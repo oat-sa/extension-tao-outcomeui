@@ -216,6 +216,8 @@ class Results extends TaoModule {
 	 * @TODO implement the following actions
 	 */
 	
+	public function getLists(){}
+	
 	public function getMetaData(){
 		throw new Exception("Not yet implemented");
 	}
