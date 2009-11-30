@@ -30,15 +30,6 @@ define("DIR_CORE_HELPERS"	, DIR_CORE . "helpers/");
 # core utils directory
 define("DIR_CORE_UTILS"		, DIR_CORE . "util/");
 
-# database config
-/*
-define("DATABASE_LOGIN"		, "root");
-define("DATABASE_PASS"		, "");
-define("DATABASE_URL"		, "");
-define("DATABASE_DRIVER"	, "");
-define("DATABASE_NAME"		, "localhost");
-*/
-
 # session namespace
 define('SESSION_NAMESPACE', 'PHPFramework');
 
@@ -62,7 +53,7 @@ $GLOBALS['lang']			= 'en';
 //@todo to remove when the user management is implemented
 define("API_LOGIN", "demo", true);
 define("API_PASS", md5("demo"), true);
-define("API_MODULE", "taoresults", true);
+define("API_MODULE", "taotrans_results", true);
 
 #BASE PATH: the root path in the file system (usually the document root)
 define('BASE_PATH', $_SERVER['DOCUMENT_ROOT'] . '/taoResults');
