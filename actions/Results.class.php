@@ -212,11 +212,25 @@ class Results extends TaoModule {
 		}
 	}
 	
+	/**
+	 * get the list data: all taoObjects children except the TAO_GROUP class
+	 * @return void
+	 */
+	public function getLists(){
+		if(!tao_helpers_Request::isAjax()){
+			throw new Exception("wrong request mode");
+		}
+		
+		return json_encode(
+			$this->getListData(array(
+				TAO_RESULT_CLASS
+			))
+		);
+	}
+	
 	/*
 	 * @TODO implement the following actions
 	 */
-	
-	public function getLists(){}
 	
 	public function getMetaData(){
 		throw new Exception("Not yet implemented");
@@ -226,13 +240,5 @@ class Results extends TaoModule {
 		throw new Exception("Not yet implemented");
 	}
 	
-	public function import(){
-		throw new Exception("Not yet implemented");
-	}
-	
-	public function export(){
-		throw new Exception("Not yet implemented");
-	}
-
 }
 ?>
