@@ -21,19 +21,15 @@ define("DIR_VIEWS"			, "views/");
 # helpers directory
 define("DIR_HELPERS"		, dirname(__FILE__) . "/../helpers/");
 
+
 # session namespace
-define('SESSION_NAMESPACE', 'PHPFramework');
+define('SESSION_NAMESPACE', 'ClearFw');
 
 # default module name
 define('DEFAULT_MODULE_NAME', 'Results');
 
 #default action name
 define('DEFAULT_ACTION_NAME', 'index');
-
-$GLOBALS['classpath']			= array(DIR_CORE,
-										DIR_CORE_UTILS,
-										DIR_ACTIONS,
-										DIR_MODELS);
 
 # theme directory
 $GLOBALS['dir_theme']		= "templates/";
