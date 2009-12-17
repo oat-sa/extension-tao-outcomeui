@@ -181,7 +181,8 @@ chrome title = #C3D9FF
 }
 #utrDiv{
     background-color:#E8EEF7;
-    height:90%;
+    overflow:auto;
+    height:100%;
 }
 
 div.divlistInstances{
@@ -268,6 +269,7 @@ padding-top:60px;
 text-align:center;
 margin-left:10px;
 margin-top:10px;
+font-size:10px;
 height: 80px;
 width: 70px;
  
@@ -278,6 +280,7 @@ background-repeat: no-repeat;
 background-color:#E8EEF7;
 padding-top:60px;
 text-align:center;
+font-size:10px;
 margin-left:10px;
 margin-top:10px;
 height: 80px;
@@ -292,6 +295,7 @@ background-color:transparent;
 /*padding-top:128px;*/
 padding-left:35;
 text-align:left;
+font-size:12px;
 height: 35px;
 margin-left:2%;
 width: 95%;
@@ -317,7 +321,7 @@ width: 100%;
     top: 50%;
     left: 50%;
     width: 800px;
-    height: 500px;
+    height: 480px;
 
     background:silver ;
     /*padding: 5px;*/
