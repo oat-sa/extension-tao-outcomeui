@@ -1,0 +1,133 @@
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+    <head>
+        <title></title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script type="text/javascript" src="javascript/jquery-1.3.2.min.js"></script>
+        <script type="text/javascript" src="javascript/raphael.js"></script>
+        <script type="text/javascript" src="javascript/pie.js"></script>
+
+        <script type="text/javascript" src="javascript/utrfactory.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="cssfiles/default/basic.css">
+    </head>
+    <body>
+        <div id="divPathWizard" class="divstandard">
+            <input class="closePathBuilder" id="closePathBuilder" type="button" value="Close Column Builder" /></input>
+            <h1> Choose the class, and select the property </h1>
+            <div id="menuPathBuilder"><br>
+                <input class="btn" id="remove" type="button" value="remove Template" /></input>
+                <input id="getInitialInstances" type="button" value="Get Initial Instance" /></input>
+                <input id="getRootClasses" title="Get root classes" type="button" value="Get Root Classes" /></input>
+            </div>
+
+            <div id="divInitialInstances" class="divlistInstances">
+            </div>
+
+            <div id="classesDiv">
+                <div id="contextClassHeader" class="boxHeader">
+                    <input id="backClass" type="button" value="Back" name="backClass"/>
+                    <h1>Classe</h1>
+
+                </div>
+                <div id="contextClasses" class="contextClassesStyle">
+
+                    <h1> list of classes</h1>
+                </div>
+            </div>
+            <div id="propertiesDiv">
+                <div id="contextPropertiesHeader" class="boxHeader">
+                    <h1>...</h1>
+                </div>
+
+                <div id="contextProperties" class="contextPropertiesStyle">
+                    <h1>List of properties</h1>
+                </div>
+
+            </div>
+
+            <div id="divFooterPathWizard" style="clear:both">
+
+            </div>
+        </div>
+
+        <div id="propertyBinding" class="centered">
+            <table border="0" cellpadding="0">
+
+                <tbody>
+                    <tr>
+                        <td>Column Name:</td>
+                        <td><input id="columnName" type="text" name="" value="" /></td>
+                    </tr>
+                    <tr>
+                        <td>Extraction Method:</td>
+                        <td><select id="typeExtraction" name="ExtractionMethodDrop">
+                                <option value="direct" >Direct </option>
+                                <option value="xpath" >XPath query </option>
+                                <option value="function" >Function </option>
+                            </select></td>
+                    </tr>
+                    <tr>
+                        <td>Query</td>
+                        <td><input id="finalPath" type="text" name="finalPath" value="" size="30" /></td>
+                    </tr>
+                </tbody>
+            </table>
+
+
+            <input id="addColumn" type="button" value="Add Column" />
+            <input id="exitAddColumn" type="button" value="Exit" />
+        </div>
+
+        <div id="utrDiv" >
+            <div id="utrmenu">
+                <input id="columnBuilder" type="submit" value="Add Column Wizard..." />
+
+
+                
+            </div>
+
+            <table id="UTR" border="1">
+                <thead id="utrHead">
+                    <tr>
+                        <th>Column...</th>
+
+
+
+
+                    </tr>
+
+                </thead>
+                <tbody id="utrBody" >
+                    <tr>
+                        <td>...</td>
+                    </tr><tr>
+                        <td>...</td>
+                    </tr><tr>
+                        <td>...</td>
+                    </tr><tr>
+                        <td>...</td>
+                    </tr><tr>
+                        <td>...</td>
+                    </tr>
+
+
+                </tbody>
+            </table>
+
+
+        </div>
+        <div id="pieStat" class="pieStatClass">
+            <input id="hidePieStat" type="button" value="Hide" />
+
+        </div>
+
+
+
+
+    </body>
+</html>

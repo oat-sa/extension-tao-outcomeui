@@ -20,6 +20,7 @@
 				<action name="duplicate" js="cloneNode" url="/taoResults/Results/cloneResult" context="instance" />
 				<action name="edit result" url="/taoResults/Results/editResult" context="instance" />
 				<action name="new property" js="addProperty" url="/taoResults/Results/addClassProperty" context="class" />
+				<action name="create table" url="/taoResults/Results/createTable"  context="*" />
 				<action name="import" url="/taoResults/Results/import"  context="class" />
 				<action name="export" url="/taoResults/Results/export"  context="class" reload="true" />
 			</actions>

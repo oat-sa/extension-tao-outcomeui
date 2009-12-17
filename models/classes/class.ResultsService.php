@@ -309,7 +309,7 @@ class taoResults_models_classes_ResultsService
 			$returnValue = true;	
 		}
 		else{
-			foreach($this->getSubjectClasses() as $subclass){
+			foreach($this->resultClass->getSubClasses(true) as $subclass){
 				if($clazz->uriResource == $subclass->uriResource){
 					$returnValue = true;
 					break;	

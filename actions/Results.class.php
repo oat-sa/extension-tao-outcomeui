@@ -126,7 +126,7 @@ class Results extends TaoModule {
 			}
 		}
 		
-		$this->setData('formTitle', 'Edit subject');
+		$this->setData('formTitle', 'Edit result');
 		$this->setData('myForm', $myForm->render());
 		$this->setView('form.tpl');
 	}
@@ -163,7 +163,7 @@ class Results extends TaoModule {
 				$this->forward('Results', 'index');
 			}
 		}
-		$this->setData('formTitle', 'Edit subject class');
+		$this->setData('formTitle', 'Edit result class');
 		$this->setData('myForm', $myForm->render());
 		$this->setView('form.tpl');
 	}
@@ -216,19 +216,18 @@ class Results extends TaoModule {
 	}
 	
 	/**
-	 * get the list data: all taoObjects children except the TAO_GROUP class
-	 * @return void
+	 * 
+	 * @return 
 	 */
-	public function getLists(){
-		if(!tao_helpers_Request::isAjax()){
-			throw new Exception("wrong request mode");
-		}
+	public function createTable(){
 		
-		return json_encode(
-			$this->getListData(array(
-				TAO_RESULT_CLASS
-			))
-		);
+		$clazz = $this->service->getResultClass();
+		$_SESSION['instances'] = array();
+		
+		foreach($clazz->getInstances(true) as $instance){
+			$_SESSION['instances'][$instance->uriResource] =  $instance->getLabel();
+		}
+		$this->setView("create_table.tpl");
 	}
 	
 	/*
