@@ -8,7 +8,12 @@ $todefine = array(
 	'TAO_SUBJECT_CLASS' 	=> 'http://www.tao.lu/Ontologies/TAOSubject.rdf#Subject',
 	'TAO_TEST_CLASS' 		=> 'http://www.tao.lu/Ontologies/TAOTest.rdf#Test',
 	'RDFS_LABEL'			=> 'http://www.w3.org/2000/01/rdf-schema#label',
-	'GENERIS_BOOLEAN'		=> 'http://www.tao.lu/Ontologies/generis.rdf#Boolean'
+	'GENERIS_BOOLEAN'		=> 'http://www.tao.lu/Ontologies/generis.rdf#Boolean',
+	'RESULT_ONTOLOGY'		=> 'http://www.tao.lu/Ontologies/TAOResult.rdf',
+	'ITEM_ONTOLOGY'		=> 'http://www.tao.lu/Ontologies/TAOItem.rdf',
+	'GROUP_ONTOLOGY'		=> 'http://www.tao.lu/Ontologies/TAOGroup.rdf',
+	'TEST_ONTOLOGY'		=> 'http://www.tao.lu/Ontologies/TAOTest.rdf',
+	'SUBJECT_ONTOLOGY'		=> 'http://www.tao.lu/Ontologies/TAOSubject.rdf'
 );
 foreach($todefine as $constName => $constValue){
 	if(!defined($constName)){

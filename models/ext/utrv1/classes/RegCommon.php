@@ -25,6 +25,15 @@ require('../../../../includes/common.php');
 class RegCommon {
 //This method permits to connect to a specific module of generis.
     public function regConnect() {
+   
+   		//Load ontologies mannually
+   		$session = core_kernel_classes_Session::singleton();
+		$session->model->loadModel(RESULT_ONTOLOGY);
+		$session->model->loadModel(ITEM_ONTOLOGY);
+		$session->model->loadModel(GROUP_ONTOLOGY);
+		$session->model->loadModel(TEST_ONTOLOGY);
+		$session->model->loadModel(SUBJECT_ONTOLOGY);
+   
     //Authentication
 	
       /*  $login = "hyperclass";
