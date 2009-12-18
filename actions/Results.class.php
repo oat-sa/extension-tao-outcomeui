@@ -66,9 +66,6 @@ class Results extends TaoModule {
 			unset($_SESSION[SESSION_NAMESPACE]['uri']);
 			unset($_SESSION[SESSION_NAMESPACE]['classUri']);
 		}
-		
-		$context = Context::getInstance();
-		$this->setData('content', "this is the ". get_class($this) ." module, " . $context->getActionName());
 		$this->setView('index.tpl');
 	}
 	
@@ -194,6 +191,7 @@ class Results extends TaoModule {
 	
 	/**
 	 * duplicate a subject instance by property copy
+	 * return void
 	 */
 	public function cloneResult(){
 		if(!tao_helpers_Request::isAjax()){
@@ -220,16 +218,16 @@ class Results extends TaoModule {
 	}
 	
 	/**
-	 * 
-	 * @return 
+	 * create data table
+	 * @return void
 	 */
 	public function createTable(){
 		
-		$clazz = $this->service->getResultClass();
 		$_SESSION['instances'] = array();
-		
-		foreach($clazz->getInstances(true) as $instance){
-			$_SESSION['instances'][$instance->uriResource] =  $instance->getLabel();
+		foreach($this->getRequestParameters() as $key => $value){
+			if(preg_match("/^uri_[0-9]+$/", $key)){
+				$_SESSION['instances'][tao_helpers_Uri::decode($value)] = tao_helpers_Uri::decode($value);
+			}
 		}
 		$this->setView("create_table.tpl");
 	}
