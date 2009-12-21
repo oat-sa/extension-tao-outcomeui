@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : model.xml
+    Created on : 18 décembre 2009, 14:16
+    Author     : djaghloul
+    Description:
+        Purpose of the document follows.
+-->
+
+<classes>
+    <class uri="TEST_CLASS" label="tao:TEST">
+
+        <property uri = "id_Test" label="labelProp1"></property>
+        <property uri = "label_Test" label="labelProp2"></property>
+        <property uri = "comment_Test" label="labelProp3"></property>
+        <property uri = "HASSCORINGMETHOD_NAME" label="labelProp3"></property>
+        <property uri = "SCORE_Value" label="labelProp3"></property>
+        <property uri = "CUMULMODEL_Name" label="labelProp3"></property>
+        <!-- property of bridge-->
+        <property uri = "SUBJECT_ID" label="labelProp3"></property>
+        <property uri = "SUBJECT_Label" label="labelProp3"></property>
+
+        <property uri = "TESTBEHAVIOR" label="labelProp3"></property>
+        <property uri = "Citem" label="labelProp3"></property>
+
+
+    </class>
+
+    <class uri="Citem_CLASS" label="label3" >
+        
+        <property uri = "WEIGHT" label="labelProp1"></property>
+        <property uri = "MODEL" label="labelProp1"></property>
+        <property uri = "DEFINITIONFILE" label="labelProp1"></property>
+        <property uri = "SEQUENCE" label="labelProp1"></property>
+        <property uri = "ENDORSMENT" label="labelProp1"></property>
+        <property uri = "ITEMUSAGE" label="labelProp1"></property>
+
+        <!-- RANGE TO BEHAVIOR-->
+        <property uri = "ITEMBEHAVIOR" label="labelProp1"></property>
+
+    </class>
+
+    <class uri= "ITEMBEHAVIOR_CLASS" label="label">
+        <property uri = "LISTENERNAME" label="labelProp1"></property>
+        <property uri = "LISTENERVALUE" label="labelProp1"></property>
+        
+
+
+    </class>
+
+    
+
+
+    
+
+
+</classes>
