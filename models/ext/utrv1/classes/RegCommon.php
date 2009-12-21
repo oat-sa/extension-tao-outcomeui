@@ -4,20 +4,6 @@
  */
 
 //This class provides the common services on generis API
-define('studentUri',"http://127.0.0.1/middleware/hyperclass.rdf#121310317039702");
-// la class School: http://127.0.0.1/middleware/hyperclass.rdf#121310337527262
-define('patrickUri',"http://127.0.0.1/middleware/hyperclass.rdf#125752260765514");
-define ('younes','http://127.0.0.1/middleware/hyperclass.rdf#125794852120900');
-
-
-define('propHasTeacher','http://127.0.0.1/middleware/hyperclass.rdf#121310343627344');
-define('propSchool','http://127.0.0.1/middleware/hyperclass.rdf#121541805831600');
-//nationalité class  http://127.0.0.1/middleware/hyperclass.rdf#12156962846672
-//has nationalité teacher = http://127.0.0.1/middleware/hyperclass.rdf#12157851749292
-//
-//la class country http://127.0.0.1/middleware/hyperclass.rdf#12156962846672
-
-define('teacherUri','http://127.0.0.1/middleware/hyperclass.rdf#121310312857514');
 
 require('../../../../../generis/common/inc.extension.php');
 require('../../../../includes/common.php');
@@ -25,17 +11,16 @@ require('../../../../includes/common.php');
 class RegCommon {
 //This method permits to connect to a specific module of generis.
     public function regConnect() {
-   
-   		//Load ontologies mannually
-   		$session = core_kernel_classes_Session::singleton();
-		$session->model->loadModel(RESULT_ONTOLOGY);
-		$session->model->loadModel(ITEM_ONTOLOGY);
-		$session->model->loadModel(GROUP_ONTOLOGY);
-		$session->model->loadModel(TEST_ONTOLOGY);
-		$session->model->loadModel(SUBJECT_ONTOLOGY);
-   
+
+        $session = core_kernel_classes_Session::singleton();
+        $session->model->loadModel(RESULT_ONTOLOGY);
+        $session->model->loadModel(ITEM_ONTOLOGY);
+        $session->model->loadModel(GROUP_ONTOLOGY);
+        $session->model->loadModel(TEST_ONTOLOGY);
+        $session->model->loadModel(SUBJECT_ONTOLOGY);
+
     //Authentication
-	
+
       /*  $login = "hyperclass";
         $password = md5("hyperclass");
         $module = "hyperclass";
@@ -252,8 +237,8 @@ class RegCommon {
         //for each uri instances in
         //link the resource
 
-        $listInstancesUri=$intermediateTabUri;
-        $intermediateTabUri=array();
+            $listInstancesUri=$intermediateTabUri;
+            $intermediateTabUri=array();
 
             foreach ($listInstancesUri as $instanceUri) {
 
@@ -267,23 +252,23 @@ class RegCommon {
                 //this array containes the bridged uri of instances
                 $intermediateTabUri = array_merge($intermediateTabUri,$values);
 
-//                if (count($values)==0) {
-//                    $instanceUri ="";
-//                    //echo "<br> the value is gg = ".$instanceUri;
-//                    break;
-//                }
-                //$instanceUri = $values[0];//prendre la première seulement; in newt release we wil take all the values
+            //                if (count($values)==0) {
+            //                    $instanceUri ="";
+            //                    //echo "<br> the value is gg = ".$instanceUri;
+            //                    break;
+            //                }
+            //$instanceUri = $values[0];//prendre la première seulement; in newt release we wil take all the values
             //echo "<br> the value is gg = ".$instanceUri;
 
 
-        }//instance
+            }//instance
 
-        //break if the intermediateTab is void
-        if(count($intermediateTabUri)==0){
-            $intermediateTabUri = array();
-            break;
-        }
-//now the intermediateTab is complete, it will be the next input of the loop
+            //break if the intermediateTab is void
+            if(count($intermediateTabUri)==0) {
+                $intermediateTabUri = array();
+                break;
+            }
+        //now the intermediateTab is complete, it will be the next input of the loop
 
         }//path
 
