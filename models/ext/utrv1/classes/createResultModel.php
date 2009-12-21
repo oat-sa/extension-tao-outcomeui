@@ -212,7 +212,7 @@ class ResultModelBuilder {
 //create class with all properties that are included in the paramaters
     public $uriRootClassOfResult ="http://www.tao.lu/Ontologies/TAOResult.rdf#Result";
 
-    public function createModel($domSom) {
+    public function createModel() {
         $domResult = new DOMDocument();
         $domResult->load('model.xml');
         //get class info
@@ -320,8 +320,7 @@ class ResultModelBuilder {
 
 $p= new ResultModelBuilder();
 
-//$p->createModel();
-$p = new importLog();
-$p->createResultInstance();
+$p->createModel();
+
 
 ?>
