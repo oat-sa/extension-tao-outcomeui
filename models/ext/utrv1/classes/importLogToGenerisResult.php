@@ -2,7 +2,7 @@
 /* 
  * 
  */
-// dans ce scipt nous allon,s fournir les po
+// 
 
 
 //tester un peu le import selon le xpath
@@ -12,10 +12,7 @@ define ('inputFile','test1.xml');
 
 require_once($_SERVER['DOCUMENT_ROOT']."/generis/common/inc.extension.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
-
-define ("CLASS_TEST",'TEST');
-define ("ID_TEST",'ID_TEST');
-
+//define ("RESULT_NS",'http://www.tao.lu/Ontologies/TAOResult.rdf#');
 define ("RESULT_NS",'http://127.0.0.1/middleware/demo.rdf#');
 
 //
@@ -35,49 +32,8 @@ class importLog {
 
     }
 
-    //    public function createDOM() {
-    //    //declarer le dom
-    //
-    //        $logDom = new DOMDocument();
-    //        $logDom->load(inputFile);
-    //        return $logDom;
-    //    }
-    //
-    //    public function getAttValueByXpath($nodePath, $att) {
-    //        $dom = new DOMDocument();
-    //        //get the actual dom
-    //        $dom = $this->domRusult;//$this->createDOM(inputFile);
-    //        //intialize th xpath
-    //        $xp = new DOMXPath($dom);
-    //        $node=$xp->query($nodePath);
-    //        $val = $node->item(0)->getAttribute($att);
-    //        return $val;
-    //
-    //    }
-    //
-    //    //get attribute value by tag name
-    //
-    //    public function getValueByNodeName() {
-    //
-    //
-    //    }
-    //
-    //    public function getAttValueDom($nodeName,$att) {
-    //        $dom = new DOMDocument();
-    //        $dom = $this->createDOM(inputFile);
-    //        $node = $dom->getElementsByTagName($nodeName);
-    //        $val = $node->item(0)->getAttribute($att);
-    //
-    //
-    //        return $val;
-    //
-    //    }
-    //    //Create an instance for the test class
+    
 
-    public function createTestInstances() {
-
-
-    }
 
     //The bigest method, to create the whole instances of all classes in the result model
     public function createResultInstance() {
@@ -107,30 +63,41 @@ class importLog {
         $testDom= $dom->getElementsByTagName("SUBJECT")->item(0);
         $SUBJECT_ID =       $testDom->getAttribute("rdfid");
         $SUBJECT_LABEL =    $testDom->getAttribute("rdfs:Label");
-        $TESTBEHAVIOR= '';     // puted after adding the instance in testbehavir class
+        $TESTBEHAVIOR= '';     // puted after adding the instance in testbehavir class TODO
 
         //Create instance and property values
 
         $class = new core_kernel_classes_Class(RESULT_NS."TEST_CLASS");
-        $instanceTest = $class->createInstance("test of student");
+        $instanceTest = $class->createInstance("Test...");
         //put property values /**** test with 3 properties only
 
         $propTest = new core_kernel_classes_Property(RESULT_NS."ID_TEST");
         $instanceTest->setPropertyValue($propTest,$ID_TEST );
 
+        $propTest = new core_kernel_classes_Property(RESULT_NS."LABEL_TEST");
+        $instanceTest->setPropertyValue($propTest,$LABEL_TEST );
+        
         $propTest = new core_kernel_classes_Property(RESULT_NS."HASSCORINGMETHOD_NAME");
         $instanceTest->setPropertyValue($propTest,$HASSCORINGMETHOD_NAME );
+
+        $propTest = new core_kernel_classes_Property(RESULT_NS."SCORE_VALUE");
+        $instanceTest->setPropertyValue($propTest,$SCORE_VALUE );
+
+        $propTest = new core_kernel_classes_Property(RESULT_NS."CUMULMODEL_NAME");
+        $instanceTest->setPropertyValue($propTest,$CUMULMODEL_NAME );
+
 
         $propTest = new core_kernel_classes_Property(RESULT_NS."SUBJECT_ID");
         $instanceTest->setPropertyValue($propTest,$SUBJECT_ID );
 
+        $propTest = new core_kernel_classes_Property(RESULT_NS."SUBJECT_LABEL");
+        $instanceTest->setPropertyValue($propTest,$SUBJECT_LABEL );
+        //TODO ADD TESTBEHAVIOR
 
 
-        // echo $ID_TEST. " -- ". $CUMULMODEL_NAME. '--- '.$SUBJECT_LABEL;
-
-
+        //----------------------------
+        
         $CITEM= '';            // puted after adding the instance to citem class
-
 
         //Get Citem attribute
         $citemDomList = $dom->getElementsByTagName("CITEM");//
@@ -152,22 +119,35 @@ class importLog {
             $ITEMBEHAVIOR='';//puted after adding the itemBehavior class
             //*****************************************************
 
-            //Create instance of citem
+            //Create instance of Citem
             $class = new core_kernel_classes_Class(RESULT_NS."CITEM_CLASS");
-            $instanceCitem = $class->createInstance("test of CITEM");
+            $instanceCitem = $class->createInstance("Test of CITEM");
             //put property values /**** test with 3 properties only
 
             $propCitem = new core_kernel_classes_Property(RESULT_NS."WEIGHT");
             $instanceCitem->setPropertyValue($propCitem,$WEIGHT );
 
+            $propCitem = new core_kernel_classes_Property(RESULT_NS."MODEL");
+            $instanceCitem->setPropertyValue($propCitem,$MODEL );
+
+            $propCitem = new core_kernel_classes_Property(RESULT_NS."DEFINITIONFILE");
+            $instanceCitem->setPropertyValue($propCitem,$DEFINITIONFILE );
+            
+
             $propCitem = new core_kernel_classes_Property(RESULT_NS."SEQUENCE");
             $instanceCitem->setPropertyValue($propCitem,$SEQUENCE );
+
+            $propCitem = new core_kernel_classes_Property(RESULT_NS."ENDORSMENT");
+            $instanceCitem->setPropertyValue($propCitem,$ENDORSMENT );
+
+            $propCitem = new core_kernel_classes_Property(RESULT_NS."ITEMUSAGE");
+            $instanceCitem->setPropertyValue($propCitem,$ITEMUSAGE );
+
 
             //*** The rage value of Test Instance/ THE Citem property
             $CITEM = $instanceCitem->uriResource;
             $propTest = new core_kernel_classes_Property(RESULT_NS."CITEM");
             $instanceTest->setPropertyValue($propTest,$CITEM );
-
 
             //echo "<br>".$WEIGHT."- ".$DEFINITIONFILE. " - ".$SEQUENCE;
             //*******************************************************************************
@@ -212,121 +192,16 @@ class importLog {
 
 
 }
-//This class build the result model, by creatin the differents classes abd properties,
-//to have the name space of the uri, we can cretae a FASTOCHE resource, get its uri and get also, the name space delimited by #
-//name space#uriuri
-
-class ResultModelBuilder {
-//create class with all properties that are included in the paramaters
-    public $uriRootClassOfResult ="http://www.tao.lu/Ontologies/TAOResult.rdf#Result";
-
-    public function createModel($domSom) {
-        $domResult = new DOMDocument();
-        $domResult->load('model.xml');
-        //get class info
-
-        $listClasses = $domResult->getElementsByTagName("class");
-
-
-        foreach($listClasses as $class) {
-        //labelClass = $class->getAttribute("label");
-            $uriClass = $class->getAttribute("uri");
-            //make the case upper, more
-            $uriClass = strtoupper($uriClass);
-
-            $labelClass = "label on ".$uriClass;
-
-            //For the actual class we buuil the array of properties
-            $listProperties = $class->getElementsByTagName("property");
-            $t= array();
-            foreach($listProperties as $propertyDescription) {
-                $propDescription=array();
-
-                $uriProp = $propertyDescription->getAttribute("uri");
-                //Make the case upper
-                $uriProp = strtoupper($uriProp);
-
-                $labelProp =$propertyDescription->getAttribute("label");
-
-                $propDescription['labelProperty']='label '.$uriProp;
-                $propDescription['commentProperty']='comment test '.$uriProp;
-                $propDescription['uriProperty']='#'.$uriProp;
-                $t[]=$propDescription;
-
-            // echo "----------".$labelProp.'<br>';
-
-            }
-            //Create the class
-            $this->createClassWithProperties($this->uriRootClassOfResult, '#'.$uriClass, $labelClass, '$commentClass', $t);
-
-        }
-
-    }
-
-    public function createClassWithProperties($uriRootClass,$uriClass,$labelClass,$commentClass,$tabProperties) {
-        $r = new RegCommon();
-        $r->regConnect();
-
-        //create the class
-        $rdfClass = new core_kernel_classes_Class(RDF_CLASS);
-        $resourceClass = $rdfClass->createInstance($labelClass,$commentClass,$uriClass);
-        //now, create the php object Class to be used in trhe creation of the properties
-        //This class should be linked to the URI already created
-        $trClass =new core_kernel_classes_Class($resourceClass->uriResource);
-        //now we have the php object linked to the class in the model
-        //echo $resourceClass->uriResource . " <br>";
-
-        //Create the property with a specific uri
-        foreach( $tabProperties as $propDescription) {
-        //get property infos
-            $labelProperty = $propDescription['labelProperty'];
-            $commentProperty =  $propDescription['commentProperty'];
-            $uriProperty = $propDescription['uriProperty'];
-
-            //Created the property with informations extracted
-
-            $rdfProperty = new core_kernel_classes_Class(RDF_PROPERTY);
-            $resourceProperty = $rdfProperty->createInstance($labelProperty,$commentProperty,$uriProperty);
-            //Create the pho pbject property and link it with the uri
-            $trProperty = new core_kernel_classes_Property($resourceProperty->uriResource);
-            //Link the property with the class
-            $trClass->setProperty($trProperty);
-
-
-        }//end for each add properties
-
-        ///add range properties
-        $prop = new core_kernel_classes_Property(RESULT_NS."CITEM");
-        $class = new core_kernel_classes_Class(RESULT_NS."CITEM_CLASS");
-        $prop->setRange($class);
-
-        $prop = new core_kernel_classes_Property(RESULT_NS."ITEMBEHAVIOR");
-        $class = new core_kernel_classes_Class(RESULT_NS."ITEMBEHAVIOR_CLASS");
-        $prop->setRange($class);
-
-        //Put the class as subclass of root
-        $rootResultClass = new core_kernel_classes_Class($uriRootClass);
-        $trClass->setSubClassOf($rootResultClass);
-    //end
-
-
-    }
-}
+//CREATE THE DOM
 $logDom = new DOMDocument();
-//get the dom from delivery
+//get the path of the xml result from delivery SERVICE
 $xmlPath = urldecode($_GET['resultxml']);
-
-
-
 $logDom->load($xmlPath);
-$logDom->save("zzz.xml");
+
 unset($_GET['resultxml']);
+
 //$logDom->load(inputFile);
-//echo $_SERVER['DOCUMENT_ROOT']."generis/common/inc.extension.php";
-
+//add to result
 $p = new importLog($logDom);
-
-
-
 
 ?>
