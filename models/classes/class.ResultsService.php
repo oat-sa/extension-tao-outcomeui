@@ -337,7 +337,4 @@ class taoResults_models_classes_ResultsService
 
 } /* end of class taoResults_models_classes_ResultsService */
 
-?>/* lost code following: 
-    // section 10-13-1-45-792423e0:12398d13f24:-8000:00000000000017F9 begin
-    // section 10-13-1-45-792423e0:12398d13f24:-8000:00000000000017F9 end
-*/
+?>
