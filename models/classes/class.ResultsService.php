@@ -3,16 +3,9 @@
 error_reporting(E_ALL);
 
 /**
- * Generis Object Oriented API -
+ * Service methods to manage the Results business models using the RDF API.
  *
- * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
- *
- * This file is part of Generis Object Oriented API.
- *
- * Automatically generated on 23.11.2009, 14:25:39 with ArgoUML PHP module 
- * (last revised $Date: 2009-04-11 21:57:46 +0200 (Sat, 11 Apr 2009) $)
- *
- * @author Bertrand Chevrier, <chevrier.bertrand@gmail.com>
+ * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
  * @package taoResults
  * @subpackage models_classes
  */
@@ -25,7 +18,7 @@ if (0 > version_compare(PHP_VERSION, '5')) {
  * The Service class is an abstraction of each service instance. 
  * Used to centralize the behavior related to every servcie instances.
  *
- * @author Bertrand Chevrier, <chevrier.bertrand@gmail.com>
+ * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
  */
 require_once('tao/models/classes/class.Service.php');
 
@@ -38,10 +31,10 @@ require_once('tao/models/classes/class.Service.php');
 // section 10-13-1-45-792423e0:12398d13f24:-8000:00000000000017F0-constants end
 
 /**
- * Short description of class taoResults_models_classes_ResultsService
+ * Service methods to manage the Results business models using the RDF API.
  *
  * @access public
- * @author Bertrand Chevrier, <chevrier.bertrand@gmail.com>
+ * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
  * @package taoResults
  * @subpackage models_classes
  */
@@ -54,7 +47,7 @@ class taoResults_models_classes_ResultsService
     // --- ATTRIBUTES ---
 
     /**
-     * Short description of attribute resultClass
+     * The RDFS top level result class
      *
      * @access protected
      * @var Class
@@ -62,7 +55,7 @@ class taoResults_models_classes_ResultsService
     protected $resultClass = null;
 
     /**
-     * Short description of attribute resultsOntologies
+     * The ontologies to load
      *
      * @access protected
      * @var array
@@ -75,7 +68,7 @@ class taoResults_models_classes_ResultsService
      * Short description of method __construct
      *
      * @access public
-     * @author Bertrand Chevrier, <chevrier.bertrand@gmail.com>
+     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
      * @return mixed
      */
     public function __construct()
@@ -90,10 +83,10 @@ class taoResults_models_classes_ResultsService
     }
 
     /**
-     * Short description of method getResult
+     * get a result instance
      *
      * @access public
-     * @author Bertrand Chevrier, <chevrier.bertrand@gmail.com>
+     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
      * @param  string identifier
      * @param  string mode
      * @param  Class clazz
@@ -118,10 +111,10 @@ class taoResults_models_classes_ResultsService
     }
 
     /**
-     * Short description of method getResults
+     * get a list of results
      *
      * @access public
-     * @author Bertrand Chevrier, <chevrier.bertrand@gmail.com>
+     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
      * @param  array options
      * @return core_kernel_classes_ContainerCollection
      */
@@ -175,10 +168,12 @@ class taoResults_models_classes_ResultsService
     }
 
     /**
-     * Short description of method getResultClass
+     * get a result subclass by uri. 
+     * If the uri is not set, it returns the  result class (the top level class.
+     * If the uri don't reference a  result subclass, it returns null
      *
      * @access public
-     * @author Bertrand Chevrier, <chevrier.bertrand@gmail.com>
+     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
      * @param  string uri
      * @return core_kernel_classes_Class
      */
@@ -204,10 +199,10 @@ class taoResults_models_classes_ResultsService
     }
 
     /**
-     * Short description of method createResultClass
+     * subclass the result class
      *
      * @access public
-     * @author Bertrand Chevrier, <chevrier.bertrand@gmail.com>
+     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
      * @param  Class clazz
      * @param  string label
      * @param  array properties
@@ -244,10 +239,10 @@ class taoResults_models_classes_ResultsService
     }
 
     /**
-     * Short description of method deleteResult
+     * delete a result
      *
      * @access public
-     * @author Bertrand Chevrier, <chevrier.bertrand@gmail.com>
+     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
      * @param  Resource result
      * @return boolean
      */
@@ -267,10 +262,10 @@ class taoResults_models_classes_ResultsService
     }
 
     /**
-     * Short description of method deleteResultClass
+     * delete a result class or subclass
      *
      * @access public
-     * @author Bertrand Chevrier, <chevrier.bertrand@gmail.com>
+     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
      * @param  Class clazz
      * @return boolean
      */
@@ -292,10 +287,10 @@ class taoResults_models_classes_ResultsService
     }
 
     /**
-     * Short description of method isResultClass
+     * check if the given class is a class or a subclass of Result
      *
      * @access public
-     * @author Bertrand Chevrier, <chevrier.bertrand@gmail.com>
+     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
      * @param  Class clazz
      * @return boolean
      */
@@ -323,29 +318,10 @@ class taoResults_models_classes_ResultsService
     }
 
     /**
-     * Short description of method analyseResult
-     *
-     * @access public
-     * @author Bertrand Chevrier, <chevrier.bertrand@gmail.com>
-     * @param  Resource result
-     * @param  Resource analyseFilter
-     * @return core_kernel_classes_Resource
-     */
-    public function analyseResult( core_kernel_classes_Resource $result,  core_kernel_classes_Resource $analyseFilter)
-    {
-        $returnValue = null;
-
-        // section 10-13-1-45-792423e0:12398d13f24:-8000:00000000000017F9 begin
-        // section 10-13-1-45-792423e0:12398d13f24:-8000:00000000000017F9 end
-
-        return $returnValue;
-    }
-
-    /**
      * Short description of method getResultsByGroup
      *
      * @access protected
-     * @author Bertrand Chevrier, <chevrier.bertrand@gmail.com>
+     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
      * @param  Resource group
      * @return core_kernel_classes_ContainerCollection
      */
@@ -361,4 +337,7 @@ class taoResults_models_classes_ResultsService
 
 } /* end of class taoResults_models_classes_ResultsService */
 
-?>
+?>/* lost code following: 
+    // section 10-13-1-45-792423e0:12398d13f24:-8000:00000000000017F9 begin
+    // section 10-13-1-45-792423e0:12398d13f24:-8000:00000000000017F9 end
+*/
