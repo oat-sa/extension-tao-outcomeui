@@ -6,9 +6,13 @@
 
 
 //tester un peu le import selon le xpath
-define ('inputFile','resultFileTao2.xml');
+define ('inputFile','test1.xml');
 
-require_once('RegCommon.php');
+//require_once($_SERVER['DOCUMENT_ROOT'].'/taoResults/models/ext/utrv1/classes/RegCommon.php');
+
+require_once($_SERVER['DOCUMENT_ROOT']."generis/common/inc.extension.php");
+require_once($_SERVER['DOCUMENT_ROOT']."taoResults/includes/common.php");
+
 define ("CLASS_TEST",'TEST');
 define ("ID_TEST",'ID_TEST');
 
@@ -19,13 +23,14 @@ class importLog {
     public $domRusult;
     public $resultDom;
 
-    public function __construct($domSom) {//our dev teame Som 
+    public function __construct($domSom) {//our dev teame Som
         $logDom = new DOMDocument();
         //$logDom->load(inputFile);
         $logDom = $domSom;
+
         $this->resultDom = $logDom;
-        createTestInstances();
-        
+        $this->createResultInstance();
+
         return 'OK';
 
     }
@@ -77,7 +82,10 @@ class importLog {
     //The bigest method, to create the whole instances of all classes in the result model
     public function createResultInstance() {
         $dom = $this->resultDom;
-
+        //explecit connect to generis with black door hhhhh
+        define('API_LOGIN','generis');
+        define('API_PASSWORD',md5('g3n3r1s'));
+        core_control_FrontController::connect(API_LOGIN, API_PASSWORD, DATABASE_NAME);
 
         //Get test attribute value
         $testDom= $dom->getElementsByTagName("TEST")->item(0);
@@ -187,7 +195,7 @@ class importLog {
                 $instanceCitem->setPropertyValue($propCitem,$ITEMBEHAVIOR );
 
 
-                echo "<br>***** ". $LISTENERNAME;
+            //echo "<br>***** ". $LISTENERNAME;
 
             }
 
@@ -287,7 +295,7 @@ class ResultModelBuilder {
 
         }//end for each add properties
 
-///add range properties
+        ///add range properties
         $prop = new core_kernel_classes_Property(RESULT_NS."CITEM");
         $class = new core_kernel_classes_Class(RESULT_NS."CITEM_CLASS");
         $prop->setRange($class);
@@ -295,33 +303,27 @@ class ResultModelBuilder {
         $prop = new core_kernel_classes_Property(RESULT_NS."ITEMBEHAVIOR");
         $class = new core_kernel_classes_Class(RESULT_NS."ITEMBEHAVIOR_CLASS");
         $prop->setRange($class);
-        
+
         //Put the class as subclass of root
         $rootResultClass = new core_kernel_classes_Class($uriRootClass);
         $trClass->setSubClassOf($rootResultClass);
-        //end
+    //end
 
 
     }
 }
+$logDom = new DOMDocument();
+//get the dom from delivery
+$xml = urldecode($_GET['resultxml']);
+$logDom->loadXML($xml);
+
+unset($_GET['resultxml']);
+//$logDom->load(inputFile);
+//echo $_SERVER['DOCUMENT_ROOT']."generis/common/inc.extension.php";
+
+$p = new importLog($logDom);
 
 
-//$propDescription['labelProperty']='label test';
-//$propDescription['commentProperty']='comment test ';
-//$propDescription['uriProperty']='#testIDSubject';
-//
-//$t[]=$propDescription;
-//
-//$propDescription["labelProperty"]='label test2';
-//$propDescription['commentProperty']='comment test2';
-//$propDescription['uriProperty']='#testIDSubject2';
-//
-//$t[]=$propDescription;
 
-$p= new ResultModelBuilder();
-
-//$p->createModel();
-$p = new importLog();
-$p->createResultInstance();
 
 ?>
