@@ -10,8 +10,8 @@ define ('inputFile','test1.xml');
 
 //require_once($_SERVER['DOCUMENT_ROOT'].'/taoResults/models/ext/utrv1/classes/RegCommon.php');
 
-require_once($_SERVER['DOCUMENT_ROOT']."generis/common/inc.extension.php");
-require_once($_SERVER['DOCUMENT_ROOT']."taoResults/includes/common.php");
+require_once($_SERVER['DOCUMENT_ROOT']."/generis/common/inc.extension.php");
+require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
 
 define ("CLASS_TEST",'TEST');
 define ("ID_TEST",'ID_TEST');
@@ -314,9 +314,12 @@ class ResultModelBuilder {
 }
 $logDom = new DOMDocument();
 //get the dom from delivery
-$xml = urldecode($_GET['resultxml']);
-$logDom->loadXML($xml);
+$xmlPath = urldecode($_GET['resultxml']);
 
+
+
+$logDom->load($xmlPath);
+$logDom->save("zzz.xml");
 unset($_GET['resultxml']);
 //$logDom->load(inputFile);
 //echo $_SERVER['DOCUMENT_ROOT']."generis/common/inc.extension.php";

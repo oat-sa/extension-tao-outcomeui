@@ -10,8 +10,8 @@ define ('inputFile','resultFileTao2.xml');
 
 //require_once('RegCommon.php');
 //require_once($_SERVER['DOCUMENT_ROOT'].'/taoResults/models/ext/utrv1/classes/RegCommon.php');
-require_once($_SERVER['DOCUMENT_ROOT']."generis/common/inc.extension.php");
-require_once($_SERVER['DOCUMENT_ROOT']."taoResults/includes/common.php");
+require_once($_SERVER['DOCUMENT_ROOT']."/generis/common/inc.extension.php");
+require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
 
 define ("CLASS_TEST",'TEST');
 define ("ID_TEST",'ID_TEST');
