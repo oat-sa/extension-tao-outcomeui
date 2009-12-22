@@ -4,9 +4,14 @@
  */
 
 //This class provides the common services on generis API
+//old path
+//require('../../../../../generis/common/inc.extension.php');
+//require('../../../../includes/common.php');
 
-require('../../../../../generis/common/inc.extension.php');
-require('../../../../includes/common.php');
+require_once($_SERVER['DOCUMENT_ROOT']."/generis/common/inc.extension.php");
+require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
+
+
 
 class RegCommon {
 //This method permits to connect to a specific module of generis.
