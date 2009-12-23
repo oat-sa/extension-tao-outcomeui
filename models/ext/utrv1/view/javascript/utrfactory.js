@@ -46,7 +46,7 @@ function utrIntro(){
 //$("#tablePreview").hide();
 }
 
-//save contyext as history to undo redo
+//save context as history to undo redo
 function saveContext(){
     
     var action =[];
@@ -470,9 +470,9 @@ function removeSession(){
     });
 }
 function showColumnInfo(colId){
-    //alert ( "kjnk");
-    //get column description
     
+    //get column description
+    var raphael;
     var columnDescription = new Array();
     var utrm = actualUTR.utrModel;
     columnDescription = utrm[colId];
@@ -500,8 +500,10 @@ function showColumnInfo(colId){
             //alert ("gfghfdgh"+totalRows+ " -- "+totalRowsNotNull);
             raphael("pieStat", 540, 370).pieChart(270, 200, 120, pieValues, pieLabels, "#fff");
             
+            
         });
     })(Raphael.ninja());
+
 }
 
 //manage the event of the index page
