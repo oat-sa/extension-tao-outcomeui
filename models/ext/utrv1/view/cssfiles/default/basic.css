@@ -261,34 +261,35 @@ div.divproperties{
 }
 
 
-#contextClasses input[type=button]{
-background-image: url(folder_yellow64.png);
+.classInfos{
+background-image: url(folder_yellow.png);
 background-repeat: no-repeat;
 background-color:transparent;/* : AliceBlue;*/
-padding-top:60px;
+padding-top:120px;
 text-align:center;
 margin-left:10px;
 margin-top:10px;
-font-size:10px;
-height: 80px;
-width: 70px;
+font-size:11px;
+height: 140px;
+width: 145px;
  
 }
-#contextClasses input[type=button]:hover{
-background-image: url(folder_yellow64.png);
+
+.classInfos:hover{
+background-image: url(folder_yellow.png);
 background-repeat: no-repeat;
-background-color:#E8EEF7;
-padding-top:60px;
+background-color:#E8EEF7;/* : AliceBlue;*/
+padding-top:119px;
 text-align:center;
-font-size:10px;
 margin-left:10px;
 margin-top:10px;
-height: 80px;
-width: 70px;
+font-size:11px;
+height: 140px;
+width: 145px;
 
 }
 
-#contextProperties input[type=button]{
+.property{
 background-image: url(folder_blue_open.png);
 background-repeat: no-repeat;
 background-color:transparent;
@@ -301,7 +302,7 @@ margin-left:2%;
 width: 95%;
 
 }
-#contextProperties input[type=button]:hover{
+.property:hover{
 background-image: url(folder_blue_open.png);
 background-repeat: no-repeat;
 background-color:orange;
