@@ -13,6 +13,7 @@ $todefine = array(
 	'ITEM_ONTOLOGY'		=> 'http://www.tao.lu/Ontologies/TAOItem.rdf',
 	'GROUP_ONTOLOGY'		=> 'http://www.tao.lu/Ontologies/TAOGroup.rdf',
 	'TEST_ONTOLOGY'		=> 'http://www.tao.lu/Ontologies/TAOTest.rdf',
+	'RDFS_TYPE'							=> 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type',
 	'SUBJECT_ONTOLOGY'		=> 'http://www.tao.lu/Ontologies/TAOSubject.rdf'
 );
 foreach($todefine as $constName => $constValue){
