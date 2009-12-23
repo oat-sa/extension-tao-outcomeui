@@ -70,7 +70,15 @@ class RegCommon {
         $label = $trProperty->getLabel();
 
         //$domaine = $trProperty->getDomain()->getIterator();
+        //$dbWrapper = core_kernel_classes_DbWrapper::singleton();
+        //$dbWrapper->dbConnector->debug = true;
+        //echo " \n HHHHHHHHHHHHHHHHHHHHHHHHHHH  ". $trProperty->getRange()."  HHHHHHHHHHHHHHHHHHHHHHHHHHH \n ";
+        //        if ($uriProperty == 'http://127.0.0.1/middleware/demo.rdf#SUBJECT_ID'){
+        //            echo " HHHHHHHHHHHHHHHHHHHHHHHHHHH  ". $trProperty->getRange();
+        //
+        //        }
         $range = $trProperty->getRange();
+        //S$dbWrapper->dbConnector->debug = false;
         //Create an object prop with the main important variable in our context.
 
         $prop->label = $label;
@@ -89,6 +97,8 @@ class RegCommon {
         //get properties of the class based on the API
         $listProperties = $trClass->getProperties(true);//now.. it returnes an array of properities object
         //create only, an array with the URI of properties
+        //filter the properties
+        $listProperties = $this->trFilterProperties($listProperties);
 
         $listUri = array_keys($listProperties);
 
@@ -98,10 +108,19 @@ class RegCommon {
         foreach($listUri as $uriProp) {
         //echo $uriProp. "<br>";
         //get the info of the property
+
+
+
             $infoProp = $this->trGetPropertyInfo($uriProp);
+            //            if($uriProp =='http://127.0.0.1/middleware/demo.rdf#SUBJECT_ID'){
+            //                echo "hhhhhhhhhhhhhhhhhhhh <br>";
+            //                print_r($infoProp);
+            //
+            //            }
             //put the property infos in the array element
             $listPropertiesUri[$uriProp]=$infoProp;
         }
+
         return $listPropertiesUri;
     }
 
@@ -130,19 +149,30 @@ class RegCommon {
             //Link to ressource
 
             $trResource = new core_kernel_classes_Resource($uriRange);
-            if ($trResource->isClass()==true) {// verify with the api if this resource is a class
+            // if ($trResource->isClass()==true) {// verify with the api if this resource is a class
             //add this class to listClasses
             //the information are propertySourceUri, label of the class, the uri of the class is the key it self
             //IMPORTANT: we should instantiate a new object,
-                $rangeClass =  new stdClass();
-                //get the values
-                $rangeClass->propertySourceUri = $uriProp;// to keep the property responsable of this bridge
-                $rangeClass->label = $labelRange;
-                $rangeClass->uriClass = $uriRange;
-                //put inn the array
+            $rangeClass =  new stdClass();
+            //get the values
+            $rangeClass->propertySourceUri = $uriProp;// to keep the property responsable of this bridge
+            $rangeClass->label = $labelRange;
+            $rangeClass->uriClass = $uriRange;
+            //put in the array
+            //
+            //Do a filter on class range in this version we delete all RDF classes and il uri is null ( This ocure some times !!!!)
+            
+            if ((substr($uriRange,0,17) != 'http://www.w3.org') and ($uriRange!='')) {
+                
                 $lc[$uriRange] = $rangeClass;//->Label;
-        }//end of adding class's info
+            }
+
+        // }//end of adding class's info
         }
+
+
+
+
         return $lc;
     }
 
@@ -164,16 +194,56 @@ class RegCommon {
         //an instance can belong to several classes
         return $classValuesUri;
     }
+    //This method provides only a set of properties that are not in filter,
+    //It is important in the case of deleting all rdf properties
+    function trFilterProperties($listProperties) {
+    //http://www.w3.org/2000/01/rdf-schema#isDefinedBy
+    //If the name space of the property is http://www.w3.org/2000/01/rdf-schema#isDefinedBy
+    //Then delete from list
+        $finalProp = $listProperties;
+        $blockedProperties = array();
+
+        $blockedProperties[]= 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type';
+        $blockedProperties[]= 'http://www.w3.org/1999/02/22-rdf-syntax-ns#subject';
+        $blockedProperties[]= 'http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate';
+        $blockedProperties[]= 'http://www.w3.org/1999/02/22-rdf-syntax-ns#object';
+        $blockedProperties[]= 'http://www.w3.org/1999/02/22-rdf-syntax-ns#value';
+        $blockedProperties[]= 'http://www.w3.org/2000/01/rdf-schema#subPropertyOf';
+        $blockedProperties[]= 'http://www.w3.org/2000/01/rdf-schema#comment';
+        $blockedProperties[]= 'http://www.w3.org/2000/01/rdf-schema#seeAlso';
+        $blockedProperties[]='http://www.w3.org/2000/01/rdf-schema#isDefinedBy';
+        $blockedProperties[]='http://www.w3.org/2000/01/rdf-schema#member';
+
+        foreach ($listProperties as $uri=>$obj ) {
+
+            if (in_array($uri,$blockedProperties)) {
+            //echo "jjjjj";
+                unset($finalProp[$uri]);
+            }
+
+        }
+        return $finalProp;
+
+
+    }
+
     //this method provides tow arrays,
     //1- The array od properties with, public function trGetProperties ($uriClass)
     //2- The array of classes range with public function trGetRangeClasses($uriClass)
 
+
     public function trGetPropertiesAndClassesRange($uriClass) {
-        $tabProperties = $this->trGetProperties($uriClass);
+
+        $tp = $this->trGetProperties($uriClass);
         $tabRangeClasses = $this->trGetRangeClasses($uriClass);
+        //filter
+        $tabProperties = $this->trFilterProperties($tp);
+
         //put the two arrays in one.
         $tabAll["propertiesList"] = $tabProperties;
         $tabAll["rangeClassesList"] = $tabRangeClasses;
+
+
 
         return $tabAll;
     }
