@@ -193,15 +193,15 @@ class importLog {
 
 }
 //CREATE THE DOM
-//$logDom = new DOMDocument();
-////get the path of the xml result from delivery SERVICE
-//$xmlPath = urldecode($_GET['resultxml']);
-//$logDom->load($xmlPath);
-//
-//unset($_GET['resultxml']);
-//
-////$logDom->load(inputFile);
-////add to result
-//$p = new importLog($logDom);
+$logDom = new DOMDocument();
+//get the path of the xml result from delivery SERVICE
+$xmlPath = $_GET['resultxml'];
+$logDom->load($xmlPath);
+
+unset($_GET['resultxml']);
+
+//$logDom->load(inputFile);
+//add to result
+$p = new importLog($logDom);
 
 ?>
