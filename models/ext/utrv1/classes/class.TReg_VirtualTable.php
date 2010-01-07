@@ -101,6 +101,22 @@ class TReg_VirtualTable extends RegCommon {
     // section 10-13-1--65--30cc15d0:1250bc77bd0:-8000:0000000000001019 end
     }
 
+    /*
+     * Delet Row an instance
+     *
+     */
+    public function trDeleteRow($uriInstance) {
+        unset($_SESSION['instances'][$uriInstance]);
+
+    }
+    public function trDeleteListRows($listRows) {
+    //delete all the rows
+        foreach($listRows as $uriInstance) {
+            $this->trDeleteRow($uriInstance);
+        }
+
+    }
+
     /**
      * Short description of method generatePreview
      *
@@ -114,17 +130,17 @@ class TReg_VirtualTable extends RegCommon {
         $table = $_SESSION["utrModel"];
         unset($table[$columnId]);
         $_SESSION["utrModel"]=$table;
-        
-       
+
+
     }
 
     //this method provides the final table model with all the values in order to be used by cleint side to preview it
-    //on bases on utrModel, that containes the model of the columns model, 
+    //on bases on utrModel, that containes the model of the columns model,
     //result we provide 3 tables :
-        //$tableF['rowsHTML']= $rowsHTML;//to facilitate the html table generation
-        //$tableF['utrModel']= $table;//the real model of the table, more scientists
-        //$tableF['rowsInfo']=$rowsInfo;
-    
+    //$tableF['rowsHTML']= $rowsHTML;//to facilitate the html table generation
+    //$tableF['utrModel']= $table;//the real model of the table, more scientists
+    //$tableF['rowsInfo']=$rowsInfo;
+
     public function generatePreview() {
     // section 10-13-1--65--30cc15d0:1250bc77bd0:-8000:0000000000001023 begin
         $table = $_SESSION['utrModel'];
@@ -190,14 +206,14 @@ class TReg_VirtualTable extends RegCommon {
     //get the initial list of instances, in the actual version, we get all the instances of a class
     public function trGetInstances() {
 
-//        $uriClass = studentUri;
-//        $trClass = new core_kernel_classes_Class($uriClass);
-//        $listInstances = $trClass->getInstances();
-//        $tab = array();
-//        foreach ($listInstances as $uri=>$obj) {
-//            $tab[$uri]=$obj;
-//        }
-//        return $tab;
+    //        $uriClass = studentUri;
+    //        $trClass = new core_kernel_classes_Class($uriClass);
+    //        $listInstances = $trClass->getInstances();
+    //        $tab = array();
+    //        foreach ($listInstances as $uri=>$obj) {
+    //            $tab[$uri]=$obj;
+    //        }
+    //        return $tab;
 
         $tabUri= $_SESSION['instances'];
         return $tabUri;
@@ -296,7 +312,7 @@ class TReg_VirtualTable extends RegCommon {
             $t= $p->getClassesOfinstances($uriInstance);
             echo json_encode($t);
         }
-//
+        //
         if ($_POST['op']=='getProperties') {
 
             $p = new TReg_VirtualTable();
@@ -304,7 +320,7 @@ class TReg_VirtualTable extends RegCommon {
             $t= $p->trGetProperties($_POST['uriClass']);
             echo json_encode($t);
         }
-//
+        //
         if ($_POST['op']=='getRangeClasses') {
             $p= new TReg_VirtualTable();
             $t = $p->trGetRangeClasses($_POST['uriClass']);
@@ -335,7 +351,7 @@ class TReg_VirtualTable extends RegCommon {
 
             echo json_encode($t);
         }
-//
+        //
         //add column the utrModel
         if ($_POST['op']=='deleteColumn') {
         //get column description
@@ -349,12 +365,25 @@ class TReg_VirtualTable extends RegCommon {
 
             echo json_encode($t);
         }
+        //delete a list of rows
+        if ( $_POST['op'] == 'deleteListRows') {
+        //get the list of rows as string
+            $lr = $_POST['listRowsToDelete'];
+            //create the tab
+            $ListRows = explode('|',$lr);
+            //delete the rows
+            $this->trDeleteListRows($ListRows);
 
+            $t = $this->generatePreview();
+            echo json_encode($t);
 
+        }
 
     }
 
-} 
+
+}
+
 $p= new TReg_VirtualTable();
 $p->dispatch();
 ////$t=$p->getInstances();

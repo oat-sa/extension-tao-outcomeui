@@ -433,7 +433,7 @@ function previewTable(table){
 
         //generate the html tag for table
         strTR = '';//initialize the row
-        strTD = '<td class="statRow">'+pourcentageRow+'</td>';//initialize the cell
+        strTD = '<td class="statRow"> <input class = "statCheck" type="checkbox" name="rowCheck" value="'+uri+'" >'+pourcentageRow+'</input> </td>';//initialize the cell
         //build the data of the row, a set of cells
         for ( i in rowHTML){
             var cellValue = '<pre>'+rowHTML[i]+'</pre>';//
@@ -506,6 +506,49 @@ function showColumnInfo(colId){
 
 }
 
+//delete the list of rows chosed bu the user
+//
+function deleteListRows(){
+    //get the list of selected rows, from the vlaue attribut of rowStat class
+    var listRows =[];
+    var listRowsString = '';
+    //get only the selected row 
+    $(".statCheck:checked").each(function(){
+        //if ($(this).attr("checked")=)
+        codeRow = $(this).attr("value");
+
+        listRows.push(codeRow);
+        
+    });
+    listRowsString = listRows.join('|');
+
+    //using ajax, send thelist to delete
+
+    options={
+        type: "POST",
+        url: "../classes/class.TReg_VirtualTable.php",
+        data: {
+            op:"deleteListRows",
+            listRowsToDelete: listRowsString
+
+        },
+        dataType:"json",
+        success: function(msg){
+            //get the new UTR table
+            actualUTR = msg;
+            previewTable(msg);
+            //close the window
+            //$("#propertyBinding").hide();
+            utrIntro();
+
+        }
+
+
+    };
+    $.ajax(options);
+
+}
+
 //manage the event of the index page
 function manageEvents(){
     //alert ("manage");
@@ -539,7 +582,7 @@ function manageEvents(){
     });
     $("#columnBuilder").click(function(){
         //show the path bulder div
-        $("#divPathWizard").show(speed);
+        $("#divPathWizard").show(speed*2);
 
         getRootClassesOfInstances();
 
@@ -559,6 +602,11 @@ function manageEvents(){
 
 
     });
+
+    //Manage delete row
+    $("#deleteListRows").click(deleteListRows);
+
+
 }
 function utrConstructor(){
     $(function(){

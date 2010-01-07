@@ -16,22 +16,20 @@ and open the template in the editor.
         <link rel="stylesheet" type="text/css" href="cssfiles/default/basic.css">
     </head>
     <body>
+        <div id="utrDiv" >
         <div id="divPathWizard" class="divstandard">
-            <input class="closePathBuilder" id="closePathBuilder" type="button" value="Close Column Builder" /></input>
-            <h1> Choose the class, and select the property </h1>
-            <div id="menuPathBuilder"><br>
-                <input class="btn" id="remove" type="button" value="remove Template" /></input>
-                <input id="getInitialInstances" type="button" value="Get Initial Instance" /></input>
-                <input id="getRootClasses" title="Get root classes" type="button" value="Get Root Classes" /></input>
+            <div id="menuPathWizard">
+            <input class="closePathBuilder" id="closePathBuilder" type="button" value="Close Column Builder"> </input>
             </div>
-
-            <div id="divInitialInstances" class="divlistInstances">
-            </div>
+            
+            
 
             <div id="classesDiv">
                 <div id="contextClassHeader" class="boxHeader">
+
                     <input id="backClass" type="button" value="Back" name="backClass"/>
                     <h1>Classe</h1>
+
 
                 </div>
                 <div id="contextClasses" class="contextClassesStyle">
@@ -83,12 +81,13 @@ and open the template in the editor.
             <input id="exitAddColumn" type="button" value="Exit" />
         </div>
 
-        <div id="utrDiv" >
+        
             <div id="utrmenu">
                 <input id="columnBuilder" type="submit" value="Add Column Wizard..." />
+                <input id="deleteListRows" type="submit" value="Delete Rows" />
 
 
-                
+
             </div>
 
             <table id="UTR" border="1">
@@ -97,23 +96,11 @@ and open the template in the editor.
                         <th>Column...</th>
 
 
-
-
                     </tr>
 
                 </thead>
                 <tbody id="utrBody" >
-                    <tr>
-                        <td>...</td>
-                    </tr><tr>
-                        <td>...</td>
-                    </tr><tr>
-                        <td>...</td>
-                    </tr><tr>
-                        <td>...</td>
-                    </tr><tr>
-                        <td>...</td>
-                    </tr>
+                    
 
 
                 </tbody>
