@@ -119,63 +119,6 @@ class taoResults_models_classes_ResultsService
     }
 
     /**
-     * get a list of results
-     *
-     * @access public
-     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
-     * @param  array options
-     * @return core_kernel_classes_ContainerCollection
-     */
-    public function getResults($options)
-    {
-        $returnValue = null;
-
-        // section 10-13-1-45-792423e0:12398d13f24:-8000:00000000000017CB begin
-		
-		if(is_null($clazz)){
-			$clazz = $this->resultClass;
-		}
-		
-		//verify the class type
-		if( $clazz->uriResource != $this->resultClass->uriResource ){
-			if( ! $clazz->isSubClassOf($this->resultClass) ){
-				throw new Exception("your clazz argument must referr to a Result or Result's subclass in your ontology ");
-			}
-		}
-		
-		$instances = $clazz->getInstances();
-		if($instances->count() > 0){
-			
-			//paginate options
-			//@todo implements
-			if(count($options) > 0){
-			
-				$sequence = $instances->sequence;
-				
-				if(isset($options['order'])){
-					//order sequence by $options['order']
-				}
-				if(isset($options['start'])){
-					//return sequence from $options['start'] index
-				}
-				if(isset($options['offset'])){
-					//return  $options['offset'] elements of the sequence
-				}
-			
-				$returnValue = new core_kernel_classes_ContainerCollection(new core_kernel_classes_Container(__METHOD__),__METHOD__);
-				$returnValue->sequence = $sequence;
-			}
-			else{
-				$returnValue = $instances;
-			}
-		}
-		
-        // section 10-13-1-45-792423e0:12398d13f24:-8000:00000000000017CB end
-
-        return $returnValue;
-    }
-
-    /**
      * get a result subclass by uri. 
      * If the uri is not set, it returns the  result class (the top level class.
      * If the uri don't reference a  result subclass, it returns null
