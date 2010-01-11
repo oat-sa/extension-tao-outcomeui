@@ -16,7 +16,7 @@ require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
 define ("CLASS_TEST",'TEST');
 define ("ID_TEST",'ID_TEST');
 
-define ("RESULT_NS",'http://127.0.0.1/middleware/demo.rdf#');
+//define ("$RESULT_NS",'http://127.0.0.1/middleware/demo.rdf#');
 define ('RESULT_MODEL',$_SERVER['DOCUMENT_ROOT'].'/taoResults/models/ext/utrv1/classes/model.xml');
 
 //
@@ -36,6 +36,10 @@ class ResultModelBuilder {
         define('API_LOGIN','generis');
         define('API_PASSWORD',md5('g3n3r1s'));
         core_control_FrontController::connect(API_LOGIN, API_PASSWORD, DATABASE_NAME);
+
+        //Get the NameSpace of in order to add the instances
+        $RESULT_NS = core_kernel_classes_Session::getNameSpace();
+        $RESULT_NS = $RESULT_NS.'#';
 
         $listClasses = $domResult->getElementsByTagName("class");
 
@@ -73,22 +77,22 @@ class ResultModelBuilder {
         }
         //add range properties
 
-        $prop = new core_kernel_classes_Property(RESULT_NS."CITEM");
-        $class = new core_kernel_classes_Class(RESULT_NS."CITEM_CLASS");
+        $prop = new core_kernel_classes_Property($RESULT_NS."CITEM");
+        $class = new core_kernel_classes_Class($RESULT_NS."CITEM_CLASS");
         $prop->setRange($class);
 
-        $prop = new core_kernel_classes_Property(RESULT_NS."ITEMBEHAVIOR");
-        $class = new core_kernel_classes_Class(RESULT_NS."ITEMBEHAVIOR_CLASS");
+        $prop = new core_kernel_classes_Property($RESULT_NS."ITEMBEHAVIOR");
+        $class = new core_kernel_classes_Class($RESULT_NS."ITEMBEHAVIOR_CLASS");
         $prop->setRange($class);
 
         //for subject antd other classes
-        $prop = new core_kernel_classes_Property(RESULT_NS."SUBJECT_ID");
+        $prop = new core_kernel_classes_Property($RESULT_NS."SUBJECT_ID");
         $class = new core_kernel_classes_Class(TAO_SUBJECT_CLASS);
 
         $prop->setRange($class);
 
 
-        $prop = new core_kernel_classes_Property(RESULT_NS."ID_TEST");
+        $prop = new core_kernel_classes_Property($RESULT_NS."ID_TEST");
         $class = new core_kernel_classes_Class(TAO_TEST_CLASS);
         $prop->setRange($class);
 

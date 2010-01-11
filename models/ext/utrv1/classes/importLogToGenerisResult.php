@@ -5,15 +5,12 @@
 // 
 
 
-//tester un peu le import selon le xpath
-define ('inputFile','test1.xml');
-
 //require_once($_SERVER['DOCUMENT_ROOT'].'/taoResults/models/ext/utrv1/classes/RegCommon.php');
 
 require_once($_SERVER['DOCUMENT_ROOT']."/generis/common/inc.extension.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
-//define ("RESULT_NS",'http://www.tao.lu/Ontologies/TAOResult.rdf#');
-define ("RESULT_NS",'http://127.0.0.1/middleware/demo.rdf#');
+//define ("$RESULT_NS",'http://www.tao.lu/Ontologies/TAOResult.rdf#');
+//define ("$RESULT_NS",'http://127.0.0.1/middleware/demo.rdf#');
 
 //
 class importLog {
@@ -21,6 +18,10 @@ class importLog {
     public $resultDom;
 
     public function __construct($domSom) {//our dev teame Som
+        //get the name space
+
+
+
         $logDom = new DOMDocument();
         //$logDom->load(inputFile);
         $logDom = $domSom;
@@ -42,6 +43,9 @@ class importLog {
         define('API_LOGIN','generis');
         define('API_PASSWORD',md5('g3n3r1s'));
         core_control_FrontController::connect(API_LOGIN, API_PASSWORD, DATABASE_NAME);
+        //Get the NameSpace of in order to add the instances
+        $RESULT_NS = core_kernel_classes_Session::getNameSpace();
+        $RESULT_NS = $RESULT_NS.'#';
 
         //Get test attribute value
         $testDom= $dom->getElementsByTagName("TEST")->item(0);
@@ -67,30 +71,30 @@ class importLog {
 
         //Create instance and property values
 
-        $class = new core_kernel_classes_Class(RESULT_NS."TEST_CLASS");
+        $class = new core_kernel_classes_Class($RESULT_NS."TEST_CLASS");
         $instanceTest = $class->createInstance("Test...");
         //put property values /**** test with 3 properties only
 
-        $propTest = new core_kernel_classes_Property(RESULT_NS."ID_TEST");
+        $propTest = new core_kernel_classes_Property($RESULT_NS."ID_TEST");
         $instanceTest->setPropertyValue($propTest,$ID_TEST );
 
-        $propTest = new core_kernel_classes_Property(RESULT_NS."LABEL_TEST");
+        $propTest = new core_kernel_classes_Property($RESULT_NS."LABEL_TEST");
         $instanceTest->setPropertyValue($propTest,$LABEL_TEST );
         
-        $propTest = new core_kernel_classes_Property(RESULT_NS."HASSCORINGMETHOD_NAME");
+        $propTest = new core_kernel_classes_Property($RESULT_NS."HASSCORINGMETHOD_NAME");
         $instanceTest->setPropertyValue($propTest,$HASSCORINGMETHOD_NAME );
 
-        $propTest = new core_kernel_classes_Property(RESULT_NS."SCORE_VALUE");
+        $propTest = new core_kernel_classes_Property($RESULT_NS."SCORE_VALUE");
         $instanceTest->setPropertyValue($propTest,$SCORE_VALUE );
 
-        $propTest = new core_kernel_classes_Property(RESULT_NS."CUMULMODEL_NAME");
+        $propTest = new core_kernel_classes_Property($RESULT_NS."CUMULMODEL_NAME");
         $instanceTest->setPropertyValue($propTest,$CUMULMODEL_NAME );
 
 
-        $propTest = new core_kernel_classes_Property(RESULT_NS."SUBJECT_ID");
+        $propTest = new core_kernel_classes_Property($RESULT_NS."SUBJECT_ID");
         $instanceTest->setPropertyValue($propTest,$SUBJECT_ID );
 
-        $propTest = new core_kernel_classes_Property(RESULT_NS."SUBJECT_LABEL");
+        $propTest = new core_kernel_classes_Property($RESULT_NS."SUBJECT_LABEL");
         $instanceTest->setPropertyValue($propTest,$SUBJECT_LABEL );
         //TODO ADD TESTBEHAVIOR
 
@@ -120,33 +124,33 @@ class importLog {
             //*****************************************************
 
             //Create instance of Citem
-            $class = new core_kernel_classes_Class(RESULT_NS."CITEM_CLASS");
+            $class = new core_kernel_classes_Class($RESULT_NS."CITEM_CLASS");
             $instanceCitem = $class->createInstance("Test of CITEM");
             //put property values /**** test with 3 properties only
 
-            $propCitem = new core_kernel_classes_Property(RESULT_NS."WEIGHT");
+            $propCitem = new core_kernel_classes_Property($RESULT_NS."WEIGHT");
             $instanceCitem->setPropertyValue($propCitem,$WEIGHT );
 
-            $propCitem = new core_kernel_classes_Property(RESULT_NS."MODEL");
+            $propCitem = new core_kernel_classes_Property($RESULT_NS."MODEL");
             $instanceCitem->setPropertyValue($propCitem,$MODEL );
 
-            $propCitem = new core_kernel_classes_Property(RESULT_NS."DEFINITIONFILE");
+            $propCitem = new core_kernel_classes_Property($RESULT_NS."DEFINITIONFILE");
             $instanceCitem->setPropertyValue($propCitem,$DEFINITIONFILE );
             
 
-            $propCitem = new core_kernel_classes_Property(RESULT_NS."SEQUENCE");
+            $propCitem = new core_kernel_classes_Property($RESULT_NS."SEQUENCE");
             $instanceCitem->setPropertyValue($propCitem,$SEQUENCE );
 
-            $propCitem = new core_kernel_classes_Property(RESULT_NS."ENDORSMENT");
+            $propCitem = new core_kernel_classes_Property($RESULT_NS."ENDORSMENT");
             $instanceCitem->setPropertyValue($propCitem,$ENDORSMENT );
 
-            $propCitem = new core_kernel_classes_Property(RESULT_NS."ITEMUSAGE");
+            $propCitem = new core_kernel_classes_Property($RESULT_NS."ITEMUSAGE");
             $instanceCitem->setPropertyValue($propCitem,$ITEMUSAGE );
 
 
             //*** The rage value of Test Instance/ THE Citem property
             $CITEM = $instanceCitem->uriResource;
-            $propTest = new core_kernel_classes_Property(RESULT_NS."CITEM");
+            $propTest = new core_kernel_classes_Property($RESULT_NS."CITEM");
             $instanceTest->setPropertyValue($propTest,$CITEM );
 
             //echo "<br>".$WEIGHT."- ".$DEFINITIONFILE. " - ".$SEQUENCE;
@@ -161,17 +165,17 @@ class importLog {
 
                 //Create Instances of itemBehavior
                 //Create instance of citem
-                $class = new core_kernel_classes_Class(RESULT_NS."ITEMBEHAVIOR_CLASS");
+                $class = new core_kernel_classes_Class($RESULT_NS."ITEMBEHAVIOR_CLASS");
                 $instanceIB = $class->createInstance("test of ItemBehavior");
 
-                $propIB = new core_kernel_classes_Property(RESULT_NS."LISTENERNAME");
+                $propIB = new core_kernel_classes_Property($RESULT_NS."LISTENERNAME");
                 $instanceIB->setPropertyValue($propIB,$LISTENERNAME );
 
-                $propIB = new core_kernel_classes_Property(RESULT_NS."LISTENERVALUE");
+                $propIB = new core_kernel_classes_Property($RESULT_NS."LISTENERVALUE");
                 $instanceIB->setPropertyValue($propIB,$LISTENERVALUE );
                 //The range of Citem instance / The ITEMBEHAVIOR
                 $ITEMBEHAVIOR = $instanceIB->uriResource;
-                $propCitem = new core_kernel_classes_Property(RESULT_NS."ITEMBEHAVIOR");
+                $propCitem = new core_kernel_classes_Property($RESULT_NS."ITEMBEHAVIOR");
                 $instanceCitem->setPropertyValue($propCitem,$ITEMBEHAVIOR );
 
 
@@ -202,6 +206,8 @@ unset($_GET['resultxml']);
 
 //$logDom->load(inputFile);
 //add to result
+
 $p = new importLog($logDom);
+
 
 ?>
