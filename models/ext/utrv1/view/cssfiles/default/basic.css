@@ -104,6 +104,7 @@ root {
     
     
 }
+/* The heeader of the tw boxes  */
 div.boxHeader{
     position:relative;
     
@@ -130,6 +131,7 @@ h1 {
     margin-top: 0;
 }
 
+/*  the div tof the class container ( context  header) */
 #classesDiv{
 position:relative;
     float:left;
@@ -144,6 +146,8 @@ position:relative;
     border-width:1px;
 
 }
+
+/* the diw that contanes the classes */
 div.contextClassesStyle{
     position:relative;
     overflow:auto;
@@ -156,6 +160,7 @@ div.contextClassesStyle{
    /* border-style:none;
     border-width:0px;*/
 }
+/* the div that containes the properties of the class */
 div.contextPropertiesStyle{
     /*position:relative;*/
     float:right;
@@ -321,7 +326,7 @@ width: 100%;
 }
 
 #menuPathWizard{
-    background:#98C1F4 ;
+    background:#9BB7EA;/*#98C1F4 ;*/
 }
 
 #divPathWizard{
