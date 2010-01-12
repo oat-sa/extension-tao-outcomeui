@@ -324,6 +324,27 @@ function deleteColumn(colId){
         }//succes
     });
 }
+//Verification of the existance of the column name
+function verifyColumnLabel(colLabel){
+var exist = false;//if the label exists
+var actualModel = [];
+actualModel = actualUTR['utrModel'];//get only the utrModel of the whole utrTable
+
+var listNames = [];
+
+
+    if ( actualModel != undefined ){
+        if (actualModel[colLabel]!=undefined){
+            exist = true;
+        }
+
+    }else
+        {
+            exist = false;
+        }
+        return exist;
+        
+}
 
 //add a column to the virtual table on server by using Ajax
 function addColumn(){
@@ -331,6 +352,11 @@ function addColumn(){
     var cn = $("#columnName").val();
     var te = $("#typeExtraction").val();
     var pf = $("#finalPath").val();
+    //Verification of the existance of the column name
+    if (verifyColumnLabel(cn)==true ){
+        alert ('Name existes, can you modify the label of the colum...')
+
+    }else{
 
     // add the column on the server side, and preview the table after succes
     $.ajax({
@@ -353,14 +379,20 @@ function addColumn(){
         }//succes
     });
 
+    }//else
+    
+
 }
 // this method prewiews the table generated from the server side, according to the the interface technique. ( jgrid, slick, simple table)
 //
 //in the actual version we generate an HTML table, I hope to use in the furtur more sophistacted grid...jGrid, slick...
 function previewTable(table){
-    
+    //save the table in a global var
+    actualUTR = table;
+
+
     finalTable = new Array();
-    //get the tables
+    //get the 2 tables (Model + rowsHTML + rowsInfo)
     finalUtrModel = table.utrModel;//
 
     //use the rowsHTML to generate the body part of the table

@@ -39,36 +39,22 @@ tr:hover, tr.odd:hover {
 	background-color: #3d80df;
 	color: #ffffff;
 }
-caption {
-	height: 45px;
-	line-height: 44px;
-	color: #60634E;
-	font-weight: bold;
-	text-align: center;
-	width: 100%;
-	margin: 0;
-	padding: 0;
-	margin-left: -1px;
-	background: #ffffff url(captop.jpg) repeat-x;
-	background-position: 50% top;
-	border-left: 2px solid #616161;
-	border-right: 2px solid #616161;
-}
+
 thead th {
 	font-size: 105%;
 	color: #000;
 	background:gray url(tbar.gif) repeat-x;
 	height: 33px;
 }
-thead th:hover {
+/*thead th:hover {
 	background: #ffffff url(tbov.gif) repeat-x;
 
-}
+}*/
 tr {
 	vertical-align: top;
 }
 tr,th,td {
-	padding: .75em;
+	/*padding: .75em;*/
 }
 td pre {
     font-size:14;
@@ -79,6 +65,15 @@ td pre {
 
 root { 
     display: block;
+}
+#closePathBuilder{
+    background-image: url(no.png);
+    background-repeat: no-repeat;
+    background-color:transparent;
+    position:absolute;
+    right:0px;
+    /*button_cancel*/
+    
 }
 .divstandard{
     position:relative;
@@ -184,6 +179,7 @@ chrome title = #C3D9FF
     margin-top: 0;
 }*/
 #utrmenu{
+    position:relative;
     background-color: #C3D9FF;
 }
 #utrDiv{
@@ -313,7 +309,7 @@ width: 95%;
 .property:hover{
 background-image: url(folder_blue_open.png);
 background-repeat: no-repeat;
-background-color:orange;
+background-color:#E8EEF7;
 /*padding-top:128px;*/
 padding-left:35;
 text-align:left;
@@ -326,6 +322,8 @@ width: 100%;
 }
 
 #menuPathWizard{
+    position:relative;
+    height:29px;
     background:#9BB7EA;/*#98C1F4 ;*/
 }
 
@@ -365,7 +363,7 @@ width: 100%;
     border:1px solide black;
 }
 #backClass{
-  background-image: url(arrowturnleft.png);
+  background-image: url(undo.png);
   background-repeat: no-repeat;
   padding-left:14;
 }
