@@ -72,6 +72,8 @@ root {
     background-color:transparent;
     position:absolute;
     right:0px;
+    width:20px;
+    height:20px;
     /*button_cancel*/
     
 }
