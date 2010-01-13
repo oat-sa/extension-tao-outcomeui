@@ -1,20 +1,31 @@
 <?php
-/* 
- *Younes Djaghloul,CRP Henri Tudor, Luxembourg.
+/**
+ * RegCommon provides the common methods to acces generis API in more suitable
+ * in Table Builder context.
+ *
+ * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+ * @package Result
  */
-
-//This class provides the common services on generis API
-//old path
-//require('../../../../../generis/common/inc.extension.php');
-//require('../../../../includes/common.php');
 
 require_once($_SERVER['DOCUMENT_ROOT']."/generis/common/inc.extension.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
 
 
-
+/**
+ * RegCommon provides the common methods to acces generis API in more suitable
+ * in Table Builder context.
+ *
+ * @access public
+ * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+ * @package Result
+ */
 class RegCommon {
-//This method permits to connect to a specific module of generis.
+/**
+ * This method permits to connect to a specific module of generis.
+ *
+ * @access public
+ * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+ */
     public function regConnect() {
 
         $session = core_kernel_classes_Session::singleton();
@@ -39,30 +50,40 @@ class RegCommon {
         }
         return $connexion;*/
     }
-    //get the binding info of specific property
-
-    //Creates a n new instance for of the selected class, based on the dom of the Log
-
-    public function createResultFromLog($resultClass,$logDOM) {
-
-
-    }
-
-
-    //get the range of class
-    //student = http://127.0.0.1/middleware/hyperclass.rdf#121310317039702
-    // to obtain a PHP object linked to the generis class, based on its URI
+    /**
+     * to obtain a PHP object linked to the generis class, based on its URI
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param  String $uriClass
+     * @return java_lang_Object
+     */
     public function linkClass($uriClass) {
         $trClass = new core_kernel_classes_Class($uriClass);
         return $trClass;
     }
-    // to obtain a PHP object linked to the generis property, based on its URI
+    /**
+     * to obtain a PHP object linked to the generis property, based on its URI
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param  void $uriProperty
+     * @return void
+     */
     public function linkProperty($uriProperty) {
         $trProperty = new core_kernel_classes_Property($uriProperty);
         return $trProperty;
     }
 
-    //get the label,the uri of the range and the label of the range of a particular property
+    /**
+     * get the label,the uri of the range and the label of the range of a
+     * property
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param  String $uriProperty
+     * @return List
+     */
     function trGetPropertyInfo($uriProperty) {
         $trProperty = new core_kernel_classes_Property($uriProperty);
 
@@ -88,9 +109,15 @@ class RegCommon {
         return $prop;
     }
 
-    //get properties of a particular class, return an array of uri properties as key with property info
-    //Label + uriRange + labelRange)
-    //
+    /**
+     * get properties of a particular class, return an array of uri properties
+     * key with property info (Label + uriRange + labelRange)
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param  String $uriClass
+     * @return Collection
+     */
     public function trGetProperties ($uriClass) {
     //Link the class, and create a PHP object
         $trClass = $this->linkClass($uriClass);
@@ -124,10 +151,15 @@ class RegCommon {
         return $listPropertiesUri;
     }
 
-
-
-    //for a specific class, we get a list uf range classes,
-    //ex : for class Student we will have a list that contains , Teacher, School
+    /**
+     * For a specific class, we get a list uf range classes,
+     * ex : for class Student we will have a list that contains , Teacher,
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param  String $uriClass
+     * @return Collection
+     */
     public function trGetRangeClasses($uriClass) {
     //initialize the array of classes
         $lc = array();
@@ -161,24 +193,27 @@ class RegCommon {
             //put in the array
             //
             //Do a filter on class range in this version we delete all RDF classes and il uri is null ( This ocure some times !!!!)
-            
+
             if ((substr($uriRange,0,17) != 'http://www.w3.org') and ($uriRange!='')) {
-                
+
                 $lc[$uriRange] = $rangeClass;//->Label;
             }
 
         // }//end of adding class's info
         }
-
-
-
-
         return $lc;
     }
+    /**
+     * get  classes of the given inctance;
+     * The class of an instance is the value of RDF_TYPE of the instance.
+     * Return structure  : $classValuesUri[$classUri]
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param  String $uriInstance
+     * @return Collection
+     */
 
-    //get  classes of the given inctance;
-    //The class of an instance is the value of RDF_TYPE of the instance.
-    //Return structure  : $classValuesUri[$classUri]
     public function trGetClassesOfInstance($uriInstance) {
     //We begin by create a resource PHP object
         $trResource = new core_kernel_classes_Resource($uriInstance);
@@ -194,8 +229,15 @@ class RegCommon {
         //an instance can belong to several classes
         return $classValuesUri;
     }
-    //This method provides only a set of properties that are not in filter,
-    //It is important in the case of deleting all rdf properties
+    /**
+     * This method provides only a set of properties that are not in filter,
+     * It is important in the case of deleting all rdf properties
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param  List $listProperties
+     * @return List
+     */
     function trFilterProperties($listProperties) {
     //http://www.w3.org/2000/01/rdf-schema#isDefinedBy
     //If the name space of the property is http://www.w3.org/2000/01/rdf-schema#isDefinedBy
@@ -227,10 +269,16 @@ class RegCommon {
 
     }
 
-    //this method provides tow arrays,
-    //1- The array od properties with, public function trGetProperties ($uriClass)
-    //2- The array of classes range with public function trGetRangeClasses($uriClass)
-
+    /**
+     * This method provides tow arrays,
+     * 1- The array od properties with, public function trGetProperties
+     * 2- The array of classes range with public function
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param  String $uriClass
+     * @return Collection
+     */
 
     public function trGetPropertiesAndClassesRange($uriClass) {
 
@@ -248,7 +296,16 @@ class RegCommon {
         return $tabAll;
     }
 
-    //this method is the first invoked. according to a list of classes, it provies the first list of properties and rangeClasses
+    /**
+     * This method is the first invoked. according to a list of classes, it
+     * the first list of properties and rangeClasses
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param  Collection $arrayOfClasses
+     * @return Collection
+     */
+
     public function trExploreModel($arrayOfClasses) {
         $tabClass = $arrayOfClasses;
         $contextClass = array();
@@ -290,9 +347,16 @@ class RegCommon {
         $finalValue = $instanceUri;
         return $finalValue;
     }
-
-    //La fonction qui me fesait peur, le saut ou la jonction
-    //based on a path: a sequence of properties and the initial instance
+    /**
+     * Provides a value of a spécific property according to the path
+     * ( path: a sequence of properties and the initial instance)
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param  String $instanceSourceUri
+     * @param  String $pathOfProperties
+     * @return java_lang_String
+     */
     function trGetBridgePropertyValues($instanceSourceUri,$pathOfProperties) {
     //we begin by explode the path structure into an array
     //the path is created by the user with path builder in  the client side

@@ -6,17 +6,14 @@
 error_reporting(E_ALL);
 
 /**
- * untitledModel - class.TReg_VirtualTable.php
+ * this method intercept the request of the client and invoke the appropriate
+ * This class is responsible of creating the table according TAO model and the
+ * of the use
+ * It interacts with a client side by AJAX request and provides a json result to
+ * used by the client
  *
- * $Id$
- *
- * This file is part of untitledModel.
- *
- * Automatically generated on 19.11.2009, 11:13:13 with ArgoUML PHP module
- * (last revised $Date: 2008-04-19 08:22:08 +0200 (Sat, 19 Apr 2008) $)
- *
- * @author Younes Djaghloul
- * @version 0.1
+ * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+ * @package Result
  */
 
 if (0 > version_compare(PHP_VERSION, '5')) {
@@ -24,42 +21,31 @@ if (0 > version_compare(PHP_VERSION, '5')) {
 }
 
 /**
- * The column model of Treg extension
+ * RegCommon provides the common methods to acces generis API in more suitable
+ * in Table Builder context.
  *
- * @author Younes Djaghloul
- * @version 0.1
+ * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
  */
 require_once('RegCommon.php');
-//require_once('class.TReg_ColumnModel.php');
 
-/* user defined includes */
-// section 10-13-1--65-4655aef3:124e777cdc4:-8000:0000000000000FF2-includes begin
-// section 10-13-1--65-4655aef3:124e777cdc4:-8000:0000000000000FF2-includes end
-
-/* user defined constants */
-// section 10-13-1--65-4655aef3:124e777cdc4:-8000:0000000000000FF2-constants begin
-// section 10-13-1--65-4655aef3:124e777cdc4:-8000:0000000000000FF2-constants end
 
 /**
- * Short description of class TReg_VirtualTable
+ * this method intercept the request of the client and invoke the appropriate
+ * This class is responsible of creating the table according TAO model and the
+ * of the use
+ * It interacts with a client side by AJAX request and provides a json result to
+ * used by the client
  *
  * @access public
- * @author Younes Djaghloul
- * @version 0.1
+ * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+ * @package Result
  */
 class TReg_VirtualTable extends RegCommon {
 // --- ASSOCIATIONS ---
-// generateAssociationEnd : 
+
 
 // --- ATTRIBUTES ---
 
-/**
- * Short description of attribute listOfColomn
- *
- * @access public
- * @var TReg_ColumnModel
- */
-    public $listOfColomn = null;
 
     /**
      * Short description of attribute listOfInstance
@@ -76,39 +62,26 @@ class TReg_VirtualTable extends RegCommon {
     }
 
     /**
-     * Short description of method addColomn
+     * Delete a row from the utr Table based on its uri
      *
      * @access public
-     * @author firstname and lastname of author, <author@example.org>
-     * @param  TReg_ColumnModel colomn
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param  String $uriInstance
      * @return void
-     */
-    public function addColumn( TReg_ColumnModel $colomn) {
-    // section 10-13-1--65--30cc15d0:1250bc77bd0:-8000:0000000000001016 begin
-    // section 10-13-1--65--30cc15d0:1250bc77bd0:-8000:0000000000001016 end
-    }
-
-    /**
-     * Short description of method deleteColomn
-     *
-     * @access public
-     * @author firstname and lastname of author, <author@example.org>
-     * @param  void idColumn
-     * @return void
-     */
-    public function deleteColomn( void $idColumn) {
-    // section 10-13-1--65--30cc15d0:1250bc77bd0:-8000:0000000000001019 begin
-    // section 10-13-1--65--30cc15d0:1250bc77bd0:-8000:0000000000001019 end
-    }
-
-    /*
-     * Delet Row an instance
-     *
      */
     public function trDeleteRow($uriInstance) {
         unset($_SESSION['instances'][$uriInstance]);
 
     }
+    /**
+     * Delete a list  of rows from the utr Table based, it uses the trDeleteRow() method
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param  void $uriInstance
+     * @return void
+     */
+
     public function trDeleteListRows($listRows) {
     //delete all the rows
         foreach($listRows as $uriInstance) {
@@ -118,28 +91,33 @@ class TReg_VirtualTable extends RegCommon {
     }
 
     /**
-     * Short description of method generatePreview
+     * Delete the column, acording to its ID
      *
      * @access public
-     * @author firstname and lastname of author, <author@example.org>
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param  String $columnId
      * @return void
      */
-
-    //delete the colum, acording to its ID
     public function YdeleteColumn($columnId) {
         $table = $_SESSION["utrModel"];
         unset($table[$columnId]);
         $_SESSION["utrModel"]=$table;
 
-
     }
 
-    //this method provides the final table model with all the values in order to be used by cleint side to preview it
-    //on bases on utrModel, that containes the model of the columns model,
-    //result we provide 3 tables :
-    //$tableF['rowsHTML']= $rowsHTML;//to facilitate the html table generation
-    //$tableF['utrModel']= $table;//the real model of the table, more scientists
-    //$tableF['rowsInfo']=$rowsInfo;
+    /**
+     * this method provides the final table model with all the values in order
+     * be used by cleint side to preview it on bases on utrModel, that containes
+     * model of the columns model,
+     * result we provide 3 tables :
+     * //$tableF['rowsHTML']= $rowsHTML;//to facilitate the html table
+     * //$tableF['utrModel']= $table;//the real model of the table, more
+     *         //$tableF['rowsInfo']=$rowsInfo;
+     *
+     * @access private
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @return java_util_Collection
+     */
 
     public function generatePreview() {
     // section 10-13-1--65--30cc15d0:1250bc77bd0:-8000:0000000000001023 begin
@@ -203,24 +181,31 @@ class TReg_VirtualTable extends RegCommon {
     // section 10-13-1--65--30cc15d0:1250bc77bd0:-8000:0000000000001023 end
     }
 
-    //get the initial list of instances, in the actual version, we get all the instances of a class
+    /**
+     * get the initial list of instances, in the actual version, we get all the
+     * of a class
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @return java_util_Collection
+     */
     public function trGetInstances() {
 
-    //        $uriClass = studentUri;
-    //        $trClass = new core_kernel_classes_Class($uriClass);
-    //        $listInstances = $trClass->getInstances();
-    //        $tab = array();
-    //        foreach ($listInstances as $uri=>$obj) {
-    //            $tab[$uri]=$obj;
-    //        }
-    //        return $tab;
+    
 
         $tabUri= $_SESSION['instances'];
         return $tabUri;
 
     }
-    //get the list of classes of the initial instances
-    //Result : $tclass['uriClass']=$uri; $tclass['label']=$labelclass;
+    /**
+     * Get the list of classes of the initial instances
+     * Result : $tclass['uriClass']=$uri; $tclass['label']=$labelclass;
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param  String $uriInstance
+     * @return java_util_Collection
+     */
     public function getClassesOfinstances($uriInstance) {
         $t=$uriInstance;//$this->getInstances();
         $rc = new RegCommon();
@@ -248,7 +233,14 @@ class TReg_VirtualTable extends RegCommon {
         return $tab;
     }
 
-    //addColumn adds a column with all informations to the list of colomns
+    /**
+     * adds a column with all informations to the list of columns
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param  Collection $columnDescription
+     * @return void
+     */
     public function YaddColumn($columnDescription) {
         $desc = $columnDescription;
         $columnList = $_SESSION['utrModel'];
@@ -257,8 +249,16 @@ class TReg_VirtualTable extends RegCommon {
         $_SESSION['utrModel']=$columnList;
     }
 
-    //Gives more information about statistic of the column
-    //number of rows, nomber of not null value in the column
+    /**
+     * Gives more information about statistic of the column
+     * number of rows, nomber of not null value in the column
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param  Collection $table
+     * @param  String $columnId
+     * @return java_util_Collection
+     */
 
     public function getStatOnColomn($table,$columnId) {
         $rowsOfColumn = $table[$columnId]['rowsColumn'];
@@ -277,7 +277,15 @@ class TReg_VirtualTable extends RegCommon {
         return $stat;
     }
 
-    //Gives more information about a row, the row id is the uri
+    /**
+     * Gives more information about a row, the row id is the uri
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param  Collection $table
+     * @param  String $rowId
+     * @return java_util_Collection
+     */
     public function getStatOnRows($table, $rowId) {
     //Get the list of columns in the row, to claculate the number of columns
     //and the number of columns not null
@@ -297,7 +305,14 @@ class TReg_VirtualTable extends RegCommon {
 
     }
 
-    //this method intercept sthe request of client and invok the appropriate methode
+    /**
+     * this method intercept the request of the client (ajax) and invoke the
+     * method
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @return void
+     */
     public function dispatch() {
 
         if ($_POST['op']=='listInstances') {
