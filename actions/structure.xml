@@ -17,7 +17,7 @@
 				<action name="new class" js="subClass" url="/taoResults/Results/addResultClass" context="class" />
 				<action name="new result" js="instanciate" url="/taoResults/Results/addResult" context="class" />
 				<action name="delete" js="removeNode" url="/taoResults/Results/delete" context="resource" />
-				<action name="duplicate" js="cloneNode" url="/taoResults/Results/cloneResult" context="instance" />
+				<action name="duplicate" js="duplicateNode" url="/taoResults/Results/cloneResult" context="instance" />
 				<action name="edit result" url="/taoResults/Results/editResult" context="instance" />
 				<action name="new property" js="addProperty" url="/taoResults/Results/addClassProperty" context="class" />
 				<action name="create table" js="resultTable" url="/taoResults/Results/createTable"  context="class" />
