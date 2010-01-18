@@ -1,21 +1,38 @@
 <?php
-/* 
- * 
+/**
+ * Permits to add a new intance in the result class and subclass ACCORDING TO
+ * RESULT FILE SUBMITED AFTER THE TEST
+ *
+ * @author Younes Djaghloul, CRP Henri Tudor
+ * @package Result
  */
-// 
 
 
-//require_once($_SERVER['DOCUMENT_ROOT'].'/taoResults/models/ext/utrv1/classes/RegCommon.php');
 
 require_once($_SERVER['DOCUMENT_ROOT']."/generis/common/inc.extension.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
-//define ("$RESULT_NS",'http://www.tao.lu/Ontologies/TAOResult.rdf#');
-//define ("$RESULT_NS",'http://127.0.0.1/middleware/demo.rdf#');
+/**
+ * Permits to add a new intance in the result class and subclass ACCORDING TO
+ * RESULT FILE SUBMITED AFTER THE TEST
+ *
+ * @access public
+ * @author Younes Djaghloul, CRP Henri Tudor
+ * @package Result
+ */
 
-//
-class importLog {
-    public $domRusult;
+class ImportLogToGenerisResult {
+    public $domResult;
     public $resultDom;
+
+     /**
+     * Based on the dom, this method invokes thecreateResultInstance to create a
+     * instance of the class Result and its sub class
+     *
+     * @access public
+     * @author Younes Djaghloul, CRP Henri Tudor
+     * @param  Object $domSom
+     * @return String
+     */
 
     public function __construct($domSom) {//our dev teame Som
         //get the name space
@@ -36,7 +53,14 @@ class importLog {
     
 
 
-    //The bigest method, to create the whole instances of all classes in the result model
+    /**
+     * adds the instance of result according to the dom of the result
+     *
+     * @access public
+     * @author firstname and lastname of author, <author@example.org>
+     * @return void
+     */
+
     public function createResultInstance() {
         $dom = $this->resultDom;
         //explecit connect to generis with black door hhhhh
@@ -204,10 +228,8 @@ $logDom->load($xmlPath);
 
 unset($_GET['resultxml']);
 
-//$logDom->load(inputFile);
-//add to result
 
-$p = new importLog($logDom);
+$p = new importLogToGenerisResult($logDom);
 
 
 ?>

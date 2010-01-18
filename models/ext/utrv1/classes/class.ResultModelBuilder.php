@@ -2,7 +2,13 @@
 /* 
  * 
  */
-
+/**
+ * create class with all properties that are included in the paramaters.
+ * This class is used only in the first time or to re-create the result model.
+ *
+ * @author Younes Djaghloul, CRP Henri Tudor
+ * @package Result
+ */
 
 
 //tester un peu le import selon le xpath
@@ -19,15 +25,26 @@ define ("ID_TEST",'ID_TEST');
 //define ("$RESULT_NS",'http://127.0.0.1/middleware/demo.rdf#');
 define ('RESULT_MODEL',$_SERVER['DOCUMENT_ROOT'].'/taoResults/models/ext/utrv1/classes/model.xml');
 
-//
-//This class build the result model, by creatin the differents classes abd properties,
-//to have the name space of the uri, we can cretae a FASTOCHE resource, get its uri and get also, the name space delimited by #
-//name space#uriuri
+
+/**
+ * create class with all properties that are included in the paramaters.
+ * This class is used only in the first time or to re-create the result model.
+ *
+ * @access public
+ * @author Younes Djaghloul, CRP Henri Tudor
+ * @package Result
+ */
 
 class ResultModelBuilder {
-//create class with all properties that are included in the paramaters
-    public $uriRootClassOfResult ="http://www.tao.lu/Ontologies/TAOResult.rdf#Result";
 
+    public $uriRootClassOfResult ="http://www.tao.lu/Ontologies/TAOResult.rdf#Result";
+    /**
+     * Based on a specific model in xml file, this method creat the model of
+     *
+     * @access public
+     * @author Younes Djaghloul, CRP Henri Tudor
+     * @return void
+     */
     public function createModel() {
         $domResult = new DOMDocument();
         $domResult->load(RESULT_MODEL);
@@ -99,6 +116,19 @@ class ResultModelBuilder {
 
 
     }
+    /**
+     * Creates a class with all its properties and integrate them in TAO as
+     * of a root class that can be chosen.
+     *
+     * @access public
+     * @author Younes Djaghloul, CRP Henri Tudor
+     * @param  String $uriRootClass
+     * @param  String $uriClass
+     * @param  String $labelClass
+     * @param  String $commentClass
+     * @param  Collection $tabProperties
+     * @return void
+     */
 
     public function createClassWithProperties($uriRootClass,$uriClass,$labelClass,$commentClass,$tabProperties) {
     //        $r = new RegCommon();
