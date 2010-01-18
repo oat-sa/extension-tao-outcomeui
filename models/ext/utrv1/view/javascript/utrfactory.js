@@ -32,6 +32,8 @@ var historyAction = new Array();
 
 //Visual intro
 function utrIntro(){
+   
+    historyAction = new Array();//Reset history of actions
     pathProperties = new Array();
     $("#divInitialInstances").html("");
     $("#contextClasses").html("");
@@ -326,11 +328,11 @@ function deleteColumn(colId){
 }
 //Verification of the existance of the column name
 function verifyColumnLabel(colLabel){
-var exist = false;//if the label exists
-var actualModel = [];
-actualModel = actualUTR['utrModel'];//get only the utrModel of the whole utrTable
+    var exist = false;//if the label exists
+    var actualModel = [];
+    actualModel = actualUTR['utrModel'];//get only the utrModel of the whole utrTable
 
-var listNames = [];
+    var listNames = [];
 
 
     if ( actualModel != undefined ){
@@ -339,10 +341,10 @@ var listNames = [];
         }
 
     }else
-        {
-            exist = false;
-        }
-        return exist;
+    {
+        exist = false;
+    }
+    return exist;
         
 }
 
@@ -358,26 +360,26 @@ function addColumn(){
 
     }else{
 
-    // add the column on the server side, and preview the table after succes
-    $.ajax({
-        type: "POST",
-        url: "../classes/class.TReg_VirtualTable.php",
-        data: {
-            op:"addColumn",
-            columnName:cn,
-            typeExtraction:te,
-            finalPath:pf
-        },
-        dataType :"json",
-        success: function(msg){
-            actualUTR = msg;
-            previewTable(msg);
-            //close the window
-            //$("#propertyBinding").hide();
-            utrIntro();
+        // add the column on the server side, and preview the table after succes
+        $.ajax({
+            type: "POST",
+            url: "../classes/class.TReg_VirtualTable.php",
+            data: {
+                op:"addColumn",
+                columnName:cn,
+                typeExtraction:te,
+                finalPath:pf
+            },
+            dataType :"json",
+            success: function(msg){
+                actualUTR = msg;
+                previewTable(msg);
+                //close the window
+                //$("#propertyBinding").hide();
+                utrIntro();
 
-        }//succes
-    });
+            }//succes
+        });
 
     }//else
     
@@ -601,7 +603,7 @@ function manageEvents(){
     $("#addColumn").click(addColumn);
     $("#exitAddColumn").click(function(){
         $("#propertyBinding").fadeOut(speed*2);
-        //vider le path
+        //delete the last property in the path
         pathProperties.pop();
     });
     //delete column
@@ -613,6 +615,11 @@ function manageEvents(){
         deleteColumn(colId);
     });
     $("#columnBuilder").click(function(){
+        //reset patth and history of actions
+        historyAction = new Array();//Reset history of actions
+        pathProperties = new Array();
+
+
         //show the path bulder div
         $("#divPathWizard").show(speed*2);
 

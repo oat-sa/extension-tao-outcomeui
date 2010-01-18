@@ -12,80 +12,80 @@ and open the template in the editor.
         <script type="text/javascript" src="javascript/pie.js"></script>
 
         <script type="text/javascript" src="javascript/utrfactory.js"></script>
-
+        
         <link rel="stylesheet" type="text/css" href="cssfiles/default/basic.css">
     </head>
     <body>
         <div id="utrDiv" >
-        <div id="divPathWizard" class="divstandard">
-            <div id="menuPathWizard">
-                UTR BUILDER... chose the property ...
-            <input class="closePathBuilderClass" id="closePathBuilder" type="button" value=""> </input>
-            </div>
-            
-            
-
-            <div id="classesDiv">
-                <div id="contextClassHeader" class="boxHeader">
-
-                    <input id="backClass" type="button" value="Back" name="backClass"/>
-                    <h1>Classe</h1>
-
-
-                </div>
-                <div id="contextClasses" class="contextClassesStyle">
-
-                    <h1> list of classes</h1>
-                </div>
-            </div>
-            <div id="propertiesDiv">
-                <div id="contextPropertiesHeader" class="boxHeader">
-                    <h1>...</h1>
+            <div id="divPathWizard" class="divstandard">
+                <div id="menuPathWizard">
+                    UTR BUILDER... chose the property ...
+                    <input class="closePathBuilderClass" id="closePathBuilder" type="button" value=""> </input>
                 </div>
 
-                <div id="contextProperties" class="contextPropertiesStyle">
-                    <h1>List of properties</h1>
+
+
+                <div id="classesDiv">
+                    <div id="contextClassHeader" class="boxHeader">
+
+                        <input id="backClass" type="button" value="Back" name="backClass"/>
+                        <h1>Classe</h1>
+
+
+                    </div>
+                    <div id="contextClasses" class="contextClassesStyle">
+
+                        <h1> list of classes</h1>
+                    </div>
+                </div>
+                <div id="propertiesDiv">
+                    <div id="contextPropertiesHeader" class="boxHeader">
+                        <h1>...</h1>
+                    </div>
+
+                    <div id="contextProperties" class="contextPropertiesStyle">
+                        <h1>List of properties</h1>
+                    </div>
+
                 </div>
 
+                <div id="divFooterPathWizard" style="clear:both">
+
+                </div>
             </div>
 
-            <div id="divFooterPathWizard" style="clear:both">
+            <div id="propertyBinding" class="centered">
+                <table border="0" cellpadding="0">
 
+                    <tbody>
+                        <tr>
+                            <td>Column Name:</td>
+                            <td><input id="columnName" type="text" name="" value="" /></td>
+                        </tr>
+                        <tr>
+                            <td>Extraction Method:</td>
+                            <td><select id="typeExtraction" name="ExtractionMethodDrop">
+                                    <option value="direct" >Direct </option>
+                                    <option value="xpath" >XPath query </option>
+                                    <option value="function" >Function </option>
+                                </select></td>
+                        </tr>
+                        <tr>
+                            <td>Query</td>
+                            <td><input id="finalPath" type="text" name="finalPath" value="" size="30" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
+                <input id="addColumn" type="button" value="Add Column" />
+                <input id="exitAddColumn" type="button" value="Exit" />
             </div>
-        </div>
-
-        <div id="propertyBinding" class="centered">
-            <table border="0" cellpadding="0">
-
-                <tbody>
-                    <tr>
-                        <td>Column Name:</td>
-                        <td><input id="columnName" type="text" name="" value="" /></td>
-                    </tr>
-                    <tr>
-                        <td>Extraction Method:</td>
-                        <td><select id="typeExtraction" name="ExtractionMethodDrop">
-                                <option value="direct" >Direct </option>
-                                <option value="xpath" >XPath query </option>
-                                <option value="function" >Function </option>
-                            </select></td>
-                    </tr>
-                    <tr>
-                        <td>Query</td>
-                        <td><input id="finalPath" type="text" name="finalPath" value="" size="30" /></td>
-                    </tr>
-                </tbody>
-            </table>
 
 
-            <input id="addColumn" type="button" value="Add Column" />
-            <input id="exitAddColumn" type="button" value="Exit" />
-        </div>
-
-        
             <div id="utrmenu">
                 <input id="columnBuilder" type="submit" value="Add Column Wizard..." /><input id="deleteListRows" type="submit" value="Delete Rows..." />
-                
+
 
 
 
@@ -93,11 +93,11 @@ and open the template in the editor.
 
             <table id="UTR" border="1">
                 <thead id="utrHead">
-                    
+
 
                 </thead>
                 <tbody id="utrBody" >
-                    
+
 
 
                 </tbody>
