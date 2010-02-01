@@ -43,6 +43,10 @@ function utrIntro(){
     $("#menuPathBuilder").hide();
     $("#pieStat").hide();
 
+    $("#utrTemplateManager").hide();
+    
+    
+
 //remove session
     
 //$("#tablePreview").hide();
@@ -352,11 +356,14 @@ function verifyColumnLabel(colLabel){
 function addColumn(){
     //get parameter from interface
     var cn = $("#columnName").val();
+    if (cn==''){
+        cn ='noName'
+        };
     var te = $("#typeExtraction").val();
     var pf = $("#finalPath").val();
     //Verification of the existance of the column name
     if (verifyColumnLabel(cn)==true ){
-        alert ('Name existes, can you modify the label of the colum...')
+        alert ('Name exists, you should change it...')
 
     }else{
 
@@ -407,7 +414,7 @@ function previewTable(table){
     var strTableHead = '';
     var strHeadNameColomn ='';
     //add the first column of rowStat
-    strTH ='<th> % </th>';
+    strTH ='<th> Columns </th>';
     for ( i in finalUtrModel){
         var columnDescription = finalUtrModel[i];
         //get columnDescription
@@ -420,7 +427,7 @@ function previewTable(table){
         pourcentageCol = totalRowsNotNull + '/'+totalRows;
         //
         //button delete
-        var btnDelete = '<input id='+i+' title="Delete column" type="button" value="-" class = "deleteColumnClass"/></input>';
+        var btnDelete = '<input id='+i+' title="Delete column" type="button" value="" class = "deleteColumnClass"/></input>';
         var btnInfo = '<input id='+i+' title="Info column" type="button" value="Info" class = "infoColumnClass"/></input>';
 
         strTH = strTH+ '<th>'+btnDelete +" "+btnInfo+'<br>'+columnLabel+'</th>';
@@ -570,6 +577,7 @@ function deleteListRows(){
         success: function(msg){
             //get the new UTR table
             actualUTR = msg;
+            
             previewTable(msg);
             //close the window
             //$("#propertyBinding").hide();
@@ -577,6 +585,95 @@ function deleteListRows(){
 
         }
 
+
+    };
+    $.ajax(options);
+
+}
+//request to save the actual utrModel
+function saveUtr(){
+    var modelName = $("#txtUtrName").val();
+    options={
+        type: "POST",
+        url: "../classes/class.TReg_VirtualTable.php",
+        data: {
+            op:"saveUtr",
+            idModel: modelName
+
+        },
+        //dataType:"json",
+        success: function(msg){
+            alert (msg);
+            utrIntro();
+        
+        }
+
+
+    };
+    $.ajax(options);
+    
+
+
+}
+function getUtrTemplate(){
+    var modelName = $(this).attr('id');
+    loadUtr(modelName)
+
+}
+function loadUtr(modelName){
+    //modelName = $("#txtUtrName").val();
+    options={
+        type: "POST",
+        url: "../classes/class.TReg_VirtualTable.php",
+        data: {
+            op:"loadUtr",
+            idModel: modelName
+
+        },
+        dataType:"json",
+        success: function(msg){
+            //get the new UTR table
+            actualUTR = msg;
+            previewTable(msg);
+            //close the window
+            //$("#propertyBinding").hide();
+            utrIntro();
+
+        }
+
+    };
+    $.ajax(options);
+}
+
+function getUtrModels(){
+    $("#utrTemplateManager").show(speed);
+    $("#txtUtrName").focus();
+    options={
+        type: "POST",
+        url: "../classes/class.TReg_VirtualTable.php",
+        data: {
+            op:"getUtrModels"
+        },
+        dataType:"json",
+        success: function(msg){
+            //get the new UTR table
+            listUtr = msg;
+            //alert (msg);
+
+            //preview the list in the div
+            $("#utrTemplateModelList").html("");
+            for (i in listUtr){
+
+                cl = listUtr[i];
+                content = '<input id="'+i+'" class= "utrTemplate" type="button" value="'+i+'" name ="cl.propertySourceUri " /></input>';
+                $("#utrTemplateModelList").append(content);
+            }
+
+            
+            //close the window
+            //$("#propertyBinding").hide();
+            //utrIntro();
+        }
 
     };
     $.ajax(options);
@@ -596,7 +693,8 @@ function manageEvents(){
     $("input[name *='propertyInfos']").live('click', getPropertyBinding);
     $("#remove").click(removeSession);
     //hide the statistic info
-    
+    $("input[class = 'utrTemplate']").live('click',getUtrTemplate);
+
     
 
     //add column event
@@ -644,6 +742,21 @@ function manageEvents(){
 
     //Manage delete row
     $("#deleteListRows").click(deleteListRows);
+
+    $("#saveUtrBtn").click(saveUtr);
+    $("#loadUtrBtn").click(loadUtr);
+
+    $("#manageUtr").click(function(){
+        /*$("#saveUtrBtn").toggle();
+        $("#loadUtrBtn").toggle();
+        $("#txtUtrName").toggle();*/
+
+        getUtrModels();
+
+
+    });
+
+
 
 
 }

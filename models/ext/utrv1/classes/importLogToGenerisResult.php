@@ -96,7 +96,7 @@ class ImportLogToGenerisResult {
         //Create instance and property values
 
         $class = new core_kernel_classes_Class($RESULT_NS."TEST_CLASS");
-        $instanceTest = $class->createInstance("Test...");
+        $instanceTest = $class->createInstance($LABEL_TEST);
         //put property values /**** test with 3 properties only
 
         $propTest = new core_kernel_classes_Property($RESULT_NS."ID_TEST");
@@ -229,7 +229,7 @@ $logDom->load($xmlPath);
 unset($_GET['resultxml']);
 
 
-$p = new importLogToGenerisResult($logDom);
+$p = new ImportLogToGenerisResult($logDom);
 
 
 ?>

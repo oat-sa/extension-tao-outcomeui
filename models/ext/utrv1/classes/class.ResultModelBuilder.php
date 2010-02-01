@@ -11,16 +11,10 @@
  */
 
 
-//tester un peu le import selon le xpath
-define ('inputFile','resultFileTao2.xml');
 
-//require_once('RegCommon.php');
-//require_once($_SERVER['DOCUMENT_ROOT'].'/taoResults/models/ext/utrv1/classes/RegCommon.php');
 require_once($_SERVER['DOCUMENT_ROOT']."/generis/common/inc.extension.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
 
-define ("CLASS_TEST",'TEST');
-define ("ID_TEST",'ID_TEST');
 
 //define ("$RESULT_NS",'http://127.0.0.1/middleware/demo.rdf#');
 define ('RESULT_MODEL',$_SERVER['DOCUMENT_ROOT'].'/taoResults/models/ext/utrv1/classes/model.xml');

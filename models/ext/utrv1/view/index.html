@@ -12,7 +12,7 @@ and open the template in the editor.
         <script type="text/javascript" src="javascript/pie.js"></script>
 
         <script type="text/javascript" src="javascript/utrfactory.js"></script>
-        
+
         <link rel="stylesheet" type="text/css" href="cssfiles/default/basic.css">
     </head>
     <body>
@@ -74,21 +74,25 @@ and open the template in the editor.
                             <td>Query</td>
                             <td><input id="finalPath" type="text" name="finalPath" value="" size="30" /></td>
                         </tr>
+
+                        <tr
+                            <td>
+                                <input id="addColumn" type="button" value="Add Column" /><input id="exitAddColumn" type="button" value="Exit" />
+
+                            </td>
+
+                        </tr>
+
                     </tbody>
                 </table>
 
 
-                <input id="addColumn" type="button" value="Add Column" />
-                <input id="exitAddColumn" type="button" value="Exit" />
+
             </div>
 
 
             <div id="utrmenu">
-                <input id="columnBuilder" type="submit" value="Add Column Wizard..." /><input id="deleteListRows" type="submit" value="Delete Rows..." />
-
-
-
-
+                <input id="columnBuilder" type="submit" value="Column Builder Wizard..." /><input id="deleteListRows" type="submit" value="Delete Rows..." /><input id="manageUtr" type="submit" value="save/Load Tables" />
             </div>
 
             <table id="UTR" border="1">
@@ -103,7 +107,17 @@ and open the template in the editor.
                 </tbody>
             </table>
 
+            <div id="utrTemplateManager" class="">
+                <div id="utrTemplateModelList">
+                    
 
+                </div>
+
+                <div id="utrTempateMenu">
+                    <input id="saveUtrBtn" type="submit" value="save Table" /><input id ="txtUtrName" type="text" name="txtUtrName" value="" />
+                </div>
+
+            </div>
         </div>
         <div id="pieStat" class="pieStatClass">
             <input id="hidePieStat" type="button" value="Hide" />

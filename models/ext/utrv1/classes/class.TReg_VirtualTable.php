@@ -45,12 +45,12 @@ class TReg_VirtualTable extends RegCommon {
 // --- ATTRIBUTES ---
 
 
-    /**
-     * Short description of attribute listOfInstance
-     *
-     * @access public
-     * @var List
-     */
+/**
+ * Short description of attribute listOfInstance
+ *
+ * @access public
+ * @var List
+ */
     public $listOfInstance = null;
 
     // --- OPERATIONS ---
@@ -105,7 +105,7 @@ class TReg_VirtualTable extends RegCommon {
 
     /**
      * this method provides the final table model with all the values in order
-     * be used by cleint side to preview it on bases on utrModel, that containes
+     * be used by client side to preview it on bases on utrModel, that containes
      * model of the columns model,
      * result we provide 3 tables :
      * //$tableF['rowsHTML']= $rowsHTML;//to facilitate the html table
@@ -133,7 +133,7 @@ class TReg_VirtualTable extends RegCommon {
         //get the path of the property
             $finalPath = $columnDescription['finalPath'];
             $columnName = $columnDescription['columnName'];
-            //for each instance in the list, getthe value of the column
+            //for each instance in the list, get the value of the column
             $listInstances = $this->trGetInstances();
             foreach ( $listInstances as $instanceSourceUri=>$obj) {
 
@@ -141,6 +141,13 @@ class TReg_VirtualTable extends RegCommon {
             //ex extract an attribute from xml dom
 
                 $value=$p->trGetBridgePropertyValues($instanceSourceUri, $finalPath);
+
+                //TEST IF IT IS AN URI
+                $uriProperty = $value;
+                $trProperty = new core_kernel_classes_Property($uriProperty);
+                $value = $trProperty->getLabel();
+
+
                 $rowsColumn[$instanceSourceUri] = $value;
 
                 //Create the suitable array, this one is more simple to use with javascripte to
@@ -189,7 +196,7 @@ class TReg_VirtualTable extends RegCommon {
      */
     public function trGetInstances() {
 
-    
+
 
         $tabUri= $_SESSION['instances'];
         return $tabUri;
@@ -242,7 +249,11 @@ class TReg_VirtualTable extends RegCommon {
     public function YaddColumn($columnDescription) {
         $desc = $columnDescription;
         $columnList = $_SESSION['utrModel'];
-        $columnList[$desc["columnName"]]=$columnDescription;
+        //timestamp
+        $columnId = microtime(true);
+        $columnId = $desc["columnName"];
+
+        $columnList[$columnId]=$columnDescription;
         //save the intermediate table in session
         $_SESSION['utrModel']=$columnList;
     }
@@ -302,6 +313,69 @@ class TReg_VirtualTable extends RegCommon {
         return $stat;
 
     }
+    /**
+     * Save The UTR template
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param  Collection $utrModel
+     * @param  String $idModel
+     * @return Collection
+     */
+
+    public function saveUtrModel($utrModel,$idModel) {
+
+    //get the old list of model
+        $oldUtrModels = file_get_contents("utrModel.mdl");
+        $tabUtrModels = json_decode($oldUtrModels,true);
+        //add in tab of models
+        $tabUtrModels[$idModel]= $utrModel;
+
+        //convert to json and Save
+        $jsonUtrModels = json_encode($tabUtrModels);
+
+        file_put_contents("utrModel.mdl", $jsonUtrModels);
+        return 'Template Saved';
+
+    }
+
+    /**
+     * Load a specific UTR Template
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param  String $idModel
+     * @return Collection
+     */
+    public function loadUtrModel($idModel) {
+        $actualUtr = array ();
+
+        $jsonUtrModels= file_get_contents("utrModel.mdl");
+        $tabUtrModels = json_decode($jsonUtrModels,true);
+
+        $actualUtr = $tabUtrModels[$idModel];
+        //print_r($tabUtrModels);
+
+        return $actualUtr;
+    }
+
+     /**
+     * get the list of UTR Template
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @return Collection
+     */
+    public function getListOfUtrModel(){
+        $actualUtr = array ();
+        $jsonUtrModels= file_get_contents("utrModel.mdl");
+        $tabUtrModels = json_decode($jsonUtrModels,true);
+        return $tabUtrModels;
+
+    }
+
+
+
 
     /**
      * this method intercept the request of the client (ajax) and invoke the
@@ -344,6 +418,27 @@ class TReg_VirtualTable extends RegCommon {
         if ($_POST['op'] == 'removeSession') {
             $_SESSION["utrModel"] = array();
         }
+
+        //save utr model
+
+        if ($_POST['op'] == 'saveUtr') {
+            $idModel = $_POST['idModel'];
+            echo $this->saveUtrModel($_SESSION["utrModel"], $idModel);
+
+
+        }
+
+        //load utr model
+        if ($_POST['op'] == 'loadUtr') {
+            $idModel = $_POST['idModel'];
+            $_SESSION["utrModel"] = $this->loadUtrModel($idModel);
+
+            $t=$this->generatePreview();
+            echo json_encode($t);
+
+
+        }
+
         //
         if ($_POST['op']=='addColumn') {
         //get column description
@@ -392,27 +487,20 @@ class TReg_VirtualTable extends RegCommon {
 
         }
 
-    }
+        //load utr models
+        if ( $_POST['op'] == 'getUtrModels') {
 
+            $t = $this->getListOfUtrModel();
+            echo json_encode($t);
+
+        }
+
+    }
 
 }
 
 $p= new TReg_VirtualTable();
 $p->dispatch();
-////$t=$p->getInstances();
-////$c = $p->getClassesOfinstances($t);
-////print_r($c);
-//
-//$tab["name"] = "younes";
-//$tab["age"]=28;
-//
-//$a[]=$tab;
-//$tab["name"] = "younes";
-//$tab["age"]=28;
-//$a[]=$tab;
-//print_r($a);
-//echo json_encode($a);
-
 
 
 
