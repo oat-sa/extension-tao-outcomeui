@@ -755,7 +755,14 @@ function manageEvents(){
 
 
     });
+    //close utrManager
+    $("#cancelUtrManager").click(function(){
+        $("#utrTemplateManager").hide(speed);
 
+
+    });
+
+    
 
 
 

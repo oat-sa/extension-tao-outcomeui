@@ -57,6 +57,7 @@ class TReg_VirtualTable extends RegCommon {
     public function __construct() {
         $p = new  RegCommon();
         $p->regConnect();
+        //print_r ($p->getCurrentModule());
     }
 
     /**
@@ -374,9 +375,11 @@ class TReg_VirtualTable extends RegCommon {
 
     }
 
+    public function trGetCurrentExtention(){
 
-
-
+        $p = new RegCommon();
+        $currentExtension = $p->getCurrentModule();
+    }
     /**
      * this method intercept the request of the client (ajax) and invoke the
      * method

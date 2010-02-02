@@ -10,7 +10,6 @@
 require_once($_SERVER['DOCUMENT_ROOT']."/generis/common/inc.extension.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
 
-
 /**
  * RegCommon provides the common methods to acces generis API in more suitable
  * in Table Builder context.
@@ -348,8 +347,8 @@ class RegCommon {
         return $finalValue;
     }
     /**
-     * Provides a value of a spécific property according to the path
-     * ( path: a sequence of properties and the initial instance)
+     * Provides a value of a specific property according to the path
+     * ( path: a sequence of properties)  and the initial instance
      *
      * @access public
      * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
@@ -412,52 +411,39 @@ class RegCommon {
         }//path
 
 
-        $finalValue = implode ('-', $intermediateTabUri);// $instanceUri;
+        $finalValue = implode ('|$*', $intermediateTabUri);// $instanceUri;
         return $finalValue;
     }
-}
- /*
-  *
+
+
+/**
+ * Provides the code of the current module in used,
+ * This is very helpful to have a contextual behavior of UTR acording to the module
  *
- *
- *  //
- *
+ * @access public
+ * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+ * 
+ * @return String , the code tof the module, one of these values
+ * -taoItems
+ * -taoTests
+ * -taoSubjects
+ * -taoGroups
+ * -taoResults
+ * -taoDelivery
  */
-//echo "uuuu";
-//$p = new RegCommon();
-//$p->regConnect();
-////$p = new TReg_VirtualTable();
-//$p->getInstances();
+public function getCurrentModule() {
 
-//
-////$tabprop=$p->trGetProperties(teacherUri);
-////print_r($tabprop);
-//
-//$t[]=propHasTeacher;
-//$t[]="http://127.0.0.1/middleware/hyperclass.rdf#12157851749292";//nationality bridgehttp://127.0.0.1/middleware/hyperclass.rdf#12157851749292
-////$t[]="sdfsf";
-//$t[]="http://www.w3.org/2000/01/rdf-schema#label";
-//
-//
-////get techcher uri of patrick
-//$v=$p->trGetBridgePropertyValues(younes, $t);
+    $service =  tao_models_classes_ServiceFactory::get('tao_models_classes_TaoService');
+    $extension = $service->getCurrentExtension();
 
-//$tabClasses = $p->trGetRangeClasses("http://127.0.0.1/middleware/hyperclass.rdf#121310312857514");
-//foreach ($tabClasses as $c=>$info) {
-//    echo "<br> Uri de la classe  = ".$c;
-//    echo "<br> Le label de la classe est : ".$info->Label;
-//    echo "<br> La property source est = ".$info->propertySourceUri;
-//    echo "<br>#################################<br>";
-//}
+    return $extension;
 
-/*$trStudent = new core_kernel_classes_Class(studentUri);
-//$coco=$trStudent->getInstances();
-//
-//echo '<br>';
-//
-//print_r($coco);
-$ins = $p->trGetClassOfInstance(patrickUri);
-print_r($ins);*/
+
+}
+
+
+}//Ensd classe
+
 
 
 ?>
