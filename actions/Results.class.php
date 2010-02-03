@@ -118,7 +118,6 @@ class Results extends TaoModule {
 				$this->setSessionAttribute("showNodeUri", tao_helpers_Uri::encode($result->uriResource));
 				$this->setData('message', 'Result saved');
 				$this->setData('reload', true);
-				$this->forward('Results', 'index');
 			}
 		}
 		
@@ -156,7 +155,6 @@ class Results extends TaoModule {
 				}
 				$this->setData('message', 'class saved');
 				$this->setData('reload', true);
-				$this->forward('Results', 'index');
 			}
 		}
 		$this->setData('formTitle', 'Edit result class');
