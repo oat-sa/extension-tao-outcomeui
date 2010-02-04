@@ -1,0 +1,55 @@
+msgid "Result saved"
+msgstr ""
+
+msgid "Edit result"
+msgstr ""
+
+msgid "Class saved"
+msgstr ""
+
+msgid "Edit result class"
+msgstr ""
+
+msgid "Results"
+msgstr ""
+
+msgid "Manage results"
+msgstr ""
+
+msgid "Results library"
+msgstr ""
+
+msgid "new class"
+msgstr ""
+
+msgid "new result"
+msgstr ""
+
+msgid "delete"
+msgstr ""
+
+msgid "duplicate"
+msgstr ""
+
+msgid "edit result"
+msgstr ""
+
+msgid "new property"
+msgstr ""
+
+msgid "create table"
+msgstr ""
+
+msgid "import"
+msgstr ""
+
+msgid "export"
+msgstr ""
+
+msgid "This module constitutes the final step."
+msgstr ""
+
+msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
+msgstr ""
+
+

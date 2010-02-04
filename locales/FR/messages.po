@@ -1,0 +1,54 @@
+msgid ""
+msgstr ""
+
+msgid "Edit result"
+msgstr "Modifier le résultat"
+
+msgid "Class saved"
+msgstr "Classe enregistrée"
+
+msgid "Edit result class"
+msgstr "Modifier la classe de résultat"
+
+msgid "Results"
+msgstr "Résultats"
+
+msgid "Manage results"
+msgstr "Gérer les résultats"
+
+msgid "Results library"
+msgstr "Librairie de résultats"
+
+msgid "new class"
+msgstr "nouvelle classe"
+
+msgid "new result"
+msgstr "nouveau résultat"
+
+msgid "delete"
+msgstr "supprimer"
+
+msgid "duplicate"
+msgstr "dupliquer"
+
+msgid "edit result"
+msgstr "modifier les résultat"
+
+msgid "new property"
+msgstr "nouvelle propriété"
+
+msgid "create table"
+msgstr "créer un tableau"
+
+msgid "import"
+msgstr "importer"
+
+msgid "export"
+msgstr "exporter"
+
+msgid "This module constitutes the final step."
+msgstr "Ce module constitue la dernière étape."
+
+msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
+msgstr "Les résultats de tous les tests passés avec les données des Sujets, Groupes et Items. Les données récupérées pendant la passation de chaque tesst dont collectées et géreés ici. "
+

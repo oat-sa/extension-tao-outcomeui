@@ -116,12 +116,12 @@ class Results extends TaoModule {
 				$result = $this->service->bindProperties($result, $myForm->getValues());
 				
 				$this->setSessionAttribute("showNodeUri", tao_helpers_Uri::encode($result->uriResource));
-				$this->setData('message', 'Result saved');
+				$this->setData('message', __('Result saved'));
 				$this->setData('reload', true);
 			}
 		}
 		
-		$this->setData('formTitle', 'Edit result');
+		$this->setData('formTitle', __('Edit result'));
 		$this->setData('myForm', $myForm->render());
 		$this->setView('form.tpl');
 	}
@@ -153,11 +153,11 @@ class Results extends TaoModule {
 				if($clazz instanceof core_kernel_classes_Resource){
 					$this->setSessionAttribute("showNodeUri", tao_helpers_Uri::encode($clazz->uriResource));
 				}
-				$this->setData('message', 'class saved');
+				$this->setData('message', __('Class saved'));
 				$this->setData('reload', true);
 			}
 		}
-		$this->setData('formTitle', 'Edit result class');
+		$this->setData('formTitle', __('Edit result class'));
 		$this->setData('myForm', $myForm->render());
 		$this->setView('form.tpl');
 	}
