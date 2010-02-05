@@ -35,7 +35,7 @@ class Results extends TaoModule {
 	 * get the instancee of the current subject regarding the 'uri' and 'classUri' request parameters
 	 * @return core_kernel_classes_Resource the subject instance
 	 */
-	private function getCurrentResult(){
+	protected function getCurrentInstance(){
 		
 		$uri = tao_helpers_Uri::decode($this->getRequestParameter('uri'));
 		if(is_null($uri) || empty($uri)){
@@ -56,18 +56,6 @@ class Results extends TaoModule {
  * controller actions
  */
 
-	/**
-	 * main action
-	 * @return void
-	 */
-	public function index(){
-		
-		if($this->getData('reload') == true){
-			unset($_SESSION[SESSION_NAMESPACE]['uri']);
-			unset($_SESSION[SESSION_NAMESPACE]['classUri']);
-		}
-		$this->setView('index.tpl');
-	}
 	
 	/**
 	 * Render json data to populate the subject tree 
@@ -87,28 +75,11 @@ class Results extends TaoModule {
 	}
 	
 	/**
-	 * Add an subject instance
-	 */
-	public function addResult(){
-		if(!tao_helpers_Request::isAjax()){
-			throw new Exception("wrong request mode");
-		}
-		$clazz = $this->getCurrentClass();
-		$result = $this->service->createInstance($clazz);
-		if(!is_null($result) && $result instanceof core_kernel_classes_Resource){
-			echo json_encode(array(
-				'label'	=> $result->getLabel(),
-				'uri' 	=> tao_helpers_Uri::encode($result->uriResource)
-			));
-		}
-	}
-	
-	/**
 	 * edit an subject instance
 	 */
 	public function editResult(){
 		$clazz = $this->getCurrentClass();
-		$result = $this->getCurrentResult();
+		$result = $this->getCurrentInstance();
 		$myForm = tao_helpers_form_GenerisFormFactory::instanceEditor($clazz, $result);
 		if($myForm->isSubmited()){
 			if($myForm->isValid()){
@@ -123,7 +94,7 @@ class Results extends TaoModule {
 		
 		$this->setData('formTitle', __('Edit result'));
 		$this->setData('myForm', $myForm->render());
-		$this->setView('form.tpl');
+		$this->setView('form.tpl', true);
 	}
 	
 	/**
@@ -159,7 +130,7 @@ class Results extends TaoModule {
 		}
 		$this->setData('formTitle', __('Edit result class'));
 		$this->setData('myForm', $myForm->render());
-		$this->setView('form.tpl');
+		$this->setView('form.tpl', true);
 	}
 	
 	/**
@@ -173,7 +144,7 @@ class Results extends TaoModule {
 		
 		$deleted = false;
 		if($this->getRequestParameter('uri')){
-			$deleted = $this->service->deleteResult($this->getCurrentResult());
+			$deleted = $this->service->deleteResult($this->getCurrentInstance());
 		}
 		else{
 			$deleted = $this->service->deleteResultClass($this->getCurrentClass());
@@ -182,23 +153,6 @@ class Results extends TaoModule {
 		echo json_encode(array('deleted'	=> $deleted));
 	}
 	
-	/**
-	 * duplicate a subject instance by property copy
-	 * return void
-	 */
-	public function cloneResult(){
-		if(!tao_helpers_Request::isAjax()){
-			throw new Exception("wrong request mode");
-		}
-		
-		$clone = $this->service->cloneInstance($this->getCurrentResult(), $this->getCurrentClass());
-		if(!is_null($clone)){
-			echo json_encode(array(
-				'label'	=> $clone->getLabel(),
-				'uri' 	=> tao_helpers_Uri::encode($clone->uriResource)
-			));
-		}
-	}
 	
 	/**
 	 * create data table
