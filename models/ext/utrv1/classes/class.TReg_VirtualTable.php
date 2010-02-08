@@ -57,7 +57,7 @@ class TReg_VirtualTable extends RegCommon {
     public function __construct() {
         $p = new  RegCommon();
         $p->regConnect();
-        //print_r ($p->getCurrentModule());
+    //print_r ($p->getCurrentModule());
     }
 
     /**
@@ -68,8 +68,13 @@ class TReg_VirtualTable extends RegCommon {
      * @param  String $uriInstance
      * @return void
      */
-    public function trDeleteRow($uriInstance) {
-        unset($_SESSION['instances'][$uriInstance]);
+    public function trDeleteRow($uriInstance,$listInstances) {
+        $newListOfRows = $listInstances;
+        unset ( $newListOfRows[$uriInstance]);
+
+        //return the the new list of rows
+        return $newListOfRows;
+    //unset($_SESSION['instances'][$uriInstance]);
 
     }
     /**
@@ -81,12 +86,16 @@ class TReg_VirtualTable extends RegCommon {
      * @return void
      */
 
-    public function trDeleteListRows($listRows) {
+    public function trDeleteListRows($listRows,$listInstances) {
     //delete all the rows
+
+        $newListOfRows = $listInstances;
+
         foreach($listRows as $uriInstance) {
-            $this->trDeleteRow($uriInstance);
+            $newListOfRows= $this->trDeleteRow($uriInstance,$newListOfRows);
         }
 
+        return $newListOfRows;
     }
 
     /**
@@ -97,11 +106,13 @@ class TReg_VirtualTable extends RegCommon {
      * @param  String $columnId
      * @return void
      */
-    public function YdeleteColumn($columnId) {
-        $table = $_SESSION["utrModel"];
-        unset($table[$columnId]);
-        $_SESSION["utrModel"]=$table;
+    public function YdeleteColumn($columnId,$utrModel) {
+        $newUtrModel =$utrModel;// $_SESSION["utrModel"];
+        unset($newUtrModel[$columnId]);
+        //return new table
+        return $newUtrModel;
 
+    //$_SESSION["utrModel"]=$table;
     }
 
     /**
@@ -118,11 +129,11 @@ class TReg_VirtualTable extends RegCommon {
      * @return java_util_Collection
      */
 
-    public function generatePreview() {
+    public function generateUTR($utrModel,$listInstances) {
     // section 10-13-1--65--30cc15d0:1250bc77bd0:-8000:0000000000001023 begin
-        $table = $_SESSION['utrModel'];
+        $table = $utrModel;//$_SESSION['utrModel'];
         //get the list of instances
-        $listInstances = $this->trGetInstances();
+        //$listInstances = $this->trGetInstances();
         //for each column we get the value according to instance and path
         $rowsColumn = array();
         $rowsHTML = array();
@@ -209,11 +220,11 @@ class TReg_VirtualTable extends RegCommon {
      *
      * @access public
      * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
-     * @param  String $uriInstance
+     * @param  array $uriInstance
      * @return java_util_Collection
      */
-    public function getClassesOfinstances($uriInstance) {
-        $t=$uriInstance;//$this->getInstances();
+    public function getClassesOfinstances($uriInstances) {
+        $t=$uriInstances;//$this->getInstances();
         $rc = new RegCommon();
         $classes = array();
         foreach ($t as $uri=>$obj) {
@@ -247,16 +258,20 @@ class TReg_VirtualTable extends RegCommon {
      * @param  Collection $columnDescription
      * @return void
      */
-    public function YaddColumn($columnDescription) {
+    public function YaddColumn($columnDescription,$utrModel) {
         $desc = $columnDescription;
-        $columnList = $_SESSION['utrModel'];
+        $columnList = $utrModel;//$_SESSION['utrModel'];
         //timestamp
         $columnId = microtime(true);
         $columnId = $desc["columnName"];
 
         $columnList[$columnId]=$columnDescription;
+        //return the utrTable
+
         //save the intermediate table in session
-        $_SESSION['utrModel']=$columnList;
+        //$_SESSION['utrModel']=$columnList;
+
+        return $columnList;
     }
 
     /**
@@ -360,14 +375,14 @@ class TReg_VirtualTable extends RegCommon {
         return $actualUtr;
     }
 
-     /**
+    /**
      * get the list of UTR Template
      *
      * @access public
      * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
      * @return Collection
      */
-    public function getListOfUtrModel(){
+    public function getListOfUtrModel() {
         $actualUtr = array ();
         $jsonUtrModels= file_get_contents("utrModel.mdl");
         $tabUtrModels = json_decode($jsonUtrModels,true);
@@ -375,7 +390,37 @@ class TReg_VirtualTable extends RegCommon {
 
     }
 
-    public function trGetCurrentExtention(){
+    /**
+     * Generate an initial UTR base on intial instyances and list of properties
+     *
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param array $listOfInstances
+     * @param array $listOfProperties
+     * @return Collection
+     */
+    public function createSimpleUtr($listOfInstances,$listOfProperties) {
+    //Create the column description
+        $columnDescription = array();
+        $utrModel = array();
+        $p= new TReg_VirtualTable();
+        foreach($listOfProperties as $propUri=>$label) {
+        //cretae the description
+            $columnDescription['columnName'] = $label;
+            $columnDescription['typeExtraction'] = 'Direct';
+            $columnDescription['finalPath'] = $propUri;
+            //add the column into the utrModel
+            $utrModel=$p->YaddColumn($columnDescription, $utrModel);
+        }
+        // generate the UTR table
+        $t=$p->generateUTR($utrModel,$listOfInstances);
+        return $t;
+
+    }
+
+
+    public function trGetCurrentExtention() {
 
         $p = new RegCommon();
         $currentExtension = $p->getCurrentModule();
@@ -404,7 +449,6 @@ class TReg_VirtualTable extends RegCommon {
         }
         //
         if ($_POST['op']=='getProperties') {
-
             $p = new TReg_VirtualTable();
 
             $t= $p->trGetProperties($_POST['uriClass']);
@@ -413,12 +457,13 @@ class TReg_VirtualTable extends RegCommon {
         //
         if ($_POST['op']=='getRangeClasses') {
             $p= new TReg_VirtualTable();
+
             $t = $p->trGetRangeClasses($_POST['uriClass']);
             echo json_encode($t);
         }
         //delete the session
-
         if ($_POST['op'] == 'removeSession') {
+
             $_SESSION["utrModel"] = array();
         }
 
@@ -426,53 +471,78 @@ class TReg_VirtualTable extends RegCommon {
 
         if ($_POST['op'] == 'saveUtr') {
             $idModel = $_POST['idModel'];
-            echo $this->saveUtrModel($_SESSION["utrModel"], $idModel);
+            $p= new TReg_VirtualTable();
 
+            echo $p->saveUtrModel($_SESSION["utrModel"], $idModel);
 
         }
 
         //load utr model
         if ($_POST['op'] == 'loadUtr') {
             $idModel = $_POST['idModel'];
-            $_SESSION["utrModel"] = $this->loadUtrModel($idModel);
+            $p = new TReg_VirtualTable();
 
-            $t=$this->generatePreview();
+            $utrModel = $p->loadUtrModel($idModel);
+            $listInstances = $p->trGetInstances();
+
+            $_SESSION['utrModel'] = $utrModel;// for the persistance
+
+            $t=$p->generateUTR($utrModel,$listInstances);
+
             echo json_encode($t);
-
-
         }
 
-        //
+        //Add column
         if ($_POST['op']=='addColumn') {
         //get column description
             $columnName = $_POST['columnName'];
             $typeExtraction= $_POST['typeExtraction'];
             $finalPath = $_POST['finalPath'];
 
+            //Create the column description
             $columnDescription['columnName'] = $columnName;
             $columnDescription['typeExtraction'] = $typeExtraction;
             $columnDescription['finalPath'] = $finalPath;
 
+
             $p= new TReg_VirtualTable();
-            $p->YaddColumn($columnDescription);
+            $utrModel = array();
 
-            //see the new columnList
+            $utrModel = $_SESSION['utrModel'];
 
-            $t=$p->generatePreview();
+
+            $utrModel = $p->YaddColumn($columnDescription,$utrModel);
+
+            //save the context of utrModel
+            $_SESSION['utrModel'] = $utrModel;
+
+            //get the instances and generate the preview
+            $listInstances = $this->trGetInstances();
+
+            $t=$p->generateUTR($utrModel,$listInstances);
 
             echo json_encode($t);
         }
         //
-        //add column the utrModel
+        //Delete column the utrModel
         if ($_POST['op']=='deleteColumn') {
         //get column description
             $columnId = $_POST["columnId"];
-            $p= new TReg_VirtualTable();
-            $p->YdeleteColumn($columnId);
 
+            $p= new TReg_VirtualTable();
+
+            $utrModel = array();
+            $utrModel = $_SESSION['utrModel'];
+
+            //Delete the column from the utrModel table
+            $utrModel = $p->YdeleteColumn($columnId,$utrModel);
+
+            //save the context of utrModel
+            $_SESSION['utrModel'] = $utrModel;
             //see the new columnList
 
-            $t=$p->generatePreview();
+            $listInstances = $p->trGetInstances();
+            $t=$p->generateUTR($utrModel,$listInstances);
 
             echo json_encode($t);
         }
@@ -480,12 +550,20 @@ class TReg_VirtualTable extends RegCommon {
         if ( $_POST['op'] == 'deleteListRows') {
         //get the list of rows as string
             $lr = $_POST['listRowsToDelete'];
+
+            $p= new TReg_VirtualTable();
+            $listInstances = $p->trGetInstances();
+            $utrModel = $_SESSION['utrModel'];
             //create the tab
             $ListRows = explode('|',$lr);
             //delete the rows
-            $this->trDeleteListRows($ListRows);
+            $listInstances = $this->trDeleteListRows($ListRows,$listInstances);
 
-            $t = $this->generatePreview();
+            //persistance of the list of instances
+
+            $_SESSION['instances'] =$listInstances;
+
+            $t = $this->generateUTR($utrModel,$listInstances);
             echo json_encode($t);
 
         }
@@ -496,6 +574,36 @@ class TReg_VirtualTable extends RegCommon {
             $t = $this->getListOfUtrModel();
             echo json_encode($t);
 
+        }
+        //Create a simple UTR based on a list of properties sended directely by Bertrand
+
+        if ($_POST['op'] == 'loadInitialUtr') {
+
+
+            //http://localhost/middleware/taov1.rdf#i1263288559029078400
+            //http://localhost/middleware/taov1.rdf#i1264523889019415800
+
+            /*$_SESSION['utrListOfProperties']['http://localhost/middleware/taov1.rdf#i1264523889019415800']="prop";
+            $_SESSION['utrListOfProperties']['http://localhost/middleware/taov1.rdf#i1263288559029078400']="gender";
+            $_SESSION['utrListOfProperties']['http://www.w3.org/2000/01/rdf-schema#label']="lABEL";*/
+            
+            if (isset($_SESSION['utrListOfProperties'])) {
+
+                $p = new TReg_VirtualTable();
+                $utrModel = array();
+                //get the list of properties and the list of instancess
+                $listOfProperties = $_SESSION['utrListOfProperties'];// an array $list[uriProperty] = label of property
+                $listOfInstances = $p->trGetInstances();
+
+                //generate an UTR model
+                $utrTable = $p->createSimpleUtr($listOfInstances, $listOfProperties);
+
+                $_SESSION['utrModel'] = $utrModel;// for the persistance
+                //unset the session var
+                $_SESSION['utrListOfProperties'] =array();
+
+                echo json_encode($utrTable);
+            }
         }
 
     }

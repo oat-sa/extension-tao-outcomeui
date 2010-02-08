@@ -358,7 +358,7 @@ function addColumn(){
     var cn = $("#columnName").val();
     if (cn==''){
         cn ='noName'
-        };
+    };
     var te = $("#typeExtraction").val();
     var pf = $("#finalPath").val();
     //Verification of the existance of the column name
@@ -663,16 +663,34 @@ function getUtrModels(){
             //preview the list in the div
             $("#utrTemplateModelList").html("");
             for (i in listUtr){
-
                 cl = listUtr[i];
                 content = '<input id="'+i+'" class= "utrTemplate" type="button" value="'+i+'" name ="cl.propertySourceUri " /></input>';
                 $("#utrTemplateModelList").append(content);
             }
+     
+        //close the window
+        //$("#propertyBinding").hide();
+        //utrIntro();
+        }
 
-            
-            //close the window
-            //$("#propertyBinding").hide();
-            //utrIntro();
+    };
+    $.ajax(options);
+
+}
+
+//load initial UTR
+function loadInitialUtr(){
+
+    options={
+        type: "POST",
+        url: "../classes/class.TReg_VirtualTable.php",
+        data: {
+            op:"loadInitialUtr"
+        },
+        dataType:"json",
+        success: function(msg){
+            actualUTR = msg;
+            previewTable(actualUTR);
         }
 
     };
@@ -762,11 +780,9 @@ function manageEvents(){
 
     });
 
-    
-
-
-
 }
+
+
 function utrConstructor(){
     $(function(){
         //alert("o jQuery");
@@ -775,6 +791,8 @@ function utrConstructor(){
         //remove session, neww table
 
         removeSession();
+        // get the initial UTR, the user will ha ve directely a simple uTR with the properties of the current class
+        loadInitialUtr();
         utrIntro();
         manageEvents();
     });
