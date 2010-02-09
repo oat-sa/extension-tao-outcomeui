@@ -4,7 +4,7 @@
 		<section name="Manage results" url="/taoResults/Results/index">
 			<trees>
 				<tree name="Results library" 
-					dataUrl="/taoResults/Results/getResults" 
+					dataUrl="/taoResults/Results/getOntologyData" 
 					editClassUrl="/taoResults/Results/editResultClass"
 					editInstanceUrl="/taoResults/Results/editResult"
 					addInstanceUrl="/taoResults/Results/addInstance"
@@ -14,6 +14,7 @@
 				/>
 			</trees>
 			<actions>
+				<action name="search" url="/taoResults/Results/search" context="*" />
 				<action name="new class" js="GenerisAction.subClass" url="/taoResults/Results/addResultClass" context="class" />
 				<action name="new result" js="GenerisAction.instanciate" url="/taoResults/Results/addInstance" context="class" />
 				<action name="delete" js="GenerisAction.removeNode" url="/taoResults/Results/delete" context="resource" />

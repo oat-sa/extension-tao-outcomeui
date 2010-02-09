@@ -52,27 +52,19 @@ class Results extends TaoModule {
 		return $result;
 	}
 	
+	/**
+	 * get the main class
+	 * @return core_kernel_classes_Classes
+	 */
+	protected function getRootClass(){
+		return $this->service->getResultClass();
+	}
+	
 /*
  * controller actions
  */
 
 	
-	/**
-	 * Render json data to populate the subject tree 
-	 * 'modelType' must be in request parameter
-	 * @return void
-	 */
-	public function getResults(){
-		
-		if(!tao_helpers_Request::isAjax()){
-			throw new Exception("wrong request mode");
-		}
-		$filter = '';
-		if($this->hasRequestParameter('filter')){
-			$filter = $this->getRequestParameter('filter');
-		}
-		echo json_encode($this->service->toTree( $this->service->getResultClass(), true, true, '', $filter));
-	}
 	
 	/**
 	 * edit an subject instance
