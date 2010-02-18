@@ -42,14 +42,8 @@ function utrIntro(){
     $("#divPathWizard").hide();
     $("#menuPathBuilder").hide();
     $("#pieStat").hide();
-
     $("#utrTemplateManager").hide();
-    
-    
 
-//remove session
-    
-//$("#tablePreview").hide();
 }
 
 //save context as history to undo redo
@@ -487,10 +481,7 @@ function previewTable(table){
     //alert (strTableBody);
     $("#utrBody").html(strTableBody);
 
-
 }
-
-
 
 function removeSession(){
     $.ajax({
@@ -540,7 +531,6 @@ function showColumnInfo(colId){
         $(function () {
             //alert ("gfghfdgh"+totalRows+ " -- "+totalRowsNotNull);
             raphael("pieStat", 540, 370).pieChart(270, 200, 120, pieValues, pieLabels, "#fff");
-            
             
         });
     })(Raphael.ninja());
@@ -607,7 +597,6 @@ function saveUtr(){
             utrIntro();
         
         }
-
 
     };
     $.ajax(options);
@@ -697,7 +686,31 @@ function loadInitialUtr(){
     $.ajax(options);
 
 }
+//send tyhe filter and recieve the UTR
+function sendFilter(){
+    var queryProperty = $("#searchProperty").val();
+    var queryOperator = $("#searchOperator").val();
+    var queryValue = $("#searchValue").val();
+    var filterFull = queryProperty+'|'+queryOperator+'|'+queryValue;
 
+    options={
+        type: "POST",
+        url: "../classes/class.TReg_VirtualTable.php",
+        data: {
+            op:"sendFilter",
+            filter:filterFull
+        },
+        dataType:"json",
+        success: function(msg){
+            actualUTR = msg;
+            previewTable(actualUTR);
+        }
+
+    };
+    $.ajax(options);
+
+    
+}
 //manage the event of the index page
 function manageEvents(){
     //alert ("manage");
@@ -768,6 +781,8 @@ function manageEvents(){
         /*$("#saveUtrBtn").toggle();
         $("#loadUtrBtn").toggle();
         $("#txtUtrName").toggle();*/
+        //$("link[rel=stylesheet]").attr({href:"green.css"});
+
 
         getUtrModels();
 
@@ -779,6 +794,8 @@ function manageEvents(){
 
 
     });
+
+    $("#sendFilter").click(sendFilter);
 
 }
 

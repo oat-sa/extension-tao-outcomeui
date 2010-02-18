@@ -45,19 +45,99 @@ class TReg_VirtualTable extends RegCommon {
 // --- ATTRIBUTES ---
 
 
-/**
- * Short description of attribute listOfInstance
- *
- * @access public
- * @var List
- */
+    /**
+     * Short description of attribute listOfInstance
+     *
+     * @access public
+     * @var List
+     */
     public $listOfInstance = null;
+    //get utr,filter get the new list of instances  and re Generate
+    public function filterAndGenerateUtr ($filterDescription,$utrModel,$listInstances) {
+
+        $utr = $this->generateUTR($utrModel, $listInstances);
+        //get the utrModel
+        $utrModelGenerated = $utr['utrModel'];
+
+        $rows = $this->filterColumn($filterDescription, $utrModelGenerated);
+        //regenerate the table based on the new list of instances
+        $newRows = $rows['match'];
+        //print_r($newRows);
+        $utr = $this->generateUTR($utrModelGenerated, $newRows);
+        return $utr;
+
+    }
+
+    public function filterColumn($filterDescription,$table) {
+        //get filter information
+        $result['notMatch'] = array();
+        $result['match'] = array();
+
+        $columnID = $filterDescription['columnID'];
+        $operator = $filterDescription['operator'];
+        $valueCriteria = $filterDescription['value'];
+
+        //get the column rows
+        if (isset ($table[$columnID]['rowsColumn'])) {
+
+            $columnTable = $table[$columnID]['rowsColumn'];
+            $result = array();
+            //do a filter
+            foreach($columnTable as $instance=>$valueRow) {
+                //according to operator we do a filter
+                $match= FALSE;
+                switch ($operator) {
+                    case '=':
+                    //do something
+                        if ($valueCriteria == $valueRow ) {
+                            $match= TRUE;
+                        }
+                        break;
+                    case '<':
+                    //do
+                        if ( $valueRow <$valueCriteria) {
+                            $match= TRUE;
+                        }
+                        break;
+
+                    case '>':
+                    //do
+                        if ( $valueRow > $valueCriteria ) {
+                            $match= TRUE;
+                        }
+                        break;
+                    case 'like':
+                    //do
+                        
+                        //$match = preg_match("#".$valueCriteria+"#",$valueRow);
+                        $pos = strpos($valueRow,$valueCriteria);
+                    if ( $pos !== false){
+                        $match = true;
+                    }
+ 
+                        break;
+                }//switch
+                //if on match then we add this row in the result array
+                if ($match) {
+                    $result['match'][$instance]=1;
+                }else {
+                    $result['notMatch'][$instance]=2;
+                }
+            }//foreach
+        }
+
+        return $result;
+
+    }
+
+
+
 
     // --- OPERATIONS ---
     public function __construct() {
         $p = new  RegCommon();
         $p->regConnect();
-    //print_r ($p->getCurrentModule());
+        //print_r ($p->getCurrentModule());
     }
 
     /**
@@ -74,7 +154,7 @@ class TReg_VirtualTable extends RegCommon {
 
         //return the the new list of rows
         return $newListOfRows;
-    //unset($_SESSION['instances'][$uriInstance]);
+        //unset($_SESSION['instances'][$uriInstance]);
 
     }
     /**
@@ -87,7 +167,7 @@ class TReg_VirtualTable extends RegCommon {
      */
 
     public function trDeleteListRows($listRows,$listInstances) {
-    //delete all the rows
+        //delete all the rows
 
         $newListOfRows = $listInstances;
 
@@ -112,7 +192,7 @@ class TReg_VirtualTable extends RegCommon {
         //return new table
         return $newUtrModel;
 
-    //$_SESSION["utrModel"]=$table;
+        //$_SESSION["utrModel"]=$table;
     }
 
     /**
@@ -122,7 +202,7 @@ class TReg_VirtualTable extends RegCommon {
      * result we provide 3 tables :
      * //$tableF['rowsHTML']= $rowsHTML;//to facilitate the html table
      * //$tableF['utrModel']= $table;//the real model of the table, more
-     *         //$tableF['rowsInfo']=$rowsInfo;
+     * //$tableF['rowsInfo']=$rowsInfo;
      *
      * @access private
      * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
@@ -130,8 +210,11 @@ class TReg_VirtualTable extends RegCommon {
      */
 
     public function generateUTR($utrModel,$listInstances) {
-    // section 10-13-1--65--30cc15d0:1250bc77bd0:-8000:0000000000001023 begin
+        // section 10-13-1--65--30cc15d0:1250bc77bd0:-8000:0000000000001023 begin
         $table = $utrModel;//$_SESSION['utrModel'];
+
+
+
         //get the list of instances
         //$listInstances = $this->trGetInstances();
         //for each column we get the value according to instance and path
@@ -142,15 +225,17 @@ class TReg_VirtualTable extends RegCommon {
         $p = new  RegCommon(); // in orderr to get the bridged values
         //for each column in the model
         foreach ($table as $columnId=>&$columnDescription) {//the column description will be changed by adding the statistic info
-        //get the path of the property
+            //get the path of the property
             $finalPath = $columnDescription['finalPath'];
             $columnName = $columnDescription['columnName'];
             //for each instance in the list, get the value of the column
-            $listInstances = $this->trGetInstances();
+            //$listInstances = $this->trGetInstances();//TODO verify
+            //test list of instance
+            error_reporting(0);
             foreach ( $listInstances as $instanceSourceUri=>$obj) {
 
-            //get the bridged value, this method provides a brut value that can be performed by pther one
-            //ex extract an attribute from xml dom
+                //get the bridged value, this method provides a brut value that can be performed by pther one
+                //ex extract an attribute from xml dom
 
                 $value=$p->trGetBridgePropertyValues($instanceSourceUri, $finalPath);
 
@@ -159,16 +244,18 @@ class TReg_VirtualTable extends RegCommon {
                 $trProperty = new core_kernel_classes_Property($uriProperty);
                 $value = $trProperty->getLabel();
 
-
                 $rowsColumn[$instanceSourceUri] = $value;
 
-                //Create the suitable array, this one is more simple to use with javascripte to
+                //Create the suitable array, this one is more simple to use with javascript to
                 //generate the html code of table.
                 $rowsHTML[$instanceSourceUri][$columnName] = $value;
 
             }//instances
             //put the rows in the column Model
+
             $table[$columnId]['rowsColumn']=$rowsColumn;
+            //print_r  ($table);
+
 
             //Get the stat info of the actual column
             $stat=$this->getStatOnColomn($table, $columnId);
@@ -195,7 +282,7 @@ class TReg_VirtualTable extends RegCommon {
         //generation html
         return $tableF;
 
-    // section 10-13-1--65--30cc15d0:1250bc77bd0:-8000:0000000000001023 end
+        // section 10-13-1--65--30cc15d0:1250bc77bd0:-8000:0000000000001023 end
     }
 
     /**
@@ -207,8 +294,6 @@ class TReg_VirtualTable extends RegCommon {
      * @return java_util_Collection
      */
     public function trGetInstances() {
-
-
 
         $tabUri= $_SESSION['instances'];
         return $tabUri;
@@ -240,7 +325,7 @@ class TReg_VirtualTable extends RegCommon {
         $tab = array();
         foreach ($classes as $uri=>$v) {
 
-        //get the label and provide the result Array
+            //get the label and provide the result Array
             $trclass = new core_kernel_classes_Class($uri);
             $labelclass = $trclass->getLabel();
             $tclass['uriClass']=$uri;
@@ -312,9 +397,9 @@ class TReg_VirtualTable extends RegCommon {
      * @return java_util_Collection
      */
     public function getStatOnRows($table, $rowId) {
-    //Get the list of columns in the row, to claculate the number of columns
-    //and the number of columns not null
-    //I prefer used the rowHTML to perse rapidly the
+        //Get the list of columns in the row, to claculate the number of columns
+        //and the number of columns not null
+        //I prefer used the rowHTML to perse rapidly the
         $columnsOfRow= $table[$rowId];
         $totalColumns = 0;
         $totalColumnsNotNull=0;
@@ -341,7 +426,7 @@ class TReg_VirtualTable extends RegCommon {
 
     public function saveUtrModel($utrModel,$idModel) {
 
-    //get the old list of model
+        //get the old list of model
         $oldUtrModels = file_get_contents("utrModel.mdl");
         $tabUtrModels = json_decode($oldUtrModels,true);
         //add in tab of models
@@ -401,12 +486,12 @@ class TReg_VirtualTable extends RegCommon {
      * @return Collection
      */
     public function createSimpleUtr($listOfInstances,$listOfProperties) {
-    //Create the column description
+        //Create the column description
         $columnDescription = array();
         $utrModel = array();
         $p= new TReg_VirtualTable();
         foreach($listOfProperties as $propUri=>$label) {
-        //cretae the description
+            //cretae the description
             $columnDescription['columnName'] = $label;
             $columnDescription['typeExtraction'] = 'Direct';
             $columnDescription['finalPath'] = $propUri;
@@ -489,12 +574,17 @@ class TReg_VirtualTable extends RegCommon {
 
             $t=$p->generateUTR($utrModel,$listInstances);
 
-            echo json_encode($t);
+            $filterDescription['columnID'] ='prop';
+            $filterDescription['operator']='>';
+            $filterDescription['value']=1;
+
+            $tf = $p->filterAndGenerateUtr($filterDescription, $utrModel, $listInstances);
+            echo json_encode($tf);
         }
 
         //Add column
         if ($_POST['op']=='addColumn') {
-        //get column description
+            //get column description
             $columnName = $_POST['columnName'];
             $typeExtraction= $_POST['typeExtraction'];
             $finalPath = $_POST['finalPath'];
@@ -526,7 +616,7 @@ class TReg_VirtualTable extends RegCommon {
         //
         //Delete column the utrModel
         if ($_POST['op']=='deleteColumn') {
-        //get column description
+            //get column description
             $columnId = $_POST["columnId"];
 
             $p= new TReg_VirtualTable();
@@ -544,11 +634,12 @@ class TReg_VirtualTable extends RegCommon {
             $listInstances = $p->trGetInstances();
             $t=$p->generateUTR($utrModel,$listInstances);
 
+
             echo json_encode($t);
         }
         //delete a list of rows
         if ( $_POST['op'] == 'deleteListRows') {
-        //get the list of rows as string
+            //get the list of rows as string
             $lr = $_POST['listRowsToDelete'];
 
             $p= new TReg_VirtualTable();
@@ -586,7 +677,7 @@ class TReg_VirtualTable extends RegCommon {
             /*$_SESSION['utrListOfProperties']['http://localhost/middleware/taov1.rdf#i1264523889019415800']="prop";
             $_SESSION['utrListOfProperties']['http://localhost/middleware/taov1.rdf#i1263288559029078400']="gender";
             $_SESSION['utrListOfProperties']['http://www.w3.org/2000/01/rdf-schema#label']="lABEL";*/
-            
+
             if (isset($_SESSION['utrListOfProperties'])) {
 
                 $p = new TReg_VirtualTable();
@@ -604,6 +695,33 @@ class TReg_VirtualTable extends RegCommon {
 
                 echo json_encode($utrTable);
             }
+        }
+
+        //set filter
+        if ($_POST['op']=='sendFilter'){
+            $filter = $_POST['filter'];
+            //extract filter elements
+            $tabFilter = explode("|",$filter);
+            
+            $filterDescription['columnID'] =trim($tabFilter[0]);
+            $filterDescription['operator']=trim($tabFilter[1]);
+            $filterDescription['value']=trim($tabFilter[2]);
+
+            //print_r($filterDescription);
+
+            $_SESSION['filterDescription']= $filterDescription;
+
+            $p = new TReg_VirtualTable();
+
+            $utrModel = $_SESSION['utrModel'];//$p->loadUtrModel($idModel);
+            $listInstances = $p->trGetInstances();
+
+
+            $t=$p->generateUTR($utrModel,$listInstances);
+
+            $tf = $p->filterAndGenerateUtr($filterDescription, $utrModel, $listInstances);
+            echo json_encode($tf);
+
         }
 
     }
