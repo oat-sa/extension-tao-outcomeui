@@ -161,17 +161,5 @@ class Results extends TaoModule {
 		$this->setView("create_table.tpl");
 	}
 	
-	/*
-	 * @TODO implement the following actions
-	 */
-	
-	public function getMetaData(){
-		throw new Exception("Not yet implemented");
-	}
-	
-	public function saveComment(){
-		throw new Exception("Not yet implemented");
-	}
-	
 }
 ?>
