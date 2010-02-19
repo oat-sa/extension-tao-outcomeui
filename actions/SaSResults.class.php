@@ -34,5 +34,17 @@ class SaSResults extends Results {
 		parent::setView('sas.tpl', true);
     }
 	
+	/**
+	 * 
+	 * @return 
+	 */
+	public function createTable(){
+		$clazz = $this->getCurrentClass();
+		$_SESSION['instances'] = array();
+		foreach($clazz->getInstances(true) as $instance){
+			$_SESSION['instances'][$instance->uriResource] = $instance->uriResource;
+		}
+		$this->setView("create_table.tpl");
+	}
 }
 ?>
