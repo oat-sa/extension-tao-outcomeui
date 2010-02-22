@@ -1,4 +1,4 @@
-msgid ""
+msgid "Result saved"
 msgstr ""
 
 msgid "Edit result"
@@ -19,6 +19,9 @@ msgstr "Gérer les résultats"
 msgid "Results library"
 msgstr "Librairie de résultats"
 
+msgid "search"
+msgstr ""
+
 msgid "new class"
 msgstr "nouvelle classe"
 
@@ -37,11 +40,11 @@ msgstr "modifier les résultat"
 msgid "new property"
 msgstr "nouvelle propriété"
 
+msgid "meta data"
+msgstr ""
+
 msgid "create table"
 msgstr "créer un tableau"
-
-msgid "import"
-msgstr "importer"
 
 msgid "export"
 msgstr "exporter"
@@ -50,7 +53,10 @@ msgid "This module constitutes the final step."
 msgstr "Ce module constitue la dernière étape."
 
 msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
-msgstr "Les résultats de tous les tests passés avec les données des Sujets, Groupes et Items. Les données récupérées pendant la passation de chaque tesst dont collectées et géreés ici. "
+msgstr "Les résultats de tous les tests passés avec les données des Sujets, Groupes et Items. Les données récupérées pendant la passation de chaque tesst dont collectées et géreés ici."
+
+msgid "import"
+msgstr "importer"
 
 msgid "EN"
 msgstr "English"
@@ -63,3 +69,4 @@ msgstr "German"
 
 msgid "LU"
 msgstr "Luxemburgish"
+

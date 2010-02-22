@@ -19,6 +19,9 @@ msgstr ""
 msgid "Results library"
 msgstr ""
 
+msgid "search"
+msgstr ""
+
 msgid "new class"
 msgstr ""
 
@@ -37,10 +40,10 @@ msgstr ""
 msgid "new property"
 msgstr ""
 
-msgid "create table"
+msgid "meta data"
 msgstr ""
 
-msgid "import"
+msgid "create table"
 msgstr ""
 
 msgid "export"
@@ -63,3 +66,4 @@ msgstr "German"
 
 msgid "LU"
 msgstr "Luxemburgish"
+
