@@ -574,11 +574,11 @@ class TReg_VirtualTable extends RegCommon {
 
             $t=$p->generateUTR($utrModel,$listInstances);
 
-            $filterDescription['columnID'] ='prop';
+            /*$filterDescription['columnID'] ='prop';
             $filterDescription['operator']='>';
             $filterDescription['value']=1;
 
-            $tf = $p->filterAndGenerateUtr($filterDescription, $utrModel, $listInstances);
+            $tf = $p->filterAndGenerateUtr($filterDescription, $utrModel, $listInstances);*/
             echo json_encode($tf);
         }
 
