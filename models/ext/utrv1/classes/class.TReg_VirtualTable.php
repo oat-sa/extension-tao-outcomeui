@@ -503,12 +503,21 @@ class TReg_VirtualTable extends RegCommon {
         return $t;
 
     }
-
+/**
+     * get the code of the current modul
+     *
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * 
+     * @return String
+     */
 
     public function trGetCurrentExtention() {
 
         $p = new RegCommon();
         $currentExtension = $p->getCurrentModule();
+        return $currentExtension;
     }
     /**
      * this method intercept the request of the client (ajax) and invoke the
@@ -579,7 +588,7 @@ class TReg_VirtualTable extends RegCommon {
             $filterDescription['value']=1;
 
             $tf = $p->filterAndGenerateUtr($filterDescription, $utrModel, $listInstances);*/
-            echo json_encode($tf);
+            echo json_encode($t);
         }
 
         //Add column
@@ -633,7 +642,6 @@ class TReg_VirtualTable extends RegCommon {
 
             $listInstances = $p->trGetInstances();
             $t=$p->generateUTR($utrModel,$listInstances);
-
 
             echo json_encode($t);
         }
@@ -730,7 +738,5 @@ class TReg_VirtualTable extends RegCommon {
 
 $p= new TReg_VirtualTable();
 $p->dispatch();
-
-
 
 ?>
