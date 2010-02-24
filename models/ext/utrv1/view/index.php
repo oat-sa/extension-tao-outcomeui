@@ -1,3 +1,4 @@
+<?session_start();?>
 <!--
 To change this template, choose Tools | Templates
 and open the template in the editor.
@@ -17,6 +18,9 @@ and open the template in the editor.
         <script type="text/javascript" src="javascript/utrfactory.js"></script>
 
         <link rel="stylesheet" type="text/css" href="cssfiles/default/basic.css">
+		<script type='text/javascript'>
+			alert(__("Add colomn wizard"));
+		</script>
     </head>
     <body>
         <div id="utrDiv" >
