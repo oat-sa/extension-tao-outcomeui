@@ -9,8 +9,6 @@
  */
 class SaSResults extends Results {
 
-    
-    
     /**
      * @see Results::__construct()
      */
@@ -20,7 +18,6 @@ class SaSResults extends Results {
 		parent::__construct();
     }
     	
-		
 	/**
      * @see TaoModule::setView()
      */
@@ -32,6 +29,19 @@ class SaSResults extends Results {
 			$this->setData('includedView', BASE_PATH . '/' . DIR_VIEWS . $GLOBALS['dir_theme'] . $identifier);
 		}
 		parent::setView('sas.tpl', true);
+    }
+	
+	/**
+     * overrided to prevent exception: 
+     * if no class is selected, the root class is returned 
+     * @see TaoModule::getCurrentClass()
+     * @return core_kernel_class_Class
+     */
+    protected function getCurrentClass() {
+        if($this->hasRequestParameter('classUri')){
+        	return parent::getCurrentClass();
+        }
+		return $this->getRootClass();
     }
 	
 	/**
