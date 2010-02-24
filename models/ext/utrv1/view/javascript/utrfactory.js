@@ -46,6 +46,7 @@ function utrIntro(){
 
 }
 
+
 //save context as history to undo redo
 function saveContext(){
     
@@ -815,6 +816,51 @@ function utrConstructor(){
     });
 
 }
+
+function trad(){
+        __("Build your table");
+        __("Add colomn wizard");
+        __("Remove rows");
+        __("Template manager");
+        __("Filter and search ");
+        __("Add new filter");
+        __("Delete filter");
+        __("Delete filter");
+        __("Apply filter");
+        __("Cancel");
+        __("Ok");
+        __("Yes");
+        __("No");
+        __("Template saved");
+        __("Back");
+        __("Next");
+        __("List of context classes");
+        __("Root classes");
+        __("List of properties");
+        __("UTR Builder");
+        __("Chose a property");
+        __("Column name");
+        __("Extraction method");
+        __("Query");
+        __("Exit");
+        __("Info");
+        __("Columns");
+        __("Do you want to delete this column ?");
+        __("Do you want to delete these rows ?");
+        __("Error in loading table");
+        __("Thank you for using UTR");
+        __("Error, action failed !");
+        __("Select a property");
+        __("With UTR, you can");
+        __("Build a flexible table to extract information");
+        __("Build a complex table with no unlimited depth");
+        __("You can dynamically Add, remove column");
+        __("Calculate the percentage of columns and rows");
+        __("Create save your own Template of tables");
+        __("Get a direct chart diagram on your columns ans rows ");
+        __("Welcome to UTR Builder");
+
+    }
 
 this.utrConstructor();
 

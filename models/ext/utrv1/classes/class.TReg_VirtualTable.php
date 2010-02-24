@@ -52,6 +52,53 @@ class TReg_VirtualTable extends RegCommon {
      * @var List
      */
     public $listOfInstance = null;
+
+    public function trad(){
+        __("Build your table");
+        __("Add colomn wizard");
+        __("Remove rows");
+        __("Template manager");
+        __("Filter and search ");
+        __("Add new filter");
+        __("Delete filter");
+        __("Delete filter");
+        __("Apply filter");
+        __("Cancel");
+        __("Ok");
+        __("Yes");
+        __("No");
+        __("Template saved");
+        __("Back");
+        __("Next");
+        __("List of context classes");
+        __("Root classes");
+        __("List of properties");
+        __("UTR Builder");
+        __("Chose a property");
+        __("Column name");
+        __("Extraction method");
+        __("Query");
+        __("Exit");
+        __("Info");
+        __("Columns");
+        __("Do you want to delete this column ?");
+        __("Do you want to delete these rows ?");
+        __("Error in loading table");
+        __("Thank you for using UTR");
+        __("Error, action failed !");
+        __("Select a property");
+        __("With UTR, you can");
+        __("Build a flexible table to extract information");
+        __("Build a complex table with no unlimited depth");
+        __("You can dynamically Add, remove column");
+        __("Calculate the percentage of columns and rows");
+        __("Create save your own Template of tables");
+        __("Get a direct chart diagram on your columns ans rows ");
+        __("Welcome to UTR Builder");
+
+        
+    }
+
     //get utr,filter get the new list of instances  and re Generate
     public function filterAndGenerateUtr ($filterDescription,$utrModel,$listInstances) {
 
@@ -232,6 +279,7 @@ class TReg_VirtualTable extends RegCommon {
             //$listInstances = $this->trGetInstances();//TODO verify
             //test list of instance
             error_reporting(0);
+
             foreach ( $listInstances as $instanceSourceUri=>$obj) {
 
                 //get the bridged value, this method provides a brut value that can be performed by pther one
@@ -619,6 +667,7 @@ class TReg_VirtualTable extends RegCommon {
             $listInstances = $this->trGetInstances();
 
             $t=$p->generateUTR($utrModel,$listInstances);
+            echo (__("coco"));
 
             echo json_encode($t);
         }
