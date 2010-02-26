@@ -11,16 +11,14 @@ and open the template in the editor.
         <script type="text/javascript" src="javascript/jquery-1.3.2.min.js"></script>
         <script type="text/javascript" src="javascript/raphael.js"></script>
         <script type="text/javascript" src="javascript/pie.js"></script>
-		
-		<script type="text/javascript" src="locales/<?=$_SESSION['lang']?>/messages_po.js"></script>
-		<script type="text/javascript" src="javascript/i18n.js"></script>
+
+        <script type="text/javascript" src="locales/<?=$_SESSION['lang']?>/messages_po.js"></script>
+        <script type="text/javascript" src="javascript/i18n.js"></script>
 
         <script type="text/javascript" src="javascript/utrfactory.js"></script>
 
         <link rel="stylesheet" type="text/css" href="cssfiles/default/basic.css">
-		<script type='text/javascript'>
-			alert(__("Add colomn wizard"));
-		</script>
+        
     </head>
     <body>
         <div id="utrDiv" >
@@ -31,13 +29,11 @@ and open the template in the editor.
                 </div>
 
 
-
                 <div id="classesDiv">
                     <div id="contextClassHeader" class="boxHeader">
 
                         <input id="backClass" type="button" value="Back" name="backClass"/>
                         <h1>Classe</h1>
-
 
                     </div>
                     <div id="contextClasses" class="contextClassesStyle">
@@ -94,13 +90,12 @@ and open the template in the editor.
                 </table>
 
 
-
             </div>
 
 
             <div id="utrmenu">
-                <input id="columnBuilder" type="submit" value="Column Builder Wizard..." /><input id="deleteListRows" type="submit" value="Delete Rows..." /><input id="manageUtr" type="submit" value="Template Manager..." />
-                <input id="searchProperty" type="text" name="searchProperty" value="" size="10" /><input id="searchOperator" type="text" name="searchOperator" value="" size="5" /><input id="searchValue" type="text" name="searchValue" value="" size="10" /><input id="sendFilter" type="submit" value="Send Filter" />
+                <input id="columnBuilder" type="submit" value="Column Builder Wizard..." /><input id="deleteListRows" type="submit" value="Delete Rows..." /><input id="manageUtr" type="submit" value="Template Manager..." /><input id="manageFilter" type="submit" value="Filter" />
+                
             </div>
 
             <table id="UTR" border="1">
@@ -117,9 +112,9 @@ and open the template in the editor.
                 <div id="#utrTemplateTitle">
                     utr
                 </div>
-                
+
                 <div id="utrTemplateModelList">
-                    
+
 
                 </div>
 
@@ -132,6 +127,58 @@ and open the template in the editor.
         </div>
         <div id="pieStat" class="pieStatClass">
             <input id="hidePieStat" type="button" value="Hide" />
+
+        </div>
+
+        <div id="filterUtr">
+            <table border="1" width="1" cellspacing="1">
+                <thead>
+                    <tr>
+                        <th>C</th>
+                        <th>F</th>
+                        <th>V</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input id="searchProperty1" type="text" name="searchProperty1" value="" size="10" /></td>
+                        <td><input id="searchOperator1" type="text" name="searchOperator1" value="" size="5" /></td>
+                        <td><input id="searchValue1" type="text" name="searchValue1" value="" size="10" /></td>
+                    </tr>
+                    <tr>
+                        <td><input id="searchProperty2" type="text" name="searchProperty2" value="" size="10" /></td>
+                        <td><input id="searchOperator2" type="text" name="searchOperator2" value="" size="5" /></td>
+                        <td><input id="searchValue2" type="text" name="searchValue2" value="" size="10" /></td>
+                    </tr>
+                    <tr>
+                        <td><input id="searchProperty3" type="text" name="searchProperty3" value="" size="10" /></td>
+                        <td><input id="searchOperator3" type="text" name="searchOperator3" value="" size="5" /></td>
+                        <td><input id="searchValue3" type="text" name="searchValue3" value="" size="10" /></td>
+                    </tr>
+                    <tr>
+                        <td><input id="searchProperty4" type="text" name="searchProperty4" value="" size="10" /></td>
+                        <td><input id="searchOperator4" type="text" name="searchOperator4" value="" size="5" /></td>
+                        <td><input id="searchValue4" type="text" name="searchValue4" value="" size="10" /></td>
+                    </tr>
+                    <tr>
+                        <td><input id="searchProperty5" type="text" name="searchProperty4" value="" size="10" /></td>
+                        <td><input id="searchOperator5" type="text" name="searchOperator4" value="" size="5" /></td>
+                        <td><input id="searchValue5" type="text" name="searchValue4" value="" size="10" /></td>
+                    </tr>
+
+
+
+                    <tr>
+                        <td><input id="sendFilter" type="submit" value="Send Filter" /></td>
+                        <td><input id="cancelFilter" type="submit" value="Cancel" /></td>
+                        <td></td>
+                    </tr>
+
+
+
+                </tbody>
+            </table>
+
 
         </div>
 

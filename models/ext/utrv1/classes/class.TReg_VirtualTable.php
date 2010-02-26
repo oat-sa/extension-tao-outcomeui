@@ -53,7 +53,7 @@ class TReg_VirtualTable extends RegCommon {
      */
     public $listOfInstance = null;
 
-    public function trad(){
+    public function trad() {
         __("Build your table");
         __("Add colomn wizard");
         __("Remove rows");
@@ -96,38 +96,59 @@ class TReg_VirtualTable extends RegCommon {
         __("Get a direct chart diagram on your columns ans rows ");
         __("Welcome to UTR Builder");
 
-        
     }
 
     //get utr,filter get the new list of instances  and re Generate
-    public function filterAndGenerateUtr ($filterDescription,$utrModel,$listInstances) {
-
+    public function filterAndGenerateUtr ($lisOfFilterDescription,$utrModel,$listInstances) {
+        //generate the first time to have all the values
         $utr = $this->generateUTR($utrModel, $listInstances);
+        
         //get the utrModel
         $utrModelGenerated = $utr['utrModel'];
 
-        $rows = $this->filterColumn($filterDescription, $utrModelGenerated);
-        //regenerate the table based on the new list of instances
-        $newRows = $rows['match'];
-        //print_r($newRows);
-        $utr = $this->generateUTR($utrModelGenerated, $newRows);
-        return $utr;
+       // Apply the filter one after one, the order is important
+        foreach($lisOfFilterDescription as $filterDescription) {
+            //filter according
 
+            $rows = $this->filterColumn($filterDescription, $utrModelGenerated);
+            
+            //regenerate the table based on the new list of instances
+            $newRows = $rows['match'];
+           
+            // print_r($newRows);
+            $utrGenerated = $this->generateUTR($utrModel, $newRows);
+            $utrModelGenerated = $utrGenerated['utrModel'];
+
+        }
+        return $utrGenerated;
     }
 
     public function filterColumn($filterDescription,$table) {
         //get filter information
+        //print_r($filterDescription);
+
+        
+        
+        $result = array();
+
         $result['notMatch'] = array();
         $result['match'] = array();
 
+        $filtredRows= array();
+
+        //prepare filter options
         $columnID = $filterDescription['columnID'];
         $operator = $filterDescription['operator'];
         $valueCriteria = $filterDescription['value'];
 
+      
+
         //get the column rows
         if (isset ($table[$columnID]['rowsColumn'])) {
-
+            //initialize the array
+            //$result['match'];
             $columnTable = $table[$columnID]['rowsColumn'];
+
             $result = array();
             //do a filter
             foreach($columnTable as $instance=>$valueRow) {
@@ -142,7 +163,7 @@ class TReg_VirtualTable extends RegCommon {
                         break;
                     case '<':
                     //do
-                        if ( $valueRow <$valueCriteria) {
+                        if ( $valueRow < $valueCriteria) {
                             $match= TRUE;
                         }
                         break;
@@ -155,22 +176,30 @@ class TReg_VirtualTable extends RegCommon {
                         break;
                     case 'like':
                     //do
-                        
-                        //$match = preg_match("#".$valueCriteria+"#",$valueRow);
+
+                    //$match = preg_match("#".$valueCriteria+"#",$valueRow);
                         $pos = strpos($valueRow,$valueCriteria);
-                    if ( $pos !== false){
-                        $match = true;
-                    }
- 
+                        if ( $pos !== false) {
+                            $match = TRUE;
+
+                        }
+
                         break;
                 }//switch
                 //if on match then we add this row in the result array
+
                 if ($match) {
                     $result['match'][$instance]=1;
+
                 }else {
                     $result['notMatch'][$instance]=2;
                 }
             }//foreach
+
+        }
+        //we send an empty array if there is no match
+        if (!isset($result['match'])){
+            $result['match']= array();
         }
 
         return $result;
@@ -262,6 +291,7 @@ class TReg_VirtualTable extends RegCommon {
 
 
 
+
         //get the list of instances
         //$listInstances = $this->trGetInstances();
         //for each column we get the value according to instance and path
@@ -275,10 +305,8 @@ class TReg_VirtualTable extends RegCommon {
             //get the path of the property
             $finalPath = $columnDescription['finalPath'];
             $columnName = $columnDescription['columnName'];
-            //for each instance in the list, get the value of the column
-            //$listInstances = $this->trGetInstances();//TODO verify
-            //test list of instance
-            error_reporting(0);
+            
+            //error_reporting(0);
 
             foreach ( $listInstances as $instanceSourceUri=>$obj) {
 
@@ -551,13 +579,13 @@ class TReg_VirtualTable extends RegCommon {
         return $t;
 
     }
-/**
+    /**
      * get the code of the current modul
      *
      *
      * @access public
      * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
-     * 
+     *
      * @return String
      */
 
@@ -667,7 +695,7 @@ class TReg_VirtualTable extends RegCommon {
             $listInstances = $this->trGetInstances();
 
             $t=$p->generateUTR($utrModel,$listInstances);
-            echo (__("coco"));
+            //echo (__("coco"));
 
             echo json_encode($t);
         }
@@ -755,28 +783,38 @@ class TReg_VirtualTable extends RegCommon {
         }
 
         //set filter
-        if ($_POST['op']=='sendFilter'){
+        if ($_POST['op']=='sendFilter') {
             $filter = $_POST['filter'];
-            //extract filter elements
-            $tabFilter = explode("|",$filter);
             
-            $filterDescription['columnID'] =trim($tabFilter[0]);
-            $filterDescription['operator']=trim($tabFilter[1]);
-            $filterDescription['value']=trim($tabFilter[2]);
+            //extract filter elements
+            // get the filters in tab
+            $tabOfFilters = explode("|*$",$filter);
+            
+            $finalTabOFilters = array();
+            foreach ($tabOfFilters as $postFilterDescription) {
+
+                $tabFilter = explode("|||",$postFilterDescription);
+
+                $filterDescription['columnID'] =trim($tabFilter[0]);
+                $filterDescription['operator']=trim($tabFilter[1]);
+                $filterDescription['value']=trim($tabFilter[2]);
+
+                $finalTabOFilters[] = $filterDescription;
+
+            }//foreach
 
             //print_r($filterDescription);
 
-            $_SESSION['filterDescription']= $filterDescription;
+            //$_SESSION['filterDescription']= $filterDescription;
 
             $p = new TReg_VirtualTable();
 
             $utrModel = $_SESSION['utrModel'];//$p->loadUtrModel($idModel);
             $listInstances = $p->trGetInstances();
 
+            //$t=$p->generateUTR($utrModel,$listInstances);
 
-            $t=$p->generateUTR($utrModel,$listInstances);
-
-            $tf = $p->filterAndGenerateUtr($filterDescription, $utrModel, $listInstances);
+            $tf = $p->filterAndGenerateUtr($finalTabOFilters, $utrModel, $listInstances);
             echo json_encode($tf);
 
         }
