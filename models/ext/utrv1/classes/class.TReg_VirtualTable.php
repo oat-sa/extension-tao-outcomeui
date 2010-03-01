@@ -97,24 +97,62 @@ class TReg_VirtualTable extends RegCommon {
         __("Welcome to UTR Builder");
 
     }
+    //export CSV
+    public function exportCSV($utrTable,$del) {
+        //besed on rowsHTML already created we provide the csv
+        $rowsHTML = $utrTable['rowsHTML'];
+        $utrModel = $utrTable['utrModel'];
+
+        $csvLines = array();
+
+        $firstlineTab = array();
+        foreach ( $utrModel as $columnId=>$columnDescription) {
+            $firstlineTab[] = $columnDescription['columnName'];
+        }
+
+        $firstLine = implode($del, $firstlineTab);
+        //save th first line, the manes of columns
+        $csvLines[] = $firstLine;
+
+        //Cretae the rows of the CSV
+
+        foreach($rowsHTML as $row=>$rowContent) {
+            $lineTab = array();
+            //$row content is an associatif array wiith name of column:Value
+            foreach ($rowContent as $columnId=>$value) {
+                $lineTab[] = $value;
+            }
+            $line = implode($del,$lineTab);//the line is created
+            $csvLines[] = $line;
+
+        }
+        $csvUtr = implode("\n",$csvLines);
+        //send
+        //header('content-type:text/csv');
+
+        //file_put_contents('coco.csv', $csvUtr);
+
+        return $csvUtr;
+
+    }
 
     //get utr,filter get the new list of instances  and re Generate
     public function filterAndGenerateUtr ($lisOfFilterDescription,$utrModel,$listInstances) {
         //generate the first time to have all the values
         $utr = $this->generateUTR($utrModel, $listInstances);
-        
+
         //get the utrModel
         $utrModelGenerated = $utr['utrModel'];
 
-       // Apply the filter one after one, the order is important
+        // Apply the filter one after one, the order is important
         foreach($lisOfFilterDescription as $filterDescription) {
             //filter according
 
             $rows = $this->filterColumn($filterDescription, $utrModelGenerated);
-            
+
             //regenerate the table based on the new list of instances
             $newRows = $rows['match'];
-           
+
             // print_r($newRows);
             $utrGenerated = $this->generateUTR($utrModel, $newRows);
             $utrModelGenerated = $utrGenerated['utrModel'];
@@ -127,8 +165,8 @@ class TReg_VirtualTable extends RegCommon {
         //get filter information
         //print_r($filterDescription);
 
-        
-        
+
+
         $result = array();
 
         $result['notMatch'] = array();
@@ -141,7 +179,7 @@ class TReg_VirtualTable extends RegCommon {
         $operator = $filterDescription['operator'];
         $valueCriteria = $filterDescription['value'];
 
-      
+
 
         //get the column rows
         if (isset ($table[$columnID]['rowsColumn'])) {
@@ -198,7 +236,7 @@ class TReg_VirtualTable extends RegCommon {
 
         }
         //we send an empty array if there is no match
-        if (!isset($result['match'])){
+        if (!isset($result['match'])) {
             $result['match']= array();
         }
 
@@ -305,7 +343,7 @@ class TReg_VirtualTable extends RegCommon {
             //get the path of the property
             $finalPath = $columnDescription['finalPath'];
             $columnName = $columnDescription['columnName'];
-            
+
             //error_reporting(0);
 
             foreach ( $listInstances as $instanceSourceUri=>$obj) {
@@ -356,6 +394,9 @@ class TReg_VirtualTable extends RegCommon {
         $tableF['utrModel']= $table;//the real model of the table, more scientists
         $tableF['rowsInfo']=$rowsInfo;// the statistique of the the row
         //generation html
+
+        //persistance
+        $_SESSION['lastUTR'] = $tableF;
         return $tableF;
 
         // section 10-13-1--65--30cc15d0:1250bc77bd0:-8000:0000000000001023 end
@@ -659,11 +700,7 @@ class TReg_VirtualTable extends RegCommon {
 
             $t=$p->generateUTR($utrModel,$listInstances);
 
-            /*$filterDescription['columnID'] ='prop';
-            $filterDescription['operator']='>';
-            $filterDescription['value']=1;
 
-            $tf = $p->filterAndGenerateUtr($filterDescription, $utrModel, $listInstances);*/
             echo json_encode($t);
         }
 
@@ -772,7 +809,7 @@ class TReg_VirtualTable extends RegCommon {
                 $listOfInstances = $p->trGetInstances();
 
                 //generate an UTR model
-                $utrTable = $p->createSimpleUtr($listOfInstances, $listOfProperties);
+                $utrModel = $p->createSimpleUtr($listOfInstances, $listOfProperties);
 
                 $_SESSION['utrModel'] = $utrModel;// for the persistance
                 //unset the session var
@@ -785,11 +822,11 @@ class TReg_VirtualTable extends RegCommon {
         //set filter
         if ($_POST['op']=='sendFilter') {
             $filter = $_POST['filter'];
-            
+
             //extract filter elements
             // get the filters in tab
             $tabOfFilters = explode("|*$",$filter);
-            
+
             $finalTabOFilters = array();
             foreach ($tabOfFilters as $postFilterDescription) {
 
@@ -818,8 +855,18 @@ class TReg_VirtualTable extends RegCommon {
             echo json_encode($tf);
 
         }
+        //export CSV
 
-    }
+        if ($_POST["op"]=='exportCSV') {
+            //filter and export
+            $utrTable = $_SESSION['lastUTR'];
+            $csv= $this->exportCSV($utrTable, ';');
+
+            echo json_encode($csv);
+
+        }
+
+    }//dispatch
 
 }
 
