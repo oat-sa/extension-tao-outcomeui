@@ -196,7 +196,7 @@ function getRootClassesOfInstances(){
             actualClassUri = 'rootClasses';
             pathProperties = [];
 
-            //return listClasses;
+        //return listClasses;
         }//succes
 
     });
@@ -658,9 +658,9 @@ function getUtrModels(){
                 $("#utrTemplateModelList").append(content);
             }
      
-            //close the window
-            //$("#propertyBinding").hide();
-            //utrIntro();
+        //close the window
+        //$("#propertyBinding").hide();
+        //utrIntro();
         }
 
     };
@@ -695,208 +695,228 @@ function sendFilter(){
     var i =0;
     //create the complex filter
     for(i=1;i<=5;i++){
+
+        var queryProperty = $("#searchProperty"+i).val();
+        var queryOperator = $("#searchOperator"+i).val();
+        var queryValue = $("#searchValue"+i).val();
     
+        //test if empty
+        if ( queryProperty !=''){
 
-    var queryProperty = $("#searchProperty"+i).val();
-    var queryOperator = $("#searchOperator"+i).val();
-    var queryValue = $("#searchValue"+i).val();
+            var columnFilter = queryProperty+'|||'+queryOperator+'|||'+queryValue;
+            tabOfFilters.push(columnFilter);
 
-    var columnFilter = queryProperty+'|||'+queryOperator+'|||'+queryValue;
-    tabOfFilters.push(columnFilter);
-}
-
-/* queryProperty ='prop' ;//$("#searchProperty").val();
-    queryOperator = '<';//$("#searchOperator").val();
-    queryValue = '5';//$("#searchValue").val();
-    columnFilter = queryProperty+'|||'+queryOperator+'|||'+queryValue;
-    tabOfFilters.push(columnFilter);*/
-
-var fullFilterText = tabOfFilters.join('|*$');
-    
-options={
-    type: "POST",
-    url: "../classes/class.TReg_VirtualTable.php",
-    data: {
-        op:"sendFilter",
-        filter:fullFilterText
-    },
-    dataType:"json",
-    success: function(msg){
-        actualUTR = msg;
-        previewTable(actualUTR);
+        }//if
     }
 
-};
-$.ajax(options);
 
+    var fullFilterText = tabOfFilters.join('|*$');
     
+    options={
+        type: "POST",
+        url: "../classes/class.TReg_VirtualTable.php",
+        data: {
+            op:"sendFilter",
+            filter:fullFilterText
+        },
+        dataType:"json",
+        success: function(msg){
+            actualUTR = msg;
+            previewTable(actualUTR);
+        }
+
+    };
+    $.ajax(options);
+    
+}
+//export to csv
+function exportCSV (){
+
+    options={
+        type: "POST",
+        url: "../classes/class.TReg_VirtualTable.php",
+        data: {
+            op:"exportCSV"
+
+        },
+        success: function(msg){
+            alert(msg);
+            
+        }
+
+    };
+    $.ajax(options);
+
 }
 
 //manage the event of the index page
 function manageEvents(){
-//alert ("manage");
-$("#closePathBuilder").click(function (){
-    $("#divPathWizard").slideUp(speed);
-});
-$("#getInitialInstances").click(getInitialInstances);
-$("#getRootClasses").click(getRootClassesOfInstances);
-//get class infos and create path
-$("input[class *='classInfos']").live('click',getClassInfos);
-$("input[name *='propertyInfos']").live('click', getPropertyBinding);
-$("#remove").click(removeSession);
-//hide the statistic info
-$("input[class = 'utrTemplate']").live('click',getUtrTemplate);
+    //alert ("manage");
+    $("#closePathBuilder").click(function (){
+        $("#divPathWizard").slideUp(speed);
+    });
+    $("#getInitialInstances").click(getInitialInstances);
+    $("#getRootClasses").click(getRootClassesOfInstances);
+    //get class infos and create path
+    $("input[class *='classInfos']").live('click',getClassInfos);
+    $("input[name *='propertyInfos']").live('click', getPropertyBinding);
+    $("#remove").click(removeSession);
+    //hide the statistic info
+    $("input[class = 'utrTemplate']").live('click',getUtrTemplate);
 
     
 
-//add column event
-$("#addColumn").click(addColumn);
-$("#exitAddColumn").click(function(){
-    $("#propertyBinding").fadeOut(speed*2);
-    //delete the last property in the path
-    pathProperties.pop();
-});
-//delete column
-$(".deleteColumnClass").live('click',function(){
-    //get parameter
+    //add column event
+    $("#addColumn").click(addColumn);
+    $("#exitAddColumn").click(function(){
+        $("#propertyBinding").fadeOut(speed*2);
+        //delete the last property in the path
+        pathProperties.pop();
+    });
+    //delete column
+    $(".deleteColumnClass").live('click',function(){
+        //get parameter
         
-    var colId = $(this).attr("id");
-    //alert ("delete "+ colId);
-    deleteColumn(colId);
-});
-$("#columnBuilder").click(function(){
+        var colId = $(this).attr("id");
+        //alert ("delete "+ colId);
+        deleteColumn(colId);
+    });
+    $("#columnBuilder").click(function(){
         
-    //reset patth and history of actions
-    historyAction = new Array();//Reset history of actions
-    pathProperties = new Array();
+        //reset patth and history of actions
+        historyAction = new Array();//Reset history of actions
+        pathProperties = new Array();
 
 
-    //show the path bulder div
-    $("#divPathWizard").show(speed*2);
+        //show the path bulder div
+        $("#divPathWizard").show(speed*2);
 
-    getRootClassesOfInstances();
+        getRootClassesOfInstances();
 
-});
-$("#backClass").click(backContext);
-//
+    });
+    $("#backClass").click(backContext);
+    //
     
-$("#hidePieStat").click(function (){
-    $("#pieStat").slideUp(speed);
-});
+    $("#hidePieStat").click(function (){
+        $("#pieStat").slideUp(speed);
+    });
 
-//show column detail
-$(".infoColumnClass").live('click', function(){
-    //get class id
-    var colId = $(this).attr("id");
-    showColumnInfo(colId);
+    //show column detail
+    $(".infoColumnClass").live('click', function(){
+        //get class id
+        var colId = $(this).attr("id");
+        showColumnInfo(colId);
 
 
-});
+    });
 
-//Manage delete row
-$("#deleteListRows").click(deleteListRows);
+    //Manage delete row
+    $("#deleteListRows").click(deleteListRows);
 
-$("#saveUtrBtn").click(saveUtr);
-$("#loadUtrBtn").click(loadUtr);
+    $("#saveUtrBtn").click(saveUtr);
+    $("#loadUtrBtn").click(loadUtr);
 
-$("#manageUtr").click(function(){
-    /*$("#saveUtrBtn").toggle();
+    $("#manageUtr").click(function(){
+        /*$("#saveUtrBtn").toggle();
         $("#loadUtrBtn").toggle();
         $("#txtUtrName").toggle();*/
-    //$("link[rel=stylesheet]").attr({href:"green.css"});
+        //$("link[rel=stylesheet]").attr({href:"green.css"});
 
 
-    getUtrModels();
+        getUtrModels();
 
 
-});
-//close utrManager
-$("#cancelUtrManager").click(function(){
-    $("#utrTemplateManager").hide(speed);
+    });
+    //close utrManager
+    $("#cancelUtrManager").click(function(){
+        $("#utrTemplateManager").hide(speed);
 
 
-});
+    });
 
-//manage filter
-$("#sendFilter").click(function (){
+    //manage filter
+    $("#sendFilter").click(function (){
 
-    sendFilter();
-    $("#filterUtr").hide(speed);
-});
+        sendFilter();
+        $("#filterUtr").hide(speed);
+    });
 
 
-$("#cancelFilter").click(function(){
+    $("#cancelFilter").click(function(){
         
-    $("#filterUtr").hide(speed);
+        $("#filterUtr").hide(speed);
 
-});
+    });
   
-$("#manageFilter").click(function(){
-    $("#filterUtr").show(speed);
+    $("#manageFilter").click(function(){
+        $("#filterUtr").show(speed);
 
-});
+    });
+
+    //export to csv
+    $("#export").click(exportCSV);
     
 }
 
 
 function utrConstructor(){
-$(function(){
-    //alert("o jQuery");
-    //   $("#coco").hide();
-    //   $("#coco").toggle(1000);
-    //remove session, neww table
+    $(function(){
+        //alert("o jQuery");
+        //   $("#coco").hide();
+        //   $("#coco").toggle(1000);
+        //remove session, neww table
 
-    removeSession();
-    // get the initial UTR, the user will ha ve directely a simple uTR with the properties of the current class
-    loadInitialUtr();
-    utrIntro();
-    manageEvents();
-});
+        removeSession();
+        // get the initial UTR, the user will ha ve directely a simple uTR with the properties of the current class
+        loadInitialUtr();
+        utrIntro();
+        manageEvents();
+    });
 
 }
 
 function trad(){
-__("Build your table");
-__("Add colomn wizard");
-__("Remove rows");
-__("Template manager");
-__("Filter and search ");
-__("Add new filter");
-__("Delete filter");
-__("Delete filter");
-__("Apply filter");
-__("Cancel");
-__("Ok");
-__("Yes");
-__("No");
-__("Template saved");
-__("Back");
-__("Next");
-__("List of context classes");
-__("Root classes");
-__("List of properties");
-__("UTR Builder");
-__("Chose a property");
-__("Column name");
-__("Extraction method");
-__("Query");
-__("Exit");
-__("Info");
-__("Columns");
-__("Do you want to delete this column ?");
-__("Do you want to delete these rows ?");
-__("Error in loading table");
-__("Thank you for using UTR");
-__("Error, action failed !");
-__("Select a property");
-__("With UTR, you can");
-__("Build a flexible table to extract information");
-__("Build a complex table with no unlimited depth");
-__("You can dynamically Add, remove column");
-__("Calculate the percentage of columns and rows");
-__("Create save your own Template of tables");
-__("Get a direct chart diagram on your columns ans rows ");
-__("Welcome to UTR Builder");
+    __("Build your table");
+    __("Add colomn wizard");
+    __("Remove rows");
+    __("Template manager");
+    __("Filter and search ");
+    __("Add new filter");
+    __("Delete filter");
+    __("Delete filter");
+    __("Apply filter");
+    __("Cancel");
+    __("Ok");
+    __("Yes");
+    __("No");
+    __("Template saved");
+    __("Back");
+    __("Next");
+    __("List of context classes");
+    __("Root classes");
+    __("List of properties");
+    __("UTR Builder");
+    __("Chose a property");
+    __("Column name");
+    __("Extraction method");
+    __("Query");
+    __("Exit");
+    __("Info");
+    __("Columns");
+    __("Do you want to delete this column ?");
+    __("Do you want to delete these rows ?");
+    __("Error in loading table");
+    __("Thank you for using UTR");
+    __("Error, action failed !");
+    __("Select a property");
+    __("With UTR, you can");
+    __("Build a flexible table to extract information");
+    __("Build a complex table with no unlimited depth");
+    __("You can dynamically Add, remove column");
+    __("Calculate the percentage of columns and rows");
+    __("Create save your own Template of tables");
+    __("Get a direct chart diagram on your columns ans rows ");
+    __("Welcome to UTR Builder");
 
 }
 

@@ -94,7 +94,7 @@ and open the template in the editor.
 
 
             <div id="utrmenu">
-                <input id="columnBuilder" type="submit" value="Column Builder Wizard..." /><input id="deleteListRows" type="submit" value="Delete Rows..." /><input id="manageUtr" type="submit" value="Template Manager..." /><input id="manageFilter" type="submit" value="Filter" />
+                <input id="columnBuilder" type="submit" value="Column Builder Wizard..." /><input id="deleteListRows" type="submit" value="Delete Rows..." /><input id="manageUtr" type="submit" value="Template Manager..." /><input id="manageFilter" type="submit" value="Filter" /><input id="export" type="submit" value="Export" />
                 
             </div>
 
