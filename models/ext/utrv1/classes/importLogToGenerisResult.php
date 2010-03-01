@@ -7,8 +7,6 @@
  * @package Result
  */
 
-
-
 require_once($_SERVER['DOCUMENT_ROOT']."/generis/common/inc.extension.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
 /**
@@ -36,9 +34,7 @@ class ImportLogToGenerisResult {
 
     public function __construct($domSom) {//our dev teame Som
         //get the name space
-
-
-
+        
         $logDom = new DOMDocument();
         //$logDom->load(inputFile);
         $logDom = $domSom;
@@ -223,11 +219,17 @@ class ImportLogToGenerisResult {
 //CREATE THE DOM
 $logDom = new DOMDocument();
 //get the path of the xml result from delivery SERVICE
-$xmlPath = $_GET['resultxml'];
-$logDom->load($xmlPath);
 
-unset($_GET['resultxml']);
+$xmlPath = $_POST['pathLogFile'];
+$xmlLogContent = $_POST['contentLogFile'];
 
+$xmlLogContentDecoded = urldecode($xmlLogContent);
+
+//file_put_contents("logxml.txt", $xmlLogContentDecoded);
+
+//$logDom->load($xmlPath);
+$logDom->loadXML($xmlLogContentDecoded);
+//unset($_GET['resultxml']);
 
 $p = new ImportLogToGenerisResult($logDom);
 
