@@ -10,15 +10,12 @@
  * @package Result
  */
 
-
-
 require_once($_SERVER['DOCUMENT_ROOT']."/generis/common/inc.extension.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
 
 
 //define ("$RESULT_NS",'http://127.0.0.1/middleware/demo.rdf#');
 define ('RESULT_MODEL',$_SERVER['DOCUMENT_ROOT'].'/taoResults/models/ext/utrv1/classes/model.xml');
-
 
 /**
  * create class with all properties that are included in the paramaters.

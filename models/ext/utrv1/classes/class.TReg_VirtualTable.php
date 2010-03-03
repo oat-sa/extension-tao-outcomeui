@@ -326,18 +326,26 @@ class TReg_VirtualTable extends RegCommon {
     public function saveUtrModel($utrModel,$idModel) {
 
         //get the old list of model
+        //if file not exist so create it
+        if (!file_exists('utrModel.mdl')){
+            file_put_contents("utrModel.mdl", "");
+        }
+
+
         $oldUtrModels = file_get_contents("utrModel.mdl");
 
         $tabUtrModels = json_decode($oldUtrModels,true);
         //add in tab of models
-        $tabUtrModels[$idModel]= $utrModel;
+        //get the module
+        $module = $this->trGetCurrentExtention();
+
+        $tabUtrModels[$module][$idModel]= $utrModel;
 
         //convert to json and Save
         $jsonUtrModels = json_encode($tabUtrModels);
 
         file_put_contents("utrModel.mdl", $jsonUtrModels);
         return 'Template Saved';
-
     }
 
     /**
@@ -351,10 +359,15 @@ class TReg_VirtualTable extends RegCommon {
     public function loadUtrModel($idModel) {
         $actualUtr = array ();
 
+        //if file not exist so create it
+        if (!file_exists('utrModel.mdl')){
+            file_put_contents("utrModel.mdl", "");
+        }
+
         $jsonUtrModels= file_get_contents("utrModel.mdl");
         $tabUtrModels = json_decode($jsonUtrModels,true);
-
-        $actualUtr = $tabUtrModels[$idModel];
+        $module = $this->trGetCurrentExtention();
+        $actualUtr = $tabUtrModels[$module][$idModel];
         //print_r($tabUtrModels);
 
         return $actualUtr;
@@ -370,8 +383,9 @@ class TReg_VirtualTable extends RegCommon {
     public function getListOfUtrModel() {
         $actualUtr = array ();
         $jsonUtrModels= file_get_contents("utrModel.mdl");
+        $module = $this->trGetCurrentExtention();
         $tabUtrModels = json_decode($jsonUtrModels,true);
-        return $tabUtrModels;
+        return $tabUtrModels[$module];
 
     }
 
@@ -686,21 +700,30 @@ class TReg_VirtualTable extends RegCommon {
 
         }
         //export CSV
+        
+if (isset ($_GET['op']) ){
+    
+        if ($_GET['op']=='exoprtCSV') {
 
-        if ($_POST["op"]=='exportCSV') {
             //filter and export
             $utrTable = $_SESSION['lastUTR'];
             $csv= $this->exportCSV($utrTable, ';');
 
-            echo json_encode($csv);
+         header('Content-type:text/csv');
+         header('Content-Disposition: attachement;filename="Toto.csv"');
+         
+         echo ($csv);
 
         }
+}
 
     }//dispatch
 
 }
 
 $p= new TReg_VirtualTable();
+error_reporting(0);
+
 $p->dispatch();
 
 

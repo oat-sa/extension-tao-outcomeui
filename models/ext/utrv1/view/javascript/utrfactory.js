@@ -141,7 +141,7 @@ function previewListClasses(listClasses){
     //remove old content
     var titleClass;
     //put the title in the header of the box
-    titleClass = 'List of context classes: '+actualClassLabel;
+    titleClass = __("List of context classes")+': '+actualClassLabel;
     $("#contextClassHeader h1").text(titleClass);
     
     //get the actual class info
@@ -159,7 +159,7 @@ function previewListClasses(listClasses){
 function previewListProperties(listProperties){
     var pl = new Array();
     var titleContextProperties;
-    titleContextProperties = "List of properties :"+actualClassLabel;
+    titleContextProperties = __("List of properties")+": "+actualClassLabel;
     $("#contextPropertiesHeader h1").text(titleContextProperties);
     
     $("#contextProperties").text('');
@@ -303,7 +303,8 @@ function getPropertyBinding(){
 
 function deleteColumn(colId){
     //$colId = $(this).attr(id);
-    alert ("Confirmation " + colId);
+
+    alert (__("Do you want to delete column ?"));
     // add the column on the server side, and preview the table after succes
     $.ajax({
         type: "POST",
@@ -358,7 +359,7 @@ function addColumn(){
     var pf = $("#finalPath").val();
     //Verification of the existance of the column name
     if (verifyColumnLabel(cn)==true ){
-        alert ('Name exists, you should change it...')
+        alert ("Name exists!");
 
     }else{
 
@@ -409,7 +410,7 @@ function previewTable(table){
     var strTableHead = '';
     var strHeadNameColomn ='';
     //add the first column of rowStat
-    strTH ='<th> Columns </th>';
+    strTH ='<th>'+ __("Columns")+'</th>';
     for ( i in finalUtrModel){
         var columnDescription = finalUtrModel[i];
         //get columnDescription
@@ -731,8 +732,9 @@ function sendFilter(){
 }
 //export to csv
 function exportCSV (){
+    alert ("jjjhhj");
 
-    options={
+    /*options={
         type: "POST",
         url: "../classes/class.TReg_VirtualTable.php",
         data: {
@@ -745,7 +747,9 @@ function exportCSV (){
         }
 
     };
-    $.ajax(options);
+    $.ajax(options);*/
+    window.location.href = "../classes/class.TReg_VirtualTable.php?op=exoprtCSV";
+   // window.ope
 
 }
 
@@ -871,6 +875,7 @@ function utrConstructor(){
         loadInitialUtr();
         utrIntro();
         manageEvents();
+        
     });
 
 }

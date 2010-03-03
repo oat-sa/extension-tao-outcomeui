@@ -43,7 +43,6 @@ class ImportLogToGenerisResult {
         $this->createResultInstance();
 
         return 'OK';
-
     }
 
     /**

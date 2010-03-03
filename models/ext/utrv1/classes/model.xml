@@ -24,7 +24,6 @@
         <property uri = "TESTBEHAVIOR" label="labelProp3"></property>
         <property uri = "Citem" label="labelProp3"></property>
 
-
     </class>
 
     <class uri="Citem_CLASS" label="label3" >

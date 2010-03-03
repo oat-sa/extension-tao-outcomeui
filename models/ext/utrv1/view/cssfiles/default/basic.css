@@ -152,10 +152,12 @@ div.boxHeader h1{
     
 }
 h1 {
-    color:white;
-    font-size:22px;
+    color:black;
+    font-size:18px;
     margin-top: 0;
 }
+
+
 
 /*  the div tof the class container ( context  header) */
 #classesDiv{
@@ -464,11 +466,11 @@ width: 100%;
     margin-left:-250px;
     border : 3px solid #9BB7EA;
 }
-#utrTempateMenu{
+#utrTemplateMenu{
     position:relative;
     background-color: #C3D9FF;
     width:100%;
-    height:15%;
+    height:12%;
    /* border:1px solid white;*/
 }
 
@@ -484,13 +486,18 @@ width: 100%;
     /*border:2px solide #3366FF;*/
 
 }
-#utrTemplateTitle{
+#utrTemplateTitle1{
     position:relative;
     width:100%;
-    height:5%;
+    height:10%;
     background-color: #C3D9FF;
     
-    
+}
+
+#utrTemplateTitle h1 {
+    color:black;
+    font-size:18px;
+    margin-top: 0;
 }
 #filterUtr{
     position:absolute;

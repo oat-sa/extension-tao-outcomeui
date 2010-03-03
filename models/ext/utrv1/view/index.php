@@ -1,9 +1,15 @@
-<?session_start();?>
+<?
+require_once($_SERVER['DOCUMENT_ROOT']."/generis/common/inc.extension.php");
+require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
+?>
 <!--
 To change this template, choose Tools | Templates
 and open the template in the editor.
 -->
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+
 <html>
     <head>
         <title></title>
@@ -24,10 +30,9 @@ and open the template in the editor.
         <div id="utrDiv" >
             <div id="divPathWizard" class="divstandard">
                 <div id="menuPathWizard">
-                    UTR BUILDER... chose the property ...
+                    <? echo __("Choose a property");?>
                     <input class="closePathBuilderClass" id="closePathBuilder" type="button" value=""> </input>
                 </div>
-
 
                 <div id="classesDiv">
                     <div id="contextClassHeader" class="boxHeader">
@@ -62,7 +67,7 @@ and open the template in the editor.
 
                     <tbody>
                         <tr>
-                            <td>Column Name:</td>
+                            <td><? echo __("Column name"); ?>Column Name:</td>
                             <td><input id="columnName" type="text" name="" value="" /></td>
                         </tr>
                         <tr>
@@ -80,7 +85,7 @@ and open the template in the editor.
 
                         <tr
                             <td>
-                                <input id="addColumn" type="button" value="Add Column" /><input id="exitAddColumn" type="button" value="Exit" />
+                                <input id="addColumn" type="button" value="Add Column" /><input id="exitAddColumn" type="button" value="<?echo __("Cancel");?>" />
 
                             </td>
 
@@ -89,12 +94,11 @@ and open the template in the editor.
                     </tbody>
                 </table>
 
-
             </div>
 
 
             <div id="utrmenu">
-                <input id="columnBuilder" type="submit" value="Column Builder Wizard..." /><input id="deleteListRows" type="submit" value="Delete Rows..." /><input id="manageUtr" type="submit" value="Template Manager..." /><input id="manageFilter" type="submit" value="Filter" /><input id="export" type="submit" value="Export" />
+                <input id="columnBuilder" type="submit" value="<?echo __("Add column wizard");?>" /><input id="deleteListRows" type="submit" value="<?echo __("Remove rows");?>" /><input id="manageUtr" type="submit" value="<? echo __("Template manager");?>" /><input id="manageFilter" type="submit" value="<?echo __("Filter and search");?>" /><input id="export" type="submit" value="<?echo __("Export");?>" />
                 
             </div>
 
@@ -110,7 +114,7 @@ and open the template in the editor.
 
             <div id="utrTemplateManager" class="">
                 <div id="#utrTemplateTitle">
-                    utr
+                    <h1><? echo __("Template manager")?></h1>
                 </div>
 
                 <div id="utrTemplateModelList">
@@ -118,9 +122,9 @@ and open the template in the editor.
 
                 </div>
 
-                <div id="utrTempateMenu">
-                    <input id="saveUtrBtn" type="submit" value="save Table" /><input id ="txtUtrName" type="text" name="txtUtrName" value="" /><br>
-                    <input id="cancelUtrManager" type="submit" value="Cancel..." />
+                <div id="utrTemplateMenu">
+                    <input id="saveUtrBtn" type="submit" value="<? echo __("Save Table")?>" /><input id ="txtUtrName" type="text" name="txtUtrName" value="" /><br>
+                    <input id="cancelUtrManager" type="submit" value="<? echo ("Cancel");?>" />
                 </div>
 
             </div>
@@ -132,14 +136,16 @@ and open the template in the editor.
 
         <div id="filterUtr">
             <table border="1" width="1" cellspacing="1">
+                <input id="sendFilter" type="submit" value="<? echo __("Apply filter");?>" /><input id="cancelFilter" type="submit" value="<? echo __("Cancel")?>" />
                 <thead>
                     <tr>
-                        <th>C</th>
-                        <th>F</th>
-                        <th>V</th>
+                        <th><?echo __("Column")?></th>
+                        <th><?echo __("Operator")?></th>
+                        <th><?echo __("Value")?></th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="filterTableBody">
+
                     <tr>
                         <td><input id="searchProperty1" type="text" name="searchProperty1" value="" size="10" /></td>
                         <td><input id="searchOperator1" type="text" name="searchOperator1" value="" size="5" /></td>
@@ -167,10 +173,9 @@ and open the template in the editor.
                     </tr>
 
 
-
                     <tr>
-                        <td><input id="sendFilter" type="submit" value="Send Filter" /></td>
-                        <td><input id="cancelFilter" type="submit" value="Cancel" /></td>
+                        <td></td>
+                        <td></td>
                         <td></td>
                     </tr>
 
@@ -179,10 +184,8 @@ and open the template in the editor.
                 </tbody>
             </table>
 
-
         </div>
-
-
+        
 
 
     </body>
