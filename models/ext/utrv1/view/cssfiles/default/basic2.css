@@ -51,45 +51,8 @@ thead th {
 	background: #ffffff url(tbov.gif) repeat-x;
 
 }*/
-#UTR
-{
-	font-family: "Lucida Sans Unicode", "Lucida Grande", Sans-Serif;
-	font-size: 12px;
-	/*margin: 45px;
-	width: 480px;*/
-	text-align: left;
-	border-collapse: collapse;
-}
-#UTR th
-{
-	font-size: 13px;
-	font-weight: normal;
-	padding: 8px;
-	background: #b9c9fe;
-	border-top: 4px solid #aabcfe;
-	border-bottom: 1px solid #fff;
-	color: #039;
-}
-#UTR td
-{
-	padding: 8px;
-	background: #e8edff;
-	border-bottom: 1px solid #fff;
-	color: #669;
-	border-top: 1px solid transparent;
-}
-#UTR tr:hover td
-{
-	background: #d0dafd;
-	color: #339;
-}
 
-  
 
-#UTRtd pre {
-    font-size:14;
-
-}
 
 
 root { 
@@ -491,30 +454,4 @@ width: 100%;
     background-color: #C3D9FF;
     
     
-}
-#filterUtr{
-    position:absolute;
-    top: 50%;
-    left: 50%;
-    width: 400px;
-    height: 250px;
-
-    background:whiteSmoke;
-    /*padding: 5px;*/
-    margin-top:-125px;
-    margin-left:-200px;
-    border : 3px solid #9BB7EA;
-
-}
-#manageFilter{
-  background-image: url(xmag.png); /*url(view_multicolumn.png);*/
-  background-repeat: no-repeat;
-  padding-left:18px;
-
-}
-#export{
-  background-image: url(export.png); /*url(view_multicolumn.png);*/
-  background-repeat: no-repeat;
-  padding-left:18px;
-
 }
