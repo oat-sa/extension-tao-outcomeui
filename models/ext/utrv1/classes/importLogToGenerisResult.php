@@ -19,7 +19,7 @@ require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
  */
 
 class ImportLogToGenerisResult {
-    public $domResult;
+    
     public $resultDom;
 
      /**
@@ -45,9 +45,6 @@ class ImportLogToGenerisResult {
         return 'OK';
 
     }
-
-    
-
 
     /**
      * adds the instance of result according to the dom of the result
@@ -92,7 +89,8 @@ class ImportLogToGenerisResult {
         //Create instance and property values
 
         $class = new core_kernel_classes_Class($RESULT_NS."TEST_CLASS");
-        $instanceTest = $class->createInstance($LABEL_TEST);
+        $LABEL_TEST = $_POST['pathLogFile'];
+        $instanceTest = $class->createInstance($LABEL_TEST);//todo change the
         //put property values /**** test with 3 properties only
 
         $propTest = new core_kernel_classes_Property($RESULT_NS."ID_TEST");
@@ -203,8 +201,6 @@ class ImportLogToGenerisResult {
 
             }
 
-
-
         }
 
     //Get itemBehavior attribut value
@@ -213,8 +209,6 @@ class ImportLogToGenerisResult {
     //        $LISTENERVALUE=$itemBehaviorDom->getAttribute("tao:LISTENERNAME");
 
     }
-
-
 }
 //CREATE THE DOM
 $logDom = new DOMDocument();
@@ -232,6 +226,5 @@ $logDom->loadXML($xmlLogContentDecoded);
 //unset($_GET['resultxml']);
 
 $p = new ImportLogToGenerisResult($logDom);
-
 
 ?>

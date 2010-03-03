@@ -3,16 +3,7 @@
 
 error_reporting(E_ALL);
 
-/**
- * this method intercept the request of the client and invoke the appropriate
- * This class is responsible of creating the table according TAO model and the
- * of the use
- * It interacts with a client side by AJAX request and provides a json result to
- * used by the client
- *
- * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
- * @package Result
- */
+
 
 if (0 > version_compare(PHP_VERSION, '5')) {
     die('This file was generated for PHP 5');
@@ -24,20 +15,10 @@ if (0 > version_compare(PHP_VERSION, '5')) {
  *
  * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
  */
-require_once('RegCommon.php');
+require_once('class.RegCommon.php');
+require_once ('class.UtrStatistic.php');
+require_once ('class.UtrFilter.php');
 
-
-/**
- * this method intercept the request of the client and invoke the appropriate
- * This class is responsible of creating the table according TAO model and the
- * of the use
- * It interacts with a client side by AJAX request and provides a json result to
- * used by the client
- *
- * @access public
- * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
- * @package Result
- */
 class TReg_VirtualTable extends RegCommon {
 // --- ASSOCIATIONS ---
 
@@ -58,7 +39,7 @@ class TReg_VirtualTable extends RegCommon {
         __("Add colomn wizard");
         __("Remove rows");
         __("Template manager");
-        __("Filter and search ");
+        __("Filter and search");
         __("Add new filter");
         __("Delete filter");
         __("Delete filter");
@@ -98,156 +79,7 @@ class TReg_VirtualTable extends RegCommon {
 
     }
     //export CSV
-    public function exportCSV($utrTable,$del) {
-        //besed on rowsHTML already created we provide the csv
-        $rowsHTML = $utrTable['rowsHTML'];
-        $utrModel = $utrTable['utrModel'];
 
-        $csvLines = array();
-
-        $firstlineTab = array();
-        foreach ( $utrModel as $columnId=>$columnDescription) {
-            $firstlineTab[] = $columnDescription['columnName'];
-        }
-
-        $firstLine = implode($del, $firstlineTab);
-        //save th first line, the manes of columns
-        $csvLines[] = $firstLine;
-
-        //Cretae the rows of the CSV
-
-        foreach($rowsHTML as $row=>$rowContent) {
-            $lineTab = array();
-            //$row content is an associatif array wiith name of column:Value
-            foreach ($rowContent as $columnId=>$value) {
-                $lineTab[] = $value;
-            }
-            $line = implode($del,$lineTab);//the line is created
-            $csvLines[] = $line;
-
-        }
-        $csvUtr = implode("\n",$csvLines);
-        //send
-        //header('content-type:text/csv');
-
-        //file_put_contents('coco.csv', $csvUtr);
-
-        return $csvUtr;
-
-    }
-
-    //get utr,filter get the new list of instances  and re Generate
-    public function filterAndGenerateUtr ($lisOfFilterDescription,$utrModel,$listInstances) {
-        //generate the first time to have all the values
-        $utr = $this->generateUTR($utrModel, $listInstances);
-
-        //get the utrModel
-        $utrModelGenerated = $utr['utrModel'];
-
-        // Apply the filter one after one, the order is important
-        foreach($lisOfFilterDescription as $filterDescription) {
-            //filter according
-
-            $rows = $this->filterColumn($filterDescription, $utrModelGenerated);
-
-            //regenerate the table based on the new list of instances
-            $newRows = $rows['match'];
-
-            // print_r($newRows);
-            $utrGenerated = $this->generateUTR($utrModel, $newRows);
-            $utrModelGenerated = $utrGenerated['utrModel'];
-
-        }
-        return $utrGenerated;
-    }
-
-    public function filterColumn($filterDescription,$table) {
-        //get filter information
-        //print_r($filterDescription);
-
-
-
-        $result = array();
-
-        $result['notMatch'] = array();
-        $result['match'] = array();
-
-        $filtredRows= array();
-
-        //prepare filter options
-        $columnID = $filterDescription['columnID'];
-        $operator = $filterDescription['operator'];
-        $valueCriteria = $filterDescription['value'];
-
-
-
-        //get the column rows
-        if (isset ($table[$columnID]['rowsColumn'])) {
-            //initialize the array
-            //$result['match'];
-            $columnTable = $table[$columnID]['rowsColumn'];
-
-            $result = array();
-            //do a filter
-            foreach($columnTable as $instance=>$valueRow) {
-                //according to operator we do a filter
-                $match= FALSE;
-                switch ($operator) {
-                    case '=':
-                    //do something
-                        if ($valueCriteria == $valueRow ) {
-                            $match= TRUE;
-                        }
-                        break;
-                    case '<':
-                    //do
-                        if ( $valueRow < $valueCriteria) {
-                            $match= TRUE;
-                        }
-                        break;
-
-                    case '>':
-                    //do
-                        if ( $valueRow > $valueCriteria ) {
-                            $match= TRUE;
-                        }
-                        break;
-                    case 'like':
-                    //do
-
-                    //$match = preg_match("#".$valueCriteria+"#",$valueRow);
-                        $pos = strpos($valueRow,$valueCriteria);
-                        if ( $pos !== false) {
-                            $match = TRUE;
-
-                        }
-
-                        break;
-                }//switch
-                //if on match then we add this row in the result array
-
-                if ($match) {
-                    $result['match'][$instance]=1;
-
-                }else {
-                    $result['notMatch'][$instance]=2;
-                }
-            }//foreach
-
-        }
-        //we send an empty array if there is no match
-        if (!isset($result['match'])) {
-            $result['match']= array();
-        }
-
-        return $result;
-
-    }
-
-
-
-
-    // --- OPERATIONS ---
     public function __construct() {
         $p = new  RegCommon();
         $p->regConnect();
@@ -276,8 +108,9 @@ class TReg_VirtualTable extends RegCommon {
      *
      * @access public
      * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
-     * @param  void $uriInstance
-     * @return void
+     * @param  array $listRows
+     * @param  array $uriInstance
+     * @return array
      */
 
     public function trDeleteListRows($listRows,$listInstances) {
@@ -289,7 +122,7 @@ class TReg_VirtualTable extends RegCommon {
             $newListOfRows= $this->trDeleteRow($uriInstance,$newListOfRows);
         }
 
-        return $newListOfRows;
+        return $newListOfRows;//the new list of rows
     }
 
     /**
@@ -298,7 +131,8 @@ class TReg_VirtualTable extends RegCommon {
      * @access public
      * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
      * @param  String $columnId
-     * @return void
+     * @param  Collection $utrModel
+     * @return Collection
      */
     public function YdeleteColumn($columnId,$utrModel) {
         $newUtrModel =$utrModel;// $_SESSION["utrModel"];
@@ -318,17 +152,18 @@ class TReg_VirtualTable extends RegCommon {
      * //$tableF['utrModel']= $table;//the real model of the table, more
      * //$tableF['rowsInfo']=$rowsInfo;
      *
-     * @access private
+     * @access public
+     *
      * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
-     * @return java_util_Collection
+     * @param  Collection $utrModel
+     * @param  array $listInstances
+
+     * @return Collection
      */
 
     public function generateUTR($utrModel,$listInstances) {
         // section 10-13-1--65--30cc15d0:1250bc77bd0:-8000:0000000000001023 begin
         $table = $utrModel;//$_SESSION['utrModel'];
-
-
-
 
         //get the list of instances
         //$listInstances = $this->trGetInstances();
@@ -370,9 +205,10 @@ class TReg_VirtualTable extends RegCommon {
             $table[$columnId]['rowsColumn']=$rowsColumn;
             //print_r  ($table);
 
-
             //Get the stat info of the actual column
-            $stat=$this->getStatOnColomn($table, $columnId);
+            $uStat = new UtrStatistic();
+            $stat=$uStat->getStatOnColomn($table, $columnId);
+
             $totalRows = $stat['totalRows'];
             $totalRowsNotNull = $stat['totalRowsNotNull'];
             $columnDescription['totalRows'] = $totalRows;
@@ -384,7 +220,7 @@ class TReg_VirtualTable extends RegCommon {
         $rowsInfo = array();
 
         foreach ($rowsHTML as $uri=>$obj) {
-            $stat=$this->getStatOnRows($rowsHTML, $uri);
+            $stat=$uStat->getStatOnRows($rowsHTML, $uri);
             $rowsInfo[$uri]=$stat;
 
         }
@@ -408,7 +244,7 @@ class TReg_VirtualTable extends RegCommon {
      *
      * @access public
      * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
-     * @return java_util_Collection
+     * @return Collection
      */
     public function trGetInstances() {
 
@@ -422,8 +258,8 @@ class TReg_VirtualTable extends RegCommon {
      *
      * @access public
      * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
-     * @param  array $uriInstance
-     * @return java_util_Collection
+     * @param  array $uriInstances
+     * @return Collection
      */
     public function getClassesOfinstances($uriInstances) {
         $t=$uriInstances;//$this->getInstances();
@@ -458,13 +294,14 @@ class TReg_VirtualTable extends RegCommon {
      * @access public
      * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
      * @param  Collection $columnDescription
-     * @return void
+     * @param  Collection $utrModel
+     * @return Collection
      */
     public function YaddColumn($columnDescription,$utrModel) {
         $desc = $columnDescription;
         $columnList = $utrModel;//$_SESSION['utrModel'];
         //timestamp
-        $columnId = microtime(true);
+        //$columnId = microtime(true);
         $columnId = $desc["columnName"];
 
         $columnList[$columnId]=$columnDescription;
@@ -477,74 +314,20 @@ class TReg_VirtualTable extends RegCommon {
     }
 
     /**
-     * Gives more information about statistic of the column
-     * number of rows, nomber of not null value in the column
-     *
-     * @access public
-     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
-     * @param  Collection $table
-     * @param  String $columnId
-     * @return java_util_Collection
-     */
-
-    public function getStatOnColomn($table,$columnId) {
-        $rowsOfColumn = $table[$columnId]['rowsColumn'];
-        //Number of rows
-        $totalRows = count($rowsOfColumn);
-        $totalRowsNotNull = 0;
-        foreach($rowsOfColumn as $value) {
-            if ($value!='') {
-                $totalRowsNotNull++;
-            }
-        }
-
-        $stat['totalRows']= $totalRows;
-        $stat['totalRowsNotNull']=$totalRowsNotNull;
-
-        return $stat;
-    }
-
-    /**
-     * Gives more information about a row, the row id is the uri
-     *
-     * @access public
-     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
-     * @param  Collection $table
-     * @param  String $rowId
-     * @return java_util_Collection
-     */
-    public function getStatOnRows($table, $rowId) {
-        //Get the list of columns in the row, to claculate the number of columns
-        //and the number of columns not null
-        //I prefer used the rowHTML to perse rapidly the
-        $columnsOfRow= $table[$rowId];
-        $totalColumns = 0;
-        $totalColumnsNotNull=0;
-        foreach($columnsOfRow as $col) {
-            $totalColumns++;
-            if ($col!='') {
-                $totalColumnsNotNull++;
-            }
-        }
-        $stat['totalColumns'] = $totalColumns;
-        $stat['totalColumnsNotNull']=$totalColumnsNotNull;
-        return $stat;
-
-    }
-    /**
      * Save The UTR template
      *
      * @access public
      * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
      * @param  Collection $utrModel
      * @param  String $idModel
-     * @return Collection
+     * @return String
      */
 
     public function saveUtrModel($utrModel,$idModel) {
 
         //get the old list of model
         $oldUtrModels = file_get_contents("utrModel.mdl");
+
         $tabUtrModels = json_decode($oldUtrModels,true);
         //add in tab of models
         $tabUtrModels[$idModel]= $utrModel;
@@ -636,6 +419,53 @@ class TReg_VirtualTable extends RegCommon {
         $currentExtension = $p->getCurrentModule();
         return $currentExtension;
     }
+
+    /**
+     * Export the UTR table into CSV format
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param array $utrTable
+     * @param array $del
+     * @return string
+     */
+
+    public function exportCSV($utrTable,$del) {
+        //besed on rowsHTML already created we provide the csv
+        $rowsHTML = $utrTable['rowsHTML'];
+        $utrModel = $utrTable['utrModel'];
+
+        $csvLines = array();
+
+        $firstlineTab = array();
+        foreach ( $utrModel as $columnId=>$columnDescription) {
+            $firstlineTab[] = $columnDescription['columnName'];
+        }
+
+        $firstLine = implode($del, $firstlineTab);
+        //save th first line, the manes of columns
+        $csvLines[] = $firstLine;
+
+        //Cretae the rows of the CSV
+
+        foreach($rowsHTML as $row=>$rowContent) {
+            $lineTab = array();
+            //$row content is an associatif array wiith name of column:Value
+            foreach ($rowContent as $columnId=>$value) {
+                $lineTab[] = $value;
+            }
+            $line = implode($del,$lineTab);//the line is created
+            $csvLines[] = $line;
+        }
+        $csvUtr = implode("\n",$csvLines);
+        //send
+        //header('content-type:text/csv');
+
+        //file_put_contents('coco.csv', $csvUtr);
+
+        return $csvUtr;
+    }
+
     /**
      * this method intercept the request of the client (ajax) and invoke the
      * method
@@ -850,8 +680,8 @@ class TReg_VirtualTable extends RegCommon {
             $listInstances = $p->trGetInstances();
 
             //$t=$p->generateUTR($utrModel,$listInstances);
-
-            $tf = $p->filterAndGenerateUtr($finalTabOFilters, $utrModel, $listInstances);
+            $uFilter = new UtrFilter();
+            $tf = $uFilter->filterAndGenerateUtr($finalTabOFilters, $utrModel, $listInstances);
             echo json_encode($tf);
 
         }
@@ -872,5 +702,6 @@ class TReg_VirtualTable extends RegCommon {
 
 $p= new TReg_VirtualTable();
 $p->dispatch();
+
 
 ?>
