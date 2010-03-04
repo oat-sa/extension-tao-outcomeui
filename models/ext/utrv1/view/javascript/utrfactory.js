@@ -130,7 +130,7 @@ function manageMC(){
     //    }
     var t = new Array();
     t=getRootClassesOfInstances();
-    alert("fin");
+    //alert("fin");
     for (i in t){
         alert(t[i].label);
     }
@@ -359,7 +359,7 @@ function addColumn(){
     var pf = $("#finalPath").val();
     //Verification of the existance of the column name
     if (verifyColumnLabel(cn)==true ){
-        alert ("Name exists!");
+        alert (__("Name exists"));
 
     }else{
 
@@ -732,7 +732,7 @@ function sendFilter(){
 }
 //export to csv
 function exportCSV (){
-    alert ("jjjhhj");
+    
 
     /*options={
         type: "POST",

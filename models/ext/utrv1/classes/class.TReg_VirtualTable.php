@@ -489,6 +489,9 @@ class TReg_VirtualTable extends RegCommon {
      * @return void
      */
     public function dispatch() {
+        if (isset ($_POST['op'])){
+
+
 
         if ($_POST['op']=='listInstances') {
             $p = new TReg_VirtualTable();
@@ -699,6 +702,8 @@ class TReg_VirtualTable extends RegCommon {
             echo json_encode($tf);
 
         }
+        }//if post [op]
+
         //export CSV
         
 if (isset ($_GET['op']) ){
@@ -708,9 +713,9 @@ if (isset ($_GET['op']) ){
             //filter and export
             $utrTable = $_SESSION['lastUTR'];
             $csv= $this->exportCSV($utrTable, ';');
+            header('Content-type:text/csv');
+            header('Content-Disposition: attachement;filename="UTR.csv"');
 
-         header('Content-type:text/csv');
-         header('Content-Disposition: attachement;filename="Toto.csv"');
          
          echo ($csv);
 
@@ -722,7 +727,7 @@ if (isset ($_GET['op']) ){
 }
 
 $p= new TReg_VirtualTable();
-error_reporting(0);
+//error_reporting(0);
 
 $p->dispatch();
 

@@ -40,6 +40,8 @@ class ResultModelBuilder {
         $domResult = new DOMDocument();
         $domResult->load(RESULT_MODEL);
         //get class info
+        
+//http://www.tao.lu/datatypes/WidgetDefinitions.rdf#HTMLArea
 
         define('API_LOGIN','generis');
         define('API_PASSWORD',md5('g3n3r1s'));
@@ -99,7 +101,6 @@ class ResultModelBuilder {
 
         $prop->setRange($class);
 
-
         $prop = new core_kernel_classes_Property($RESULT_NS."ID_TEST");
         $class = new core_kernel_classes_Class(TAO_TEST_CLASS);
         $prop->setRange($class);
@@ -147,6 +148,14 @@ class ResultModelBuilder {
             $resourceProperty = $rdfProperty->createInstance($labelProperty,$commentProperty,$uriProperty);
             //Create the pho pbject property and link it with the uri
             $trProperty = new core_kernel_classes_Property($resourceProperty->uriResource);
+
+            //http://www.tao.lu/datatypes/WidgetDefinitions.rdf#widget
+            //http://www.tao.lu/datatypes/WidgetDefinitions.rdf#TextBox
+            //put a widget for the property
+
+            $widgetProp = $propCitem = new core_kernel_classes_Property("http://www.tao.lu/datatypes/WidgetDefinitions.rdf#widget");
+            $trProperty->setPropertyValue($widgetProp,"http://www.tao.lu/datatypes/WidgetDefinitions.rdf#TextBox");
+
             //Link the property with the class
             $trClass->setProperty($trProperty);
 

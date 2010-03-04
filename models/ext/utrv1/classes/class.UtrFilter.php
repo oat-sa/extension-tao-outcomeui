@@ -108,6 +108,21 @@ class UtrFilter {
                             $match= TRUE;
                         }
                         break;
+
+                        case '>=':
+                    //do
+                        if ( $valueRow >= $valueCriteria ) {
+                            $match= TRUE;
+                        }
+                        break;
+
+                        case '<=':
+                    //do
+                        if ( $valueRow <= $valueCriteria ) {
+                            $match= TRUE;
+                        }
+                        break;
+
                     case 'like':
                     //do
 
