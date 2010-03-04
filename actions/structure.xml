@@ -14,16 +14,13 @@
 				/>
 			</trees>
 			<actions>
-				<action name="search" url="/taoResults/Results/search" context="*" />
+			  <action name="create table" js="GenerisAction.resultTable" url="/taoResults/Results/createTable"  context="class" />
 				<action name="new class" js="GenerisAction.subClass" url="/taoResults/Results/addResultClass" context="class" />
-				<action name="new result" js="GenerisAction.instanciate" url="/taoResults/Results/addInstance" context="class" />
-				<action name="delete" js="GenerisAction.removeNode" url="/taoResults/Results/delete" context="resource" />
-				<action name="duplicate" js="GenerisAction.duplicateNode" url="/taoResults/Results/cloneInstance" context="instance" />
-				<action name="edit result" url="/taoResults/Results/editResult" context="instance" />
 				<action name="new property" js="GenerisAction.addProperty" url="/taoResults/Results/addClassProperty" context="class" />
-				<action name="meta data" js="GenerisAction.loadMetaData" url="/taoResults/Results/getMetaData"  context="instance" />
-				<action name="create table" js="GenerisAction.resultTable" url="/taoResults/Results/createTable"  context="class" />
-				<action name="export" url="/taoResults/Results/export"  context="*" />
+        <action name="new result" js="GenerisAction.instanciate" url="/taoResults/Results/addInstance" context="class" />
+				<action name="delete" js="GenerisAction.removeNode" url="/taoResults/Results/delete" context="resource" />
+				
+				
 			</actions>
 		</section>
 	</sections>
