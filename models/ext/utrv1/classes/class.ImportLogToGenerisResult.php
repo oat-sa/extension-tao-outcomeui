@@ -63,6 +63,7 @@ class ImportLogToGenerisResult {
         $RESULT_NS = core_kernel_classes_Session::getNameSpace();
         $RESULT_NS = $RESULT_NS.'#';
 
+
         //Get test attribute value
         $testDom= $dom->getElementsByTagName("TEST")->item(0);
 
@@ -89,7 +90,9 @@ class ImportLogToGenerisResult {
 
         $class = new core_kernel_classes_Class($RESULT_NS."TEST_CLASS");
 
-        $LABEL_TEST =  $SUBJECT_ID."_".$ID_TEST."_".date("Y_m_d_His"); //$_POST['pathLogFile'];
+        $LABEL_TEST =  $SUBJECT_LABEL."_".$LABEL_TEST."_".date("Y/m/d_H:i:s"); //$_POST['pathLogFile'];
+
+        //$LABEL_TEST = 'Result_'.date("Y/m/d_H:i:s");
 
         $instanceTest = $class->createInstance($LABEL_TEST);//todo change the
         //put property values /**** test with 3 properties only
@@ -218,11 +221,13 @@ $xmlPath = $_POST['pathLogFile'];
 $xmlLogContent = $_POST['contentLogFile'];
 
 $xmlLogContentDecoded = urldecode($xmlLogContent);
+$logDom->loadXML($xmlLogContentDecoded);
 
 //file_put_contents("logxml.txt", $xmlLogContentDecoded);
 
-//$logDom->load($xmlPath);
-$logDom->loadXML($xmlLogContentDecoded);
+//$logDom->load("res1.xml");
+
+
 //unset($_GET['resultxml']);
 
 $p = new ImportLogToGenerisResult($logDom);
