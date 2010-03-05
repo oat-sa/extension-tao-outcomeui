@@ -90,7 +90,7 @@ class ImportLogToGenerisResult {
 
         $class = new core_kernel_classes_Class($RESULT_NS."TEST_CLASS");
 
-        $LABEL_TEST =  $SUBJECT_LABEL."_".$LABEL_TEST."_".date("Y/m/d_H:i:s"); //$_POST['pathLogFile'];
+        $LABEL_TEST =  "Res_".$LABEL_TEST."_".date("Y/m/d_H:i:s"); //$_POST['pathLogFile'];
 
         //$LABEL_TEST = 'Result_'.date("Y/m/d_H:i:s");
 
