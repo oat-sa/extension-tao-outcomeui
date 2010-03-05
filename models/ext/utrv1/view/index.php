@@ -37,7 +37,7 @@ and open the template in the editor.
                 <div id="classesDiv">
                     <div id="contextClassHeader" class="boxHeader">
 
-                        <input id="backClass" type="button" value="Back" name="backClass"/>
+                        <input id="backClass" type="button" value="<?__("Back")?>" name="backClass"/>
                         <h1>Classe</h1>
 
                     </div>

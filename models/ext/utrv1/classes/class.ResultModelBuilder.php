@@ -171,19 +171,6 @@ class ResultModelBuilder {
     }
 }
 
-
-//$propDescription['labelProperty']='label test';
-//$propDescription['commentProperty']='comment test ';
-//$propDescription['uriProperty']='#testIDSubject';
-//
-//$t[]=$propDescription;
-//
-//$propDescription["labelProperty"]='label test2';
-//$propDescription['commentProperty']='comment test2';
-//$propDescription['uriProperty']='#testIDSubject2';
-//
-//$t[]=$propDescription;
-
 $p= new ResultModelBuilder();
 //echo $_SERVER['DOCUMENT_ROOT']."generis/common/inc.extension.php";
 $p->createModel();

@@ -1,5 +1,5 @@
 msgid "Result saved"
-msgstr ""
+msgstr "Résultat enregistrée"
 
 msgid "Edit result"
 msgstr "Modifier le résultat"
@@ -20,7 +20,7 @@ msgid "Results library"
 msgstr "Librairie de résultats"
 
 msgid "search"
-msgstr ""
+msgstr "Recherche"
 
 msgid "new class"
 msgstr "nouvelle classe"
@@ -41,10 +41,10 @@ msgid "new property"
 msgstr "nouvelle propriété"
 
 msgid "meta data"
-msgstr ""
+msgstr "métadonnée"
 
 msgid "create table"
-msgstr "créer un tableau"
+msgstr "créer le tableau"
 
 msgid "export"
 msgstr "exporter"
