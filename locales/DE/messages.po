@@ -29,7 +29,7 @@ msgid "new result"
 msgstr "neues Ergebnis"
 
 msgid "delete"
-msgstr "löschen"
+msgstr "lÃ¶schen"
 
 msgid "duplicate"
 msgstr "duplizieren"
@@ -53,13 +53,13 @@ msgid "This module constitutes the final step."
 msgstr "Diese Modul stellt den letzten Schritt dar."
 
 msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
-msgstr "Hier werden alle Ergebnisse durchlaufener Tests mit den dazugehörigen spezifischen Daten der Testpersonen, Gruppen und Items, sowie die individuelle Datenerhebung während des Testdurchlaufs gespeichert und verwaltet."
+msgstr "Hier werden alle Ergebnisse durchlaufener Tests mit den dazugehÃ¶rigen spezifischen Daten der Testpersonen, Gruppen und Items, sowie die individuelle Datenerhebung wÃ¤hrend des Testdurchlaufs gespeichert und verwaltet."
 
 msgid "EN"
 msgstr "Englisch"
 
 msgid "FR"
-msgstr "Französisch"
+msgstr "FranzÃ¶sisch"
 
 msgid "DE"
 msgstr "Deutsch"

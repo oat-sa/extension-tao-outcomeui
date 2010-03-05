@@ -1,11 +1,11 @@
-msgid "Build your table"
+Ôªømsgid "Build your table"
 msgstr "Erstellt aer eegen Tabell"
 
 msgid "Add colomn wizard"
 msgstr "Kolonnen Assistent derbeisetzen"
 
 msgid "Remove rows"
-msgstr "Zeilen läschen"
+msgstr "Zeilen l≈†schen"
 
 msgid "Template manager"
 msgstr "Viirlagen Verwaltung"
@@ -17,7 +17,7 @@ msgid "Add new filter"
 msgstr "Neie Filter derbeisetzen"
 
 msgid "Delete filter"
-msgstr "Filter läschen"
+msgstr "Filter l≈†schen"
 
 msgid "Apply filter"
 msgstr "Filter uwenden"
@@ -38,25 +38,25 @@ msgid "Template saved"
 msgstr "Viirlag gespaichert"
 
 msgid "Back"
-msgstr "Zréck"
+msgstr "Zr≈Ωck"
 
 msgid "Next"
-msgstr "Nächsten"
+msgstr "N≈†chsten"
 
 msgid "List of context classes"
-msgstr "Lëscht vun Kontext Klassen"
+msgstr "L‚Äòscht vun Kontext Klassen"
 
 msgid "Root classes"
 msgstr "Root Klassen"
 
 msgid "List of properties"
-msgstr "Proprietéit Lëschten"
+msgstr "Propriet≈Ωit L‚Äòschten"
 
 msgid "UTR Builder"
-msgstr "UTR Entwéckler"
+msgstr "UTR Entw≈Ωckler"
 
 msgid "Chose a property"
-msgstr "Proprietéit eraussichen"
+msgstr "Propriet≈Ωit eraussichen"
 
 msgid "Column name"
 msgstr "Kolonnen Numm"
@@ -77,10 +77,10 @@ msgid "Columns"
 msgstr "Kolonnen"
 
 msgid "Do you want to delete this column ?"
-msgstr "Wellt dir dës Kolonn läschen?"
+msgstr "Wellt dir d‚Äòs Kolonn l≈†schen?"
 
 msgid "Do you want to delete these rows ?"
-msgstr "Wellt dir dës Zeilen läschen"
+msgstr "Wellt dir d‚Äòs Zeilen l≈†schen"
 
 msgid "Error in loading table"
 msgstr "Fehler beim Lueden von der Tabell"
@@ -89,10 +89,10 @@ msgid "Thank you for using UTR"
 msgstr "Merci fier d'Benotzen vun UTR"
 
 msgid "Error, action failed !"
-msgstr "Fehler, d'Aktioun as nit gegléckt!"
+msgstr "Fehler, d'Aktioun as nit gegl≈Ωckt!"
 
 msgid "Select a property"
-msgstr "Sicht eng Proprietéit eraus"
+msgstr "Sicht eng Propriet≈Ωit eraus"
 
 msgid "With UTR, you can"
 msgstr "Mat UTR kennt dir"
@@ -101,10 +101,10 @@ msgid "Build a flexible table to extract information"
 msgstr "eng flexibel Tabell vun Informatiounen erstellen"
 
 msgid "Build a complex table with no unlimited depth"
-msgstr "Erstellt eng komplex Tabell ouni Limitéirung"
+msgstr "Erstellt eng komplex Tabell ouni Limit≈Ωirung"
 
 msgid "You can dynamically Add, remove column"
-msgstr "Dir kennt ganz flexibel Kolonnen derbeistellen oder läschen"
+msgstr "Dir kennt ganz flexibel Kolonnen derbeistellen oder l≈†schen"
 
 msgid "Calculate the percentage of columns and rows"
 msgstr "Errechnen vum Kolonnen an Zeilen Prozentsaatz"
@@ -116,7 +116,7 @@ msgid "Get a direct chart diagram on your columns ans rows "
 msgstr "Loost ierch een Diagramm vun aeren Kolonnen an Zeilen uweisen"
 
 msgid "Welcome to UTR Builder"
-msgstr "Wëllkomm am UTR Instrument"
+msgstr "W‚Äòllkomm am UTR Instrument"
 
 msgid "coco"
 msgstr "coco"

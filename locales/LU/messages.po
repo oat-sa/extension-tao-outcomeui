@@ -1,14 +1,14 @@
-msgid "Result saved"
+Ôªømsgid "Result saved"
 msgstr "Resultat gespaichert"
 
 msgid "Edit result"
-msgstr "Resultat editéiren"
+msgstr "Resultat edit≈Ωiren"
 
 msgid "Class saved"
 msgstr "Klass gespaichert"
 
 msgid "Edit result class"
-msgstr "Resultat Klass editéiren"
+msgstr "Resultat Klass edit≈Ωiren"
 
 msgid "Results"
 msgstr "Resultater"
@@ -29,16 +29,16 @@ msgid "new result"
 msgstr "neit Resultat"
 
 msgid "delete"
-msgstr "läschen"
+msgstr "l≈†schen"
 
 msgid "duplicate"
-msgstr "duplizéiren"
+msgstr "dupliz≈Ωiren"
 
 msgid "edit result"
-msgstr "Resultat editéiren"
+msgstr "Resultat edit≈Ωiren"
 
 msgid "new property"
-msgstr "nei Proprietéit"
+msgstr "nei Propriet≈Ωit"
 
 msgid "meta data"
 msgstr "Meta Daten"
@@ -47,13 +47,13 @@ msgid "create table"
 msgstr "Tabell erstellen"
 
 msgid "export"
-msgstr "exportéiren"
+msgstr "export≈Ωiren"
 
 msgid "This module constitutes the final step."
 msgstr "Desen Modul stellt den letzen Schrack duer."
 
 msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
-msgstr "All Resultater vun duerchgefouerten Tester, mat hieren entspriechenden Testpersounen, Gruppen, Item Daten an och all individeull Daten déi während der Testpassatioun gesammelt goufen, gin hei gespaichert"
+msgstr "All Resultater vun duerchgefouerten Tester, mat hieren entspriechenden Testpersounen, Gruppen, Item Daten an och all individeull Daten d≈Ωi w≈†hrend der Testpassatioun gesammelt goufen, gin hei gespaichert"
 
 msgid "EN"
 msgstr "English"
