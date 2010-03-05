@@ -1,69 +1,69 @@
 msgid "Result saved"
-msgstr ""
+msgstr "Ergebnis gespeichert"
 
 msgid "Edit result"
-msgstr ""
+msgstr "Ergebnis bearbeiten"
 
 msgid "Class saved"
-msgstr ""
+msgstr "Klasse gespeichert"
 
 msgid "Edit result class"
-msgstr ""
+msgstr "Klasse \"Ergebnis\" speichern"
 
 msgid "Results"
-msgstr ""
+msgstr "Ergebnisse"
 
 msgid "Manage results"
-msgstr ""
+msgstr "Ergebnisse verwalten"
 
 msgid "Results library"
-msgstr ""
+msgstr "Ergebnis-Bibliothek"
 
 msgid "search"
-msgstr ""
+msgstr "suchen"
 
 msgid "new class"
-msgstr ""
+msgstr "neue Klasse"
 
 msgid "new result"
-msgstr ""
+msgstr "neues Ergebnis"
 
 msgid "delete"
-msgstr ""
+msgstr "löschen"
 
 msgid "duplicate"
-msgstr ""
+msgstr "duplizieren"
 
 msgid "edit result"
-msgstr ""
+msgstr "Ergebnis bearbeiten"
 
 msgid "new property"
-msgstr ""
+msgstr "neue Eigenschaft"
 
 msgid "meta data"
-msgstr ""
+msgstr "Meta-Daten"
 
 msgid "create table"
-msgstr ""
+msgstr "Tabelle erstellen"
 
 msgid "export"
-msgstr ""
+msgstr "Export"
 
 msgid "This module constitutes the final step."
-msgstr ""
+msgstr "Diese Modul stellt den letzten Schritt dar."
 
 msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
-msgstr ""
+msgstr "Hier werden alle Ergebnisse durchlaufener Tests mit den dazugehörigen spezifischen Daten der Testpersonen, Gruppen und Items, sowie die individuelle Datenerhebung während des Testdurchlaufs gespeichert und verwaltet."
 
 msgid "EN"
-msgstr "English"
+msgstr "Englisch"
 
 msgid "FR"
-msgstr "French"
+msgstr "Französisch"
 
 msgid "DE"
-msgstr "German"
+msgstr "Deutsch"
 
 msgid "LU"
-msgstr "Luxemburgish"
+msgstr "Luxemburgisch"
 

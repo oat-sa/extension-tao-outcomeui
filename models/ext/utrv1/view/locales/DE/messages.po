@@ -1,123 +1,123 @@
 msgid "Build your table"
-msgstr ""
+msgstr "Erstellen Sie Ihre Tabelle"
 
 msgid "Add colomn wizard"
-msgstr ""
+msgstr "Spalten-Wizard hinzufügen"
 
 msgid "Remove rows"
-msgstr ""
+msgstr "Reihe löschen"
 
 msgid "Template manager"
-msgstr ""
+msgstr "Template-Verwaltung"
 
 msgid "Filter and search "
-msgstr ""
+msgstr "Filter und Suche"
 
 msgid "Add new filter"
-msgstr ""
+msgstr "Neuen Filter hinzufügen"
 
 msgid "Delete filter"
-msgstr ""
+msgstr "Filter löschen"
 
 msgid "Apply filter"
-msgstr ""
+msgstr "Filter anwenden"
 
 msgid "Cancel"
-msgstr ""
+msgstr "Abbrechen"
 
 msgid "Ok"
-msgstr ""
+msgstr "OK"
 
 msgid "Yes"
-msgstr ""
+msgstr "Ja"
 
 msgid "No"
-msgstr ""
+msgstr "Nein"
 
 msgid "Template saved"
-msgstr ""
+msgstr "Template gespeichert"
 
 msgid "Back"
-msgstr ""
+msgstr "Zurück"
 
 msgid "Next"
-msgstr ""
+msgstr "Weiter"
 
 msgid "List of context classes"
-msgstr ""
+msgstr "Liste der Kontext-Klassen"
 
 msgid "Root classes"
-msgstr ""
+msgstr "Root-Klassen"
 
 msgid "List of properties"
-msgstr ""
+msgstr "Liste der Eigenschaften"
 
 msgid "UTR Builder"
-msgstr ""
+msgstr "UTR-Builder"
 
 msgid "Chose a property"
-msgstr ""
+msgstr "Eigenschaft auswählen"
 
 msgid "Column name"
-msgstr ""
+msgstr "Spaltenname"
 
 msgid "Extraction method"
-msgstr ""
+msgstr "Extraktionsmethode"
 
 msgid "Query"
-msgstr ""
+msgstr "Frage"
 
 msgid "Exit"
-msgstr ""
+msgstr "Beenden"
 
 msgid "Info"
-msgstr ""
+msgstr "Info"
 
 msgid "Columns"
-msgstr ""
+msgstr "Spalten"
 
 msgid "Do you want to delete this column ?"
-msgstr ""
+msgstr "Möchten Sie diese Spalte(n) löschen"
 
 msgid "Do you want to delete these rows ?"
-msgstr ""
+msgstr "Möchten sie diese Reihe(n) löschen?"
 
 msgid "Error in loading table"
-msgstr ""
+msgstr "Fehler beim Laden der Tabelle"
 
 msgid "Thank you for using UTR"
-msgstr ""
+msgstr "Danke für die Benutzung von UTR"
 
 msgid "Error, action failed !"
-msgstr ""
+msgstr "Fehler, Aktion gescheitert"
 
 msgid "Select a property"
-msgstr ""
+msgstr "Eigenschaft auswählen"
 
 msgid "With UTR, you can"
-msgstr ""
+msgstr "UTR ermöglicht"
 
 msgid "Build a flexible table to extract information"
-msgstr ""
+msgstr "das Erstellen flexibler Tabellen zur Extrahierung von Informationen"
 
 msgid "Build a complex table with no unlimited depth"
-msgstr ""
+msgstr "das Erstellen komplexer Tabellen ohne begrenzte Tiefe"
 
 msgid "You can dynamically Add, remove column"
-msgstr ""
+msgstr "dynamisch Spalten hinzuzufügen oder zu löschen"
 
 msgid "Calculate the percentage of columns and rows"
-msgstr ""
+msgstr "die Berechnung der Prozente von Spalten und Reihen"
 
 msgid "Create save your own Template of tables"
-msgstr ""
+msgstr "eigene Tabellen-Templates zu erstellen und zu speichern"
 
 msgid "Get a direct chart diagram on your columns ans rows "
-msgstr ""
+msgstr "Spalten und Reihen graphischen darzustellen"
 
 msgid "Welcome to UTR Builder"
-msgstr ""
+msgstr "Willkommen zum UTR-Builder"
 
 msgid "coco"
-msgstr ""
+msgstr "coco"
 

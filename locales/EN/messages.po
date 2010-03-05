@@ -53,7 +53,7 @@ msgid "This module constitutes the final step."
 msgstr ""
 
 msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
-msgstr ""
+msgstr "All results of passed Tests with their referring Testees, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
 
 msgid "EN"
 msgstr "English"
