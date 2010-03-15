@@ -83,7 +83,7 @@ and open the template in the editor.
                             <td><input id="finalPath" type="text" name="finalPath" value="" size="30" /></td>
                         </tr>
 
-                        <tr
+                        <tr>
                             <td>
                                 <input id="addColumn" type="button" value="Add Column" /><input id="exitAddColumn" type="button" value="<?echo __("Cancel");?>" />
 
