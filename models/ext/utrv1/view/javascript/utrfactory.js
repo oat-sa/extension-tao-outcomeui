@@ -473,8 +473,13 @@ function previewTable(table){
         strTD = '<td class="statRow"> <input class = "statCheck" type="checkbox" name="rowCheck" value="'+uri+'" >'+pourcentageRow+'</input> </td>';//initialize the cell
         //build the data of the row, a set of cells
         for ( i in rowHTML){
-            var cellValue = '<pre>'+rowHTML[i]+'</pre>';//
+
+            /*var cellValue = '<pre>'+rowHTML[i]+'</pre>';//
+            strTD = strTD+'<td>'+cellValue+'</td>';*/
+
+            var cellValue = rowHTML[i].replace("\|\*\$", '<br>');//
             strTD = strTD+'<td>'+cellValue+'</td>';
+
         }
         //create the row
         strTR = '<tr id = "'+ uri+'">'+strTD+'</tr>';
