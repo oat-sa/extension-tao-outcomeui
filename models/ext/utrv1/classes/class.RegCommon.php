@@ -316,36 +316,6 @@ class RegCommon {
         return $contextClass;
     }
 
-    //La fonction qui me fesait peur, le saut ou la jonction
-    //based on a path: a sequence of properties and the initial instance
-    function trGetBridgePropertyValues0($instanceSourceUri,$pathOfProperties) {
-        //we begin by explode the path structure into an array
-        //the path is created by the user with path builder in  the client side
-        $pathOfPropertiesArray = explode('__',$pathOfProperties);
-        $instanceUri = $instanceSourceUri;
-
-        foreach ($pathOfPropertiesArray as $propertyUri) {
-
-            //link the resource
-            $trResource = new core_kernel_classes_Resource($instanceUri);
-            //get the value of the property for this instance
-            $values = $trResource->getPropertyValues(new core_kernel_classes_Property($propertyUri)) ;// get the array of values
-
-            //the value is the new instance to treat, it is now the new bridge
-            //it can also be the last value, so we te
-
-            if (count($values)==0) {
-                $instanceUri ="";
-                //echo "<br> the value is gg = ".$instanceUri;
-                break;
-            }
-            $instanceUri = $values[0];//prendre la première seulement; in newt release we wil take all the values
-            //echo "<br> the value is gg = ".$instanceUri;
-        }
-
-        $finalValue = $instanceUri;
-        return $finalValue;
-    }
     /**
      * Provides a value of a specific property according to the path
      * ( path: a sequence of properties)  and the initial instance
@@ -368,7 +338,12 @@ class RegCommon {
 
         //this array is used only to keep the list of the next uri instance of the actual path position
         $intermediateTabUri = array();
-        $intermediateTabUri[]= $instanceSourceUri;
+
+        $actualPV = array();
+        $actualPV['instance'] = $instanceSourceUri;
+        $actualPV['realPath'] = array();
+
+        $intermediateTabUri[]= $actualPV;//$instanceSourceUri;
 
         //keep the lreal path
         $realPath = array();
@@ -387,36 +362,27 @@ class RegCommon {
 
             foreach ($listInstancesUri as $instanceUri) {
 
-                $trResource = new core_kernel_classes_Resource($instanceUri);
+                $trResource = new core_kernel_classes_Resource($instanceUri['instance']);
                 //get the value of the property for this instance
                 $values = $trResource->getPropertyValues(new core_kernel_classes_Property($propertyUri)) ;// get the array of values
                 // ************* Added to keep the real path of the instance
+                //
+                //feed the valusPath
+                $valuesPath = array();
+                $actualPV = array();
+                foreach($values as $val){
+                    $actualPV['instance'] = $val;
 
-                /*foreach ($values as $val) {
-                    //test if we arze in the rage property and not  the last property to
-                    //do not have a conflict of values ( ex the property is label so we can have the same value
-                    if ($pathPosition <= count($pathOfPropertiesArray)) {
-                        
-                        if (isset($realPath[urlencode($instanceUri)]) ) {
-                            //$path = $realPath[$listInstancesUri].'.'.$listInstancesUri;
-                            echo "exist";
-
-                            $realPath[urlencode($val)] = $realPath[$instanceUri].'__'.$instanceUri;
-                        }else {
-                             echo "NNNN pas";
-                            $realPath[urlencode($val)] = urlencode($instanceUri);
-                        }
-                        //the real path
-                    }
-
+                    //prepare the label
+                    $trResource = new core_kernel_classes_Resource($val);
+                    $labelVal = $trResource->getLabel();
+                    
+                    $actualPV['realPath'][] = $labelVal;
+                    $valuesPath[] = $actualPV;
                 }
-                 /*///Finish ************* Added to keep the real path of the instance
-
-                //the value is the new instance to treat, it is now the new bridge
-                //it can also be the last value, so we test the count
 
                 //this array containes the bridged uri of instances
-                $intermediateTabUri = array_merge($intermediateTabUri,$values);
+                $intermediateTabUri = array_merge($intermediateTabUri,$valuesPath);
 
             }//instance
 
@@ -430,13 +396,25 @@ class RegCommon {
         }//path
         /*        echo "le real path";*/
 
+        //print_r($intermediateTabUri);
+        $finalValueTab = array();
+        
+        //create the last value
+        foreach ($intermediateTabUri as $vp){
+            //prepare values with label
+           
 
-        $finalValue = implode ('|$*', $intermediateTabUri);// $instanceUri;
+            $finalValueTab[] = implode("::", $vp['realPath']);
+
+           
+        }
+        
+        $finalValue = implode ('|$*', $finalValueTab);// $instanceUri;
         return $finalValue;
     }
 
 
-    function YYYYtrGetBridgePropertyValues($instanceSourceUri,$pathOfProperties) {
+    function yyytrGetBridgePropertyValues($instanceSourceUri,$pathOfProperties) {
         //we begin by explode the path structure into an array
         //the path is created by the user with path builder in  the client side
         $pathOfPropertiesArray = explode('__',$pathOfProperties);
@@ -472,25 +450,7 @@ class RegCommon {
                 $values = $trResource->getPropertyValues(new core_kernel_classes_Property($propertyUri)) ;// get the array of values
                 // ************* Added to keep the real path of the instance
 
-                foreach ($values as $val) {
-                    //test if we arze in the rage property and not  the last property to
-                    //do not have a conflict of values ( ex the property is label so we can have the same value
-                    if ($pathPosition <= count($pathOfPropertiesArray)) {
-
-                        if (isset($realPath[urlencode($instanceUri)]) ) {
-                            //$path = $realPath[$listInstancesUri].'.'.$listInstancesUri;
-                            echo "exist";
-
-                            $realPath[urlencode($val)] = $realPath[$instanceUri].'__'.$instanceUri;
-                        }else {
-                             echo "NNNN pas";
-                            $realPath[urlencode($val)] = urlencode($instanceUri);
-                        }
-                        //the real path
-                    }
-
-                }
-                // Finish ************* Added to keep the real path of the instance
+                
 
                 //the value is the new instance to treat, it is now the new bridge
                 //it can also be the last value, so we test the count
@@ -509,7 +469,7 @@ class RegCommon {
 
         }//path
         /*        echo "le real path";*/
-print_r($realPath);
+        
 
         $finalValue = implode ('|$*', $intermediateTabUri);// $instanceUri;
         return $finalValue;
