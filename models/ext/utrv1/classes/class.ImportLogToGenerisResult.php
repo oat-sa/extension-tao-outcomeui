@@ -183,7 +183,7 @@ class ImportLogToGenerisResult {
             foreach($itemBehaviorDomList as $itemBehaviorDom) {
 
                 $LISTENERNAME=$itemBehaviorDom->getAttribute("tao:LISTENERNAME");
-                $LISTENERVALUE=$itemBehaviorDom->getAttribute("tao:LISTENERNAME");
+                $LISTENERVALUE=$itemBehaviorDom->getAttribute("tao:LISTENERVALUE");
 
                 //Create Instances of itemBehavior
                 //Create instance of citem
