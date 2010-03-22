@@ -11,6 +11,7 @@
 					addSubClassUrl="/taoResults/Results/addResultClass"
 					deleteUrl="/taoResults/Results/delete"
 					duplicateUrl="/taoResults/Results/cloneInstance"
+					moveInstanceUrl="/taoResults/Results/moveInstance"
 				/>
 			</trees>
 			<actions>
