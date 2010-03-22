@@ -1,5 +1,50 @@
-msgid ""
-msgstr ""
+msgid "Add column wizard"
+msgstr "Ajouter une colonne"
+
+msgid "Choose a property"
+msgstr "Choisir un propriété"
+
+msgid "Back"
+msgstr "Retour"
+
+msgid "Column name"
+msgstr "Nom de colonne"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Remove rows"
+msgstr "Supprimer des lignes"
+
+msgid "Template manager"
+msgstr "Gestionnaire des modèles"
+
+msgid "Filter and search"
+msgstr "Filtrage et recherche"
+
+msgid "Save Table"
+msgstr "Enregister le table"
+
+msgid "Export"
+msgstr "Exporter"
+
+
+msgid "Apply filter"
+msgstr "Rechercher"
+
+
+msgid "Column"
+msgstr "Colonne"
+
+
+msgid "Operator"
+msgstr "Operateur"
+
+
+msgid "Value"
+msgstr "Valeur"
+
+
 
 msgid "Edit result"
 msgstr "Modifier le résultat"
@@ -69,4 +114,5 @@ msgstr "German"
 
 msgid "LU"
 msgstr "Luxemburgish"
+
 

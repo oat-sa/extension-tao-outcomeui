@@ -1,4 +1,51 @@
-﻿msgid "Result saved"
+msgid "Add column wizard"
+msgstr ""
+
+msgid "Choose a property"
+msgstr ""
+
+msgid "Back"
+msgstr ""
+
+msgid "Column name"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Remove rows"
+msgstr ""
+
+msgid "Template manager"
+msgstr ""
+
+msgid "Filter and search"
+msgstr ""
+
+msgid "Save Table"
+msgstr ""
+
+msgid "Export"
+msgstr ""
+
+
+msgid "Apply filter"
+msgstr ""
+
+
+msgid "Column"
+msgstr ""
+
+
+msgid "Operator"
+msgstr ""
+
+
+msgid "Value"
+msgstr ""
+
+
+msgid "Result saved"
 msgstr "Resultat gespaichert"
 
 msgid "Edit result"
