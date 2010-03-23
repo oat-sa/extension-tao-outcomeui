@@ -2,7 +2,7 @@ msgid "Build your table"
 msgstr "Contruire ta table"
 
 msgid "Add colomn wizard"
-msgstr "Ajouter une colonne "
+msgstr "Ajouter une colonne"
 
 msgid "Remove rows"
 msgstr "Supprimer des lignes"
@@ -10,7 +10,7 @@ msgstr "Supprimer des lignes"
 msgid "Template manager"
 msgstr "Gestionnaire des Modèles"
 
-msgid "Filter and search "
+msgid "Filter and search"
 msgstr "Filtrage et recherche"
 
 msgid "Add new filter"
@@ -44,7 +44,7 @@ msgid "Next"
 msgstr "Suivant"
 
 msgid "List of context classes"
-msgstr "Liste des classes contextuelles "
+msgstr "Liste des classes contextuelles"
 
 msgid "Root classes"
 msgstr "Classes racine"
@@ -83,7 +83,7 @@ msgid "Do you want to delete these rows ?"
 msgstr "Vouler vous supprimer ces lignes ?"
 
 msgid "Error in loading table"
-msgstr " Erreur dans le chargement de la table"
+msgstr "Erreur dans le chargement de la table"
 
 msgid "Thank you for using UTR"
 msgstr "Merci pour l'utilisation de UTR"
@@ -101,7 +101,7 @@ msgid "Build a flexible table to extract information"
 msgstr "Construire une table flexible pour extraire les données"
 
 msgid "Build a complex table with no unlimited depth"
-msgstr "Construire une table complexe, avec une profondeur de graph illimitée "
+msgstr "Construire une table complexe, avec une profondeur de graph illimitée"
 
 msgid "You can dynamically Add, remove column"
 msgstr "Vous pouvez ajouter et supprimer des colonnes dynamiquement"
@@ -119,5 +119,35 @@ msgid "Welcome to UTR Builder"
 msgstr "Bienvenue dans le constructeur d'UTR"
 
 msgid "coco"
+msgstr ""
+
+msgid "Choose a property"
+msgstr ""
+
+msgid "Add column wizard"
+msgstr ""
+
+msgid "Export"
+msgstr ""
+
+msgid "Save Table"
+msgstr ""
+
+msgid "Column"
+msgstr ""
+
+msgid "Operator"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+msgid "Do you want to delete column ?"
+msgstr ""
+
+msgid "Name exists"
+msgstr ""
+
+msgid "Filter and search "
 msgstr ""
 

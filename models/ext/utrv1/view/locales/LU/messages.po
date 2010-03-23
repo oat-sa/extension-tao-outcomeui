@@ -1,4 +1,4 @@
-﻿msgid "Build your table"
+msgid "Build your table"
 msgstr "Erstellt aer eegen Tabell"
 
 msgid "Add colomn wizard"
@@ -10,7 +10,7 @@ msgstr "Zeilen läschen"
 msgid "Template manager"
 msgstr "Viirlagen Verwaltung"
 
-msgid "Filter and search "
+msgid "Filter and search"
 msgstr "Filteren an sichen"
 
 msgid "Add new filter"
@@ -113,11 +113,44 @@ msgid "Create save your own Template of tables"
 msgstr "Erstellen an spaicheren vun aeren eegenen Tabellen Viirlagen"
 
 msgid "Get a direct chart diagram on your columns ans rows "
-msgstr "Loost ierch een Diagramm vun aeren Kolonnen an Zeilen uweisen"
+msgstr ""
 
 msgid "Welcome to UTR Builder"
 msgstr "Wëllkomm am UTR Instrument"
 
 msgid "coco"
 msgstr "coco"
+
+msgid "Choose a property"
+msgstr ""
+
+msgid "Add column wizard"
+msgstr ""
+
+msgid "Export"
+msgstr ""
+
+msgid "Save Table"
+msgstr ""
+
+msgid "Column"
+msgstr ""
+
+msgid "Operator"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+msgid "Do you want to delete column ?"
+msgstr ""
+
+msgid "Name exists"
+msgstr ""
+
+msgid "Filter and search "
+msgstr ""
+
+msgid "Get a direct chart diagram on your columns ans rows"
+msgstr "Loost ierch een Diagramm vun aeren Kolonnen an Zeilen uweisen"
 

@@ -10,7 +10,7 @@ msgstr ""
 msgid "Template manager"
 msgstr ""
 
-msgid "Filter and search "
+msgid "Filter and search"
 msgstr ""
 
 msgid "Add new filter"
@@ -119,5 +119,35 @@ msgid "Welcome to UTR Builder"
 msgstr ""
 
 msgid "coco"
+msgstr ""
+
+msgid "Choose a property"
+msgstr ""
+
+msgid "Add column wizard"
+msgstr ""
+
+msgid "Export"
+msgstr ""
+
+msgid "Save Table"
+msgstr ""
+
+msgid "Column"
+msgstr ""
+
+msgid "Operator"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+msgid "Do you want to delete column ?"
+msgstr ""
+
+msgid "Name exists"
+msgstr ""
+
+msgid "Filter and search "
 msgstr ""
 

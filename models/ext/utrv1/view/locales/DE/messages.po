@@ -10,7 +10,7 @@ msgstr "Reihe löschen"
 msgid "Template manager"
 msgstr "Template-Verwaltung"
 
-msgid "Filter and search "
+msgid "Filter and search"
 msgstr "Filter und Suche"
 
 msgid "Add new filter"
@@ -113,11 +113,44 @@ msgid "Create save your own Template of tables"
 msgstr "eigene Tabellen-Templates zu erstellen und zu speichern"
 
 msgid "Get a direct chart diagram on your columns ans rows "
-msgstr "Spalten und Reihen graphischen darzustellen"
+msgstr ""
 
 msgid "Welcome to UTR Builder"
 msgstr "Willkommen zum UTR-Builder"
 
 msgid "coco"
 msgstr "coco"
+
+msgid "Choose a property"
+msgstr ""
+
+msgid "Add column wizard"
+msgstr ""
+
+msgid "Export"
+msgstr ""
+
+msgid "Save Table"
+msgstr ""
+
+msgid "Column"
+msgstr ""
+
+msgid "Operator"
+msgstr ""
+
+msgid "Value"
+msgstr ""
+
+msgid "Do you want to delete column ?"
+msgstr ""
+
+msgid "Name exists"
+msgstr ""
+
+msgid "Filter and search "
+msgstr ""
+
+msgid "Get a direct chart diagram on your columns ans rows"
+msgstr "Spalten und Reihen graphischen darzustellen"
 
