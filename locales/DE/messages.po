@@ -8,7 +8,7 @@ msgid "Class saved"
 msgstr "Klasse gespeichert"
 
 msgid "Edit result class"
-msgstr "Klasse "Ergebnis" speichern"
+msgstr "Klasse \"Ergebnis\" speichern"
 
 msgid "Results"
 msgstr "Ergebnisse"
