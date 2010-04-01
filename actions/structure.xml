@@ -20,6 +20,7 @@
 				<action name="new property" js="GenerisAction.addProperty" url="/taoResults/Results/addClassProperty" context="class" />
        			<action name="new result" js="GenerisAction.instanciate" url="/taoResults/Results/addInstance" context="class" />
 				<action name="delete" js="GenerisAction.removeNode" url="/taoResults/Results/delete" context="resource" />
+				<action name="lists"  url="/tao/Lists/index"  context="*" />
 			</actions>
 		</section>
 	</sections>
