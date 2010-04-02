@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE extension SYSTEM "../../tao/doc/structure.dtd">
 <extension name="Results" url="/taoResults/Results/index" level="5">
 	<sections>
-		<section name="Manage results" url="/taoResults/Results/index">
+		<section id="manage_results" name="Manage results" url="/taoResults/Results/index">
 			<trees>
 				<tree name="Results library" 
 					dataUrl="/taoResults/Results/getOntologyData" 

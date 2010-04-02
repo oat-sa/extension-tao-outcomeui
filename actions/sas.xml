@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE services SYSTEM "../../tao/doc/sas.dtd">
+<services>
+	<service>
+		<name>Search</name>
+		<description>Search instance form </description>
+		<location url="/taoResults/SaSResults/search" />
+		<return>
+			<param key="resultUris" />
+		</return>
+	</service>	
+	<service>
+		<name>Result Table</name>
+		<description>UTR table</description>
+		<location url="/taoResults/SaSResults/createTable">
+			<param key="classUri" value="^resultClassUri" />
+		</location>
+	</service>	
+</services>
