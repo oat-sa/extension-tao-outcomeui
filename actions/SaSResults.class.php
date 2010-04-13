@@ -17,6 +17,14 @@ class SaSResults extends Results {
 		tao_helpers_form_GenerisFormFactory::setMode(tao_helpers_form_GenerisFormFactory::MODE_STANDALONE);
 		parent::__construct();
     }
+    
+ 	/**
+     * Give the auth to the workflow engine
+     * @return boolean
+     */
+    protected function _isAllowed(){
+    	return isset($_SESSION['taoqual.authenticated']);
+    }
     	
 	/**
      * @see TaoModule::setView()
