@@ -2,8 +2,8 @@
 <!DOCTYPE services SYSTEM "../../tao/doc/sas.dtd">
 <services>
 	<service>
-		<name>Search</name>
-		<description>Search instance form </description>
+		<name>Results searching</name>
+		<description>Search results instance form</description>
 		<location url="/taoResults/SaSResults/search" />
 		<return>
 			<param key="resultUris" />
@@ -11,7 +11,7 @@
 	</service>	
 	<service>
 		<name>Result Table</name>
-		<description>UTR table</description>
+		<description>Open the UTR table on the results</description>
 		<location url="/taoResults/SaSResults/createTable">
 			<param key="classUri" value="^resultClassUri" />
 		</location>
