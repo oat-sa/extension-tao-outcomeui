@@ -22,6 +22,8 @@ var propertiesContext= new Array();//the properties of the actual class
 //The path taht contains a sequence of properties 
 
 var pathProperties = new Array();
+//the actual path
+var pathString = '';
 
 //the actual utr
 var actualUTR = new Array();
@@ -38,12 +40,21 @@ function utrIntro(){
     $("#divInitialInstances").html("");
     $("#contextClasses").html("");
     $("#contextProperties").html("");
-    $("#propertyBinding").hide();
+    //$("#propertyBinding").show();
+
+    $("#propertyBinding").dialog({
+        autoOpen:false
+    });
+    $("#propertyBinding").dialog("close");
+
     $("#divPathWizard").hide();
     $("#menuPathBuilder").hide();
     $("#pieStat").hide();
     $("#utrTemplateManager").hide();
     $("#filterUtr").hide();
+
+    //utr menu
+    $("#utrmenu input").button();
 
 }
 
@@ -83,7 +94,6 @@ function backContext(){
         {
             actualClassLabel=action.actualClassLabel
             getRangeClasses(actualClassUri);
-        
         
         }
     
@@ -149,7 +159,7 @@ function previewListClasses(listClasses){
     for (i in listClasses){
         cl = listClasses[i];
         // we have a button with all information to acces to class info
-        //content = '<input id="'+cl.uriClass+'" type="button" value="'+cl.label+'" name ="classInfos_'+cl.uriClass +'" /></input>';
+        // content = '<input id="'+cl.uriClass+'" type="button" value="'+cl.label+'" name ="classInfos_'+cl.uriClass +'" /></input>';
         content = '<input id="'+cl.uriClass+'" class= "classInfos" type="button" value="'+cl.label+'" name ="'+cl.propertySourceUri +'" /></input>';
         //content = '<a id="younes11" href="#" onclick="getClassInfos()">'+cl.label +'</a>';//onclick="getClassInfos()
         $("#contextClasses").append(content);
@@ -279,7 +289,6 @@ function getClassInfos (){
 
     //Save the context
     
-
     //alert ("l'uri est "+uri);
     //get the properties and the range of the class, this is thje next step of the process
     getRangeClasses(uriC);
@@ -292,12 +301,30 @@ function getPropertyBinding(){
     var labelP = $(this).attr("value");
 
     //add to path
-    var pathString =addToPath(uriP);
+    pathString =addToPath(uriP);
+    //show the dialog with options
 
+    var option={
+        resizable:false,
+        buttons: {
+            
+            "No":function(){
+                $("#propertyBinding").dialog("close");
+                //delete the last property in the path
+                pathProperties.pop();
+            },
+            "Ok": function() {
+                addColumn();
+            }
+        }
+    }
+
+    $("#propertyBinding").dialog(option);
+    $("#propertyBinding").dialog("open");
     //Put the default values
     $("#columnName").val(labelP);
-    $("#finalPath").val(pathString);
-    $("#propertyBinding").fadeIn(speed);
+//$("#finalPath").val(pathString);
+    
 }
 //delete the colomn from the server side and re-preview the table
 
@@ -355,8 +382,8 @@ function addColumn(){
     if (cn==''){
         cn ='noName'
     };
-    var te = $("#typeExtraction").val();
-    var pf = $("#finalPath").val();
+    var te = 'Deprecated';//$("#typeExtraction").val();
+    var pf = pathString;//$("#finalPath").val();
     //Verification of the existance of the column name
     if (verifyColumnLabel(cn)==true ){
         alert (__("Name exists"));
@@ -378,7 +405,8 @@ function addColumn(){
                 actualUTR = msg;
                 previewTable(msg);
                 //close the window
-                //$("#propertyBinding").hide();
+                
+                
                 utrIntro();
 
             }//succes
@@ -487,6 +515,8 @@ function previewTable(table){
     }
     //alert (strTableBody);
     $("#utrBody").html(strTableBody);
+
+//tableToGrid("#UTR");
 
 }
 
@@ -754,7 +784,7 @@ function exportCSV (){
     };
     $.ajax(options);*/
     window.location.href = "../classes/class.TReg_VirtualTable.php?op=exoprtCSV";
-   // window.ope
+// window.ope
 
 }
 
@@ -778,7 +808,9 @@ function manageEvents(){
     //add column event
     $("#addColumn").click(addColumn);
     $("#exitAddColumn").click(function(){
-        $("#propertyBinding").fadeOut(speed*2);
+
+        $("#propertyBinding").dialog("close");
+        
         //delete the last property in the path
         pathProperties.pop();
     });
@@ -798,7 +830,20 @@ function manageEvents(){
 
 
         //show the path bulder div
+        //old***
         $("#divPathWizard").show(speed*2);
+
+        //with dialog
+        optionPathWizard={
+            show:'blind',
+            hide:'explode',
+            height:420,
+            width:800,
+            modal:true,
+            resizable:false
+
+        };
+        //$("#divPathWizard").dialog(open,optionPathWizard);
 
         getRootClassesOfInstances();
 

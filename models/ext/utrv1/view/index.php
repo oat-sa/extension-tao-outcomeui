@@ -11,10 +11,20 @@ and open the template in the editor.
 
 
 <html>
+    
     <head>
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        <script type="text/javascript" src="javascript/jquery-1.3.2.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="cssfiles/default/basic.css">
+
+        <link rel="stylesheet" type="text/css" media="screen" href="javascript/jqGrid/css/ui.jqgrid.css" />
+        <link rel="stylesheet" type="text/css" media="screen" href="javascript/jquery/jqueryui/themes/redmond/jquery-ui-1.7.1.custom.css" />
+
+        <script src="javascript/jquery-1.3.2.min.js"></script>
+
+        <script src="javascript/jqGrid/js/jquery.jqGrid.min.js"></script>
+        <script src="javascript/jquery/jqueryui/jquery-ui-1.8.custom.min.js"></script>
+
         <script type="text/javascript" src="javascript/raphael.js"></script>
         <script type="text/javascript" src="javascript/pie.js"></script>
 
@@ -23,19 +33,20 @@ and open the template in the editor.
 
         <script type="text/javascript" src="javascript/utrfactory.js"></script>
 
-        <link rel="stylesheet" type="text/css" href="cssfiles/default/basic.css">
-        
     </head>
+
+
     <body>
         <div id="utrDiv" >
-            <div id="divPathWizard" class="divstandard">
-                <div id="menuPathWizard">
+            <div id="divPathWizard" class="ui-widget-content ui-corner-all">
+                <div id="menuPathWizard" class ="ui-widget-header ui-corner-all">
                     <? echo __("Choose a property");?>
                     <input class="closePathBuilderClass" id="closePathBuilder" type="button" value=""> </input>
                 </div>
+                
 
-                <div id="classesDiv">
-                    <div id="contextClassHeader" class="boxHeader">
+                <div id="classesDiv" class="ui-widget-content ui-corner-all">
+                    <div id="contextClassHeader" class="ui-widget-header" style="margin: 0.1em 0.1em">
 
                         <input id="backClass" type="button" value="<?__("Back")?>" name="backClass"/>
                         <h1>Classe</h1>
@@ -46,49 +57,28 @@ and open the template in the editor.
                         <h1> list of classes</h1>
                     </div>
                 </div>
-                <div id="propertiesDiv">
-                    <div id="contextPropertiesHeader" class="boxHeader">
+                <div id="propertiesDiv" class="ui-widget-content ui-corner-all">
+                    <div id="contextPropertiesHeader" class="ui-widget-header ui-corner-all">
                         <h1>...</h1>
                     </div>
 
-                    <div id="contextProperties" class="contextPropertiesStyle">
+                    <div id="contextProperties" class= " contextPropertiesStyle ui-widget-content ui-corner-all " style="margin: 0.1em 0.1em">
                         <h1>List of properties</h1>
                     </div>
 
                 </div>
 
                 <div id="divFooterPathWizard" style="clear:both">
-
                 </div>
             </div>
 
-            <div id="propertyBinding" class="centered">
+            <div id="propertyBinding" title="Add column" class="centered">
                 <table border="0" cellpadding="0">
 
                     <tbody>
                         <tr>
-                            <td><? echo __("Column name"); ?>Column Name:</td>
+                            <td><? echo __("Column name"); ?>:</td>
                             <td><input id="columnName" type="text" name="" value="" /></td>
-                        </tr>
-                        <tr>
-                            <td>Extraction Method:</td>
-                            <td><select id="typeExtraction" name="ExtractionMethodDrop">
-                                    <option value="direct" >Direct </option>
-                                    <option value="xpath" >XPath query </option>
-                                    <option value="function" >Function </option>
-                                </select></td>
-                        </tr>
-                        <tr>
-                            <td>Query</td>
-                            <td><input id="finalPath" type="text" name="finalPath" value="" size="30" /></td>
-                        </tr>
-
-                        <tr>
-                            <td>
-                                <input id="addColumn" type="button" value="Add Column" /><input id="exitAddColumn" type="button" value="<?echo __("Cancel");?>" />
-
-                            </td>
-
                         </tr>
 
                     </tbody>
