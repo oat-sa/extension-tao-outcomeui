@@ -34,6 +34,7 @@
         <property uri = "SEQUENCE" label="labelProp1"></property>
         <property uri = "ENDORSMENT" label="labelProp1"></property>
         <property uri = "ITEMUSAGE" label="labelProp1"></property>
+        <property uri = "ITEM_ID" label="labelProp3"></property>
 
         <!-- RANGE TO BEHAVIOR-->
         <property uri = "ITEMBEHAVIOR" label="labelProp1"></property>
@@ -43,7 +44,18 @@
     <class uri= "ITEMBEHAVIOR_CLASS" label="label">
         <property uri = "LISTENERNAME" label="labelProp1"></property>
         <property uri = "LISTENERVALUE" label="labelProp1"></property>
+
+
+        <property uri = "id_Test" label="labelProp1"></property>
+        <property uri = "SUBJECT_ID" label="labelProp3"></property>
+        <property uri = "ITEM_ID" label="labelProp3"></property>
+
+        <property uri = "Reviwe1_ID" label="labelProp3"></property>
         
+        <property uri = "Reviwe1_Comment" label="labelProp3"></property>
+
+        <property uri = "Reviwe1_Note" label="labelProp3"></property>
+
 
 
     </class>

@@ -27,6 +27,10 @@ class RegCommon {
      */
     public function regConnect() {
 
+        define('API_LOGIN','younes');
+        define('API_PASSWORD',md5('younes'));
+        core_control_FrontController::connect(API_LOGIN, API_PASSWORD, DATABASE_NAME);
+
         $session = core_kernel_classes_Session::singleton();
         $session->model->loadModel(RESULT_ONTOLOGY);
         $session->model->loadModel(ITEM_ONTOLOGY);
