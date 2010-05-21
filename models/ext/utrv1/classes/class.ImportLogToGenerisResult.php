@@ -142,6 +142,8 @@ class ImportLogToGenerisResult {
 
             $ITEMUSAGE=$citemDom->getAttribute("tao:ITEMUSAGE");
 
+            $itemId = $citemDom->getAttribute("rdfid");
+
             $ITEMBEHAVIOR='';//puted after adding the itemBehavior class
             //*****************************************************
 
@@ -195,6 +197,16 @@ class ImportLogToGenerisResult {
 
                 $propIB = new core_kernel_classes_Property($RESULT_NS."LISTENERVALUE");
                 $instanceIB->setPropertyValue($propIB,$LISTENERVALUE );
+
+                $propIB = new core_kernel_classes_Property($RESULT_NS."ID_TEST");
+                $instanceIB->setPropertyValue($propIB,$ID_TEST );
+
+                $propIB = new core_kernel_classes_Property($RESULT_NS."SUBJECT_ID");
+                $instanceIB->setPropertyValue($propIB,$SUBJECT_ID );
+
+                $propIB = new core_kernel_classes_Property($RESULT_NS."ITEM_ID");
+                $instanceIB->setPropertyValue($propIB,$itemId );
+
                 //The range of Citem instance / The ITEMBEHAVIOR
                 $ITEMBEHAVIOR = $instanceIB->uriResource;
                 $propCitem = new core_kernel_classes_Property($RESULT_NS."ITEMBEHAVIOR");

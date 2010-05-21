@@ -27,7 +27,7 @@
     </class>
 
     <class uri="Citem_CLASS" label="label3" >
-        
+
         <property uri = "WEIGHT" label="labelProp1"></property>
         <property uri = "MODEL" label="labelProp1"></property>
         <property uri = "DEFINITIONFILE" label="labelProp1"></property>
@@ -49,21 +49,25 @@
         <property uri = "id_Test" label="labelProp1"></property>
         <property uri = "SUBJECT_ID" label="labelProp3"></property>
         <property uri = "ITEM_ID" label="labelProp3"></property>
-
-        <property uri = "Reviwe1_ID" label="labelProp3"></property>
         
-        <property uri = "Reviwe1_Comment" label="labelProp3"></property>
+        <property uri = "Final_Endorsement" label="labelProp3"></property>
+        <property uri = "Final_Comment" label="labelProp3"></property>
 
-        <property uri = "Reviwe1_Note" label="labelProp3"></property>
+        <property uri = "Reviwer1_ID" label="labelProp3"></property>
+        <property uri = "Reviwer1_Comment" label="labelProp3"></property>
+        <property uri = "Reviwer1_Endorsement" label="labelProp3"></property>
 
+        <property uri = "Reviwer2_ID" label="labelProp3"></property>
+        <property uri = "Reviwer2_Comment" label="labelProp3"></property>
+        <property uri = "Reviwer2_Endorsement" label="labelProp3"></property>
 
 
     </class>
 
-    
 
 
-    
+
+
 
 
 </classes>

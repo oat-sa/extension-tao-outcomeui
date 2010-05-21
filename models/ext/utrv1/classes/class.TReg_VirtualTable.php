@@ -491,8 +491,6 @@ class TReg_VirtualTable extends RegCommon {
     public function dispatch() {
         if (isset ($_POST['op'])){
 
-
-
         if ($_POST['op']=='listInstances') {
             $p = new TReg_VirtualTable();
             $t= $p->trGetInstances();
