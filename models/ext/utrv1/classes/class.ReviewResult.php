@@ -12,13 +12,12 @@ require_once('class.RegCommon.php');
 class ReviewResult {
     public function  __construct() {
 // A supprimer lors du deploiment final
-        define('API_LOGIN','younes');
-        define('API_PASSWORD',md5('123456'));
+        define('API_LOGIN','djaghloul');
+        define('API_PASSWORD',md5('djaghloul'));
         core_control_FrontController::connect(API_LOGIN, API_PASSWORD, DATABASE_NAME);
 
         $p = new  RegCommon();
         $p->regConnect();
-
     }
 
     /**
@@ -44,13 +43,15 @@ class ReviewResult {
         $uriSubjectProp = $RESULT_NS.'#'.'SUBJECT_ID';
         $uriItemIdProp = $RESULT_NS.'#'.'ITEM_ID';
         //reviwer information
-        $uriRevId_1Prop = $RESULT_NS.'#'.'REVIEWER1_ID'.
-        $uriRevComment_1Prop = $RESULT_NS.'#'.'REVIEWER1_COMMENT';
-        $uriRevEndorsement_1Prop = $RESULT_NS.'#'.'REVIWER1_ENDORSEMENT';
+        $uriRevId_1Prop = $RESULT_NS.'#'.'REVIEWER1_ID';
 
-        $uriRevId_2Prop = $RESULT_NS.'#'.'REVIEWER2_ID'.
+        $uriRevComment_1Prop = $RESULT_NS.'#'.'REVIEWER1_COMMENT';
+
+        $uriRevEndorsement_1Prop = $RESULT_NS.'#'.'REVIEWER1_ENDORSEMENT';
+
+        $uriRevId_2Prop = $RESULT_NS.'#'.'REVIEWER2_ID';
         $uriRevComment_2Prop = $RESULT_NS.'#'.'REVIEWER2_COMMENT';
-        $uriRevEndorsement_2Prop = $RESULT_NS.'#'.'REVIWER2_ENDORSEMENT';
+        $uriRevEndorsement_2Prop = $RESULT_NS.'#'.'REVIEWER2_ENDORSEMENT';
 
         $uriRevComment_FinalProp = $RESULT_NS.'#'.'FINAL_COMMENT';
         $uriRevEndorsement_FinalProp = $RESULT_NS.'#'.'FINAL_ENDORSEMENT';
@@ -68,33 +69,36 @@ class ReviewResult {
         $itemId = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriItemIdProp));
 
         $revId_1 = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevId_1Prop));
+
+        //print_r($revId_1);
+
         $revComment_1 = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevComment_1Prop));
         $revEndorsement_1 = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevEndorsement_1Prop));
-        
+
         $revId_2 = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevId_2Prop));
         $revComment_2 = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevComment_2Prop));
         $revEndorsement_2 = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevEndorsement_2Prop));
-        
+
         $revComment_Final = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevComment_FinalProp));
         $revEndorsement_Final = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevEndorsement_FinalProp));
 
 
-        
-        
+
+
 
         //test the variables
         $idTestValue = '';
-        if (isset($idTest[0])){
+        if (isset($idTest[0])) {
             $idTestValue = $idTest[0];
         }
 
         $subjectIdValue = '';
-        if (isset($subjectId[0])){
+        if (isset($subjectId[0])) {
             $subjectIdValue = $subjectId[0];
         }
 
         $itemIdValue = '';
-        if (isset($itemId[0])){
+        if (isset($itemId[0])) {
             $itemIdValue = $itemId[0];
         }
         $ibInformationValues['uriPassedItem']= $uriIB;
@@ -104,7 +108,7 @@ class ReviewResult {
         $ibInformationValues['subjectId']= $subjectIdValue;
         $ibInformationValues['itemId']= $itemIdValue;
 
-        $ibInformationValues['revId_1']= $revId_1[0];
+        $ibInformationValues['revId_1']= end($revId_1);
         $ibInformationValues['revComment_1']= $revComment_1[0];
         $ibInformationValues['revEndorsement_1']= $revEndorsement_1[0];
 
@@ -114,7 +118,7 @@ class ReviewResult {
 
         $ibInformationValues['revComment_Final']= $revComment_Final[0];
         $ibInformationValues['revEndorsement_Final']= $revEndorsement_Final[0];
-        
+
         return $ibInformationValues;
 
     }
@@ -157,34 +161,85 @@ class ReviewResult {
         foreach($listIbInstances as $uriIB=>$resource ) {
             $endorsementValues =$this->getIbEndorsemenInformationValues($uriIB);
             $listEndorsementValues[] = $endorsementValues;
-
         }
 
         return $listEndorsementValues;
+    }
+
+
+    /**
+     * Set the review input
+     *
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param      * $uriItemReviewed,$revId,$revComment,$revEndorsement
+     *
+     */
+
+    public function setReviewInformation($uriItemReviewed,$revId,$revComment,$revEndorsement) {
+        //put the reviewer's ni the ontology
+        // create the link to the instance
+
+        // get the property uris'
+        //echo 'rev id ='. $revId;
+        
+        $RESULT_NS = core_kernel_classes_Session::getNameSpace();
+
+        $uriRevIdProp = $RESULT_NS.'#'.'REVIEWER1_ID';
+        $uriRevCommentProp = $RESULT_NS.'#'.'REVIEWER1_COMMENT';
+        $uriRevEndorsementProp = $RESULT_NS.'#'.'REVIEWER1_ENDORSEMENT';
+
+        $itemReviewed = new core_kernel_classes_Resource($uriItemReviewed);
+
+        //create the properties
+        $propRevId = new core_kernel_classes_Property($uriRevIdProp);
+        
+        //print_r($propRevId);
+        $propRevComment = new core_kernel_classes_Property($uriRevCommentProp);
+        $proprevEndorsement = new core_kernel_classes_Property($uriRevEndorsementProp);
+
+        //set values of properties
+
+        $itemReviewed->setPropertyValue($propRevId, $revId);
+        $itemReviewed->setPropertyValue($propRevComment, $revComment);
+        $itemReviewed->setPropertyValue($proprevEndorsement, $revEndorsement);
+
 
     }
 
-    public function dispatch(){
-        if (isset($_POST['revOp'])){
-            
+    public function dispatch() {
+        if (isset($_POST['revOp'])) {
 
             //get itemBehavior information
-            if ($_POST['revOp'] == 'getItermBehaviorInformation'){
+            if ($_POST['revOp'] == 'getItermBehaviorInformation') {
                 //get the filter options. Otherwise one uses all itemBehavior instances
-
                 $list= $this->getItermBehaviorInformation();
+
                 echo (json_encode($list));
-                
 
             }
-         
+
+            //set review information
+            if ($_POST['revOp']=='setReviewInformation') {
+               
+                $uriItemReviewed=$_POST['uriItemReviewed'];
+                $revId=$_POST['revId'];
+                $revComment=$_POST['revComment'];
+                $revEndorsement=$_POST['revEndorsement'];
+
+                $this->setReviewInformation($uriItemReviewed, $revId, $revComment, $revEndorsement);
+            }
+
         }
     }
 
 }
-
+//http://localhost/middleware/tao4.rdf#i1274964277010141500
+//
 //session_destroy();
 $r = new ReviewResult();
+
 
 error_reporting(0);
 $r->dispatch();

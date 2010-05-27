@@ -53,13 +53,13 @@
         <property uri = "Final_Endorsement" label="labelProp3"></property>
         <property uri = "Final_Comment" label="labelProp3"></property>
 
-        <property uri = "Reviwer1_ID" label="labelProp3"></property>
-        <property uri = "Reviwer1_Comment" label="labelProp3"></property>
-        <property uri = "Reviwer1_Endorsement" label="labelProp3"></property>
+        <property uri = "Reviewer1_ID" label="labelProp3"></property>
+        <property uri = "Reviewer1_Comment" label="labelProp3"></property>
+        <property uri = "Reviewer1_Endorsement" label="labelProp3"></property>
 
-        <property uri = "Reviwer2_ID" label="labelProp3"></property>
-        <property uri = "Reviwer2_Comment" label="labelProp3"></property>
-        <property uri = "Reviwer2_Endorsement" label="labelProp3"></property>
+        <property uri = "Reviewer2_ID" label="labelProp3"></property>
+        <property uri = "Reviewer2_Comment" label="labelProp3"></property>
+        <property uri = "Reviewer2_Endorsement" label="labelProp3"></property>
 
 
     </class>
