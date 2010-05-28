@@ -35,8 +35,9 @@ class ReviewResult {
         $ibInformationValues = array();// the returned array
         //get the uri of the property LISTENERVALUE
         $RESULT_NS = core_kernel_classes_Session::getNameSpace();
-
+//echo ' hhl=kml';
         //Create property connexion
+
         $uriListnerValueProp = $RESULT_NS.'#'.'LISTENERVALUE';
         $uriListenerNameProp = $RESULT_NS.'#'.'LISTENERNAME';
         $uriIDTestProp = $RESULT_NS.'#'.'ID_TEST';
@@ -70,7 +71,7 @@ class ReviewResult {
 
         $revId_1 = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevId_1Prop));
 
-         //print_r($revId_1);
+        //print_r($revId_1);
 
         $revComment_1 = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevComment_1Prop));
         $revEndorsement_1 = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevEndorsement_1Prop));
@@ -82,7 +83,8 @@ class ReviewResult {
         $revComment_Final = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevComment_FinalProp));
         $revEndorsement_Final = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevEndorsement_FinalProp));
 
-        // print_r($revEndorsement_Final);
+
+         //print_r($revId_1);
 
 
 
@@ -106,21 +108,22 @@ class ReviewResult {
         $ibInformationValues['uriPassedItem']= $uriIB;
         $ibInformationValues['endorsement']= $endorsement[0];
         $ibInformationValues['listenerName']= $listenerName[0];
-        $ibInformationValues['iDTest']= $idTestValue;
-        $ibInformationValues['subjectId']= $subjectIdValue;
-        $ibInformationValues['itemId']= $itemIdValue;
+        $ibInformationValues['iDTest']= $idTestValue[0];
+        $ibInformationValues['subjectId']= $subjectIdValue[0];
+        $ibInformationValues['itemId']= $itemIdValue[0];
 
-        $ibInformationValues['revId_1']= end($revId_1);
-        $ibInformationValues['revComment_1']= end($revComment_1);
-        $ibInformationValues['revEndorsement_1']= end($revEndorsement_1);
+        $ibInformationValues['revId_1']=  $revId_1[0];
+        $ibInformationValues['revComment_1']=  $revComment_1[0];
+        $ibInformationValues['revEndorsement_1']=  $revEndorsement_1[0];
 
-        $ibInformationValues['revId_2']= end($revId_2);
-        $ibInformationValues['revComment_2']= end($revComment_2);
-        $ibInformationValues['revEndorsement_2']= end($revEndorsement_2);
+        $ibInformationValues['revId_2']=  $revId_2[0];
+        $ibInformationValues['revComment_2']=  $revComment_2[0];
+        $ibInformationValues['revEndorsement_2']=  $revEndorsement_2[0];
 
-        $ibInformationValues['revComment_Final']= end($revComment_Final);
-        $ibInformationValues['revEndorsement_Final']= end($revEndorsement_Final);
+        $ibInformationValues['revComment_Final']=  $revComment_Final[0];
+        $ibInformationValues['revEndorsement_Final']=  $revEndorsement_Final[0];
 
+       
         return $ibInformationValues;
 
     }
@@ -160,19 +163,21 @@ class ReviewResult {
 
     public function getItermBehaviorInformation($idTest,$idSubject,$idItem) {
         $listIbInstances = $this->getItemBehaviorInstances();
+        
         $listEndorsementValues = array();
 
         foreach($listIbInstances as $uriIB=>$resource ) {
+           
             $endorsementValues =$this->getIbEndorsemenInformationValues($uriIB);
             //do the filter
-            if (($endorsementValues['iDTest'] ==$idTest) && ($endorsementValues['subjectId']==$idSubject) && ($endorsementValues['itemId']==$idItem)) {
+           if ((  $endorsementValues['listenerName']=='inquiryEndorsment')&& ($endorsementValues['iDTest'] ==$idTest) && ($endorsementValues['subjectId']==$idSubject) && ($endorsementValues['itemId']==$idItem)) {
                 $listEndorsementValues[] = $endorsementValues;
             }
 
 
 
         }
-
+//print_r($listEndorsementValues);
         return $listEndorsementValues;
     }
 
@@ -243,9 +248,9 @@ class ReviewResult {
             //get itemBehavior information
             if ($_POST['revOp'] == 'getItermBehaviorInformation') {
                 //get the filter options. Otherwise one uses all itemBehavior instances
-                $idTest ='test14';
-                $idSubject='subject1';
-                $idItem='item1';
+                $idTest ='2';
+                $idSubject='2';
+                $idItem='2';
                 $list= $this->getItermBehaviorInformation($idTest,$idSubject,$idItem);
 
                 echo (json_encode($list));
@@ -274,7 +279,7 @@ class ReviewResult {
 $r = new ReviewResult();
 
 
-//error_reporting(0);
+error_reporting(0);
 $r->dispatch();
 error_reporting(-1);
 /*$uriIB = "http://localhost/middleware/tao3.rdf#i1274357746084423200";
