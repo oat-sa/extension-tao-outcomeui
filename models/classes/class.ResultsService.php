@@ -54,14 +54,6 @@ class taoResults_models_classes_ResultsService
      */
     protected $resultClass = null;
 
-    /**
-     * The ontologies to load
-     *
-     * @access protected
-     * @var array
-     */
-    protected $resultsOntologies = array('http://www.tao.lu/Ontologies/TAOResult.rdf');
-
     // --- OPERATIONS ---
 
     /**
@@ -77,7 +69,6 @@ class taoResults_models_classes_ResultsService
 		
 		parent::__construct();
 		$this->resultClass 	= new core_kernel_classes_Class( TAO_RESULT_CLASS );
-		$this->loadOntologies($this->resultsOntologies);
 		
         // section 127-0-1-1--233123b3:125208ce1cc:-8000:0000000000001C75 end
     }
