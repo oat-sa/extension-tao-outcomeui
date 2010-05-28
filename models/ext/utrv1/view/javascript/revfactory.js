@@ -27,18 +27,42 @@ function manageEvents(){
 }
 //set reviewer info
 function setRevInformation(revNumber){
-alert (revNumber);
-var item = iBInfo[0];
-// get the instance of the pased item
+    alert (revNumber);
+    var item = iBInfo[0];
+    // get the instance of the pased item
+if ( revNumber == 'rev1'){
 
-var currentItemreviewed = item['uriPassedItem'];
-//get reviwer info
-var currentRevId =$("#revId_1").val();
-var currentRevComment = $("#revComment_1").val();
+    var currentItemreviewed = item['uriPassedItem'];
+    //get reviwer info
+    var currentRevId =$("#revId_1").val();
+    var currentRevComment = $("#revComment_1").val();
 
-var currentRevEndorsement =$("#revEndorsement_1").val();
+    var currentRevEndorsement =$("#revEndorsement_1").val();
+}
 
-   options={
+if ( revNumber == 'rev2'){
+
+    var currentItemreviewed = item['uriPassedItem'];
+    //get reviwer info
+    var currentRevId =$("#revId_2").val();
+    var currentRevComment = $("#revComment_2").val();
+
+    var currentRevEndorsement =$("#revEndorsement_2").val();
+}
+
+if ( revNumber == 'revf'){
+
+    var currentItemreviewed = item['uriPassedItem'];
+    //get reviwer info
+    var currentRevId ='younes';
+    var currentRevComment = $("#revComment_Final").val();
+
+    var currentRevEndorsement =$("#revEndorsement_Final").val();
+}
+
+
+
+options={
         type: "POST",
         url: "../classes/class.ReviewResult.php",
         data: {
@@ -50,9 +74,8 @@ var currentRevEndorsement =$("#revEndorsement_1").val();
             revEndorsement:currentRevEndorsement
 
         },
-        dataType:"json",
         success: function(msg){
-            alert('msg');
+            alert(msg);
             
 
         }
@@ -122,8 +145,6 @@ function previewAllItemInformation(){
 
 
 }
-
-
 
 
 
