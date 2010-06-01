@@ -9,7 +9,16 @@
 
 require_once('class.RegCommon.php');
 
+
+
 class ReviewResult {
+    private $revType;
+    private $revIdCurrent;
+    private $revTestId;
+    private $revSubjectId;
+    private $revItemId;
+
+
     public function  __construct() {
 // A supprimer lors du deploiment final
         define('API_LOGIN','djaghloul');
@@ -18,6 +27,14 @@ class ReviewResult {
 
         $p = new  RegCommon();
         $p->regConnect();
+        //init the variables
+        $this->revType = $_SESSION['revType'];
+        $this->revIdCurrent=$_SESSION['revIdCurrent'];
+        $this->revTestId=$_SESSION['revTestId'];
+        $this->revSubjectId=$_SESSION['revSubjectId'];
+        $this->revItemId=$_SESSION['revItemId'];
+
+
     }
 
     /**
@@ -57,7 +74,6 @@ class ReviewResult {
         $uriRevComment_FinalProp = $RESULT_NS.'#'.'FINAL_COMMENT';
         $uriRevEndorsement_FinalProp = $RESULT_NS.'#'.'FINAL_ENDORSEMENT';
 
-
         //create the property LISTENERVALUE
         $ibEndorsmentListnerValue = new core_kernel_classes_Property($uriListnerValueProp);
         //get the valu of the instance uriIB for the the property LISTENERVALUE
@@ -84,7 +100,7 @@ class ReviewResult {
         $revEndorsement_Final = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevEndorsement_FinalProp));
 
 
-         //print_r($revId_1);
+        //print_r($revId_1);
 
 
 
@@ -104,26 +120,55 @@ class ReviewResult {
             $itemIdValue = $itemId[0];
         }
 
+        //put the reviewer id
+
 
         $ibInformationValues['uriPassedItem']= $uriIB;
         $ibInformationValues['endorsement']= $endorsement[0];
         $ibInformationValues['listenerName']= $listenerName[0];
-        $ibInformationValues['iDTest']= $idTestValue[0];
-        $ibInformationValues['subjectId']= $subjectIdValue[0];
-        $ibInformationValues['itemId']= $itemIdValue[0];
+        $ibInformationValues['iDTest']= $idTestValue;
+        $ibInformationValues['subjectId']= $subjectIdValue;
+        $ibInformationValues['itemId']= $itemIdValue;
+        // put either the id in the ontology or the sent revId by the workflow and chose the appropriate reviewer
 
-        $ibInformationValues['revId_1']=  $revId_1[0];
+
+        $ibInformationValues['revId_1']= $revId_1[0];
         $ibInformationValues['revComment_1']=  $revComment_1[0];
         $ibInformationValues['revEndorsement_1']=  $revEndorsement_1[0];
 
-        $ibInformationValues['revId_2']=  $revId_2[0];
+
+
+        $ibInformationValues['revId_2']= $revId_2[0];
         $ibInformationValues['revComment_2']=  $revComment_2[0];
         $ibInformationValues['revEndorsement_2']=  $revEndorsement_2[0];
+        
+//in reviewer process
+        if ($this->revType=='reviewer') {
+            
 
+
+            if ($revId_1[0]=='') {
+                $ibInformationValues['revId_1']=  $this->revIdCurrent;
+                $ibInformationValues['revNumber'] = 'rev1';
+            }else {
+
+            }
+//second reviewer
+            if (($revId_2[0]=='')&&($revId_1[0]!='')) {
+                $ibInformationValues['revId_2']=  $this->revIdCurrent;
+                $ibInformationValues['revNumber'] = 'rev2';
+            }else {
+
+            }
+        }
+
+       //in final reviwe process
+        if ($this->revType=='revFinal') {
+            $ibInformationValues['revNumber'] = 'revf';
+        }
         $ibInformationValues['revComment_Final']=  $revComment_Final[0];
         $ibInformationValues['revEndorsement_Final']=  $revEndorsement_Final[0];
 
-       
         return $ibInformationValues;
 
     }
@@ -163,24 +208,21 @@ class ReviewResult {
 
     public function getItermBehaviorInformation($idTest,$idSubject,$idItem) {
         $listIbInstances = $this->getItemBehaviorInstances();
-        
+
         $listEndorsementValues = array();
 
         foreach($listIbInstances as $uriIB=>$resource ) {
-           
+
             $endorsementValues =$this->getIbEndorsemenInformationValues($uriIB);
             //do the filter
-           if ((  $endorsementValues['listenerName']=='inquiryEndorsment')&& ($endorsementValues['iDTest'] ==$idTest) && ($endorsementValues['subjectId']==$idSubject) && ($endorsementValues['itemId']==$idItem)) {
+            if ((  $endorsementValues['listenerName']=='inquiryEndorsment')&& ($endorsementValues['iDTest'] ==$idTest) && ($endorsementValues['subjectId']==$idSubject) && ($endorsementValues['itemId']==$idItem)) {
                 $listEndorsementValues[] = $endorsementValues;
             }
-
-
 
         }
 //print_r($listEndorsementValues);
         return $listEndorsementValues;
     }
-
 
 
 
@@ -199,7 +241,7 @@ class ReviewResult {
         // create the link to the instance
 
         // get the property uris'
-        echo $uriItemReviewed.'<br>'.$revId;
+        //echo $uriItemReviewed.'<br>'.$revId;
         $RESULT_NS = core_kernel_classes_Session::getNameSpace();
         if ($revNumber =='rev1') {
 
@@ -223,7 +265,6 @@ class ReviewResult {
         }
 
         $itemReviewed = new core_kernel_classes_Resource($uriItemReviewed);
-
         //create the properties
         $propRevId = new core_kernel_classes_Property($uriRevIdProp);
 
@@ -248,9 +289,9 @@ class ReviewResult {
             //get itemBehavior information
             if ($_POST['revOp'] == 'getItermBehaviorInformation') {
                 //get the filter options. Otherwise one uses all itemBehavior instances
-                $idTest ='2';
-                $idSubject='2';
-                $idItem='2';
+                $idTest =$this->revTestId;// 'http://localhost/middleware/tao4.rdf#i1261572267020194300';
+                $idSubject=$this->revSubjectId;//  'http://localhost/middleware/tao4.rdf#i1274434222052333200';
+                $idItem=$this->revItemId;//  'http://localhost/middleware/tao4.rdf#i1274434065093789300';
                 $list= $this->getItermBehaviorInformation($idTest,$idSubject,$idItem);
 
                 echo (json_encode($list));
@@ -276,8 +317,8 @@ class ReviewResult {
 //http://localhost/middleware/tao4.rdf#i1274964277010141500
 //
 //session_destroy();
-$r = new ReviewResult();
 
+$r = new ReviewResult();
 
 error_reporting(0);
 $r->dispatch();
