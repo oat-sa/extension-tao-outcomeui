@@ -61,6 +61,14 @@
         <property uri = "Reviewer2_Comment" label="labelProp3"></property>
         <property uri = "Reviewer2_Endorsement" label="labelProp3"></property>
 
+        <property uri = "Reviewer3_ID" label="labelProp3"></property>
+        <property uri = "Reviewer3_Comment" label="labelProp3"></property>
+        <property uri = "Reviewer3_Endorsement" label="labelProp3"></property>
+
+        <property uri = "Reviewer4_ID" label="labelProp3"></property>
+        <property uri = "Reviewer4_Comment" label="labelProp3"></property>
+        <property uri = "Reviewer4_Endorsement" label="labelProp3"></property>
+
 
     </class>
 
