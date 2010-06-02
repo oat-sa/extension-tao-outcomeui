@@ -9,7 +9,7 @@
 		'name' => 'TAO Results',
 		'description' => 'TAO Results extensions http://www.tao.lu',
 		'additional' => array(
-			'version' => '1.0',
+			'version' => '1.2',
 			'author' => 'CRP Henri Tudor',
 			'dependances' => array(),
 			'install' => array( 
