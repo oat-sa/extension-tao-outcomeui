@@ -71,6 +71,15 @@ class ReviewResult {
         $uriRevComment_2Prop = $RESULT_NS.'#'.'REVIEWER2_COMMENT';
         $uriRevEndorsement_2Prop = $RESULT_NS.'#'.'REVIEWER2_ENDORSEMENT';
 
+        $uriRevId_3Prop = $RESULT_NS.'#'.'REVIEWER3_ID';
+        $uriRevComment_3Prop = $RESULT_NS.'#'.'REVIEWER3_COMMENT';
+        $uriRevEndorsement_3Prop = $RESULT_NS.'#'.'REVIEWER3_ENDORSEMENT';
+
+        $uriRevId_4Prop = $RESULT_NS.'#'.'REVIEWER4_ID';
+        $uriRevComment_4Prop = $RESULT_NS.'#'.'REVIEWER4_COMMENT';
+        $uriRevEndorsement_4Prop = $RESULT_NS.'#'.'REVIEWER4_ENDORSEMENT';
+
+
         $uriRevComment_FinalProp = $RESULT_NS.'#'.'FINAL_COMMENT';
         $uriRevEndorsement_FinalProp = $RESULT_NS.'#'.'FINAL_ENDORSEMENT';
 
@@ -96,6 +105,15 @@ class ReviewResult {
         $revComment_2 = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevComment_2Prop));
         $revEndorsement_2 = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevEndorsement_2Prop));
 
+        $revId_3 = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevId_3Prop));
+        $revComment_3 = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevComment_3Prop));
+        $revEndorsement_3 = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevEndorsement_3Prop));
+
+        $revId_4 = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevId_4Prop));
+        $revComment_4 = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevComment_4Prop));
+        $revEndorsement_4 = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevEndorsement_4Prop));
+
+        
         $revComment_Final = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevComment_FinalProp));
         $revEndorsement_Final = $utrResource->getPropertyValues(new core_kernel_classes_Property($uriRevEndorsement_FinalProp));
 
@@ -141,10 +159,19 @@ class ReviewResult {
         $ibInformationValues['revId_2']= $revId_2[0];
         $ibInformationValues['revComment_2']=  $revComment_2[0];
         $ibInformationValues['revEndorsement_2']=  $revEndorsement_2[0];
-        
+
+        $ibInformationValues['revId_3']= $revId_3[0];
+        $ibInformationValues['revComment_3']=  $revComment_3[0];
+        $ibInformationValues['revEndorsement_3']=  $revEndorsement_3[0];
+
+        $ibInformationValues['revId_4']= $revId_4[0];
+        $ibInformationValues['revComment_4']=  $revComment_4[0];
+        $ibInformationValues['revEndorsement_4']=  $revEndorsement_4[0];
+
+
 //in reviewer process
         if ($this->revType=='reviewer') {
-            
+
 
 
             if ($revId_1[0]=='') {
@@ -160,9 +187,24 @@ class ReviewResult {
             }else {
 
             }
+
+            if (($revId_3[0]=='')&&($revId_2[0]!='')) {
+                $ibInformationValues['revId_3']=  $this->revIdCurrent;
+                $ibInformationValues['revNumber'] = 'rev3';
+            }else {
+
+            }
+
+            if (($revId_4[0]=='')&&($revId_3[0]!='')) {
+                $ibInformationValues['revId_4']=  $this->revIdCurrent;
+                $ibInformationValues['revNumber'] = 'rev4';
+            }else {
+
+            }
+
         }
 
-       //in final reviwe process
+        //in final reviwe process
         if ($this->revType=='revFinal') {
             $ibInformationValues['revNumber'] = 'revf';
         }
@@ -256,6 +298,21 @@ class ReviewResult {
             $uriRevCommentProp = $RESULT_NS.'#'.'REVIEWER2_COMMENT';
             $uriRevEndorsementProp = $RESULT_NS.'#'.'REVIEWER2_ENDORSEMENT';
         }
+
+        if ($revNumber =='rev3') {
+
+            $uriRevIdProp = $RESULT_NS.'#'.'REVIEWER3_ID';
+            $uriRevCommentProp = $RESULT_NS.'#'.'REVIEWER3_COMMENT';
+            $uriRevEndorsementProp = $RESULT_NS.'#'.'REVIEWER3_ENDORSEMENT';
+        }
+
+        if ($revNumber =='rev4') {
+
+            $uriRevIdProp = $RESULT_NS.'#'.'REVIEWER4_ID';
+            $uriRevCommentProp = $RESULT_NS.'#'.'REVIEWER4_COMMENT';
+            $uriRevEndorsementProp = $RESULT_NS.'#'.'REVIEWER4_ENDORSEMENT';
+        }
+
 
         if ($revNumber =='revf') {
 
