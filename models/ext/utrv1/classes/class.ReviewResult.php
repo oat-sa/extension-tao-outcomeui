@@ -7,8 +7,8 @@
  * @author djaghloul
  */
 
-require_once('class.RegCommon.php');
-
+//require_once('class.RegCommon.php');
+require_once($_SERVER['DOCUMENT_ROOT']."/wfEngine/includes/common.php");
 
 
 class ReviewResult {
@@ -28,12 +28,15 @@ class ReviewResult {
         $p = new  RegCommon();
         $p->regConnect();
         //init the variables
+
         $this->revType = $_SESSION['revType'];
         $this->revIdCurrent=$_SESSION['revIdCurrent'];
         $this->revTestId=$_SESSION['revTestId'];
         $this->revSubjectId=$_SESSION['revSubjectId'];
         $this->revItemId=$_SESSION['revItemId'];
 
+
+        
 
     }
 
@@ -285,6 +288,7 @@ class ReviewResult {
         // get the property uris'
         //echo $uriItemReviewed.'<br>'.$revId;
         $RESULT_NS = core_kernel_classes_Session::getNameSpace();
+        
         if ($revNumber =='rev1') {
 
             $uriRevIdProp = $RESULT_NS.'#'.'REVIEWER1_ID';
@@ -297,6 +301,7 @@ class ReviewResult {
             $uriRevIdProp = $RESULT_NS.'#'.'REVIEWER2_ID';
             $uriRevCommentProp = $RESULT_NS.'#'.'REVIEWER2_COMMENT';
             $uriRevEndorsementProp = $RESULT_NS.'#'.'REVIEWER2_ENDORSEMENT';
+             
         }
 
         if ($revNumber =='rev3') {
@@ -338,10 +343,15 @@ class ReviewResult {
         $itemReviewed->editPropertyValues($proprevEndorsement, $revEndorsement);
         $itemReviewed->editPropertyValues($propRevId, $revId);
 
+        //Save the variable
+       
+
+
     }
 
     public function dispatch() {
         if (isset($_POST['revOp'])) {
+
 
             //get itemBehavior information
             if ($_POST['revOp'] == 'getItermBehaviorInformation') {
@@ -374,12 +384,15 @@ class ReviewResult {
 //http://localhost/middleware/tao4.rdf#i1274964277010141500
 //
 //session_destroy();
+//echo "salamo";
+//ServiceApi::save(array('yvar1' => 'hello world rev 2'));
+/*$r = new ReviewResult();
 
-$r = new ReviewResult();
+
 
 error_reporting(0);
 $r->dispatch();
-error_reporting(-1);
+error_reporting(-1);*/
 /*$uriIB = "http://localhost/middleware/tao3.rdf#i1274357746084423200";
 $r->getIbEndorsmentValue($uriIB);*/
 

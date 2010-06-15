@@ -10,6 +10,8 @@
 require_once($_SERVER['DOCUMENT_ROOT']."/generis/common/inc.extension.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
 
+
+
 /**
  * RegCommon provides the common methods to acces generis API in more suitable
  * in Table Builder context.
@@ -27,7 +29,7 @@ class RegCommon {
      */
     public function regConnect() {
 
-        
+
 
         $session = core_kernel_classes_Session::singleton();
         $session->model->loadModel(RESULT_ONTOLOGY);
@@ -331,6 +333,94 @@ class RegCommon {
     function trGetBridgePropertyValues($instanceSourceUri,$pathOfProperties) {
         //we begin by explode the path structure into an array
         //the path is created by the user with path builder in  the client side
+
+        $pathOfPropertiesArray = explode('__',$pathOfProperties);
+        //the array of uri of instances
+        $listInstancesUri=array();
+        //this array is used only to keep the list of the next uri instance of the actual path position
+        $intermediateTabUri = array();
+        //keep the lreal path
+        $realPath = array();
+
+        // Into the path, step by step
+        $countPath = count($pathOfProperties);
+        $pathPosition = 0;
+        //****** the main loop
+        $valuePath['instance'] = $instanceSourceUri;
+        $trResource = new core_kernel_classes_Resource($valuePath['instance']);
+        
+        $valuePath['realPath'] ='Root';
+        $intermediateTabUri[]=$valuePath;
+       //print_r($intermediateTabUri);
+        foreach ($pathOfPropertiesArray as $propertyUri) {
+            
+            $pathPosition++ ;
+            //for each uri instances in
+            //link the resource
+            $listInstancesUri=$intermediateTabUri;
+            // after each progression in the path , we remove the array
+            $intermediateTabUri=array();
+            $valuesPath = array();
+
+            foreach ($listInstancesUri as $instanceUri) {
+
+                $trResource = new core_kernel_classes_Resource($instanceUri['instance']);
+                //get the value of the property for this instance
+                $values = $trResource->getPropertyValues(new core_kernel_classes_Property($propertyUri)) ;// get the array of values
+
+                //add the path of the actual instance on all step+1 instances
+                foreach($values as $val) {
+
+                    $valuesPath = array();
+                    $actualPV = array();
+
+                    $actualPV['instance'] = $val;
+
+                    //prepare the label
+                    $trResource = new core_kernel_classes_Resource($val);
+                    //todo: i have to get the label of the actual resource and add it the the old path already created
+                    $labelVal = $trResource->getLabel();// this is the error
+                 
+                    //add new path,  TODO add as array not string
+                    $actualPV['realPath'] = $instanceUri['realPath'].'::'.$labelVal;
+                    $valuesPath[] = $actualPV;
+                }
+
+                //this array containes the bridged uri of instances
+                $intermediateTabUri = array_merge($intermediateTabUri,$valuesPath);
+            }
+
+            //break if the intermediateTab is void
+            /*if(count($intermediateTabUri)==0) {
+                $intermediateTabUri = array();
+                break;
+            }*/
+            //now the intermediateTab is complete, it will be the next input of the loop
+
+        }//path
+
+
+        //create the last value
+        print_r($intermediateTabUri);
+        $finalValueTab[] = array();
+        foreach ($intermediateTabUri as $vp) {
+            echo 'vp---- <br>';
+            print_r($vp);
+            //prepare values with label
+            //$finalValueTab[] = implode("::", $vp['realPath']);
+
+            $finalValueTab[] = $vp['realPath'];
+       }
+          echo 'vp---- <br>';
+        print_r($finalValueTab);
+
+        $finalValue = implode ('|$*', $finalValueTab);// $instanceUri;
+        return $finalValue;
+    }
+
+    function trGetBridgePropertyValuesSOS($instanceSourceUri,$pathOfProperties) {
+        //we begin by explode the path structure into an array
+        //the path is created by the user with path builder in  the client side
         $pathOfPropertiesArray = explode('__',$pathOfProperties);
 
         //$instanceUri = $instanceSourceUri;
@@ -363,22 +453,22 @@ class RegCommon {
             $intermediateTabUri=array();
 
             foreach ($listInstancesUri as $instanceUri) {
-
+                $valuesPath = array();
                 $trResource = new core_kernel_classes_Resource($instanceUri['instance']);
                 //get the value of the property for this instance
                 $values = $trResource->getPropertyValues(new core_kernel_classes_Property($propertyUri)) ;// get the array of values
                 // ************* Added to keep the real path of the instance
                 //
                 //feed the valusPath
-                $valuesPath = array();
+
                 $actualPV = array();
-                foreach($values as $val){
+                foreach($values as $val) {
                     $actualPV['instance'] = $val;
 
                     //prepare the label
                     $trResource = new core_kernel_classes_Resource($val);
                     $labelVal = $trResource->getLabel();
-                    
+
                     $actualPV['realPath'][] = $labelVal;
                     $valuesPath[] = $actualPV;
                 }
@@ -387,6 +477,7 @@ class RegCommon {
                 $intermediateTabUri = array_merge($intermediateTabUri,$valuesPath);
 
             }//instance
+            print_r($valuesPath);
 
             //break if the intermediateTab is void
             if(count($intermediateTabUri)==0) {
@@ -400,20 +491,21 @@ class RegCommon {
 
         //print_r($intermediateTabUri);
         $finalValueTab = array();
-        
+
         //create the last value
-        foreach ($intermediateTabUri as $vp){
+        foreach ($intermediateTabUri as $vp) {
             //prepare values with label
-           
+
 
             $finalValueTab[] = implode("::", $vp['realPath']);
 
-           
+
         }
-        
+
         $finalValue = implode ('|$*', $finalValueTab);// $instanceUri;
         return $finalValue;
     }
+
 
 
     function yyytrGetBridgePropertyValues($instanceSourceUri,$pathOfProperties) {
@@ -452,7 +544,7 @@ class RegCommon {
                 $values = $trResource->getPropertyValues(new core_kernel_classes_Property($propertyUri)) ;// get the array of values
                 // ************* Added to keep the real path of the instance
 
-                
+
 
                 //the value is the new instance to treat, it is now the new bridge
                 //it can also be the last value, so we test the count
@@ -471,7 +563,7 @@ class RegCommon {
 
         }//path
         /*        echo "le real path";*/
-        
+
 
         $finalValue = implode ('|$*', $intermediateTabUri);// $instanceUri;
         return $finalValue;
