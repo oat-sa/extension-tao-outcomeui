@@ -342,15 +342,12 @@ class RegCommon {
         //keep the real path
         $realPath = array();
 
-        //****** the main loop
+
         $valuePath['instance'] = $instanceSourceUri;
         $trResource = new core_kernel_classes_Resource($valuePath['instance']);
-        
-        $valuePath['realPath'] ='Root';
+
+        //$valuePath['realPath'][] ='';
         $intermediateTabUri[]=$valuePath;
-       //print_r($intermediateTabUri);
-        //print_r($pathOfPropertiesArray);
-        
         foreach ($pathOfPropertiesArray as $propertyUri) {
             //link the resource
             $listInstancesUri=$intermediateTabUri;
@@ -368,33 +365,31 @@ class RegCommon {
                 //add the path of the actual instance on all step+1 instances
 
                 foreach($values as $val) {
-
-                   
                     $actualPV = array();
-
                     $actualPV['instance'] = $val;
-
                     //prepare the label
                     $trResource = new core_kernel_classes_Resource($val);
                     //todo: i have to get the label of the actual resource and add it the the old path already created
                     $labelVal = $trResource->getLabel();// this is the error
-                 
+
                     //add new path,  TODO add as array not string
-
-                    $actualPV['realPath'] = $instanceUri['realPath'].'::'.$labelVal;
-                    //$actualPV['realPath'][] = $labelVal;
-
+                    //$actualPV['realPath'] = $instanceUri['realPath'].'::'.$labelVal;
+                    if (isset($instanceUri['realPath'])){
+                    $actualPV['realPath'] = $instanceUri['realPath'];
+                    }
+                    
+                    $actualPV['realPath'][] = $labelVal;
                     $valuesPath[] = $actualPV;
                 }
 
                 //this array containes the bridged uri of instances
                 $intermediateTabUri = array_merge($intermediateTabUri,$valuesPath);
-                
+
             }
 
             //break if the intermediateTab is void
             if(count($intermediateTabUri)==0) {
-                
+
                 $intermediateTabUri = array();
                 break;
             }
@@ -407,12 +402,12 @@ class RegCommon {
         //print_r($intermediateTabUri);
         $finalValueTab = array();
         foreach ($intermediateTabUri as $vp) {
-            
-            //prepare values with label
-            //$finalValueTab[] = implode("::", $vp['realPath']);
 
-            $finalValueTab[] = $vp['realPath'];
-       }
+            //prepare values with label
+            $finalValueTab[] = implode("->", $vp['realPath']);
+
+            //$finalValueTab[] = $vp['realPath'];
+        }
 
         $finalValue = implode ('|$*', $finalValueTab);// $instanceUri;
         return $finalValue;
@@ -451,7 +446,7 @@ class RegCommon {
 
             $listInstancesUri=$intermediateTabUri;
             $intermediateTabUri=array();
-            
+
 
             foreach ($listInstancesUri as $instanceUri) {
                 $valuesPath = array();
@@ -478,7 +473,7 @@ class RegCommon {
                 $intermediateTabUri = array_merge($intermediateTabUri,$valuesPath);
 
             }//instance
-          
+
             //break if the intermediateTab is void
             if(count($intermediateTabUri)==0) {
                 $intermediateTabUri = array();
