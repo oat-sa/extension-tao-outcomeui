@@ -505,7 +505,7 @@ function previewTable(table){
             /*var cellValue = '<pre>'+rowHTML[i]+'</pre>';//
             strTD = strTD+'<td>'+cellValue+'</td>';*/
 
-            var cellValue = rowHTML[i].replace("\|\*\$", '<br>');//
+            var cellValue = rowHTML[i].replace("\|\$\*", '<br>');//
             strTD = strTD+'<td>'+cellValue+'</td>';
 
         }

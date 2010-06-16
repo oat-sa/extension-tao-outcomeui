@@ -349,15 +349,16 @@ class RegCommon {
         $valuePath['realPath'] ='Root';
         $intermediateTabUri[]=$valuePath;
        //print_r($intermediateTabUri);
+        //print_r($pathOfPropertiesArray);
+        
         foreach ($pathOfPropertiesArray as $propertyUri) {
-            
-            //for each uri instances in
             //link the resource
             $listInstancesUri=$intermediateTabUri;
+
             // after each progression in the path , we remove the array
             $intermediateTabUri=array();
             $valuesPath = array();
-
+            //print_r($listInstancesUri);
             foreach ($listInstancesUri as $instanceUri) {
                 $valuesPath = array();
                 $trResource = new core_kernel_classes_Resource($instanceUri['instance']);
@@ -365,6 +366,7 @@ class RegCommon {
                 $values = $trResource->getPropertyValues(new core_kernel_classes_Property($propertyUri)) ;// get the array of values
 
                 //add the path of the actual instance on all step+1 instances
+
                 foreach($values as $val) {
 
                    
@@ -373,7 +375,7 @@ class RegCommon {
                     $actualPV['instance'] = $val;
 
                     //prepare the label
-                    $trResource = new core_kernel_classes_Resource($instanceUri['instance']);
+                    $trResource = new core_kernel_classes_Resource($val);
                     //todo: i have to get the label of the actual resource and add it the the old path already created
                     $labelVal = $trResource->getLabel();// this is the error
                  
@@ -449,6 +451,7 @@ class RegCommon {
 
             $listInstancesUri=$intermediateTabUri;
             $intermediateTabUri=array();
+            
 
             foreach ($listInstancesUri as $instanceUri) {
                 $valuesPath = array();
