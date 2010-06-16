@@ -339,12 +339,9 @@ class RegCommon {
         $listInstancesUri=array();
         //this array is used only to keep the list of the next uri instance of the actual path position
         $intermediateTabUri = array();
-        //keep the lreal path
+        //keep the real path
         $realPath = array();
 
-        // Into the path, step by step
-        $countPath = count($pathOfProperties);
-        $pathPosition = 0;
         //****** the main loop
         $valuePath['instance'] = $instanceSourceUri;
         $trResource = new core_kernel_classes_Resource($valuePath['instance']);
@@ -354,7 +351,6 @@ class RegCommon {
        //print_r($intermediateTabUri);
         foreach ($pathOfPropertiesArray as $propertyUri) {
             
-            $pathPosition++ ;
             //for each uri instances in
             //link the resource
             $listInstancesUri=$intermediateTabUri;
@@ -363,7 +359,7 @@ class RegCommon {
             $valuesPath = array();
 
             foreach ($listInstancesUri as $instanceUri) {
-
+                $valuesPath = array();
                 $trResource = new core_kernel_classes_Resource($instanceUri['instance']);
                 //get the value of the property for this instance
                 $values = $trResource->getPropertyValues(new core_kernel_classes_Property($propertyUri)) ;// get the array of values
@@ -371,48 +367,50 @@ class RegCommon {
                 //add the path of the actual instance on all step+1 instances
                 foreach($values as $val) {
 
-                    $valuesPath = array();
+                   
                     $actualPV = array();
 
                     $actualPV['instance'] = $val;
 
                     //prepare the label
-                    $trResource = new core_kernel_classes_Resource($val);
+                    $trResource = new core_kernel_classes_Resource($instanceUri['instance']);
                     //todo: i have to get the label of the actual resource and add it the the old path already created
                     $labelVal = $trResource->getLabel();// this is the error
                  
                     //add new path,  TODO add as array not string
+
                     $actualPV['realPath'] = $instanceUri['realPath'].'::'.$labelVal;
+                    //$actualPV['realPath'][] = $labelVal;
+
                     $valuesPath[] = $actualPV;
                 }
 
                 //this array containes the bridged uri of instances
                 $intermediateTabUri = array_merge($intermediateTabUri,$valuesPath);
+                
             }
 
             //break if the intermediateTab is void
-            /*if(count($intermediateTabUri)==0) {
+            if(count($intermediateTabUri)==0) {
+                
                 $intermediateTabUri = array();
                 break;
-            }*/
+            }
             //now the intermediateTab is complete, it will be the next input of the loop
 
         }//path
 
 
         //create the last value
-        print_r($intermediateTabUri);
-        $finalValueTab[] = array();
+        //print_r($intermediateTabUri);
+        $finalValueTab = array();
         foreach ($intermediateTabUri as $vp) {
-            echo 'vp---- <br>';
-            print_r($vp);
+            
             //prepare values with label
             //$finalValueTab[] = implode("::", $vp['realPath']);
 
             $finalValueTab[] = $vp['realPath'];
        }
-          echo 'vp---- <br>';
-        print_r($finalValueTab);
 
         $finalValue = implode ('|$*', $finalValueTab);// $instanceUri;
         return $finalValue;
@@ -477,8 +475,7 @@ class RegCommon {
                 $intermediateTabUri = array_merge($intermediateTabUri,$valuesPath);
 
             }//instance
-            print_r($valuesPath);
-
+          
             //break if the intermediateTab is void
             if(count($intermediateTabUri)==0) {
                 $intermediateTabUri = array();
@@ -496,9 +493,7 @@ class RegCommon {
         foreach ($intermediateTabUri as $vp) {
             //prepare values with label
 
-
             $finalValueTab[] = implode("::", $vp['realPath']);
-
 
         }
 

@@ -1,6 +1,7 @@
 <?
 require_once($_SERVER['DOCUMENT_ROOT']."/generis/common/inc.extension.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
+require_once dirname(__FILE__) . '/../includes/common.php';
 //$_SESSION["revType"]= $_GET[revType];
 //get the parameters of the workflow
 
@@ -19,6 +20,7 @@ $revTestId='http://localhost/middleware/tao4.rdf#i1261572267020194300';
 $revSubjectId='http://localhost/middleware/tao4.rdf#i1274434222052333200';
 $revItemId='http://localhost/middleware/tao4.rdf#i1274434065093789300';
  */
+
 
 //put in the session
 $_SESSION['revType']= $revType;
@@ -43,9 +45,11 @@ and open the template in the editor.
         <link rel="stylesheet" type="text/css" href="cssfiles/default/basic.css">
 
         <link rel="stylesheet" type="text/css" media="screen" href="javascript/jqGrid/css/ui.jqgrid.css" />
-        <link rel="stylesheet" type="text/css" media="screen" href="javascript/jquery/jqueryui/themes/redmond/jquery-ui-1.7.1.custom.css" />
-
+        
         <script src="javascript/jquery-1.3.2.min.js"></script>
+
+
+        <link rel="stylesheet" type="text/css" href="<?=TAOBASE_WWW?>css/custom-theme/jquery-ui-1.8.custom.css" />
 
         <script src="javascript/jqGrid/js/jquery.jqGrid.min.js"></script>
         <script src="javascript/jquery/jqueryui/jquery-ui-1.8.custom.min.js"></script>
