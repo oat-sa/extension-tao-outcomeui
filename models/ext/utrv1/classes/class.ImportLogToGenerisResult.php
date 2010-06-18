@@ -19,10 +19,10 @@ require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
  */
 
 class ImportLogToGenerisResult {
-    
+
     public $resultDom;
 
-     /**
+    /**
      * Based on the dom, this method invokes thecreateResultInstance to create a
      * instance of the class Result and its sub class
      *
@@ -34,7 +34,7 @@ class ImportLogToGenerisResult {
 
     public function __construct($domSom) {//our dev teame Som
         //get the name space
-        
+
         $logDom = new DOMDocument();
         //$logDom->load(inputFile);
         $logDom = $domSom;
@@ -70,7 +70,7 @@ class ImportLogToGenerisResult {
         $ID_TEST =          $testDom->getAttribute("rdfid");
 
         $LABEL_TEST=        $testDom->getAttribute("rdfs:Label");
-        
+
         //*******************
         $testDom= $dom->getElementsByTagName("HASSCORINGMETHOD")->item(0);
         $HASSCORINGMETHOD_NAME=$testDom->getAttribute("tao:NAME");
@@ -107,7 +107,7 @@ class ImportLogToGenerisResult {
 
         $propTest = new core_kernel_classes_Property($RESULT_NS."LABEL_TEST");
         $instanceTest->setPropertyValue($propTest,$LABEL_TEST );
-        
+
         $propTest = new core_kernel_classes_Property($RESULT_NS."HASSCORINGMETHOD_NAME");
         $instanceTest->setPropertyValue($propTest,$HASSCORINGMETHOD_NAME );
 
@@ -126,14 +126,14 @@ class ImportLogToGenerisResult {
         //TODO ADD TESTBEHAVIOR
 
         //----------------------------
-        
+
         $CITEM= '';            // puted after adding the instance to citem class
 
         //Get Citem attribute
         $citemDomList = $dom->getElementsByTagName("CITEM");//
 
         foreach($citemDomList as $citemDom) {
-        //get attributes values
+            //get attributes values
             $WEIGHT = $citemDom->getAttribute("tao:WEIGHT");
 
             $MODEL=$citemDom->getAttribute("tao:MODEL");
@@ -149,8 +149,8 @@ class ImportLogToGenerisResult {
             //So we create it
 
             $itemId = $citemDom->getAttribute("rdfid");
-            
-            if ($itemId=='undefined'){
+
+            if ($itemId=='undefined') {
                 $itemId = $RESULT_NS.substr($DEFINITIONFILE,0,strlen($DEFINITIONFILE)-2);
             }
 
@@ -159,8 +159,21 @@ class ImportLogToGenerisResult {
             //*****************************************************
 
             //Create instance of Citem
+                //Create instance of citem
+                $res = new core_kernel_classes_Resource($ID_TEST);
+                $labelTest = $res->getLabel();
+                $res = new core_kernel_classes_Resource($itemId);
+                $labelItem = $res->getLabel();//
+
+                $res = new core_kernel_classes_Resource($SUBJECT_ID);
+                $labelSubject = $res->getLabel();
+
+                //create the labele of the itemBehavior
+                $labelCitem =$labelItem.'::'.$labelTest;
+
+
             $class = new core_kernel_classes_Class($RESULT_NS."CITEM_CLASS");
-            $instanceCitem = $class->createInstance("Test of CITEM");
+            $instanceCitem = $class->createInstance($labelCitem);
             //put property values /**** test with 3 properties only
 
             $propCitem = new core_kernel_classes_Property($RESULT_NS."WEIGHT");
@@ -171,7 +184,7 @@ class ImportLogToGenerisResult {
 
             $propCitem = new core_kernel_classes_Property($RESULT_NS."DEFINITIONFILE");
             $instanceCitem->setPropertyValue($propCitem,$DEFINITIONFILE );
-            
+
 
             $propCitem = new core_kernel_classes_Property($RESULT_NS."SEQUENCE");
             $instanceCitem->setPropertyValue($propCitem,$SEQUENCE );
@@ -199,15 +212,12 @@ class ImportLogToGenerisResult {
                 $LISTENERVALUE=$itemBehaviorDom->getAttribute("tao:LISTENERVALUE");
 
                 //Create Instances of itemBehavior
-                //Create instance of citem
-
-                //$label
+                $labelItemBehavior =$labelItem.'::'.$labelTest;
                 $class = new core_kernel_classes_Class($RESULT_NS."ITEMBEHAVIOR_CLASS");
-                $instanceIB = $class->createInstance("test of ItemBehavior");
+                $instanceIB = $class->createInstance($labelItemBehavior);
 
                 $propIB = new core_kernel_classes_Property($RESULT_NS."ID_DELIVERY");
                 $instanceIB->setPropertyValue($propIB,$DELIVERY_ID );
-
 
                 $propIB = new core_kernel_classes_Property($RESULT_NS."LISTENERNAME");
                 $instanceIB->setPropertyValue($propIB,$LISTENERNAME );
@@ -230,15 +240,15 @@ class ImportLogToGenerisResult {
                 $instanceCitem->setPropertyValue($propCitem,$ITEMBEHAVIOR );
 
 
-            //echo "<br>***** ". $LISTENERNAME;
+                //echo "<br>***** ". $LISTENERNAME;
 
             }
         }
 
-    //Get itemBehavior attribut value
-    //        $LISTENERNAME=$itemBehaviorDom->getAttribute("tao:LISTENERNAME");
-    //
-    //        $LISTENERVALUE=$itemBehaviorDom->getAttribute("tao:LISTENERNAME");
+        //Get itemBehavior attribut value
+        //        $LISTENERNAME=$itemBehaviorDom->getAttribute("tao:LISTENERNAME");
+        //
+        //        $LISTENERVALUE=$itemBehaviorDom->getAttribute("tao:LISTENERNAME");
 
     }
 }
