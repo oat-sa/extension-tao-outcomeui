@@ -200,6 +200,8 @@ class ImportLogToGenerisResult {
 
                 //Create Instances of itemBehavior
                 //Create instance of citem
+
+                $label
                 $class = new core_kernel_classes_Class($RESULT_NS."ITEMBEHAVIOR_CLASS");
                 $instanceIB = $class->createInstance("test of ItemBehavior");
 
