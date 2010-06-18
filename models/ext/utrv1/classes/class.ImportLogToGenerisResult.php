@@ -70,7 +70,7 @@ class ImportLogToGenerisResult {
         $ID_TEST =          $testDom->getAttribute("rdfid");
 
         $LABEL_TEST=        $testDom->getAttribute("rdfs:Label");
-        $COMMENT_TEST=      $testDom->getAttribute("rdfs:Comment");
+        
         //*******************
         $testDom= $dom->getElementsByTagName("HASSCORINGMETHOD")->item(0);
         $HASSCORINGMETHOD_NAME=$testDom->getAttribute("tao:NAME");
@@ -84,6 +84,7 @@ class ImportLogToGenerisResult {
         $testDom= $dom->getElementsByTagName("SUBJECT")->item(0);
         $SUBJECT_ID =       $testDom->getAttribute("rdfid");
         $SUBJECT_LABEL =    $testDom->getAttribute("rdfs:Label");
+        $DELIVERY_ID =      $testDom->getAttribute("rdfs:Comment");
         $TESTBEHAVIOR= '';     // puted after adding the instance in testbehavir class TODO
 
         //Create instance and property values
@@ -99,6 +100,10 @@ class ImportLogToGenerisResult {
 
         $propTest = new core_kernel_classes_Property($RESULT_NS."ID_TEST");
         $instanceTest->setPropertyValue($propTest,$ID_TEST );
+
+        $propTest = new core_kernel_classes_Property($RESULT_NS."ID_DELIVERY");
+        $instanceTest->setPropertyValue($propTest,$DELIVERY_ID );
+
 
         $propTest = new core_kernel_classes_Property($RESULT_NS."LABEL_TEST");
         $instanceTest->setPropertyValue($propTest,$LABEL_TEST );
@@ -120,7 +125,6 @@ class ImportLogToGenerisResult {
         $instanceTest->setPropertyValue($propTest,$SUBJECT_LABEL );
         //TODO ADD TESTBEHAVIOR
 
-
         //----------------------------
         
         $CITEM= '';            // puted after adding the instance to citem class
@@ -141,8 +145,15 @@ class ImportLogToGenerisResult {
             $ENDORSMENT=$citemDom->getAttribute("tao:ENDORSMENT");
 
             $ITEMUSAGE=$citemDom->getAttribute("tao:ITEMUSAGE");
+            //in hawai we have not the uri of the item, We have just the last part with language ID
+            //So we create it
 
             $itemId = $citemDom->getAttribute("rdfid");
+            
+            if ($itemId=='undefined'){
+                $itemId = $RESULT_NS.substr($DEFINITIONFILE,0,strlen($DEFINITIONFILE)-2);
+            }
+
 
             $ITEMBEHAVIOR='';//puted after adding the itemBehavior class
             //*****************************************************
@@ -191,6 +202,10 @@ class ImportLogToGenerisResult {
                 //Create instance of citem
                 $class = new core_kernel_classes_Class($RESULT_NS."ITEMBEHAVIOR_CLASS");
                 $instanceIB = $class->createInstance("test of ItemBehavior");
+
+                $propIB = new core_kernel_classes_Property($RESULT_NS."ID_DELIVERY");
+                $instanceIB->setPropertyValue($propIB,$DELIVERY_ID );
+
 
                 $propIB = new core_kernel_classes_Property($RESULT_NS."LISTENERNAME");
                 $instanceIB->setPropertyValue($propIB,$LISTENERNAME );

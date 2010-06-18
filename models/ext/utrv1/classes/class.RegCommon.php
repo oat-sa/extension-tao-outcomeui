@@ -408,7 +408,6 @@ class RegCommon {
 
             //$finalValueTab[] = $vp['realPath'];
         }
-
         $finalValue = implode ('|$*', $finalValueTab);// $instanceUri;
         return $finalValue;
     }

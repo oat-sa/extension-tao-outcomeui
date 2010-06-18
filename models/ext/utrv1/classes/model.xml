@@ -12,6 +12,7 @@
     <class uri="TEST_CLASS" label="tao:TEST">
 
         <property uri = "id_Test" label="labelProp1"></property>
+        <property uri = "id_Delivery" label="labelProp1"></property>
         <property uri = "label_Test" label="labelProp2"></property>
         <property uri = "comment_Test" label="labelProp3"></property>
         <property uri = "HASSCORINGMETHOD_NAME" label="labelProp3"></property>
@@ -49,6 +50,7 @@
         <property uri = "id_Test" label="labelProp1"></property>
         <property uri = "SUBJECT_ID" label="labelProp3"></property>
         <property uri = "ITEM_ID" label="labelProp3"></property>
+        <property uri = "id_Delivery" label="labelProp1"></property>
         
         <property uri = "Final_Endorsement" label="labelProp3"></property>
         <property uri = "Final_Comment" label="labelProp3"></property>
