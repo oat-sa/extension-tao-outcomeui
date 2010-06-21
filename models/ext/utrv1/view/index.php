@@ -17,15 +17,11 @@ and open the template in the editor.
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="cssfiles/default/basic.css">
 
-        <link rel="stylesheet" type="text/css" media="screen" href="javascript/jqGrid/css/ui.jqgrid.css" />
         <link rel="stylesheet" type="text/css" href="<?=TAOBASE_WWW?>css/custom-theme/jquery-ui-1.8.custom.css" />
 
         <script src="javascript/jquery-1.3.2.min.js"></script>
 
-        <script src="javascript/jqGrid/js/jquery.jqGrid.min.js"></script>
-        <script src="javascript/jquery/jqueryui/jquery-ui-1.8.custom.min.js"></script>
-
-
+        <script src="<?=TAOBASE_WWW?>js/jquery-ui-1.8.custom.min.js"></script>
 
         <script type="text/javascript" src="javascript/raphael.js"></script>
         <script type="text/javascript" src="javascript/pie.js"></script>
