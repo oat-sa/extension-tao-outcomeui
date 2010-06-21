@@ -158,6 +158,7 @@ class Results extends TaoModule {
 		$clazz = $this->getCurrentClass();
 		foreach($clazz->getInstances(false) as $resource){
 			$_SESSION['instances']['uri_'.$index] = $resource->uriResource;
+			$index++;
 		}
 		
 		$this->setView("create_table.tpl");
