@@ -153,11 +153,13 @@ class Results extends TaoModule {
 	public function createTable(){
 		
 		$_SESSION['instances'] = array();
-		foreach($this->getRequestParameters() as $key => $value){
-			if(preg_match("/^uri_[0-9]+$/", $key)){
-				$_SESSION['instances'][tao_helpers_Uri::decode($value)] = tao_helpers_Uri::decode($value);
-			}
+	
+		$index = 0;
+		$clazz = $this->getCurrentClass();
+		foreach($clazz->getInstances(false) as $resource){
+			$_SESSION['instances']['uri_'.$index] = $resource->uriResource;
 		}
+		
 		$this->setView("create_table.tpl");
 	}
 	
