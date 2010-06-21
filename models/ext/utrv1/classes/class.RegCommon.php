@@ -405,8 +405,9 @@ class RegCommon {
 
             //prepare values with label
             $finalValueTab[] = implode("->", $vp['realPath']);
-
-            //$finalValueTab[] = $vp['realPath'];
+            //in order to get only the value without all the path
+            //$finalValueTab[] = end($vp['realPath']);
+            
         }
         $finalValue = implode ('|$*', $finalValueTab);// $instanceUri;
         return $finalValue;
@@ -498,68 +499,6 @@ class RegCommon {
         return $finalValue;
     }
 
-
-
-    function yyytrGetBridgePropertyValues($instanceSourceUri,$pathOfProperties) {
-        //we begin by explode the path structure into an array
-        //the path is created by the user with path builder in  the client side
-        $pathOfPropertiesArray = explode('__',$pathOfProperties);
-
-        //$instanceUri = $instanceSourceUri;
-
-        //the array of uri of instances
-        $listInstancesUri=array(); //[]=$instanceSourceUri;
-
-        //this array is used only to keep the list of the next uri instance of the actual path position
-        $intermediateTabUri = array();
-        $intermediateTabUri[]= $instanceSourceUri;
-
-        //keep the lreal path
-        $realPath = array();
-
-        // Into the path, step by step
-        $countPath = count($pathOfProperties);
-        $pathPosition = 0;
-
-        foreach ($pathOfPropertiesArray as $propertyUri) {
-            $pathPosition++ ;
-            //for each uri instances in
-            //link the resource
-
-            $listInstancesUri=$intermediateTabUri;
-            $intermediateTabUri=array();
-
-            foreach ($listInstancesUri as $instanceUri) {
-
-                $trResource = new core_kernel_classes_Resource($instanceUri);
-                //get the value of the property for this instance
-                $values = $trResource->getPropertyValues(new core_kernel_classes_Property($propertyUri)) ;// get the array of values
-                // ************* Added to keep the real path of the instance
-
-
-
-                //the value is the new instance to treat, it is now the new bridge
-                //it can also be the last value, so we test the count
-
-                //this array containes the bridged uri of instances
-                $intermediateTabUri = array_merge($intermediateTabUri,$values);
-
-            }//instance
-
-            //break if the intermediateTab is void
-            if(count($intermediateTabUri)==0) {
-                $intermediateTabUri = array();
-                break;
-            }
-            //now the intermediateTab is complete, it will be the next input of the loop
-
-        }//path
-        /*        echo "le real path";*/
-
-
-        $finalValue = implode ('|$*', $intermediateTabUri);// $instanceUri;
-        return $finalValue;
-    }
     /**
      * Provides the code of the current module in used,
      * This is very helpful to have a contextual behavior of UTR acording to the module

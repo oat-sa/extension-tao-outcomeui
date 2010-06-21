@@ -185,8 +185,10 @@ function previewListProperties(listProperties){
 //the list of instances is savedd on the server side
 
 function getRootClassesOfInstances(){
+    
     //According to the list of instances we get the list of classes
     listClasses = new Array();
+    
     $.ajax({
         type: "POST",
         url: "../classes/class.TReg_VirtualTable.php",
@@ -195,7 +197,9 @@ function getRootClassesOfInstances(){
         },
         dataType :"json",
         async : false,
+        
         success: function(msg){
+            
             var vide=[];
             listClasses = msg;
             rootClasses = msg;
@@ -400,6 +404,7 @@ function addColumn(){
                 typeExtraction:te,
                 finalPath:pf
             },
+            async:false,
             dataType :"json",
             success: function(msg){
                 actualUTR = msg;
@@ -505,7 +510,7 @@ function previewTable(table){
             /*var cellValue = '<pre>'+rowHTML[i]+'</pre>';//
             strTD = strTD+'<td>'+cellValue+'</td>';*/
 
-            var cellValue = rowHTML[i].replace("\|\$\*", '<br>');//
+            var cellValue = rowHTML[i].replace(/\|\$\*/g, '<br>-');//
             strTD = strTD+'<td>'+cellValue+'</td>';
 
         }
@@ -830,7 +835,7 @@ function manageEvents(){
 
 
         //show the path bulder div
-        //old***
+   
         $("#divPathWizard").show(speed*2);
 
         //with dialog

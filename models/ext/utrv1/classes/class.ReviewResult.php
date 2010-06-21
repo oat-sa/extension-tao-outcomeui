@@ -10,8 +10,7 @@
 //require_once('class.RegCommon.php');
 require_once($_SERVER['DOCUMENT_ROOT']."/wfEngine/includes/common.php");
 
-
-class ReviewResult {
+    class ReviewResult {
     private $revType;
     private $revIdCurrent;
     private $revTestId;
@@ -34,9 +33,7 @@ class ReviewResult {
         $this->revTestId=$_SESSION['revTestId'];
         $this->revSubjectId=$_SESSION['revSubjectId'];
         $this->revItemId=$_SESSION['revItemId'];
-
-
-        
+    
 
     }
 

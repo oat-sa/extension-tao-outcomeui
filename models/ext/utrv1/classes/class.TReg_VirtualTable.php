@@ -247,8 +247,9 @@ class TReg_VirtualTable extends RegCommon {
      * @return Collection
      */
     public function trGetInstances() {
-
         $tabUri= $_SESSION['instances'];
+       
+        
         return $tabUri;
 
     }
@@ -262,7 +263,9 @@ class TReg_VirtualTable extends RegCommon {
      * @return Collection
      */
     public function getClassesOfinstances($uriInstances) {
-        $t=$uriInstances;//$this->getInstances();
+        $t=$uriInstances;//$this->geInstances();
+       
+       
         $rc = new RegCommon();
         $classes = array();
         foreach ($t as $uri=>$obj) {
@@ -272,6 +275,7 @@ class TReg_VirtualTable extends RegCommon {
             //merge the classes of the actual instance with the list of all classes
             //of instances
             $classes = array_merge($classes,$ci);
+            //print_r($classes);
         }
         //Now classes containes all classes of the list of nstances
         //redendance
@@ -285,6 +289,8 @@ class TReg_VirtualTable extends RegCommon {
             $tclass['label']=$labelclass;
             $tab[$uri]=$tclass;
         }
+
+        //echo '******';
         return $tab;
     }
 
@@ -489,7 +495,11 @@ class TReg_VirtualTable extends RegCommon {
      * @return void
      */
     public function dispatch() {
+        
+        
         if (isset ($_POST['op'])){
+
+        
 
         if ($_POST['op']=='listInstances') {
             $p = new TReg_VirtualTable();
@@ -498,8 +508,11 @@ class TReg_VirtualTable extends RegCommon {
         }
         //
         if ($_POST['op']=='getClassesOfInstances') {
+            
+            
             $p = new TReg_VirtualTable();
             $uriInstance = $p->trGetInstances();
+            
             $t= $p->getClassesOfinstances($uriInstance);
             echo json_encode($t);
         }
@@ -521,6 +534,7 @@ class TReg_VirtualTable extends RegCommon {
         if ($_POST['op'] == 'removeSession') {
 
             $_SESSION["utrModel"] = array();
+            
         }
 
         //save utr model
@@ -651,6 +665,7 @@ class TReg_VirtualTable extends RegCommon {
                 $utrModel = array();
                 //get the list of properties and the list of instancess
                 $listOfProperties = $_SESSION['utrListOfProperties'];// an array $list[uriProperty] = label of property
+
                 $listOfInstances = $p->trGetInstances();
 
                 //generate an UTR model
