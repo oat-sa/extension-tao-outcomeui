@@ -157,7 +157,7 @@ class Results extends TaoModule {
 		$index = 0;
 		$clazz = $this->getCurrentClass();
 		foreach($clazz->getInstances(false) as $resource){
-			$_SESSION['instances']['uri_'.$index] = $resource->uriResource;
+			$_SESSION['instances'][$resource->uriResource] =  'uri_'.$index;
 			$index++;
 		}
 		
