@@ -46,11 +46,13 @@ function utrIntro(){
         autoOpen:false
     });
     $("#propertyBinding").dialog("close");
+    
 
     $("#divPathWizard").hide();
     $("#menuPathBuilder").hide();
     $("#pieStat").hide();
     $("#utrTemplateManager").hide();
+    $("#utrTemplateManager").dialog('close');
     $("#filterUtr").hide();
 
     //utr menu
@@ -636,6 +638,7 @@ function deleteListRows(){
 }
 //request to save the actual utrModel
 function saveUtr(){
+    //$("#utrTemplateManager").dialog('close');
     var modelName = $("#txtUtrName").val();
     options={
         type: "POST",
@@ -660,7 +663,10 @@ function saveUtr(){
 }
 function getUtrTemplate(){
     var modelName = $(this).attr('id');
+    
+
     loadUtr(modelName)
+    $("#utrTemplateManager").dialog('close');
 
 }
 function loadUtr(modelName){
@@ -693,7 +699,7 @@ function getUtrModels(){
     var options ={
         height:450,
         width:700,
-        show:'blind',
+        
         hide:'explode',
 
         modal : false,
@@ -913,7 +919,7 @@ function manageEvents(){
     });
     //close utrManager
     $("#cancelUtrManager").click(function(){
-        $("#utrTemplateManager").hide(speed);
+        $("#utrTemplateManager").dialog('close');
 
 
     });
