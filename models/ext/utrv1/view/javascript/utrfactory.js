@@ -325,6 +325,11 @@ function getPropertyBinding(){
 
     $("#propertyBinding").dialog(option);
     $("#propertyBinding").dialog("open");
+    //whene we close the dialog with the X the path is restored
+    $("#propertyBinding").bind("dialogclose",function (){
+        pathProperties.pop();
+    });
+    
     //Put the default values
     $("#columnName").val(labelP);
 //$("#finalPath").val(pathString);
@@ -335,27 +340,34 @@ function getPropertyBinding(){
 function deleteColumn(colId){
     //$colId = $(this).attr(id);
 
-    alert (__("Do you want to delete column ?"));
-    // add the column on the server side, and preview the table after succes
-    $.ajax({
-        type: "POST",
-        url: "../classes/class.TReg_VirtualTable.php",
-        data: {
-            op:"deleteColumn",
-            'columnId':colId
-            
-        },
-        dataType :"json",
-        success: function(msg){
-            //alert ()
-            actualUTR = msg;
-            previewTable(msg);
-            //close the window
-            //$("#propertyBinding").hide();
-            utrIntro();
+    var deleteCol = confirm(__("Do you want to delete column ?"));
+    if (deleteCol){
+        // add the column on the server side, and preview the table after succes
+        $.ajax({
+            type: "POST",
+            url: "../classes/class.TReg_VirtualTable.php",
+            data: {
+                op:"deleteColumn",
+                'columnId':colId
 
-        }//succes
-    });
+            },
+            dataType :"json",
+            success: function(msg){
+                //alert ()
+                actualUTR = msg;
+                previewTable(msg);
+                //close the window
+                //$("#propertyBinding").hide();
+                utrIntro();
+
+            }//succes
+        });
+
+
+    }
+    else{
+        
+}
 }
 //Verification of the existance of the column name
 function verifyColumnLabel(colLabel){
@@ -677,7 +689,20 @@ function loadUtr(modelName){
 }
 
 function getUtrModels(){
-    $("#utrTemplateManager").show(speed);
+
+    var options ={
+        height:450,
+        width:700,
+        show:'blind',
+        hide:'explode',
+
+        modal : false,
+        resizable: false,
+        title:__("template manager")
+
+    };
+    // open the dialog
+    $("#utrTemplateManager").dialog(open,options);
     $("#txtUtrName").focus();
     options={
         type: "POST",

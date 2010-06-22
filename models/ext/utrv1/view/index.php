@@ -101,10 +101,6 @@ and open the template in the editor.
             </table>
 
             <div id="utrTemplateManager" class="">
-                <div id="#utrTemplateTitle">
-                    <h1><? echo __("Template manager")?></h1>
-                </div>
-
                 <div id="utrTemplateModelList">
 
 
@@ -115,6 +111,7 @@ and open the template in the editor.
                     <input id="cancelUtrManager" type="submit" value="<? echo ("Cancel");?>" />
                 </div>
 
+ 
             </div>
         </div>
         <div id="pieStat" class="pieStatClass">
