@@ -125,7 +125,7 @@ and open the template in the editor.
         <div id="filterUtr">
 
             <table border="0" width="0" cellspacing="2">
-                <input id="sendFilter" type="submit" value="<? echo __("Apply filter"); ?>" /><input id="cancelFilter" type="submit" value="<? echo __("Cancel") ?>" />
+                
                 <thead>
                     <tr>
                         <th><? echo __("Column") ?></th>

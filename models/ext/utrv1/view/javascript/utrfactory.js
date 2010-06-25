@@ -745,6 +745,27 @@ function getUtrModels(){
     $.ajax(options);
 
 }
+//load the actual UTR without filter
+
+function loadUnfilteredUtr(){
+
+    options={
+        type: "POST",
+        url: "../classes/class.TReg_VirtualTable.php",
+        data: {
+            op:"loadUnfilteredUtr"
+        },
+        dataType:"json",
+        success: function(msg){
+            actualUTR = msg;
+            previewTable(actualUTR);
+        }
+
+    };
+    $.ajax(options);
+
+}
+
 
 //load initial UTR
 function loadInitialUtr(){
@@ -950,7 +971,7 @@ function manageEvents(){
         
         var options ={
             height:450,
-            width:400,
+            width:550,
             hide:'explode',
 
 
@@ -961,16 +982,15 @@ function manageEvents(){
              buttons: {
 
                 "Cancel":function(){
+                    loadUnfilteredUtr();
                     $("#filterUtr").dialog('close');
                 },
-                "Apply Filter": function() {
+                "Apply filter": function() {
                     sendFilter();
                     $("#filterUtr").dialog('close');
                 }
             }
-           
-
-
+          
         };
 
         $("#filterUtr").dialog(open,options);
