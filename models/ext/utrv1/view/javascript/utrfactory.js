@@ -4,6 +4,7 @@
  * UTR Task ( Ultimate Table for Result module)
  * 
  */
+var numberOfFilter = 10;
 var speed = 333;
 var initialInstancesUri = new Array();// array of instances URI
 var rootClasses= new Array();//The classes of the initial Instances
@@ -42,10 +43,10 @@ function utrIntro(){
     $("#contextProperties").html("");
     //$("#propertyBinding").show();
 
+    $("#propertyBinding").dialog('close');
     $("#propertyBinding").dialog({
         autoOpen:false
     });
-    $("#propertyBinding").dialog("close");
     
 
     $("#divPathWizard").hide();
@@ -54,6 +55,8 @@ function utrIntro(){
     $("#utrTemplateManager").hide();
     $("#utrTemplateManager").dialog('close');
     $("#filterUtr").hide();
+    
+    $("#filterUtr").dialog('close');
 
     //utr menu
     $("#utrmenu input").button();
@@ -683,6 +686,7 @@ function loadUtr(modelName){
         success: function(msg){
             //get the new UTR table
             actualUTR = msg;
+           
             previewTable(msg);
             //close the window
             //$("#propertyBinding").hide();
@@ -696,7 +700,7 @@ function loadUtr(modelName){
 
 function getUtrModels(){
 
-    var options ={
+    var optionsTM ={
         height:450,
         width:700,
         
@@ -704,11 +708,13 @@ function getUtrModels(){
 
         modal : false,
         resizable: false,
-        title:__("template manager")
+        title:__("template manager"),
+        buttons:{}
+
 
     };
     // open the dialog
-    $("#utrTemplateManager").dialog(open,options);
+    $("#utrTemplateManager").dialog(open,optionsTM);
     $("#txtUtrName").focus();
     options={
         type: "POST",
@@ -766,12 +772,13 @@ function sendFilter(){
     //
     var i =0;
     //create the complex filter
-    for(i=1;i<=5;i++){
+    for(i=1;i<=numberOfFilter;i++){
 
         var queryProperty = $("#searchProperty"+i).val();
         var queryOperator = $("#searchOperator"+i).val();
         var queryValue = $("#searchValue"+i).val();
-    
+
+     
         //test if empty
         if ( queryProperty !=''){
 
@@ -928,18 +935,46 @@ function manageEvents(){
     $("#sendFilter").click(function (){
 
         sendFilter();
-        $("#filterUtr").hide(speed);
+        $("#filterUtr").dialog('close');
     });
 
 
     $("#cancelFilter").click(function(){
         
-        $("#filterUtr").hide(speed);
+        $("#filterUtr").dialog('close');
 
     });
   
     $("#manageFilter").click(function(){
-        $("#filterUtr").show(speed);
+        var ok = '';
+        
+        var options ={
+            height:450,
+            width:400,
+            hide:'explode',
+
+
+            modal : true,
+            resizable: false,
+            title:__("Filter & Search"),
+
+             buttons: {
+
+                "Cancel":function(){
+                    $("#filterUtr").dialog('close');
+                },
+                "Apply Filter": function() {
+                    sendFilter();
+                    $("#filterUtr").dialog('close');
+                }
+            }
+           
+
+
+        };
+
+        $("#filterUtr").dialog(open,options);
+        buildFilterLine();
 
     });
 
@@ -1008,6 +1043,67 @@ function trad(){
     __("Create save your own Template of tables");
     __("Get a direct chart diagram on your columns ans rows ");
     __("Welcome to UTR Builder");
+
+}
+
+//create the filter interface according the disponible columns
+function buildFilterLine(){
+    var actualModel = [];
+    $("#filterTableBody").html('');
+    
+    var optionProperties = '';
+    
+    
+    //faire la boucle
+    
+    var actualModel = actualUTR['utrModel'];//get only the utrModel of the whole utrTable.
+    
+    var operators = [];
+    operators[0] = '=';
+    operators[1] = '<';
+    operators[2] = '>';
+
+    operators[3] = '<=';
+    operators[4] = '>=';
+    operators[5] = 'like';
+
+    
+    //build the propety selection
+    for ( trI = 1 ;trI <=numberOfFilter;trI++){
+
+        optionProperties = '<select id="searchProperty'+trI+'">';
+
+        //add a blank option
+        optionProperties = optionProperties + '<option value=""></option>';
+
+        for (i in actualModel){
+            property = i;
+            optionProperties = optionProperties + '<option value="'+property+'">'+property+'</option>';
+        }
+        optionProperties = '<td>'+optionProperties +'</select></td>';
+
+        //build the operator selction
+    
+        var optionOperators = '';
+        optionOperators = '<select id ="searchOperator'+trI+'">';
+        var op = '';
+        for (i in operators){
+            op = operators[i];
+            optionOperators= optionOperators + '<option value="'+op+'">'+op+'</option>';
+        
+        }
+
+        optionOperators = '<td>'+optionOperators +'</select></td>' ;
+
+        var creteriaValue = '<td><input id="searchValue'+trI+'" type="text" name="searchValue'+trI+' value="" size="10" /></td>';
+        //build the whole filter element
+        var filterElement = '<tr>'+optionProperties+optionOperators+creteriaValue+'</tr>';
+
+        $("#filterTableBody").append(filterElement);
+
+    }// end for
+
+  
 
 }
 
