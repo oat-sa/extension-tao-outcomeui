@@ -111,7 +111,6 @@ and open the template in the editor.
 
                 <div id="utrTemplateMenu">
                     <input id="saveUtrBtn" type="submit" value="<? echo __("Save Table") ?>" /><input id ="txtUtrName" type="text" name="txtUtrName" value="" /><br>
-                    <input id="cancelUtrManager" type="submit" value="<? echo ("Cancel"); ?>" />
                 </div>
 
 

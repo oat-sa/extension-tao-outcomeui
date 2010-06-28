@@ -52,15 +52,20 @@ function utrIntro(){
     $("#divPathWizard").hide();
     $("#menuPathBuilder").hide();
     $("#pieStat").hide();
-    $("#utrTemplateManager").hide();
+
+     $("#utrTemplateManager").hide();
     $("#utrTemplateManager").dialog('close');
+
+    
     $("#filterUtr").hide();
     
     $("#filterUtr").dialog('close');
 
     //utr menu
-    $("#utrmenu input").button();
+    $("#saveUtrBtn").button();
 
+    $("#utrmenu input").button();
+   
 }
 
 //save context as history to undo redo
@@ -708,8 +713,9 @@ function getUtrModels(){
 
         modal : false,
         resizable: false,
-        title:__("template manager"),
-        buttons:{}
+        title:__("template manager")
+        
+
 
 
     };
