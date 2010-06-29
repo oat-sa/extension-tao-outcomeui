@@ -11,7 +11,7 @@ msgid "Template manager"
 msgstr "Gestionnaire des Modèles"
 
 msgid "Filter and search"
-msgstr "Filtrage et recherche"
+msgstr ""
 
 msgid "Add new filter"
 msgstr "Ajouter un nouveau filtre"
@@ -148,6 +148,39 @@ msgstr ""
 msgid "Name exists"
 msgstr ""
 
+msgid "template manager"
+msgstr ""
+
+msgid "Filter & Search"
+msgstr ""
+
 msgid "Filter and search "
+msgstr ""
+
+msgid "Response of the test maker"
+msgstr ""
+
+msgid "Subject:"
+msgstr ""
+
+msgid "Test:"
+msgstr ""
+
+msgid "Item:"
+msgstr ""
+
+msgid "Response"
+msgstr ""
+
+msgid "Report on open review"
+msgstr ""
+
+msgid "Validate your review"
+msgstr ""
+
+msgid "Validate final review"
+msgstr ""
+
+msgid "Get a direct chart diagram on your columns ans rows"
 msgstr ""
 

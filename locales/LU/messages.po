@@ -34,6 +34,12 @@ msgstr "neit Resultat"
 msgid "delete"
 msgstr "läschen"
 
+msgid "lists"
+msgstr ""
+
+msgid "rdf"
+msgstr ""
+
 msgid "Build your table"
 msgstr ""
 
@@ -184,7 +190,37 @@ msgstr ""
 msgid "Name exists"
 msgstr ""
 
+msgid "template manager"
+msgstr ""
+
+msgid "Filter & Search"
+msgstr ""
+
 msgid "Filter and search "
+msgstr ""
+
+msgid "Response of the test maker"
+msgstr ""
+
+msgid "Subject:"
+msgstr ""
+
+msgid "Test:"
+msgstr ""
+
+msgid "Item:"
+msgstr ""
+
+msgid "Response"
+msgstr ""
+
+msgid "Report on open review"
+msgstr ""
+
+msgid "Validate your review"
+msgstr ""
+
+msgid "Validate final review"
 msgstr ""
 
 msgid "This module constitutes the final step."
@@ -192,6 +228,9 @@ msgstr "Desen Modul stellt den letzen Schrack duer."
 
 msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
 msgstr "All Resultater vun duerchgefouerten Tester, mat hieren entspriechenden Testpersounen, Gruppen, Item Daten an och all individeull Daten déi während der Testpassatioun gesammelt goufen, gin hei gespaichert"
+
+msgid "Get a direct chart diagram on your columns ans rows"
+msgstr ""
 
 msgid "search"
 msgstr "sichen"

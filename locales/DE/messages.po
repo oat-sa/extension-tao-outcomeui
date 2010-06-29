@@ -8,7 +8,7 @@ msgid "Class saved"
 msgstr "Klasse gespeichert"
 
 msgid "Edit result class"
-msgstr "Klasse \"Ergebnis\" speichern"
+msgstr "Klasse "Ergebnis" speichern"
 
 msgid "Results"
 msgstr "Ergebnisse"
@@ -33,6 +33,12 @@ msgstr "neues Ergebnis"
 
 msgid "delete"
 msgstr "löschen"
+
+msgid "lists"
+msgstr ""
+
+msgid "rdf"
+msgstr ""
 
 msgid "Build your table"
 msgstr ""
@@ -184,7 +190,37 @@ msgstr ""
 msgid "Name exists"
 msgstr ""
 
+msgid "template manager"
+msgstr ""
+
+msgid "Filter & Search"
+msgstr ""
+
 msgid "Filter and search "
+msgstr ""
+
+msgid "Response of the test maker"
+msgstr ""
+
+msgid "Subject:"
+msgstr ""
+
+msgid "Test:"
+msgstr ""
+
+msgid "Item:"
+msgstr ""
+
+msgid "Response"
+msgstr ""
+
+msgid "Report on open review"
+msgstr ""
+
+msgid "Validate your review"
+msgstr ""
+
+msgid "Validate final review"
 msgstr ""
 
 msgid "This module constitutes the final step."
@@ -192,6 +228,9 @@ msgstr "Diese Modul stellt den letzten Schritt dar."
 
 msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
 msgstr "Hier werden alle Ergebnisse durchlaufener Tests mit den dazugehörigen spezifischen Daten der Testpersonen, Gruppen und Items, sowie die individuelle Datenerhebung während des Testdurchlaufs gespeichert und verwaltet."
+
+msgid "Get a direct chart diagram on your columns ans rows"
+msgstr ""
 
 msgid "search"
 msgstr "suchen"
