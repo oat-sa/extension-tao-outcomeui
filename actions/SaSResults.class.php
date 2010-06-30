@@ -1,6 +1,6 @@
 <?php
 /**
- * SaSResults Controller provide process services
+ * SaSResults Controller provide process services on results
  * 
  * @author Bertrand Chevrier, <taosupport@tudor.lu>
  * @package taoResults
@@ -19,9 +19,13 @@ class SaSResults extends Results {
     }
     
     	
+    
 	/**
-     * @see TaoModule::setView()
-     */
+	 * @see TaoModule::setView()
+	 * @param string $identifier the view name
+	 * @param boolean $useMetaExtensionView use a view from the parent extention
+	 * @return mixed 
+	 */
     public function setView($identifier, $useMetaExtensionView = false) {
 		if(tao_helpers_Request::isAjax()){
 			return parent::setView($identifier, $useMetaExtensionView);

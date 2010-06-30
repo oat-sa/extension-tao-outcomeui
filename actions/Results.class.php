@@ -68,6 +68,7 @@ class Results extends TaoModule {
 	
 	/**
 	 * edit an subject instance
+	 * @return void
 	 */
 	public function editResult(){
 		$clazz = $this->getCurrentClass();
@@ -91,6 +92,7 @@ class Results extends TaoModule {
 	
 	/**
 	 * add a subject model (subclass Result)
+	 * @return void
 	 */
 	public function addResultClass(){
 		if(!tao_helpers_Request::isAjax()){
@@ -107,6 +109,7 @@ class Results extends TaoModule {
 	
 	/**
 	 * Edit a subject model (edit a class)
+	 * @return void
 	 */
 	public function editResultClass(){
 		$clazz = $this->getCurrentClass();
@@ -128,6 +131,7 @@ class Results extends TaoModule {
 	/**
 	 * delete a subject or a subject model
 	 * called via ajax
+	 * @return void
 	 */
 	public function delete(){
 		if(!tao_helpers_Request::isAjax()){
