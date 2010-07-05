@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE services SYSTEM "../../tao/doc/sas.dtd">
 <services>
+	<description>Results services</description>
 	<service>
 		<name>Results searching</name>
 		<description>Search results instance form</description>
