@@ -73,7 +73,10 @@ class Results extends TaoModule {
 	public function editResult(){
 		$clazz = $this->getCurrentClass();
 		$result = $this->getCurrentInstance();
-		$myForm = tao_helpers_form_GenerisFormFactory::instanceEditor($clazz, $result);
+		
+		$formContainer = new tao_actions_form_Instance($clazz, $result);
+		$myForm = $formContainer->getForm();
+		
 		if($myForm->isSubmited()){
 			if($myForm->isValid()){
 				
