@@ -14,7 +14,6 @@ class SaSResults extends Results {
      */
     public function __construct() {
         $this->setSessionAttribute('currentExtension', 'taoResults');
-		tao_helpers_form_GenerisFormFactory::setMode(tao_helpers_form_GenerisFormFactory::MODE_STANDALONE);
 		parent::__construct();
     }
     
