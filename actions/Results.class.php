@@ -82,11 +82,12 @@ class Results extends TaoModule {
 				
 				$result = $this->service->bindProperties($result, $myForm->getValues());
 				
-				$this->setSessionAttribute("showNodeUri", tao_helpers_Uri::encode($result->uriResource));
 				$this->setData('message', __('Result saved'));
 				$this->setData('reload', true);
 			}
 		}
+		
+		$this->setSessionAttribute("showNodeUri", tao_helpers_Uri::encode($result->uriResource));
 		
 		$this->setData('formTitle', __('Edit result'));
 		$this->setData('myForm', $myForm->render());
