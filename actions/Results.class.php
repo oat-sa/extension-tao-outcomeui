@@ -116,6 +116,11 @@ class Results extends TaoModule {
 	 */
 	public function editResultClass(){
 		$clazz = $this->getCurrentClass();
+		
+		if($this->hasRequestParameter('property_mode')){
+			$this->setSessionAttribute('property_mode', $this->getRequestParameter('property_mode'));
+		}
+		
 		$myForm = $this->editClass($clazz, $this->service->getResultClass());
 		if($myForm->isSubmited()){
 			if($myForm->isValid()){
