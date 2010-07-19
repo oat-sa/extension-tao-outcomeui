@@ -13,6 +13,7 @@ class SaSResults extends Results {
      * @see Results::__construct()
      */
     public function __construct() {
+    	tao_helpers_Context::load('STANDALONE_MODE');
         $this->setSessionAttribute('currentExtension', 'taoResults');
 		parent::__construct();
     }
