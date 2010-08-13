@@ -13,7 +13,8 @@ function revConstructor(){
         revIntro();
 
         manageEvents();
-        getItemBehaviorInformation();
+        //getItemBehaviorInformation();
+        getListOfTestees();
        
     });
 }
@@ -78,12 +79,13 @@ function setRevInformation(revNumber){
 
 //get all item information
 
-function getItemBehaviorInformation(){
+function getItemBehaviorInformation(subjectId){
     options={
         type: "POST",
         url: "../classes/class.ReviewResult.php",
         data: {
-            revOp:"getItermBehaviorInformation"
+            revOp:"getItermBehaviorInformation",
+            revSubjectId : subjectId
         },
         dataType:"json",
         success: function(msg){
@@ -97,6 +99,47 @@ function getItemBehaviorInformation(){
     $.ajax(options);
    
 }
+
+//get list of testees
+function getListOfTestees(){
+    options={
+        type: "POST",
+        url: "../classes/class.ReviewResult.php",
+        data: {
+            revOp:"getListOfTestees"
+                    },
+        dataType:"json",
+        success: function(msg){
+            list= msg;
+            perviewListTestees(list)
+
+            //previewReviewItemInformation();
+
+        }
+
+    };
+    $.ajax(options);
+
+}
+
+//preview the list of testees
+function perviewListTestees(list){
+content = '';
+    for (i in list){
+        
+    revSubjectId="'"+list[i]+"'";
+    link = 'revService.php?'+revSubjectId;
+        //content =  content = '<input id="'+cl.uriClass+'" class= "classInfos" type="button" value="'+cl.label+'" name ="'+cl.propertySourceUri +'" /></input>';
+    
+
+    content = content + '<br>'+'<a href ="#" OnClick ="getItemBehaviorInformation('+revSubjectId+');">rev'+revSubjectId+'</a>';
+
+    }
+    $("#listTestees").text('');
+    $("#listTestees").append(content);
+ 
+}
+
 
 function previewReviewItemInformation(){
     var testedItem = iBInfo[0];
@@ -207,10 +250,6 @@ function previewReviewItemInformation(){
         $("#revComment_Final").val(revComment_Final);
         $("#revEndorsement_Final").val(revEndorsement_Final);
 
-
-
-
-
     }
 
 /*var revId_1 = testedItem['revId_1'];
@@ -237,8 +276,6 @@ function previewReviewItemInformation(){
 
     $("#revComment_Final").val(revComment_Final);
     $("#revEndorsement_Final").val(revEndorsement_Final);*/
-
-
 
 
 }

@@ -1,15 +1,20 @@
 <?
 require_once($_SERVER['DOCUMENT_ROOT']."/generis/common/inc.extension.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
-require_once dirname(__FILE__) . '/../includes/common.php';
+//require_once dirname(__FILE__) . '/../includes/common.php';
 //$_SESSION["revType"]= $_GET[revType];
 //get the parameters of the workflow
 
 $revType = urldecode($_GET['revType']);
 $revIdCurrent=urldecode($_GET['revIdCurrent']);
 $revTestId=urldecode($_GET['revTestId']);
-$revSubjectId=urldecode($_GET['revSubjectId']);
+$revSubjectId ='all';
+if (isset($_GET['revSubjectId'])){
+    $revSubjectId=urldecode($_GET['revSubjectId']);
+}
+
 $revItemId=urldecode($_GET['revItemId']);
+
 
 //simulate with static variables
 
@@ -60,6 +65,11 @@ and open the template in the editor.
         <script type="text/javascript" src="javascript/revfactory.js"></script>
 
     </head>
+    <div id="listTestees" class="">
+
+
+    </div>
+
     <div id="container">
         <div id="reportHeader">
             <h1> <?=__("Report on open review")?></h1>
