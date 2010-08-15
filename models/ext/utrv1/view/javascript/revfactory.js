@@ -5,7 +5,8 @@ var currentRicUri='';
 
 function revIntro(){
     $("#reviewersReport").hide();
-    $("#revZone").hide();
+    $("#reviewContainer").hide();
+
     
 
     
@@ -58,7 +59,7 @@ function manageEvents(){
     $("#confirmCapacity").click(function(){
         var capacity = $("#currentCapacity").val();
         var comment = $('#currentComment').val();
-        alert($("#chCapacity").attr("checked"));
+        //alert($("#chCapacity").attr("checked"));
         var capacity='';
         if ($("#chCapacity").attr("checked")){
             capacity = 'yes';
@@ -107,6 +108,7 @@ function setRevInformation(revNumber){
         },
         success: function(msg){
         //alert(msg);
+        alert ("Review Submited!")
 
         }
 
@@ -151,8 +153,6 @@ function getListOfTestees(){
             list= msg;
             perviewListTestees(list)
 
-        //previewReviewItemInformation();
-
         }
 
     };
@@ -163,14 +163,17 @@ function getListOfTestees(){
 //preview the list of testees
 function perviewListTestees(list){
     content = '';
+    var testee =[];
     for (i in list){
+        testee=list[i];
         
-        revSubjectId="'"+list[i]+"'";
+        revSubjectLabel=testee['idTesteeLabel'];
+        revSubjectId = "'"+testee['idSubject']+"'";
         link = 'revService.php?'+revSubjectId;
         //content =  content = '<input id="'+cl.uriClass+'" class= "classInfos" type="button" value="'+cl.label+'" name ="'+cl.propertySourceUri +'" /></input>';
     
 
-        content = content + '<a href ="#" OnClick ="getItemBehaviorInformation('+revSubjectId+');">Testee '+revSubjectId+'</a>'+'<br>';
+        content = content + '<a href ="#" OnClick ="getItemBehaviorInformation('+revSubjectId+');">Testee: '+revSubjectLabel+'</a>'+'<br>';
 
     }
     $("#listTestees").text('');
@@ -180,14 +183,15 @@ function perviewListTestees(list){
 
 
 function previewReviewItemInformation(){
+
     var testedItem = iBInfo[0];
     revNumber = testedItem['revNumber'];
 
     responceOfTestee = decodeURI(testedItem['endorsement']);
     //alert(testedItem['iDTest'])
-    var testId = testedItem['iDTest'];
-    var subjectId = testedItem['subjectId'];
-    var itemId = testedItem ['itemId'];
+    var testId = testedItem['iDTestLabel'];
+    var subjectId = testedItem['subjectIdLabel'];
+    var itemId = testedItem ['itemIdLabel'];
 
     $("#subjectId").text(subjectId);
     $("#testId").text(testId);
@@ -196,37 +200,37 @@ function previewReviewItemInformation(){
     
     if (revNumber =='rev1'){
 
-        var revId= testedItem['revId_1'];
+        var revId= testedItem['revId_1Label'];
         var revComment= testedItem['revComment_1'];
         var revEndorsement= testedItem['revEndorsement_1'];
-        $("#revZone").show();
+        $("#reviewContainer").show();
 
     }
 
     if (revNumber =='rev2'){
 
-        var revId= testedItem['revId_2'];
+        var revId= testedItem['revId_2Label'];
         var revComment= testedItem['revComment_2'];
         var revEndorsement= testedItem['revEndorsement_2'];
-        $("#revZone").show();
+        $("#reviewContainer").show();
 
     }
 
     if (revNumber =='rev3'){
 
-        var revId= testedItem['revId_3'];
+        var revId= testedItem['revId_3Label'];
         var revComment= testedItem['revComment_3'];
         var revEndorsement= testedItem['revEndorsement_3'];
-        $("#revZone").show();
+        $("#reviewContainer").show();
 
     }
 
     if (revNumber =='rev4'){
 
-        var revId= testedItem['revId_4'];
+        var revId= testedItem['revId_4Label'];
         var revComment= testedItem['revComment_4'];
         var revEndorsement= testedItem['revEndorsement_4'];
-        $("#revZone").show();
+        $("#reviewContainer").show();
     }
     
     //  feed the input box
@@ -246,19 +250,19 @@ function previewReviewItemInformation(){
         $("#revZone").hide();
         $("#reviewersReport").show();
 
-        var revId_1 = testedItem['revId_1'];
+        var revId_1 = testedItem['revId_1Label'];
         var revComment_1= testedItem['revComment_1'];
         var revEndorsement_1= testedItem['revEndorsement_1'];
 
-        var revId_2= testedItem['revId_2'];
+        var revId_2= testedItem['revId_2Label'];
         var revComment_2= testedItem['revComment_2'];
         var revEndorsement_2= testedItem['revEndorsement_2'];
 
-        var revId_3= testedItem['revId_3'];
+        var revId_3= testedItem['revId_3Label'];
         var revComment_3= testedItem['revComment_3'];
         var revEndorsement_3= testedItem['revEndorsement_3'];
 
-        var revId_4= testedItem['revId_4'];
+        var revId_4= testedItem['revId_4Label'];
         var revComment_4= testedItem['revComment_4'];
         var revEndorsement_4= testedItem['revEndorsement_4'];
 
@@ -319,7 +323,7 @@ function previewReviewItemInformation(){
 
     $("#revComment_Final").val(revComment_Final);
     $("#revEndorsement_Final").val(revEndorsement_Final);*/
-
+$("#reviewContainer").show();
 
 }
 //get RIC information
@@ -437,7 +441,7 @@ function getRicAllReviewers(){
                 };
                 
                 contentRic = contentRic +'<div class="'+divClass+'" style=" margin-top: 1px">'+
-                '<div class="ui-widget-header ui-corner-top ui-state-default"> <h1>'+ric['idRev']+' item capacity </h1> </div>'+
+                '<div class="ui-widget-header ui-corner-top ui-state-default"> <h1>'+ric['labelRev']+' item capacity </h1> </div>'+
                 '<div class="ui-priority-primary " ></div>'+
                 ' <table border="0">'+
 

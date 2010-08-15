@@ -67,8 +67,11 @@ function previewReviewItemInformation(){
     $("#revComment_Final").val(revComment_Final);
     $("#revEndorsement_Final").val(revEndorsement_Final);
     //show reviewer div
+
     $("#revZone").hide();
     $("#reviewersReport").show();
+    $("#ricAllReviewers").show();
+
 
     var revId_1 = testedItem['revId_1'];
     var revComment_1= testedItem['revComment_1'];

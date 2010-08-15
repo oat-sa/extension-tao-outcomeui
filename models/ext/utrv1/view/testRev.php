@@ -7,8 +7,8 @@
  
 
 
-$revType = urlencode('revFinal');//reviewer revFinal
-$revIdCurrent=urlencode('rev2');
+$revType = urlencode('reviewer');//reviewer revFinal
+$revIdCurrent=urlencode('revY2');
 $revTestId= urlencode('test1');
 $revSubjectId= urlencode('younes');
 $revItemId=urlencode('item1');

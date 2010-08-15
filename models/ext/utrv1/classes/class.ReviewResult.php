@@ -148,6 +148,19 @@ class ReviewResult {
         $ibInformationValues['iDTest']= $idTestValue;
         $ibInformationValues['subjectId']= $subjectIdValue;
         $ibInformationValues['itemId']= $itemIdValue;
+
+        $res = new core_kernel_classes_Property($ibInformationValues['iDTest']);
+        $label = $res->getLabel();
+        $ibInformationValues['iDTestLabel']= $label;
+
+        $res = new core_kernel_classes_Property($ibInformationValues['subjectId']);
+        $label = $res->getLabel();
+        $ibInformationValues['subjectIdLabel']= $label;
+
+        $res = new core_kernel_classes_Property($ibInformationValues['itemId']);
+        $label = $res->getLabel();
+        $ibInformationValues['itemIdLabel']= $label;
+
         // put either the id in the ontology or the sent revId by the workflow and chose the appropriate reviewer
 
         $revId_1Val='';
@@ -277,6 +290,22 @@ class ReviewResult {
         $ibInformationValues['revComment_Final']=  $revComment_FinalVal;
         $ibInformationValues['revEndorsement_Final']=  $revEndorsement_FinalVal;
 
+
+               $res = new core_kernel_classes_Property($ibInformationValues['revId_1']);
+        $label = $res->getLabel();
+        $ibInformationValues['revId_1Label']= $label;
+
+        $res = new core_kernel_classes_Property($ibInformationValues['revId_2']);
+        $label = $res->getLabel();
+        $ibInformationValues['revId_2Label']= $label;
+        $res = new core_kernel_classes_Property($ibInformationValues['revId_3']);
+        $label = $res->getLabel();
+        $ibInformationValues['revId_3Label']= $label;
+        $res = new core_kernel_classes_Property($ibInformationValues['revId_4']);
+        $label = $res->getLabel();
+        $ibInformationValues['revId_4Label']= $label;
+
+
         return $ibInformationValues;
 
     }
@@ -388,8 +417,21 @@ class ReviewResult {
         $ibInformationValues['subjectId']= $subjectId;
 
 
-
         $ibInformationValues['itemId']= $itemId;
+
+        $res = new core_kernel_classes_Property($ibInformationValues['iDTest']);
+        $label = $res->getLabel();
+        $ibInformationValues['iDTestLabel']= $label;
+
+        $res = new core_kernel_classes_Property($ibInformationValues['subjectId']);
+        $label = $res->getLabel();
+        $ibInformationValues['subjectIdLabel']= $label;
+
+        $res = new core_kernel_classes_Property($ibInformationValues['itemId']);
+        $label = $res->getLabel();
+        $ibInformationValues['itemIdLabel']= $label;
+
+
         // put either the id in the ontology or the sent revId by the workflow and chose the appropriate reviewer
 
 
@@ -403,13 +445,16 @@ class ReviewResult {
         $ibInformationValues['revComment_2']=  $revComment_2;
         $ibInformationValues['revEndorsement_2']=  $revEndorsement_2;
 
+
         $ibInformationValues['revId_3']= $revId_3;
         $ibInformationValues['revComment_3']=  $revComment_3;
         $ibInformationValues['revEndorsement_3']=  $revEndorsement_3;
 
+
         $ibInformationValues['revId_4']= $revId_4;
         $ibInformationValues['revComment_4']=  $revComment_4;
         $ibInformationValues['revEndorsement_4']=  $revEndorsement_4;
+
 
 //in reviewer process
 
@@ -453,6 +498,24 @@ class ReviewResult {
         }
         $ibInformationValues['revComment_Final']=  $revComment_Final;
         $ibInformationValues['revEndorsement_Final']=  $revEndorsement_Final;
+
+        // Add labels
+        $res = new core_kernel_classes_Property($idRevFinalValue);
+        $label = $res->getLabel();
+
+        $res = new core_kernel_classes_Property($ibInformationValues['revId_1']);
+        $label = $res->getLabel();
+        $ibInformationValues['revId_1Label']= $label;
+
+        $res = new core_kernel_classes_Property($ibInformationValues['revId_2']);
+        $label = $res->getLabel();
+        $ibInformationValues['revId_2Label']= $label;
+        $res = new core_kernel_classes_Property($ibInformationValues['revId_3']);
+        $label = $res->getLabel();
+        $ibInformationValues['revId_3Label']= $label;
+        $res = new core_kernel_classes_Property($ibInformationValues['revId_4']);
+        $label = $res->getLabel();
+        $ibInformationValues['revId_4Label']= $label;
 
 
         return $ibInformationValues;
@@ -527,7 +590,9 @@ class ReviewResult {
             //do the filter
             //(  $endorsementValues['listenerName']=='inquiryEndorsment')&&
             if (($endorsementValues['iDTest'] ==$idTest) && ($endorsementValues['itemId']==$idItem)) {
-                $listOfTestees[] = $endorsementValues['subjectId'];
+                $testee['idSubject'] =$endorsementValues['subjectId'];
+                $testee['idTesteeLabel']=$endorsementValues['subjectIdLabel'];
+                $listOfTestees[] = $testee;
             }
 
         }
@@ -650,7 +715,7 @@ class ReviewResult {
 //get current Rev Test Item
             if ($_POST['revOp']=='getCurrentRevTestItem') {
                 $t = array();
-                
+
                 $t['idRev']=$this->revIdCurrent;
                 $t['idTest'] = $this->revTestId;
                 $t['idItem'] = $this->revItemId;
