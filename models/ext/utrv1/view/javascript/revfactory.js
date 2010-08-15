@@ -1,10 +1,13 @@
 var iBInfo = [];
 var revNumber = 'rev1';
 var currentPassedItem='';
+var currentRicUri='';
 
 function revIntro(){
     $("#reviewersReport").hide();
     $("#revZone").hide();
+    
+
     
 }
 function revConstructor(){
@@ -14,7 +17,29 @@ function revConstructor(){
 
         manageEvents();
         //getItemBehaviorInformation();
+        
         getListOfTestees();
+     
+        //var t =[];
+        t = getCurrentRevTestItem();
+
+        //get ric Info
+        
+        var ricInfo = getRicInformation(t['idRev'],t['idTest'],t['idItem']);
+        var capacity = ricInfo['capacity'];
+        var comment = ricInfo['comment'];
+        currentRicUri = ricInfo['uriRic'];
+        if ( capacity =='yes'){
+            $("#chCapacity").attr("checked", "checked");
+        }else{
+            $("#chCapacity").removeAttr("checked");
+        }
+        $("#currentCapacity").val(capacity);
+        $('#currentComment').val(comment);
+
+        getRicAllReviewers();
+            
+
        
     });
 }
@@ -30,12 +55,25 @@ function manageEvents(){
         setRevInformation('revf');
 
     });
+    $("#confirmCapacity").click(function(){
+        var capacity = $("#currentCapacity").val();
+        var comment = $('#currentComment').val();
+        alert($("#chCapacity").attr("checked"));
+        var capacity='';
+        if ($("#chCapacity").attr("checked")){
+            capacity = 'yes';
+        }
+        else{
+            capacity = 'no';
+        }
+        setRicInfo(currentRicUri,capacity,comment);
+    });
 
 }
 
 //set reviewer info
 function setRevInformation(revNumber){
-    alert (revNumber);
+    
     var item = iBInfo[0];
     //revNumber = item['revNumber'];
 
@@ -107,13 +145,13 @@ function getListOfTestees(){
         url: "../classes/class.ReviewResult.php",
         data: {
             revOp:"getListOfTestees"
-                    },
+        },
         dataType:"json",
         success: function(msg){
             list= msg;
             perviewListTestees(list)
 
-            //previewReviewItemInformation();
+        //previewReviewItemInformation();
 
         }
 
@@ -124,15 +162,15 @@ function getListOfTestees(){
 
 //preview the list of testees
 function perviewListTestees(list){
-content = '';
+    content = '';
     for (i in list){
         
-    revSubjectId="'"+list[i]+"'";
-    link = 'revService.php?'+revSubjectId;
+        revSubjectId="'"+list[i]+"'";
+        link = 'revService.php?'+revSubjectId;
         //content =  content = '<input id="'+cl.uriClass+'" class= "classInfos" type="button" value="'+cl.label+'" name ="'+cl.propertySourceUri +'" /></input>';
     
 
-    content = content + '<br>'+'<a href ="#" OnClick ="getItemBehaviorInformation('+revSubjectId+');">rev'+revSubjectId+'</a>';
+        content = content + '<a href ="#" OnClick ="getItemBehaviorInformation('+revSubjectId+');">Testee '+revSubjectId+'</a>'+'<br>';
 
     }
     $("#listTestees").text('');
@@ -144,7 +182,6 @@ content = '';
 function previewReviewItemInformation(){
     var testedItem = iBInfo[0];
     revNumber = testedItem['revNumber'];
-
 
     responceOfTestee = decodeURI(testedItem['endorsement']);
     //alert(testedItem['iDTest'])
@@ -192,11 +229,12 @@ function previewReviewItemInformation(){
         $("#revZone").show();
     }
     
-//  feed the input box
+    //  feed the input box
     $("#responceOfTestee").val(responceOfTestee)
     $("#revId").val(revId);
     $("#revEndorsement").val(revEndorsement);
     $("#revComment").val(revComment);
+
 
     if (revNumber =='revf'){
         var revComment_Final= testedItem['revComment_Final'];
@@ -250,6 +288,11 @@ function previewReviewItemInformation(){
         $("#revComment_Final").val(revComment_Final);
         $("#revEndorsement_Final").val(revEndorsement_Final);
 
+
+    // get all ric of reviewers
+        
+        
+
     }
 
 /*var revId_1 = testedItem['revId_1'];
@@ -279,6 +322,159 @@ function previewReviewItemInformation(){
 
 
 }
+//get RIC information
+function getRicInformation(idRev, idTest,idItem){
+    
+
+    var ricInfo=[];
+    options={
+        type: "POST",
+        url: "../classes/class.revItemCapacity.php",
+        data: {
+            revOp:"getRicInformation",
+            ricRev:idRev,
+            ricTest:idTest,
+            ricItem:idItem
+
+        },
+        dataType:"json",
+        async:false,
+        success: function(msg){
+            ricInfo= msg;
+        //perviewListTestees(list)
+            
+        //previewReviewItemInformation();
+
+        }
+
+    };
+    $.ajax(options);
+    return ricInfo;
+
+}
+//set the ric information
+function setRicInfo(ricUri,ricCapacity,ricComment){
+    
+    options={
+        type: "POST",
+        url: "../classes/class.revItemCapacity.php",
+        data: {
+            revOp:"setRicInformation",
+            ricUriS:ricUri,
+            ricCapacityS:ricCapacity,
+            ricCommentS:ricComment
+
+        },
+        
+        
+        success: function(msg){
+            alert(msg)
+        //perviewListTestees(list)
+
+        //previewReviewItemInformation();
+
+        }
+
+    };
+    $.ajax(options);
+   
+
+}
+
+
+//get current rev item, test
+function getCurrentRevTestItem(){
+    var t=[];
+    options={
+        type: "POST",
+        url: "../classes/class.ReviewResult.php",
+        data: {
+            revOp:"getCurrentRevTestItem"
+
+        },
+        dataType:"json",
+        async:false,
+        success: function(msg){
+            
+            t= msg;
+        //perviewListTestees(list)
+  
+        //previewReviewItemInformation();
+
+        }
+
+    };
+    $.ajax(options);
+    return t;
+}
+// get all ric of this review
+function getRicAllReviewers(){
+    var t=[];
+    options={
+        type: "POST",
+        url: "../classes/class.revItemCapacity.php",
+        data: {
+            revOp:"getRicAllReviewers"
+  
+        },
+        dataType:"json",
+ 
+        success: function(msg){
+            var allRic= msg;
+            // preview all ric od reviewers
+            var ric =[];
+            var contentRic = '';
+
+            for ( i in allRic){
+                ric = allRic[i];
+                //<input type="checkbox" name="" value="ON" checked="checked" />
+                var checkCapacity = ' <input type="checkbox" name="" value="ON" />';
+                var divClass = "ui-widget-content";
+                if (ric['capacity']=='yes'){
+                    checkCapacity = ' <input type="checkbox" name="" value="ON" checked="checked" />';
+                    divClass = "ui-state-error";
+
+                };
+                
+                contentRic = contentRic +'<div class="'+divClass+'" style=" margin-top: 1px">'+
+                '<div class="ui-widget-header ui-corner-top ui-state-default"> <h1>'+ric['idRev']+' item capacity </h1> </div>'+
+                '<div class="ui-priority-primary " ></div>'+
+                ' <table border="0">'+
+
+                '<tbody>'+
+                ' <tr>'+
+                '    <td>Problem ?</td>'+
+                '   <td>'+checkCapacity+'</td>'+
+                '</tr>'+
+                '<tr>'+
+                '<td>Comment</td>'+
+                '<td><textarea name="" rows="4" cols="18">'+ric['comment']+' </textarea></td>'+
+                '</tr>'+
+
+                '  </tbody>'+
+                '   </table>'+
+
+                '</div>';
+
+    
+
+            }
+           
+            //put the new content in the div
+            
+                        
+            $("#ricAllReviewers").append(contentRic);
+
+
+
+        }
+
+    };
+    $.ajax(options);
+   
+}
+
+//pre
 
 revConstructor();
 

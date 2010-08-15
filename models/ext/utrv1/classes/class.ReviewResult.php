@@ -12,7 +12,7 @@
 require_once($_SERVER['DOCUMENT_ROOT']."/generis/common/inc.extension.php");
 require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
 
-    class ReviewResult {
+class ReviewResult {
     private $revType;
     private $revIdCurrent;
     private $revTestId;
@@ -22,10 +22,10 @@ require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
 
     public function  __construct() {
 // A supprimer lors du deploiment final
-        define('API_LOGIN','djaghloul');
-        define('API_PASSWORD',md5('djaghloul'));
+        define('API_LOGIN','tao');
+        define('API_PASSWORD',md5('tao'));
         core_control_FrontController::connect(API_LOGIN, API_PASSWORD, DATABASE_NAME);
-        
+
 
         //$p = new  RegCommon();
         //$p->regConnect();
@@ -36,7 +36,7 @@ require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
         $this->revTestId=$_SESSION['revTestId'];
         $this->revSubjectId=$_SESSION['revSubjectId'];
         $this->revItemId=$_SESSION['revItemId'];
- 
+
     }
 
     /**
@@ -47,7 +47,7 @@ require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
      * @param  String UriIB
      *
      */
-     public function getIbEndorsemenInformationValues($uriIB) {
+    public function getIbEndorsemenInformationValues($uriIB) {
 
         $uri = $uriIB;
         $ibInformationValues = array();// the returned array
@@ -151,62 +151,62 @@ require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
         // put either the id in the ontology or the sent revId by the workflow and chose the appropriate reviewer
 
         $revId_1Val='';
-        if (isset($revId_1[0])){
+        if (isset($revId_1[0])) {
             $revId_1Val = $revId_1[0];
         }
         $revComment_1Val='';
-        if (isset($revComment_1[0])){
+        if (isset($revComment_1[0])) {
             $revComment_1Val = $revComment_1[0];
         }
 
         $revEndorsement_1Val='';
-        if (isset($revEndorsement_1[0])){
+        if (isset($revEndorsement_1[0])) {
             $revEndorsement_1Val = $revEndorsement_1[0];
         }
 
 
         $revId_2Val='';
-        if (isset($revId_2[0])){
+        if (isset($revId_2[0])) {
             $revId_2Val = $revId_2[0];
         }
         $revComment_2Val='';
-        if (isset($revComment_2[0])){
+        if (isset($revComment_2[0])) {
             $revComment_2Val = $revComment_2[0];
         }
 
         $revEndorsement_2Val='';
-        if (isset($revEndorsement_2[0])){
+        if (isset($revEndorsement_2[0])) {
             $revEndorsement_2Val = $revEndorsement_2[0];
         }
 
         $revId_3Val='';
-        if (isset($revId_3[0])){
+        if (isset($revId_3[0])) {
             $revId_3Val = $revId_3[0];
         }
         $revComment_3Val='';
-        if (isset($revComment_3[0])){
+        if (isset($revComment_3[0])) {
             $revComment_3Val = $revComment_3[0];
         }
 
         $revEndorsement_3Val='';
-        if (isset($revEndorsement_3[0])){
+        if (isset($revEndorsement_3[0])) {
             $revEndorsement_3Val = $revEndorsement_3[0];
         }
 
         $revId_4Val='';
-        if (isset($revId_4[0])){
+        if (isset($revId_4[0])) {
             $revId_4Val = $revId_4[0];
         }
         $revComment_4Val='';
-        if (isset($revComment_4[0])){
+        if (isset($revComment_4[0])) {
             $revComment_4Val = $revComment_4[0];
         }
 
         $revEndorsement_4Val='';
-        if (isset($revEndorsement_4[0])){
+        if (isset($revEndorsement_4[0])) {
             $revEndorsement_4Val = $revEndorsement_4[0];
         }
-        
+
         $ibInformationValues['revId_1']= $revId_1Val;
         $ibInformationValues['revComment_1']=  $revComment_1Val;
         $ibInformationValues['revEndorsement_1']=  $revEndorsement_1Val;
@@ -265,15 +265,15 @@ require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
             $ibInformationValues['revNumber'] = 'revf';
         }
         $revComment_FinalVal= '';
-        if (isset($revComment_Final[0])){
-        $revComment_FinalVal = $revComment_Final[0];
+        if (isset($revComment_Final[0])) {
+            $revComment_FinalVal = $revComment_Final[0];
         }
 
         $revEndorsement_FinalVal = '';
-        if (isset($revEndorsement_Final[0])){
-           $revEndorsement_FinalVal= $revEndorsement_Final[0];
+        if (isset($revEndorsement_Final[0])) {
+            $revEndorsement_FinalVal= $revEndorsement_Final[0];
         }
-        
+
         $ibInformationValues['revComment_Final']=  $revComment_FinalVal;
         $ibInformationValues['revEndorsement_Final']=  $revEndorsement_FinalVal;
 
@@ -351,7 +351,7 @@ require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
         $revComment_4 = $utrResource->getOnePropertyValue(new core_kernel_classes_Property($uriRevComment_4Prop));
         $revEndorsement_4 = $utrResource->getOnePropertyValue(new core_kernel_classes_Property($uriRevEndorsement_4Prop));
 
-        
+
         $revComment_Final = $utrResource->getOnePropertyValue(new core_kernel_classes_Property($uriRevComment_FinalProp));
         $revEndorsement_Final = $utrResource->getOnePropertyValue(new core_kernel_classes_Property($uriRevEndorsement_FinalProp));
 
@@ -375,19 +375,19 @@ require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
         if (isset($itemId[0])) {
             $itemIdValue = $itemId[0];
         }*/
-        
-        
+
+
         //put the reviewer id
 
 
         $ibInformationValues['uriPassedItem']= $uriIB;
-        
+
         $ibInformationValues['endorsement']= $endorsement;
         $ibInformationValues['listenerName']= $listenerName;
         $ibInformationValues['iDTest']= $idTest;
         $ibInformationValues['subjectId']= $subjectId;
-        
-        
+
+
 
         $ibInformationValues['itemId']= $itemId;
         // put either the id in the ontology or the sent revId by the workflow and chose the appropriate reviewer
@@ -453,7 +453,7 @@ require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
         }
         $ibInformationValues['revComment_Final']=  $revComment_Final;
         $ibInformationValues['revEndorsement_Final']=  $revEndorsement_Final;
-        
+
 
         return $ibInformationValues;
 
@@ -475,9 +475,9 @@ require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
         $utrClass = new core_kernel_classes_Class($uriItemBehavior);
 
         $listOfItemBehavior =$utrClass->getInstances();
- 
+
         //filter the list  to have only the endorsement and other criterias
-        
+
 
         return ($listOfItemBehavior);
 
@@ -494,19 +494,17 @@ require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
 
     public function getItermBehaviorInformation($idTest,$idSubject,$idItem) {
         $listIbInstances = $this->getItemBehaviorInstances();
-        
-          
+
+
         $listEndorsementValues = array();
-      
+
 
         foreach($listIbInstances as $uriIB=>$resource ) {
-     
+
             $endorsementValues =$this->getIbEndorsemenInformationValues($uriIB);
-           
-            
 
             //do the filter
-            //(  $endorsementValues['listenerName']=='inquiryEndorsment')&& 
+            //(  $endorsementValues['listenerName']=='inquiryEndorsment')&&
             if ((  $endorsementValues['listenerName']=='inquiryEndorsment')&&($endorsementValues['iDTest'] ==$idTest) && ($endorsementValues['subjectId']==$idSubject) && ($endorsementValues['itemId']==$idItem)) {
                 $listEndorsementValues[] = $endorsementValues;
             }
@@ -515,7 +513,7 @@ require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
         return $listEndorsementValues;
     }
     //get the list of testees
-    public function getListOftestees($idTest,$idItem){
+    public function getListOftestees($idTest,$idItem) {
 
         $listIbInstances = $this->getItemBehaviorInstances();
 
@@ -534,7 +532,7 @@ require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
 
         }
         return $listOfTestees;
-        
+
     }
 
 
@@ -557,7 +555,7 @@ require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
         // get the property uris'
         //echo $uriItemReviewed.'<br>'.$revId;
         $RESULT_NS = core_kernel_classes_Session::getNameSpace();
-        
+
         if ($revNumber =='rev1') {
 
             $uriRevIdProp = $RESULT_NS.'#'.'REVIEWER1_ID';
@@ -570,7 +568,7 @@ require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
             $uriRevIdProp = $RESULT_NS.'#'.'REVIEWER2_ID';
             $uriRevCommentProp = $RESULT_NS.'#'.'REVIEWER2_COMMENT';
             $uriRevEndorsementProp = $RESULT_NS.'#'.'REVIEWER2_ENDORSEMENT';
-             
+
         }
 
         if ($revNumber =='rev3') {
@@ -613,7 +611,7 @@ require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
         $itemReviewed->editPropertyValues($propRevId, $revId);
 
         //Save the variable
-       
+
 
 
     }
@@ -632,8 +630,8 @@ require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
                 $idItem=$this->revItemId;//  'http://localhost/middleware/tao4.rdf#i1274434065093789300';
 
                 $list= $this->getItermBehaviorInformation($idTest,$idSubject,$idItem);
-               echo (json_encode($list));
-               
+                echo (json_encode($list));
+
 
             }
             //get itemBehavior information
@@ -649,7 +647,17 @@ require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
 
 
             }
+//get current Rev Test Item
+            if ($_POST['revOp']=='getCurrentRevTestItem') {
+                $t = array();
+                
+                $t['idRev']=$this->revIdCurrent;
+                $t['idTest'] = $this->revTestId;
+                $t['idItem'] = $this->revItemId;
 
+                echo (json_encode($t));
+
+            }
             //set review information
             if ($_POST['revOp']=='setReviewInformation') {
 
@@ -684,7 +692,7 @@ error_reporting(-1);*/
 $r->getIbEndorsmentValue($uriIB);*/
 //error_reporting(-1);
 
-error_reporting();
+error_reporting(0);
 
 $review = new ReviewResult();
 $review->dispatch();

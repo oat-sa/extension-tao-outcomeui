@@ -9,7 +9,7 @@ $revType = urldecode($_GET['revType']);
 $revIdCurrent=urldecode($_GET['revIdCurrent']);
 $revTestId=urldecode($_GET['revTestId']);
 $revSubjectId ='all';
-if (isset($_GET['revSubjectId'])){
+if (isset($_GET['revSubjectId'])) {
     $revSubjectId=urldecode($_GET['revSubjectId']);
 }
 
@@ -24,7 +24,7 @@ $revIdCurrent='YOUNES CUR';
 $revTestId='http://localhost/middleware/tao4.rdf#i1261572267020194300';
 $revSubjectId='http://localhost/middleware/tao4.rdf#i1274434222052333200';
 $revItemId='http://localhost/middleware/tao4.rdf#i1274434065093789300';
- */
+*/
 
 
 //put in the session
@@ -48,185 +48,107 @@ and open the template in the editor.
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="cssfiles/default/basic.css">
-
-        <link rel="stylesheet" type="text/css" media="screen" href="javascript/jqGrid/css/ui.jqgrid.css" />
-        
-        <script src="javascript/jquery-1.3.2.min.js"></script>
-
-
         <link rel="stylesheet" type="text/css" href="<?=TAOBASE_WWW?>css/custom-theme/jquery-ui-1.8.custom.css" />
-
-        <script src="javascript/jqGrid/js/jquery.jqGrid.min.js"></script>
-        <script src="javascript/jquery/jqueryui/jquery-ui-1.8.custom.min.js"></script>
+        <script src="javascript/jquery-1.3.2.min.js"></script>
 
         <script type="text/javascript" src="locales/<?=$_SESSION['lang']?>/messages_po.js"></script>
         <script type="text/javascript" src="javascript/i18n.js"></script>
 
         <script type="text/javascript" src="javascript/revfactory.js"></script>
-
     </head>
-    <div id="listTestees" class="">
 
 
-    </div>
 
-    <div id="container">
-        <div id="reportHeader">
+    <div id="rootReviewContainer" style="width: 1100px">
+
+        <div id="reportHeader" class="ui-widget-header  ui-state-default">
             <h1> <?=__("Report on open review")?></h1>
+            
         </div>
 
-        <div id="itemDescription" class="ui-widget-content ui-corner-all">
-            <h1 class ="ui-widget-header ui-corner-all"><?=__("Response of the test maker") ?> </h1>
-            <table border="0">
+        <div id="TesteesAndRic" classe ="ui-widget ui-widget-content ui-corner-all" style="float: left;width:250px; margin-top: 10px;margin-bottom: 10px">
+            <div id="listTesteesBox" class="ext-home-container ui-state-highlight" style="height:50%" >
 
-                <tbody>
-                    <tr>
-                        <td><h1><?=__("Subject:") ?> </h1></td>
-                        <td><h1 id="subjectId"> </h1></td>
-                    </tr>
-                    <tr>
-                        <td> <h1><?=__("Test:") ?> </h1></td>
-                        <td><h1 id="testId"></td>
-                    </tr>
-                    <tr>
-                        <td><h1><?=__("Item:") ?> </h1></td>
-                        <td><h1 id="itemId"></h1></td>
-                    </tr>
-                    <tr>
-                        <td><h1><?=__("Response") ?> </h1></td>
-                        <td><textarea id="responceOfTestee" rows="10" cols="100"></textarea></td>
-                    </tr>
-                </tbody>
-            </table>
+                <div class="ui-widget-header ui-corner-top ui-state-default"> <h1> list of testees</h1> </div>
+                <div id="listTestees" class="ui-widget-content  " ></div>
 
-        </div>
+            </div>
 
-        <div id="revZone" class ="ui-widget-content ui-corner-all">
-            <h1 class ="ui-widget-header ui-corner-all"> Reviewer</h1>
-            <table border="0">
+            <div id ="ricInformationBox" class="ext-home-container ui-state-highlight" style=" margin-top: 5px">
 
-                <tbody>
-                    <tr>
-                        <td>Reviewer ID</td>
-                        <td><input id="revId" type="text" name="" value="" size ="40" disabled="true" /></td>
-                    </tr>
-                    <tr>
-                        <td>Reviewer Endorsement:</td>
-                        <td><input id="revEndorsement" type="text" name="" value="" size="5"/></td>
-                    </tr>
-                    <tr>
-                        <td>Reviewer Comment:</td>
-                        <td>
-                            <textarea id="revComment" name="" rows="4" cols="100"></textarea>
+                <div class="ui-widget-header ui-corner-top ui-state-default"> <h1> Item Capacity </h1> </div>
+                <div id="ricInformation" class="ui-widget-content " ></div>
 
-                        </td>
-                    </tr>
-
-
-                </tbody>
-            </table>
-            <input id="okRev" type="submit" value="<?=__("Validate your review")?>" />
-
-        </div>
-
-        <div id="reviewersReport">
-
-            <div id="Rev1Zone" class ="ui-widget-content ui-corner-all">
-                <h1 class ="ui-widget-header ui-corner-all"> Reviewer 1</h1>
                 <table border="0">
 
                     <tbody>
                         <tr>
-                            <td>Reviewer ID</td>
-                            <td><input id="revId_1" type="text" name="" value="" size ="40" disabled="true" /></td>
+                            <td>Problem ?</td>
+                            <td><input id="chCapacity" type="checkbox" name="" value="ON" /></td>
                         </tr>
                         <tr>
-                            <td>Reviewer Endorsement:</td>
-                            <td><input id="revEndorsement_1" type="text" name="" value="" size="5"/></td>
+                            <td>Comment</td>
+                            <td><textarea id="currentComment" name="" rows="4" cols="19"> </textarea></td>
                         </tr>
                         <tr>
-                            <td>Reviewer Comment:</td>
-                            <td>
-                                <textarea id="revComment_1" name="" rows="4" cols="100"></textarea>
+                            <td><input id="confirmCapacity" type="button" value="Send" /></td>
 
-                            </td>
                         </tr>
-
 
                     </tbody>
                 </table>
 
             </div>
+           
 
-            <div id="Rev2Zone" class ="ui-widget-content ui-corner-all">
-                <h1 class ="ui-widget-header ui-corner-all"> Reviewer 2</h1>
+        </div>
+        <div id="reviewContainer"  classe ="ui-widget ui-widget-content ui-corner-all" style=" width: 50%; float:left; margin: 10px 10px 10px 10px">
+
+
+            <div id="itemDescription" class="ui-widget-content ui-corner-all" >
+                <div class="ui-widget-header ui-corner-top ui-state-default"><h1><?=__("Response of the test maker") ?> </h1>  </div>
+
                 <table border="0">
 
                     <tbody>
                         <tr>
-                            <td>Reviewer ID</td>
-                            <td><input id="revId_2" type="text" name="" value="" size="40" disabled="true"/></td>
+                            <td><h1><?=__("Subject:") ?> </h1></td>
+                            <td><h1 id="subjectId"> </h1></td>
                         </tr>
                         <tr>
-                            <td>Reviewer Endorsement:</td>
-                            <td><input id="revEndorsement_2" type="text" name="" value="" size ="5"/></td>
+                            <td> <h1><?=__("Test:") ?> </h1></td>
+                            <td><h1 id="testId"></td>
                         </tr>
                         <tr>
-                            <td>Reviewer Comment:</td>
-                            <td>
-                                <textarea id="revComment_2" name="" rows="4" cols="100"></textarea>
-
-                            </td>
-                        </tr>
-
-                    </tbody>
-                </table>
-           </div>
-
-            <div id="Rev3Zone" class ="ui-widget-content ui-corner-all">
-                <h1 class ="ui-widget-header ui-corner-all"> Reviewer 3</h1>
-                <table border="0">
-
-                    <tbody>
-                        <tr>
-                            <td>Reviewer ID</td>
-                            <td><input id="revId_3" type="text" name="" value="" size ="40" disabled="true" /></td>
+                            <td><h1><?=__("Item:") ?> </h1></td>
+                            <td><h1 id="itemId"></h1></td>
                         </tr>
                         <tr>
-                            <td>Reviewer Endorsement:</td>
-                            <td><input id="revEndorsement_3" type="text" name="" value="" size="5"/></td>
+                            <td><h1><?=__("Response") ?> </h1></td>
+                            <td><textarea id="responceOfTestee" rows="10" cols="52"></textarea></td>
                         </tr>
-                        <tr>
-                            <td>Reviewer Comment:</td>
-                            <td>
-                                <textarea id="revComment_3" name="" rows="4" cols="100"></textarea>
-
-                            </td>
-                        </tr>
-
-
                     </tbody>
                 </table>
 
             </div>
 
-            <div id="Rev4Zone" class ="ui-widget-content ui-corner-all">
-                <h1 class ="ui-widget-header ui-corner-all"> Reviewer 4</h1>
+            <div id="revZone" class="ui-widget-content ui-corner-all" style=" margin-top: 10px">
+          <div class="ui-widget-header ui-corner-top ui-state-default"><h1><?=__("Reviewer") ?> </h1>  </div>
                 <table border="0">
 
                     <tbody>
                         <tr>
                             <td>Reviewer ID</td>
-                            <td><input id="revId_4" type="text" name="" value="" size ="40" disabled="true" /></td>
+                            <td><input id="revId" type="text" name="" value="" size ="40" disabled="true" /></td>
                         </tr>
                         <tr>
                             <td>Reviewer Endorsement:</td>
-                            <td><input id="revEndorsement_4" type="text" name="" value="" size="5"/></td>
+                            <td><input id="revEndorsement" type="text" name="" value="" size="5"/></td>
                         </tr>
                         <tr>
                             <td>Reviewer Comment:</td>
                             <td>
-                                <textarea id="revComment_4" name="" rows="4" cols="100"></textarea>
+                                <textarea id="revComment" name="" rows="4" cols="52"></textarea>
 
                             </td>
                         </tr>
@@ -234,42 +156,156 @@ and open the template in the editor.
 
                     </tbody>
                 </table>
+                <input id="okRev" type="submit" value="<?=__("Validate your review")?>" />
 
             </div>
 
+            <div id="reviewersReport">
 
-            <div id="finalRevZone" class ="ui-widget-content ui-corner-all">
+                <div id="Rev1Zone" class="ui-widget-content ui-corner-all" style=" margin-top: 3px">
+                    <div class="ui-widget-header ui-corner-top ui-state-default"><h1><?=__("Reviewer1") ?> </h1>  </div>
 
-                <h1 class ="ui-widget-header ui-corner-all"> Final Reviewer </h1>
-                <table border="0">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
 
-                        <tr>
-                            <td>Final Endorsement:</td>
-                            <td><input id="revEndorsement_Final" type="text" name="" value="" size="5"/></td>
-                        </tr>
-                        <tr>
-                            <td>Final Comment:</td>
-                            <td>
-                                <textarea id="revComment_Final" name="" rows="10" cols="100"></textarea>
+                    <table border="0">
 
-                            </td>
-                        </tr>
+                        <tbody>
+                            <tr>
+                                <td>Reviewer ID</td>
+                                <td><input id="revId_1" type="text" name="" value="" size ="40" disabled="true" /></td>
+                            </tr>
+                            <tr>
+                                <td>Reviewer Endorsement:</td>
+                                <td><input id="revEndorsement_1" type="text" name="" value="" size="5"/></td>
+                            </tr>
+                            <tr>
+                                <td>Reviewer Comment:</td>
+                                <td>
+                                    <textarea id="revComment_1" name="" rows="4" cols="52"></textarea>
 
-                    </tbody>
-                </table>
-                <input id="okRevFinal" type="submit" value="<?=__("Validate final review")?>" />
+                                </td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+                <div id="Rev2Zone" class="ui-widget-content ui-corner-all" style=" margin-top: 3px">
+                    <div class="ui-widget-header ui-corner-top ui-state-default"><h1><?=__("Reviewer2") ?> </h1>  </div>
+                   <table border="0">
+
+                        <tbody>
+                            <tr>
+                                <td>Reviewer ID</td>
+                                <td><input id="revId_2" type="text" name="" value="" size="40" disabled="true"/></td>
+                            </tr>
+                            <tr>
+                                <td>Reviewer Endorsement:</td>
+                                <td><input id="revEndorsement_2" type="text" name="" value="" size ="5"/></td>
+                            </tr>
+                            <tr>
+                                <td>Reviewer Comment:</td>
+                                <td>
+                                    <textarea id="revComment_2" name="" rows="4" cols="52"></textarea>
+
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="Rev3Zone" class="ui-widget-content ui-corner-all" style=" margin-top: 3px">
+                    <div class="ui-widget-header ui-corner-top ui-state-default"><h1><?=__("Reviewer3") ?> </h1>  </div>
+                    <table border="0">
+
+                        <tbody>
+                            <tr>
+                                <td>Reviewer ID</td>
+                                <td><input id="revId_3" type="text" name="" value="" size ="40" disabled="true" /></td>
+                            </tr>
+                            <tr>
+                                <td>Reviewer Endorsement:</td>
+                                <td><input id="revEndorsement_3" type="text" name="" value="" size="5"/></td>
+                            </tr>
+                            <tr>
+                                <td>Reviewer Comment:</td>
+                                <td>
+                                    <textarea id="revComment_3" name="" rows="4" cols="52"></textarea>
+
+                                </td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+                 <div id="Rev4Zone" class="ui-widget-content ui-corner-all" style=" margin-top: 3px">
+                    <div class="ui-widget-header ui-corner-top ui-state-default"><h1><?=__("Reviewer4") ?> </h1>  </div>
+                   <table border="0">
+
+                        <tbody>
+                            <tr>
+                                <td>Reviewer ID</td>
+                                <td><input id="revId_4" type="text" name="" value="" size ="40" disabled="true" /></td>
+                            </tr>
+                            <tr>
+                                <td>Reviewer Endorsement:</td>
+                                <td><input id="revEndorsement_4" type="text" name="" value="" size="5"/></td>
+                            </tr>
+                            <tr>
+                                <td>Reviewer Comment:</td>
+                                <td>
+                                    <textarea id="revComment_4" name="" rows="4" cols="52"></textarea>
+
+                                </td>
+                            </tr>
+
+
+                        </tbody>
+                    </table>
+
+                </div>
+
+
+                <div id="finalRevZone" class ="ui-widget-content ui-corner-all">
+
+                    <h1 class ="ui-widget-header ui-corner-all"> Final Reviewer </h1>
+                    <table border="0">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            <tr>
+                                <td>Final Endorsement:</td>
+                                <td><input id="revEndorsement_Final" type="text" name="" value="" size="5"/></td>
+                            </tr>
+                            <tr>
+                                <td>Final Comment:</td>
+                                <td>
+                                    <textarea id="revComment_Final" name="" rows="10" cols="52"></textarea>
+
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                    <input id="okRevFinal" type="submit" value="<?=__("Validate final review")?>" />
+                </div>
+
             </div>
 
         </div>
-
+        <div id="ricAllReviewers" style="float:left;margin-top: 10px"></div>
     </div>
+
     <body>
 
     </body>
