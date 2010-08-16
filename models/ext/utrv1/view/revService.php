@@ -5,15 +5,35 @@ require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
 //$_SESSION["revType"]= $_GET[revType];
 //get the parameters of the workflow
 
-$revType = urldecode($_GET['revType']);
-$revIdCurrent=urldecode($_GET['revIdCurrent']);
-$revTestId=urldecode($_GET['revTestId']);
-$revSubjectId ='all';
-if (isset($_GET['revSubjectId'])) {
-    $revSubjectId=urldecode($_GET['revSubjectId']);
+// $revType = urldecode($_GET['revType']);
+$revType = 'reviewer';
+if(isset($_GET['final'])){
+	if($_GET['final'] == 1){
+		$revType = 'revFinal';
+	}	
 }
 
-$revItemId=urldecode($_GET['revItemId']);
+//get the subject uri from the wf userService:
+$userService = tao_models_classes_ServiceFactory::get('tao_models_classes_UserService');
+$reviewer = $userService->getCurrentUser();
+$revIdCurrent = $reviewer->uriResource;
+// var_dump(array(
+	// $reviewer->getUniquePropertyValue(new core_kernel_classes_Property('http://www.tao.lu/Ontologies/generis.rdf#password')),
+	// $reviewer->getUniquePropertyValue(new core_kernel_classes_Property('http://www.tao.lu/Ontologies/generis.rdf#login'))
+// ));
+// exit;
+$_SESSION['password']= $reviewer->getUniquePropertyValue(new core_kernel_classes_Property('http://www.tao.lu/Ontologies/generis.rdf#password'))->literal;
+$_SESSION['login']= $reviewer->getUniquePropertyValue(new core_kernel_classes_Property('http://www.tao.lu/Ontologies/generis.rdf#login'))->literal;
+
+
+$revTestId=tao_helpers_Uri::decode($_GET['testUri']);
+
+$revSubjectId ='all';
+if (isset($_GET['revSubjectId'])) {
+    $revSubjectId=tao_helpers_Uri::decode($_GET['revSubjectId']);
+}
+
+$revItemId=tao_helpers_Uri::decode($_GET['itemUri']);
 
 
 //simulate with static variables

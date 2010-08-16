@@ -17,13 +17,13 @@ define ('RIC_URI','ricTQ5');
 class classrevItemCapacity {
     private $namespace;
     public function  __construct() {
-        define('API_LOGIN','generis');
-        define('API_PASSWORD',md5('g3n3r1s'));
-        core_control_FrontController::connect(API_LOGIN, API_PASSWORD, DATABASE_NAME);
-        $this->namespace = core_kernel_classes_Session::getNameSpace().'#';
-
-
-
+        // core_control_FrontController::connect($_SESSION['login'], $_SESSION['password'], DATABASE_NAME);
+		
+		define('API_LOGIN','tao');
+        define('API_PASSWORD',md5('tao'));
+		// core_control_FrontController::connect(API_LOGIN, API_PASSWORD, DATABASE_NAME);
+		
+		$this->namespace = core_kernel_classes_Session::getNameSpace().'#';
     }
     //put your code here
 

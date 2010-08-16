@@ -22,10 +22,13 @@ class ReviewResult {
 
     public function  __construct() {
 // A supprimer lors du deploiment final
-        define('API_LOGIN','tao');
+        
+		// var_dump($_SESSION['password'], $_SESSION['login']);exit;
+        // core_control_FrontController::connect($_SESSION['login'], $_SESSION['password'], DATABASE_NAME);
+		
+		define('API_LOGIN','tao');
         define('API_PASSWORD',md5('tao'));
-        core_control_FrontController::connect(API_LOGIN, API_PASSWORD, DATABASE_NAME);
-
+		// core_control_FrontController::connect(API_LOGIN, API_PASSWORD, DATABASE_NAME);
 
         //$p = new  RegCommon();
         //$p->regConnect();
@@ -589,7 +592,7 @@ class ReviewResult {
 
             //do the filter
             //(  $endorsementValues['listenerName']=='inquiryEndorsment')&&
-            if (($endorsementValues['iDTest'] ==$idTest) && ($endorsementValues['itemId']==$idItem)) {
+            if ((  $endorsementValues['listenerName']=='inquiryEndorsment')&&($endorsementValues['iDTest'] ==$idTest) && ($endorsementValues['itemId']==$idItem)) {
                 $testee['idSubject'] =$endorsementValues['subjectId'];
                 $testee['idTesteeLabel']=$endorsementValues['subjectIdLabel'];
                 $listOfTestees[] = $testee;
