@@ -46,8 +46,21 @@ class eventsFactory extends eventsServices {
         foreach( $patternSymbolCollection as $symbol){
             $this->eventSymbolization($symbol);
         }
+    }
+    //create the symbolized event Log
+    public function generateSymbolizedEvents(){
+        $usedEvents = $this->currentXml;
+        $listEvents = simplexml_load_string($usedEvents);
+        $symbolizedLog = '';
+        foreach ($listEvents as $event){
+            $symbolLetter = $event->attributes()->EVENT_SYMBOL;
+            $symbolizedLog=$symbolizedLog.$symbolLetter;
+        }
+        return $symbolizedLog;
 
     }
+
+
     //save the eventlog
     public function saveEvents($fileName="raffinedEvents.xml"){
         $xmlDoc = simplexml_load_string($this->currentXml);
@@ -61,7 +74,7 @@ $eventList = $xml->saveXML();
 
 $sf = new symbolFactory();
 $sf->addSymbol(symbolFactory::create('Y', "nom = 'younes'"));
-$sf->addSymbol(symbolFactory::create('Lgg', "nom = 'Thibaud'"));
+$sf->addSymbol(symbolFactory::create('L', "nom = 'Thibaud'"));
 $sf->addSymbol(symbolFactory::create('T', "type='type_1'"));
 
 $collection = $sf->getSymbolCollection();
@@ -70,7 +83,8 @@ $p = new eventsFactory($eventList);
 
 //$p->eventSymbolization('Y', "(nom = 'younes')");
 $p->fullSymbolization($collection);
-
+$symbLog = $p->generateSymbolizedEvents();
+echo $symbLog;
 
 $p->saveEvents();
 ?>

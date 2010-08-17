@@ -72,23 +72,6 @@ class eventsServices {
         return $resArray;
     }
 
-    //modify the text node with a value for all matched nodes
-    // this function will be used in  Symbolysation phase
-    public function setNodeValue($nodeName, $nodeValue, $query) {
-        $usedXml = $this->currentXml;
-
-        //filter the XML
-
-        $xmlDoc = simplexml_load_string($usedXml);
-        $filtredNodes = $xmlDoc->xpath($query);
-
-        foreach ($filtredNodes as $node) {
-            $node->$nodeName = $nodeValue;
-        }
-
-        $this->currentXml = $xmlDoc->asXml();
-    }
-
     //set Xml element Value
     private function setElementValue($elementName, $elementValue, $query, $typeOfElement='attribute') {
 
