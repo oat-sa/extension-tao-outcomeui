@@ -15,6 +15,8 @@ class eventsFactory extends eventsServices {
         //pepare the ebvent consists of adding symbol numeration attribute and
         $this->incEventNumber();
         $this->addSymbolAttribute();
+        //now we have a list with event with two new attributes; one for the incrementation,
+        //the other for the symbol very importante
      
     }
 // add an attribute with increment number from 1
@@ -31,7 +33,15 @@ class eventsFactory extends eventsServices {
     }
     //add symbol attribute
     private function addSymbolAttribute(){
+        //Call the parent method 
         $this->addAttributeForAllNodes(EVENT_SYMBOL);
+    }
+
+    // the symbolization method put the accurate pattern Symbole for event according to the query
+    public function eventSymbolization($patternSymbol,$query){
+        
+
+        
     }
 }
 ?>
