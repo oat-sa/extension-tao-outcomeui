@@ -95,7 +95,6 @@ class eventsServices {
         $usedXml = $this->currentXml;
         //filter the XML
         $xmlDoc = simplexml_load_string($usedXml);
-        echo '<br>'.$query;
         $filtredNodes = $xmlDoc->xpath($query);
 
         foreach ($filtredNodes as $node) {
