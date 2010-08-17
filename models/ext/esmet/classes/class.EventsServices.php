@@ -95,6 +95,7 @@ class eventsServices {
         $usedXml = $this->currentXml;
         //filter the XML
         $xmlDoc = simplexml_load_string($usedXml);
+        echo '<br>'.$query;
         $filtredNodes = $xmlDoc->xpath($query);
 
         foreach ($filtredNodes as $node) {
@@ -137,25 +138,25 @@ class eventsServices {
 
 }
 
-$ev = new eventsServices();
-// create array
-for ($i = 1; $i < 1000; $i++) {
-    $pers['nom'] = "younes_$i";
-    $pers['age'] = $i;
-    $pers['type'] = "type_$i";
-    $tab[] = $pers;
-}
-
-//$resA = $ev->queryArray("(age >'7')and (type = 'type_67')", $tab);
-
-$xml = $ev->simpleArrayToXml($tab, 'events', 'tEvent');
-//$ev->setNodesValue('age', '45454', "//tEvent[(age >'10') ]");
-$xml = $ev->addAttributeForAllNodes('Symbol');
-$xml = $ev->setAttributesValue('Symbol', 'A', "//tEvent[age >10]");
-
-$xsave = simplexml_load_string($xml);
-$xsave->asXML('test2.xml')
-
+//$ev = new eventsServices();
+//// create array
+//for ($i = 1; $i < 1000; $i++) {
+//    $pers['nom'] = "younes_$i";
+//    $pers['age'] = $i;
+//    $pers['type'] = "type_$i";
+//    $tab[] = $pers;
+//}
+//
+////$resA = $ev->queryArray("(age >'7')and (type = 'type_67')", $tab);
+//
+//$xml = $ev->simpleArrayToXml($tab, 'events', 'tEvent');
+////$ev->setNodesValue('age', '45454', "//tEvent[(age >'10') ]");
+//$xml = $ev->addAttributeForAllNodes('Symbol');
+//$xml = $ev->setAttributesValue('Symbol', 'A', "//tEvent[age >10]");
+//
+//$xsave = simplexml_load_string($xml);
+//$xsave->asXML('test2.xml')
+//
 
 
 // filter
