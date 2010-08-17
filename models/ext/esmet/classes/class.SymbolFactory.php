@@ -1,14 +1,7 @@
 <?php
-/* 
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+require_once 'esmet_config.php';
 
-/**
- * Description of class
- *
- * @author djaghloul
- */
+
 require_once 'class.SymbolDescription.php';
 class symbolFactory {
     private $symbolOfPatternCollection = array();

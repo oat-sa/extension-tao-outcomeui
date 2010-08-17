@@ -1,4 +1,6 @@
 <?php
+require_once 'esmet_config.php';
+
 
 class symbolDescription {
 

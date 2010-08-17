@@ -1,16 +1,6 @@
 <?php
 
-//require_once 'esmetConfig.php';
-require_once 'class.EventsServices.php';
-require_once 'class.SymbolFactory.php';
-
-define('ROOT', 'EVENT_ROOT');
-define('EVENT_NODE', 'TAO_EVENT');
-define('EVENT_NUMBER','EVENT_NUMBER');
-define('EVENT_SYMBOL',"EVENT_SYMBOL");//the symbol attribute
-define('NOISE_SYMBOL','Z');// the symbol used for noise events
-
-
+require_once 'esmet_config.php';
 
 class eventsFactory extends eventsServices {
 
@@ -71,7 +61,7 @@ $eventList = $xml->saveXML();
 
 $sf = new symbolFactory();
 $sf->addSymbol(symbolFactory::create('Y', "nom = 'younes'"));
-$sf->addSymbol(symbolFactory::create('L', "nom = 'Thibaud'"));
+$sf->addSymbol(symbolFactory::create('Lgg', "nom = 'Thibaud'"));
 $sf->addSymbol(symbolFactory::create('T', "type='type_1'"));
 
 $collection = $sf->getSymbolCollection();
