@@ -66,6 +66,15 @@ class eventsFactory extends eventsServices {
         $xmlDoc = simplexml_load_string($this->currentXml);
         $xmlDoc->asXML($fileName);
     }
+    //match the trace
+    public function matchingPatternMatchin($patternToMatch,$symbolizedTraces){
+        $usedTraces = $symbolizedTraces;
+        $match = false;
+        $match = preg_match($patternToMatch, $usedTraces);
+        return $match;
+        
+
+    }
 }
 
 $xml = new DOMDocument();
@@ -75,7 +84,7 @@ $eventList = $xml->saveXML();
 $sf = new symbolFactory();
 $sf->addSymbol(symbolFactory::create('Y', "nom = 'younes'"));
 $sf->addSymbol(symbolFactory::create('L', "nom = 'Thibaud'"));
-$sf->addSymbol(symbolFactory::create('T', "type='type_1'"));
+$sf->addSymbol(symbolFactory::create('T', "(type='type_1)'"));
 
 $collection = $sf->getSymbolCollection();
 

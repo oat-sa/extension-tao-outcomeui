@@ -63,9 +63,9 @@ class taoEventModelConverter {
             //Création du tableau des traces, il englobe toutes les variables ( tableau peyload + tableaux des attributs fixes)
             //$trace = $T_Values;
 
-            $trace['TE_Name'] = $TE_Name;
-            $trace['TE_Type'] = $TE_Type;
-            $trace['TE_Time'] = $TE_Time;
+            $trace['name'] = $TE_Name;
+            $trace['type'] = $TE_Type;
+            $trace['time'] = $TE_Time;
 
             //Merge the tow arrays ( attribute + node values )
             $tout = array_merge($trace, $T_Values);
@@ -94,14 +94,14 @@ class taoEventModelConverter {
                 $tabVarFinal = array_merge($tabVarFinal, $tokenVar);
             }
         }
-        print_r($tabVarFinal);
+        
         return $tabVarFinal;
     }
 
 }
 
 //test the converion
-$xmlDoc = simplexml_load_file('hawai12.xml');
+$xmlDoc = simplexml_load_file('hawai1.xml');
 $xml = $xmlDoc->asXML();
 $conv = new taoEventModelConverter($xml);
 $import = $conv->importFromHAWAI();

@@ -33,7 +33,6 @@ class eventsServices {
 
         return $xmlDoc->asXML();
     }
-
 // end function
     //apply xPath and return an array od simpleXml Element
 
