@@ -43,8 +43,11 @@ class eventsFactory extends eventsServices {
     //symbolization of all the log
     //as in put, an array of symbol
     public function fullSymbolization($patternSymbolCollection){
+        
         foreach( $patternSymbolCollection as $symbol){
             $this->eventSymbolization($symbol);
+            
+
         }
     }
     //create the symbolized event Log
@@ -70,30 +73,10 @@ class eventsFactory extends eventsServices {
     public function matchingPatternMatchin($patternToMatch,$symbolizedTraces){
         $usedTraces = $symbolizedTraces;
         $match = false;
-        $match = preg_match($patternToMatch, $usedTraces);
+        $match = preg_match('/'.$patternToMatch.'/', $usedTraces);
         return $match;
-        
-
+ 
     }
 }
 
-$xml = new DOMDocument();
-$xml->load('tEventExample.xml');
-$eventList = $xml->saveXML();
-
-$sf = new symbolFactory();
-$sf->addSymbol(symbolFactory::create('Y', "nom = 'younes'"));
-$sf->addSymbol(symbolFactory::create('L', "nom = 'Thibaud'"));
-$sf->addSymbol(symbolFactory::create('T', "(type='type_1)'"));
-
-$collection = $sf->getSymbolCollection();
-
-$p = new eventsFactory($eventList);
-
-//$p->eventSymbolization('Y', "(nom = 'younes')");
-$p->fullSymbolization($collection);
-$symbLog = $p->generateSymbolizedEvents();
-echo $symbLog;
-
-$p->saveEvents();
 ?>

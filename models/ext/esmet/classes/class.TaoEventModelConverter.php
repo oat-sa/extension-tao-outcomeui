@@ -29,7 +29,7 @@ class taoEventModelConverter {
 
         $hawaiTrace = new DOMDocument();
         $hawaiTrace->loadXML($usedXml);
-//create the unified array bay parsing attribute and string
+//create the unified array by parsing attribute and string
         $listEvent = $hawaiTrace->getElementsByTagName('taoEvent');
 
         $unifiedArray = $this->getTracesAsArray($listEvent);
@@ -101,11 +101,8 @@ class taoEventModelConverter {
 }
 
 //test the converion
-$xmlDoc = simplexml_load_file('hawai1.xml');
-$xml = $xmlDoc->asXML();
-$conv = new taoEventModelConverter($xml);
-$import = $conv->importFromHAWAI();
 
 
-file_put_contents('taoHawai.xml', $import);
+
+//file_put_contents('taoHawai.xml', $import);
 ?>

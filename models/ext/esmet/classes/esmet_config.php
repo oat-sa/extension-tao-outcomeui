@@ -2,7 +2,9 @@
 
 require_once 'class.EventsServices.php';
 require_once 'class.SymbolFactory.php';
-
+require_once 'class.TaoEventModelConverter.php';
+require_once 'class.EventsFactory.php';
+require_once 'class.MatchnigScoringToolBox.php';
 define('ROOT', 'EVENT_ROOT');
 define('EVENT_NODE', 'TAO_EVENT');
 define('EVENT_NUMBER','EVENT_NUMBER');

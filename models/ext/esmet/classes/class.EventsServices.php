@@ -78,8 +78,7 @@ class eventsServices {
         //filter the XML
         $xmlDoc = simplexml_load_string($usedXml);
         $filtredNodes = $xmlDoc->xpath($query);
-
-        foreach ($filtredNodes as $node) {
+          foreach ($filtredNodes as $node) {
             if ($typeOfElement == "attribute") {
                 $node->attributes()->$elementName = $elementValue;
             }
@@ -90,12 +89,14 @@ class eventsServices {
         }
 
         $this->currentXml = $xmlDoc->asXml();
+
         return $this->currentXml;
     }
 
 //Set the value of the attribute
     public function setAttributesValue($attributeName, $attributeValue, $query) {
         $xml = $this->setElementValue($attributeName, $attributeValue, $query, 'attribute');
+        
         return $xml;
     }
 
@@ -118,6 +119,9 @@ class eventsServices {
     }
 
 }
+//$xml = simplexml_load_file('taoHawai.xml');
+//$re = $xml->xpath("//TAO_EVENT[(type='PHASE_START') ]");
+//print_r($re);
 
 //$ev = new eventsServices();
 //// create array

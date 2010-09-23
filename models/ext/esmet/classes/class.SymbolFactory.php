@@ -19,15 +19,13 @@ class symbolFactory {
     // add symbol the the list of symbols
     public function addSymbol(symbolDescription $symbol){
         $key = $symbol->symbolLetter;
-
-        $this->symbolOdPattern[$key]= $symbol;
+        $this->symbolOfPatternCollection[$key]= $symbol;
         return $this->symbolOfPatternCollection;
     }
     //get the current collection
     public function getSymbolCollection(){
-        return $this->symbolOdPattern;
+        return $this->symbolOfPatternCollection;
     }
-
 
 }
 
