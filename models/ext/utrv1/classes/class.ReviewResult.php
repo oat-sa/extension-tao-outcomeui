@@ -578,7 +578,7 @@ class ReviewResult {
         }
         return $listEndorsementValues;
     }
-    //get the list of testees
+    //get the list of test takers
     public function getListOftestees($idTest,$idItem) {
 
         $listIbInstances = $this->getItemBehaviorInstances();

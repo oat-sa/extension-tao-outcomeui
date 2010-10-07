@@ -89,7 +89,7 @@ and open the template in the editor.
         <div id="TesteesAndRic" classe ="ui-widget ui-widget-content ui-corner-all" style="float: left;width:250px; margin-top: 10px;margin-bottom: 10px">
             <div id="listTesteesBox" class="ext-home-container ui-state-highlight" style="height:50%" >
 
-                <div class="ui-widget-header ui-corner-top ui-state-default"> <h1> list of testees</h1> </div>
+                <div class="ui-widget-header ui-corner-top ui-state-default"> <h1> list of test takers</h1> </div>
                 <div id="listTestees" class="ui-widget-content  " ></div>
 
             </div>

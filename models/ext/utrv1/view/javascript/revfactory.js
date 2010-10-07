@@ -173,7 +173,7 @@ function perviewListTestees(list){
         //content =  content = '<input id="'+cl.uriClass+'" class= "classInfos" type="button" value="'+cl.label+'" name ="'+cl.propertySourceUri +'" /></input>';
     
 
-        content = content + '<a href ="#" OnClick ="getItemBehaviorInformation('+revSubjectId+');">Testee: '+revSubjectLabel+'</a>'+'<br>';
+        content = content + '<a href ="#" OnClick ="getItemBehaviorInformation('+revSubjectId+');">Test taker: '+revSubjectLabel+'</a>'+'<br>';
 
     }
     $("#listTestees").text('');
