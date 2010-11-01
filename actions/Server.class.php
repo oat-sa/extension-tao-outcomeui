@@ -43,19 +43,30 @@ class Server extends Api {
 	 * save data pushed to the server
 	 */
 	public function save(){
-		
-		print_r($_POST);
-		
+		$saved = false;
 		if($this->hasRequestParameter('token')){
 			$token = $this->getRequestParameter('token');
 			if($this->authenticate($token)){
 				
 				$executionEnvironment = $this->getExecutionEnvironment();
 				
+				
+				if($this->hasRequestParameter('taoVars')){
+					
+					//here we save the TAO variables
+					
+				}
+				if($this->hasRequestParameter('userVars')){
+					
+					//here we save the user variables
+					
+				}
+				
+				$saved = true;
 			}
 		}
 		
-		echo json_encode(array('saved' => false));
+		echo json_encode(array('saved' => $saved));
 	} 
 	
 }
