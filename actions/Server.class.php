@@ -69,5 +69,43 @@ class Server extends Api {
 		echo json_encode(array('saved' => $saved));
 	} 
 	
+	/**
+	 * trace the sent events 
+	 */
+	public function traceEvents(){
+		$saved = false;
+		if($this->hasRequestParameter('token') && $this->hasRequestParameter('events')){
+			$token = $this->getRequestParameter('token');
+			if($this->authenticate($token)){
+				
+				//check if there is events
+				$events = $this->getRequestParameter('events');
+				if(is_array($events)){
+					
+					$executionEnvironment = $this->getExecutionEnvironment();
+					
+					//get the process execution uri
+					if(isset($executionEnvironment[CLASS_PROCESS_EXECUTIONS]['uri'])){
+					
+						$process_id = tao_helpers_Uri::encode($executionEnvironment[CLASS_PROCESS_EXECUTIONS]['uri']);
+					
+						
+						$eventService = tao_models_classes_ServiceFactory::get('tao_models_classes_EventsService');
+					
+						//get the event to be foltered on the server side
+						$eventFilter = array();
+						$compiledFolder = $this->getCompiledFolder($executionEnvironment);
+						if(file_exists($compiledFolder .'events.xml')){
+							$eventFilter = $eventService->getEventList($compiledFolder .'events.xml', 'server');
+						}
+					
+						//trace the events
+						$saved = $eventService->traceEvent($events, $process_id, EVENT_LOG_PATH, $eventFilter);
+					}
+				}
+			}
+		}
+		echo json_encode(array('saved' => $saved));
+	}
 }
 ?>
