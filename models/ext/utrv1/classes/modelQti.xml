@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Document   : model.xml
+    Created on : 18 décembre 2009, 14:16
+    Author     : djaghloul
+    Description:
+        Purpose of the document follows.
+-->
+
+<classes>
+   
+    <class uri= "TAO_ITEM_RESULTS" label="label">
+        <property uri = "TAO_DELIVERY_ID" label="labelProp1"></property>
+        <property uri = "TAO_TEST_ID" label="labelProp1"></property>
+        <property uri = "TAO_ITEM_ID" label="labelProp3"></property>
+        <property uri = "TAO_SUBJECT_ID" label="labelProp3"></property>
+
+        <property uri = "TAO_ITEM_VARIABLE_ID" label="labelProp3"></property>
+        <property uri = "TAO_ITEM_VARIABLE_VALUE" label="labelProp3"></property>
+
+
+
+    </class>
+
+
+
+
+
+
+
+
+</classes>
