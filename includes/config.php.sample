@@ -39,6 +39,9 @@ define('BASE_URL', ROOT_URL. '/taoResults');
 #BASE WWW the web resources path
 define('BASE_WWW', BASE_URL . '/' . DIR_VIEWS);
 
+#the path were the event logs are saved
+define('EVENT_LOG_PATH', BASE_PATH . '/data');
+
 #export resources path
 define('EXPORT_PATH', 	BASE_PATH . '/' . DIR_VIEWS . 'export');
 define('EXPORT_URL', 	BASE_URL  . '/' . DIR_VIEWS . 'export');

@@ -87,8 +87,8 @@ class Server extends Api {
 					//get the process execution uri
 					if(isset($executionEnvironment[CLASS_PROCESS_EXECUTIONS]['uri'])){
 					
-						$process_id = tao_helpers_Uri::encode($executionEnvironment[CLASS_PROCESS_EXECUTIONS]['uri']);
-					
+						$processURI = $executionEnvironment[CLASS_PROCESS_EXECUTIONS]['uri'];
+						$process_id = substr($processURI, strpos($processURI, '#') + 1);
 						
 						$eventService = tao_models_classes_ServiceFactory::get('tao_models_classes_EventsService');
 					
