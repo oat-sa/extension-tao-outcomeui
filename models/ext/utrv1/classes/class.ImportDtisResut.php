@@ -25,9 +25,10 @@ class ImportDtisResult {
 
     public function addDtisResult($arrayOfDtisVariables) {
 
-
+    	$dtisInstance = null;
+		
         //connect to the class of dtis Result Class
-        $resultNS = core_kernel_classes_Session::getNameSpace();
+        $resultNS = 'http://www.tao.lu/Ontologies/TAOResult.rdf';
         $itemResultClassURI = $resultNS."#"."TAO_ITEM_RESULTS";
         $dtisResultClass = new core_kernel_classes_Class($itemResultClassURI);
         // Create the instance of DTIS_Result
@@ -61,7 +62,7 @@ class ImportDtisResult {
             $dtisInstance->setPropertyValue($dtisProp,$dtisValue );
 
         }
-
+		return $dtisInstance;
     }
 }
 
