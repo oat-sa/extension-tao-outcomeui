@@ -277,7 +277,8 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
         $returnValue = null;
 
         // section 127-0-1-1-3fc126b2:12c350e4297:-8000:0000000000002886 begin
-
+        //get the name space of the class
+        $resultNS = 'http://www.tao.lu/Ontologies/TAOResult.rdf';
         if (is_array($dtisUris) && !empty($key)) {
 
             //connect to the class of dtis Result Class
