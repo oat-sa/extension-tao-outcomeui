@@ -89,17 +89,20 @@ class ImportDtisResult {
             $dtisInstance = $dtisResultClass->createInstance($dtisLabel, $dtisComment);
             //Add the uri of the variable and its value to the array
             //Put the name only without the name space part
-            $dtisUris['TAO_ITEM_VARIABLE_ID'] = $key;
-            $dtisUris['TAO_ITEM_VARIABLE_VALUE'] = $value;
+
+            $dtisUrisAll['TAO_ITEM_VARIABLE_ID'] = $key;
+            $dtisUrisAll['TAO_ITEM_VARIABLE_VALUE'] = $value;
+            $dtisUrisAll = array_merge($dtisUris,$dtisUrisAll);
             //print_r($dtisUris);
             // Create the property Object
-            foreach ($dtisUris as $dtisUri => $dtisValue) {
+            foreach ($dtisUrisAll as $dtisUri => $dtisValue) {
                 // Create the property Object
                 $dtisProp = new core_kernel_classes_Property($resultNS . "#" . $dtisUri);
                 // Set values of the instance
                 $dtisInstance->setPropertyValue($dtisProp, $dtisValue);
             }
         }
+        
         //put the instance as returned value
         $returnValue = $dtisInstance;
 
@@ -140,6 +143,30 @@ class ImportDtisResult {
             print_r($drClass->getParentClasses());
         }
         echo " <br> the class to be used is $uriDelivery <br>";
+        $drClass = new core_kernel_classes_Class($uriDelivery);
+        //créer les 5 properties
+
+        foreach($dtisUris as $nameTaoVar=>$valueTaoVar){
+
+             //create the property
+            $rdfProperty = new core_kernel_classes_Class(RDF_PROPERTY);
+            $labelProperty = $nameTaoVar;
+
+            $resourceProperty = $rdfProperty->createInstance($labelProperty, $commentProperty, "#" . $nameTaoVar);
+            //Create the property and link it with the uri
+            $drProperty = new core_kernel_classes_Property($resourceProperty->uriResource);
+
+
+            $widgetProp = new core_kernel_classes_Property("http://www.tao.lu/datatypes/WidgetDefinitions.rdf#widget");
+            $drProperty->setPropertyValue($widgetProp, "http://www.tao.lu/datatypes/WidgetDefinitions.rdf#TextBox");
+
+            //Link the property with the class
+            $drClass->setProperty($drProperty);
+
+        }
+        $listProp = $drClass->getProperties();
+        print_r($listProp);
+
         //now, we have to check from all instances fo this class, if the insatce exists
         //get the instances of the class of delivery result
         $drClass = new core_kernel_classes_Class($uriDelivery);
@@ -147,7 +174,8 @@ class ImportDtisResult {
         $match = FALSE;
         foreach ($listDeliveryResults as $uri => $resource) {
             $drInstance = new core_kernel_classes_Resource($uri);
-            foreach ($dtisUris as $nameTaoProperty => $value) {
+            
+            foreach ($dtisUris as $nameTaoProperty => $VarValue) {
                 $prop = new core_kernel_classes_Property($localNS . "#" . $nameTaoProperty);
                 //get the property value
                 $propVal = $drInstance->getPropertyValues($prop);
@@ -156,10 +184,15 @@ class ImportDtisResult {
             }
             //now we have an array with 5 propeties value of the current instance
             // we will compare it with the parameter
+            $flag = 0;
+
             foreach ($instancePropValues as $nameVar => $valueProp) {
-                $flag = 0;
+                
                 if ($instancePropValues[$nameVar] == $dtisUri[$nameVar]) {
+
                     $flag++;
+                    echo ("<br> tt");
+
                 }
             }
             if ($flag == 5) {// the number of variable to check
@@ -179,7 +212,6 @@ class ImportDtisResult {
             $matchUri = $newInstance->uriResource;
         }
         // now the $matchUri is the instance to use
-
         //******************** Get the uri of the property to use to save the value
         //verify if the property exists for the current class
         //get all properties of the current class
@@ -213,6 +245,18 @@ class ImportDtisResult {
 
         //now we have the uri of the property + the uri of the instance
         //just "Inchallah" set the property values
+        $deliveryResultInstance = new core_kernel_classes_Resource($matchUri);
+        //set all peroperty values
+        foreach ($dtisUris as $nameTaoProperty => $varValue) {
+            $prop = new core_kernel_classes_Property($localNS . "#" . $nameTaoProperty);
+            //set the property value
+            $deliveryResultInstance->editPropertyValues($prop, $dtisUris[$nameTaoProperty]);
+        }
+        //set the value of the property
+        $varPro = new core_kernel_classes_Property($uriOfVariable);
+        $deliveryResultInstance->editPropertyValues($varPro, $value);
+// the end
+
         // section 127-0-1-1-3fc126b2:12c350e4297:-8000:0000000000002886 end
 
 
@@ -302,14 +346,14 @@ define('API_LOGIN', 'generis');
 define('API_PASSWORD', md5('g3n3r1s'));
 core_control_FrontController::connect(API_LOGIN, API_PASSWORD, DATABASE_NAME);
 $d = new ImportDtisResult();
-$dtisArray["TAO_PROCESS_EXEC_ID"] = "process ID";
-$dtisArray["TAO_DELIVERY_ID"] = "http://localhost/middleware/tao13.rdf#i1289486545077513100y";
-$dtisArray["TAO_TEST_ID"] = "test 2";
-$dtisArray["TAO_ITEM_ID"] = "item2";
-$dtisArray["TAO_SUBJECT_ID"] = "subject2fg";
+$dtisArray["TAO_PROCESS_EXEC_ID"] = "proc12";
+$dtisArray["TAO_DELIVERY_ID"] = "http://localhost/middleware/tao13__rdf#i1289490148019971700";
+$dtisArray["TAO_TEST_ID"] = "test1";
+$dtisArray["TAO_ITEM_ID"] = "item3";
+$dtisArray["TAO_SUBJECT_ID"] = "subject1";
 // the variable infos
-$key = " variable idfg";
-$value = "var valuefgdf f dfsd1111";
+$key = " score2";
+$value = "valeurs rein 2";
 
 $d->addResultVariable($dtisArray, $key, $value);
 ?>
