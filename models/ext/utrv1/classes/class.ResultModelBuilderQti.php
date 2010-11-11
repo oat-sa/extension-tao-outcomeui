@@ -48,7 +48,7 @@ class ResultModelBuilderQti {
         core_control_FrontController::connect(API_LOGIN, API_PASSWORD, DATABASE_NAME);
 
         //Get the NameSpace of in order to add the instances
-        $RESULT_NS = core_kernel_classes_Session::getNameSpace();
+        $RESULT_NS = "http://www.tao.lu/Ontologies/TAOResult.rdf"; // put name space of TAO
         $RESULT_NS = $RESULT_NS.'#';
 
         $listClasses = $domResult->getElementsByTagName("class");
@@ -73,7 +73,7 @@ class ResultModelBuilderQti {
 
                 $labelProp =$propertyDescription->getAttribute("label");
 
-                $propDescription['labelProperty']=''.$uriProp;
+                $propDescription['labelProperty']=$uriProp;
                 $propDescription['commentProperty']='comment '.$uriProp;
                 $propDescription['uriProperty']='#'.$uriProp;
                 $t[]=$propDescription;
@@ -81,7 +81,7 @@ class ResultModelBuilderQti {
 
             }
             //Create the class
-            $this->createClassWithProperties($this->uriRootClassOfResult, '#'.$uriClass, $labelClass, '$comment', $t);
+            $this->createClassWithProperties($this->uriRootClassOfResult, "#".$uriClass, $labelClass, '$comment', $t);
 
         }
         //add Range properties

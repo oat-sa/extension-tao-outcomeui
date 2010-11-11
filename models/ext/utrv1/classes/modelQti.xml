@@ -11,6 +11,7 @@
 <classes>
    
     <class uri= "TAO_ITEM_RESULTS" label="label">
+        <property uri = "TAO_PROCESS_EXEC_ID" label="labelProp1"></property>
         <property uri = "TAO_DELIVERY_ID" label="labelProp1"></property>
         <property uri = "TAO_TEST_ID" label="labelProp1"></property>
         <property uri = "TAO_ITEM_ID" label="labelProp3"></property>
@@ -19,6 +20,10 @@
         <property uri = "TAO_ITEM_VARIABLE_ID" label="labelProp3"></property>
         <property uri = "TAO_ITEM_VARIABLE_VALUE" label="labelProp3"></property>
 
+
+
+    </class>
+    <class uri= "TAO_DELIVERY_RESULTS" label="label">
 
 
     </class>
