@@ -157,15 +157,20 @@ class ImportDtisResult {
             //now we have an array with 5 propeties value of the current instance
             // we will compare it with the parameter
             foreach ($instancePropValues as $nameVar => $valueProp) {
+                $flag = 0;
                 if ($instancePropValues[$nameVar] == $dtisUri[$nameVar]) {
-                    $match = TRUE; // not match
-                    // return the uri
-                    $matchUri = $uri;
+                    $flag++;
                 }
+            }
+            if ($flag == 5) {// the number of variable to check
+                $match = TRUE; // not match
+                // return the uri
+                $matchUri = $uri;
+                //exit the loop
             }
         }
 
-        // if it doesn't match so create a new instance
+        //if it doesn't match so create a new instance
         if (!$match) {
             //create a new instance of the delivery
             $label = $deliveryLabel . "_" . date("Y/m/d_H:i:s");
@@ -175,6 +180,7 @@ class ImportDtisResult {
         }
         // now the $matchUri is the instance to use
 
+        //******************** Get the uri of the property to use to save the value
         //verify if the property exists for the current class
         //get all properties of the current class
         $listOfProperties = $drClass->getProperties();
@@ -187,29 +193,26 @@ class ImportDtisResult {
         $lastPartUriProperty = $lpTestUri . '_' . $lpItemUri . "__" . $nameOfVariable;
         //check the existance of the property
         $uriPropertyToCheck = $localNS . "#" . $lastPartUriProperty;
-        if (!array_key_exists($uriPropertyToCheck, $listOfProperties) === FALSE) {
+        if (array_key_exists($uriPropertyToCheck, $listOfProperties) === FALSE) {
             //create the property
             $rdfProperty = new core_kernel_classes_Class(RDF_PROPERTY);
-            $labelProperty = $nameOfVariable."_".$itemLabel.'_'.$testLabel;
+            $labelProperty = $nameOfVariable . "_" . $itemLabel . '_' . $testLabel;
 
-            $resourceProperty = $rdfProperty->createInstance($labelProperty, $commentProperty, "#".$lastPartUriProperty);
+            $resourceProperty = $rdfProperty->createInstance($labelProperty, $commentProperty, "#" . $lastPartUriProperty);
             //Create the property and link it with the uri
             $drProperty = new core_kernel_classes_Property($resourceProperty->uriResource);
 
             $widgetProp = new core_kernel_classes_Property("http://www.tao.lu/datatypes/WidgetDefinitions.rdf#widget");
             $drProperty->setPropertyValue($widgetProp, "http://www.tao.lu/datatypes/WidgetDefinitions.rdf#TextBox");
-            
+
             //Link the property with the class
             $drClass->setProperty($drProperty);
-
         }
         //the Uri of the property is
-        $uriOfVariable = $localNS."#".$lastPartUriProperty;
+        $uriOfVariable = $localNS . "#" . $lastPartUriProperty;
 
         //now we have the uri of the property + the uri of the instance
         //just "Inchallah" set the property values
-
-        
         // section 127-0-1-1-3fc126b2:12c350e4297:-8000:0000000000002886 end
 
 
