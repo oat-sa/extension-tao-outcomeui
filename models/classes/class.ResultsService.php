@@ -9,6 +9,7 @@ error_reporting(E_ALL);
  * @package taoResults
  * @subpackage models_classes
  */
+
 if (0 > version_compare(PHP_VERSION, '5')) {
     die('This file was generated for PHP 5');
 }
@@ -37,8 +38,12 @@ require_once('tao/models/classes/class.GenerisService.php');
  * @package taoResults
  * @subpackage models_classes
  */
-class taoResults_models_classes_ResultsService extends tao_models_classes_GenerisService {
+class taoResults_models_classes_ResultsService
+    extends tao_models_classes_GenerisService
+{
     // --- ASSOCIATIONS ---
+
+
     // --- ATTRIBUTES ---
 
     /**
@@ -58,7 +63,8 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
      * @return mixed
      */
-    public function __construct() {
+    public function __construct()
+    {
         // section 127-0-1-1--233123b3:125208ce1cc:-8000:0000000000001C75 begin
 
         parent::__construct();
@@ -77,7 +83,8 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * @param  Class clazz
      * @return core_kernel_classes_Resource
      */
-    public function getResult($identifier, $mode = 'uri', core_kernel_classes_Class $clazz = null) {
+    public function getResult($identifier, $mode = 'uri',  core_kernel_classes_Class $clazz = null)
+    {
         $returnValue = null;
 
         // section 127-0-1-1--233123b3:125208ce1cc:-8000:0000000000001C77 begin
@@ -113,7 +120,8 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * @param  string uri
      * @return core_kernel_classes_Class
      */
-    public function getResultClass($uri = '') {
+    public function getResultClass($uri = '')
+    {
         $returnValue = null;
 
         // section 127-0-1-1--233123b3:125208ce1cc:-8000:0000000000001C86 begin
@@ -142,7 +150,8 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * @param  array properties
      * @return core_kernel_classes_Class
      */
-    public function createResultClass(core_kernel_classes_Class $clazz = null, $label = '', $properties = array()) {
+    public function createResultClass( core_kernel_classes_Class $clazz = null, $label = '', $properties = array())
+    {
         $returnValue = null;
 
         // section 127-0-1-1--233123b3:125208ce1cc:-8000:0000000000001C8C begin
@@ -179,7 +188,8 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * @param  Resource result
      * @return boolean
      */
-    public function deleteResult(core_kernel_classes_Resource $result) {
+    public function deleteResult( core_kernel_classes_Resource $result)
+    {
         $returnValue = (bool) false;
 
         // section 10-13-1-45-792423e0:12398d13f24:-8000:00000000000017F6 begin
@@ -201,7 +211,8 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * @param  Class clazz
      * @return boolean
      */
-    public function deleteResultClass(core_kernel_classes_Class $clazz) {
+    public function deleteResultClass( core_kernel_classes_Class $clazz)
+    {
         $returnValue = (bool) false;
 
         // section 127-0-1-1--233123b3:125208ce1cc:-8000:0000000000001C9E begin
@@ -225,7 +236,8 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * @param  Class clazz
      * @return boolean
      */
-    public function isResultClass(core_kernel_classes_Class $clazz) {
+    public function isResultClass( core_kernel_classes_Class $clazz)
+    {
         $returnValue = (bool) false;
 
         // section 127-0-1-1--233123b3:125208ce1cc:-8000:0000000000001CA2 begin
@@ -254,7 +266,8 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * @param  Resource group
      * @return core_kernel_classes_ContainerCollection
      */
-    protected function getResultsByGroup(core_kernel_classes_Resource $group) {
+    protected function getResultsByGroup( core_kernel_classes_Resource $group)
+    {
         $returnValue = null;
 
         // section 10-13-1-45-792423e0:12398d13f24:-8000:00000000000017F3 begin
@@ -267,18 +280,19 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * Short description of method addResultVariable
      *
      * @access public
-     * @author Younes Dajghloul, Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
+     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
      * @param  array dtisUris
      * @param  string key
      * @param  string value
      * @return core_kernel_classes_Resource
      */
-    public function addResultVariable($dtisUris, $key, $value) {
+    public function addResultVariable($dtisUris, $key, $value)
+    {
         $returnValue = null;
 
         // section 127-0-1-1-3fc126b2:12c350e4297:-8000:0000000000002886 begin
         //get the name space of the class
-        $resultNS = 'http://www.tao.lu/Ontologies/TAOResult.rdf';
+        $resultNS = core_kernel_classes_Session::getNameSpace();
         if (is_array($dtisUris) && !empty($key)) {
 
             //connect to the class of dtis Result Class
@@ -290,58 +304,47 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
             if (!isset($dtisUris["TAO_PROCESS_EXEC_ID"])) {
                 throw new Exception('TAO_PROCESS_EXEC_ID must reference a process execution uri');
             }
-            $uri = $dtisUris["TAO_PROCESS_EXEC_ID"];
-            $inst = new core_kernel_classes_Resource($uri);
-            $processLabel = $inst->getLabel();
+            $process = new core_kernel_classes_Resource($dtisUris["TAO_PROCESS_EXEC_ID"]);
 
             // label of Delivery
             if (!isset($dtisUris["TAO_DELIVERY_ID"])) {
                 throw new Exception('TAO_DELIVERY_ID must reference a delivery uri');
             }
-            $uri = $dtisUris["TAO_DELIVERY_ID"];
-            $inst = new core_kernel_classes_Resource($uri);
-            $deliveryLabel = $inst->getLabel();
+            $delivery = new core_kernel_classes_Resource($dtisUris["TAO_DELIVERY_ID"]);
+            $deliveryLabel = $delivery->getLabel();
 
             // label of Test
             if (!isset($dtisUris["TAO_TEST_ID"])) {
                 throw new Exception('TAO_TEST_ID must reference a test uri');
             }
-            $uri = $dtisUris["TAO_TEST_ID"];
-            $inst = new core_kernel_classes_Resource($uri);
-            $testLabel = $inst->getLabel();
+            $test = new core_kernel_classes_Resource($dtisUris["TAO_TEST_ID"]);
+            $testLabel = $test->getLabel();
 
             // label of Item
             if (!isset($dtisUris["TAO_ITEM_ID"])) {
                 throw new Exception('TAO_ITEM_ID must reference an item uri');
             }
-            $uri = $dtisUris["TAO_ITEM_ID"];
-            $inst = new core_kernel_classes_Resource($uri);
-            $itemLabel = $inst->getLabel();
+            $item = new core_kernel_classes_Resource($dtisUris["TAO_ITEM_ID"]);
+            $itemLabel = $item->getLabel();
 
             //label of Subject
             if (!isset($dtisUris["TAO_SUBJECT_ID"])) {
                 throw new Exception('TAO_SUBJECT_ID must reference a subject uri');
             }
-            $uri = $dtisUris["TAO_SUBJECT_ID"];
-            $inst = new core_kernel_classes_Resource($uri);
-            $subjectLabel = $inst->getLabel();
+            $subject = new core_kernel_classes_Resource($dtisUris["TAO_SUBJECT_ID"]);
+            $subjectLabel = $subject->getLabel();
 
             // Create the label of the new instance
             $dtisLabel = $processLabel . "_" . $deliveryLabel . "_" . $testLabel . "_" . $itemLabel . "_" . $subjectLabel . "_" . date("Y/m/d_H:i:s"); // todo label of dtis + date
             $dtisComment = "Result Recieved the : " . date("Y/m/d_H:i:s");
             $dtisInstance = $dtisResultClass->createInstance($dtisLabel, $dtisComment);
-            //Add the uri of the variable and its value to the array
-            //Put the name only without the name space part
-            $dtisUris['TAO_ITEM_VARIABLE_ID'] = $key;
-            $dtisUris['TAO_ITEM_VARIABLE_VALUE'] = $value;
-
-            // Create the property Object
-            foreach ($arrayOfDtisVariables as $dtisUri => $dtisValue) {
-                // Create the property Object
-                $dtisProp = new core_kernel_classes_Property($resultNS . "#" . $dtisUri);
-                // Set values of the instance
-                $dtisInstance->setPropertyValue($dtisProp, $dtisValue);
+            
+            foreach($dtisUris as $dtiKey => $dtiValue){
+            	$dtisInstance->editPropertyValues(new core_kernel_classes_Property(RESULT_ONTOLOGY."#$dtiKey"), $dtiValue);   
             }
+            $dtisInstance->setPropertyValue(new core_kernel_classes_Property(RESULT_ONTOLOGY. "#TAO_ITEM_VARIABLE_ID"), $key);
+            $dtisInstance->setPropertyValue(new core_kernel_classes_Property(RESULT_ONTOLOGY. "#TAO_ITEM_VARIABLE_VALUE"), $value);
+            
         }
         //put the instance as returned value
         $returnValue = $dtisInstance;
@@ -362,18 +365,20 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * @param  string maxScoreValue
      * @return core_kernel_classes_Resource
      */
-    public function setScore($dtisUris, $scoreValue, $minScoreValue = '', $maxScoreValue = '') {
+    public function setScore($dtisUris, $scoreValue, $minScoreValue = '', $maxScoreValue = '')
+    {
         $returnValue = null;
 
         // section 127-0-1-1-3fc126b2:12c350e4297:-8000:000000000000288B begin
 
+       
         $returnValue = $this->addResultVariable($dtisUris, SCORE_ID, $scoreValue);
 
         if (!empty($minScoreValue)) {
             $this->addResultVariable($dtisUris, SCORE_MIN_ID, $minScoreValue);
         }
         if (!empty($maxScoreValue)) {
-            $this->addResultVariable($dtisUris, SCORE_MAX, $maxScoreValue);
+            $this->addResultVariable($dtisUris, SCORE_MAX_ID, $maxScoreValue);
         }
 
         // section 127-0-1-1-3fc126b2:12c350e4297:-8000:000000000000288B end
@@ -387,10 +392,11 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * @access public
      * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
      * @param  array dtisUris
-     * @param  boolean|float endorsement
+     * @param  boolean endorsement
      * @return core_kernel_classes_Resource
      */
-    public function setEndorsment($dtisUris, $endorsement) {
+    public function setEndorsment($dtisUris, $endorsement)
+    {
         $returnValue = null;
 
         // section 127-0-1-1-bdec0d0:12c357cc917:-8000:0000000000002893 begin
@@ -414,7 +420,8 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * @param  string value
      * @return core_kernel_classes_Resource
      */
-    public function setAnsweredValues($dtisUris, $value) {
+    public function setAnsweredValues($dtisUris, $value)
+    {
         $returnValue = null;
 
         // section 127-0-1-1-bdec0d0:12c357cc917:-8000:0000000000002897 begin
@@ -426,7 +433,57 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
         return $returnValue;
     }
 
-}
+    /**
+     * Short description of method addResultVariables
+     *
+     * @access public
+     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
+     * @param  array dtisUris
+     * @param  array variables
+     * @param  boolean onlyKnown
+     * @return core_kernel_classes_Session_int
+     */
+    public function addResultVariables($dtisUris, $variables, $onlyKnown = false)
+    {
+        $returnValue = (int) 0;
 
-/* end of class taoResults_models_classes_ResultsService */
+        // section 127-0-1-1--360cae3b:12c3a1d0b40:-8000:00000000000028A8 begin
+        
+        $scores = array();
+        
+    	foreach($variables as $key => $value){
+			switch($key){
+				case SCORE_ID: 		$scores[SCORE_ID] = $value;			break;
+				case SCORE_MIN_ID:	$scores[SCORE_MIN_ID] = $value;		break;
+				case SCORE_MAX_ID:	$scores[SCORE_MAX_ID] = $value;		break;
+				case ENDORSMENT_ID:
+					$this->setEndorsment($dtisUris, $value);
+					$returnValue++;
+					break;
+				case ANSWERED_VALUES_ID:
+					$this->setAnsweredValues($dtisUris, $value);
+					$returnValue++;
+					break;
+				default:
+					if(!$onlyKnown){
+						$this->addResultVariable($dtisUris, $key, $value);
+						$returnValue++;
+					}
+					break;
+			}
+		}
+		if(isset($scores[SCORE_ID])) {
+			(isset($scores[SCORE_MIN_ID])) ? $min = $scores[SCORE_MIN_ID] : $min = '';
+			(isset($scores[SCORE_MAX_ID])) ? $max = $scores[SCORE_MAX_ID] : $max = '';
+			$this->setScore($dtisUris, $scores[SCORE_ID], $min, $max);
+			$returnValue++;
+		}
+        
+        // section 127-0-1-1--360cae3b:12c3a1d0b40:-8000:00000000000028A8 end
+
+        return (int) $returnValue;
+    }
+
+} /* end of class taoResults_models_classes_ResultsService */
+
 ?>
