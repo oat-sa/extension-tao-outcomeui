@@ -296,58 +296,70 @@ class taoResults_models_classes_ResultsService
         if (is_array($dtisUris) && !empty($key)) {
 
             //connect to the class of dtis Result Class
-
             $dtisResultClass = new core_kernel_classes_Class(TAO_ITEM_RESULTS_CLASS);
-            // Create the instance of DTIS_Result
-            //one begins by create the label; label of DTIS + date
-            // label of Delivery
+           
+             //get the process
             if (!isset($dtisUris["TAO_PROCESS_EXEC_ID"])) {
                 throw new Exception('TAO_PROCESS_EXEC_ID must reference a process execution uri');
             }
             $process = new core_kernel_classes_Resource($dtisUris["TAO_PROCESS_EXEC_ID"]);
-
-            // label of Delivery
+			
+            //get the Delivery
             if (!isset($dtisUris["TAO_DELIVERY_ID"])) {
                 throw new Exception('TAO_DELIVERY_ID must reference a delivery uri');
             }
             $delivery = new core_kernel_classes_Resource($dtisUris["TAO_DELIVERY_ID"]);
-            $deliveryLabel = $delivery->getLabel();
 
-            // label of Test
+            //get the Test
             if (!isset($dtisUris["TAO_TEST_ID"])) {
                 throw new Exception('TAO_TEST_ID must reference a test uri');
             }
             $test = new core_kernel_classes_Resource($dtisUris["TAO_TEST_ID"]);
-            $testLabel = $test->getLabel();
 
-            // label of Item
+            //get the Item
             if (!isset($dtisUris["TAO_ITEM_ID"])) {
                 throw new Exception('TAO_ITEM_ID must reference an item uri');
             }
             $item = new core_kernel_classes_Resource($dtisUris["TAO_ITEM_ID"]);
-            $itemLabel = $item->getLabel();
 
-            //label of Subject
+            //get the Subject
             if (!isset($dtisUris["TAO_SUBJECT_ID"])) {
                 throw new Exception('TAO_SUBJECT_ID must reference a subject uri');
             }
-            $subject = new core_kernel_classes_Resource($dtisUris["TAO_SUBJECT_ID"]);
-            $subjectLabel = $subject->getLabel();
+            $subject = new core_kernel_classes_Resource($dtisUris["TAO_ITEM_ID"]);
 
-            // Create the label of the new instance
-            $dtisLabel = $processLabel . "_" . $deliveryLabel . "_" . $testLabel . "_" . $itemLabel . "_" . $subjectLabel . "_" . date("Y/m/d_H:i:s"); // todo label of dtis + date
-            $dtisComment = "Result Recieved the : " . date("Y/m/d_H:i:s");
-            $dtisInstance = $dtisResultClass->createInstance($dtisLabel, $dtisComment);
+            //check if the instance has already been created
+            $resultInstance = null;
+            foreach($dtisResultClass->getInstances(true) as $dtiInstance){
+            	if((string)$dtiInstance->getOnePropertyValue(RESULT_ONTOLOGY."#TAO_PROCESS_EXEC_ID") == $process->uriResource){
+            		if((string)$dtiInstance->getOnePropertyValue(RESULT_ONTOLOGY."#TAO_DELIVERY_ID") == $delivery->uriResource){
+	            		$testUri = (string)$dtiInstance->getOnePropertyValue(RESULT_ONTOLOGY."#TAO_TEST_ID");
+	            		$itemUri = (string)$dtiInstance->getOnePropertyValue(RESULT_ONTOLOGY."#TAO_ITEM_ID");
+	            		$subjectUri = (string)$dtiInstance->getOnePropertyValue(RESULT_ONTOLOGY."#TAO_ITEM_ID");
+            			if($testUri == $test->uriResource && $itemUri == $item->uriResource && $subjectUri = $subject->uriResource){
+            				$resultInstance = $dtiInstance;
+            				break;
+            			}
+            		}
+            	}
+            }
+            
+            if(is_null($resultInstance)){
+	            // Create the label of the new instance
+	            $dtisLabel = $process->getLabel() . "_" . $delivery->getLabel() . "_" . $test->getLabel() . "_" . $item->getLabel() . "_" . $subject->getLabel() . "_" . date("Y/m/d_H:i:s"); // todo label of dtis + date
+	            $dtisComment = "Result Recieved the : " . date("Y/m/d_H:i:s");
+	            $resultInstance = $dtisResultClass->createInstance($dtisLabel, $dtisComment);
+            }
             
             foreach($dtisUris as $dtiKey => $dtiValue){
-            	$dtisInstance->editPropertyValues(new core_kernel_classes_Property(RESULT_ONTOLOGY."#$dtiKey"), $dtiValue);   
+            	$resultInstance->editPropertyValues(new core_kernel_classes_Property(RESULT_ONTOLOGY."#$dtiKey"), $dtiValue);   
             }
-            $dtisInstance->setPropertyValue(new core_kernel_classes_Property(RESULT_ONTOLOGY. "#TAO_ITEM_VARIABLE_ID"), $key);
-            $dtisInstance->setPropertyValue(new core_kernel_classes_Property(RESULT_ONTOLOGY. "#TAO_ITEM_VARIABLE_VALUE"), $value);
+            $resultInstance->setPropertyValue(new core_kernel_classes_Property(RESULT_ONTOLOGY. "#TAO_ITEM_VARIABLE_ID"), $key);
+            $resultInstance->setPropertyValue(new core_kernel_classes_Property(RESULT_ONTOLOGY. "#TAO_ITEM_VARIABLE_VALUE"), $value);
             
         }
         //put the instance as returned value
-        $returnValue = $dtisInstance;
+        $returnValue = $resultInstance;
 
         // section 127-0-1-1-3fc126b2:12c350e4297:-8000:0000000000002886 end
 
