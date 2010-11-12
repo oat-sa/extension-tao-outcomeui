@@ -248,7 +248,7 @@ echo "<br> ****************************exist ";
         $itemUri = $dtisUris["TAO_ITEM_ID"];
         list($ns, $lpItemUri) = explode("#", $itemUri);
         $nameOfVariable = $key;
-        $lastPartUriProperty = $lpTestUri . '_' . $lpItemUri . "__" . $nameOfVariable;
+        $lastPartUriProperty = $lpTestUri . '_' . $lpItemUri . "_" . $nameOfVariable;
         //check the existance of the property
         $uriPropertyToCheck = $localNS . "#" . $lastPartUriProperty;
         if (array_key_exists($uriPropertyToCheck, $listOfProperties) === FALSE) {
@@ -266,6 +266,7 @@ echo "<br> ****************************exist ";
 
             //Link the property with the class
             $drClass->setProperty($drProperty);
+            echo " <br>property ".$resourceProperty->uriResource;
         }
         //the Uri of the property is
         $uriOfVariable = $localNS . "#" . $lastPartUriProperty;
@@ -384,8 +385,8 @@ $dtisArray["TAO_TEST_ID"] = "http://localhost/middleware/taoqti__rdf#test1";
 $dtisArray["TAO_ITEM_ID"] = "http://localhost/middleware/taoqti__rdf#item1";
 $dtisArray["TAO_SUBJECT_ID"] = "http://localhost/middleware/taoqti__rdf#subject1";
 // the variable infos
-$key = "Score1";
-$value = "valeurs rein  ";//item 1 test 2";
+$key = "Score3";
+$value = "valeurs reinc333  ";//item 1 test 2";
 
 $d->addResultVariable($dtisArray, $key, $value);
 ?>
