@@ -9,7 +9,7 @@
 -->
 
 <classes>
-   
+
     <class uri= "TAO_ITEM_RESULTS" label="label">
         <property uri = "TAO_PROCESS_EXEC_ID" label="labelProp1"></property>
         <property uri = "TAO_DELIVERY_ID" label="labelProp1"></property>
@@ -24,8 +24,9 @@
 
     </class>
     <class uri= "TAO_DELIVERY_RESULTS" label="label">
-
-
+        <property uri = "TAO_PROCESS_EXEC_ID" label="labelProp1"></property>
+        <property uri = "TAO_DELIVERY_ID" label="labelProp1"></property>
+        <property uri = "TAO_SUBJECT_ID" label="labelProp3"></property>
     </class>
 
 

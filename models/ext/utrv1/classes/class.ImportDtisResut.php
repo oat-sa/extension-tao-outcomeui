@@ -136,8 +136,8 @@ class ImportDtisResult {
         if (array_key_exists($uriDelivery, $listOfDeliveryClasses) === FALSE) {
             echo "Not exist<br>";
             $rdfClass = new core_kernel_classes_Class(RDF_CLASS);
-            $labelClass = $deliveryLabel;
-            $commentClass = " This result class contains all results for the " . $deliveryLabel . "delivery";
+            $labelClass = $deliveryLabel. "_Results";
+            $commentClass = " This result class contains all results for the " . $deliveryLabel . " delivery";
             $uriClass = '#' ."DR_". $lastpartUriDeliveryOfResult;
             $resourceClass = $rdfClass->createInstance($labelClass, $commentClass, $uriClass);
             //This class should be linked to the URI already created
@@ -187,10 +187,13 @@ class ImportDtisResult {
             //get the value of the property TAO_PROCESS_EXEC_ID
             $propVal = $drInstance->getPropertyValues($propProcId);
             // check if the the value of this property matchs with the TAO_PROCESS_EXEC_ID of the inputed result
-            if ($propVal == $dtisUris["TAO_PROCESS_EXEC_ID"]) {
+            $propValue = $propVal[0];
+            echo " <br> prop =  $propValue <br> dtis ==".  $dtisUris['TAO_PROCESS_EXEC_ID'];
+            if ($propValue == $dtisUris["TAO_PROCESS_EXEC_ID"]) {
                 // it matches
                 $match = TRUE;
                 //return the uriOf this instance
+echo "<br> ****************************exist ";
                 $matchUri = $uri;
             }
 
@@ -271,14 +274,14 @@ class ImportDtisResult {
         //just "Inchallah" set the property values for TAO_PROCESS_EXEC_ID TAO_DELIVERY_ID TAO_SUBJECT_ID
         $deliveryResultInstance = new core_kernel_classes_Resource($matchUri);
 
-        $varPro = new core_kernel_classes_Property($resultNS."#".$dtisUris["TAO_PROCESS_EXEC_ID"]);
+        $varPro = new core_kernel_classes_Property($localNS."#"."TAO_PROCESS_EXEC_ID");
         $deliveryResultInstance->editPropertyValues($varPro, $dtisUris["TAO_PROCESS_EXEC_ID"]);
 
 
-        $varPro = new core_kernel_classes_Property($resultNS."#".$dtisUris["TAO_DELIVERY_ID"]);
+        $varPro = new core_kernel_classes_Property($resultNS."#"."TAO_DELIVERY_ID");
         $deliveryResultInstance->editPropertyValues($varPro, $dtisUris['TAO_DELIVERY_ID']);
 
-        $varPro = new core_kernel_classes_Property($resultNS."#".$dtisUris["TAO_SUBJECT_ID"]);
+        $varPro = new core_kernel_classes_Property($resultNS."#"."TAO_SUBJECT_ID");
         $deliveryResultInstance->editPropertyValues($varPro, $dtisUris["TAO_SUBJECT_ID"]);
 
         //set the value of the variable property
@@ -375,14 +378,14 @@ define('API_LOGIN', 'generis');
 define('API_PASSWORD', md5('g3n3r1s'));
 core_control_FrontController::connect(API_LOGIN, API_PASSWORD, DATABASE_NAME);
 $d = new ImportDtisResult();
-$dtisArray["TAO_PROCESS_EXEC_ID"] = "http://localhost/middleware/taoqti__rdf#iproc1";
-$dtisArray["TAO_DELIVERY_ID"] = "http://localhost/middleware/taoqti__rdf#delivery1";
+$dtisArray["TAO_PROCESS_EXEC_ID"] = "http://localhost/middleware/taoqti__rdf#iproc3";
+$dtisArray["TAO_DELIVERY_ID"] = "http://localhost/middleware/taoqti__rdf#delivery2";
 $dtisArray["TAO_TEST_ID"] = "http://localhost/middleware/taoqti__rdf#test1";
 $dtisArray["TAO_ITEM_ID"] = "http://localhost/middleware/taoqti__rdf#item1";
 $dtisArray["TAO_SUBJECT_ID"] = "http://localhost/middleware/taoqti__rdf#subject1";
 // the variable infos
-$key = " Score1";
-$value = "valeurs rein 1";
+$key = "Score1";
+$value = "valeurs rein  ";//item 1 test 2";
 
 $d->addResultVariable($dtisArray, $key, $value);
 ?>
