@@ -288,81 +288,211 @@ class taoResults_models_classes_ResultsService
      */
     public function addResultVariable($dtisUris, $key, $value)
     {
-        $returnValue = null;
+               $returnValue = null;
 
         // section 127-0-1-1-3fc126b2:12c350e4297:-8000:0000000000002886 begin
         //get the name space of the class
-        $resultNS = core_kernel_classes_Session::getNameSpace();
+
+        $resultNS = 'http://www.tao.lu/Ontologies/TAOResult.rdf';
+
         if (is_array($dtisUris) && !empty($key)) {
 
             //connect to the class of dtis Result Class
-            $dtisResultClass = new core_kernel_classes_Class(TAO_ITEM_RESULTS_CLASS);
-           
-             //get the process
+//            $dtisResultClass = new core_kernel_classes_Class(TAO_ITEM_RESULTS_CLASS);
+//            //****Remove from the last version
+//            $resultNS = core_kernel_classes_Session::getNameSpace();
+//            //echo " le namse space ".$resultNS; // to remove in the final version
+//            $dtisResultClass = new core_kernel_classes_Class($resultNS . '#' . "TAO_ITEM_RESULTS");
+//            //****
+            // Create the instance of DTIS_Result
+            //one begins by create the label; label of DTIS + date
+            // label of Delivery
             if (!isset($dtisUris["TAO_PROCESS_EXEC_ID"])) {
                 throw new Exception('TAO_PROCESS_EXEC_ID must reference a process execution uri');
             }
-            $process = new core_kernel_classes_Resource($dtisUris["TAO_PROCESS_EXEC_ID"]);
-			
-            //get the Delivery
+            $uri = $dtisUris["TAO_PROCESS_EXEC_ID"];
+            $inst = new core_kernel_classes_Resource($uri);
+            $processLabel = $inst->getLabel();
+
+            // label of Delivery
             if (!isset($dtisUris["TAO_DELIVERY_ID"])) {
                 throw new Exception('TAO_DELIVERY_ID must reference a delivery uri');
             }
-            $delivery = new core_kernel_classes_Resource($dtisUris["TAO_DELIVERY_ID"]);
+            $uri = $dtisUris["TAO_DELIVERY_ID"];
+            $inst = new core_kernel_classes_Resource($uri);
+            $deliveryLabel = $inst->getLabel();
 
-            //get the Test
+            // label of Test
             if (!isset($dtisUris["TAO_TEST_ID"])) {
                 throw new Exception('TAO_TEST_ID must reference a test uri');
             }
-            $test = new core_kernel_classes_Resource($dtisUris["TAO_TEST_ID"]);
+            $uri = $dtisUris["TAO_TEST_ID"];
+            $inst = new core_kernel_classes_Resource($uri);
+            $testLabel = $inst->getLabel();
 
-            //get the Item
+            // label of Item
             if (!isset($dtisUris["TAO_ITEM_ID"])) {
                 throw new Exception('TAO_ITEM_ID must reference an item uri');
             }
-            $item = new core_kernel_classes_Resource($dtisUris["TAO_ITEM_ID"]);
+            $uri = $dtisUris["TAO_ITEM_ID"];
+            $inst = new core_kernel_classes_Resource($uri);
+            $itemLabel = $inst->getLabel();
 
-            //get the Subject
+            //label of Subject
             if (!isset($dtisUris["TAO_SUBJECT_ID"])) {
                 throw new Exception('TAO_SUBJECT_ID must reference a subject uri');
             }
-            $subject = new core_kernel_classes_Resource($dtisUris["TAO_ITEM_ID"]);
+            $uri = $dtisUris["TAO_SUBJECT_ID"];
+            $inst = new core_kernel_classes_Resource($uri);
+            $subjectLabel = $inst->getLabel();
+            //-----To remove in the last version
+//            list($ns, $processLabel) = explode("#", $dtisUris["TAO_PROCESS_EXEC_ID"]);
+//            list($ns, $deliveryLabel) = explode("#", $dtisUris["TAO_DELIVERY_ID"]);
+//
+//            list($ns, $testLabel) = explode("#", $dtisUris["TAO_TEST_ID"]);
+//
+//            list($ns, $itemLabel) = explode("#", $dtisUris["TAO_ITEM_ID"]);
+//            list($ns, $subjectLabel) = explode("#", $dtisUris["TAO_SUBJECT_ID"]);
 
-            //check if the instance has already been created
-            $resultInstance = null;
-            foreach($dtisResultClass->getInstances(true) as $dtiInstance){
-            	if((string)$dtiInstance->getOnePropertyValue(RESULT_ONTOLOGY."#TAO_PROCESS_EXEC_ID") == $process->uriResource){
-            		if((string)$dtiInstance->getOnePropertyValue(RESULT_ONTOLOGY."#TAO_DELIVERY_ID") == $delivery->uriResource){
-	            		$testUri = (string)$dtiInstance->getOnePropertyValue(RESULT_ONTOLOGY."#TAO_TEST_ID");
-	            		$itemUri = (string)$dtiInstance->getOnePropertyValue(RESULT_ONTOLOGY."#TAO_ITEM_ID");
-	            		$subjectUri = (string)$dtiInstance->getOnePropertyValue(RESULT_ONTOLOGY."#TAO_ITEM_ID");
-            			if($testUri == $test->uriResource && $itemUri == $item->uriResource && $subjectUri = $subject->uriResource){
-            				$resultInstance = $dtiInstance;
-            				break;
-            			}
-            		}
-            	}
+            // Create the label of the new instance
+            $dtisLabel = $deliveryLabel . "_" . $processLabel . "_" . $testLabel . "_" . $itemLabel . "_" . $subjectLabel . "_" . date("Y/m/d_H:i:s"); // todo label of dtis + date
+            $dtisComment = "Result Recieved the : " . date("Y/m/d_H:i:s");
+            $dtisInstance = $dtisResultClass->createInstance($dtisLabel, $dtisComment);
+            //Add the uri of the variable and its value to the array
+            //Put the name only without the name space part
+
+            $dtisUrisAll['TAO_ITEM_VARIABLE_ID'] = $key;
+            $dtisUrisAll['TAO_ITEM_VARIABLE_VALUE'] = $value;
+            $dtisUrisAll = array_merge($dtisUris, $dtisUrisAll);
+            //print_r($dtisUris);
+            // Create the property Object
+            foreach ($dtisUrisAll as $dtisUri => $dtisValue) {
+                // Create the property Object
+                $dtisProp = new core_kernel_classes_Property($resultNS . "#" . $dtisUri);
+                // Set values of the instance
+                $dtisInstance->setPropertyValue($dtisProp, $dtisValue);
             }
-            
-            if(is_null($resultInstance)){
-	            // Create the label of the new instance
-	            $dtisLabel = $process->getLabel() . "_" . $delivery->getLabel() . "_" . $test->getLabel() . "_" . $item->getLabel() . "_" . $subject->getLabel() . "_" . date("Y/m/d_H:i:s"); // todo label of dtis + date
-	            $dtisComment = "Result Recieved the : " . date("Y/m/d_H:i:s");
-	            $resultInstance = $dtisResultClass->createInstance($dtisLabel, $dtisComment);
+
+            //put the instance as returned value
+            $returnValue = $dtisInstance;
+
+            //**********************************************************
+            //Now we will add the method that create the instance in the delivery classe
+            //the delivery classes wils be created and dynamically, as well as thier properties
+            //Regarding to each new result, we creat or no the class and the property,
+            //its important to check the existance of the instance also to add the propertyvamue for the appropriate instance
+            //get the appropriate Delivery Result Class according to the delivery of the result
+            //one begins by geting all classes of TAO_DELIVERY_RESULTS
+            //connect to the class TAO_DELIVERY_RESULTS
+            $TAO_DELIVERY_RESULTS_CLASS = $resultNS . "#" . "TAO_DELIVERY_RESULTS"; // to modify in the last version and put a contant
+            $deliveryResultClass = new core_kernel_classes_Class($TAO_DELIVERY_RESULTS_CLASS);
+            $listOfDeliveryClasses = $deliveryResultClass->getSubClasses();
+            //compaiason
+            $uri = $dtisUris["TAO_DELIVERY_ID"];
+            list($ns, $lastpartUriDeliveryOfResult) = explode("#", $uri);
+            //use the last part as uri for the search
+            $localNS = core_kernel_classes_Session::getNameSpace();
+
+            $uriDelivery = $localNS . "#DR_" . $lastpartUriDeliveryOfResult; // add DR_ for the instance of the Delivery Result
+            //
+            //check of not existance => create it with the same last part uri as the delivery
+
+            if (array_key_exists($uriDelivery, $listOfDeliveryClasses) === FALSE) {
+                $rdfClass = new core_kernel_classes_Class(RDF_CLASS);
+                $labelClass = $deliveryLabel . "_Results";
+                $commentClass = " This result class contains all results for the " . $deliveryLabel . " delivery";
+                $uriClass = '#' . "DR_" . $lastpartUriDeliveryOfResult;
+                $resourceClass = $rdfClass->createInstance($labelClass, $commentClass, $uriClass);
+                //This class should be linked to the URI already created
+                $drClass = new core_kernel_classes_Class($resourceClass->uriResource);
+
+                //set this class as sub class of TAO_DELIVERY_RESULTS ($deliveryResultClass)
+                $drClass->setSubClassOf($deliveryResultClass);
+                $uriDelivery = $drClass->uriResource;
+
+
             }
-            
-            foreach($dtisUris as $dtiKey => $dtiValue){
-            	$resultInstance->editPropertyValues(new core_kernel_classes_Property(RESULT_ONTOLOGY."#$dtiKey"), $dtiValue);   
+            //now, we have to check from all instances fo this class, if the instance exists
+            //get the instances of the class of delivery result
+            $drClass = new core_kernel_classes_Class($uriDelivery);
+            $listDeliveryResults = $drClass->getInstances();
+            $match = FALSE;
+            $matchUri = '';
+            foreach ($listDeliveryResults as $uri => $resource) {
+                $drInstance = new core_kernel_classes_Resource($uri);
+                $propProcId = new core_kernel_classes_Property($resultNS . "#" . "TAO_PROCESS_EXEC_ID");
+                //get the value of the property TAO_PROCESS_EXEC_ID
+                $propVal = $drInstance->getPropertyValues($propProcId);
+                // check if the the value of this property matchs with the TAO_PROCESS_EXEC_ID of the inputed result
+                $propValue = $propVal[0];
+                if ($propValue == $dtisUris["TAO_PROCESS_EXEC_ID"]) {
+                    // it matches
+                    $match = TRUE;
+                    //return the uriOf this instance
+                    $matchUri = $uri;
+                }
             }
-            $resultInstance->setPropertyValue(new core_kernel_classes_Property(RESULT_ONTOLOGY. "#TAO_ITEM_VARIABLE_ID"), $key);
-            $resultInstance->setPropertyValue(new core_kernel_classes_Property(RESULT_ONTOLOGY. "#TAO_ITEM_VARIABLE_VALUE"), $value);
-            
+            //if it doesn't match so create a new instance
+            if (!$match) {
+                //create a new instance of the current delivery class
+                $label = "Res_" . $deliveryLabel . "_" . date("Y/m/d_H:i:s");
+                $comment = "Result of " . $subjectLabel;
+                $newInstance = $drClass->createInstance($label, $comment);
+                $matchUri = $newInstance->uriResource;
+            }
+            // now the $matchUri is the instance to use
+            //******************** Get the uri of the property to use to save the value
+            //verify if the variable exists as property in the current class
+            //get all properties of the current class
+            $listOfProperties = $drClass->getProperties();
+            //create the last part of the uri test+item++variable name
+            $testUri = $dtisUris["TAO_TEST_ID"];
+            list($ns, $lpTestUri) = explode("#", $testUri);
+            $itemUri = $dtisUris["TAO_ITEM_ID"];
+            list($ns, $lpItemUri) = explode("#", $itemUri);
+            $nameOfVariable = $key;
+            $lastPartUriProperty = $lpTestUri . '_' . $lpItemUri . "_" . $nameOfVariable;
+            //check the existance of the property
+            $uriPropertyToCheck = $localNS . "#" . $lastPartUriProperty;
+            if (array_key_exists($uriPropertyToCheck, $listOfProperties) === FALSE) {
+                //create the property
+                $rdfProperty = new core_kernel_classes_Class(RDF_PROPERTY);
+                $labelProperty = $nameOfVariable . " of " . $itemLabel . '_' . $testLabel;
+                $commentProperty = " This property match the variable " . $nameOfVariable . " of the Item :  " . $itemLabel . ' in the test :' . $testLabel;
+
+                $resourceProperty = $rdfProperty->createInstance($labelProperty, $commentProperty, "#" . $lastPartUriProperty);
+                //Create the property and link it with the uri
+                $drProperty = new core_kernel_classes_Property($resourceProperty->uriResource);
+
+                $widgetProp = new core_kernel_classes_Property("http://www.tao.lu/datatypes/WidgetDefinitions.rdf#widget");
+                $drProperty->setPropertyValue($widgetProp, "http://www.tao.lu/datatypes/WidgetDefinitions.rdf#TextBox");
+
+                //Link the property with the class
+                $drClass->setProperty($drProperty);
+            }
+            //the Uri of the property is
+            $uriOfVariable = $localNS . "#" . $lastPartUriProperty;
+
+            //now we have the uri of the property + the uri of the instance
+            //just "Inchallah" set the property values for TAO_PROCESS_EXEC_ID TAO_DELIVERY_ID TAO_SUBJECT_ID
+            $deliveryResultInstance = new core_kernel_classes_Resource($matchUri);
+
+            $varPro = new core_kernel_classes_Property($localNS . "#" . "TAO_PROCESS_EXEC_ID");
+            $deliveryResultInstance->editPropertyValues($varPro, $dtisUris["TAO_PROCESS_EXEC_ID"]);
+
+
+            $varPro = new core_kernel_classes_Property($resultNS . "#" . "TAO_DELIVERY_ID");
+            $deliveryResultInstance->editPropertyValues($varPro, $dtisUris['TAO_DELIVERY_ID']);
+
+            $varPro = new core_kernel_classes_Property($resultNS . "#" . "TAO_SUBJECT_ID");
+            $deliveryResultInstance->editPropertyValues($varPro, $dtisUris["TAO_SUBJECT_ID"]);
+
+            //set the value of the variable property
+            $varPro = new core_kernel_classes_Property($uriOfVariable);
+            $deliveryResultInstance->editPropertyValues($varPro, $value);
+// the end
+            // section 127-0-1-1-3fc126b2:12c350e4297:-8000:0000000000002886 end
         }
-        //put the instance as returned value
-        $returnValue = $resultInstance;
-
-        // section 127-0-1-1-3fc126b2:12c350e4297:-8000:0000000000002886 end
-
         return $returnValue;
     }
 
