@@ -37,5 +37,25 @@ class ResultsTestCase extends UnitTestCase {
 		$this->resultsService = $resultsService;
 	}
 	
+	public function testDtis(){
+		
+		$dtisUris = array();
+		$dtisUris["TAO_PROCESS_EXEC_ID"] 	= "http://localhost/middleware/taoqti__rdf#iproc3";
+		$dtisUris["TAO_DELIVERY_ID"] 		= "http://localhost/middleware/taoqti__rdf#delivery2";
+		$dtisUris["TAO_TEST_ID"] 			= "http://localhost/middleware/taoqti__rdf#test1";
+		$dtisUris["TAO_ITEM_ID"] 			= "http://localhost/middleware/taoqti__rdf#item1";
+		$dtisUris["TAO_SUBJECT_ID"]		= "http://localhost/middleware/taoqti__rdf#subject1";
+		// the variable infos
+		$key = "test";
+		$value = "test";
+	
+		$instance = $this->resultsService->addResultVariable($dtisUris, $key, $value);
+	
+		$this->assertNotNull($instance);
+		$this->assertIsA($instance, 'core_kernel_classes_Resource');
+		
+		$this->assertTrue($instance->delelte());
+	}
+	
 }
 ?>
