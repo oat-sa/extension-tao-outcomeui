@@ -378,7 +378,7 @@ class taoResults_models_classes_ResultsService
 
             //**********************************************************
             //Now we will add the method that create the instance in the delivery classe
-            //the delivery classes wils be created and dynamically, as well as thier properties
+            //the delivery classes will be created and dynamically, as well as thier properties
             //Regarding to each new result, we creat or no the class and the property,
             //its important to check the existance of the instance also to add the propertyvamue for the appropriate instance
             //get the appropriate Delivery Result Class according to the delivery of the result
@@ -477,7 +477,7 @@ class taoResults_models_classes_ResultsService
             //just "Inchallah" set the property values for TAO_PROCESS_EXEC_ID TAO_DELIVERY_ID TAO_SUBJECT_ID
             $deliveryResultInstance = new core_kernel_classes_Resource($matchUri);
 
-            $varPro = new core_kernel_classes_Property($localNS . "#" . "TAO_PROCESS_EXEC_ID");
+            $varPro = new core_kernel_classes_Property($resultNS . "#" . "TAO_PROCESS_EXEC_ID");
             $deliveryResultInstance->editPropertyValues($varPro, $dtisUris["TAO_PROCESS_EXEC_ID"]);
 
 
