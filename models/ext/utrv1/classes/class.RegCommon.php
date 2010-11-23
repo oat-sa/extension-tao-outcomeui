@@ -107,7 +107,7 @@ class RegCommon {
 
         $prop->label = $label;
         $prop->uriRange = $range->uriResource;
-        $prop->labelRange = $range->label;
+        $prop->labelRange = $range->getLabel();
         //return the object
         return $prop;
     }
@@ -174,7 +174,7 @@ class RegCommon {
         //get the range of all properties
         foreach ($listProp as $uriProp=>$infoProp) {
 
-            $labelProp = $infoProp->label;
+            $labelProp = $infoProp-label;
             $uriRange = $infoProp->uriRange;
             $labelRange = $infoProp->labelRange;
             //echo $labelProp." ". $labelRange." <br>";
@@ -359,28 +359,50 @@ class RegCommon {
             foreach ($listInstancesUri as $instanceUri) {
                 $valuesPath = array();
                 $trResource = new core_kernel_classes_Resource($instanceUri['instance']);
+                // ça marche echo " -----the label is : ". $trResource->getLabel();
                 //get the value of the property for this instance
                 $values = $trResource->getPropertyValues(new core_kernel_classes_Property($propertyUri)) ;// get the array of values
+                //print_r($values);
 
                 //add the path of the actual instance on all step+1 instances
 
                 foreach($values as $val) {
+                    //echo "<br>". $val;
                     $actualPV = array();
                     $actualPV['instance'] = $val;
                     //prepare the label
                     $trResource = new core_kernel_classes_Resource($val);
+                    
                     //todo: i have to get the label of the actual resource and add it the the old path already created
-                    $labelVal = $trResource->getLabel();// this is the error
+                    $labelVal = $trResource->getLabel();// this is the error, if t$val is not an uri, it return tyt !!!!!
+//                    echo "T$labelVal T ".strlen($labelVal);
+                    if ($labelVal ==NULL){
+                        //send the  val as label
+                        //echo "yyyyyyyyyyyyyyyyyyy";
+                        $labelVal = $val;
+                    }
 
+//                    echo "T$labelVal T long = ". strlen($labelVal);
+////                    $label = $trResource->label;
+////                    echo "la resource <> ".$labelVal . " and ". $label;
+////                    print_r(($trResource));
+//                 //   echo "+++++++++888+++ ";
+//                    if ($labelVal==''){
+//                        echo "++++++++++++ ";
+//                    }
                     //add new path,  TODO add as array not string
                     //$actualPV['realPath'] = $instanceUri['realPath'].'::'.$labelVal;
                     if (isset($instanceUri['realPath'])){
                     $actualPV['realPath'] = $instanceUri['realPath'];
                     }
-                    
+//                    echo $labelVal;
                     $actualPV['realPath'][] = $labelVal;
                     $valuesPath[] = $actualPV;
+//                    echo "act ";
+//                    print_r($valuesPath);
                 }
+//                echo " value path ";
+//                print_r($valuesPath);
 
                 //this array containes the bridged uri of instances
                 $intermediateTabUri = array_merge($intermediateTabUri,$valuesPath);
@@ -409,6 +431,7 @@ class RegCommon {
             //$finalValueTab[] = end($vp['realPath']);
             
         }
+        
         $finalValue = implode ('|$*', $finalValueTab);// $instanceUri;
         return $finalValue;
     }
