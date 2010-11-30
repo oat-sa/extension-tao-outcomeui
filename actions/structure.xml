@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE extension SYSTEM "../../tao/doc/structure.dtd">
 <extension name="Results" url="/taoResults/Results/index" level="5">
-	<sections>
-		<section id="manage_results" name="Manage results" url="/taoResults/Results/index">
-			<trees>
-				<tree name="Results library" 
+    <sections>
+        <section id="manage_results" name="Manage results" url="/taoResults/Results/index">
+            <trees>
+                <tree name="Results library"
 					dataUrl="/taoResults/Results/getOntologyData" 
 					editClassUrl="/taoResults/Results/editResultClass"
 					editInstanceUrl="/taoResults/Results/editResult"
@@ -14,16 +14,20 @@
 					duplicateUrl="/taoResults/Results/cloneInstance"
 					moveInstanceUrl="/taoResults/Results/moveInstance"
 				/>
-			</trees>
-			<actions>
-			  <action name="create table" url="/taoResults/Results/createTable"  context="class" />
-				<action name="new class" js="GenerisAction.subClass" url="/taoResults/Results/addResultClass" context="class" />
-				<action name="new property" js="GenerisAction.addProperty" url="/taoResults/Results/addClassProperty" context="class" />
-       			<action name="new result" js="GenerisAction.instanciate" url="/taoResults/Results/addInstance" context="class" />
-				<action name="delete" js="GenerisAction.removeNode" url="/taoResults/Results/delete" context="resource" />
-				<action name="lists"  url="/tao/Lists/index"  context="*" />
-				<action name="rdf" url="/tao/Export/index"  context="*" /> 
-			</actions>
-		</section>
-	</sections>
+            </trees>
+            <actions>
+                <action name="create table" url="/taoResults/Results/createTable"  context="class" />
+                <action name="create Simple table" url="/taoResults/Results/createSimpleTable"  context="class" />
+                <action name="new class" js="GenerisAction.subClass" url="/taoResults/Results/addResultClass" context="class" />
+                <action name="new property" js="GenerisAction.addProperty" url="/taoResults/Results/addClassProperty" context="class" />
+                <action name="new result" js="GenerisAction.instanciate" url="/taoResults/Results/addInstance" context="class" />
+                <action name="delete" js="GenerisAction.removeNode" url="/taoResults/Results/delete" context="resource" />
+                <action name="lists"  url="/tao/Lists/index"  context="*" />
+                <action name="rdf" url="/tao/Export/index"  context="*" />
+                <action name="Younes" url="/tao/Export/index"  context="class" />
+            </actions>
+        </section>
+
+        <section id="Mannage" name="Advanced Authoring Tool" url="/taoResults/Results/manage" />
+      </sections>
 </extension>

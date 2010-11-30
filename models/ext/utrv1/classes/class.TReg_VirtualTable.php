@@ -403,6 +403,7 @@ class TReg_VirtualTable extends RegCommon {
             //add the column into the utrModel
             $utrModel = $p->YaddColumn($columnDescription, $utrModel);
         }
+        $_SESSION['utrModel'] = $utrModel; // for the persistance
         // generate the UTR table
         $t = $p->generateUTR($utrModel, $listOfInstances);
         return $t;
@@ -639,9 +640,8 @@ class TReg_VirtualTable extends RegCommon {
                     $listOfInstances = $p->trGetInstances();
 
                     //generate an UTR model
-                    $utrModel = $p->createSimpleUtr($listOfInstances, $listOfProperties);
+                    $utrTable = $p->createSimpleUtr($listOfInstances, $listOfProperties);
 
-                    $_SESSION['utrModel'] = $utrModel; // for the persistance
                     //unset the session var
                     $_SESSION['utrListOfProperties'] = array();
 

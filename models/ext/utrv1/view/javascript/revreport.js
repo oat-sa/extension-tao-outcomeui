@@ -9,7 +9,7 @@ function revIntro(){
 function revConstructor(){
     $(function(){
         //$("#container").accordion({active:1,animated: 'bounceslide',event:'click',icons: { 'header': 'ui-icon-print', 'headerSelected': 'ui-icon-minus' }});
-        revIntro();
+        
 
         manageEvents();
         getReviewReport();
