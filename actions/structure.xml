@@ -18,6 +18,8 @@
             <actions>
                 <action name="create table" url="/taoResults/Results/createTable"  context="class" />
                 <action name="create Simple table" url="/taoResults/Results/createSimpleTable"  context="class" />
+                <action name="create Score table" url="/taoResults/Results/createScoreTable"  context="class" />
+                <action name="Test view" url="/taoResults/Results/templateUtr13"  context="class" />
                 <action name="new class" js="GenerisAction.subClass" url="/taoResults/Results/addResultClass" context="class" />
                 <action name="new property" js="GenerisAction.addProperty" url="/taoResults/Results/addClassProperty" context="class" />
                 <action name="new result" js="GenerisAction.instanciate" url="/taoResults/Results/addInstance" context="class" />

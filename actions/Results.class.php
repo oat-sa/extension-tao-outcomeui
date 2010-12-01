@@ -184,7 +184,7 @@ class Results extends TaoModule {
             $index++;
         }
         //add information of the class
-        $listProperties = $clazz->getProperties();
+        $listProperties = $clazz->getProperties(true);
         $listUris = array_keys($listProperties);
         $propertiesOfSimpleTable = array();
         
@@ -198,6 +198,78 @@ class Results extends TaoModule {
         $this->setView("create_table.tpl");
 
     }
+    private function filterPropertyList($listProperties){
+        //http://www.w3.org/2000/01/rdf-schema#isDefinedBy
+        //If the name space of the property is http://www.w3.org/2000/01/rdf-schema#isDefinedBy
+        //Then delete from list
+        $finalProp = $listProperties;
+        $blockedProperties = array();
+
+        $blockedProperties[]= 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type';
+        $blockedProperties[]= 'http://www.w3.org/1999/02/22-rdf-syntax-ns#subject';
+        $blockedProperties[]= 'http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate';
+        $blockedProperties[]= 'http://www.w3.org/1999/02/22-rdf-syntax-ns#object';
+        $blockedProperties[]= 'http://www.w3.org/1999/02/22-rdf-syntax-ns#value';
+        $blockedProperties[]= 'http://www.w3.org/2000/01/rdf-schema#subPropertyOf';
+        $blockedProperties[]= 'http://www.w3.org/2000/01/rdf-schema#comment';
+        $blockedProperties[]= 'http://www.w3.org/2000/01/rdf-schema#seeAlso';
+        $blockedProperties[]='http://www.w3.org/2000/01/rdf-schema#isDefinedBy';
+        $blockedProperties[]='http://www.w3.org/2000/01/rdf-schema#member';
+
+        foreach ($listProperties as $uri=>$obj ) {
+
+            if (in_array($uri,$blockedProperties)) {
+                //echo "jjjjj";
+                unset($finalProp[$uri]);
+            }
+            //for the specific uri like SCORE
+
+
+        }
+        return $finalProp;
+        
+    }
+
+    public function createScoreTable(){
+        //echo "HHHHHHHHHHHHHHHHHHH".SCORE_ID;
+        $_SESSION['instances'] = array();
+
+
+        $index = 0;
+        $clazz = $this->getCurrentClass();
+        foreach ($clazz->getInstances(true) as $resource) {
+            $_SESSION['instances'][$resource->uriResource] = 'uri_' . $index;
+            $index++;
+        }
+        //add information of the class
+        $listProperties = $clazz->getProperties(true);
+        $listUris = array_keys($listProperties);
+        //do a first filter to gremove the RDF property that are not important
+        
+        $propertiesOfSimpleTable = array();
+        $scoreID = SCORE_ID;
+
+        foreach ($listUris as $uriProp){
+                 //filter the property
+            if (!strpos($uriProp,$scoreID)===FALSE){
+            $propInstance = $trProperty = new core_kernel_classes_Property($uriProp);
+            $label = $propInstance->getLabel();
+            $propertiesOfSimpleTable[$uriProp] = $label;
+                
+            }
+
+            
+        }
+        $_SESSION['utrListOfProperties'] = $propertiesOfSimpleTable;
+
+        $this->setView("create_table.tpl");
+
+    }
+    public function templateUtr13(){
+        $this->setView("utr13.tpl");
+    }
+}
+
 
 //    public function sum($a, $b) {
 //        echo " la somme est :". ($a + $b);
