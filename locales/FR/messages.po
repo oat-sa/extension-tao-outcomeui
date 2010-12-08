@@ -1,26 +1,98 @@
-msgid "Result saved"
-msgstr ""
+msgid "Add column wizard"
+msgstr "Ajouter une colonne"
 
-msgid "Edit result"
-msgstr "Modifier le résultat"
+msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
+msgstr "Les résultats de tous les tests passés avec les données des Sujets, Groupes et Items comme les données récupérées pendant le déroulement de chaque test sont collectées et gérées ici."
+
+msgid "Apply filter"
+msgstr "Rechercher"
+
+msgid "Back"
+msgstr "Retour"
+
+msgid "Cancel"
+msgstr "Annuler"
+
+msgid "Choose a property"
+msgstr "Choisir un propriété"
 
 msgid "Class saved"
 msgstr "Classe enregistrée"
 
+msgid "Column"
+msgstr "Colonne"
+
+msgid "Column name"
+msgstr "Nom de colonne"
+
+msgid "DE"
+msgstr "German"
+
+msgid "EN"
+msgstr "English"
+
+msgid "Edit result"
+msgstr "Modifier le résultat"
+
 msgid "Edit result class"
 msgstr "Modifier la classe de résultat"
 
-msgid "Results"
-msgstr "Résultats"
+msgid "Export"
+msgstr "Exporter"
+
+msgid "FR"
+msgstr "French"
+
+msgid "LU"
+msgstr "Luxemburgish"
 
 msgid "Manage results"
 msgstr "Gérer les résultats"
 
+msgid "Operator"
+msgstr "Operateur"
+
+msgid "Remove rows"
+msgstr "Supprimer des lignes"
+
+msgid "Results"
+msgstr "Résultats"
+
 msgid "Results library"
 msgstr "Librairie de résultats"
 
+msgid "Save Table"
+msgstr "Enregister le table"
+
+msgid "Template manager"
+msgstr "Gestionnaire des modèles"
+
+msgid "This module constitutes the final step."
+msgstr "Ce module constitue la dernière étape."
+
+msgid "Value"
+msgstr "Valeur"
+
 msgid "create table"
 msgstr "créer le tableau"
+
+msgid "delete"
+msgstr "supprimer"
+
+msgid "duplicate"
+msgstr "dupliquer"
+
+msgid "edit result"
+msgstr "modifier les résultat"
+
+msgid "export"
+msgstr "exporter"
+
+msgid "import"
+msgstr "importer"
+
+msgid "meta data"
+msgstr "métadonnée"
 
 msgid "new class"
 msgstr "nouvelle classe"
@@ -31,8 +103,188 @@ msgstr "nouvelle propriété"
 msgid "new result"
 msgstr "nouveau résultat"
 
-msgid "delete"
-msgstr "supprimer"
+msgid "search"
+msgstr "Recherche"
+
+msgid ""
+msgstr ""
+
+msgid "Add colomn wizard"
+msgstr ""
+
+msgid "Add new filter"
+msgstr ""
+
+msgid "Advanced Authoring Tool"
+msgstr ""
+
+msgid "Build a complex table with no unlimited depth"
+msgstr ""
+
+msgid "Build a flexible table to extract information"
+msgstr ""
+
+msgid "Build your table"
+msgstr ""
+
+msgid "Calculate the percentage of columns and rows"
+msgstr ""
+
+msgid "Chose a property"
+msgstr ""
+
+msgid "Columns"
+msgstr ""
+
+msgid "Create save your own Template of tables"
+msgstr ""
+
+msgid "Delete filter"
+msgstr ""
+
+msgid "Do you want to delete column ?"
+msgstr ""
+
+msgid "Do you want to delete these rows ?"
+msgstr ""
+
+msgid "Do you want to delete this column ?"
+msgstr ""
+
+msgid "Error in loading table"
+msgstr ""
+
+msgid "Error, action failed !"
+msgstr ""
+
+msgid "Exit"
+msgstr ""
+
+msgid "Extraction method"
+msgstr ""
+
+msgid "Filter & Search"
+msgstr ""
+
+msgid "Filter and search"
+msgstr ""
+
+msgid "Filter and search "
+msgstr ""
+
+msgid "Get a direct chart diagram on your columns ans rows"
+msgstr ""
+
+msgid "Get a direct chart diagram on your columns ans rows "
+msgstr ""
+
+msgid "Info"
+msgstr ""
+
+msgid "Item:"
+msgstr ""
+
+msgid "List of context classes"
+msgstr ""
+
+msgid "List of properties"
+msgstr ""
+
+msgid "Name exists"
+msgstr ""
+
+msgid "Next"
+msgstr ""
+
+msgid "No"
+msgstr ""
+
+msgid "Ok"
+msgstr ""
+
+msgid "Query"
+msgstr ""
+
+msgid "Report on open review"
+msgstr ""
+
+msgid "Response"
+msgstr ""
+
+msgid "Response of the test maker"
+msgstr ""
+
+msgid "Result saved"
+msgstr ""
+
+msgid "Reviewer"
+msgstr ""
+
+msgid "Reviewer1"
+msgstr ""
+
+msgid "Reviewer2"
+msgstr ""
+
+msgid "Reviewer3"
+msgstr ""
+
+msgid "Reviewer4"
+msgstr ""
+
+msgid "Root classes"
+msgstr ""
+
+msgid "Select a property"
+msgstr ""
+
+msgid "Subject:"
+msgstr ""
+
+msgid "Template saved"
+msgstr ""
+
+msgid "Test view"
+msgstr ""
+
+msgid "Test:"
+msgstr ""
+
+msgid "Thank you for using UTR"
+msgstr ""
+
+msgid "UTR Builder"
+msgstr ""
+
+msgid "Validate final review"
+msgstr ""
+
+msgid "Validate your review"
+msgstr ""
+
+msgid "Welcome to UTR Builder"
+msgstr ""
+
+msgid "With UTR, you can"
+msgstr ""
+
+msgid "Yes"
+msgstr ""
+
+msgid "You can dynamically Add, remove column"
+msgstr ""
+
+msgid "Younes"
+msgstr ""
+
+msgid "coco"
+msgstr ""
+
+msgid "create Score table"
+msgstr ""
+
+msgid "create Simple table"
+msgstr ""
 
 msgid "lists"
 msgstr ""
@@ -40,228 +292,6 @@ msgstr ""
 msgid "rdf"
 msgstr ""
 
-msgid "Build your table"
-msgstr ""
-
-msgid "Add colomn wizard"
-msgstr ""
-
-msgid "Remove rows"
-msgstr "Supprimer des lignes"
-
-msgid "Template manager"
-msgstr "Gestionnaire des modèles"
-
-msgid "Filter and search"
-msgstr ""
-
-msgid "Add new filter"
-msgstr ""
-
-msgid "Delete filter"
-msgstr ""
-
-msgid "Apply filter"
-msgstr "Rechercher"
-
-msgid "Cancel"
-msgstr "Annuler"
-
-msgid "Ok"
-msgstr ""
-
-msgid "Yes"
-msgstr ""
-
-msgid "No"
-msgstr ""
-
-msgid "Template saved"
-msgstr ""
-
-msgid "Back"
-msgstr "Retour"
-
-msgid "Next"
-msgstr ""
-
-msgid "List of context classes"
-msgstr ""
-
-msgid "Root classes"
-msgstr ""
-
-msgid "List of properties"
-msgstr ""
-
-msgid "UTR Builder"
-msgstr ""
-
-msgid "Chose a property"
-msgstr ""
-
-msgid "Column name"
-msgstr "Nom de colonne"
-
-msgid "Extraction method"
-msgstr ""
-
-msgid "Query"
-msgstr ""
-
-msgid "Exit"
-msgstr ""
-
-msgid "Info"
-msgstr ""
-
-msgid "Columns"
-msgstr ""
-
-msgid "Do you want to delete this column ?"
-msgstr ""
-
-msgid "Do you want to delete these rows ?"
-msgstr ""
-
-msgid "Error in loading table"
-msgstr ""
-
-msgid "Thank you for using UTR"
-msgstr ""
-
-msgid "Error, action failed !"
-msgstr ""
-
-msgid "Select a property"
-msgstr ""
-
-msgid "With UTR, you can"
-msgstr ""
-
-msgid "Build a flexible table to extract information"
-msgstr ""
-
-msgid "Build a complex table with no unlimited depth"
-msgstr ""
-
-msgid "You can dynamically Add, remove column"
-msgstr ""
-
-msgid "Calculate the percentage of columns and rows"
-msgstr ""
-
-msgid "Create save your own Template of tables"
-msgstr ""
-
-msgid "Get a direct chart diagram on your columns ans rows "
-msgstr ""
-
-msgid "Welcome to UTR Builder"
-msgstr ""
-
-msgid "coco"
-msgstr ""
-
-msgid "Choose a property"
-msgstr "Choisir un propriété"
-
-msgid "Add column wizard"
-msgstr "Ajouter une colonne"
-
-msgid "Export"
-msgstr "Exporter"
-
-msgid "Save Table"
-msgstr "Enregister le table"
-
-msgid "Column"
-msgstr "Colonne"
-
-msgid "Operator"
-msgstr "Operateur"
-
-msgid "Value"
-msgstr "Valeur"
-
-msgid "Do you want to delete column ?"
-msgstr ""
-
-msgid "Name exists"
-msgstr ""
-
 msgid "template manager"
 msgstr ""
-
-msgid "Filter & Search"
-msgstr ""
-
-msgid "Filter and search "
-msgstr ""
-
-msgid "Response of the test maker"
-msgstr ""
-
-msgid "Subject:"
-msgstr ""
-
-msgid "Test:"
-msgstr ""
-
-msgid "Item:"
-msgstr ""
-
-msgid "Response"
-msgstr ""
-
-msgid "Report on open review"
-msgstr ""
-
-msgid "Validate your review"
-msgstr ""
-
-msgid "Validate final review"
-msgstr ""
-
-msgid "This module constitutes the final step."
-msgstr "Ce module constitue la dernière étape."
-
-msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
-msgstr "Les résultats de tous les tests passés avec les données des Sujets, Groupes et Items comme les données récupérées pendant le déroulement de chaque test sont collectées et gérées ici."
-
-msgid ""
-msgstr ""
-
-msgid "Get a direct chart diagram on your columns ans rows"
-msgstr ""
-
-msgid "search"
-msgstr "Recherche"
-
-msgid "duplicate"
-msgstr "dupliquer"
-
-msgid "edit result"
-msgstr "modifier les résultat"
-
-msgid "meta data"
-msgstr "métadonnée"
-
-msgid "export"
-msgstr "exporter"
-
-msgid "import"
-msgstr "importer"
-
-msgid "EN"
-msgstr "English"
-
-msgid "FR"
-msgstr "French"
-
-msgid "DE"
-msgstr "German"
-
-msgid "LU"
-msgstr "Luxemburgish"
 
