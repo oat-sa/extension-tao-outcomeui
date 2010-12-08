@@ -26,7 +26,6 @@
                 <action name="delete" js="GenerisAction.removeNode" url="/taoResults/Results/delete" context="resource" />
                 <action name="lists"  url="/tao/Lists/index"  context="*" />
                 <action name="export" url="/tao/Export/index"  context="*" />
-                <action name="Younes" url="/tao/Export/index"  context="class" />
             </actions>
         </section>
 
