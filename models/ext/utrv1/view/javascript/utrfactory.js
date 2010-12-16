@@ -857,6 +857,25 @@ function exportCSV (){
 // window.ope
 
 }
+/// export to excel
+function exportToExcel(){
+
+//    options={
+//        type: "POST",
+//        url: "../classes/class.TReg_VirtualTable.php",
+//        data: {
+//            op:"exportToExcel"
+//        },
+//        success: function(msg){
+////            actualUTR = msg;
+////            previewTable(actualUTR);
+//        }
+//
+//    };
+//    $.ajax(options);
+window.location.href = "../classes/class.TReg_VirtualTable.php?op=exportToExcel"
+
+}
 
 //manage the event of the index page
 function manageEvents(){
@@ -1006,6 +1025,7 @@ function manageEvents(){
 
     //export to csv
     $("#export").click(exportCSV);
+    $("#exportToExcel").click(exportToExcel);
     
 }
 

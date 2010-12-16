@@ -184,8 +184,8 @@ class TReg_VirtualTable extends RegCommon {
                 //TEST IF IT IS AN URI
                 $uriProperty = $value;
                 $trProperty = new core_kernel_classes_Property($uriProperty);
-                $valueLabel = $trProperty->getLabel();// to see
-                if ($valueLabel==NULL){
+                $valueLabel = $trProperty->getLabel(); // to see
+                if ($valueLabel == NULL) {
 
                 }
 
@@ -470,6 +470,80 @@ class TReg_VirtualTable extends RegCommon {
     }
 
     /**
+     * Export the UTR table into excel format
+     *
+     * @access public
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @param array $utrTable
+     */
+    public function exportToExcel($utrTable) {
+
+        //prepare the column name
+        //besed on rowsHTML already created we provide the csv
+        $rowsHTML = $utrTable['rowsHTML'];
+        $utrModel = $utrTable['utrModel'];
+
+        $firstlineTab = array();
+        foreach ($utrModel as $columnId => $columnDescription) {
+            $firstlineTab[] = $columnDescription['columnName'];
+        }
+        //$firstlineTab is the header
+        $excelLines = array();
+
+        foreach ($rowsHTML as $row => $rowContent) {
+            $lineTab = array();
+            //$row content is an associatif array with name of column:Value
+            foreach ($rowContent as $columnId => $value) {
+                $lineTab[] = $value;
+            }
+            $excelLines[] = $lineTab;
+        }
+
+        //Create the rows of the CSV
+
+        $memoryRules = array();
+        $memoryInfo = array();
+        $title = $firstlineTab;
+
+//add by younes
+        $path = realpath("../lib") . '/';
+        define('EXCEL_ROOT_PATH', $path);
+        require_once('../lib/class.Excel.php');
+        $params = array(
+            //'directory' => '',
+            'name' => 'TAO Table',
+            'formats' => array(
+                'titres' => array(
+                    'bold' => 1,
+                    'size' => 14,
+                    'bgColor' => 'red',
+                    'align' => 'center',
+                ),
+                'datas' => array(
+                    'textWrap' => 1,
+                    'size' => 12,
+                    'align' => 'left',
+                    'bgColor' => 'white',
+                    'border' => array(),
+                ),
+            ),
+            'pages' => array(
+                'Results' => array(
+                    'title' => $title,
+                    'titleFormat' => 'titres',
+                    'dataFormat' => 'datas',
+                    'width' => array(40, 40, 40, 40, 40, 40),
+                    'higlight' => 1,
+                    'empty' => '-',
+                    'data' => $excelLines
+                )
+            )
+        );
+        $url = osq_models_classes_Excel::createExcel($params);
+        
+    }
+
+    /**
      * this method intercept the request of the client (ajax) and invoke the
      * method
      *
@@ -693,6 +767,9 @@ class TReg_VirtualTable extends RegCommon {
                 $t = $p->generateUTR($utrModel, $listInstances);
                 echo json_encode($t);
             }
+            
+
+            
         }//if post [op]
         //export CSV
 
@@ -708,6 +785,15 @@ class TReg_VirtualTable extends RegCommon {
 
 
                 echo ($csv);
+            }
+            //export to excel
+            if ($_GET['op'] == 'exportToExcel') {
+                $utrTable = $_SESSION['lastUTR'];
+                $this->exportToExcel($utrTable);
+
+
+
+
             }
         }
     }
