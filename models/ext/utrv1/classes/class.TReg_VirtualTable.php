@@ -296,7 +296,7 @@ class TReg_VirtualTable extends RegCommon {
         $columnList = $utrModel; //$_SESSION['utrModel'];
         //timestamp
         //$columnId = microtime(true);
-        $columnId = $desc["columnName"];
+        $columnId = str_replace(" ", "_", $desc["columnName"]);
 
         $columnList[$columnId] = $columnDescription;
         //return the utrTable
