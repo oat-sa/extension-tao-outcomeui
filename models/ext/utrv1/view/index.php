@@ -89,7 +89,7 @@ and open the template in the editor.
 
 
             <div id="utrmenu">
-                <input id="columnBuilder" type="submit" value="<? echo __("Add column wizard"); ?>" /><input id="deleteListRows" type="submit" value="<? echo __("Remove rows"); ?>" /><input id="manageUtr" type="submit" value="<? echo __("Template manager"); ?>" /><input id="manageFilter" type="submit" value="<? echo __("Filter and search"); ?>" /><input id="export" type="submit" value="<? echo __("Export"); ?>" /><input id="exportToExcel" type="submit" value="<? echo __("Export to excel"); ?>" />
+                <input id="columnBuilder" type="submit" value="<? echo __("Add column wizard"); ?>" /><input id="deleteListRows" type="submit" value="<? echo __("Remove rows"); ?>" /><input id="manageUtr" type="submit" value="<? echo __("Template manager"); ?>" /><input id="manageFilter" type="submit" value="<? echo __("Filter and search"); ?>" /><input id="export" type="submit" value="<? echo __("Export"); ?>" />
 
             </div>
 
@@ -139,6 +139,9 @@ and open the template in the editor.
                 </tbody>
             </table>
 
+        </div>
+        <div id="exportChoice">
+            
         </div>
 
 
