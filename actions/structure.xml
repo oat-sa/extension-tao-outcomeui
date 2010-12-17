@@ -17,11 +17,11 @@
             </trees>
             <actions>
                 <action name="create table" url="/taoResults/Results/createTable"  context="class" />
-                <action name="create simple table" url="/taoResults/Results/createSimpleTable"  context="class" />
-                <action name="create score table" url="/taoResults/Results/createScoreTable"  context="class" />
+                <action name="create direct table" url="/taoResults/Results/createDirectTable"  context="class" />
+                <action name="create Score table" url="/taoResults/Results/createScoreTable"  context="class" />
             </actions>
         </section>
 
-        <section id="Mannage" name="Advanced Authoring Tool" url="/taoResults/Results/manage" />
+
       </sections>
 </extension>
