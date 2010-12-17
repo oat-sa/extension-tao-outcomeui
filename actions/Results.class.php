@@ -173,9 +173,8 @@ class Results extends TaoModule {
 
         $this->setView("create_table.tpl");
     }
-    public function createSimpleTable(){
+    public function createDirectTable(){
         $_SESSION['instances'] = array();
-
 
         $index = 0;
         $clazz = $this->getCurrentClass();
@@ -185,7 +184,11 @@ class Results extends TaoModule {
         }
         //add information of the class
         $listProperties = $clazz->getProperties(true);
-        $listUris = array_keys($listProperties);
+        $listUrisWithoutFilter = array_keys($listProperties);
+        //do a first filter to gremove the RDF property that are not important
+        $listUris=$this->filterPropertyList($listUrisWithoutFilter);
+
+
         $propertiesOfSimpleTable = array();
         
         foreach ($listUris as $uriProp){
@@ -202,6 +205,8 @@ class Results extends TaoModule {
         //http://www.w3.org/2000/01/rdf-schema#isDefinedBy
         //If the name space of the property is http://www.w3.org/2000/01/rdf-schema#isDefinedBy
         //Then delete from list
+        $listProperties = array_flip($listProperties);
+        
         $finalProp = $listProperties;
         $blockedProperties = array();
 
@@ -213,25 +218,25 @@ class Results extends TaoModule {
         $blockedProperties[]= 'http://www.w3.org/2000/01/rdf-schema#subPropertyOf';
         $blockedProperties[]= 'http://www.w3.org/2000/01/rdf-schema#comment';
         $blockedProperties[]= 'http://www.w3.org/2000/01/rdf-schema#seeAlso';
-        $blockedProperties[]='http://www.w3.org/2000/01/rdf-schema#isDefinedBy';
-        $blockedProperties[]='http://www.w3.org/2000/01/rdf-schema#member';
-
+        $blockedProperties[]= 'http://www.w3.org/2000/01/rdf-schema#isDefinedBy';
+        $blockedProperties[]= 'http://www.w3.org/2000/01/rdf-schema#member';
+        $blockedProperties[]= 'http://www.tao.lu/middleware/Interview.rdf#i122354397139712';
+        $blockedProperties[]= "http://www.tao.lu/middleware/Interview.rdf#i12191501768574";
+        $blockedProperties[]= "http://www.tao.lu/Ontologies/TAOResult.rdf#ResultContent";
         foreach ($listProperties as $uri=>$obj ) {
 
-            if (in_array($uri,$blockedProperties)) {
-                //echo "jjjjj";
+            if (in_array($uri,$blockedProperties)===true) {
+               
                 unset($finalProp[$uri]);
             }
             //for the specific uri like SCORE
 
-
         }
-        return $finalProp;
+        return array_flip($finalProp);
         
     }
 
     public function createScoreTable(){
-        //echo "HHHHHHHHHHHHHHHHHHH".SCORE_ID;
         $_SESSION['instances'] = array();
 
 
@@ -243,23 +248,30 @@ class Results extends TaoModule {
         }
         //add information of the class
         $listProperties = $clazz->getProperties(true);
-        $listUris = array_keys($listProperties);
+        $listUrisWithoutFilter = array_keys($listProperties);
         //do a first filter to gremove the RDF property that are not important
-        
+        $listUris=$this->filterPropertyList($listUrisWithoutFilter);
+
         $propertiesOfSimpleTable = array();
         $scoreID = SCORE_ID;
 
+        //add fixed properties ( the DTIS )
+        //$allowedProperty [] = "http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_PROCESS_EXEC_ID";
+        $allowedProperty [] = "http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_DELIVERY_ID";
+        $allowedProperty [] = "http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_SUBJECT_ID";
+
         foreach ($listUris as $uriProp){
                  //filter the property
-            if (!strpos($uriProp,$scoreID)===FALSE){
+            
+            if ((!strpos($uriProp,$scoreID)===FALSE)|| (in_array($uriProp, $allowedProperty))){
             $propInstance = $trProperty = new core_kernel_classes_Property($uriProp);
             $label = $propInstance->getLabel();
             $propertiesOfSimpleTable[$uriProp] = $label;
                 
             }
-
             
         }
+
         $_SESSION['utrListOfProperties'] = $propertiesOfSimpleTable;
 
         $this->setView("create_table.tpl");
