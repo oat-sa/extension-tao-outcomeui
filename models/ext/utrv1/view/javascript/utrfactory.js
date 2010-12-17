@@ -837,44 +837,13 @@ function sendFilter(){
 }
 //export to csv
 function exportCSV (){
-    
 
-    /*options={
-        type: "POST",
-        url: "../classes/class.TReg_VirtualTable.php",
-        data: {
-            op:"exportCSV"
-
-        },
-        success: function(msg){
-            alert(msg);
-            
-        }
-
-    };
-    $.ajax(options);*/
     window.location.href = "../classes/class.TReg_VirtualTable.php?op=exoprtCSV";
-// window.ope
-
 }
 /// export to excel
 function exportToExcel(){
 
-//    options={
-//        type: "POST",
-//        url: "../classes/class.TReg_VirtualTable.php",
-//        data: {
-//            op:"exportToExcel"
-//        },
-//        success: function(msg){
-////            actualUTR = msg;
-////            previewTable(actualUTR);
-//        }
-//
-//    };
-//    $.ajax(options);
 window.location.href = "../classes/class.TReg_VirtualTable.php?op=exportToExcel"
-
 }
 
 //manage the event of the index page
@@ -1023,9 +992,40 @@ function manageEvents(){
 
     });
 
-    //export to csv
-    $("#export").click(exportCSV);
-    $("#exportToExcel").click(exportToExcel);
+    //export to 
+    $("#export").click(function(){
+        
+        var ok = '';
+        
+        var options ={
+            height:50,
+            width:500,
+            hide:'explode',
+            modal : true,
+            resizable: false,
+            title:__("Export the Table"),
+
+             buttons: {
+
+                "Export To CSV":function(){
+                    exportCSV();
+                    $("#exportChoice").dialog('close');
+                },
+                "Export To MS Excel": function() {
+                    exportToExcel();
+                    $("#exportChoice").dialog('close');
+                }
+            }
+          
+        };
+
+        $("#exportChoice").dialog(open,options);
+        
+        
+    });
+
+
+    
     
 }
 
