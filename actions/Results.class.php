@@ -73,7 +73,39 @@ class Results extends TaoModule {
         $result = $this->getCurrentInstance();
 
         $formContainer = new tao_actions_form_Instance($clazz, $result);
-        $myForm = $formContainer->getForm();
+		$myForm = $formContainer->getForm();
+		
+		$disabledProperties = array(
+			PROP_RESULT_RESULTCONTENT,
+			PROP_RESULT_PROCESS_EXEC_ID,
+			PROP_RESULT_DELIVERY_ID,
+			PROP_RESULT_TEST_ID,
+			PROP_RESULT_ITEM_ID,
+			PROP_RESULT_SUBJECT_ID,
+			PROP_RESULT_ITEM_VARIABLE_ID,
+			PROP_RESULT_ITEM_VARIABLE_VALUE
+		);
+		
+		$readOnlyProperties = array(
+			PROP_RESULT_ITEM_VARIABLE_ID,
+			PROP_RESULT_ITEM_VARIABLE_VALUE
+		);
+		
+		//disable all input fields:
+		foreach($disabledProperties as $disabledPropertyUri){
+			$elementName = tao_helpers_Uri::encode($disabledPropertyUri);
+			$element = $myForm->getElement($elementName);
+			if(!is_null($element)){
+				//disable element:
+				if(in_array($disabledPropertyUri, $readOnlyProperties)){
+					$element->setAttribute('readonly', 'true');
+				}else{
+					$element->setAttribute('disabled', 'disabled');
+				}
+				$myForm->removeElement($elementName);
+				$myForm->addElement($element);
+			}
+		}
 
         if ($myForm->isSubmited()) {
             if ($myForm->isValid()) {

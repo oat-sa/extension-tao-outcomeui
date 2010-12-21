@@ -21,8 +21,18 @@ $todefine = array(
 	'SCORE_MIN_ID'				=> 'SCORE_MIN',
 	'SCORE_MAX_ID'				=> 'SCORE_MAX',
 	'ENDORSMENT_ID'				=> 'ENDORSMENT',
-	'ANSWERED_VALUES_ID'		=> 'ANSWERED_VALUES'
+	'ANSWERED_VALUES_ID'		=> 'ANSWERED_VALUES',
+	
+	'PROP_RESULT_RESULTCONTENT' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultContent',
+	'PROP_RESULT_PROCESS_EXEC_ID' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_PROCESS_EXEC_ID',
+	'PROP_RESULT_DELIVERY_ID' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_DELIVERY_ID',
+	'PROP_RESULT_TEST_ID' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_TEST_ID',
+	'PROP_RESULT_ITEM_ID' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_ITEM_ID',
+	'PROP_RESULT_SUBJECT_ID' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_SUBJECT_ID',
+	'PROP_RESULT_ITEM_VARIABLE_ID' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_ITEM_VARIABLE_ID',
+	'PROP_RESULT_ITEM_VARIABLE_VALUE' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_ITEM_VARIABLE_VALUE'
 );
+
 foreach($todefine as $constName => $constValue){
 	if(!defined($constName)){
 		define($constName, $constValue);
