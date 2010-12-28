@@ -1,6 +1,6 @@
 var iBInfo = [];
 var revNumber = 'rev1';
-var currentPassedItem='';
+//var currentPassedItem='';
 
 function revIntro(){
     
