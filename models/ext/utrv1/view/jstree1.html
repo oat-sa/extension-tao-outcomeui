@@ -1,0 +1,217 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title></title>
+        <script type="text/javascript" src="./js/jstree/_lib/jquery.js"></script>
+        <script type="text/javascript" src="./js/jstree/_lib/jquery.cookie.js"></script>
+        <script type="text/javascript" src="./js/jstree/_lib/jquery.hotkeys.js"></script>
+        <script type="text/javascript" src="./js/jstree/jquery.jstree.js"></script>
+        <script type="text/javascript">
+            var divTree;;
+            var allTables = [];
+            var i =0;
+            
+            function buildTheTableTree(){
+                
+
+                /* var tableDescription =[];
+                var t1 = "jghjh";
+
+                var tableDescription = {"attr" : {"id":t1},"data":"une tabled"};
+                //    tableDescription.data = "titre";
+                //  tableDescription.attr.id = "id1212";
+                allTables[0] = tableDescription;
+                var tableDescription = {"attr" : {"id":t1+"22222"},"data":"table 2ss"};
+                //allTables[1] = tableDescription;
+                allTables.push(tableDescription);
+                addTable("hh","younes");
+                addTable("55","younes55");
+                //addTable("44","younes44");
+                //t1.attr.id = "ffff";*/
+
+                listTables = [{
+                        "data" : "list of Tables",
+                        "attr" :{"id":"utrTemplatesOfView" },
+                        "children" : allTables
+                    },
+                ];
+                $("#divTree")
+                .jstree({
+                    "core":{//init
+
+                        "initially_open":["utrTemplatesOfView"],// identify the opened node
+                        rtl:false// cool for arabic
+
+                    },
+                    "json_data" : {//data
+                        "data" : listTables
+                    },
+                    "plugins" : [ "themes", "json_data","ui" ,"search","checkbox"],//add what you need from thje plugins catalog
+                    "ui":{//ui configuration
+                        "select_limit":3,//the max of selected node
+                        "select_multiple_modifier" :"on" //the click is enought to do multi select
+                    },
+                    "themes":{// select the theme, change icon, dots
+                        "theme" :"apple",
+                        "dots" : true,
+                        "icons": false
+                    }
+                    
+                });
+
+                
+
+            }
+
+            function addTable(idTable,nameTable){
+                var td = {"attr" : {"id":idTable,"uri":"put your urior other attribut"},"data":nameTable};
+                allTables.push(td);
+     
+            }
+            function toggeleNodes(){
+                $("#divTree").jstree("toggle_node","#utrTemplatesOfView");
+            }
+
+            function openAllNodes(){
+                var divTree = jQuery.jstree._reference("#divTree");
+                //firs method
+                //$("#divTree").jstree("open_all","#utrTemplatesOfView");//clese_all
+                //second method
+                //jQuery.jstree._reference("#divTree").open_all();
+                divTree.open_all();
+            }
+
+            function searchNode(){
+                $("#divTree").jstree("search","table3");
+            }
+
+            //get the selected nodes
+            function getSelectedTable(){
+                alert ("ff");
+                // var selected = $("#divTree").jstree("get_selected","#divTree");
+                var selected = $("#divTree").jstree("get_selected");
+
+                console.debug("ff");
+                
+                var numberOfTable = selected['length'];
+                
+                for (i=0;i<numberOfTable;i++ ){
+                    var t = selected[i];
+                    var id = $(t).attr("id");
+                    alert (id);
+                }
+            }
+            function getCheckedTable(){
+
+                var selected = $("#divTree").jstree("get_selected");
+                console.debug(selected);
+                var num = selected['length'];
+
+                for (i= 0;i<num;i++ ){
+                    t = $(selected[i]);
+                    id = $(t).attr("id");
+                    alert (id);
+                    
+
+                }
+                
+
+            }
+               
+                function checkAllTable(){
+                    
+                    //$("#divTree").jstree("check_all");//ok
+                   // $("#divTree").jstree ("check_node","#utrTemplatesOfView li") // ok
+
+                    $("#divTree").jstree("select_node","li [id *='utr']");// select all nodes that matches
+
+                }
+       
+            //function c
+            $(function(){
+                 
+                /*{
+            "attr" : { "id" : "li.node.id" },
+            "data" : {
+             "title" : "Long format demo",
+             "attr" : { "href" : "#" }
+            }
+           }*/
+                buildTheTableTree();
+                $("#openTree").click(function(){
+                    toggeleNodes();
+                });
+                $("#addTableBtn").click(function(){
+                    
+                    addTable("utrTableId_"+i,'table'+i);
+                    i++;
+                    buildTheTableTree();
+
+                });
+                $("li [id ='utrTableId_' ]").live('click',function(){
+                    //get thje ID and the text of the selected node
+
+                    var id = $(this).attr('id');
+
+                    var text = $("#divTree").jstree("get_text","#"+id);
+                    alert ("The Id is :"+ id+ " and the text is "+text);
+                    //rename 
+                    $("#divTree").jstree("rename_node","#"+id,"new name ");
+
+                });
+
+
+                $("#openAll").click(function(){
+                   
+                    openAllNodes();
+                });
+                //search
+                $("#search").click(function(){
+                    
+                    searchNode();
+
+                });
+                //selected node
+                $("#getSelected").click(function(){
+                    getSelectedTable();
+                });
+                $("#getChecked").click(function(){
+                    getCheckedTable();
+                    
+                });
+
+
+                $("#checkAll").click(function(){
+                    
+                    checkAllTable();
+
+                });
+
+            });// fin
+            
+        </script>
+
+    </head>
+    <body>
+        <input id= "addTableBtn" type="button" value=" Add TAbles"></input>
+        <input id= "openTree" type="button" value=" open tree"></input>
+        <input id= "openAll" type="button" value=" open All Table"></input>
+        <input id= "search" type="button" value=" Search"></input>
+        <input id= "getSelected" type="button" value=" selected URI"></input>
+        <input id= "getChecked" type="button" value=" get checked URI"></input>
+        <input id= "checkAll" type="button" value="checkAll"></input>
+
+        <div id="divTree">
+            <ul id="tree"/>
+        </div>
+        cvxvxv
+        <div id="divTree22">
+            <ul id="tree22"/>
+        </div>
+
+
+
+    </body>
+</html>
