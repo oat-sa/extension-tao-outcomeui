@@ -1,8 +1,5 @@
 <?php
 
-require_once('tao/actions/CommonModule.class.php');
-require_once('tao/actions/TaoModule.class.php');
-
 /**
  * Results Controller provide actions performed from url resolution
  * 
@@ -12,7 +9,7 @@ require_once('tao/actions/TaoModule.class.php');
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  * 
  */
-class Results extends TaoModule {
+class taoResults_actions_Results extends tao_actions_TaoModule {
 
     /**
      * constructor: initialize the service and the default data
