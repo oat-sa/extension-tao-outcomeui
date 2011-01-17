@@ -11,10 +11,10 @@ msgid "Back"
 msgstr "Retour"
 
 msgid "Build a complex table with no unlimited depth"
-msgstr "Construire une table complexe, avec une profondeur de graph illimitée"
+msgstr "Construire une table complexe, avec une profondeur de graph illimitÃ©e"
 
 msgid "Build a flexible table to extract information"
-msgstr "Construire une table flexible pour extraire les données"
+msgstr "Construire une table flexible pour extraire les donnÃ©es"
 
 msgid "Build your table"
 msgstr "Contruire ta table"
@@ -26,7 +26,7 @@ msgid "Cancel"
 msgstr "Annuler"
 
 msgid "Chose a property"
-msgstr "Choisir une propriété"
+msgstr "Choisir une propriÃ©tÃ©"
 
 msgid "Column name"
 msgstr "Nom de la colonne"
@@ -35,7 +35,7 @@ msgid "Columns"
 msgstr "Colonnes"
 
 msgid "Create save your own Template of tables"
-msgstr "Créer et sauvegarder vos propres modèles de tables"
+msgstr "CrÃ©er et sauvegarder vos propres modÃ©les de tables"
 
 msgid "Delete filter"
 msgstr "Supprimer un filtre"
@@ -50,13 +50,13 @@ msgid "Error in loading table"
 msgstr "Erreur dans le chargement de la table"
 
 msgid "Error, action failed !"
-msgstr "Error, Action échouée"
+msgstr "Error, Action Ã©chouÃ©e"
 
 msgid "Exit"
 msgstr "Quitter"
 
 msgid "Extraction method"
-msgstr "méthode d'extraction"
+msgstr "mÃ©thode d'extraction"
 
 msgid "Info"
 msgstr "Info"
@@ -65,7 +65,7 @@ msgid "List of context classes"
 msgstr "Liste des classes contextuelles"
 
 msgid "List of properties"
-msgstr "Liste des propriétés"
+msgstr "Liste des propriÃ©tÃ©s"
 
 msgid "Next"
 msgstr "Suivant"
@@ -77,7 +77,7 @@ msgid "Ok"
 msgstr "OK"
 
 msgid "Query"
-msgstr "Requête"
+msgstr "RequÃªte"
 
 msgid "Remove rows"
 msgstr "Supprimer des lignes"
@@ -86,13 +86,13 @@ msgid "Root classes"
 msgstr "Classes racine"
 
 msgid "Select a property"
-msgstr "Sélectionner une propriété"
+msgstr "SÃ©lectionner une propriÃ©tÃ©"
 
 msgid "Template manager"
-msgstr "Gestionnaire des Modèles"
+msgstr "Gestionnaire des ModÃ¨les"
 
 msgid "Template saved"
-msgstr "Modèle enregistré"
+msgstr "ModÃ¨le enregistrÃ©"
 
 msgid "Thank you for using UTR"
 msgstr "Merci pour l'utilisation de UTR"
@@ -125,6 +125,9 @@ msgid "Do you want to delete column ?"
 msgstr ""
 
 msgid "Export"
+msgstr ""
+
+msgid "Export the Table"
 msgstr ""
 
 msgid "Filter & Search"

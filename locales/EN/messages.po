@@ -1,8 +1,8 @@
-msgid "Advanced Authoring Tool"
-msgstr ""
-
 msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
 msgstr "All results of passed Tests with their referring Test takers, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
+
+msgid "Advanced Authoring Tool"
+msgstr ""
 
 msgid "Class saved"
 msgstr ""
@@ -35,6 +35,9 @@ msgid "create Score table"
 msgstr ""
 
 msgid "create Simple table"
+msgstr ""
+
+msgid "create direct table"
 msgstr ""
 
 msgid "create table"

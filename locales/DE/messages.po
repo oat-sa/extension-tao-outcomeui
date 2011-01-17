@@ -1,6 +1,3 @@
-msgid "Advanced Authoring Tool"
-msgstr ""
-
 msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
 msgstr "Hier werden alle Ergebnisse durchlaufener Tests mit den dazugehörigen spezifischen Daten der Testpersonen, Gruppen und Items, sowie die individuelle Datenerhebung während des Testdurchlaufs gespeichert und verwaltet."
 
@@ -25,17 +22,8 @@ msgstr "Ergebnisse"
 msgid "Results library"
 msgstr "Ergebnis-Bibliothek"
 
-msgid "Test view"
-msgstr ""
-
 msgid "This module constitutes the final step."
 msgstr "Diese Modul stellt den letzten Schritt dar."
-
-msgid "create Score table"
-msgstr ""
-
-msgid "create Simple table"
-msgstr ""
 
 msgid "create table"
 msgstr "Tabelle erstellen"
@@ -46,9 +34,6 @@ msgstr "löschen"
 msgid "export"
 msgstr "Export"
 
-msgid "lists"
-msgstr ""
-
 msgid "new class"
 msgstr "neue Klasse"
 
@@ -57,4 +42,22 @@ msgstr "neue Eigenschaft"
 
 msgid "new result"
 msgstr "neues Ergebnis"
+
+msgid "Advanced Authoring Tool"
+msgstr ""
+
+msgid "Test view"
+msgstr ""
+
+msgid "create Score table"
+msgstr ""
+
+msgid "create Simple table"
+msgstr ""
+
+msgid "create direct table"
+msgstr ""
+
+msgid "lists"
+msgstr ""
 

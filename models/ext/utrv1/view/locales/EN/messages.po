@@ -70,6 +70,9 @@ msgstr ""
 msgid "Export"
 msgstr ""
 
+msgid "Export the Table"
+msgstr ""
+
 msgid "Extraction method"
 msgstr ""
 

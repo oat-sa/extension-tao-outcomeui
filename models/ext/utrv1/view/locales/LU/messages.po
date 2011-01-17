@@ -130,6 +130,9 @@ msgstr ""
 msgid "Export"
 msgstr ""
 
+msgid "Export the Table"
+msgstr ""
+
 msgid "Filter & Search"
 msgstr ""
 

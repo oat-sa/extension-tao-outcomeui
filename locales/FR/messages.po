@@ -58,3 +58,6 @@ msgstr "nouvelle propriété"
 msgid "new result"
 msgstr "nouveau résultat"
 
+msgid "create direct table"
+msgstr ""
+
