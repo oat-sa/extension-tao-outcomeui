@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE extension SYSTEM "../../tao/doc/structure.dtd">
 <extension name="Results" url="/taoResults/Results/index" level="5">
+	<description>View and format the collected results.</description>
     <sections>
         <section id="manage_results" name="Manage results" url="/taoResults/Results/index">
             <trees>
