@@ -1,6 +1,6 @@
 <?php
 require_once dirname(__FILE__) . '/../../tao/test/TestRunner.php';
-require_once dirname(__FILE__) . '/../includes/common.php';
+include_once dirname(__FILE__) . '/bootstrap.php';
 
 /**
  *
@@ -54,7 +54,7 @@ class ResultsTestCase extends UnitTestCase {
 		$this->assertNotNull($instance);
 		$this->assertIsA($instance, 'core_kernel_classes_Resource');
 		
-		$this->assertTrue($instance->delelte());
+		$this->assertTrue($instance->delete());
 	}
 	
 }
