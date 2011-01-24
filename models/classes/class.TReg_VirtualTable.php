@@ -9,7 +9,7 @@ error_reporting(E_ALL);
  *
  * This file is part of TAO.
  *
- * Automatically generated on 12.01.2011, 17:22:12 with ArgoUML PHP module 
+ * Automatically generated on 24.01.2011, 11:45:53 with ArgoUML PHP module 
  * (last revised $Date: 2010-01-12 20:14:42 +0100 (Tue, 12 Jan 2010) $)
  *
  * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
@@ -20,6 +20,27 @@ error_reporting(E_ALL);
 if (0 > version_compare(PHP_VERSION, '5')) {
     die('This file was generated for PHP 5');
 }
+
+/**
+ * include taoResults_models_classes_RegCommon
+ *
+ * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+ */
+require_once('taoResults/models/classes/class.RegCommon.php');
+
+/**
+ * include taoResults_models_classes_UtrFilter
+ *
+ * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+ */
+require_once('taoResults/models/classes/class.UtrFilter.php');
+
+/**
+ * include taoResults_models_classes_UtrStatistic
+ *
+ * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+ */
+require_once('taoResults/models/classes/class.UtrStatistic.php');
 
 /* user defined includes */
 // section 10-13-1--65-3b6a288d:12d79aedebf:-8000:0000000000002AA5-includes begin
@@ -38,9 +59,13 @@ if (0 > version_compare(PHP_VERSION, '5')) {
  * @subpackage models_classes
  */
 class taoResults_models_classes_TReg_VirtualTable
+    /* multiple generalisations not supported by PHP: */
+    /* extends taoResults_models_classes_RegCommon,
+            taoResults_models_classes_RegCommon,
+            taoResults_models_classes_RegCommon */
 {
     // --- ASSOCIATIONS ---
-
+    // generateAssociationEnd :     // generateAssociationEnd : 
 
     // --- ATTRIBUTES ---
 

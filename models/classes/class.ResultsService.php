@@ -5,7 +5,7 @@ error_reporting(E_ALL);
 /**
  * Service methods to manage the Results business models using the RDF API.
  *
- * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
+ * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
  * @package taoResults
  * @subpackage models_classes
  */
@@ -18,7 +18,7 @@ if (0 > version_compare(PHP_VERSION, '5')) {
  * The Service class is an abstraction of each service instance. 
  * Used to centralize the behavior related to every servcie instances.
  *
- * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
+ * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
  */
 require_once('tao/models/classes/class.GenerisService.php');
 
@@ -34,7 +34,7 @@ require_once('tao/models/classes/class.GenerisService.php');
  * Service methods to manage the Results business models using the RDF API.
  *
  * @access public
- * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
+ * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
  * @package taoResults
  * @subpackage models_classes
  */
@@ -60,7 +60,7 @@ class taoResults_models_classes_ResultsService
      * Short description of method __construct
      *
      * @access public
-     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
      * @return mixed
      */
     public function __construct()
@@ -77,7 +77,7 @@ class taoResults_models_classes_ResultsService
      * get a result instance
      *
      * @access public
-     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
      * @param  string identifier
      * @param  string mode
      * @param  Class clazz
@@ -116,7 +116,7 @@ class taoResults_models_classes_ResultsService
      * If the uri don't reference a  result subclass, it returns null
      *
      * @access public
-     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
      * @param  string uri
      * @return core_kernel_classes_Class
      */
@@ -144,7 +144,7 @@ class taoResults_models_classes_ResultsService
      * subclass the result class
      *
      * @access public
-     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
      * @param  Class clazz
      * @param  string label
      * @param  array properties
@@ -184,7 +184,7 @@ class taoResults_models_classes_ResultsService
      * delete a result
      *
      * @access public
-     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
      * @param  Resource result
      * @return boolean
      */
@@ -207,7 +207,7 @@ class taoResults_models_classes_ResultsService
      * delete a result class or subclass
      *
      * @access public
-     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
      * @param  Class clazz
      * @return boolean
      */
@@ -232,7 +232,7 @@ class taoResults_models_classes_ResultsService
      * check if the given class is a class or a subclass of Result
      *
      * @access public
-     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
      * @param  Class clazz
      * @return boolean
      */
@@ -262,7 +262,7 @@ class taoResults_models_classes_ResultsService
      * Short description of method getResultsByGroup
      *
      * @access protected
-     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
      * @param  Resource group
      * @return core_kernel_classes_ContainerCollection
      */
@@ -280,7 +280,7 @@ class taoResults_models_classes_ResultsService
      * Short description of method addResultVariable
      *
      * @access public
-     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
      * @param  array dtisUris
      * @param  string key
      * @param  string value
@@ -288,7 +288,7 @@ class taoResults_models_classes_ResultsService
      */
     public function addResultVariable($dtisUris, $key, $value)
     {
-               $returnValue = null;
+        $returnValue = null;
 
         // section 127-0-1-1-3fc126b2:12c350e4297:-8000:0000000000002886 begin
         //get the name space of the class
@@ -491,8 +491,8 @@ class taoResults_models_classes_ResultsService
             $varPro = new core_kernel_classes_Property($uriOfVariable);
             $deliveryResultInstance->editPropertyValues($varPro, $value);
 // the end
-            // section 127-0-1-1-3fc126b2:12c350e4297:-8000:0000000000002886 end
-        }
+        // section 127-0-1-1-3fc126b2:12c350e4297:-8000:0000000000002886 end
+
         return $returnValue;
     }
 
@@ -500,7 +500,7 @@ class taoResults_models_classes_ResultsService
      * Short description of method setScore
      *
      * @access public
-     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
      * @param  array dtisUris
      * @param  string scoreValue
      * @param  string minScoreValue
@@ -531,7 +531,7 @@ class taoResults_models_classes_ResultsService
      * Short description of method setEndorsment
      *
      * @access public
-     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
      * @param  array dtisUris
      * @param  boolean endorsement
      * @return core_kernel_classes_Resource
@@ -556,7 +556,7 @@ class taoResults_models_classes_ResultsService
      * Short description of method setAnsweredValues
      *
      * @access public
-     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
      * @param  array dtisUris
      * @param  string value
      * @return core_kernel_classes_Resource
@@ -578,7 +578,7 @@ class taoResults_models_classes_ResultsService
      * Short description of method addResultVariables
      *
      * @access public
-     * @author Bertrand Chevrier, <bertrand.chevrier@tudor.lu>
+     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
      * @param  array dtisUris
      * @param  array variables
      * @param  boolean onlyKnown
