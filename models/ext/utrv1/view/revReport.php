@@ -1,6 +1,5 @@
 <?
-require_once($_SERVER['DOCUMENT_ROOT']."/generis/common/inc.extension.php");
-require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
+require_once(dirname(__FILE__) . "/../../../../includes/raw_start.php");
 //$_SESSION["revType"]= $_GET[revType];
 //get the parameters of the workflow
 

@@ -7,8 +7,7 @@
  * @package Result
  */
 
-require_once($_SERVER['DOCUMENT_ROOT']."/generis/common/inc.extension.php");
-require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
+require_once(dirname(__FILE__) . "/../../../../includes/raw_start.php");
 /**
  * Permits to add a new intance in the result class and subclass ACCORDING TO
  * RESULT FILE SUBMITED AFTER THE TEST

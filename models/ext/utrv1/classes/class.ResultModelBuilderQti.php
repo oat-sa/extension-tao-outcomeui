@@ -9,9 +9,7 @@
  * @author Younes Djaghloul, CRP Henri Tudor
  * @package Result
  */
-
-require_once($_SERVER['DOCUMENT_ROOT']."/generis/common/inc.extension.php");
-require_once($_SERVER['DOCUMENT_ROOT']."/taoResults/includes/common.php");
+require_once(dirname(__FILE__) . "/../../../../includes/raw_start.php");
 
 
 //define ("$RESULT_NS",'http://127.0.0.1/middleware/demo.rdf#');
