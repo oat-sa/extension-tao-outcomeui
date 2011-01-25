@@ -491,6 +491,7 @@ class taoResults_models_classes_ResultsService
             $varPro = new core_kernel_classes_Property($uriOfVariable);
             $deliveryResultInstance->editPropertyValues($varPro, $value);
 // the end
+        }
         // section 127-0-1-1-3fc126b2:12c350e4297:-8000:0000000000002886 end
 
         return $returnValue;
