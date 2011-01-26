@@ -1,0 +1,82 @@
+<?xml version="1.0"?>
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xml:base="http://www.tao.lu/Ontologies/TAOResult.rdf#" xmlns:ns13="http://www.tao.lu/Ontologies/TAOResult.rdf">
+  <rdf:Description rdf:about="#Result">
+    <rdfs:label xml:lang="EN"><![CDATA[Result]]></rdfs:label>
+    <rdfs:comment xml:lang="EN"><![CDATA[Result]]></rdfs:comment>
+    <rdfs:subClassOf rdf:resource="http://www.tao.lu/Ontologies/TAO.rdf#TAOObject"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="">
+    <rdf:type rdf:resource="http://www.tao.lu/Ontologies/generis.rdf#Model"/>
+    <rdfs:label xml:lang="EN"><![CDATA[TAO Result Model]]></rdfs:label>
+    <rdfs:comment xml:lang="EN"><![CDATA[TAO Result Model]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="#ResultContent">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:label xml:lang="EN"><![CDATA[Result Content]]></rdfs:label>
+    <rdfs:comment xml:lang="EN"><![CDATA[ResultContent]]></rdfs:comment>
+    <rdfs:domain rdf:resource="#Result"/>
+    <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#TAO_ITEM_RESULTS">
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:label><![CDATA[TAO_ITEM_RESULTS]]></rdfs:label>
+    <rdfs:comment><![CDATA[$comment]]></rdfs:comment>
+    <rdfs:subClassOf rdf:resource="#Result"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#TAO_PROCESS_EXEC_ID">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:label><![CDATA[TAO_PROCESS_EXEC_ID]]></rdfs:label>
+    <rdfs:comment><![CDATA[comment TAO_PROCESS_EXEC_ID]]></rdfs:comment>
+    <rdfs:domain rdf:resource="#TAO_ITEM_RESULTS"/>
+    <rdfs:domain rdf:resource="#TAO_DELIVERY_RESULTS"/>
+    <rdfs:range rdf:resource="http://www.tao.lu/middleware/wfEngine.rdf#ClassProcessInstances"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#TAO_DELIVERY_ID">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:label><![CDATA[TAO_DELIVERY_ID]]></rdfs:label>
+    <rdfs:comment><![CDATA[comment TAO_DELIVERY_ID]]></rdfs:comment>
+    <rdfs:domain rdf:resource="#TAO_ITEM_RESULTS"/>
+    <rdfs:domain rdf:resource="#TAO_DELIVERY_RESULTS"/>
+    <rdfs:range rdf:resource="http://www.tao.lu/Ontologies/TAODelivery.rdf#Delivery"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#TAO_TEST_ID">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:label><![CDATA[TAO_TEST_ID]]></rdfs:label>
+    <rdfs:comment><![CDATA[comment TAO_TEST_ID]]></rdfs:comment>
+    <rdfs:domain rdf:resource="#TAO_ITEM_RESULTS"/>
+    <rdfs:range rdf:resource="http://www.tao.lu/Ontologies/TAOTest.rdf#Test"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#TAO_ITEM_ID">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:label><![CDATA[TAO_ITEM_ID]]></rdfs:label>
+    <rdfs:comment><![CDATA[comment TAO_ITEM_ID]]></rdfs:comment>
+    <rdfs:domain rdf:resource="#TAO_ITEM_RESULTS"/>
+    <rdfs:range rdf:resource="http://www.tao.lu/Ontologies/TAOItem.rdf#Item"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#TAO_SUBJECT_ID">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:label><![CDATA[TAO_SUBJECT_ID]]></rdfs:label>
+    <rdfs:comment><![CDATA[comment TAO_SUBJECT_ID]]></rdfs:comment>
+    <rdfs:domain rdf:resource="#TAO_ITEM_RESULTS"/>
+    <rdfs:domain rdf:resource="#TAO_DELIVERY_RESULTS"/>
+    <rdfs:range rdf:resource="http://www.tao.lu/Ontologies/TAOSubject.rdf#Subject"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#TAO_ITEM_VARIABLE_ID">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:label><![CDATA[TAO_ITEM_VARIABLE_ID]]></rdfs:label>
+    <rdfs:comment><![CDATA[comment TAO_ITEM_VARIABLE_ID]]></rdfs:comment>
+    <rdfs:domain rdf:resource="#TAO_ITEM_RESULTS"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#TAO_ITEM_VARIABLE_VALUE">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:label><![CDATA[TAO_ITEM_VARIABLE_VALUE]]></rdfs:label>
+    <rdfs:comment><![CDATA[comment TAO_ITEM_VARIABLE_VALUE]]></rdfs:comment>
+    <rdfs:domain rdf:resource="#TAO_ITEM_RESULTS"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="#TAO_DELIVERY_RESULTS">
+    <rdfs:subClassOf rdf:resource="#Result"/>
+    <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
+    <rdfs:label><![CDATA[TAO_DELIVERY_RESULTS]]></rdfs:label>
+    <rdfs:comment><![CDATA[$comment]]></rdfs:comment>
+  </rdf:Description>
+</rdf:RDF>
