@@ -6,18 +6,17 @@
  * 
  */
 	return array(
-		'name' => 'TAO Results',
-		'description' => 'TAO Results extensions http://www.tao.lu',
+		'name' => 'taoResults',
+		'description' => 'TAO Results extension',
 		'additional' => array(
-			'version' => '1.2',
+			'version' => '2.0',
 			'author' => 'CRP Henri Tudor',
-			'dependances' => array(),
+			'dependances' => array('tao'),
+			'models' => 'http://www.tao.lu/Ontologies/TAOResult.rdf',
 			'install' => array( 
-				'sql' => dirname(__FILE__). '/model/ontology/TAOResult.sql',
-				'php' => dirname(__FILE__). '/install/install.php'
+				'php' => dirname(__FILE__). '/install/install.php',
+				'rdf' => dirname(__FILE__). '/models/ontology/taoresult.rdf'
 			),
-
-			'model' => array('http://www.tao.lu/Ontologies/TAOResult.rdf'),
 			'classLoaderPackages' => array( 
 				dirname(__FILE__).'/actions/',
 				dirname(__FILE__).'/helpers/'
