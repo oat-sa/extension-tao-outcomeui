@@ -5,9 +5,6 @@
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  *
  */
-
-include_once ROOT_PATH . '/tao/includes/constants.php';
-
 $todefine = array(
 	'RESULT_ONTOLOGY'		=> 'http://www.tao.lu/Ontologies/TAOResult.rdf',
 	'ITEM_ONTOLOGY'			=> 'http://www.tao.lu/Ontologies/TAOItem.rdf',
@@ -32,11 +29,4 @@ $todefine = array(
 	'PROP_RESULT_ITEM_VARIABLE_ID' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_ITEM_VARIABLE_ID',
 	'PROP_RESULT_ITEM_VARIABLE_VALUE' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_ITEM_VARIABLE_VALUE'
 );
-
-foreach($todefine as $constName => $constValue){
-	if(!defined($constName)){
-		define($constName, $constValue);
-	}
-}
-unset($todefine);
 ?>
