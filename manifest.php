@@ -14,7 +14,6 @@
 			'dependances' => array('tao'),
 			'models' => 'http://www.tao.lu/Ontologies/TAOResult.rdf',
 			'install' => array( 
-				'php' => dirname(__FILE__). '/install/install.php',
 				'rdf' => dirname(__FILE__). '/models/ontology/taoresult.rdf'
 			),
 			'classLoaderPackages' => array( 
