@@ -412,25 +412,15 @@ class taoResults_models_classes_ResultsService
 
 
             }
-            //now, we have to check from all instances fo this class, if the instance exists
-            //get the instances of the class of delivery result
-            $drClass = new core_kernel_classes_Class($uriDelivery);
-            $listDeliveryResults = $drClass->getInstances();
+        	$drClass = new core_kernel_classes_Class($uriDelivery);
             $match = FALSE;
             $matchUri = '';
-            foreach ($listDeliveryResults as $uri => $resource) {
-                $drInstance = new core_kernel_classes_Resource($uri);
-                $propProcId = new core_kernel_classes_Property($resultNS . "#" . "TAO_PROCESS_EXEC_ID");
-                //get the value of the property TAO_PROCESS_EXEC_ID
-                $propVal = $drInstance->getPropertyValues($propProcId);
-                // check if the the value of this property matchs with the TAO_PROCESS_EXEC_ID of the inputed result
-                $propValue = $propVal[0];
-                if ($propValue == $dtisUris["TAO_PROCESS_EXEC_ID"]) {
-                    // it matches
-                    $match = TRUE;
-                    //return the uriOf this instance
-                    $matchUri = $uri;
-                }
+            
+            $apiModel       = core_kernel_impl_ApiModelOO::singleton();
+            $processExecCollection = $apiModel->getSubject($resultNS . "#" . "TAO_PROCESS_EXEC_ID", $dtisUris["TAO_PROCESS_EXEC_ID"]);
+            foreach($processExecCollection->getIterator() as $processExec){
+            	 $match = TRUE;
+                 $matchUri = $processExec->uriResource;
             }
             //if it doesn't match so create a new instance
             if (!$match) {
@@ -440,6 +430,7 @@ class taoResults_models_classes_ResultsService
                 $newInstance = $drClass->createInstance($label, $comment);
                 $matchUri = $newInstance->uriResource;
             }
+            
             // now the $matchUri is the instance to use
             //******************** Get the uri of the property to use to save the value
             //verify if the variable exists as property in the current class
