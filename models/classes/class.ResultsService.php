@@ -415,13 +415,15 @@ class taoResults_models_classes_ResultsService
         	$drClass = new core_kernel_classes_Class($uriDelivery);
             $match = FALSE;
             $matchUri = '';
+            $apiSearch = new core_kernel_impl_ApiSearchI();
+        	$options = array('checkSubclasses'	=> false, 'like' => false);
+        	$filters = array($resultNS . "#" . "TAO_PROCESS_EXEC_ID" => $dtisUris["TAO_PROCESS_EXEC_ID"]);
+        	foreach($apiSearch->searchInstances($filters, $drClass, $options) as $processExec){
+        		$match = TRUE;
+                $matchUri = $processExec->uriResource;
+                break;
+        	}
             
-            $apiModel       = core_kernel_impl_ApiModelOO::singleton();
-            $processExecCollection = $apiModel->getSubject($resultNS . "#" . "TAO_PROCESS_EXEC_ID", $dtisUris["TAO_PROCESS_EXEC_ID"]);
-            foreach($processExecCollection->getIterator() as $processExec){
-            	 $match = TRUE;
-                 $matchUri = $processExec->uriResource;
-            }
             //if it doesn't match so create a new instance
             if (!$match) {
                 //create a new instance of the current delivery class
