@@ -19,7 +19,7 @@
             <actions>
                 
                 <action name="create direct table" url="/taoResults/Results/createDirectTable"  context="class" />
-                <action name="create Score table" url="/taoResults/Results/createScoreTable"  context="class" />
+                <action name="create score table" url="/taoResults/Results/createScoreTable"  context="class" />
                 <action name="create table" url="/taoResults/Results/createTable"  context="class" />
             </actions>
         </section>
