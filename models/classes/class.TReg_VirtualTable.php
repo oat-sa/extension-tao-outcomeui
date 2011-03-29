@@ -127,7 +127,7 @@ class taoResults_models_classes_TReg_VirtualTable
      * @param  array utrModel
      * @return array
      */
-    public function deleteColumn($$columnId, $utrModel)
+    public function deleteColumn($columnId, $utrModel)
     {
         $returnValue = array();
 
