@@ -454,7 +454,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
         $resultNS = 'http://taotransfer/mytao.rdf'; // à supprimer dans la version finale
         $dtisItemResultClass = new core_kernel_classes_Class($resultNS . '#' . "RDM_ITEM_VARIABLES_CLASS");
 
-        $dtisLabel = 'Result_t' . RESULT_ONTOLOGY . date("Y/m/d_H:i:s"); // we can delete it if we want reduce
+        $dtisLabel = 'Result_'. date("Y/m/d_H:i:s"); // we can delete it if we want reduce
         $dtisComment = ''; // "Result Recieved the : " . date("Y/m/d_H:i:s");
 
         $dtisInstance = $dtisItemResultClass->createInstance($dtisLabel, $dtisComment);
@@ -556,22 +556,31 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
 
         $match = FALSE;
         $matchUri = '';
-        //for each process_id there is only one instance, so we create an instance with the same last part as the the URI of the process_ID
 
-        
+        //for each process_id there is only one instance, so we create an instance with the same last part as the the URI of the process_ID
         list($ns, $lastPartProcessID) = explode('#', $dtisUris["TAO_PROCESS_EXEC_ID"]);
         $instanceUri = $localNS . "#instResult_" . $lastPartProcessID;
 
-        //test the existance of this instance in the delivery result class
-        $deliveryResultClass = new core_kernel_classes_Class($deliveryResultUri);
+        //************** first algo. test the existance of this instance in the delivery result class
+        /*$deliveryResultClass = new core_kernel_classes_Class($deliveryResultUri);
         $listOfInstances = $deliveryResultClass->getInstances();
         //chack the existance of this Uris
-        if (array_key_exists($instanceUri, $listOfInstances)===TRUE){
+        if (array_key_exists($instanceUri, $listOfInstances) === TRUE) {
+            $match = TRUE;
+            $matchUri = $instanceUri;
+        }*/
+        //*******************
+
+        //second algo, get directely the type of an instance and check if this instance is an instance of the selected deliveryResult
+        $inst = new core_kernel_classes_Resource($instanceUri);
+        $typeOfIns = $inst->getType();
+        if (array_key_exists($deliveryResultUri, $typeOfIns) === TRUE) {
             $match = TRUE;
             $matchUri = $instanceUri;
         }
+        //*********************
 
-        /* Old coee to find if an uinstance exists
+        /* Old code to find if an uinstance exists
          * $apiSearch = new core_kernel_impl_ApiSearchI();
           $options = array('checkSubclasses' => false, 'like' => false);
           $filters = array($resultNS . "#" . "TAO_PROCESS_EXEC_ID" => $dtisUris["TAO_PROCESS_EXEC_ID"]);
@@ -584,15 +593,17 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
         //if it doesn't match so create a new instance
         if (!$match) {
             // label of Delivery
+            $subjectInst = new core_kernel_classes_Class($dtisUris["TAO_SUBJECT_ID"]);
+            $subjectLabel = $subjectInst->getLabel();
 
             $deliveryResultLabel = $drClass->getLabel();
-            //Delivery label finish
+            
             //create a new instance of the current delivery class
-            $label = "Res_" . $deliveryResultLabel. "_" . date("Y/m/d_H:i:s");
-            $comment = '';//"Result of " . $subjectLabel;
+            $label = "Res_" .$subjectLabel.'_'.$deliveryResultLabel . "_" . date("Y/m/d_H:i:s");
+            $comment = ''; //"Result of " . $subjectLabel;
             //create the instance with special last part that correspends to proces ID
-            list($ns,$lastPartInstanceResult)= explode('#',$instanceUri);
-            $newInstance = $drClass->createInstance($label, $comment,"#".$lastPartInstanceResult);
+            list($ns, $lastPartInstanceResult) = explode('#', $instanceUri);
+            $newInstance = $drClass->createInstance($label, $comment, "#" . $lastPartInstanceResult);
 
             //set the value of the three propertie DTIS
 
