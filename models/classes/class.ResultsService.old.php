@@ -92,11 +92,12 @@ class taoResults_models_classes_ResultsService
         if (is_null($clazz) && $mode == 'uri') {
             try {
                 $resource = new core_kernel_classes_Resource($identifier);
-                $type = $resource->getUniquePropertyValue(new core_kernel_classes_Property(RDF_TYPE));
-                $clazz = new core_kernel_classes_Class($type->uriResource);
-            } catch (Exception $e) {
+                foreach($resource->getType() as $type){
+                	$clazz = $type;
+                	break;
+                }
                 
-            }
+            } catch (Exception $e) { }
         }
         if (is_null($clazz)) {
             $clazz = $this->resultClass;

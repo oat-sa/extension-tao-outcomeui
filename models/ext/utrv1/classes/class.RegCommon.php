@@ -219,13 +219,12 @@ class RegCommon {
     public function trGetClassesOfInstance($uriInstance) {
         //We begin by create a resource PHP object
         $trResource = new core_kernel_classes_Resource($uriInstance);
-        //get the values of this instance for the property RDF_TYPE
-        //it is an array of values array[]=uris
-        $cv=$trResource->getPropertyValues(new core_kernel_classes_Property( RDF_TYPE));
+       
+        $cv=$trResource->getType();
 
         //put the uris as keys
-        foreach ($cv as $uri) {
-            $classValuesUri[$uri] = 0;
+        foreach ($cv as $type) {
+            $classValuesUri[$type->uriResource] = 0;
         }
         //return an array of classes URI;
         //an instance can belong to several classes
