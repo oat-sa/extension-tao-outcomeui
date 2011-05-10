@@ -64,7 +64,7 @@ class taoResults_models_classes_EventAdvancedResult_SymbolFactory
      * @access private
      * @var array
      */
-    private $symbolOfPatternCollection = array(array);
+    private $symbolOfPatternCollection = array();
 
     // --- OPERATIONS ---
 

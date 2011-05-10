@@ -578,18 +578,6 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
             $match = TRUE;
             $matchUri = $instanceUri;
         }
-        //*********************
-
-        /* Old code to find if an uinstance exists
-         * $apiSearch = new core_kernel_impl_ApiSearchI();
-          $options = array('checkSubclasses' => false, 'like' => false);
-          $filters = array($resultNS . "#" . "TAO_PROCESS_EXEC_ID" => $dtisUris["TAO_PROCESS_EXEC_ID"]);
-          foreach ($apiSearch->searchInstances($filters, $drClass, $options) as $processExec) {
-          $match = TRUE;
-          $matchUri = $processExec->uriResource;
-          break;
-          } */
-        //********************************************************************
         //if it doesn't match so create a new instance
         if (!$match) {
             // label of Delivery

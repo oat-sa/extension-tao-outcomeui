@@ -112,7 +112,7 @@ class taoResults_models_classes_TReg_VirtualTable
      * @param  array listInstances
      * @return mixed
      */
-    private function array($listRows, $listInstances)
+    private function makeArray($listRows, $listInstances)
     {
         // section 10-13-1--65-3b6a288d:12d79aedebf:-8000:0000000000002AAC begin
         // section 10-13-1--65-3b6a288d:12d79aedebf:-8000:0000000000002AAC end
