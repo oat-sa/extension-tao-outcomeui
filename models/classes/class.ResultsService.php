@@ -672,6 +672,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
             $resourceProperty = $rdfProperty->createInstance($labelProperty, $commentProperty, "#" . $lastPartUriProperty);
             //Create the property and link it with the uri
             $drProperty = new core_kernel_classes_Property($resourceProperty->uriResource);
+            $drProperty->setMultiple(true);
 
             $widgetProp = new core_kernel_classes_Property("http://www.tao.lu/datatypes/WidgetDefinitions.rdf#widget");
             $drProperty->setPropertyValue($widgetProp, "http://www.tao.lu/datatypes/WidgetDefinitions.rdf#TextBox");
