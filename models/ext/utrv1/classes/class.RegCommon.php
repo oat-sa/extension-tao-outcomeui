@@ -30,12 +30,12 @@ class RegCommon {
 
 
 
-        $session = core_kernel_classes_Session::singleton();
+        /*$session = core_kernel_classes_Session::singleton();
         $session->model->loadModel(RESULT_ONTOLOGY);
         $session->model->loadModel(ITEM_ONTOLOGY);
         $session->model->loadModel(GROUP_ONTOLOGY);
         $session->model->loadModel(TEST_ONTOLOGY);
-        $session->model->loadModel(SUBJECT_ONTOLOGY);
+        $session->model->loadModel(SUBJECT_ONTOLOGY);*/
 
         //Authentication
 
