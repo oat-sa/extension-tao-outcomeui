@@ -1,4 +1,5 @@
 <?php
+
 /**
  * RegCommon provides the common methods to acces generis API in more suitable
  * in Table Builder context.
@@ -6,10 +7,7 @@
  * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
  * @package Result
  */
-
 require_once(dirname(__FILE__) . "/../../../../includes/raw_start.php");
-
-
 
 /**
  * RegCommon provides the common methods to acces generis API in more suitable
@@ -20,6 +18,7 @@ require_once(dirname(__FILE__) . "/../../../../includes/raw_start.php");
  * @package Result
  */
 class RegCommon {
+
     /**
      * This method permits to connect to a specific module of generis.
      *
@@ -30,28 +29,14 @@ class RegCommon {
 
 
 
-        /*$session = core_kernel_classes_Session::singleton();
-        $session->model->loadModel(RESULT_ONTOLOGY);
-        $session->model->loadModel(ITEM_ONTOLOGY);
-        $session->model->loadModel(GROUP_ONTOLOGY);
-        $session->model->loadModel(TEST_ONTOLOGY);
-        $session->model->loadModel(SUBJECT_ONTOLOGY);*/
-
-        //Authentication
-
-        /*  $login = "hyperclass";
-        $password = md5("hyperclass");
-        $module = "hyperclass";
-        //Connect to generis API
-        $connexion = new  core_control_FrontController();
-        $connexion->connect($login,$password,$module);
-        //return the variable in order to be used by other services
-
-        if ($connexion->isConnected()) {
-        //echo "#################### Connected to ". $module. " ######################";
-        }
-        return $connexion;*/
+        /* $session = core_kernel_classes_Session::singleton();
+          $session->model->loadModel(RESULT_ONTOLOGY);
+          $session->model->loadModel(ITEM_ONTOLOGY);
+          $session->model->loadModel(GROUP_ONTOLOGY);
+          $session->model->loadModel(TEST_ONTOLOGY);
+          $session->model->loadModel(SUBJECT_ONTOLOGY); */
     }
+
     /**
      * to obtain a PHP object linked to the generis class, based on its URI
      *
@@ -64,6 +49,7 @@ class RegCommon {
         $trClass = new core_kernel_classes_Class($uriClass);
         return $trClass;
     }
+
     /**
      * to obtain a PHP object linked to the generis property, based on its URI
      *
@@ -92,14 +78,6 @@ class RegCommon {
         //extract most important properties for navigation
         $label = $trProperty->getLabel();
 
-        //$domaine = $trProperty->getDomain()->getIterator();
-        //$dbWrapper = core_kernel_classes_DbWrapper::singleton();
-        //$dbWrapper->dbConnector->debug = true;
-        //echo " \n HHHHHHHHHHHHHHHHHHHHHHHHHHH  ". $trProperty->getRange()."  HHHHHHHHHHHHHHHHHHHHHHHHHHH \n ";
-        //        if ($uriProperty == 'http://127.0.0.1/middleware/demo.rdf#SUBJECT_ID'){
-        //            echo " HHHHHHHHHHHHHHHHHHHHHHHHHHH  ". $trProperty->getRange();
-        //
-        //        }
         $range = $trProperty->getRange();
         //S$dbWrapper->dbConnector->debug = false;
         //Create an object prop with the main important variable in our context.
@@ -120,11 +98,11 @@ class RegCommon {
      * @param  String $uriClass
      * @return Collection
      */
-    public function trGetProperties ($uriClass) {
+    public function trGetProperties($uriClass) {
         //Link the class, and create a PHP object
         $trClass = $this->linkClass($uriClass);
         //get properties of the class based on the API
-        $listProperties = $trClass->getProperties(true);//now.. it returnes an array of properities object
+        $listProperties = $trClass->getProperties(true); //now.. it returnes an array of properities object
         //create only, an array with the URI of properties
         //filter the properties
         $listProperties = $this->trFilterProperties($listProperties);
@@ -134,20 +112,15 @@ class RegCommon {
         //populate the array $listPropertiesUri with property infos
         $listPropertiesUri = array();
 
-        foreach($listUri as $uriProp) {
+        foreach ($listUri as $uriProp) {
             //echo $uriProp. "<br>";
             //get the info of the property
 
 
 
             $infoProp = $this->trGetPropertyInfo($uriProp);
-            //            if($uriProp =='http://127.0.0.1/middleware/demo.rdf#SUBJECT_ID'){
-            //                echo "hhhhhhhhhhhhhhhhhhhh <br>";
-            //                print_r($infoProp);
-            //
-            //            }
             //put the property infos in the array element
-            $listPropertiesUri[$uriProp]=$infoProp;
+            $listPropertiesUri[$uriProp] = $infoProp;
         }
 
         return $listPropertiesUri;
@@ -165,19 +138,18 @@ class RegCommon {
     public function trGetRangeClasses($uriClass) {
         //initialize the array of classes
         $lc = array();
-        $rangeClass =  new stdClass();
+        $rangeClass = new stdClass();
 
         //get properties of the class
         $listProp = $this->trGetProperties($uriClass);
 
         //get the range of all properties
-        foreach ($listProp as $uriProp=>$infoProp) {
+        foreach ($listProp as $uriProp => $infoProp) {
 
-            $labelProp = $infoProp-label;
+            $labelProp = $infoProp - label;
             $uriRange = $infoProp->uriRange;
             $labelRange = $infoProp->labelRange;
             //echo $labelProp." ". $labelRange." <br>";
-
             //Test if the range is class or not, if it is class, add it to the array
             //
             //Link to ressource
@@ -187,24 +159,24 @@ class RegCommon {
             //add this class to listClasses
             //the information are propertySourceUri, label of the class, the uri of the class is the key it self
             //IMPORTANT: we should instantiate a new object,
-            $rangeClass =  new stdClass();
+            $rangeClass = new stdClass();
             //get the values
-            $rangeClass->propertySourceUri = $uriProp;// to keep the property responsable of this bridge
+            $rangeClass->propertySourceUri = $uriProp; // to keep the property responsable of this bridge
             $rangeClass->label = $labelRange;
             $rangeClass->uriClass = $uriRange;
             //put in the array
-            //
             //Do a filter on class range in this version we delete all RDF classes and il uri is null ( This ocure some times !!!!)
 
-            if ((substr($uriRange,0,17) != 'http://www.w3.org') and ($uriRange!='')) {
+            if ((substr($uriRange, 0, 17) != 'http://www.w3.org') and ($uriRange != '')) {
 
-                $lc[$uriRange] = $rangeClass;//->Label;
+                $lc[$uriRange] = $rangeClass; //->Label;
             }
 
             // }//end of adding class's info
         }
         return $lc;
     }
+
     /**
      * get  classes of the given inctance;
      * The class of an instance is the value of RDF_TYPE of the instance.
@@ -215,12 +187,11 @@ class RegCommon {
      * @param  String $uriInstance
      * @return Collection
      */
-
     public function trGetClassesOfInstance($uriInstance) {
         //We begin by create a resource PHP object
         $trResource = new core_kernel_classes_Resource($uriInstance);
-       
-        $cv=$trResource->getType();
+
+        $cv = $trResource->getType();
 
         //put the uris as keys
         foreach ($cv as $type) {
@@ -230,6 +201,7 @@ class RegCommon {
         //an instance can belong to several classes
         return $classValuesUri;
     }
+
     /**
      * This method provides only a set of properties that are not in filter,
      * It is important in the case of deleting all rdf properties
@@ -246,28 +218,25 @@ class RegCommon {
         $finalProp = $listProperties;
         $blockedProperties = array();
 
-        $blockedProperties[]= 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type';
-        $blockedProperties[]= 'http://www.w3.org/1999/02/22-rdf-syntax-ns#subject';
-        $blockedProperties[]= 'http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate';
-        $blockedProperties[]= 'http://www.w3.org/1999/02/22-rdf-syntax-ns#object';
-        $blockedProperties[]= 'http://www.w3.org/1999/02/22-rdf-syntax-ns#value';
-        $blockedProperties[]= 'http://www.w3.org/2000/01/rdf-schema#subPropertyOf';
-        $blockedProperties[]= 'http://www.w3.org/2000/01/rdf-schema#comment';
-        $blockedProperties[]= 'http://www.w3.org/2000/01/rdf-schema#seeAlso';
-        $blockedProperties[]='http://www.w3.org/2000/01/rdf-schema#isDefinedBy';
-        $blockedProperties[]='http://www.w3.org/2000/01/rdf-schema#member';
+        $blockedProperties[] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type';
+        $blockedProperties[] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#subject';
+        $blockedProperties[] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate';
+        $blockedProperties[] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#object';
+        $blockedProperties[] = 'http://www.w3.org/1999/02/22-rdf-syntax-ns#value';
+        $blockedProperties[] = 'http://www.w3.org/2000/01/rdf-schema#subPropertyOf';
+        $blockedProperties[] = 'http://www.w3.org/2000/01/rdf-schema#comment';
+        $blockedProperties[] = 'http://www.w3.org/2000/01/rdf-schema#seeAlso';
+        $blockedProperties[] = 'http://www.w3.org/2000/01/rdf-schema#isDefinedBy';
+        $blockedProperties[] = 'http://www.w3.org/2000/01/rdf-schema#member';
 
-        foreach ($listProperties as $uri=>$obj ) {
+        foreach ($listProperties as $uri => $obj) {
 
-            if (in_array($uri,$blockedProperties)) {
+            if (in_array($uri, $blockedProperties)) {
                 //echo "jjjjj";
                 unset($finalProp[$uri]);
             }
-
         }
         return $finalProp;
-
-
     }
 
     /**
@@ -280,7 +249,6 @@ class RegCommon {
      * @param  String $uriClass
      * @return Collection
      */
-
     public function trGetPropertiesAndClassesRange($uriClass) {
 
         $tp = $this->trGetProperties($uriClass);
@@ -306,13 +274,12 @@ class RegCommon {
      * @param  Collection $arrayOfClasses
      * @return Collection
      */
-
     public function trExploreModel($arrayOfClasses) {
         $tabClass = $arrayOfClasses;
         $contextClass = array();
         //
 
-        foreach ($tabClass as $uriClass=>$info) {
+        foreach ($tabClass as $uriClass => $info) {
             $contextClass[] = $this->trGetPropertiesAndClassesRange($uriClass);
         }
         return $contextClass;
@@ -328,13 +295,13 @@ class RegCommon {
      * @param  String $pathOfProperties
      * @return java_lang_String
      */
-    function trGetBridgePropertyValues($instanceSourceUri,$pathOfProperties) {
+    function trGetBridgePropertyValues($instanceSourceUri, $pathOfProperties) {
         //we begin by explode the path structure into an array
         //the path is created by the user with path builder in  the client side
 
-        $pathOfPropertiesArray = explode('__',$pathOfProperties);
+        $pathOfPropertiesArray = explode('__', $pathOfProperties);
         //the array of uri of instances
-        $listInstancesUri=array();
+        $listInstancesUri = array();
         //this array is used only to keep the list of the next uri instance of the actual path position
         $intermediateTabUri = array();
         //keep the real path
@@ -345,13 +312,13 @@ class RegCommon {
         $trResource = new core_kernel_classes_Resource($valuePath['instance']);
 
         //$valuePath['realPath'][] ='';
-        $intermediateTabUri[]=$valuePath;
+        $intermediateTabUri[] = $valuePath;
         foreach ($pathOfPropertiesArray as $propertyUri) {
             //link the resource
-            $listInstancesUri=$intermediateTabUri;
+            $listInstancesUri = $intermediateTabUri;
 
             // after each progression in the path , we remove the array
-            $intermediateTabUri=array();
+            $intermediateTabUri = array();
             $valuesPath = array();
             //print_r($listInstancesUri);
             foreach ($listInstancesUri as $instanceUri) {
@@ -359,91 +326,68 @@ class RegCommon {
                 $trResource = new core_kernel_classes_Resource($instanceUri['instance']);
                 // ça marche echo " -----the label is : ". $trResource->getLabel();
                 //get the value of the property for this instance
-                $values = $trResource->getPropertyValues(new core_kernel_classes_Property($propertyUri)) ;// get the array of values
+                $values = $trResource->getPropertyValues(new core_kernel_classes_Property($propertyUri)); // get the array of values
                 //print_r($values);
-
                 //add the path of the actual instance on all step+1 instances
 
-                foreach($values as $val) {
+                foreach ($values as $val) {
                     //echo "<br>". $val;
                     $actualPV = array();
                     $actualPV['instance'] = $val;
                     //prepare the label
-                    $trResource = new core_kernel_classes_Resource($val);
-                    
-                    //todo: i have to get the label of the actual resource and add it the the old path already created
-                    $labelVal = $trResource->getLabel();// this is the error, if t$val is not an uri, it return tyt !!!!!
-//                    echo "T$labelVal T ".strlen($labelVal);
-                    if ($labelVal ==NULL){
-                        //send the  val as label
-                        //echo "yyyyyyyyyyyyyyyyyyy";
-                        $labelVal = $val;
+                    $labelVal = ' ';//TODO: change  space by null
+                    if (!empty($val) &&(is_string($val))) {
+                        $trResource = new core_kernel_classes_Resource($val);
+
+                        //todo: i have to get the label of the current resource and add it the the old path already created
+                        $labelVal = $trResource->getLabel(); // this is the error, if t$val is not an uri, it return tyt !!!!!
+                        if ($labelVal == NULL) {
+                            //send the  val as label
+                            $labelVal = (string)$val;
+                        }
                     }
 
-//                    echo "T$labelVal T long = ". strlen($labelVal);
-////                    $label = $trResource->label;
-////                    echo "la resource <> ".$labelVal . " and ". $label;
-////                    print_r(($trResource));
-//                 //   echo "+++++++++888+++ ";
-//                    if ($labelVal==''){
-//                        echo "++++++++++++ ";
-//                    }
-                    //add new path,  TODO add as array not string
-                    //$actualPV['realPath'] = $instanceUri['realPath'].'::'.$labelVal;
-                    if (isset($instanceUri['realPath'])){
-                    $actualPV['realPath'] = $instanceUri['realPath'];
+
+                    if (isset($instanceUri['realPath'])) {
+                        $actualPV['realPath'] = $instanceUri['realPath'];
                     }
-//                    echo $labelVal;
                     $actualPV['realPath'][] = $labelVal;
                     $valuesPath[] = $actualPV;
-//                    echo "act ";
-//                    print_r($valuesPath);
                 }
-//                echo " value path ";
-//                print_r($valuesPath);
 
                 //this array containes the bridged uri of instances
-                $intermediateTabUri = array_merge($intermediateTabUri,$valuesPath);
-
+                $intermediateTabUri = array_merge($intermediateTabUri, $valuesPath);
             }
 
             //break if the intermediateTab is void
-            if(count($intermediateTabUri)==0) {
+            if (count($intermediateTabUri) == 0) {
 
                 $intermediateTabUri = array();
                 break;
             }
             //now the intermediateTab is complete, it will be the next input of the loop
-
         }//path
-
-
         //create the last value
-        //print_r($intermediateTabUri);
         $finalValueTab = array();
         foreach ($intermediateTabUri as $vp) {
 
             //prepare values with label
             $finalValueTab[] = implode("->", $vp['realPath']);
             //in order to get only the value without all the path
-            //$finalValueTab[] = end($vp['realPath']);
-            
         }
-        
-        $finalValue = implode ('|$*', $finalValueTab);// $instanceUri;
+
+        $finalValue = implode('|$*', $finalValueTab); // $instanceUri;
         return $finalValue;
     }
 
-    function trGetBridgePropertyValuesSOS($instanceSourceUri,$pathOfProperties) {
+    function trGetBridgePropertyValuesSOS($instanceSourceUri, $pathOfProperties) {
         //we begin by explode the path structure into an array
         //the path is created by the user with path builder in  the client side
-        $pathOfPropertiesArray = explode('__',$pathOfProperties);
+        $pathOfPropertiesArray = explode('__', $pathOfProperties);
 
         //$instanceUri = $instanceSourceUri;
-
         //the array of uri of instances
-        $listInstancesUri=array(); //[]=$instanceSourceUri;
-
+        $listInstancesUri = array(); //[]=$instanceSourceUri;
         //this array is used only to keep the list of the next uri instance of the actual path position
         $intermediateTabUri = array();
 
@@ -451,8 +395,7 @@ class RegCommon {
         $actualPV['instance'] = $instanceSourceUri;
         $actualPV['realPath'] = array();
 
-        $intermediateTabUri[]= $actualPV;//$instanceSourceUri;
-
+        $intermediateTabUri[] = $actualPV; //$instanceSourceUri;
         //keep the lreal path
         $realPath = array();
 
@@ -461,25 +404,25 @@ class RegCommon {
         $pathPosition = 0;
 
         foreach ($pathOfPropertiesArray as $propertyUri) {
-            $pathPosition++ ;
+            $pathPosition++;
             //for each uri instances in
             //link the resource
 
-            $listInstancesUri=$intermediateTabUri;
-            $intermediateTabUri=array();
+            $listInstancesUri = $intermediateTabUri;
+            $intermediateTabUri = array();
 
 
             foreach ($listInstancesUri as $instanceUri) {
                 $valuesPath = array();
                 $trResource = new core_kernel_classes_Resource($instanceUri['instance']);
                 //get the value of the property for this instance
-                $values = $trResource->getPropertyValues(new core_kernel_classes_Property($propertyUri)) ;// get the array of values
+                $values = $trResource->getPropertyValues(new core_kernel_classes_Property($propertyUri)); // get the array of values
                 // ************* Added to keep the real path of the instance
                 //
                 //feed the valusPath
 
                 $actualPV = array();
-                foreach($values as $val) {
+                foreach ($values as $val) {
                     $actualPV['instance'] = $val;
 
                     //prepare the label
@@ -491,19 +434,16 @@ class RegCommon {
                 }
 
                 //this array containes the bridged uri of instances
-                $intermediateTabUri = array_merge($intermediateTabUri,$valuesPath);
-
+                $intermediateTabUri = array_merge($intermediateTabUri, $valuesPath);
             }//instance
-
             //break if the intermediateTab is void
-            if(count($intermediateTabUri)==0) {
+            if (count($intermediateTabUri) == 0) {
                 $intermediateTabUri = array();
                 break;
             }
             //now the intermediateTab is complete, it will be the next input of the loop
-
         }//path
-        /*        echo "le real path";*/
+        /*        echo "le real path"; */
 
         //print_r($intermediateTabUri);
         $finalValueTab = array();
@@ -513,10 +453,9 @@ class RegCommon {
             //prepare values with label
 
             $finalValueTab[] = implode("::", $vp['realPath']);
-
         }
 
-        $finalValue = implode ('|$*', $finalValueTab);// $instanceUri;
+        $finalValue = implode('|$*', $finalValueTab); // $instanceUri;
         return $finalValue;
     }
 
@@ -537,17 +476,13 @@ class RegCommon {
      */
     public function getCurrentModule() {
 
-        $service =  tao_models_classes_ServiceFactory::get('tao_models_classes_TaoService');
+        $service = tao_models_classes_ServiceFactory::get('tao_models_classes_TaoService');
         $extension = $service->getCurrentExtension();
 
         return $extension;
-
-
     }
 
+}
 
-}//End class
-
-
-
+//End class
 ?>
