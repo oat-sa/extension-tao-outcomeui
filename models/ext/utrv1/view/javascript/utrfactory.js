@@ -53,7 +53,7 @@ function utrIntro(){
     $("#menuPathBuilder").hide();
     $("#pieStat").hide();
 
-     $("#utrTemplateManager").hide();
+    $("#utrTemplateManager").hide();
     $("#utrTemplateManager").dialog('close');
 
     
@@ -843,7 +843,7 @@ function exportCSV (){
 /// export to excel
 function exportToExcel(){
 
-window.location.href = "../classes/class.TReg_VirtualTable.php?op=exportToExcel"
+    window.location.href = "../classes/class.TReg_VirtualTable.php?op=exportToExcel"
 }
 
 //manage the event of the index page
@@ -973,7 +973,7 @@ function manageEvents(){
             resizable: false,
             title:__("Filter & Search"),
 
-             buttons: {
+            buttons: {
 
                 "Cancel":function(){
                     loadUnfilteredUtr();
@@ -1005,7 +1005,7 @@ function manageEvents(){
             resizable: false,
             title:__("Export the Table"),
 
-             buttons: {
+            buttons: {
 
                 "Export To CSV":function(){
                     exportCSV();
@@ -1032,11 +1032,7 @@ function manageEvents(){
 
 function utrConstructor(){
     $(function(){
-        //alert("o jQuery");
-        //   $("#coco").hide();
-        //   $("#coco").toggle(1000);
-        //remove session, neww table
-
+    
         removeSession();
         // get the initial UTR, the user will ha ve directely a simple uTR with the properties of the current class
         loadInitialUtr();
