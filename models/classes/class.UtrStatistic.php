@@ -16,7 +16,6 @@ error_reporting(E_ALL);
  * @package taoResults
  * @subpackage models_classes
  */
-
 if (0 > version_compare(PHP_VERSION, '5')) {
     die('This file was generated for PHP 5');
 }
@@ -44,13 +43,10 @@ require_once('taoResults/models/classes/class.TReg_VirtualTable.php');
  * @package taoResults
  * @subpackage models_classes
  */
-class taoResults_models_classes_UtrStatistic
-{
+class taoResults_models_classes_UtrStatistic {
     // --- ASSOCIATIONS ---
     // generateAssociationEnd : 
-
     // --- ATTRIBUTES ---
-
     // --- OPERATIONS ---
 
     /**
@@ -63,11 +59,25 @@ class taoResults_models_classes_UtrStatistic
      * @param  string columnId
      * @return array
      */
-    public function getStatOnColomn($table, $columnId)
-    {
+    public function getStatOnColomn($table, $columnId) {
         $returnValue = array();
 
         // section 10-13-1--65--32b0d5d:12d7b0b88e4:-8000:0000000000002AA2 begin
+        $rowsOfColumn = $table[$columnId]['rowsColumn'];
+        //Number of rows
+        $totalRows = count($rowsOfColumn);
+        $totalRowsNotNull = 0;
+        foreach ($rowsOfColumn as $value) {
+            if ($value != '') {
+                $totalRowsNotNull++;
+            }
+        }
+
+        $stat['totalRows'] = $totalRows;
+        $stat['totalRowsNotNull'] = $totalRowsNotNull;
+
+        $returnValue =  $stat;
+
         // section 10-13-1--65--32b0d5d:12d7b0b88e4:-8000:0000000000002AA2 end
 
         return (array) $returnValue;
@@ -82,16 +92,32 @@ class taoResults_models_classes_UtrStatistic
      * @param  string rowId
      * @return array
      */
-    public function getStatOnRows($table, $rowId)
-    {
+    public function getStatOnRows($table, $rowId) {
         $returnValue = array();
 
         // section 10-13-1--65--32b0d5d:12d7b0b88e4:-8000:0000000000002AAF begin
+            //Get the list of columns in the row, to claculate the number of columns
+        //and the number of columns not null
+        //I prefer used the rowHTML to perse rapidly the
+        $columnsOfRow= $table[$rowId];
+        $totalColumns = 0;
+        $totalColumnsNotNull=0;
+        foreach($columnsOfRow as $col) {
+            $totalColumns++;
+            if ($col!='') {
+                $totalColumnsNotNull++;
+            }
+        }
+        $stat['totalColumns'] = $totalColumns;
+        $stat['totalColumnsNotNull']=$totalColumnsNotNull;
+        
+        $returnValue = $stat;
         // section 10-13-1--65--32b0d5d:12d7b0b88e4:-8000:0000000000002AAF end
 
         return (array) $returnValue;
     }
 
-} /* end of class taoResults_models_classes_UtrStatistic */
+}
 
+/* end of class taoResults_models_classes_UtrStatistic */
 ?>
