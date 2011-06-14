@@ -1,0 +1,63 @@
+msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
+msgstr "Alla resultat av avklarade tester med data om testtagare, grupper och moment, liksom särskild data insamlad under testutförandet samlas och hanteras här."
+
+msgid "Advanced Authoring Tool"
+msgstr "Avancerat skapandeverktyg"
+
+msgid "Class saved"
+msgstr "Klass sparad"
+
+msgid "Edit result"
+msgstr "Redigera resultat"
+
+msgid "Edit result class"
+msgstr "Redigera resultatklass"
+
+msgid "Manage results"
+msgstr "Hantera resultat"
+
+msgid "Result saved"
+msgstr "Resultat sparat"
+
+msgid "Results"
+msgstr "Resultat"
+
+msgid "Results library"
+msgstr "Resultatarkiv"
+
+msgid "Test view"
+msgstr "Testvy"
+
+msgid "This module constitutes the final step."
+msgstr "Denna modul utgör det slutgiltiga steget"
+
+msgid "create Score table"
+msgstr "skapa poängtabell"
+
+msgid "create Simple table"
+msgstr "skapa enkel tabell"
+
+msgid "create direct table"
+msgstr "skapa direkt tabell"
+
+msgid "create table"
+msgstr "skapa tabell"
+
+msgid "delete"
+msgstr "radera"
+
+msgid "export"
+msgstr "exportera"
+
+msgid "lists"
+msgstr "listor"
+
+msgid "new class"
+msgstr "ny klass"
+
+msgid "new property"
+msgstr "ny egenskap"
+
+msgid "new result"
+msgstr "nytt resultat"
+
