@@ -58,6 +58,9 @@ msgstr ""
 msgid "create direct table"
 msgstr ""
 
+msgid "create score table"
+msgstr ""
+
 msgid "lists"
 msgstr ""
 
