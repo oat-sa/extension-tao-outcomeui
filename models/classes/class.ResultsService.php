@@ -279,10 +279,11 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
         // section 127-0-1-1-3fc126b2:12c350e4297:-8000:0000000000002886 begin
         //
         $resultNS = RESULT_ONTOLOGY; //'http://www.tao.lu/Ontologies/TAOResult.rdf';
+       
 
         if (is_array($dtisUris) && !empty($key)) {
             //save the variable as one instance with only one property, Full optimization
-            $this->addItemVariableFullOptimization($dtisUris, $key, $value);
+            //$this->addItemVariableFullOptimization($dtisUris, $key, $value);// not for this vesion
 
             //Save the result in the appropriate delivery as a valu of a property.
             //The model of the delivery is created dynamically
@@ -297,6 +298,8 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
             //set the value of the variable property
             $varPro = new core_kernel_classes_Property($propertyUri);
             $deliveryResultInstance->editPropertyValues($varPro, $value);
+            
+            $returnValue = $deliveryResultInstance;
 // 
         }
         // section 127-0-1-1-3fc126b2:12c350e4297:-8000:0000000000002886 end
