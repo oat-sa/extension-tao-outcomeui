@@ -576,11 +576,11 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
 
         //second algo, get directely the type of an instance and check if this instance is an instance of the selected deliveryResult
         $inst = new core_kernel_classes_Resource($instanceUri);
-        $typeOfIns = $inst->getType();
-        if (array_key_exists($deliveryResultUri, $typeOfIns) === TRUE) {
+        if ($inst->exists()) {
             $match = TRUE;
             $matchUri = $instanceUri;
         }
+        
         //if it doesn't match so create a new instance
         if (!$match) {
             // label of Delivery
