@@ -28,10 +28,34 @@
     <rdfs:range rdf:resource="http://www.w3.org/2000/01/rdf-schema#Literal"/>
     <widget:widget rdf:resource="http://www.tao.lu/datatypes/WidgetDefinitions.rdf#Readonly"/>
   </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_PROCESS_EXEC_ID">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:label><![CDATA[TAO_PROCESS_EXEC_ID]]></rdfs:label>
+    <rdfs:comment><![CDATA[comment TAO_PROCESS_EXEC_ID]]></rdfs:comment>
+    <widget:widget rdf:resource="http://www.tao.lu/datatypes/WidgetDefinitions.rdf#Readonly"/>
+    <rdfs:domain rdf:resource="http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_DELIVERY_RESULTS"/>
+    <rdfs:range rdf:resource="http://www.tao.lu/middleware/wfEngine.rdf#ClassProcessInstances"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_DELIVERY_ID">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:label><![CDATA[TAO_DELIVERY_ID]]></rdfs:label>
+    <rdfs:comment><![CDATA[comment TAO_DELIVERY_ID]]></rdfs:comment>
+    <widget:widget rdf:resource="http://www.tao.lu/datatypes/WidgetDefinitions.rdf#Readonly"/>
+    <rdfs:domain rdf:resource="http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_DELIVERY_RESULTS"/>
+    <rdfs:range rdf:resource="http://www.tao.lu/Ontologies/TAODelivery.rdf#Delivery"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_SUBJECT_ID">
+    <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
+    <rdfs:label><![CDATA[TAO_SUBJECT_ID]]></rdfs:label>
+    <rdfs:comment><![CDATA[comment TAO_SUBJECT_ID]]></rdfs:comment>
+    <widget:widget rdf:resource="http://www.tao.lu/datatypes/WidgetDefinitions.rdf#Readonly"/>
+    <rdfs:domain rdf:resource="http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_DELIVERY_RESULTS"/>
+    <rdfs:range rdf:resource="http://www.tao.lu/Ontologies/TAOSubject.rdf#Subject"/>
+  </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_DELIVERY_RESULTS">
     <rdfs:subClassOf rdf:resource="http://www.tao.lu/Ontologies/TAOResult.rdf#Result"/>
     <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
-    <rdfs:label><![CDATA[TAO_DELIVERY_RESULTS]]></rdfs:label>
-    <rdfs:comment><![CDATA[$comment]]></rdfs:comment>
+    <rdfs:label><![CDATA[Delivery Results]]></rdfs:label>
+    <rdfs:comment><![CDATA[The results ordered by delivery: 1 sublcass = 1 delivery, 1 instance = 1 execution]]></rdfs:comment>
   </rdf:Description>
 </rdf:RDF>

@@ -16,6 +16,27 @@ class taoResults_actions_Settings extends tao_actions_Settings {
         protected function getOptimizableClasses(){
                 
                 $returnValue = array();
+                
+                $optionsCompile = array(
+                        'recursive'             => true,
+                        'append'                => true,
+                        'createForeigns'        => false,
+                        'referencesAllTypes'	=> true,
+                        'rmSources'             => true
+                );
+                
+                $optionsDecompile = array(
+                        'recursive'             => true,
+                        'removeForeigns'        => false				
+                );
+                
+                $returnValue = array(
+                        'http://www.tao.lu/Ontologies/TAOResult.rdf#Result' => array(
+                                'compile' => $optionsCompile,
+                                'decompile' => $optionsDecompile
+                        )
+                );
+                
                 return $returnValue;
                 
         }
