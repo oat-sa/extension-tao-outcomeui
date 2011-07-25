@@ -183,11 +183,14 @@ class TReg_VirtualTable extends RegCommon {
 
                 //TEST IF IT IS AN URI
                 $uriProperty = $value;
-                $trProperty = new core_kernel_classes_Property($uriProperty);
-                $valueLabel = $trProperty->getLabel(); // to see
-                if ($valueLabel == NULL) {
+                if(common_Utils::isUri($uriProperty)){
+                        $trProperty = new core_kernel_classes_Property($uriProperty);
+                        $valueLabel = $trProperty->getLabel(); // to see
+                        if(empty($valueLabel)){
 
+                        }
                 }
+                
 
                 $rowsColumn[$instanceSourceUri] = $value;
 
