@@ -85,6 +85,9 @@ msgstr ""
 msgid "Filter and search "
 msgstr ""
 
+msgid "Get a direct chart diagram on your columns ans rows"
+msgstr ""
+
 msgid "Get a direct chart diagram on your columns ans rows "
 msgstr ""
 

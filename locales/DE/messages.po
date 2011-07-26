@@ -46,6 +46,9 @@ msgstr "neues Ergebnis"
 msgid "Advanced Authoring Tool"
 msgstr ""
 
+msgid "Template Saved"
+msgstr ""
+
 msgid "Test view"
 msgstr ""
 

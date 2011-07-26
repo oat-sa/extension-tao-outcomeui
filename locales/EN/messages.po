@@ -25,6 +25,9 @@ msgstr ""
 msgid "Results library"
 msgstr ""
 
+msgid "Template Saved"
+msgstr ""
+
 msgid "Test view"
 msgstr ""
 

@@ -61,6 +61,9 @@ msgstr "ny egenskap"
 msgid "new result"
 msgstr "nytt resultat"
 
+msgid "Template Saved"
+msgstr ""
+
 msgid "create score table"
 msgstr ""
 

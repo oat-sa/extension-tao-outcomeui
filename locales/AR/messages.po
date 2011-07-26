@@ -37,6 +37,9 @@ msgstr ".انشاء جدول نقاط"
 msgid "create Simple table"
 msgstr "انشاء جدول بسيط"
 
+msgid "create direct table"
+msgstr "انشاء جدول مباشر"
+
 msgid "create table"
 msgstr "انشاء جدول"
 
@@ -58,6 +61,9 @@ msgstr "خاصية جديدة"
 msgid "new result"
 msgstr "نتيجة جديدة"
 
-msgid "create direct table"
-msgstr "انشاء جدول مباشر"
+msgid "Template Saved"
+msgstr ""
+
+msgid "create score table"
+msgstr ""
 
