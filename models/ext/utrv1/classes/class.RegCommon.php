@@ -74,17 +74,30 @@ class RegCommon {
      */
     function trGetPropertyInfo($uriProperty) {
         $trProperty = new core_kernel_classes_Property($uriProperty);
+        
 
         //extract most important properties for navigation
         $label = $trProperty->getLabel();
 
         $range = $trProperty->getRange();
+        //var_dump($range);
+        
         //S$dbWrapper->dbConnector->debug = false;
         //Create an object prop with the main important variable in our context.
 
         $prop->label = $label;
+        
+        $prop->uriRange = "";
+        $prop->labelRange = "";
+        
+        if ( !is_null($range)){
         $prop->uriRange = $range->uriResource;
         $prop->labelRange = $range->getLabel();
+            
+        }
+        
+        
+        
         //return the object
         return $prop;
     }
@@ -146,7 +159,7 @@ class RegCommon {
         //get the range of all properties
         foreach ($listProp as $uriProp => $infoProp) {
 
-            $labelProp = $infoProp - label;
+            $labelProp = $infoProp->label;
             $uriRange = $infoProp->uriRange;
             $labelRange = $infoProp->labelRange;
             //echo $labelProp." ". $labelRange." <br>";
