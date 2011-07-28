@@ -352,6 +352,11 @@ class RegCommon {
                     if ( common_Utils::isUri($val) ){
                         $trResource = new core_kernel_classes_Resource($val);
                         $labelVal = $trResource->getLabel(); // this is the error, if t$val is not an uri, it return tyt !!!!!
+                        //var_dump($labelVal);
+                        
+                        if ($labelVal==NULL){
+                            $labelVal="RROR 404, Unavailable Resource";
+                        }
                     } 
                     else {
                         $labelVal = (string)$val;
