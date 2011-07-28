@@ -347,17 +347,14 @@ class RegCommon {
                     //echo "<br>". $val;
                     $actualPV = array();
                     $actualPV['instance'] = $val;
-                    //prepare the label
-                    $labelVal = ' ';//TODO: change  space by null
-                    if (!empty($val) &&(is_string($val))) {
+                    
+                    // if $val is an URI then get the label, otherwise it is just a lateral
+                    if ( common_Utils::isUri($val) ){
                         $trResource = new core_kernel_classes_Resource($val);
-
-                        //todo: i have to get the label of the current resource and add it the the old path already created
                         $labelVal = $trResource->getLabel(); // this is the error, if t$val is not an uri, it return tyt !!!!!
-                        if ($labelVal == NULL) {
-                            //send the  val as label
-                            $labelVal = (string)$val;
-                        }
+                    } 
+                    else {
+                        $labelVal = (string)$val;
                     }
 
 
