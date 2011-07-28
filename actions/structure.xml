@@ -9,18 +9,17 @@
 					dataUrl="/taoResults/Results/getOntologyData" 
 					editClassUrl="/taoResults/Results/editResultClass"
 					editInstanceUrl="/taoResults/Results/editResult"
-					addInstanceUrl="/taoResults/Results/addInstance"
-					addSubClassUrl="/taoResults/Results/addResultClass"
 					deleteUrl="/taoResults/Results/delete"
-					duplicateUrl="/taoResults/Results/cloneInstance"
-					moveInstanceUrl="/taoResults/Results/moveInstance"
+					
+                                        
 				/>
             </trees>
             <actions>
-                
                 <action name="create direct table" url="/taoResults/Results/createDirectTable"  context="class" />
                 <action name="create score table" url="/taoResults/Results/createScoreTable"  context="class" />
                 <action name="create table" url="/taoResults/Results/createTable"  context="class" />
+                <action name="delete" js="GenerisAction.removeNode" url="/taoSubjects/Subjects/delete" context="resource" />
+                
             </actions>
         </section>
 
