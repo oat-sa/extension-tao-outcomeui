@@ -720,7 +720,7 @@ function getUtrModels(){
 
     };
     // open the dialog
-    $("#utrTemplateManager").dialog(open,optionsTM);
+    $("#utrTemplateManager").dialog(optionsTM);
     $("#txtUtrName").focus();
     options={
         type: "POST",
@@ -987,7 +987,7 @@ function manageEvents(){
           
         };
 
-        $("#filterUtr").dialog(open,options);
+        $("#filterUtr").dialog(options);
         buildFilterLine();
 
     });
@@ -1019,7 +1019,7 @@ function manageEvents(){
           
         };
 
-        $("#exportChoice").dialog(open,options);
+        $("#exportChoice").dialog(options);
         
         
     });
