@@ -167,7 +167,6 @@ class RegCommon {
             //check if the uri is not empty
             if (common_Utils::isUri($uriRange)) {
 
-
                 $trResource = new core_kernel_classes_Resource($uriRange);
                 //add this class to listClasses
                 //the information are propertySourceUri, label of the class, the uri of the class is the key it self
