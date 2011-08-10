@@ -74,30 +74,28 @@ class RegCommon {
      */
     function trGetPropertyInfo($uriProperty) {
         $trProperty = new core_kernel_classes_Property($uriProperty);
-        
+
 
         //extract most important properties for navigation
         $label = $trProperty->getLabel();
 
         $range = $trProperty->getRange();
         //var_dump($range);
-        
         //S$dbWrapper->dbConnector->debug = false;
         //Create an object prop with the main important variable in our context.
 
         $prop->label = $label;
-        
+
         $prop->uriRange = "";
         $prop->labelRange = "";
-        
-        if ( !is_null($range)){
-        $prop->uriRange = $range->uriResource;
-        $prop->labelRange = $range->getLabel();
-            
+
+        if (!is_null($range)) {
+            $prop->uriRange = $range->uriResource;
+            $prop->labelRange = $range->getLabel();
         }
-        
-        
-        
+
+
+
         //return the object
         return $prop;
     }
@@ -166,23 +164,26 @@ class RegCommon {
             //Test if the range is class or not, if it is class, add it to the array
             //
             //Link to ressource
+            //check if the uri is not empty
+            if (common_Utils::isUri($uriRange)) {
 
-            $trResource = new core_kernel_classes_Resource($uriRange);
-            // if ($trResource->isClass()==true) {// verify with the api if this resource is a class
-            //add this class to listClasses
-            //the information are propertySourceUri, label of the class, the uri of the class is the key it self
-            //IMPORTANT: we should instantiate a new object,
-            $rangeClass = new stdClass();
-            //get the values
-            $rangeClass->propertySourceUri = $uriProp; // to keep the property responsable of this bridge
-            $rangeClass->label = $labelRange;
-            $rangeClass->uriClass = $uriRange;
-            //put in the array
-            //Do a filter on class range in this version we delete all RDF classes and il uri is null ( This ocure some times !!!!)
 
-            if ((substr($uriRange, 0, 17) != 'http://www.w3.org') and ($uriRange != '')) {
+                $trResource = new core_kernel_classes_Resource($uriRange);
+                //add this class to listClasses
+                //the information are propertySourceUri, label of the class, the uri of the class is the key it self
+                //IMPORTANT: we should instantiate a new object,
+                $rangeClass = new stdClass();
+                //get the values
+                $rangeClass->propertySourceUri = $uriProp; // to keep the property responsable of this bridge
+                $rangeClass->label = $labelRange;
+                $rangeClass->uriClass = $uriRange;
+                //put in the array
+                //Do a filter on class range in this version we delete all RDF classes and il uri is null ( This ocure some times !!!!)
 
-                $lc[$uriRange] = $rangeClass; //->Label;
+                if ((substr($uriRange, 0, 17) != 'http://www.w3.org') and ($uriRange != '')) {
+
+                    $lc[$uriRange] = $rangeClass; //->Label;
+                }
             }
 
             // }//end of adding class's info
@@ -347,19 +348,18 @@ class RegCommon {
                     //echo "<br>". $val;
                     $actualPV = array();
                     $actualPV['instance'] = $val;
-                    
+
                     // if $val is an URI then get the label, otherwise it is just a lateral
-                    if ( common_Utils::isUri($val) ){
+                    if (common_Utils::isUri($val)) {
                         $trResource = new core_kernel_classes_Resource($val);
                         $labelVal = $trResource->getLabel(); // this is the error, if t$val is not an uri, it return tyt !!!!!
                         //var_dump($labelVal);
-                        
-                        if ($labelVal==NULL){
-                            $labelVal="RROR 404, Unavailable Resource";
+
+                        if ($labelVal == NULL) {
+                            $labelVal = "ERROR 404, Unavailable Resource";
                         }
-                    } 
-                    else {
-                        $labelVal = (string)$val;
+                    } else {
+                        $labelVal = (string) $val;
                     }
 
 
