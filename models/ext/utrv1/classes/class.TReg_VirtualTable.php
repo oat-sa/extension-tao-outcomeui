@@ -584,10 +584,9 @@ class TReg_VirtualTable extends RegCommon {
                 echo json_encode($t);
             }
             //
-            if ($_POST['op'] == 'getRangeClasses') {
+            if ($_POST['op'] == 'getContextClasses') {
                 $p = new TReg_VirtualTable();
-
-                $t = $p->trGetRangeClasses($_POST['uriClass']);
+                $t = $p->getContextClasses($_POST['uriClass']);
                 echo json_encode($t);
             }
             //delete the session

@@ -26,15 +26,7 @@ class RegCommon {
      * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
      */
     public function regConnect() {
-
-
-
-        /* $session = core_kernel_classes_Session::singleton();
-          $session->model->loadModel(RESULT_ONTOLOGY);
-          $session->model->loadModel(ITEM_ONTOLOGY);
-          $session->model->loadModel(GROUP_ONTOLOGY);
-          $session->model->loadModel(TEST_ONTOLOGY);
-          $session->model->loadModel(SUBJECT_ONTOLOGY); */
+        
     }
 
     /**
@@ -93,8 +85,6 @@ class RegCommon {
             $prop->uriRange = $range->uriResource;
             $prop->labelRange = $range->getLabel();
         }
-
-
 
         //return the object
         return $prop;
@@ -167,7 +157,7 @@ class RegCommon {
             //check if the uri is not empty
             if (common_Utils::isUri($uriRange)) {
 
-                $trResource = new core_kernel_classes_Resource($uriRange);
+                //$trResource = new core_kernel_classes_Resource($uriRange);
                 //add this class to listClasses
                 //the information are propertySourceUri, label of the class, the uri of the class is the key it self
                 //IMPORTANT: we should instantiate a new object,
@@ -176,6 +166,7 @@ class RegCommon {
                 $rangeClass->propertySourceUri = $uriProp; // to keep the property responsable of this bridge
                 $rangeClass->label = $labelRange;
                 $rangeClass->uriClass = $uriRange;
+                $rangeClass->type = "Rangey";
                 //put in the array
                 //Do a filter on class range in this version we delete all RDF classes and il uri is null ( This ocure some times !!!!)
 
@@ -272,8 +263,6 @@ class RegCommon {
         //put the two arrays in one.
         $tabAll["propertiesList"] = $tabProperties;
         $tabAll["rangeClassesList"] = $tabRangeClasses;
-
-
 
         return $tabAll;
     }
@@ -494,6 +483,68 @@ class RegCommon {
         $extension = $service->getCurrentExtension();
 
         return $extension;
+    }
+
+    //get the list of the subclasses
+    public function getsubParentClasses($uriClass) {
+        $lc = array();
+        
+        $classSource = new core_kernel_classes_class($uriClass);
+        $listSubClasses = $classSource->getSubClasses(false);
+        $listParentClasses = $classSource->getParentClasses(false);
+        
+
+        //create the array of subClasses        
+        $lsc = array_keys($listSubClasses);
+        foreach ($lsc as $uriSubClass) {
+            $class = new core_kernel_classes_class($uriSubClass);
+            $labelClass = $class->getLabel();
+
+            $subClass = new stdClass();
+            //get the values
+            $subClass->label = $labelClass . '(sub)';
+            $subClass->uriClass = $uriSubClass;
+            $subClass->type = "subClass";
+            $lc[$uriSubClass] = $subClass; //->Label;
+            
+        }
+        
+        //create the array of parentClasses        
+        $lpc = array_keys($listParentClasses);
+        foreach ($lpc as $uriParentClass) {
+            $class = new core_kernel_classes_class($uriParentClass);
+            $labelClass = $class->getLabel();
+
+            $parentClass = new stdClass();
+            //get the values
+            $parentClass->label = $labelClass . '(Parent)';
+            $parentClass->uriClass = $uriParentClass;
+            $parentClass->type = "parentClass";
+            
+            $lc[$uriParentClass] = $uriParentClass; //->Label;
+        }
+
+
+        //$listParentClasses = $classSource->getParentClasses(false);
+
+        return $lc;
+        
+    }
+
+    //get the list of the subclasses
+    public function getContextClasses($uriClass) {
+        $listContextClasses = array();
+        $listRange = $this->trGetRangeClasses($uriClass);
+        $listSubParent = $this->getSubParentClasses($uriClass);
+        
+        
+        /*$listContextClasses['listeRangeClasses']=$listRange;
+        $listContextClasses['listSubParentClasses']=$listSubParent;*/
+        
+        $listContextClasses = array_merge($listRange,$listSubParent);
+        return $listContextClasses;
+        
+        
     }
 
 }

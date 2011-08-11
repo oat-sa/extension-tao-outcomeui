@@ -103,7 +103,7 @@ function backContext(){
         }else
         {
             actualClassLabel=action.actualClassLabel
-            getRangeClasses(actualClassUri);
+            getContextClasses(actualClassUri);
         
         }
     
@@ -166,6 +166,7 @@ function previewListClasses(listClasses){
     
     //get the actual class info
     $("#contextClasses").text('');
+    
     for (i in listClasses){
         cl = listClasses[i];
         // we have a button with all information to acces to class info
@@ -181,7 +182,7 @@ function previewListProperties(listProperties){
     var titleContextProperties;
     titleContextProperties = __("List of properties")+": "+actualClassLabel;
     $("#contextPropertiesHeader h1").text(titleContextProperties);
-    
+   
     $("#contextProperties").text('');
     for (uriP in listProperties){
         pl = listProperties[uriP];
@@ -190,7 +191,6 @@ function previewListProperties(listProperties){
         $("#contextProperties").append(content);
     }
 }
-
 //Get the list of classes according to the intial list of instances,
 //the list of instances is savedd on the server side
 
@@ -247,14 +247,14 @@ function getProperties(uriC){
 }
 
 //get the range of a class, a range is a set iof classesthat are range of properties of the actual class
-function getRangeClasses(uriC){
+function getContextClasses(uriC){
 
     //alert(uriC);
     $.ajax({
         type: "POST",
         url: "../classes/class.TReg_VirtualTable.php",
         data: {
-            op:"getRangeClasses",
+            op:"getContextClasses",
             uriClass:uriC
         },
         dataType :"json",
@@ -283,7 +283,7 @@ function addToPath(propertyUri){
 }
 
 //this method gets the properties and the range of a particular class,
-//it uses getRangeClasses and get getProperties.
+//it uses getContextClasses and get getProperties.
 function getClassInfos (){
     saveContext();
     //get the URI of the class
@@ -305,7 +305,7 @@ function getClassInfos (){
     
     //alert ("l'uri est "+uri);
     //get the properties and the range of the class, this is thje next step of the process
-    getRangeClasses(uriC);
+    getContextClasses(uriC);
     getProperties(uriC);
 }
 //show the div to preview the values of the property
