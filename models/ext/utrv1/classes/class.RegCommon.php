@@ -487,64 +487,68 @@ class RegCommon {
 
     //get the list of the subclasses
     public function getsubParentClasses($uriClass) {
-        $lc = array();
-        
-        $classSource = new core_kernel_classes_class($uriClass);
-        $listSubClasses = $classSource->getSubClasses(false);
-        $listParentClasses = $classSource->getParentClasses(false);
-        
 
-        //create the array of subClasses        
-        $lsc = array_keys($listSubClasses);
+        $listSubClasses = array();
+        $listParentClasses = array();
+        $listSubAndParentClasses = array();
+
+
+
+        $classSource = new core_kernel_classes_class($uriClass);
+        $subClasses = $classSource->getSubClasses(false);
+        $parentClasses = $classSource->getParentClasses(false);
+        /* print_r($listSubClasses);
+          print_r($listParentClasses); */
+
+
+        //create the array of subClasses    
+
+        $lsc = array_keys($subClasses);
         foreach ($lsc as $uriSubClass) {
             $class = new core_kernel_classes_class($uriSubClass);
             $labelClass = $class->getLabel();
-
             $subClass = new stdClass();
             //get the values
             $subClass->label = $labelClass . '(sub)';
             $subClass->uriClass = $uriSubClass;
             $subClass->type = "subClass";
-            $lc[$uriSubClass] = $subClass; //->Label;
-            
+            $listSubClasses[$uriSubClass] = $subClass; //->Label;
         }
-        
+
         //create the array of parentClasses        
-        $lpc = array_keys($listParentClasses);
+        $lpc = array_keys($parentClasses);
         foreach ($lpc as $uriParentClass) {
             $class = new core_kernel_classes_class($uriParentClass);
             $labelClass = $class->getLabel();
-
             $parentClass = new stdClass();
             //get the values
             $parentClass->label = $labelClass . '(Parent)';
             $parentClass->uriClass = $uriParentClass;
             $parentClass->type = "parentClass";
-            
-            $lc[$uriParentClass] = $uriParentClass; //->Label;
+            $listParentClasses[$uriParentClass] = $parentClass; //->Label;
         }
 
-
         //$listParentClasses = $classSource->getParentClasses(false);
+        $listSubAndParentClasses['subClasses'] = $listSubClasses;
+        $listSubAndParentClasses['parentClasses'] = $listParentClasses;
 
-        return $lc;
-        
+        return $listSubAndParentClasses;
     }
 
     //get the list of the subclasses
     public function getContextClasses($uriClass) {
         $listContextClasses = array();
+        $listRange = array();
+        $listSubAndParentClasses = array();
+
         $listRange = $this->trGetRangeClasses($uriClass);
-        $listSubParent = $this->getSubParentClasses($uriClass);
-        
-        
-        /*$listContextClasses['listeRangeClasses']=$listRange;
-        $listContextClasses['listSubParentClasses']=$listSubParent;*/
-        
-        $listContextClasses = array_merge($listRange,$listSubParent);
+        $listSubAndParentClasses = $this->getSubParentClasses($uriClass);
+
+        /* $listContextClasses['listeRangeClasses']=$listRange;
+          $listContextClasses['listSubParentClasses']=$listSubParent; */
+
+        $listContextClasses = array_merge($listRange, $listSubAndParentClasses['subClasses'],$listSubAndParentClasses['parentClasses']);
         return $listContextClasses;
-        
-        
     }
 
 }
