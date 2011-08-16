@@ -40,6 +40,7 @@ and open the template in the editor.
         <div id="utrDiv" >
             <div id="divPathWizard" class="ui-widget-content ui-corner-top" >
                 <div id="menuPathWizard" class ="ui-widget-header ui-corner-top" style="margin: 0.1em 0.1em">
+                    <input id="backClass" type="button" value="<? __("Back") ?>" name="backClass"/>
                     <? echo __("Choose a property"); ?>
                     <input class="closePathBuilderClass" id="closePathBuilder" type="button" value=""> </input>
                 </div>
@@ -48,13 +49,22 @@ and open the template in the editor.
                 <div id="classesDiv" class="ui-widget-content ui-corner-all">
                     <div id="contextClassHeader" class="ui-widget-header" style="margin: 0.1em 0.1em">
 
-                        <input id="backClass" type="button" value="<? __("Back") ?>" name="backClass"/>
+                        
                         <h1>Classe</h1>
 
                     </div>
-                    <div id="contextClasses" class="contextClassesStyle">
+                    <div id="contextClasses" >
 
-                        <h1> list of classes</h1>
+                        
+                        <ul>
+                            <li><a href="#rangeClasses"> <? echo __("Range"); ?></a></li>
+                            <li><a href="#subClasses"><? echo __("Sub"); ?> </a></li>
+                            <li><a href="#parentClasses"><? echo __("parent"); ?></a></li>
+                        </ul>
+                        <div id ="rangeClasses" class="contextClassesStyle"></div>
+                        <div id ="subClasses" class="contextClassesStyle"></div>
+                        <div id ="parentClasses" class="contextClassesStyle"></div>
+                        
                     </div>
                 </div>
                 <div id="propertiesDiv" class="ui-widget-content ui-corner-all">

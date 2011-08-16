@@ -547,7 +547,11 @@ class RegCommon {
         /* $listContextClasses['listeRangeClasses']=$listRange;
           $listContextClasses['listSubParentClasses']=$listSubParent; */
 
-        $listContextClasses = array_merge($listRange, $listSubAndParentClasses['subClasses'],$listSubAndParentClasses['parentClasses']);
+        //$listContextClasses = array_merge($listRange, $listSubAndParentClasses['subClasses'],$listSubAndParentClasses['parentClasses']);
+        $listContextClasses['rangeClasses'] = $listRange;
+        $listContextClasses['subClasses'] = $listSubAndParentClasses['subClasses'];
+        $listContextClasses['parentClasses'] = $listSubAndParentClasses['parentClasses'];
+        
         return $listContextClasses;
     }
 

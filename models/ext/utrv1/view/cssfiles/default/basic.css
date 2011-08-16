@@ -137,8 +137,8 @@ h1 {
 div.contextClassesStyle{
     position:relative;
     overflow:auto;
-    /*background-color:white ;*/
-    font-size:16px;
+    background-color:white ;
+    /*font-size:12px;*/
 
     width:100%;
     height:75%;

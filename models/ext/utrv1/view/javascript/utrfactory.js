@@ -39,7 +39,7 @@ function utrIntro(){
     historyAction = new Array();//Reset history of actions
     pathProperties = new Array();
     $("#divInitialInstances").html("");
-    $("#contextClasses").html("");
+    //$("#contextClasses").html("");
     $("#contextProperties").html("");
     //$("#propertyBinding").show();
 
@@ -65,6 +65,7 @@ function utrIntro(){
     $("#saveUtrBtn").button();
 
     $("#utrmenu input").button();
+    $("#contextClasses").tabs();
    
 }
 
@@ -143,11 +144,6 @@ function getInitialInstances(){
 }
 
 function manageMC(){
-    //alert ("ff");
-    //    for (i in uriInstances){
-    //        p = uriInstances[i];
-    //        $("#liListInstances").append("<br>"+p.label);
-    //    }
     var t = new Array();
     t=getRootClassesOfInstances();
     //alert("fin");
@@ -158,22 +154,45 @@ function manageMC(){
 }
 //view the list of classes
 function previewListClasses(listClasses){
+    
     //remove old content
     var titleClass;
+    var rangeClasses = listClasses['rangeClasses'];
+    var subClasses = listClasses['subClasses'];
+    var parentClasses = listClasses['parentClasses'];
+    
     //put the title in the header of the box
     titleClass = __("List of context classes")+': '+actualClassLabel;
     $("#contextClassHeader h1").text(titleClass);
-    
     //get the actual class info
-    $("#contextClasses").text('');
     
-    for (i in listClasses){
-        cl = listClasses[i];
+    
+    $("#rangeClasses").text('');
+    for (i in rangeClasses){
+        cl = rangeClasses[i];
         // we have a button with all information to acces to class info
-        // content = '<input id="'+cl.uriClass+'" type="button" value="'+cl.label+'" name ="classInfos_'+cl.uriClass +'" /></input>';
         content = '<input id="'+cl.uriClass+'" class= "classInfos" type="button" value="'+cl.label+'" name ="'+cl.propertySourceUri +'" /></input>';
-        //content = '<a id="younes11" href="#" onclick="getClassInfos()">'+cl.label +'</a>';//onclick="getClassInfos()
-        $("#contextClasses").append(content);
+        $("#rangeClasses").append(content);
+    }
+    
+    
+    
+    $("#subClasses").text('');
+    for (i in subClasses){
+        cl = subClasses[i];
+        // we have a button with all information to acces to class info
+        content = '<input id="'+cl.uriClass+'" class= "classInfos" type="button" value="'+cl.label+'" name ="'+cl.propertySourceUri +'" /></input>';
+        $("#subClasses").append(content);
+    }
+    
+    
+    
+    $("#parentClasses").text('');
+    for (i in parentClasses){
+        cl = parentClasses[i];
+        // we have a button with all information to acces to class info
+        content = '<input id="'+cl.uriClass+'" class= "classInfos" type="button" value="'+cl.label+'" name ="'+cl.propertySourceUri +'" /></input>';
+        $("#parentClasses").append(content);
     }
 }
 //preview the list of properties of the actual class
@@ -213,8 +232,14 @@ function getRootClassesOfInstances(){
             var vide=[];
             listClasses = msg;
             rootClasses = msg;
+            var initialClasses =[];
+            
+            // to have the same model of classes list for the preview
+            initialClasses['rangeClasses'] = rootClasses;
+            initialClasses['subClasses'] = rootClasses;
+            initialClasses['parentClasses'] = rootClasses;
             // preview the list of classes
-            previewListClasses(rootClasses);
+            previewListClasses(initialClasses);
             previewListProperties(vide);
             //save the context
             actualClassUri = 'rootClasses';
@@ -259,8 +284,15 @@ function getContextClasses(uriC){
         },
         dataType :"json",
         success: function(msg){
-            classesContext= msg;
-            previewListClasses(classesContext);
+            var contextClasses= msg;
+            var rangeClasses = contextClasses['rangeClasses'];
+            var subClasses = contextClasses['subClasses'];
+            var parentClasses = contextClasses['parentClasses'];
+            
+            var mergedContextClasses=[];
+            console.log(contextClasses);
+            previewListClasses(contextClasses);
+            //TODO add other classes
 
         }//succes
     });
