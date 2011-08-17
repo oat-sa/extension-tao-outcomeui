@@ -290,9 +290,9 @@ function getContextClasses(uriC){
             var parentClasses = contextClasses['parentClasses'];
             
             var mergedContextClasses=[];
-            console.log(contextClasses);
+            //console.log(contextClasses);
             previewListClasses(contextClasses);
-            //TODO add other classes
+        //TODO add other classes
 
         }//succes
     });
@@ -310,6 +310,8 @@ function addToPath(propertyUri){
     // just for illustration 
     pathString =pathProperties.join("__");
     //$("#pathProp").val(pathString);
+    console.log (propertyUri);
+    console.log(pathString);
 
     return pathString;
 }
@@ -513,7 +515,7 @@ function previewTable(table){
         var btnDelete = '<input id='+i+' title="Delete column" type="button" value="" class = "deleteColumnClass"/></input>';
         var btnInfo = '<input id='+i+' title="Info column" type="button" value="Info" class = "infoColumnClass"/></input>';
 
-        strTH = strTH+ '<th>'+btnDelete +" "+btnInfo+'<br>'+columnLabel+'</th>';
+        strTH = strTH+ '<th>'+btnDelete+'<br>'+columnLabel+'</th>';
     }
     strHeadNameColomn = strTH;
     //the sat of column
@@ -563,8 +565,23 @@ function previewTable(table){
 
             /*var cellValue = '<pre>'+rowHTML[i]+'</pre>';//
             strTD = strTD+'<td>'+cellValue+'</td>';*/
+            //TODO modify style of complex cell
+            //var cellValue = rowHTML[i].replace(/\|\$\*/g, '<br>*');
+            
+            var cellValue = rowHTML[i];
+            var arrayCellValue = cellValue.split(/\|\$\*/g);
+            //if multiple values create a liste else send a value as is
+            if (arrayCellValue.length >1){
+            
+            //build a list
+            var list = '<ul>';
+            for (i in arrayCellValue){
+                list = list + "<li>"+arrayCellValue[i]+"</li>";
+            }
+            list = list+"</ul>";
+            cellValue = list;
+            } 
 
-            var cellValue = rowHTML[i].replace(/\|\$\*/g, '<br>-');//
             strTD = strTD+'<td>'+cellValue+'</td>';
 
         }
