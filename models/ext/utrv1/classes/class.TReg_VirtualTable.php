@@ -295,6 +295,9 @@ class TReg_VirtualTable extends RegCommon {
      * @return Collection
      */
     public function YaddColumn($columnDescription, $utrModel) {
+        $desc = array();
+        $columnList = array(); //$_SESSION['utrModel'];
+
         $desc = $columnDescription;
         $columnList = $utrModel; //$_SESSION['utrModel'];
         //timestamp
@@ -398,6 +401,8 @@ class TReg_VirtualTable extends RegCommon {
         $columnDescription = array();
         $utrModel = array();
         $p = new TReg_VirtualTable();
+        $_SESSION['utrModel'] = array();
+        
         foreach ($listOfProperties as $propUri => $label) {
             //cretae the description
             $columnDescription['columnName'] = $label;
