@@ -449,7 +449,7 @@ class taoResults_models_classes_RegCommon extends tao_models_classes_GenerisServ
         $returnValue = (string) '';
 
         // section 10-13-1--65-3b6a288d:12d79aedebf:-8000:0000000000002A66 begin
-        $service = tao_models_classes_ServiceFactory::get('tao_models_classes_TaoService');
+        $service = tao_models_classes_TaoService::singleton();
         $extension = $service->getCurrentExtension();
 
         return $extension; 

@@ -12,7 +12,7 @@ if(isset($_GET['final'])){
 }
 
 //get the subject uri from the wf userService:
-$userService = tao_models_classes_ServiceFactory::get('tao_models_classes_UserService');
+$userService = tao_models_classes_UserService::singleton();
 $reviewer = $userService->getCurrentUser();
 $revIdCurrent = $reviewer->uriResource;
 // var_dump(array(

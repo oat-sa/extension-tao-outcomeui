@@ -20,7 +20,7 @@ class taoResults_actions_Results extends tao_actions_TaoModule {
         parent::__construct();
 
         //the service is initialized by default
-        $this->service = tao_models_classes_ServiceFactory::get('Results');
+        $this->service = taoResults_models_classes_ResultsService::singleton();
         $this->defaultData();
     }
 
@@ -325,7 +325,7 @@ class taoResults_actions_Results extends tao_actions_TaoModule {
 //
 //    public function sumModel($a, $b) {
 //        //echo "inprogress + access au truc";
-//        $eService = tao_models_classes_ServiceFactory::get('taoResults_models_classes_Clacul');
+//        $eService = taoResults_models_classes_Clacul::singleton();
 //        //echo "<br>";
 // //       $res = $eService->sumsum($a,$b);
 // //

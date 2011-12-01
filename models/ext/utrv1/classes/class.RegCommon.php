@@ -479,7 +479,7 @@ class RegCommon {
      */
     public function getCurrentModule() {
 
-        $service = tao_models_classes_ServiceFactory::get('tao_models_classes_TaoService');
+        $service = tao_models_classes_TaoService::singleton();
         $extension = $service->getCurrentExtension();
 
         return $extension;
