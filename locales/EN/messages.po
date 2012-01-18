@@ -1,10 +1,29 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: TAO v2.2-alpha\n"
+"PO-Revision-Date: 2012-01-18T15:51:32\n"
+"Last-Translator: TAO Translation Team <translation@tao.lu>\n"
+"MIME-Version: 1.0\n"
+"Language: EN\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
 msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
 msgstr "All results of passed Tests with their referring Test takers, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
 
-msgid "Advanced Authoring Tool"
+msgid "Class saved"
 msgstr ""
 
-msgid "Class saved"
+msgid "create direct table"
+msgstr ""
+
+msgid "create score table"
+msgstr ""
+
+msgid "create table"
+msgstr ""
+
+msgid "delete"
 msgstr ""
 
 msgid "Edit result"
@@ -28,42 +47,9 @@ msgstr ""
 msgid "Template Saved"
 msgstr ""
 
-msgid "Test view"
-msgstr ""
-
 msgid "This module constitutes the final step."
 msgstr ""
 
-msgid "create Score table"
-msgstr ""
-
-msgid "create Simple table"
-msgstr ""
-
-msgid "create direct table"
-msgstr ""
-
-msgid "create score table"
-msgstr ""
-
-msgid "create table"
-msgstr ""
-
-msgid "delete"
-msgstr ""
-
-msgid "export"
-msgstr ""
-
-msgid "lists"
-msgstr ""
-
-msgid "new class"
-msgstr ""
-
-msgid "new property"
-msgstr ""
-
-msgid "new result"
+msgid "View and format the collected results."
 msgstr ""
 

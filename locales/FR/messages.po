@@ -1,11 +1,30 @@
-msgid "Advanced Authoring Tool"
-msgstr "Editeur avancé"
+msgid ""
+msgstr ""
+"Project-Id-Version: TAO v2.2-alpha\n"
+"PO-Revision-Date: 2012-01-18T15:51:32\n"
+"Last-Translator: TAO Translation Team <translation@tao.lu>\n"
+"MIME-Version: 1.0\n"
+"Language: FR\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 
 msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
 msgstr "Les résultats de tous les tests passés avec les données des Sujets, Groupes et Items comme les données récupérées pendant le déroulement de chaque test sont collectées et gérées ici."
 
 msgid "Class saved"
 msgstr "Classe enregistrée"
+
+msgid "create direct table"
+msgstr ""
+
+msgid "create score table"
+msgstr ""
+
+msgid "create table"
+msgstr "créer le tableau"
+
+msgid "delete"
+msgstr "supprimer"
 
 msgid "Edit result"
 msgstr "Modifier le résultat"
@@ -25,45 +44,12 @@ msgstr "Résultats"
 msgid "Results library"
 msgstr "Librairie de résultats"
 
-msgid "Test view"
-msgstr "Vue de test"
+msgid "Template Saved"
+msgstr ""
 
 msgid "This module constitutes the final step."
 msgstr "Ce module constitue la dernière étape."
 
-msgid "create Score table"
-msgstr "créer un tableau Score"
-
-msgid "create Simple table"
-msgstr "créer un tableau Simple"
-
-msgid "create table"
-msgstr "créer le tableau"
-
-msgid "delete"
-msgstr "supprimer"
-
-msgid "export"
-msgstr "exporter"
-
-msgid "lists"
-msgstr "listes"
-
-msgid "new class"
-msgstr "nouvelle classe"
-
-msgid "new property"
-msgstr "nouvelle propriété"
-
-msgid "new result"
-msgstr "nouveau résultat"
-
-msgid "Template Saved"
-msgstr ""
-
-msgid "create direct table"
-msgstr ""
-
-msgid "create score table"
+msgid "View and format the collected results."
 msgstr ""
 

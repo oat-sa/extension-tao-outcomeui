@@ -1,8 +1,30 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: TAO v2.2-alpha\n"
+"PO-Revision-Date: 2012-01-18T15:51:33\n"
+"Last-Translator: TAO Translation Team <translation@tao.lu>\n"
+"MIME-Version: 1.0\n"
+"Language: LU\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
 msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
 msgstr "All Resultater vun duerchgefouerten Tester, mat hieren entspriechenden Testpersounen, Gruppen, Item Daten an och all individeull Daten déi während der Testpassatioun gesammelt goufen, gin hei gespaichert"
 
 msgid "Class saved"
 msgstr "Klass gespaichert"
+
+msgid "create direct table"
+msgstr ""
+
+msgid "create score table"
+msgstr ""
+
+msgid "create table"
+msgstr "Tabell erstellen"
+
+msgid "delete"
+msgstr "läschen"
 
 msgid "Edit result"
 msgstr "Resultat editéiren"
@@ -22,48 +44,12 @@ msgstr "Resultater"
 msgid "Results library"
 msgstr "Resultater Sammlung"
 
-msgid "This module constitutes the final step."
-msgstr "Desen Modul stellt den letzen Schrack duer."
-
-msgid "create table"
-msgstr "Tabell erstellen"
-
-msgid "delete"
-msgstr "läschen"
-
-msgid "export"
-msgstr "exportéiren"
-
-msgid "new class"
-msgstr "nei Klass"
-
-msgid "new property"
-msgstr "nei Proprietéit"
-
-msgid "new result"
-msgstr "neit Resultat"
-
-msgid "Advanced Authoring Tool"
-msgstr ""
-
 msgid "Template Saved"
 msgstr ""
 
-msgid "Test view"
-msgstr ""
+msgid "This module constitutes the final step."
+msgstr "Desen Modul stellt den letzen Schrack duer."
 
-msgid "create Score table"
-msgstr ""
-
-msgid "create Simple table"
-msgstr ""
-
-msgid "create direct table"
-msgstr ""
-
-msgid "create score table"
-msgstr ""
-
-msgid "lists"
+msgid "View and format the collected results."
 msgstr ""
 

@@ -1,11 +1,30 @@
-msgid "Advanced Authoring Tool"
-msgstr "ادوات التاليف المتقدمة"
+msgid ""
+msgstr ""
+"Project-Id-Version: TAO v2.2-alpha\n"
+"PO-Revision-Date: 2012-01-18T15:51:32\n"
+"Last-Translator: TAO Translation Team <translation@tao.lu>\n"
+"MIME-Version: 1.0\n"
+"Language: AR\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
 
 msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
 msgstr "نتائج كل الاختبارات التي مرت مع معطيات المترشحين,المجموعات و الاسئلةوايضا المعطيات المتحصل عليها اثناء اجراء اي اختبار تجمع وتسير هنا"
 
 msgid "Class saved"
 msgstr "تم حفظ الصنف"
+
+msgid "create direct table"
+msgstr "انشاء جدول مباشر"
+
+msgid "create score table"
+msgstr ""
+
+msgid "create table"
+msgstr "انشاء جدول"
+
+msgid "delete"
+msgstr "حذف"
 
 msgid "Edit result"
 msgstr "تحرير النتيجة"
@@ -25,45 +44,12 @@ msgstr "النتائج"
 msgid "Results library"
 msgstr "مكتبة النتائج"
 
-msgid "Test view"
-msgstr "عرض الاختبار"
+msgid "Template Saved"
+msgstr ""
 
 msgid "This module constitutes the final step."
 msgstr ".هذه الوحدة يشكل الخطوة النهائي"
 
-msgid "create Score table"
-msgstr ".انشاء جدول نقاط"
-
-msgid "create Simple table"
-msgstr "انشاء جدول بسيط"
-
-msgid "create direct table"
-msgstr "انشاء جدول مباشر"
-
-msgid "create table"
-msgstr "انشاء جدول"
-
-msgid "delete"
-msgstr "حذف"
-
-msgid "export"
-msgstr "تصدير"
-
-msgid "lists"
-msgstr "القوائم"
-
-msgid "new class"
-msgstr "صنف جديد"
-
-msgid "new property"
-msgstr "خاصية جديدة"
-
-msgid "new result"
-msgstr "نتيجة جديدة"
-
-msgid "Template Saved"
-msgstr ""
-
-msgid "create score table"
+msgid "View and format the collected results."
 msgstr ""
 
