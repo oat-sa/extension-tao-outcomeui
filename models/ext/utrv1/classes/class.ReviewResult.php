@@ -52,7 +52,7 @@ class ReviewResult {
         $uri = $uriIB;
         $ibInformationValues = array();// the returned array
         //get the uri of the property LISTENERVALUE
-        $RESULT_NS = core_kernel_classes_Session::getNameSpace();
+        $RESULT_NS = core_kernel_classes_Session::singleton()->getNameSpace();
 //echo ' hhl=kml';
         //Create property connexion
 
@@ -317,7 +317,7 @@ class ReviewResult {
         $uri = $uriIB;
         $ibInformationValues = array();// the returned array
         //get the uri of the property LISTENERVALUE
-        $RESULT_NS = core_kernel_classes_Session::getNameSpace();
+        $RESULT_NS = core_kernel_classes_Session::singleton()->getNameSpace();
 
         //Create property connexion
 
@@ -533,7 +533,7 @@ class ReviewResult {
      */
 
     public function getItemBehaviorInstances() {
-        $RESULT_NS = core_kernel_classes_Session::getNameSpace();
+        $RESULT_NS = core_kernel_classes_Session::singleton()->getNameSpace();
         $uriItemBehavior = $RESULT_NS.'#'.'ITEMBEHAVIOR_CLASS';
         $utrClass = new core_kernel_classes_Class($uriItemBehavior);
 
@@ -619,7 +619,7 @@ class ReviewResult {
 
         // get the property uris'
         //echo $uriItemReviewed.'<br>'.$revId;
-        $RESULT_NS = core_kernel_classes_Session::getNameSpace();
+        $RESULT_NS = core_kernel_classes_Session::singleton()->getNameSpace();
 
         if ($revNumber =='rev1') {
 

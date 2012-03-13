@@ -22,7 +22,7 @@ class classrevItemCapacity {
         define('API_PASSWORD',md5('tao'));
 		// core_control_FrontController::connect(API_LOGIN, API_PASSWORD, DATABASE_NAME);
 		
-		$this->namespace = core_kernel_classes_Session::getNameSpace().'#';
+		$this->namespace = core_kernel_classes_Session::singleton()->getNameSpace().'#';
     }
     //put your code here
 

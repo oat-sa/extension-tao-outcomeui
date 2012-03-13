@@ -47,7 +47,7 @@ class ResultModelBuilder {
         core_control_FrontController::connect(API_LOGIN, API_PASSWORD, DATABASE_NAME);
 
         //Get the NameSpace of in order to add the instances
-        $RESULT_NS = core_kernel_classes_Session::getNameSpace();
+        $RESULT_NS = core_kernel_classes_Session::singleton()->getNameSpace();
         $RESULT_NS = $RESULT_NS.'#';
 
         $listClasses = $domResult->getElementsByTagName("class");

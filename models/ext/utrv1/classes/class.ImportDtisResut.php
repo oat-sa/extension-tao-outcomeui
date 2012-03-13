@@ -36,7 +36,7 @@ class ImportDtisResult {
             //connect to the class of dtis Result Class
             $dtisResultClass = new core_kernel_classes_Class(TAO_ITEM_RESULTS_CLASS);
             //****Remove from the last version
-            $resultNS = core_kernel_classes_Session::getNameSpace();
+            $resultNS = core_kernel_classes_Session::singleton()->getNameSpace();
             //echo " le namse space ".$resultNS; // to remove in the final version
             $dtisResultClass = new core_kernel_classes_Class($resultNS . '#' . "TAO_ITEM_RESULTS");
             //****
@@ -127,7 +127,7 @@ class ImportDtisResult {
             $uri = $dtisUris["TAO_DELIVERY_ID"];
             list($ns, $lastpartUriDeliveryOfResult) = explode("#", $uri);
             //use the last part as uri for the search
-            $localNS = core_kernel_classes_Session::getNameSpace();
+            $localNS = core_kernel_classes_Session::singleton()->getNameSpace();
 
             $uriDelivery = $localNS . "#DR_" . $lastpartUriDeliveryOfResult; // add DR_ for the instance of the Delivery Result
             //
