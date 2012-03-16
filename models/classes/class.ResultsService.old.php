@@ -293,7 +293,7 @@ class taoResults_models_classes_ResultsService
 
         // section 127-0-1-1-3fc126b2:12c350e4297:-8000:0000000000002886 begin
         //get the name space of the class
-        $resultNS = core_kernel_classes_Session::getNameSpace();
+        $resultNS = core_kernel_classes_Session::singleton()->getNameSpace();
         if (is_array($dtisUris) && !empty($key)) {
 
             //connect to the class of dtis Result Class

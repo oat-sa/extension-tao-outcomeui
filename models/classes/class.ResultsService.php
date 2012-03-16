@@ -5,10 +5,11 @@ error_reporting(E_ALL);
 /**
  * Service methods to manage the Results business models using the RDF API.
  *
- * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+ * @author Joel Bout, <joel.bout@tudor.lu>
  * @package taoResults
  * @subpackage models_classes
  */
+
 if (0 > version_compare(PHP_VERSION, '5')) {
     die('This file was generated for PHP 5');
 }
@@ -17,7 +18,7 @@ if (0 > version_compare(PHP_VERSION, '5')) {
  * The Service class is an abstraction of each service instance. 
  * Used to centralize the behavior related to every servcie instances.
  *
- * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+ * @author Joel Bout, <joel.bout@tudor.lu>
  */
 require_once('tao/models/classes/class.GenerisService.php');
 
@@ -33,12 +34,16 @@ require_once('tao/models/classes/class.GenerisService.php');
  * Service methods to manage the Results business models using the RDF API.
  *
  * @access public
- * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+ * @author Joel Bout, <joel.bout@tudor.lu>
  * @package taoResults
  * @subpackage models_classes
  */
-class taoResults_models_classes_ResultsService extends tao_models_classes_GenerisService {
+class taoResults_models_classes_ResultsService
+    extends tao_models_classes_GenerisService
+{
     // --- ASSOCIATIONS ---
+
+
     // --- ATTRIBUTES ---
 
     /**
@@ -55,10 +60,11 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * Short description of method __construct
      *
      * @access public
-     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @author Joel Bout, <joel.bout@tudor.lu>
      * @return mixed
      */
-    public function __construct() {
+    public function __construct()
+    {
         // section 127-0-1-1--233123b3:125208ce1cc:-8000:0000000000001C75 begin
 
         parent::__construct();
@@ -71,13 +77,14 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * get a result instance
      *
      * @access public
-     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  string identifier
      * @param  string mode
      * @param  Class clazz
      * @return core_kernel_classes_Resource
      */
-    public function getResult($identifier, $mode = 'uri', core_kernel_classes_Class $clazz = null) {
+    public function getResult($identifier, $mode = 'uri',  core_kernel_classes_Class $clazz = null)
+    {
         $returnValue = null;
 
         // section 127-0-1-1--233123b3:125208ce1cc:-8000:0000000000001C77 begin
@@ -109,11 +116,12 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * If the uri don't reference a  result subclass, it returns null
      *
      * @access public
-     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  string uri
      * @return core_kernel_classes_Class
      */
-    public function getResultClass($uri = '') {
+    public function getResultClass($uri = '')
+    {
         $returnValue = null;
 
         // section 127-0-1-1--233123b3:125208ce1cc:-8000:0000000000001C86 begin
@@ -136,13 +144,14 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * subclass the result class
      *
      * @access public
-     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  Class clazz
      * @param  string label
      * @param  array properties
      * @return core_kernel_classes_Class
      */
-    public function createResultClass(core_kernel_classes_Class $clazz = null, $label = '', $properties = array()) {
+    public function createResultClass( core_kernel_classes_Class $clazz = null, $label = '', $properties = array())
+    {
         $returnValue = null;
 
         // section 127-0-1-1--233123b3:125208ce1cc:-8000:0000000000001C8C begin
@@ -175,11 +184,12 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * delete a result
      *
      * @access public
-     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  Resource result
      * @return boolean
      */
-    public function deleteResult(core_kernel_classes_Resource $result) {
+    public function deleteResult( core_kernel_classes_Resource $result)
+    {
         $returnValue = (bool) false;
 
         // section 10-13-1-45-792423e0:12398d13f24:-8000:00000000000017F6 begin
@@ -197,11 +207,12 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * delete a result class or subclass
      *
      * @access public
-     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  Class clazz
      * @return boolean
      */
-    public function deleteResultClass(core_kernel_classes_Class $clazz) {
+    public function deleteResultClass( core_kernel_classes_Class $clazz)
+    {
         $returnValue = (bool) false;
 
         // section 127-0-1-1--233123b3:125208ce1cc:-8000:0000000000001C9E begin
@@ -221,11 +232,12 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * check if the given class is a class or a subclass of Result
      *
      * @access public
-     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  Class clazz
      * @return boolean
      */
-    public function isResultClass(core_kernel_classes_Class $clazz) {
+    public function isResultClass( core_kernel_classes_Class $clazz)
+    {
         $returnValue = (bool) false;
 
         // section 127-0-1-1--233123b3:125208ce1cc:-8000:0000000000001CA2 begin
@@ -250,11 +262,12 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * Short description of method getResultsByGroup
      *
      * @access protected
-     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  Resource group
      * @return core_kernel_classes_ContainerCollection
      */
-    protected function getResultsByGroup(core_kernel_classes_Resource $group) {
+    protected function getResultsByGroup( core_kernel_classes_Resource $group)
+    {
         $returnValue = null;
 
         // section 10-13-1-45-792423e0:12398d13f24:-8000:00000000000017F3 begin
@@ -267,13 +280,14 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * Short description of method addResultVariable
      *
      * @access public
-     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  array dtisUris
      * @param  string key
      * @param  string value
      * @return core_kernel_classes_Resource
      */
-    public function addResultVariable($dtisUris, $key, $value) {
+    public function addResultVariable($dtisUris, $key, $value)
+    {
         $returnValue = null;
 
         // section 127-0-1-1-3fc126b2:12c350e4297:-8000:0000000000002886 begin
@@ -311,14 +325,15 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * Short description of method setScore
      *
      * @access public
-     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  array dtisUris
      * @param  string scoreValue
      * @param  string minScoreValue
      * @param  string maxScoreValue
      * @return core_kernel_classes_Resource
      */
-    public function setScore($dtisUris, $scoreValue, $minScoreValue = '', $maxScoreValue = '') {
+    public function setScore($dtisUris, $scoreValue, $minScoreValue = '', $maxScoreValue = '')
+    {
         $returnValue = null;
 
         // section 127-0-1-1-3fc126b2:12c350e4297:-8000:000000000000288B begin
@@ -341,12 +356,13 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * Short description of method setEndorsment
      *
      * @access public
-     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  array dtisUris
      * @param  boolean endorsement
      * @return core_kernel_classes_Resource
      */
-    public function setEndorsment($dtisUris, $endorsement) {
+    public function setEndorsment($dtisUris, $endorsement)
+    {
         $returnValue = null;
 
         // section 127-0-1-1-bdec0d0:12c357cc917:-8000:0000000000002893 begin
@@ -365,12 +381,13 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * Short description of method setAnsweredValues
      *
      * @access public
-     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  array dtisUris
      * @param  string value
      * @return core_kernel_classes_Resource
      */
-    public function setAnsweredValues($dtisUris, $value) {
+    public function setAnsweredValues($dtisUris, $value)
+    {
         $returnValue = null;
 
         // section 127-0-1-1-bdec0d0:12c357cc917:-8000:0000000000002897 begin
@@ -386,13 +403,14 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * Short description of method addResultVariables
      *
      * @access public
-     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  array dtisUris
      * @param  array variables
      * @param  boolean onlyKnown
      * @return core_kernel_classes_Session_int
      */
-    public function addResultVariables($dtisUris, $variables, $onlyKnown = false) {
+    public function addResultVariables($dtisUris, $variables, $onlyKnown = false)
+    {
         $returnValue = (int) 0;
 
         // section 127-0-1-1--360cae3b:12c3a1d0b40:-8000:00000000000028A8 begin
@@ -443,13 +461,14 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * create for each variable a specified value.
      *
      * @access public
-     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  array dtisUris
      * @param  string variableName
      * @param  string value
      * @return core_kernel_classes_Session_int
      */
-    public function addItemVariableFullOptimization($dtisUris, $variableName, $value) {
+    public function addItemVariableFullOptimization($dtisUris, $variableName, $value)
+    {
         $returnValue = (int) 0;
 
         // section 10-13-1--65-4e40d1d7:12f583ecd14:-8000:0000000000002D69 begin
@@ -484,11 +503,12 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * old one to recive the new variable of result.
      *
      * @access public
-     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  array dtisUris
      * @return string
      */
-    public function getDeliveryOftheResult($dtisUris) {
+    public function getDeliveryOftheResult($dtisUris)
+    {
         $returnValue = (string) '';
 
         // section 10-13-1--65-4e40d1d7:12f583ecd14:-8000:0000000000002D6F begin
@@ -503,7 +523,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
         $uri = $dtisUris["TAO_DELIVERY_ID"];
         list($ns, $lastpartUriDeliveryOfResult) = explode("#", $uri);
         //use the last part as uri for the search
-        $localNS = core_kernel_classes_Session::getNameSpace();
+        $localNS = core_kernel_classes_Session::singleton()->getNameSpace();
 
         $uriDelivery = $localNS . "#DR_" . $lastpartUriDeliveryOfResult; // add DR_ for the instance of the Delivery Result
         //
@@ -544,16 +564,17 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * properties
      *
      * @access public
-     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  array dtisUris
      * @param  string deliveryResultUri
      * @return string
      */
-    public function getInstanceOfResult($dtisUris, $deliveryResultUri) {
+    public function getInstanceOfResult($dtisUris, $deliveryResultUri)
+    {
         $returnValue = (string) '';
 
         // section 10-13-1--65-4e40d1d7:12f583ecd14:-8000:0000000000002D73 begin
-        $localNS = core_kernel_classes_Session::getNameSpace();
+        $localNS = core_kernel_classes_Session::singleton()->getNameSpace();
         $resultNS = RESULT_ONTOLOGY; //'http://www.tao.lu/Ontologies/TAOResult.rdf';
         $drClass = new core_kernel_classes_Class($deliveryResultUri);
 
@@ -622,18 +643,19 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
      * Short description of method getPropertyOfResult
      *
      * @access public
-     * @author Younes Djaghloul, <younes.djaghloul@tudor.lu>
+     * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  array dtisUris
      * @param  string key
      * @param  string deliveryResultUri
      * @return string
      */
-    public function getPropertyOfResult($dtisUris, $key, $deliveryResultUri) {
+    public function getPropertyOfResult($dtisUris, $key, $deliveryResultUri)
+    {
         $returnValue = (string) '';
 
         // section 10-13-1--65-19cc067:12f585986f8:-8000:0000000000002D78 begin
         //
-        $localNS = core_kernel_classes_Session::getNameSpace();
+        $localNS = core_kernel_classes_Session::singleton()->getNameSpace();
 
         $drClass = new core_kernel_classes_Class($deliveryResultUri);
         $listOfProperties = $drClass->getProperties();
@@ -692,7 +714,28 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_Generi
         return (string) $returnValue;
     }
 
-}
+    /**
+     * Short description of method setAnsweredValue
+     *
+     * @access public
+     * @author Joel Bout, <joel.bout@tudor.lu>
+     * @param  Resource deliveryResult
+     * @param  Resource activityExecution
+     * @param  string value
+     * @return mixed
+     */
+    public function setAnsweredValue( core_kernel_classes_Resource $deliveryResult,  core_kernel_classes_Resource $activityExecution, $value)
+    {
+        // section 127-0-1-1--7689377f:135d2b9bc18:-8000:000000000000384F begin
+        $type = new core_kernel_classes_Class(TAO_RESULT_ANSWER);
+        $answerResource = $type->createInstanceWithProperties(array(
+			PROPERTY_MEMBER_OF_RESULT		=> $deliveryResult,
+			PROPERTY_VARIABLE_ORIGIN		=> $activityExecution,
+			PROPERTY_VARIABLE_VALUE			=> $value,
+		));
+        // section 127-0-1-1--7689377f:135d2b9bc18:-8000:000000000000384F end
+    }
 
-/* end of class taoResults_models_classes_ResultsService */
+} /* end of class taoResults_models_classes_ResultsService */
+
 ?>

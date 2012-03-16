@@ -339,7 +339,7 @@ class taoResults_actions_Results extends tao_actions_TaoModule {
 //        $clas = new core_kernel_classes_Class(TAO_ITEM_RESULTS_CLASS);
 //        $label = $clas->getLabel();
 //            //****Remove from the last version
-//        $resultNS = core_kernel_classes_Session::getNameSpace();
+//        $resultNS = core_kernel_classes_Session::singleton()->getNameSpace();
 //
 //        //$label = $clazz->getLabel();
 //        $result["valeur"]= $res;
