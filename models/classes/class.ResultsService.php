@@ -715,25 +715,31 @@ class taoResults_models_classes_ResultsService
     }
 
     /**
-     * Short description of method setAnsweredValue
+     * new approach to storing values in the ontology
      *
      * @access public
      * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  Resource deliveryResult
      * @param  Resource activityExecution
+     * @param  string identifier
      * @param  string value
-     * @return mixed
+     * @return core_kernel_classes_Resource
      */
-    public function setAnsweredValue( core_kernel_classes_Resource $deliveryResult,  core_kernel_classes_Resource $activityExecution, $value)
+    public function setAnsweredValue( core_kernel_classes_Resource $deliveryResult,  core_kernel_classes_Resource $activityExecution, $identifier, $value)
     {
-        // section 127-0-1-1--7689377f:135d2b9bc18:-8000:000000000000384F begin
+        $returnValue = null;
+
+        // section 127-0-1-1-5e0273f6:1362a85676b:-8000:0000000000003B6C begin
         $type = new core_kernel_classes_Class(TAO_RESULT_ANSWER);
         $answerResource = $type->createInstanceWithProperties(array(
 			PROPERTY_MEMBER_OF_RESULT		=> $deliveryResult,
 			PROPERTY_VARIABLE_ORIGIN		=> $activityExecution,
+			PROPERTY_VARIABLE_IDENTIFIER	=> $identifier,
 			PROPERTY_VARIABLE_VALUE			=> $value,
 		));
-        // section 127-0-1-1--7689377f:135d2b9bc18:-8000:000000000000384F end
+        // section 127-0-1-1-5e0273f6:1362a85676b:-8000:0000000000003B6C end
+
+        return $returnValue;
     }
 
 } /* end of class taoResults_models_classes_ResultsService */

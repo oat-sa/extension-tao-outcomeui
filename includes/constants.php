@@ -26,6 +26,7 @@ $todefine = array(
 	'PROPERTY_RESULT_OF_DELIVERY'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery',
 	'PROPERTY_RESULT_OF_PROCESS'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfProcess',
 	'TAO_RESULT_ANSWER'				=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#AnswerVariable',
+	'TAO_RESULT_GRADE'				=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#GradeVariable',
 	'PROPERTY_MEMBER_OF_RESULT'		=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#memberOfDeliveryResult',
 	'PROPERTY_VARIABLE_ORIGIN'		=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#variableOrigin',
 	'PROPERTY_VARIABLE_IDENTIFIER'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#variableIdentifier',
