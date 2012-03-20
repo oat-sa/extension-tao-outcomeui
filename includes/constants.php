@@ -31,6 +31,8 @@ $todefine = array(
 	'PROPERTY_VARIABLE_ORIGIN'		=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#variableOrigin',
 	'PROPERTY_VARIABLE_IDENTIFIER'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#variableIdentifier',
 	'PROPERTY_VARIABLE_VALUE'		=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#variableValue',
+	'PROPERTY_VARIABLE_DERIVATED'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#derivatedFrom',
+	'PROPERTY_VARIABLE_AUTHORED'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#authoredBy',
 
 	// probably long since deprecated
 	'TAO_ITEM_RESULTS_CLASS'=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_ITEM_RESULTS',
