@@ -34,7 +34,7 @@ class taoResults_actions_SaSResults extends taoResults_actions_Results {
 			$this->setData('includedView', $identifier);
 		}
 		else{
-			$this->setData('includedView', BASE_PATH . '/' . DIR_VIEWS . $GLOBALS['dir_theme'] . $identifier);
+			$this->setData('includedView', DIR_VIEWS . $GLOBALS['dir_theme'] . $identifier);
 		}
 		return parent::setView('sas.tpl', true);
     }

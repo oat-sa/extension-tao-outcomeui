@@ -16,10 +16,12 @@ define("DIR_MODELS"			, dirname(__FILE__). "/../models/");
 define('DIR_PLUGINS'		, dirname(__FILE__).'/../plugins/');
 
 # views directory
-define("DIR_VIEWS"			, "views/");
+define("DIR_VIEWS"			, dirname(__FILE__)."/../views/");
 
 # helpers directory
 define("DIR_HELPERS"		, dirname(__FILE__) . "/../helpers/");
+
+define('CACHE_PATH'			, ROOT_PATH . '/tao/data/cache/');
 
 # default module name
 define('DEFAULT_MODULE_NAME', 'Results');
@@ -37,13 +39,13 @@ define('BASE_PATH', ROOT_PATH . '/taoResults');
 define('BASE_URL', ROOT_URL. '/taoResults');
 
 #BASE WWW the web resources path
-define('BASE_WWW', BASE_URL . '/' . DIR_VIEWS);
+define('BASE_WWW', BASE_URL . '/views/');
 
 #the path were the event logs are saved
 define('EVENT_LOG_PATH', BASE_PATH . '/data');
 
 #TAO extension Paths
-define('TAOBASE_WWW',  ROOT_URL  . '/tao/' . DIR_VIEWS);
-define('TAOVIEW_PATH', ROOT_PATH . '/tao/' . DIR_VIEWS);
-define('TAO_TPL_PATH', ROOT_PATH . '/tao/' . DIR_VIEWS . $GLOBALS['dir_theme']);
+define('TAOBASE_WWW',  ROOT_URL  . '/tao/views/');
+define('TAOVIEW_PATH', ROOT_PATH . '/tao/views/');
+define('TAO_TPL_PATH', TAOVIEW_PATH . $GLOBALS['dir_theme']);
 ?>
