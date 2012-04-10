@@ -97,13 +97,5 @@
 		<funcacl:actionMemberOf rdf:resource="http://www.tao.lu/Ontologies/taoFuncACL.rdf#m_taoResults_SaSResults" />
   </rdf:Description>
 
-	<rdf:Description rdf:about="http://www.tao.lu/Ontologies/taoFuncACL.rdf#m_taoResults_Settings">
-    <rdf:type rdf:resource="http://www.tao.lu/Ontologies/taoFuncACL.rdf#Module"/>
-    <rdfs:label xml:lang="EN"><![CDATA[module Settings]]></rdfs:label>
-		<rdfs:comment xml:lang="EN"><![CDATA[module Settings]]></rdfs:comment>
-		<funcacl:moduleIdentifier xml:lang="EN"><![CDATA[Settings]]></funcacl:moduleIdentifier>
-		<funcacl:moduleExtension xml:lang="EN"><![CDATA[taoResults]]></funcacl:moduleExtension>
-  </rdf:Description>
-
 
 </rdf:RDF>
