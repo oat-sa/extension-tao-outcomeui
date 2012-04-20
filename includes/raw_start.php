@@ -12,6 +12,6 @@ if(PHP_SAPI == 'cli'){
 
 require_once dirname(__FILE__). '/../../tao/includes/class.Bootstrap.php';
 
-$bootStrap = new BootStrap('taoResults');
+$bootStrap = new BootStrap('taoResults', array('session_name' => TestRunner::SESSION_KEY));
 $bootStrap->start();
 ?>
