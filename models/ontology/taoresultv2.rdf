@@ -49,14 +49,14 @@
     <rdfs:comment xml:lang="EN"><![CDATA[Variable of a DeliveryResult]]></rdfs:comment>
     <rdfs:subClassOf rdf:resource="http://www.tao.lu/Ontologies/TAO.rdf#TAOObject"/>
   </rdf:Description>
-  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#AnswerVariable">
-    <rdfs:label xml:lang="EN"><![CDATA[Answer Variable]]></rdfs:label>
-    <rdfs:comment xml:lang="EN"><![CDATA[Answer of an DeliveryResults Activity execution]]></rdfs:comment>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable">
+    <rdfs:label xml:lang="EN"><![CDATA[Response Variable]]></rdfs:label>
+    <rdfs:comment xml:lang="EN"><![CDATA[Response to an interaction]]></rdfs:comment>
     <rdfs:subClassOf rdf:resource="http://www.tao.lu/Ontologies/TAOResult.rdf#Variable"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#GradeVariable">
     <rdfs:label xml:lang="EN"><![CDATA[Grade Variable]]></rdfs:label>
-    <rdfs:comment xml:lang="EN"><![CDATA[Grade of an DeliveryResults Activity execution]]></rdfs:comment>
+    <rdfs:comment xml:lang="EN"><![CDATA[Grade of an interaction]]></rdfs:comment>
     <rdfs:subClassOf rdf:resource="http://www.tao.lu/Ontologies/TAOResult.rdf#Variable"/>
   </rdf:Description>
   

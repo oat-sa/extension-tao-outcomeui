@@ -730,7 +730,7 @@ class taoResults_models_classes_ResultsService
         $returnValue = null;
 
         // section 127-0-1-1-5e0273f6:1362a85676b:-8000:0000000000003B6C begin
-        $type = new core_kernel_classes_Class(TAO_RESULT_ANSWER);
+        $type = new core_kernel_classes_Class(TAO_RESULT_RESPONSE);
         $answerResource = $type->createInstanceWithProperties(array(
 			PROPERTY_MEMBER_OF_RESULT		=> $deliveryResult,
 			PROPERTY_VARIABLE_ORIGIN		=> $activityExecution,
