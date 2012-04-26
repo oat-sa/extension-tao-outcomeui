@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    @sourceLanguage EN
+    @targetLanguage SE
+-->
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xml:base="http://www.tao.lu/Ontologies/taoFuncACL.rdf">
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/taoFuncACL.rdf#m_taoResults_Results">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source module Results
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#m_taoResults_Results
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="SE"><![CDATA[module Results]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source module Results
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#m_taoResults_Results
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="SE"><![CDATA[module Results]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_editResult">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source action editResult
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_editResult
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="SE"><![CDATA[action editResult]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source action editResult
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_editResult
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="SE"><![CDATA[action editResult]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_addResultClass">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source action addResultClass
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_addResultClass
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="SE"><![CDATA[action addResultClass]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source action addResultClass
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_addResultClass
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="SE"><![CDATA[action addResultClass]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_editResultClass">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source action editResultClass
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_editResultClass
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="SE"><![CDATA[action editResultClass]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source action editResultClass
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_editResultClass
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="SE"><![CDATA[action editResultClass]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_delete">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source action delete
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_delete
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="SE"><![CDATA[action delete]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source action delete
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_delete
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="SE"><![CDATA[action delete]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_createTable">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source action createTable
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_createTable
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="SE"><![CDATA[action createTable]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source action createTable
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_createTable
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="SE"><![CDATA[action createTable]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_createDirectTable">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source action createDirectTable
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_createDirectTable
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="SE"><![CDATA[action createDirectTable]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source action createDirectTable
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_createDirectTable
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="SE"><![CDATA[action createDirectTable]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_createScoreTable">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source action createScoreTable
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_createScoreTable
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="SE"><![CDATA[action createScoreTable]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source action createScoreTable
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_createScoreTable
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="SE"><![CDATA[action createScoreTable]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_templateUtr13">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source action templateUtr13
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_templateUtr13
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="SE"><![CDATA[action templateUtr13]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source action templateUtr13
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_templateUtr13
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="SE"><![CDATA[action templateUtr13]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/taoFuncACL.rdf#m_taoResults_SaSResults">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source module SaSResults
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#m_taoResults_SaSResults
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="SE"><![CDATA[module SaSResults]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source module SaSResults
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#m_taoResults_SaSResults
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="SE"><![CDATA[module SaSResults]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_SaSResults_setView">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source action setView
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_SaSResults_setView
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="SE"><![CDATA[action setView]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source action setView
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_SaSResults_setView
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="SE"><![CDATA[action setView]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_SaSResults_createTable">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source action createTable
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_SaSResults_createTable
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="SE"><![CDATA[action createTable]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage SE
+    @source action createTable
+    @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_SaSResults_createTable
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="SE"><![CDATA[action createTable]]></rdfs:comment>
+  </rdf:Description>
+</rdf:RDF>

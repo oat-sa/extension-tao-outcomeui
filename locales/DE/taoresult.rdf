@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    @sourceLanguage EN
+    @targetLanguage DE
+-->
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xml:base="http://www.tao.lu/Ontologies/TAOResult.rdf">
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#Result">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage DE
+    @source Result
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#Result
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="DE"><![CDATA[Result]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage DE
+    @source Result
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#Result
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="DE"><![CDATA[Result]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage DE
+    @source TAO Result Model
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="DE"><![CDATA[TAO Result Model]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage DE
+    @source TAO Result Model
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="DE"><![CDATA[TAO Result Model]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#ResultContent">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage DE
+    @source Result Content
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#ResultContent
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="DE"><![CDATA[Result Content]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage DE
+    @source ResultContent
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#ResultContent
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="DE"><![CDATA[ResultContent]]></rdfs:comment>
+  </rdf:Description>
+</rdf:RDF>
