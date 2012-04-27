@@ -17,6 +17,7 @@
 			'install' => array(
 				'rdf' => array(
 						array('ns' => 'http://www.tao.lu/Ontologies/TAOResult.rdf', 'file' => dirname(__FILE__). '/models/ontology/taoresult.rdf'),
+						array('ns' => 'http://www.tao.lu/Ontologies/TAOResult.rdf', 'file' => dirname(__FILE__). '/models/ontology/taoresult_alt.rdf'),
 						array('ns' => 'http://www.tao.lu/Ontologies/taoFuncACL.rdf', 'file' => dirname(__FILE__). '/models/ontology/funcacl.rdf')
 				)
 			),

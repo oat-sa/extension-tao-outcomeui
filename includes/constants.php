@@ -30,12 +30,11 @@ $todefine = array(
 	'PROPERTY_MEMBER_OF_RESULT'		=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#memberOfDeliveryResult',
 	'PROPERTY_VARIABLE_ORIGIN'		=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#variableOrigin',
 	'PROPERTY_VARIABLE_IDENTIFIER'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#variableIdentifier',
-	'PROPERTY_VARIABLE_VALUE'		=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#variableValue',
 	'PROPERTY_VARIABLE_DERIVATED'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#derivatedFrom',
-	'PROPERTY_VARIABLE_AUTHORED'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#authoredBy',
+	'PROPERTY_VARIABLE_AUTHOR'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#authoredBy',
 	'PROPERTY_GRADE_FINAL'			=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#gradeFinal',
 
-	// probably long since deprecated
+	// old
 	'TAO_ITEM_RESULTS_CLASS'=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_ITEM_RESULTS',
 	'PROP_RESULT_RESULTCONTENT'		=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultContent',
 	'PROP_RESULT_PROCESS_EXEC_ID'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_PROCESS_EXEC_ID',

@@ -735,7 +735,7 @@ class taoResults_models_classes_ResultsService
 			PROPERTY_MEMBER_OF_RESULT		=> $deliveryResult,
 			PROPERTY_VARIABLE_ORIGIN		=> $activityExecution,
 			PROPERTY_VARIABLE_IDENTIFIER	=> $identifier,
-			PROPERTY_VARIABLE_VALUE			=> $value,
+			RDF_VALUE						=> $value,
 		));
         // section 127-0-1-1-5e0273f6:1362a85676b:-8000:0000000000003B6C end
 
