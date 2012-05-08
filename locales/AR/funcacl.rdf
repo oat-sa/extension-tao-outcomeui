@@ -8,7 +8,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source module Results
+    @source Module Results
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#m_taoResults_Results
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
@@ -16,7 +16,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source module Results
+    @source Module Results
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#m_taoResults_Results
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
@@ -26,7 +26,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source action editResult
+    @source Action editResult
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_editResult
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
@@ -34,7 +34,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source action editResult
+    @source Action editResult
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_editResult
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
@@ -44,7 +44,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source action addResultClass
+    @source Action addResultClass
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_addResultClass
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
@@ -52,7 +52,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source action addResultClass
+    @source Action addResultClass
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_addResultClass
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
@@ -62,7 +62,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source action editResultClass
+    @source Action editResultClass
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_editResultClass
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
@@ -70,7 +70,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source action editResultClass
+    @source Action editResultClass
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_editResultClass
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
@@ -80,7 +80,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source action delete
+    @source Action delete
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_delete
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
@@ -88,7 +88,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source action delete
+    @source Action delete
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_delete
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
@@ -98,7 +98,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source action createTable
+    @source Action createTable
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_createTable
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
@@ -106,7 +106,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source action createTable
+    @source Action createTable
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_createTable
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
@@ -116,7 +116,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source action createDirectTable
+    @source Action createDirectTable
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_createDirectTable
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
@@ -124,7 +124,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source action createDirectTable
+    @source Action createDirectTable
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_createDirectTable
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
@@ -134,7 +134,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source action createScoreTable
+    @source Action createScoreTable
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_createScoreTable
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
@@ -142,7 +142,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source action createScoreTable
+    @source Action createScoreTable
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_createScoreTable
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
@@ -152,7 +152,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source action templateUtr13
+    @source Action templateUtr13
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_templateUtr13
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
@@ -160,7 +160,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source action templateUtr13
+    @source Action templateUtr13
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_Results_templateUtr13
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
@@ -170,7 +170,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source module SaSResults
+    @source Module SaSResults
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#m_taoResults_SaSResults
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
@@ -178,7 +178,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source module SaSResults
+    @source Module SaSResults
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#m_taoResults_SaSResults
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
@@ -188,7 +188,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source action setView
+    @source Action setView
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_SaSResults_setView
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
@@ -196,7 +196,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source action setView
+    @source Action setView
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_SaSResults_setView
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
@@ -206,7 +206,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source action createTable
+    @source Action createTable
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_SaSResults_createTable
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
@@ -214,7 +214,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage AR
-    @source action createTable
+    @source Action createTable
     @subject http://www.tao.lu/Ontologies/taoFuncACL.rdf#a_taoResults_SaSResults_createTable
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->

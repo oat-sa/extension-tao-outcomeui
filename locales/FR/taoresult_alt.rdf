@@ -1,0 +1,277 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+    @sourceLanguage EN
+    @targetLanguage FR
+-->
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xml:base="http://www.tao.lu/Ontologies/TAOResult.rdf">
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#Result">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Result
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#Result
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="FR"><![CDATA[Result]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Result
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#Result
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="FR"><![CDATA[Result]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Result of subject
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="FR"><![CDATA[Result of subject]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Tao Delivery Result of Subject
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="FR"><![CDATA[Tao Delivery Result of Subject]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Tao Delivery Result
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="FR"><![CDATA[Tao Delivery Result]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Tao Delivery Result
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="FR"><![CDATA[Tao Delivery Result]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Delivery of this result
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="FR"><![CDATA[Delivery of this result]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Delivery of this result
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="FR"><![CDATA[Delivery of this result]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfProcess">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source ClassProcessInstance of this result
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfProcess
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="FR"><![CDATA[ClassProcessInstance of this result]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source ClassProcessInstance of this result
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfProcess
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="FR"><![CDATA[ClassProcessInstance of this result]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#Variable">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Result Variable
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#Variable
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="FR"><![CDATA[Result Variable]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Variable of a DeliveryResult
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#Variable
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="FR"><![CDATA[Variable of a DeliveryResult]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Response Variable
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="FR"><![CDATA[Response Variable]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Response to an interaction
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="FR"><![CDATA[Response to an interaction]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#GradeVariable">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Grade Variable
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#GradeVariable
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="FR"><![CDATA[Grade Variable]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Grade of an interaction
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#GradeVariable
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="FR"><![CDATA[Grade of an interaction]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#memberOfDeliveryResult">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Author of result
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#memberOfDeliveryResult
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="FR"><![CDATA[Author of result]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Author of result
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#memberOfDeliveryResult
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="FR"><![CDATA[Author of result]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#variableIdentifier">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Variable Identifier
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#variableIdentifier
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="FR"><![CDATA[Variable Identifier]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Variable Identifier
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#variableIdentifier
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="FR"><![CDATA[Variable Identifier]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#variableComment">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Variable Comment
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#variableComment
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="FR"><![CDATA[Variable Comment]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Variable Comment
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#variableComment
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="FR"><![CDATA[Variable Comment]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#authoredBy">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Variable Author
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#authoredBy
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="FR"><![CDATA[Variable Author]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Variable Author
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#authoredBy
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="FR"><![CDATA[Variable Author]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#variableOrigin">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Variable Activity Origin
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#variableOrigin
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="FR"><![CDATA[Variable Activity Origin]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Variable Activity Origin
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#variableOrigin
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="FR"><![CDATA[Variable Activity Origin]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#derivatedFrom">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Derivated From
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#derivatedFrom
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="FR"><![CDATA[Derivated From]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Variable was derivated from this variable
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#derivatedFrom
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="FR"><![CDATA[Variable was derivated from this variable]]></rdfs:comment>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#gradeFinal">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Final
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#gradeFinal
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="FR"><![CDATA[Final]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage FR
+    @source Is the grade final?
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#gradeFinal
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="FR"><![CDATA[Is the grade final?]]></rdfs:comment>
+  </rdf:Description>
+</rdf:RDF>
