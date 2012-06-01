@@ -54,7 +54,7 @@ class taoResults_actions_Results extends tao_actions_TaoModule {
      * @return core_kernel_classes_Classes
      */
     protected function getRootClass() {
-        return $this->service->getResultClass();
+        return new core_kernel_classes_Class(RESULT_ONTOLOGY . "#" . "TAO_DELIVERY_RESULTS");
     }
 
     /*

@@ -68,7 +68,8 @@ class taoResults_models_classes_ResultsService
         // section 127-0-1-1--233123b3:125208ce1cc:-8000:0000000000001C75 begin
 
         parent::__construct();
-		$this->resultClass = new core_kernel_classes_Class(RESULT_ONTOLOGY . "#" . "TAO_DELIVERY_RESULTS");
+        $this->resultClass = new core_kernel_classes_Class(TAO_RESULT_CLASS);
+
         // section 127-0-1-1--233123b3:125208ce1cc:-8000:0000000000001C75 end
     }
 
