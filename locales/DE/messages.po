@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO v2.2-beta\n"
-"PO-Revision-Date: 2012-05-24T16:16:00\n"
+"Project-Id-Version: TAO v2.2-beta2\n"
+"PO-Revision-Date: 2012-06-08T13:42:00\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: DE\n"
@@ -32,12 +32,14 @@ msgstr "Ergebnis bearbeiten"
 msgid "Edit result class"
 msgstr "Klasse"
 
+#, tao-public
 msgid "Manage results"
 msgstr "Ergebnisse verwalten"
 
 msgid "Result saved"
 msgstr "Ergebnis gespeichert"
 
+#, tao-public
 msgid "Results"
 msgstr "Ergebnisse"
 
@@ -50,6 +52,7 @@ msgstr ""
 msgid "This module constitutes the final step."
 msgstr "Diese Modul stellt den letzten Schritt dar."
 
+#, tao-public
 msgid "View and format the collected results."
 msgstr ""
 

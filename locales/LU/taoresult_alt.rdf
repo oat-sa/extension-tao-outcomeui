@@ -26,7 +26,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage LU
-    @source Result of subject
+    @source Test taker of result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
@@ -34,7 +34,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage LU
-    @source Tao Delivery Result of Subject
+    @source Test taker of result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
@@ -62,7 +62,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage LU
-    @source Delivery of this result
+    @source Delivery of result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
@@ -70,7 +70,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage LU
-    @source Delivery of this result
+    @source Delivery of result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
@@ -80,7 +80,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage LU
-    @source ClassProcessInstance of this result
+    @source ClassProcessInstance of result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfProcess
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
@@ -88,7 +88,7 @@
     <!--
     @sourceLanguage EN
     @targetLanguage LU
-    @source ClassProcessInstance of this result
+    @source ClassProcessInstance of result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfProcess
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
