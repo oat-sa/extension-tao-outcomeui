@@ -30,7 +30,7 @@ class taoResults_actions_Results extends tao_actions_TaoModule {
 
     /**
      * get the instancee of the current subject regarding the 'uri' and 'classUri' request parameters
-     * @return core_kernel_classes_Resource the subject instance
+     * @return core_kernel_classes_Resource the result instance
      */
     protected function getCurrentInstance() {
 
@@ -43,7 +43,7 @@ class taoResults_actions_Results extends tao_actions_TaoModule {
 
         $result = $this->service->getResult($uri, 'uri', $clazz);
         if (is_null($result)) {
-            throw new Exception("No subject found for the uri {$uri}");
+            throw new common_Exception("No result found for the uri {$uri}");
         }
 
         return $result;

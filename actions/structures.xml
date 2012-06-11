@@ -19,7 +19,7 @@
 	                <action name="create direct table" url="/taoResults/Results/createDirectTable"  context="class" />
 	                <action name="create score table" url="/taoResults/Results/createScoreTable"  context="class" />
 	                <action name="create table" url="/taoResults/Results/createTable"  context="class" />
-	                <action name="delete" js="GenerisAction.removeNode" url="/taoSubjects/Subjects/delete" context="resource" />
+	                <action name="delete" js="GenerisAction.removeNode" url="/taoResults/Results/delete" context="resource" />
 	                
 	            </actions>
 	        </section>
