@@ -699,8 +699,8 @@ class taoResults_models_classes_ResultsService
             $drProperty = new core_kernel_classes_Property($resourceProperty->uriResource);
             $drProperty->setMultiple(true);
 
-            $widgetProp = new core_kernel_classes_Property("http://www.tao.lu/datatypes/WidgetDefinitions.rdf#widget");
-            $drProperty->setPropertyValue($widgetProp, "http://www.tao.lu/datatypes/WidgetDefinitions.rdf#TextBox");
+            $widgetProp = new core_kernel_classes_Property(PROPERTY_WIDGET);
+            $drProperty->setPropertyValue($widgetProp, WIDGET_FTE);
 
             //Link the property with the class
             $drClass->setProperty($drProperty);
