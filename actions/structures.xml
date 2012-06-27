@@ -7,12 +7,11 @@
 	        <section id="manage_results" name="Manage results" url="/taoResults/Results/index">
 	            <trees>
 	                <tree name="Results library"
+	                	className="Result"
 						dataUrl="/taoResults/Results/getOntologyData" 
 						editClassUrl="/taoResults/Results/editResultClass"
 						editInstanceUrl="/taoResults/Results/editResult"
-						deleteUrl="/taoResults/Results/delete"
-						
-	                                        
+						deleteUrl="/taoResults/Results/delete"              
 					/>
 	            </trees>
 	            <actions>
