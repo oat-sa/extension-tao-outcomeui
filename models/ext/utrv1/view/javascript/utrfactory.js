@@ -1,8 +1,8 @@
-/* 
+/*
  * Younes Djaghloul, CRP Henri Tudor Luxembourg
  * TAO transfer Project
  * UTR Task ( Ultimate Table for Result module)
- * 
+ *
  */
 var numberOfFilter = 10;
 var speed = 333;
@@ -20,7 +20,7 @@ var actualPropertySourceUri='';
 var classesContext = new Array(); // Context classes are in this version the Rang e of the actual class,
 var propertiesContext= new Array();//the properties of the actual class
 
-//The path taht contains a sequence of properties 
+//The path taht contains a sequence of properties
 
 var pathProperties = new Array();
 //the actual path
@@ -35,7 +35,7 @@ var historyAction = new Array();
 
 //Visual intro
 function utrIntro(){
-   
+
     historyAction = new Array();//Reset history of actions
     pathProperties = new Array();
     $("#divInitialInstances").html("");
@@ -47,7 +47,7 @@ function utrIntro(){
     $("#propertyBinding").dialog({
         autoOpen:false
     });
-    
+
 
     $("#divPathWizard").hide();
     $("#menuPathBuilder").hide();
@@ -56,9 +56,9 @@ function utrIntro(){
     $("#utrTemplateManager").hide();
     $("#utrTemplateManager").dialog('close');
 
-    
+
     $("#filterUtr").hide();
-    
+
     $("#filterUtr").dialog('close');
 
     //utr menu
@@ -66,18 +66,18 @@ function utrIntro(){
 
     $("#utrmenu input").button();
     $("#contextClasses").tabs();
-   
+
 }
 
 //save context as history to undo redo
 function saveContext(){
-    
+
     var action =[];
     action.path = pathProperties;
     action.actualClassUri = actualClassUri;
     action.actualClassLabel = actualClassLabel;
     //alert (action.actualClassUri);
-    
+
     historyAction.push(action);
 }
 function backContext(){
@@ -99,15 +99,15 @@ function backContext(){
         if (actualClassUri == 'rootClasses'){
             actualClassLabel = "Root Classes";
             getRootClassesOfInstances();
-            
-        
+
+
         }else
         {
             actualClassLabel=action.actualClassLabel
             getContextClasses(actualClassUri);
-        
+
         }
-    
+
         getProperties(actualClassUri);
     }else{
         alert("There is no parent");
@@ -154,19 +154,19 @@ function manageMC(){
 }
 //view the list of classes
 function previewListClasses(listClasses){
-    
+
     //remove old content
     var titleClass;
     var rangeClasses = listClasses['rangeClasses'];
     var subClasses = listClasses['subClasses'];
     var parentClasses = listClasses['parentClasses'];
-    
+
     //put the title in the header of the box
     titleClass = __("List of context classes")+': '+actualClassLabel;
     $("#contextClassHeader h1").text(titleClass);
     //get the actual class info
-    
-    
+
+
     $("#rangeClasses").text('');
     for (i in rangeClasses){
         cl = rangeClasses[i];
@@ -174,9 +174,9 @@ function previewListClasses(listClasses){
         content = '<input id="'+cl.uriClass+'" class= "classInfos" type="button" value="'+cl.label+'" name ="'+cl.propertySourceUri +'" /></input>';
         $("#rangeClasses").append(content);
     }
-    
-    
-    
+
+
+
     $("#subClasses").text('');
     for (i in subClasses){
         cl = subClasses[i];
@@ -184,9 +184,9 @@ function previewListClasses(listClasses){
         content = '<input id="'+cl.uriClass+'" class= "classInfos" type="button" value="'+cl.label+'" name ="'+cl.propertySourceUri +'" /></input>';
         $("#subClasses").append(content);
     }
-    
-    
-    
+
+
+
     $("#parentClasses").text('');
     for (i in parentClasses){
         cl = parentClasses[i];
@@ -201,7 +201,7 @@ function previewListProperties(listProperties){
     var titleContextProperties;
     titleContextProperties = __("List of properties")+": "+actualClassLabel;
     $("#contextPropertiesHeader h1").text(titleContextProperties);
-   
+
     $("#contextProperties").text('');
     for (uriP in listProperties){
         pl = listProperties[uriP];
@@ -214,10 +214,10 @@ function previewListProperties(listProperties){
 //the list of instances is savedd on the server side
 
 function getRootClassesOfInstances(){
-    
+
     //According to the list of instances we get the list of classes
     listClasses = new Array();
-    
+
     $.ajax({
         type: "POST",
         url: "../classes/class.TReg_VirtualTable.php",
@@ -226,14 +226,14 @@ function getRootClassesOfInstances(){
         },
         dataType :"json",
         async : false,
-        
+
         success: function(msg){
-            
+
             var vide=[];
             listClasses = msg;
             rootClasses = msg;
             var initialClasses =[];
-            
+
             // to have the same model of classes list for the preview
             initialClasses['rangeClasses'] = rootClasses;
             initialClasses['subClasses'] = rootClasses;
@@ -253,7 +253,7 @@ function getRootClassesOfInstances(){
 }
 //get the properties of  the class, according to the URI as parameter
 function getProperties(uriC){
-    
+
     //alert(uriC);
     $.ajax({
         type: "POST",
@@ -288,7 +288,7 @@ function getContextClasses(uriC){
             var rangeClasses = contextClasses['rangeClasses'];
             var subClasses = contextClasses['subClasses'];
             var parentClasses = contextClasses['parentClasses'];
-            
+
             var mergedContextClasses=[];
             //console.log(contextClasses);
             previewListClasses(contextClasses);
@@ -306,12 +306,12 @@ function addToPath(propertyUri){
     if (propertyUri != 'undefined'){
         pathProperties.push(propertyUri);
     }
-    
-    // just for illustration 
+
+    // just for illustration
     pathString =pathProperties.join("__");
     //$("#pathProp").val(pathString);
-    console.log (propertyUri);
-    console.log(pathString);
+    //console.log (propertyUri);
+    //console.log(pathString);
 
     return pathString;
 }
@@ -336,7 +336,7 @@ function getClassInfos (){
     addToPath(actualPropertySourceUri);
 
     //Save the context
-    
+
     //alert ("l'uri est "+uri);
     //get the properties and the range of the class, this is thje next step of the process
     getContextClasses(uriC);
@@ -355,7 +355,7 @@ function getPropertyBinding(){
     var option={
         resizable:false,
         buttons: {
-            
+
             "No":function(){
                 $("#propertyBinding").dialog("close");
                 //delete the last property in the path
@@ -373,11 +373,11 @@ function getPropertyBinding(){
     $("#propertyBinding").bind("dialogclose",function (){
         pathProperties.pop();
     });
-    
+
     //Put the default values
     $("#columnName").val(labelP);
 //$("#finalPath").val(pathString);
-    
+
 }
 //delete the colomn from the server side and re-preview the table
 
@@ -410,7 +410,7 @@ function deleteColumn(colId){
 
     }
     else{
-        
+
 }
 }
 //Verification of the existance of the column name
@@ -432,7 +432,7 @@ function verifyColumnLabel(colLabel){
         exist = false;
     }
     return exist;
-        
+
 }
 
 //add a column to the virtual table on server by using Ajax
@@ -466,15 +466,15 @@ function addColumn(){
                 actualUTR = msg;
                 previewTable(msg);
                 //close the window
-                
-                
+
+
                 utrIntro();
 
             }//succes
         });
 
     }//else
-    
+
 
 }
 // this method prewiews the table generated from the server side, according to the the interface technique. ( jgrid, slick, simple table)
@@ -519,7 +519,7 @@ function previewTable(table){
     }
     strHeadNameColomn = strTH;
     //the sat of column
-     
+
     strTH ='<th> % </th>';
     var strStatColumn = '';
     for ( i in finalUtrModel){
@@ -529,7 +529,7 @@ function previewTable(table){
         totalRows = columnDescription["totalRows"];
         totalRowsNotNull=columnDescription["totalRowsNotNull"] ;
 
-        
+
         //calculate the pourcentage and add a new header
         pourcentageCol = (parseFloat(totalRowsNotNull/totalRows)*100).toFixed(2);
         columnLabel =  pourcentageCol;
@@ -553,7 +553,7 @@ function previewTable(table){
         var rowInfo = finalRowsInfo[uri];
         var totalColumns = rowInfo["totalColumns"];
         var totalColumnsNotNull=rowInfo['totalColumnsNotNull']
-        
+
         var pourcentageRow = parseFloat(totalColumnsNotNull/totalColumns)*100;
         pourcentageRow = pourcentageRow.toFixed(2);
 
@@ -567,12 +567,12 @@ function previewTable(table){
             strTD = strTD+'<td>'+cellValue+'</td>';*/
             //TODO modify style of complex cell
             //var cellValue = rowHTML[i].replace(/\|\$\*/g, '<br>*');
-            
+
             var cellValue = rowHTML[i];
             var arrayCellValue = cellValue.split(/\|\$\*/g);
             //if multiple values create a liste else send a value as is
             if (arrayCellValue.length >1){
-            
+
             //build a list
             var list = '<ul>';
             for (i in arrayCellValue){
@@ -580,7 +580,7 @@ function previewTable(table){
             }
             list = list+"</ul>";
             cellValue = list;
-            } 
+            }
 
             strTD = strTD+'<td>'+cellValue+'</td>';
 
@@ -602,7 +602,7 @@ function removeSession(){
         url: "../classes/class.TReg_VirtualTable.php",
         data: {
             op:"removeSession"
-            
+
         },
         //dataType :"json",
         success: function(msg){
@@ -615,17 +615,17 @@ function removeSession(){
     });
 }
 function showColumnInfo(colId){
-    
+
     //get column description
     var raphael;
     var columnDescription = new Array();
     var utrm = actualUTR.utrModel;
     columnDescription = utrm[colId];
-    
+
     var totalRows = columnDescription['totalRows'];
     var totalRowsNotNull=columnDescription["totalRowsNotNull"] ;
     //alert (totalRows+ " -- "+totalRowsNotNull);
-   
+
 
     $("#pieStat").slideDown();
     //put the two arrays of value and labels
@@ -637,14 +637,14 @@ function showColumnInfo(colId){
     pieValues.push(pourcentageRowNull);
     pieLabels.push('Not Null');
     pieLabels.push('Null');
-    
-    
+
+
 
     (function (raphael) {
         $(function () {
             //alert ("gfghfdgh"+totalRows+ " -- "+totalRowsNotNull);
             raphael("pieStat", 540, 370).pieChart(270, 200, 120, pieValues, pieLabels, "#fff");
-            
+
         });
     })(Raphael.ninja());
 
@@ -656,13 +656,13 @@ function deleteListRows(){
     //get the list of selected rows, from the vlaue attribut of rowStat class
     var listRows =[];
     var listRowsString = '';
-    //get only the selected row 
+    //get only the selected row
     $(".statCheck:checked").each(function(){
         //if ($(this).attr("checked")=)
         codeRow = $(this).attr("value");
 
         listRows.push(codeRow);
-        
+
     });
     listRowsString = listRows.join('|');
 
@@ -680,7 +680,7 @@ function deleteListRows(){
         success: function(msg){
             //get the new UTR table
             actualUTR = msg;
-            
+
             previewTable(msg);
             //close the window
             //$("#propertyBinding").hide();
@@ -709,18 +709,18 @@ function saveUtr(){
         success: function(msg){
             alert (msg);
             utrIntro();
-        
+
         }
 
     };
     $.ajax(options);
-    
+
 
 
 }
 function getUtrTemplate(){
     var modelName = $(this).attr('id');
-    
+
 
     loadUtr(modelName)
     $("#utrTemplateManager").dialog('close');
@@ -740,7 +740,7 @@ function loadUtr(modelName){
         success: function(msg){
             //get the new UTR table
             actualUTR = msg;
-           
+
             previewTable(msg);
             //close the window
             //$("#propertyBinding").hide();
@@ -757,13 +757,13 @@ function getUtrModels(){
     var optionsTM ={
         height:450,
         width:700,
-        
+
         hide:'explode',
 
         modal : false,
         resizable: false,
         title:__("template manager")
-        
+
 
 
 
@@ -790,7 +790,7 @@ function getUtrModels(){
                 content = '<input id="'+i+'" class= "utrTemplate" type="button" value="'+i+'" name ="cl.propertySourceUri " /></input>';
                 $("#utrTemplateModelList").append(content);
             }
-     
+
         //close the window
         //$("#propertyBinding").hide();
         //utrIntro();
@@ -854,7 +854,7 @@ function sendFilter(){
         var queryOperator = $("#searchOperator"+i).val();
         var queryValue = $("#searchValue"+i).val();
 
-     
+
         //test if empty
         if ( queryProperty !=''){
 
@@ -866,7 +866,7 @@ function sendFilter(){
 
 
     var fullFilterText = tabOfFilters.join('|*$');
-    
+
     options={
         type: "POST",
         url: "../classes/class.TReg_VirtualTable.php",
@@ -882,7 +882,7 @@ function sendFilter(){
 
     };
     $.ajax(options);
-    
+
 }
 //export to csv
 function exportCSV (){
@@ -910,34 +910,34 @@ function manageEvents(){
     //hide the statistic info
     $("input[class = 'utrTemplate']").live('click',getUtrTemplate);
 
-    
+
 
     //add column event
     $("#addColumn").click(addColumn);
     $("#exitAddColumn").click(function(){
 
         $("#propertyBinding").dialog("close");
-        
+
         //delete the last property in the path
         pathProperties.pop();
     });
     //delete column
     $(".deleteColumnClass").live('click',function(){
         //get parameter
-        
+
         var colId = $(this).attr("id");
         //alert ("delete "+ colId);
         deleteColumn(colId);
     });
     $("#columnBuilder").click(function(){
-        
+
         //reset patth and history of actions
         historyAction = new Array();//Reset history of actions
         pathProperties = new Array();
 
 
         //show the path bulder div
-   
+
         $("#divPathWizard").show(speed*2);
 
         //with dialog
@@ -957,7 +957,7 @@ function manageEvents(){
     });
     $("#backClass").click(backContext);
     //
-    
+
     $("#hidePieStat").click(function (){
         $("#pieStat").slideUp(speed);
     });
@@ -1004,14 +1004,14 @@ function manageEvents(){
 
 
     $("#cancelFilter").click(function(){
-        
+
         $("#filterUtr").dialog('close');
 
     });
-  
+
     $("#manageFilter").click(function(){
         var ok = '';
-        
+
         var options ={
             height:450,
             width:550,
@@ -1033,7 +1033,7 @@ function manageEvents(){
                     $("#filterUtr").dialog('close');
                 }
             }
-          
+
         };
 
         $("#filterUtr").dialog(options);
@@ -1041,11 +1041,11 @@ function manageEvents(){
 
     });
 
-    //export to 
+    //export to
     $("#export").click(function(){
-        
+
         var ok = '';
-        
+
         var options ={
             height:50,
             width:500,
@@ -1065,29 +1065,29 @@ function manageEvents(){
                     $("#exportChoice").dialog('close');
                 }
             }
-          
+
         };
 
         $("#exportChoice").dialog(options);
-        
-        
+
+
     });
 
 
-    
-    
+
+
 }
 
 
 function utrConstructor(){
     $(function(){
-    
+
         removeSession();
         // get the initial UTR, the user will ha ve directely a simple uTR with the properties of the current class
         loadInitialUtr();
         utrIntro();
         manageEvents();
-        
+
     });
 
 }
@@ -1141,14 +1141,14 @@ function trad(){
 function buildFilterLine(){
     var actualModel = [];
     $("#filterTableBody").html('');
-    
+
     var optionProperties = '';
-    
-    
+
+
     //faire la boucle
-    
+
     var actualModel = actualUTR['utrModel'];//get only the utrModel of the whole utrTable.
-    
+
     var operators = [];
     operators[0] = '=';
     operators[1] = '<';
@@ -1158,7 +1158,7 @@ function buildFilterLine(){
     operators[4] = '>=';
     operators[5] = 'like';
 
-    
+
     //build the propety selection
     for ( trI = 1 ;trI <=numberOfFilter;trI++){
 
@@ -1174,14 +1174,14 @@ function buildFilterLine(){
         optionProperties = '<td>'+optionProperties +'</select></td>';
 
         //build the operator selction
-    
+
         var optionOperators = '';
         optionOperators = '<select id ="searchOperator'+trI+'">';
         var op = '';
         for (i in operators){
             op = operators[i];
             optionOperators= optionOperators + '<option value="'+op+'">'+op+'</option>';
-        
+
         }
 
         optionOperators = '<td>'+optionOperators +'</select></td>' ;
@@ -1194,7 +1194,7 @@ function buildFilterLine(){
 
     }// end for
 
-  
+
 
 }
 
