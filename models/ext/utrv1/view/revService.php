@@ -8,7 +8,7 @@ $revType = 'reviewer';
 if(isset($_GET['final'])){
 	if($_GET['final'] == 1){
 		$revType = 'revFinal';
-	}	
+	}
 }
 
 //get the subject uri from the wf userService:
@@ -66,7 +66,7 @@ and open the template in the editor.
         <title></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="cssfiles/default/basic.css">
-        <link rel="stylesheet" type="text/css" href="<?=TAOBASE_WWW?>css/custom-theme/jquery-ui-1.8.custom.css" />
+        <link rel="stylesheet" type="text/css" href="<?=TAOBASE_WWW?>css/custom-theme/jquery-ui-1.8.22.custom.css" />
         <script src="javascript/jquery-1.3.2.min.js"></script>
 
         <script type="text/javascript" src="locales/<?=$_SESSION['lang']?>/messages_po.js"></script>
@@ -81,7 +81,7 @@ and open the template in the editor.
 
         <div id="reportHeader" class="ui-widget-header  ui-state-default">
             <h1> <?=__("Report on open review")?></h1>
-            
+
         </div>
 
         <div id="TesteesAndRic" classe ="ui-widget ui-widget-content ui-corner-all" style="float: left;width:250px; margin-top: 10px;margin-bottom: 10px">
@@ -117,7 +117,7 @@ and open the template in the editor.
                 </table>
 
             </div>
-           
+
 
         </div>
         <div id="reviewContainer"  classe ="ui-widget ui-widget-content ui-corner-all" style=" width: 50%; float:left; margin: 10px 10px 10px 10px">
