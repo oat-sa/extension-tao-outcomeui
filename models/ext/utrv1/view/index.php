@@ -16,19 +16,16 @@ and open the template in the editor.
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="stylesheet" type="text/css" href="cssfiles/default/basic.css">
 
-        <link rel="stylesheet" type="text/css" href="<?=TAOBASE_WWW
-?>css/custom-theme/jquery-ui-1.8.custom.css" />
+        <link rel="stylesheet" type="text/css" href="<?=TAOBASE_WWW?>css/custom-theme/jquery-ui-1.8.custom.css" />
 
         <script src="javascript/jquery-1.3.2.min.js"></script>
 
-        <script src="<?=TAOBASE_WWW
-?>js/jquery-ui-1.8.custom.min.js"></script>
+        <script src="<?=TAOBASE_WWW?>js/jquery-ui-1.8.21.custom.min.js"></script>
 
               <script type="text/javascript" src="javascript/raphael.js"></script>
               <script type="text/javascript" src="javascript/pie.js"></script>
 
-              <script type="text/javascript" src="locales/<?=$_SESSION['lang']
-?>/messages_po.js"></script>
+              <script type="text/javascript" src="locales/<?=$_SESSION['lang']?>/messages_po.js"></script>
         <script type="text/javascript" src="javascript/i18n.js"></script>
 
         <script type="text/javascript" src="javascript/utrfactory.js"></script>
@@ -49,13 +46,13 @@ and open the template in the editor.
                 <div id="classesDiv" class="ui-widget-content ui-corner-all">
                     <div id="contextClassHeader" class="ui-widget-header" style="margin: 0.1em 0.1em">
 
-                        
+
                         <h1>Classe</h1>
 
                     </div>
                     <div id="contextClasses" >
 
-                        
+
                         <ul>
                             <li><a href="#rangeClasses"> <? echo __("Range"); ?></a></li>
                             <li><a href="#subClasses"><? echo __("Sub"); ?> </a></li>
@@ -64,7 +61,7 @@ and open the template in the editor.
                         <div id ="rangeClasses" class="contextClassesStyle"></div>
                         <div id ="subClasses" class="contextClassesStyle"></div>
                         <div id ="parentClasses" class="contextClassesStyle"></div>
-                        
+
                     </div>
                 </div>
                 <div id="propertiesDiv" class="ui-widget-content ui-corner-all">
@@ -133,7 +130,7 @@ and open the template in the editor.
         <div id="filterUtr">
 
             <table border="0" width="0" cellspacing="2">
-                
+
                 <thead>
                     <tr>
                         <th><? echo __("Column") ?></th>
@@ -143,14 +140,14 @@ and open the template in the editor.
                 </thead>
                 <tbody id="filterTableBody">
 
-                    
+
 
                 </tbody>
             </table>
 
         </div>
         <div id="exportChoice">
-            
+
         </div>
 
 
