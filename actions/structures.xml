@@ -8,22 +8,22 @@
 	            <trees>
 	                <tree name="Results library"
 	                	className="Result"
-						dataUrl="/taoResults/Results/getOntologyData" 
+						dataUrl="/taoResults/Results/getOntologyData"
 						editClassUrl="/taoResults/Results/editResultClass"
 						editInstanceUrl="/taoResults/Results/editResult"
-						deleteUrl="/taoResults/Results/delete"              
+						deleteUrl="/taoResults/Results/delete"
 					/>
 	            </trees>
 	            <actions>
 	                <action name="create direct table" url="/taoResults/Results/createDirectTable"  context="class" />
 	                <action name="create score table" url="/taoResults/Results/createScoreTable"  context="class" />
 	                <action name="create table" url="/taoResults/Results/createTable"  context="class" />
-	                <action name="delete" js="GenerisAction.removeNode" url="/taoResults/Results/delete" context="resource" />
-	                
+	                <action name="delete" js="generisActions.removeNode" url="/taoResults/Results/delete" context="resource" />
+
 	            </actions>
 	        </section>
-	
-	
+
+
 	      </sections>
 	</structure>
 </structures>
