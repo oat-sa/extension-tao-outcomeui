@@ -2,6 +2,7 @@
 	#filter-container { width:19%;  height:561px; }
 	.main-container { height:584px; padding:0; margin:0; overflow:auto !important; }
 	#process-details-tabs { height:269px; }
+	#monitoring-processes-container, #process-details-container { padding:0; height:50%; overflow:auto; }
 </style>
 
 <div id="filter-container" class="data-container tabs-bottom">
@@ -22,15 +23,12 @@
 </div>
 
 <script type="text/javascript">
-
 //Global variable
 var monitoringGrid = null;
-var currentActivitiesGrid = null;
-var historyProcessGrid = null;
 //Selected process id
 //quick hack to test, to replace quickly
 var selectedProcessId = null;
-var selectedActivityExecutionId = null;
+//var selectedActivityExecutionId = null;
 
 //load the monitoring interface functions of the parameter filter
 function loadResults(filter)
@@ -49,16 +47,16 @@ function loadResults(filter)
 
 $(function(){
 	require(['require', 'jquery', 'generis.facetFilter', 'grid/tao.grid'], function(req, $, GenerisFacetFilterClass) {
-	
+
 		//the grid model
 		model = <?=$model?>;
-	
+
 		/*
 		 * Instantiate the tabs
 		 */
 		var filterTabs = new TaoTabsClass('#filter-container', {'position':'bottom'});
 		var processDetailsTabs = new TaoTabsClass('#process-details-tabs', {'position':'bottom'});
-	
+
 		/*
 		 * instantiate the facet based filter widget
 		 */
@@ -98,14 +96,14 @@ $(function(){
 		];
 		//instantiate the facet filter
 		var facetFilter = new GenerisFacetFilterClass('#facet-filter', filterNodes, facetFilterOptions);
-	
-	
+
+
 		var tabMap = [];
 		var openTab = function(title, url) {
 			uiBootstrap.tabs.tabs("add", url, title);
 			uiBootstrap.tabs.tabs("select", uiBootstrap.tabs.tabs("length")-1);
 		}
-		
+
 		/*
 		 * instantiate the monitoring grid
 		 */
@@ -124,12 +122,12 @@ $(function(){
 				}
 			}
 		};
-		
+
 		//instantiate the grid widget
 		monitoringGrid = new TaoGridClass('#monitoring-processes-grid', model, '', resultsGridOptions);
 		//load monitoring grid
 		loadResults(null);
-	
+
 		//width/height of the subgrids
 		var subGridWith = $('#current_activities_container').width() - 12 /* padding */;
 		var subGridHeight = $('#current_activities_container').height() - 45;
