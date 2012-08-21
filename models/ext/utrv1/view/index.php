@@ -20,7 +20,7 @@ and open the template in the editor.
 
         <script src="javascript/jquery-1.3.2.min.js"></script>
 
-        <script src="<?=TAOBASE_WWW?>js/jquery-ui-1.8.22.custom.min.js"></script>
+        <script src="<?=TAOBASE_WWW?>js/jquery-ui-1.8.23.custom.min.js"></script>
 
               <script type="text/javascript" src="javascript/raphael.js"></script>
               <script type="text/javascript" src="javascript/pie.js"></script>
