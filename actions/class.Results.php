@@ -11,6 +11,8 @@
  */
 class taoResults_actions_Results extends tao_actions_TaoModule {
 
+	private $resultGridOptions;
+	
     /**
      * constructor: initialize the service and the default data
      * @return Results
@@ -21,9 +23,134 @@ class taoResults_actions_Results extends tao_actions_TaoModule {
 
         //the service is initialized by default
         $this->service = taoResults_models_classes_ResultsService::singleton();
+        $this->resultGridOptions = array(
+			'columns' => array(
+				RDFS_LABEL						=> array('weight'=>2),
+				PROPERTY_RESULT_OF_DELIVERY 	=> array('weight'=>2),
+				PROPERTY_RESULT_OF_SUBJECT	 	=> array('weight'=>2)
+			)
+		);
         $this->defaultData();
     }
 
+    
+	public function index() {
+		//Class to filter on
+		$clazz = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
+		
+		//Properties to filter on
+		$properties = array();
+		$properties[] = new core_kernel_classes_Property(PROPERTY_RESULT_OF_DELIVERY);
+		$properties[] = new core_kernel_classes_Property(PROPERTY_RESULT_OF_SUBJECT);
+		
+		//Monitoring grid
+		$processMonitoringGrid = new taoResults_helpers_DeliveryResultGrid(array(), $this->resultGridOptions);
+		$grid = $processMonitoringGrid->getGrid();
+		$model = $grid->getColumnsModel();
+		
+		//Filtering data
+		$this->setData('clazz', $clazz);
+		$this->setData('properties', $properties);
+		
+		//Monitoring data
+		$this->setData('model', json_encode($model));
+		$this->setData('data', $processMonitoringGrid->toArray());
+		
+		$this->setView('resultList.tpl');
+	}
+	
+	public function getResults() {
+		$returnValue = array();
+		$filter = null;
+		
+		//get the filter
+		if($this->hasRequestParameter('filter')){
+			$filter = $this->getRequestParameter('filter');
+			$filter = $filter == 'null' || empty($filter) ? null : $filter;
+            if(is_array($filter)){
+                foreach($filter as $propertyUri=>$propertyValues){
+                    foreach($propertyValues as $i=>$propertyValue){
+                        $propertyDecoded = tao_helpers_Uri::decode($propertyValue);
+                        if(common_Utils::isUri($propertyDecoded)){
+                            $filter[$propertyUri][$i] = $propertyDecoded;
+                        }
+                    }
+                }
+            }
+		}
+		//get the processes uris
+		$processesUri = $this->hasRequestParameter('processesUri') ? $this->getRequestParameter('processesUri') : null;
+		
+		$clazz = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
+		if(!is_null($filter)){
+			$results = $clazz->searchInstances($filter, array ('recursive'=>true));
+		}
+		else if(!is_null($processesUri)){
+			foreach($processesUri as $processUri){
+				$results[$processUri] = new core_kernel_classes_resource($processUri);
+			}
+		}
+		else{
+			$results = $clazz->getInstances();
+		}
+		
+		$data = array();
+		foreach ($results as $res) {
+			$props = $res->getPropertiesValues(array(
+				PROPERTY_RESULT_OF_DELIVERY,
+				PROPERTY_RESULT_OF_SUBJECT
+			));
+			$data[$res->getUri()] = array(
+				RDFS_LABEL					=> $res->getLabel(),
+				PROPERTY_RESULT_OF_DELIVERY => array_shift($props[PROPERTY_RESULT_OF_DELIVERY]),
+				PROPERTY_RESULT_OF_SUBJECT	=> array_shift($props[PROPERTY_RESULT_OF_SUBJECT])
+			);
+		}
+		
+		$resultsGrid = new taoResults_helpers_DeliveryResultGrid($data, $this->resultGridOptions);
+		$data = $resultsGrid->toArray();
+		//var_dump($data);
+		
+		echo json_encode($data);
+	}
+	
+	public function viewResult() {
+		$clazz = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
+        $result = $this->getCurrentInstance();
+		common_Logger::d('Viewing '.$result->getLabel().' of type '.$clazz->getLabel());
+        
+        $formContainer = new tao_actions_form_Instance($clazz, $result);
+		$myForm = $formContainer->getForm();
+		$myForm->setActions(array(), 'top');
+		$myForm->setActions(array());
+		
+		$variables = array();
+		foreach ($this->service->getVariables($result) as $variable) {
+			$values = $variable->getPropertiesValues(array(
+				new core_kernel_classes_Property(PROPERTY_VARIABLE_IDENTIFIER),
+				new core_kernel_classes_Property(RDF_VALUE),
+				new core_kernel_classes_Property(RDF_TYPE),
+				new core_kernel_classes_Property(PROPERTY_VARIABLE_ORIGIN),
+			));
+			$origin = array_pop($values[PROPERTY_VARIABLE_ORIGIN])->getUri();
+			if (!isset($variables[$origin])) {
+				$variables[$origin] = array(
+					'vars' => array()
+				);
+			}
+			$variables[$origin]['vars'][] = $values;
+		}
+		foreach ($variables as $origin => $data) {
+			$ae = new core_kernel_classes_Resource($origin);
+		}
+		
+		common_Logger::d('Variables '.count($variables));
+		
+        $this->setData('myForm', $myForm->render());
+        $this->setData('variables', $variables);
+        $this->setView('viewResult.tpl', false);
+	}
+	
     /*
      * conveniance methods
      */
@@ -54,115 +181,12 @@ class taoResults_actions_Results extends tao_actions_TaoModule {
      * @return core_kernel_classes_Classes
      */
     protected function getRootClass() {
-        return new core_kernel_classes_Class(RESULT_ONTOLOGY . "#" . "TAO_DELIVERY_RESULTS");
+        return new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
     }
 
     /*
      * controller actions
      */
-
-    /**
-     * edit an subject instance
-     * @return void
-     */
-    public function editResult() {
-        $clazz = $this->getCurrentClass();
-        $result = $this->getCurrentInstance();
-
-        $formContainer = new tao_actions_form_Instance($clazz, $result);
-		$myForm = $formContainer->getForm();
-		
-		$disabledProperties = array(
-			PROP_RESULT_RESULTCONTENT,
-			PROP_RESULT_PROCESS_EXEC_ID,
-			PROP_RESULT_DELIVERY_ID,
-			PROP_RESULT_TEST_ID,
-			PROP_RESULT_ITEM_ID,
-			PROP_RESULT_SUBJECT_ID,
-			PROP_RESULT_ITEM_VARIABLE_ID,
-			PROP_RESULT_ITEM_VARIABLE_VALUE
-		);
-		
-		$readOnlyProperties = array(
-			PROP_RESULT_ITEM_VARIABLE_ID,
-			PROP_RESULT_ITEM_VARIABLE_VALUE
-		);
-		
-		//disable all input fields:
-		foreach($disabledProperties as $disabledPropertyUri){
-			$elementName = tao_helpers_Uri::encode($disabledPropertyUri);
-			$element = $myForm->getElement($elementName);
-			if(!is_null($element)){
-				//disable element:
-				if(in_array($disabledPropertyUri, $readOnlyProperties)){
-					$element->setAttribute('readonly', 'true');
-				}else{
-					$element->setAttribute('disabled', 'disabled');
-				}
-				$myForm->removeElement($elementName);
-				$myForm->addElement($element);
-			}
-		}
-
-        if ($myForm->isSubmited()) {
-            if ($myForm->isValid()) {
-
-                $result = $this->service->bindProperties($result, $myForm->getValues());
-
-                $this->setData('message', __('Result saved'));
-                $this->setData('reload', true);
-            }
-        }
-
-        $this->setSessionAttribute("showNodeUri", tao_helpers_Uri::encode($result->uriResource));
-
-        $this->setData('formTitle', __('Edit result'));
-        $this->setData('myForm', $myForm->render());
-        $this->setView('form.tpl', true);
-    }
-
-    /**
-     * add a subject model (subclass Result)
-     * @return void
-     */
-    public function addResultClass() {
-        if (!tao_helpers_Request::isAjax()) {
-            throw new Exception("wrong request mode");
-        }
-        $clazz = $this->service->createResultClass($this->getCurrentClass());
-        if (!is_null($clazz) && $clazz instanceof core_kernel_classes_Class) {
-            echo json_encode(array(
-                'label' => $clazz->getLabel(),
-                'uri' => tao_helpers_Uri::encode($clazz->uriResource)
-            ));
-        }
-    }
-
-    /**
-     * Edit a subject model (edit a class)
-     * @return void
-     */
-    public function editResultClass() {
-        $clazz = $this->getCurrentClass();
-
-        if ($this->hasRequestParameter('property_mode')) {
-            $this->setSessionAttribute('property_mode', $this->getRequestParameter('property_mode'));
-        }
-
-        $myForm = $this->editClass($clazz, $this->service->getResultClass());
-        if ($myForm->isSubmited()) {
-            if ($myForm->isValid()) {
-                if ($clazz instanceof core_kernel_classes_Resource) {
-                    $this->setSessionAttribute("showNodeUri", tao_helpers_Uri::encode($clazz->uriResource));
-                }
-                $this->setData('message', __('Class saved'));
-                $this->setData('reload', true);
-            }
-        }
-        $this->setData('formTitle', __('Edit result class'));
-        $this->setData('myForm', $myForm->render());
-        $this->setView('form.tpl', true);
-    }
 
     /**
      * delete a subject or a subject model
@@ -184,176 +208,5 @@ class taoResults_actions_Results extends tao_actions_TaoModule {
         echo json_encode(array('deleted' => $deleted));
     }
 
-    /**
-     * create data table
-     * @return void
-     */
-    public function createTable() {
-
-        $_SESSION['instances'] = array();
-        
-
-        $index = 0;
-        $clazz = $this->getCurrentClass();
-        foreach ($clazz->getInstances(false) as $resource) {
-            $_SESSION['instances'][$resource->uriResource] = 'uri_' . $index;
-            $index++;
-        }
-
-        $this->setView("create_table.tpl");
-    }
-    public function createDirectTable(){
-        $_SESSION['instances'] = array();
-
-        $index = 0;
-        $clazz = $this->getCurrentClass();
-        foreach ($clazz->getInstances(true) as $resource) {
-            $_SESSION['instances'][$resource->uriResource] = 'uri_' . $index;
-            $index++;
-        }
-        //add information of the class
-        $listProperties = $clazz->getProperties(true);
-        $listUrisWithoutFilter = array_keys($listProperties);
-        //do a first filter to gremove the RDF property that are not important
-        $listUris=$this->filterPropertyList($listUrisWithoutFilter);
-
-
-        $propertiesOfSimpleTable = array();
-        
-        foreach ($listUris as $uriProp){
-            $propInstance = $trProperty = new core_kernel_classes_Property($uriProp);
-            $label = $propInstance->getLabel();
-            $propertiesOfSimpleTable[$uriProp] = $label;
-        }
-        $_SESSION['utrListOfProperties'] = $propertiesOfSimpleTable;
-
-        $this->setView("create_table.tpl");
-
-    }
-    private function filterPropertyList($listProperties){
-        //http://www.w3.org/2000/01/rdf-schema#isDefinedBy
-        //If the name space of the property is http://www.w3.org/2000/01/rdf-schema#isDefinedBy
-        //Then delete from list
-        $listProperties = array_flip($listProperties);
-        
-        $finalProp = $listProperties;
-        $blockedProperties = array();
-
-        $blockedProperties[]= 'http://www.w3.org/1999/02/22-rdf-syntax-ns#type';
-        $blockedProperties[]= 'http://www.w3.org/1999/02/22-rdf-syntax-ns#subject';
-        $blockedProperties[]= 'http://www.w3.org/1999/02/22-rdf-syntax-ns#predicate';
-        $blockedProperties[]= 'http://www.w3.org/1999/02/22-rdf-syntax-ns#object';
-        $blockedProperties[]= 'http://www.w3.org/1999/02/22-rdf-syntax-ns#value';
-        $blockedProperties[]= 'http://www.w3.org/2000/01/rdf-schema#subPropertyOf';
-        $blockedProperties[]= 'http://www.w3.org/2000/01/rdf-schema#comment';
-        $blockedProperties[]= 'http://www.w3.org/2000/01/rdf-schema#seeAlso';
-        $blockedProperties[]= 'http://www.w3.org/2000/01/rdf-schema#isDefinedBy';
-        $blockedProperties[]= 'http://www.w3.org/2000/01/rdf-schema#member';
-        $blockedProperties[]= 'http://www.tao.lu/middleware/Interview.rdf#i122354397139712';
-        $blockedProperties[]= "http://www.tao.lu/middleware/Interview.rdf#i12191501768574";
-        $blockedProperties[]= "http://www.tao.lu/Ontologies/TAOResult.rdf#ResultContent";
-        foreach ($listProperties as $uri=>$obj ) {
-
-            if (in_array($uri,$blockedProperties)===true) {
-               
-                unset($finalProp[$uri]);
-            }
-            //for the specific uri like SCORE
-
-        }
-        return array_flip($finalProp);
-        
-    }
-
-    public function createScoreTable(){
-        $_SESSION['instances'] = array();
-
-
-        $index = 0;
-        $clazz = $this->getCurrentClass();
-        foreach ($clazz->getInstances(true) as $resource) {
-            $_SESSION['instances'][$resource->uriResource] = 'uri_' . $index;
-            $index++;
-        }
-        //add information of the class
-        $listProperties = $clazz->getProperties(true);
-        $listUrisWithoutFilter = array_keys($listProperties);
-        //do a first filter to gremove the RDF property that are not important
-        $listUris=$this->filterPropertyList($listUrisWithoutFilter);
-
-        $propertiesOfSimpleTable = array();
-        $scoreID = SCORE_ID;
-
-        //add fixed properties ( the DTIS )
-        //$allowedProperty [] = "http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_PROCESS_EXEC_ID";
-        $allowedProperty [] = "http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_DELIVERY_ID";
-        $allowedProperty [] = "http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_SUBJECT_ID";
-
-        foreach ($listUris as $uriProp){
-                 //filter the property
-            
-            if ((!strpos($uriProp,$scoreID)===FALSE)|| (in_array($uriProp, $allowedProperty))){
-            $propInstance = $trProperty = new core_kernel_classes_Property($uriProp);
-            $label = $propInstance->getLabel();
-            $propertiesOfSimpleTable[$uriProp] = $label;
-                
-            }
-            
-        }
-
-        $_SESSION['utrListOfProperties'] = $propertiesOfSimpleTable;
-
-        $this->setView("create_table.tpl");
-
-    }
-    public function templateUtr13(){
-        $this->setView("utr13.tpl");
-    }
 }
-
-
-//    public function sum($a, $b) {
-//        echo " la somme est :". ($a + $b);
-//    }
-//
-//    public function paramSum() {
-//        /// get the parameters by http
-//        $a = $this->getRequestParameter('a');
-//        $b = $this->getRequestParameter('b');
-//        echo 'somme http :' . ($a + $b);
-//    }
-//
-//    public function sumModel($a, $b) {
-//        //echo "inprogress + access au truc";
-//        $eService = taoResults_models_classes_Clacul::singleton();
-//        //echo "<br>";
-// //       $res = $eService->sumsum($a,$b);
-// //
-////        $this->setData('a',$a);
-////        $this->setData('b',$b);
-////        $this->setData('result',$res);
-////        //$this->setView('sum.tpl');
-//        $pa = $this->getRequestParameter('a');
-//        $pb = $this->getRequestParameter('b');
-//        $res = $eService->sumsum($pa+1000,$pb);
-//        $clas = new core_kernel_classes_Class(TAO_ITEM_RESULTS_CLASS);
-//        $label = $clas->getLabel();
-//            //****Remove from the last version
-//        $resultNS = core_kernel_classes_Session::singleton()->getNameSpace();
-//
-//        //$label = $clazz->getLabel();
-//        $result["valeur"]= $res;
-//        $result["label"] = $label;
-//
-//        echo json_encode($result);
-//
-//    }
-//    public function manage (){
-//        $this->setData("message",'<br> hhhhhuiohjkh hjkh jk <br>');
-//        $this->setData ("path",TAOVIEW_PATH);
-//        $this->setView('manage.tpl');
-//
-//    }
-//
-//}
 ?>

@@ -4,22 +4,21 @@
 	<structure id="results" name="Results" url="/taoResults/Results/index" level="5" visible="true">
 		<description>View and format the collected results.</description>
 	    <sections>
-	        <section id="manage_results" name="Manage results" url="/taoResults/Results/index">
+	        <section id="manage_legacyresults" name="Legacy results" url="/taoResults/LegacyResults/index">
 	            <trees>
 	                <tree name="Results library"
 	                	className="Result"
-						dataUrl="/taoResults/Results/getOntologyData"
-						editClassUrl="/taoResults/Results/editResultClass"
-						editInstanceUrl="/taoResults/Results/editResult"
-						deleteUrl="/taoResults/Results/delete"
+						dataUrl="/taoResults/LegacyResults/getOntologyData"
+						editClassUrl="/taoResults/LegacyResults/editResultClass"
+						editInstanceUrl="/taoResults/LegacyResults/editResult"
+						deleteUrl="/taoResults/LegacyResults/delete"
 					/>
 	            </trees>
 	            <actions>
-	                <action name="create direct table" url="/taoResults/Results/createDirectTable"  context="class" />
-	                <action name="create score table" url="/taoResults/Results/createScoreTable"  context="class" />
-	                <action name="create table" url="/taoResults/Results/createTable"  context="class" />
-	                <action name="delete" js="generisActions.removeNode" url="/taoResults/Results/delete" context="resource" />
-
+	                <action name="create direct table" url="/taoResults/LegacyResults/createDirectTable"  context="class" />
+	                <action name="create score table" url="/taoResults/LegacyResults/createScoreTable"  context="class" />
+	                <action name="create table" url="/taoResults/LegacyResults/createTable"  context="class" />
+	                <action name="delete" js="generisActions.removeNode" url="/taoResults/LegacyResults/delete" context="resource" />
 	            </actions>
 	        </section>
 

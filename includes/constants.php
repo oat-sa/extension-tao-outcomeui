@@ -25,6 +25,7 @@ $todefine = array(
 	'PROPERTY_RESULT_OF_SUBJECT'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject',
 	'PROPERTY_RESULT_OF_DELIVERY'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery',
 	'PROPERTY_RESULT_OF_PROCESS'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfProcess',
+	'TAO_RESULT_VARIABLE'			=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#Variable',
 	'TAO_RESULT_RESPONSE'			=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable',
 	'TAO_RESULT_GRADE'				=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#GradeVariable',
 	'PROPERTY_MEMBER_OF_RESULT'		=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#memberOfDeliveryResult',
@@ -36,7 +37,6 @@ $todefine = array(
 
 	// old
 	'TAO_ITEM_RESULTS_CLASS'=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_ITEM_RESULTS',
-	'PROP_RESULT_RESULTCONTENT'		=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultContent',
 	'PROP_RESULT_PROCESS_EXEC_ID'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_PROCESS_EXEC_ID',
 	'PROP_RESULT_DELIVERY_ID'		=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_DELIVERY_ID',
 	'PROP_RESULT_TEST_ID'			=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_TEST_ID',
