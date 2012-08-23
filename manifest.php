@@ -12,7 +12,7 @@
 			'version' => '2.3',
 			'author' => 'CRP Henri Tudor',
 			'extends' => 'tao',	
-			'dependances' => array('tao'),
+			'dependances' => array('taoTests'),
 			'models' => array('http://www.tao.lu/Ontologies/TAOResult.rdf',
 				'http://www.tao.lu/Ontologies/taoFuncACL.rdf'),
 			'install' => array(
