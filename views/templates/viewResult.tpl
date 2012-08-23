@@ -15,7 +15,7 @@
 	<div>
 	<table>
 	<?  foreach (get_data('variables') as $group){ ?>
-		<tr><td>-</td></tr>
+		<tr><th colspan="3"><?=$group['label']?></th></tr>
 	<?  foreach ($group['vars'] as $variable){ ?>
 		<tr>
 		<td>

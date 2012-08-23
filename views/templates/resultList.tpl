@@ -13,6 +13,13 @@
 		<div id="facet-filter">
 		</div>
 	</div>
+	<div style="position: absolute; bottom: 10px">
+		<?foreach($deliveries as $uri => $label):?>
+			<ul>
+				<li><a href="#" data-uri="<?=$uri?>" class="resultTableLink"><?=$label?></a></li>
+			</ul>
+		<?endforeach;?>
+	</div>
 </div>
 
 <div class="main-container">
@@ -97,13 +104,6 @@ $(function(){
 		//instantiate the facet filter
 		var facetFilter = new GenerisFacetFilterClass('#facet-filter', filterNodes, facetFilterOptions);
 
-
-		var tabMap = [];
-		var openTab = function(title, url) {
-			uiBootstrap.tabs.tabs("add", url, title);
-			uiBootstrap.tabs.tabs("select", uiBootstrap.tabs.tabs("length")-1);
-		}
-
 		/*
 		 * instantiate the monitoring grid
 		 */
@@ -118,7 +118,7 @@ $(function(){
 					if (!label) {
 						label = __('Delivery Result');
 					}
-					openTab(label, root_url+'/taoResults/results/viewResult?uri='+escape(rowId));
+					helpers.openTab(label, root_url+'/taoResults/results/viewResult?uri='+escape(rowId));
 				}
 			}
 		};
@@ -131,7 +131,12 @@ $(function(){
 		//width/height of the subgrids
 		var subGridWith = $('#current_activities_container').width() - 12 /* padding */;
 		var subGridHeight = $('#current_activities_container').height() - 45;
-	});
+
+		$('.resultTableLink').click(function() {
+			uri = root_url+'/taoResults/ResultTable/index?filter[<?=urlencode(PROPERTY_RESULT_OF_DELIVERY)?>][]='+escape($(this).data('uri'));
+			name = $(this).text();
+			helpers.openTab(name, uri)});
+		});
 });
 </script>
 

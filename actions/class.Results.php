@@ -55,6 +55,13 @@ class taoResults_actions_Results extends tao_actions_TaoModule {
 		//Monitoring data
 		$this->setData('model', json_encode($model));
 		$this->setData('data', $processMonitoringGrid->toArray());
+
+		$delivery = new core_kernel_classes_Class(TAO_DELIVERY_CLASS);
+		$deliveryList = array();
+		foreach ($delivery->getInstances(true) as $inst) {
+			$deliveryList[$inst->getUri()] = $inst->getLabel();
+		}
+		$this->setData('deliveries', $deliveryList);
 		
 		$this->setView('resultList.tpl');
 	}
@@ -117,7 +124,6 @@ class taoResults_actions_Results extends tao_actions_TaoModule {
 	public function viewResult() {
 		$clazz = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
         $result = $this->getCurrentInstance();
-		common_Logger::d('Viewing '.$result->getLabel().' of type '.$clazz->getLabel());
         
         $formContainer = new tao_actions_form_Instance($clazz, $result);
 		$myForm = $formContainer->getForm();
@@ -142,9 +148,9 @@ class taoResults_actions_Results extends tao_actions_TaoModule {
 		}
 		foreach ($variables as $origin => $data) {
 			$ae = new core_kernel_classes_Resource($origin);
+			$item = taoCoding_models_classes_CodingService::singleton()->getItemByActivityExecution($ae);
+			$variables[$origin]['label'] = $item->getLabel();
 		}
-		
-		common_Logger::d('Variables '.count($variables));
 		
         $this->setData('myForm', $myForm->render());
         $this->setData('variables', $variables);
