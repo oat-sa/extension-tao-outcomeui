@@ -38,13 +38,12 @@ var selectedProcessId = null;
 //var selectedActivityExecutionId = null;
 
 //load the monitoring interface functions of the parameter filter
-function loadResults(filter)
-{
-	$.getJSON(root_url+'/taoResults/results/getResults'
-		,{
+function loadResults(filter) {
+	$.getJSON(root_url+'/taoResults/results/getResults',
+		{
 			'filter':filter
-		}
-		, function (DATA) {
+		},
+		function (DATA) {
 			monitoringGrid.empty();
 			monitoringGrid.add(DATA);
 			selectedProcessId = null;
@@ -54,7 +53,6 @@ function loadResults(filter)
 
 $(function(){
 	require(['require', 'jquery', 'generis.facetFilter', 'grid/tao.grid'], function(req, $, GenerisFacetFilterClass) {
-
 		//the grid model
 		model = <?=$model?>;
 
@@ -68,16 +66,17 @@ $(function(){
 		 * instantiate the facet based filter widget
 		 */
 		var getUrl = root_url + '/taoResults/results/getFilteredInstancesPropertiesValues';
+
 		//the facet filter options
 		var facetFilterOptions = {
 			'template' : 'accordion',
 			'callback' : {
-				'onFilter' : function(filter, filterNodesOpt){
+				'onFilter' : function(filter, filterNodesOpt) {
 					var formatedFilter = {};
-					for(var filterNodeId in filter){
+					for (var filterNodeId in filter) {
 						var propertyUri = filterNodesOpt[filterNodeId]['propertyUri'];
-						typeof(formatedFilter[propertyUri])=='undefined'?formatedFilter[propertyUri]=new Array():null;
-						for(var i in filter[filterNodeId]){
+						formatedFilter[propertyUri] = (typeof(formatedFilter[propertyUri]) == 'undefined') ? new Array() : null;
+						for (var i in filter[filterNodeId]) {
 							formatedFilter[propertyUri].push(filter[filterNodeId][i]);
 						}
 					}
@@ -85,21 +84,21 @@ $(function(){
 				}
 			}
 		};
+
 		//set the filter nodes
 		var filterNodes = [
-			<?foreach($properties as $property):?>
+<?foreach($properties as $property):?>
 			{
-				id					: '<?=md5($property->uriResource)?>'
-				, label				: '<?=$property->getLabel()?>'
-				, url				: getUrl
-				, options 			:
-				{
-					'propertyUri' 	: '<?= $property->uriResource ?>'
-					, 'classUri' 	: '<?= $clazz->uriResource ?>'
-	                , 'filterItself': false
+				id: '<?=md5($property->uriResource)?>',
+				label: '<?=$property->getLabel()?>',
+				url: getUrl,
+				options: {
+					'propertyUri': '<?= $property->uriResource ?>',
+					'classUri': '<?= $clazz->uriResource ?>',
+	        'filterItself': false
 				}
 			},
-			<?endforeach;?>
+<?endforeach;?>
 		];
 		//instantiate the facet filter
 		var facetFilter = new GenerisFacetFilterClass('#facet-filter', filterNodes, facetFilterOptions);
@@ -109,11 +108,10 @@ $(function(){
 		 */
 		//the monitoring grid options
 		var resultsGridOptions = {
-			'height' : $('#monitoring-processes-grid').parent().height()
-			, 'title' 	: __('Delivery results')
-			, 'callback' : {
-				'onSelectRow' : function(rowId)
-				{
+			'height': $('#monitoring-processes-grid').parent().height(),
+			'title': __('Delivery results'),
+			'callback': {
+				'onSelectRow': function(rowId) {
 					label = monitoringGrid.data[rowId]['http://www.w3.org/2000/01/rdf-schema#label'];
 					if (!label) {
 						label = __('Delivery Result');
@@ -132,7 +130,8 @@ $(function(){
 		var subGridWith = $('#current_activities_container').width() - 12 /* padding */;
 		var subGridHeight = $('#current_activities_container').height() - 45;
 
-		$('.resultTableLink').click(function() {
+		$('.resultTableLink').click(function(e) {
+			e.preventDefault();
 			uri = root_url+'/taoResults/ResultTable/index?filter[<?=urlencode(PROPERTY_RESULT_OF_DELIVERY)?>][]='+escape($(this).data('uri'));
 			name = $(this).text();
 			helpers.openTab(name, uri)});
