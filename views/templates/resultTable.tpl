@@ -6,7 +6,7 @@
 <div class="main-container">
 	<div style='padding: 20px'>
 	<span class="ui-state-default ui-corner-all">
-		<a href="#" onclick="helpers.selectTabByName('add_user');">
+		<a href="#" id="getScoreButton">
 			<img src="<?=TAOBASE_WWW?>img/add.png" alt="add" /> <?=__('Add grades')?>
 		</a>
 	</span>
@@ -16,15 +16,19 @@
 </div>
 <script type="text/javascript">
 require(['require', 'jquery', 'grid/tao.grid'], function(req, $) {
-	
-	$(function(){
+	function setColumn(columns) {
+		var models = [];
+		for (key in columns) {
+			models.push({'name': columns[key], index:'index'+models.length});
+		}
+		$('#result-table-grid').jqGrid('GridUnload');
 		var myGrid = $("#result-table-grid").jqGrid({
 			url: "<?=_url('data', 'ResultTable', 'taoResults')?>",
-			postData: <?=tao_helpers_Javascript::buildObject(array('filter' => $filter))?>,
+			postData: {'filter': <?=tao_helpers_Javascript::buildObject($filter)?>, 'columns':Object.keys(columns)},
 			mtype: "post",
 			datatype: "json",
-			colNames:[],
-			colModel:[],
+			colNames: columns.values,
+			colModel: models,
 			rowNum:20,
 			height:300,
 			width: (parseInt($("#result-table-grid").width()) - 2),
@@ -47,6 +51,21 @@ require(['require', 'jquery', 'grid/tao.grid'], function(req, $) {
 		myGrid.navGrid('#result-table-grid',{edit:false, add:false, del:false});
 
 		helpers._autoFx();
+	}
+
+	$('#getScoreButton').click(function(e) {
+		e.preventDefault();
+		$.getJSON(root_url+'/taoResults/resultTable/getGradeColumns'
+			, <?=tao_helpers_Javascript::buildObject(array('filter' => $filter))?>
+			, function (data) {
+				data.unshift('Test taker', 'subject');
+				setColumn(data.columns)
+			}
+		);
+	});
+
+	$(function(){
+		setColumn([]);
 	});
 });
 </script>

@@ -58,8 +58,39 @@ class taoResults_actions_ResultTable extends tao_actions_TaoModule {
 		$this->setView('resultTable.tpl');
     }
     
+    public function getGradeColumns() {
+		$columns = array();
+		
+    	$filter = $this->getRequestParameter('filter');
+    	$clazz		= new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
+		$results	= $clazz->searchInstances($filter, array ('recursive'=>true));
+		
+		$deliveries = array();
+		foreach ($results as $result) {
+			$deliveries[] = $result->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_RESULT_OF_DELIVERY))->getUri();
+		}
+		$deliveries = array_unique($deliveries);
+		
+		foreach ($deliveries as $deliveryUri) {
+			$delivery = new core_kernel_classes_Resource($deliveryUri);
+			$procDef = $delivery->getUniquePropertyValue(new core_kernel_classes_Property(TAO_DELIVERY_PROCESS));
+			$activities = $procDef->getPropertyValues(new core_kernel_classes_Property(PROPERTY_PROCESS_ACTIVITIES));
+			
+			foreach ($activities as $activityUri) {
+				// build label
+				$activity = new core_kernel_classes_Resource($activityUri);
+				$item = taoTests_models_classes_TestAuthoringService::singleton()->getItemByActivity($activity);
+				$columns[$activity->getUri()] = $item->getLabel();
+			}
+		}
+    	echo json_encode(array(
+    		'columns' => $columns
+    	));
+    }
+    
     public function data() {
     	$filter = $this->getRequestParameter('filter');
+    	$columns = $this->getRequestParameter('columns');
     	$page = $this->getRequestParameter('page');
 		$limit = $this->getRequestParameter('rows');
 		$sidx = $this->getRequestParameter('sidx');
@@ -78,7 +109,11 @@ class taoResults_actions_ResultTable extends tao_actions_TaoModule {
     		$counti		= $clazz->countInstances($filter, array ('recursive'=>true));
     		
 			foreach($results as $result){
-				$cellData = array();
+				$subject = $result->getOnePropertyValue(new core_kernel_classes_Property(PROPERTY_RESULT_OF_SUBJECT));
+				$cellData = array($subject->getLabel(),'b','c','d');
+				
+				// PROPERTY_ACTIVITIES_INTERACTIVESERVICES
+				
 				$response->rows[] = array(
 					'id' => tao_helpers_Uri::encode($result->uriResource),
 					'cell' => $cellData
