@@ -7,7 +7,7 @@
  * @subpackage actions
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  */
-class taoResults_actions_SaSResults extends taoResults_actions_Results {
+class taoResults_actions_SaSResults extends taoResults_actions_LegacyResults {
 
     /**
      * @see Results::__construct()
