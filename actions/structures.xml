@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE extension SYSTEM "../../tao/doc/structures.dtd">
 <structures>
-	<structure id="results" name="Results" url="/taoResults/Results/index" level="5" visible="true">
+	<structure id="results" name="Results" url="/taoResults/LegacyResults/index" level="5" visible="true">
 		<description>View and format the collected results.</description>
 	    <sections>
 	        <section id="manage_legacyresults" name="Legacy results" url="/taoResults/LegacyResults/index">
