@@ -379,6 +379,9 @@ class TReg_VirtualTable extends RegCommon {
      * @return Collection
      */
     public function getListOfUtrModel() {
+    	if (!file_exists("utrModel.mdl")) {
+    		return array();
+    	}
         $actualUtr = array();
         $jsonUtrModels = file_get_contents("utrModel.mdl");
         $module = $this->trGetCurrentExtention();
