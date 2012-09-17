@@ -479,10 +479,7 @@ class RegCommon {
      */
     public function getCurrentModule() {
 
-        $service = tao_models_classes_TaoService::singleton();
-        $extension = $service->getCurrentExtension();
-
-        return $extension;
+        return context::getInstance()->getExtensionName();
     }
 
     //get the list of the subclasses
