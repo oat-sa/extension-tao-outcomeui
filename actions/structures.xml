@@ -4,7 +4,7 @@
 	<structure id="results" name="Results" url="/taoResults/LegacyResults/index" level="5" visible="true">
 		<description>View and format the collected results.</description>
 	    <sections>
-	        <section id="manage_legacyresults" name="Legacy results" url="/taoResults/LegacyResults/index">
+	        <section id="manage_legacyresults" name="Results" url="/taoResults/LegacyResults/index">
 	            <trees>
 	                <tree name="Results library"
 	                	className="Result"
