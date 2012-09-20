@@ -74,43 +74,6 @@ class taoResults_models_classes_LegacyResultsService
     }
 
     /**
-     * get a result instance
-     *
-     * @access public
-     * @author Joel Bout, <joel.bout@tudor.lu>
-     * @param  string identifier
-     * @param  string mode
-     * @param  Class clazz
-     * @return core_kernel_classes_Resource
-     */
-    public function getResult($identifier, $mode = 'uri',  core_kernel_classes_Class $clazz = null)
-    {
-        $returnValue = null;
-
-        // section 127-0-1-1--233123b3:125208ce1cc:-8000:0000000000001C77 begin
-
-        if (is_null($clazz) && $mode == 'uri') {
-            try {
-                $resource = new core_kernel_classes_Resource($identifier);
-                foreach($resource->getType() as $type){
-                	$clazz = $type;
-                	break;
-                }
-            } catch (Exception $e) {}
-        }
-        if (is_null($clazz)) {
-            $clazz = $this->resultClass;
-        }
-        if ($this->isResultClass($clazz)) {
-            $returnValue = $this->getOneInstanceBy($clazz, $identifier, $mode);
-        }
-
-        // section 127-0-1-1--233123b3:125208ce1cc:-8000:0000000000001C77 end
-
-        return $returnValue;
-    }
-
-    /**
      * get a result subclass by uri. 
      * If the uri is not set, it returns the  result class (the top level class.
      * If the uri don't reference a  result subclass, it returns null

@@ -29,27 +29,6 @@ class taoResults_actions_LegacyResults extends tao_actions_TaoModule {
      */
 
     /**
-     * get the instancee of the current subject regarding the 'uri' and 'classUri' request parameters
-     * @return core_kernel_classes_Resource the result instance
-     */
-    protected function getCurrentInstance() {
-
-        $uri = tao_helpers_Uri::decode($this->getRequestParameter('uri'));
-        if (is_null($uri) || empty($uri)) {
-            throw new Exception("No valid uri found");
-        }
-
-        $clazz = $this->getCurrentClass();
-
-        $result = $this->service->getResult($uri, 'uri', $clazz);
-        if (is_null($result)) {
-            throw new common_Exception("No result found for the uri {$uri}");
-        }
-
-        return $result;
-    }
-
-    /**
      * get the main class
      * @return core_kernel_classes_Classes
      */
