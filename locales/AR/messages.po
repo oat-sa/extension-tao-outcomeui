@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO v2.2-rc01\n"
-"PO-Revision-Date: 2012-06-15T13:38:12\n"
+"Project-Id-Version: TAO v2.3-beta\n"
+"PO-Revision-Date: 2012-09-21T15:08:18\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: AR\n"
@@ -26,15 +26,17 @@ msgstr "انشاء جدول"
 msgid "delete"
 msgstr "حذف"
 
+msgid "Delivery"
+msgstr ""
+
 msgid "Edit result"
 msgstr "تحرير النتيجة"
 
 msgid "Edit result class"
 msgstr "تعديل صنف نتيجة"
 
-#, tao-public
-msgid "Manage results"
-msgstr "ادارة النتائج"
+msgid "Label"
+msgstr ""
 
 msgid "Result saved"
 msgstr "النتيجة محفوظة"
@@ -47,6 +49,9 @@ msgid "Results library"
 msgstr "مكتبة النتائج"
 
 msgid "Template Saved"
+msgstr ""
+
+msgid "Test taker"
 msgstr ""
 
 msgid "This module constitutes the final step."
