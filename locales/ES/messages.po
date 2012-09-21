@@ -1,0 +1,63 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: TAO v2.3-beta\n"
+"PO-Revision-Date: 2012-09-21T15:59:20\n"
+"Last-Translator: TAO Translation Team <translation@tao.lu>\n"
+"MIME-Version: 1.0\n"
+"Language: ES\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
+msgstr ""
+
+msgid "Class saved"
+msgstr ""
+
+msgid "create direct table"
+msgstr ""
+
+msgid "create score table"
+msgstr ""
+
+msgid "create table"
+msgstr ""
+
+msgid "delete"
+msgstr ""
+
+msgid "Delivery"
+msgstr ""
+
+msgid "Edit result"
+msgstr ""
+
+msgid "Edit result class"
+msgstr ""
+
+msgid "Label"
+msgstr ""
+
+msgid "Result saved"
+msgstr ""
+
+#, tao-public
+msgid "Results"
+msgstr ""
+
+msgid "Results library"
+msgstr ""
+
+msgid "Template Saved"
+msgstr ""
+
+msgid "Test taker"
+msgstr ""
+
+msgid "This module constitutes the final step."
+msgstr ""
+
+#, tao-public
+msgid "View and format the collected results."
+msgstr ""
+
