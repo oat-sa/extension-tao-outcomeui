@@ -47,18 +47,18 @@ return array(
 		'BASE_PATH'				=> $extpath,
 	
 		#BASE URL (usually the domain root)
-		'BASE_URL'				=> ROOT_URL . '/taoResults',
+		'BASE_URL'				=> ROOT_URL	.'taoResults',
 	
 		#BASE WWW the web resources path
-		'BASE_WWW'				=> ROOT_URL . '/taoResults/views/',
+		'BASE_WWW'				=> ROOT_URL .'taoResults/views/',
 
 		#the path were the event logs are saved
-		'EVENT_LOG_PATH'		=> ROOT_PATH . '/taoResults/data',
+		'EVENT_LOG_PATH'		=> ROOT_PATH.'taoResults/data',
 
 	 	#TAO extension Paths
-		'TAOBASE_WWW'			=> ROOT_URL  . '/tao/views/',
-		'TAOVIEW_PATH'			=> $taopath.'views'.DIRECTORY_SEPARATOR,
-		'TAO_TPL_PATH'			=> $taopath.'views'.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR,
+		'TAOBASE_WWW'			=> ROOT_URL	.'tao/views/',
+		'TAOVIEW_PATH'			=> $taopath	.'views'.DIRECTORY_SEPARATOR,
+		'TAO_TPL_PATH'			=> $taopath	.'views'.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR,
 
 
 	)
