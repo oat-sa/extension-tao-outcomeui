@@ -19,6 +19,9 @@ return array(
 		'rdf' => array(
 				array('ns' => 'http://www.tao.lu/Ontologies/TAOResult.rdf', 'file' => dirname(__FILE__). '/models/ontology/taoresult.rdf'),
 				array('ns' => 'http://www.tao.lu/Ontologies/TAOResult.rdf', 'file' => dirname(__FILE__). '/models/ontology/taoresult_alt.rdf'),
+		),
+		'checks' => array(
+			array('type' => 'CheckFileSystemComponent', 'value' => array('id' => 'fs_taoResults_includes', 'location' => 'taoResults/includes', 'rights' => 'r'))
 		)
 	),
 	'classLoaderPackages' => array(
