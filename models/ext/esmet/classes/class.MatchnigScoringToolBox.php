@@ -71,23 +71,4 @@ class matchnigScoringToolBox {
     }
 
 }
-
-
-//$symbol = symbolFactory::create('N', "(type= 'BUTTON') and (id = 'btn_next')");
-//$resetSymbol = symbolFactory::create('R', "(type= 'BUTTON') and (id = 'btn_back')");
-//
-//$xmlDoc = simplexml_load_file('teplax.xml');
-//$xml = $xmlDoc->asXML();
-//
-//$conv = new taoEventModelConverter($xml);
-//$taoEvents = $conv->importFromHAWAI();
-//
-//$ms = new matchnigScoringToolBox($taoEvents);
-//$ls = $ms->lastStateOfEvent_CheckBoxStyle($symbol, $resetSymbol);
-//
-//echo "<br> last State" . $ls;
-
-
-
-
 ?>
