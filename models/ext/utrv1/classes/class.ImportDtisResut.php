@@ -315,8 +315,8 @@ class ImportDtisResult {
 
 }
 
-define('API_LOGIN', 'generis');
-define('API_PASSWORD', md5('g3n3r1s'));
+define('API_LOGIN', SYS_USER_LOGIN);
+define('API_PASSWORD', SYS_USER_PASS);
 core_control_FrontController::connect(API_LOGIN, API_PASSWORD, DATABASE_NAME);
 $d = new ImportDtisResult();
 $dtisArray["TAO_PROCESS_EXEC_ID"] = "http://localhost/middleware/taoqti.rdf#iproc66";

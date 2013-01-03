@@ -42,8 +42,8 @@ class ResultModelBuilder {
         
 //http://www.tao.lu/datatypes/WidgetDefinitions.rdf#HTMLArea
 
-        define('API_LOGIN','generis');
-        define('API_PASSWORD',md5('g3n3r1s'));
+        define('API_LOGIN',SYS_USER_LOGIN);
+        define('API_PASSWORD',SYS_USER_PASS);
         core_control_FrontController::connect(API_LOGIN, API_PASSWORD, DATABASE_NAME);
 
         //Get the NameSpace of in order to add the instances
