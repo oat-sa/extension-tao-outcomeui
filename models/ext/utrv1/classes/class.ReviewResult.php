@@ -19,16 +19,10 @@ class ReviewResult {
 
     public function  __construct() {
 // A supprimer lors du deploiment final
-        
-		// var_dump($_SESSION['password'], $_SESSION['login']);exit;
-        // core_control_FrontController::connect($_SESSION['login'], $_SESSION['password'], DATABASE_NAME);
 		
 		define('API_LOGIN','tao');
         define('API_PASSWORD',md5('tao'));
-		// core_control_FrontController::connect(API_LOGIN, API_PASSWORD, DATABASE_NAME);
 
-        //$p = new  RegCommon();
-        //$p->regConnect();
         //init the variables
 
         $this->revType = $_SESSION['revType'];

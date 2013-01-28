@@ -44,7 +44,8 @@ class ResultModelBuilder {
 
         define('API_LOGIN',SYS_USER_LOGIN);
         define('API_PASSWORD',SYS_USER_PASS);
-        core_control_FrontController::connect(API_LOGIN, API_PASSWORD, DATABASE_NAME);
+        $userService = core_kernel_users_Service::singleton();
+		$userService->login(API_LOGIN, API_PASSWORD, new core_kernel_classes_Class('http://www.tao.lu/Ontologies/TAO.rdf#TaoManagerRole'));
 
         //Get the NameSpace of in order to add the instances
         $RESULT_NS = core_kernel_classes_Session::singleton()->getNameSpace();
