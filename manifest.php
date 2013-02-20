@@ -24,6 +24,7 @@ return array(
 			array('type' => 'CheckFileSystemComponent', 'value' => array('id' => 'fs_taoResults_includes', 'location' => 'taoResults/includes', 'rights' => 'r'))
 		)
 	),
+	'managementRole' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole',
 	'classLoaderPackages' => array(
 		dirname(__FILE__).'/actions/',
 		dirname(__FILE__).'/helpers/'
