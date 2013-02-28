@@ -96,7 +96,7 @@ class taoResults_actions_LegacyResults extends tao_actions_TaoModule {
 
         $this->setData('formTitle', __('Edit result'));
         $this->setData('myForm', $myForm->render());
-        $this->setView('form.tpl', true);
+        $this->setView('form.tpl', 'tao');
     }
 
     /**
@@ -139,7 +139,7 @@ class taoResults_actions_LegacyResults extends tao_actions_TaoModule {
         }
         $this->setData('formTitle', __('Edit result class'));
         $this->setData('myForm', $myForm->render());
-        $this->setView('form.tpl', true);
+        $this->setView('form.tpl', 'tao');
     }
 
     /**
