@@ -11,7 +11,7 @@ return array(
 	'name' => 'taoResults',
 	'description' => 'TAO Results extension',
 	'version' => '2.4',
-	'author' => 'CRP Henri Tudor',
+	'author' => 'Open Assessment Technologies, CRP Henri Tudor',
 	'dependencies' => array('taoTests'),
 	'models' => array('http://www.tao.lu/Ontologies/TAOResult.rdf',
 		'http://www.tao.lu/Ontologies/taoFuncACL.rdf'),
