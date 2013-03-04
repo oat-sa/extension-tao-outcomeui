@@ -84,8 +84,9 @@ class taoResults_actions_LegacyResults extends tao_actions_TaoModule {
 
         if ($myForm->isSubmited()) {
             if ($myForm->isValid()) {
-
-                $result = $this->service->bindProperties($result, $myForm->getValues());
+            	
+            	$binder = new tao_models_classes_dataBinding_GenerisFormDataBinder($result);
+                $result = $binder->bind($myForm->getValues());
 
                 $this->setData('message', __('Result saved'));
                 $this->setData('reload', true);
