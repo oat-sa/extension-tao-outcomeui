@@ -24,7 +24,7 @@
 /**
  * Results Controller provide actions performed from url resolution
  * 
- * @author Bertrand Chevrier, <taosupport@tudor.lu>
+ * @author Joel Bout & Patrick Plichart, <info@taotesting.com>
  * @package taoResults
  * @subpackage actions
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
