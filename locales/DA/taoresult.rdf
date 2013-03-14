@@ -40,4 +40,22 @@
     -->
     <rdfs:comment xml:lang="DA"><![CDATA[TAO Result Model]]></rdfs:comment>
   </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage DA
+    @source Results Manager
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="DA"><![CDATA[Results Manager]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage DA
+    @source The Results Manager Role
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="DA"><![CDATA[The Results Manager Role]]></rdfs:comment>
+  </rdf:Description>
 </rdf:RDF>

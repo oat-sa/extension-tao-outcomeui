@@ -1,27 +1,36 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO v2.4-beta1\n"
-"PO-Revision-Date: 2013-03-05T10:35:32\n"
+"Project-Id-Version: TAO v2.4-beta3\n"
+"PO-Revision-Date: 2013-03-14T16:10:12\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: LU\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid "Add All grades"
+msgstr ""
+
+msgid "Add All responses"
+msgstr ""
+
+msgid "Add Test Taker"
+msgstr ""
+
 msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
 msgstr "All Resultater vun duerchgefouerten Tester, mat hieren entspriechenden Testpersounen, Gruppen, Item Daten an och all individeull Daten déi während der Testpassatioun gesammelt goufen, gin hei gespaichert"
+
+msgid "Anonymise"
+msgstr ""
+
+msgid "build table"
+msgstr ""
 
 msgid "Class saved"
 msgstr "Klass gespaichert"
 
-msgid "create direct table"
+msgid "custom table"
 msgstr ""
-
-msgid "create score table"
-msgstr ""
-
-msgid "create table"
-msgstr "Tabell erstellen"
 
 msgid "delete"
 msgstr "läschen"
@@ -29,13 +38,63 @@ msgstr "läschen"
 msgid "Delivery"
 msgstr ""
 
-msgid "Edit result"
-msgstr "Resultat editéiren"
+msgid "Delivery Result"
+msgstr ""
+
+msgid "Delivery results"
+msgstr ""
+
+msgid "Download CSV File"
+msgstr ""
+
+msgid "Download PDF File"
+msgstr ""
 
 msgid "Edit result class"
 msgstr "Resultat Klass editéiren"
 
+msgid "Error"
+msgstr ""
+
+msgid "export"
+msgstr ""
+
+msgid "Filter"
+msgstr ""
+
+msgid "Filter columns"
+msgstr ""
+
+msgid "import"
+msgstr ""
+
+#, tao-public
+msgid "Inspect Results"
+msgstr ""
+
 msgid "Label"
+msgstr ""
+
+msgid "lists"
+msgstr ""
+
+#, tao-public
+msgid "Manage Results"
+msgstr ""
+
+msgid "meta data"
+msgstr ""
+
+msgid "move"
+msgstr ""
+
+msgid "new class"
+msgstr ""
+
+msgid "Remove All grades"
+msgstr ""
+
+msgid "Remove All responses"
 msgstr ""
 
 msgid "Result saved"
@@ -48,10 +107,16 @@ msgstr "Resultater"
 msgid "Results library"
 msgstr "Resultater Sammlung"
 
+msgid "search"
+msgstr ""
+
 msgid "Template Saved"
 msgstr ""
 
 msgid "Test taker"
+msgstr ""
+
+msgid "There was a problem generating your report, please try again."
 msgstr ""
 
 msgid "This module constitutes the final step."
@@ -59,5 +124,11 @@ msgstr "Desen Modul stellt den letzen Schrack duer."
 
 #, tao-public
 msgid "View and format the collected results."
+msgstr ""
+
+msgid "View result"
+msgstr ""
+
+msgid "We are preparing your report, please wait..."
 msgstr ""
 

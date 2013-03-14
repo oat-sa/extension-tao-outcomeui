@@ -44,19 +44,19 @@
     <!--
     @sourceLanguage EN
     @targetLanguage DE
-    @source Tao Delivery Result
+    @source Result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
-    <rdfs:label xml:lang="DE"><![CDATA[Tao Delivery Result]]></rdfs:label>
+    <rdfs:label xml:lang="DE"><![CDATA[Result]]></rdfs:label>
     <!--
     @sourceLanguage EN
     @targetLanguage DE
-    @source Tao Delivery Result
+    @source Result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
-    <rdfs:comment xml:lang="DE"><![CDATA[Tao Delivery Result]]></rdfs:comment>
+    <rdfs:comment xml:lang="DE"><![CDATA[Result]]></rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery">
     <!--

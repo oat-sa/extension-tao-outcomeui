@@ -21,8 +21,8 @@
     <generis:is_language_dependent rdf:resource="http://www.tao.lu/Ontologies/generis.rdf#False"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult">
-    <rdfs:label xml:lang="EN"><![CDATA[Tao Delivery Result]]></rdfs:label>
-    <rdfs:comment xml:lang="EN"><![CDATA[Tao Delivery Result]]></rdfs:comment>
+    <rdfs:label xml:lang="EN"><![CDATA[Result]]></rdfs:label>
+    <rdfs:comment xml:lang="EN"><![CDATA[Result]]></rdfs:comment>
     <rdfs:subClassOf rdf:resource="http://www.tao.lu/Ontologies/TAOResult.rdf#Result"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery">
