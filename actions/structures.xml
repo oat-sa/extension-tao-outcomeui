@@ -12,12 +12,12 @@
 			editClassUrl="/taoResults/Results/editResultClass"
 			editInstanceUrl="/taoResults/InspectResults/viewResult"
 			deleteUrl="/taoResults/Results/delete"
+			moveInstanceUrl="/taoResults/Results/moveInstance"
 		    />
 		</trees>
 		<actions>
 		<action name="search" url="/taoResults/Results/search" context="*" />
 		<action name="new class" js="generisActions.subClass" url="/taoResults/Results/addSubClass" context="class" />
-		<action name="delete" js="generisActions.removeNode" url="/taoResults/Results/delete" context="resource" />
 		<action name="move" js="generisActions.moveNode" url="" context="instance" />
 		<action name="lists"  url="/tao/Lists/index"  context="*" />
 		<action name="meta data" js="generisActions.loadMetaData" url="/taoResults/Results/getMetaData"  context="instance" />
