@@ -47,7 +47,8 @@ if (0 > version_compare(PHP_VERSION, '5')) {
  *
  * @author Joel Bout, <joel.bout@tudor.lu>
  */
-require_once('taoResults/models/classes/class.LegacyResultsService.php');
+//being deprecated
+//require_once('taoResults/models/classes/class.LegacyResultsService.php');
 
 /* user defined includes */
 // section 127-0-1-1-16e239f7:13925739ce2:-8000:0000000000003B72-includes begin
@@ -66,7 +67,8 @@ require_once('taoResults/models/classes/class.LegacyResultsService.php');
  * @subpackage models_classes
  */
 class taoResults_models_classes_ResultsService
-    extends taoResults_models_classes_LegacyResultsService
+//was formerly extending taoResults_models_classes_LegacyResultsService
+     extends tao_models_classes_GenerisService
 {
     // --- ASSOCIATIONS ---
 
