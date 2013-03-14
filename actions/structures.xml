@@ -3,26 +3,30 @@
 <structures>
 	<structure id="results" name="Results" level="5" visible="true">
 		<description>View and format the collected results.</description>
-	    <sections>
-	        <section id="manage_legacyresults" name="Results" url="/taoResults/LegacyResults/index">
-	            <trees>
-	                <tree name="Results library"
-	                	className="Result"
-						dataUrl="/taoResults/LegacyResults/getOntologyData"
-						editClassUrl="/taoResults/LegacyResults/editResultClass"
-						editInstanceUrl="/taoResults/LegacyResults/editResult"
-						deleteUrl="/taoResults/LegacyResults/delete"
-					/>
-	            </trees>
-	            <actions>
-	                <action name="create direct table" url="/taoResults/LegacyResults/createDirectTable"  context="class" />
-	                <action name="create score table" url="/taoResults/LegacyResults/createScoreTable"  context="class" />
-	                <action name="create table" url="/taoResults/LegacyResults/createTable"  context="class" />
-	                <action name="delete" js="generisActions.removeNode" url="/taoResults/LegacyResults/delete" context="resource" />
-	            </actions>
-	        </section>
-
-
-	      </sections>
+	<sections>
+	    <section id="manage_results" name="Manage Results" url="/taoResults/Results/index">
+		<trees>
+		    <tree name="Results library"
+			className="Result"
+			dataUrl="/taoResults/Results/getOntologyData"
+			editClassUrl="/taoResults/Results/editResultClass"
+			editInstanceUrl="/taoResults/Results/editResult"
+			deleteUrl="/taoResults/Results/delete"
+		    />
+		</trees>
+		<actions>
+		<action name="search" url="/taoResults/Results/search" context="*" />
+		<action name="new class" js="generisActions.subClass" url="/taoResults/Results/addSubClass" context="class" />
+		<action name="delete" js="generisActions.removeNode" url="/taoResults/Results/delete" context="resource" />
+		<action name="move" js="generisActions.moveNode" url="" context="instance" />
+		<action name="lists"  url="/tao/Lists/index"  context="*" />
+		<action name="meta data" js="generisActions.loadMetaData" url="/taoResults/Results/getMetaData"  context="instance" />
+		<action name="export" url="/tao/Export/index"  context="*" />
+		<action name="import" url="/tao/Import/index"  context="class" />
+		<action name="Simple Report" url="/taoResults/SimpleReport/build" context="class" />
+		</actions>
+	    </section>
+	    <section id="inspect_results" name="Inspect Results" url="/taoResults/InspectResults/index" />
+	  </sections>
 	</structure>
 </structures>

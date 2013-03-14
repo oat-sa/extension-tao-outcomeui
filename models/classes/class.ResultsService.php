@@ -74,7 +74,10 @@ class taoResults_models_classes_ResultsService
     // --- ATTRIBUTES ---
 
     // --- OPERATIONS ---
-
+    public function getResultClass($uri = "")
+    {
+	return new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
+    }
     /**
      * Short description of method getVariables
      *
