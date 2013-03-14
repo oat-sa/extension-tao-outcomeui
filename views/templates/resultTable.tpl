@@ -138,11 +138,11 @@ require(['require', 'jquery', 'grid/tao.grid'], function(req, $) {
 	}
     }
     //Grade properties
-    else if ((column.type == "taoCoding_models_classes_table_GradeColumn")){
+    else if ((column.type == "taoResults_models_classes_table_GradeColumn")){
     return  "<span class=numeric>"+data+"</span>";
     }
     //Actual responses properties
-    else if ((column.type == "taoCoding_models_classes_table_ResponseColumn")){
+    else if ((column.type == "taoResults_models_classes_table_ResponseColumn")){
 	try{
 	var jsData = $.parseJSON(data);
 	var formattedData = "";
