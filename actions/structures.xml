@@ -10,7 +10,7 @@
 			className="Result"
 			dataUrl="/taoResults/Results/getOntologyData"
 			editClassUrl="/taoResults/Results/editResultClass"
-			editInstanceUrl="/taoResults/Results/editResult"
+			editInstanceUrl="/taoResults/InspectResults/viewResult"
 			deleteUrl="/taoResults/Results/delete"
 		    />
 		</trees>
