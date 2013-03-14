@@ -24,7 +24,7 @@
 /**
  * Results Controller provide actions performed from url resolution
  * 
- * @author Bertrand Chevrier, <taosupport@tudor.lu>
+ * @author Joel Bout, Patrick Plichart <info@taotesting.com>
  * @package taoResults
  * @subpackage actions
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
@@ -86,7 +86,7 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
 				$item = taoTests_models_classes_TestAuthoringService::singleton()->getItemByActivity($activity);
 				$measurements = taoItems_models_classes_ItemsService::singleton()->getItemMeasurements($item);
 				foreach ($measurements as $measurement) {
-					$columns[] = new taoCoding_models_classes_table_GradeColumn($activity, $measurement->getIdentifier());
+					$columns[] = new taoResults_models_classes_table_GradeColumn($activity, $measurement->getIdentifier());
 				}
 			}
 		}
@@ -136,7 +136,7 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
 			
 			foreach ($activities as $activityUri) {
 				$activity = new core_kernel_classes_Resource($activityUri);
-				$columns[] = new taoCoding_models_classes_table_ResponseColumn($activity, 'RESPONSE');
+				$columns[] = new taoResults_models_classes_table_ResponseColumn($activity, 'RESPONSE');
 			}
 		}
 		
