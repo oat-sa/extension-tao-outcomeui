@@ -35,7 +35,6 @@ class taoResults_actions_SaSResults extends taoResults_actions_Results {
      */
     public function __construct() {
     	tao_helpers_Context::load('STANDALONE_MODE');
-        $this->setSessionAttribute('currentExtension', 'taoResults');
 		parent::__construct();
     }
     
