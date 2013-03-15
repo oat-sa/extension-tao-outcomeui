@@ -102,7 +102,20 @@ class taoResults_models_classes_ResultsService
 
         return (array) $returnValue;
     }
-
+    /**
+     * returns the test taker related to the delivery
+     *
+     * @author Patrick Plichart, <patrick.plichart@taotesting.com>
+     */
+    public function getTestTaker( core_kernel_classes_Resource $deliveryResult)
+    {
+        $returnValue = array();
+	
+	$propResultOfSubject = new core_kernel_classes_Property(PROPERTY_RESULT_OF_SUBJECT);
+	$testTaker = $deliveryResult->getPropertyValues($propResultOfSubject);
+	
+       return new core_kernel_classes_Resource(array_pop($testTaker));
+    }
     /**
      * Short description of method storeVariable
      *
