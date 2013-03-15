@@ -38,7 +38,7 @@
 		    <img src="<?=TAOBASE_WWW?>img/delete.png" alt="remove" /> <?=__('Remove All responses')?>
 	    </a>
     </span>
-     </div>
+     </div>viewResult
     </div>    
 
     <table id="result-table-grid"></table>
