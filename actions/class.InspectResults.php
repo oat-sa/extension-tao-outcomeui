@@ -57,7 +57,7 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule {
     
 	public function index() {
 		//Class to filter on
-		$clazz = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
+		$rootClass = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
 		
 		//Properties to filter on
 		$properties = array();
@@ -70,7 +70,7 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule {
 		$model = $grid->getColumnsModel();
 		
 		//Filtering data
-		$this->setData('clazz', $clazz);
+		$this->setData('clazz', $rootClass);
 		$this->setData('properties', $properties);
 		
 		//Monitoring data
@@ -88,9 +88,9 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule {
 		//get the processes uris
 		$processesUri = $this->hasRequestParameter('processesUri') ? $this->getRequestParameter('processesUri') : null;
 		
-		$clazz = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
+		$rootClass = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
 		if(!is_null($filter)){
-			$results = $clazz->searchInstances($filter, array ('recursive'=>true));
+			$results = $rootClass->searchInstances($filter, array ('recursive'=>true));
 		}
 		else if(!is_null($processesUri)){
 			foreach($processesUri as $processUri){
@@ -98,7 +98,7 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule {
 			}
 		}
 		else{
-			$results = $clazz->getInstances();
+			$results = $rootClass->getInstances();
 		}
 		
 		$data = array();
@@ -120,39 +120,44 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule {
 		
 		echo json_encode($data);
 	}
-	
+	/**
+	 * @author initially Joel Bout, some modifications Patrick Plichart
+	 */
 	public function viewResult() {
-		$clazz = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
+	
+	$rootClass = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
         $result = $this->getCurrentInstance();
-        
-        $formContainer = new tao_actions_form_Instance($clazz, $result);
-		$myForm = $formContainer->getForm();
-		$myForm->setActions(array(), 'top');
-		$myForm->setActions(array());
-		
-		$variables = array();
-		foreach ($this->service->getVariables($result) as $variable) {
-			$values = $variable->getPropertiesValues(array(
-				new core_kernel_classes_Property(PROPERTY_VARIABLE_IDENTIFIER),
-				new core_kernel_classes_Property(RDF_VALUE),
-				new core_kernel_classes_Property(RDF_TYPE),
-				new core_kernel_classes_Property(PROPERTY_VARIABLE_ORIGIN),
-			));
-			$origin = array_pop($values[PROPERTY_VARIABLE_ORIGIN])->getUri();
-			if (!isset($variables[$origin])) {
-				$variables[$origin] = array(
-					'vars' => array()
-				);
-			}
-			$variables[$origin]['vars'][] = $values;
+	
+        $testTaker = $this->service->getTestTaker($result);
+	$this->setData('TestTakerLabel', $testTaker->getLabel());
+	$this->setData('TestTakerLogin', array_pop($testTaker->getPropertyValues(new core_kernel_classes_Property(PROPERTY_USER_LOGIN))));
+	
+	$variables = array();
+	foreach ($this->service->getVariables($result) as $variable) {
+		$values = $variable->getPropertiesValues(array(
+			new core_kernel_classes_Property(PROPERTY_VARIABLE_IDENTIFIER),
+			new core_kernel_classes_Property(RDF_VALUE),
+			new core_kernel_classes_Property(RDF_TYPE),
+			new core_kernel_classes_Property(PROPERTY_VARIABLE_ORIGIN),
+		));
+		$origin = array_pop($values[PROPERTY_VARIABLE_ORIGIN])->getUri();
+		if (!isset($variables[$origin])) {
+			$variables[$origin] = array(
+				'vars' => array()
+			);
 		}
-		foreach ($variables as $origin => $data) {
-			$ae = new core_kernel_classes_Resource($origin);
-			$item = taoCoding_models_classes_CodingService::singleton()->getItemByActivityExecution($ae);
-			$variables[$origin]['label'] = $item->getLabel();
-		}
-		
-        $this->setData('myForm', $myForm->render());
+		$variables[$origin]['vars'][] = $values;
+	}
+	foreach ($variables as $origin => $data) {
+		$ae = new core_kernel_classes_Resource($origin);
+		$item = taoCoding_models_classes_CodingService::singleton()->getItemByActivityExecution($ae);
+		$variables[$origin]['label'] = $item->getLabel();
+		$itemModel = $item->getPropertyValues(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
+		$itemModelResource = new core_kernel_classes_Resource(array_pop($itemModel));
+		$variables[$origin]['itemModel'] = $itemModelResource->getLabel();
+	}
+	$this->setData('deliveryResultLabel', $result->getLabel());
+        //$this->setData('myForm', $myForm->render());
         $this->setData('variables', $variables);
         $this->setView('viewResult.tpl');
 	}
