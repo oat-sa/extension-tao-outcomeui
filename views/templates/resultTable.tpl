@@ -38,7 +38,7 @@
 		    <img src="<?=TAOBASE_WWW?>img/delete.png" alt="remove" /> <?=__('Remove All responses')?>
 	    </a>
     </span>
-     </div>viewResult
+     </div>
     </div>    
 
     <table id="result-table-grid"></table>
@@ -90,7 +90,7 @@ require(['require', 'jquery', 'grid/tao.grid'], function(req, $) {
 	sortorder: "asc",
 	gridview : true,
 	caption: __("Delivery results"),
-	onCellSelect: function(rowid,iCol,cellcontent, e) {helpers.openTab(__('Delivery Result'), '<?=_url('viewResult','Results')?>?uri='+escape(rowid));}
+	onCellSelect: function(rowid,iCol,cellcontent, e) {helpers.openTab(__('Delivery Result'), '<?=_url('viewResult','InspectResults')?>?uri='+escape(rowid));}
     });
     jQuery("#result-table-grid").jqGrid('navGrid','#pagera1', {edit:false,add:false,del:false,search:false,refresh:false});
     jQuery("#result-table-grid").jqGrid('navButtonAdd',"#pagera1", {caption:"Column chooser",title:"Column chooser", buttonicon :'ui-icon-gear',onClickButton:function(){columnChooser();}});
