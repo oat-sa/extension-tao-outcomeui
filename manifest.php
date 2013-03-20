@@ -50,13 +50,6 @@ return array(
 		dirname(__FILE__).'/actions/',
 		dirname(__FILE__).'/helpers/'
 	 ),
-	'optimizableProperties' => array(
-		'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_PROCESS_EXEC_ID',
-		'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_DELIVERY_ID',
-		'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_TEST_ID',
-		'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_ITEM_ID',
-		'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_SUBJECT_ID'
-	),
 	'constants' => array(
 	 	# actions directory
 	 	"DIR_ACTIONS"			=> $extpath."actions".DIRECTORY_SEPARATOR,
