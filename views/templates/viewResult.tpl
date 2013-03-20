@@ -32,7 +32,7 @@
     return layoutdata(oldhtml);
     });
     </script>
-<div id="main" class="ui-widget-content ui-corner-all" style="padding:30px" >
+<div id="main" class="ui-widget-content ui-corner-all" style="padding:10px" >
 		<div id="content" style="width:100%">
 			<h2><?=get_data('deliveryResultLabel')?></h2>
 			<p>
@@ -43,13 +43,14 @@
 			</p>
 			<table class="resultsTable" >
 			<?  foreach (get_data('variables') as $group){ ?>
-			<tr class="headerRow">
+			<tr >
 			        <td class="headerRow" colspan="2"><span class="itemName"><?=__('Item')?> : <?=$group['label']?></span> <span class="itemModel">(<?=$group['itemModel']?>)</span></td>
 			</tr>
-			    <?  foreach ($group['vars'] as $variable){ ?>
-				<tr>
+			    <?  foreach ($group['vars'] as $key => $variable){ ?>
+				<?php $rowOdd = $key % 2;?>
+				<tr class="row<?php echo $rowOdd ?>">
 				<td><?=array_pop($variable[PROPERTY_VARIABLE_IDENTIFIER])?> (<?=array_pop($variable[RDF_TYPE])->getLabel()?> ) :</td>
-				<td><span class="dataResult"><?=array_pop($variable[RDF_VALUE])?></script></span></td>
+				<td class="dataResult"><?=array_pop($variable[RDF_VALUE])?></td>
 				</tr>
 			    <? } ?>
 			</p>			
