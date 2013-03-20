@@ -25,7 +25,7 @@ include_once dirname(__FILE__) . '/../includes/raw_start.php';
 
 /**
  *
- * @author Bertrand Chevrier, <taosupport@tudor.lu>
+ * @author Patrick plichart, <patrick@taotesting.com>
  * @package taoResults
  * @subpackage test
  */
@@ -37,11 +37,23 @@ class ResultsTestCase extends UnitTestCase {
 	 */
 	protected $resultsService = null;
 	
+	//a stored response
+	protected $grade = null;
 	/**
 	 * tests initialization
 	 */
 	public function setUp(){		
 		TaoTestRunner::initTest();
+		
+		$resultsService = taoResults_models_classes_ResultsService::singleton();
+		$this->resultsService = $resultsService;
+		
+		$activityExecution = new core_kernel_classes_Resource("#MyActivityExecution");
+		$deliveryResult = new core_kernel_classes_Resource("#MyDeliveryResult");
+		$variableIDentifier = "GRADE";
+		$value = 0.4;
+		$this->grade = $this->resultsService->storeGrade($deliveryResult,$activityExecution, $variableIDentifier, $value);
+
 	}
 	
 	/**
@@ -51,32 +63,89 @@ class ResultsTestCase extends UnitTestCase {
 	 */
 	public function testService(){
 		
-		$resultsService = taoResults_models_classes_ResultsService::singleton();
-		$this->assertIsA($resultsService, 'tao_models_classes_Service');
-		$this->assertIsA($resultsService, 'taoResults_models_classes_ResultsService');
 		
-		$this->resultsService = $resultsService;
+		$this->assertIsA($this->resultsService, 'tao_models_classes_Service');
+		$this->assertIsA($this->resultsService, 'taoResults_models_classes_ResultsService');
+		
+		
+	}
+		
+	public function testStoreVariable(){
+	     $this->assertIsA($this->grade, 'core_kernel_classes_Resource');
+	     //$this->fail("Not implemented yet");
+	    
 	}
 	
-	public function testDtis(){
-		
-		$dtisUris = array();
-		$dtisUris["TAO_PROCESS_EXEC_ID"] 	= "http://localhost/middleware/taoqti__rdf#iproc3";
-		$dtisUris["TAO_DELIVERY_ID"] 		= "http://localhost/middleware/taoqti__rdf#delivery2";
-		$dtisUris["TAO_TEST_ID"] 		= "http://localhost/middleware/taoqti__rdf#test1";
-		$dtisUris["TAO_ITEM_ID"] 		= "http://localhost/middleware/taoqti__rdf#item1";
-		$dtisUris["TAO_SUBJECT_ID"]		= "http://localhost/middleware/taoqti__rdf#subject1";
-		// the variable infos
-		$key = "test";
-		$value = "test";
-	
-		$instance = $this->resultsService->addResultVariable($dtisUris, $key, $value);
-	
-		$this->assertNotNull($instance);
-		$this->assertIsA($instance, 'core_kernel_classes_Resource');
-		
-		$this->assertTrue($instance->delete());
+	public function testGetScoreVariables(){
+	    
+	    
+	    $deliveryResult = new core_kernel_classes_Resource("#MyDeliveryResult");
+	    
+	    
+	    $scoreVariables = $this->resultsService->getScoreVariables($deliveryResult);
+	    
+	    //tricky if the unit test fails, it probably means that there is some ghost data not correctly removed from previous executions 
+	    $this->assertEqual(count($scoreVariables),1);
+	     $variable = array_pop($scoreVariables);
+	    
+	     $this->assertIsA($variable, 'core_kernel_classes_Resource');
+	    
+	   
+	    
+	    $value = $variable->getUniquePropertyValue(new core_kernel_classes_Property(RDF_VALUE));
+	    $variableIdentifier = $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_IDENTIFIER));
+    	    $variableOrigin = $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_ORIGIN));
+	    
+	    $this->assertEqual($value,"0.4");
+	    $this->assertEqual($variableIdentifier,"GRADE");
+	    $this->assertEqual($variableOrigin->getUri(),"#MyActivityExecution");
 	}
 	
-}
+	public function testGetVariables(){
+	    
+	    
+	    $deliveryResult = new core_kernel_classes_Resource("#MyDeliveryResult");
+	    
+	    
+	    $scoreVariables = $this->resultsService->getVariables($deliveryResult);
+	    
+	    //tricky if the unit test fails, it probably means that there is some ghost data not correctly removed from previous executions 
+	    $this->assertEqual(count($scoreVariables),1);
+	     $variable = array_pop($scoreVariables);
+	    
+	     $this->assertIsA($variable, 'core_kernel_classes_Resource');
+	    
+	   
+	    
+	    $value = $variable->getUniquePropertyValue(new core_kernel_classes_Property(RDF_VALUE));
+	    $variableIdentifier = $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_IDENTIFIER));
+    	    $variableOrigin = $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_ORIGIN));
+	    
+	    $this->assertEqual($value,"0.4");
+	    $this->assertEqual($variableIdentifier,"GRADE");
+	    $this->assertEqual($variableOrigin->getUri(),"#MyActivityExecution");
+	}
+	
+	public function testGetTestTaker(){
+		 $deliveryResult = new core_kernel_classes_Resource("#MyDeliveryResult");
+		 $deliveryResult->setPropertyValue(new core_kernel_classes_Property(PROPERTY_RESULT_OF_SUBJECT),"#Patrick");
+		$testTaker = $this->resultsService->getTestTaker($deliveryResult);
+		 $this->assertIsA($testTaker, 'core_kernel_classes_Resource');
+		 $this->assertEqual($testTaker->getUri(),"#Patrick");
+	}
+	public function testGetVariableData(){
+	    /*
+	     * Needs to build an activity execution along the grade, etc.
+	    $variableData = $this->resultsService->getVariableData($this->grade);
+	    print_r($variableData);
+	     * 
+	    */
+	    
+	}
+	
+	
+	public function tearDown(){
+	    $this->assertTrue($this->grade->delete());
+	}
+}   
 ?>
