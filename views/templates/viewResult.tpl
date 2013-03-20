@@ -11,10 +11,9 @@
 	var jsData = $.parseJSON(data);
 	var formattedData = "";
 	if (jsData instanceof Array) {
-	    //the formatter callback expects a string to be returned, normal DOM modifications seems not to work.
-	    formattedData = '<UL class="cellDataList">';
+	    formattedData = '<UL >';
 	    for (key in jsData){
-		formattedData += '<li class="cellDataListElement">';
+		formattedData += '<li >';
 		formattedData += jsData[key];
 		 formattedData += "</li>";
 		}
