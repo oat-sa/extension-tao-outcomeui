@@ -103,6 +103,53 @@ class taoResults_models_classes_ResultsService
         return (array) $returnValue;
     }
     /**
+     * Retrieves all score variables pertaining to the deliveryResult
+     *
+     * @access public
+     * @author Patrick Plichart, <patrick.plichart@taotesting.com>
+     * @param  Resource deliveryResult
+     * @return array
+     */
+    public function getScoreVariables( core_kernel_classes_Resource $deliveryResult)
+    {
+        $returnValue = array();
+
+        // section 127-0-1-1-16e239f7:13925739ce2:-8000:0000000000003B74 begin
+    	$type = new core_kernel_classes_Class(TAO_RESULT_GRADE); //TAO_RESULT_GRADE
+        $returnValue = $type->searchInstances(
+        	array(PROPERTY_MEMBER_OF_RESULT	=> $deliveryResult->getUri()),
+		array('recursive' => true, 'like' => false)
+        );
+        // section 127-0-1-1-16e239f7:13925739ce2:-8000:0000000000003B74 end
+
+        return (array) $returnValue;
+    }
+    
+    /**
+     * 
+     */
+    /**
+     * Retrieves information about the variable, including the related item
+     *      * @access public
+     * @author Patrick Plichart, <patrick.plichart@taotesting.com>
+     * @param  Resource variable
+     * @return array simple associative$returnValue = taoTests_models_classes_TestAuthoringService::singleton()->getItemByActivity($activityClass);
+     */
+    public function getVariableData( core_kernel_classes_Resource $variable)
+    {
+        $returnValue = array();
+	$returnValue["value"] = $variable->getUniquePropertyValue(new core_kernel_classes_Property(RDF_VALUE));
+	$returnValue["variableIdentifier"] = $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_IDENTIFIER));
+    //identify the item related to the score Variable
+	$variableOrigin = $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_ORIGIN));
+	$activityDefinition = $variableOrigin->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_ACTIVITY_EXECUTION_ACTIVITY));
+	$returnValue["item"] = taoTests_models_classes_TestAuthoringService::singleton()->getItemByActivity($activityDefinition);
+	
+        return (array) $returnValue;
+    }
+    
+    
+    /**
      * returns the test taker related to the delivery
      *
      * @author Patrick Plichart, <patrick.plichart@taotesting.com>
@@ -126,7 +173,7 @@ class taoResults_models_classes_ResultsService
      * @param  Resource activityExecution
      * @param  string identifier
      * @param  string value
-     * @return core_kernel_classes_Resource
+     * @return core_kernel_classes_Resource$returnValue = taoTests_models_classes_TestAuthoringService::singleton()->getItemByActivity($activityClass);
      */
     protected function storeVariable( core_kernel_classes_Class $type,  core_kernel_classes_Resource $deliveryResult,  core_kernel_classes_Resource $activityExecution, $identifier, $value)
     {
@@ -143,7 +190,7 @@ class taoResults_models_classes_ResultsService
 
         return $returnValue;
     }
-
+    
     /**
      * Short description of method storeResponse
      *
