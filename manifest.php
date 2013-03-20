@@ -49,7 +49,15 @@ return array(
 	'classLoaderPackages' => array(
 		dirname(__FILE__).'/actions/',
 		dirname(__FILE__).'/helpers/'
-	 ), 'constants' => array(
+	 ),
+	'optimizableProperties' => array(
+		'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_PROCESS_EXEC_ID',
+		'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_DELIVERY_ID',
+		'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_TEST_ID',
+		'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_ITEM_ID',
+		'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_SUBJECT_ID'
+	),
+	'constants' => array(
 	 	# actions directory
 	 	"DIR_ACTIONS"			=> $extpath."actions".DIRECTORY_SEPARATOR,
 	
@@ -77,9 +85,7 @@ return array(
 	 	#TAO extension Paths
 		'TAOBASE_WWW'			=> ROOT_URL	.'tao/views/',
 		'TAOVIEW_PATH'			=> $taopath	.'views'.DIRECTORY_SEPARATOR,
-		'TAO_TPL_PATH'			=> $taopath	.'views'.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR,
-
-
+		'TAO_TPL_PATH'			=> $taopath	.'views'.DIRECTORY_SEPARATOR.'templates'.DIRECTORY_SEPARATOR
 	)
 );
 ?>
