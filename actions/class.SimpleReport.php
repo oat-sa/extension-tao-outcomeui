@@ -74,7 +74,7 @@ class taoResults_actions_SimpleReport extends tao_actions_TaoModule {
         $selectedDeliveryClass = $this->getCurrentClass();
         
 	$this->reportService->setContextClass($selectedDeliveryClass);
-	//extract statistics using the statistics service
+	//extract statistics using the statistics service and feed the report
         $this->reportService->setDataSet($this->service->extractDeliveryDataSet($selectedDeliveryClass));
 
 	//add the required graphics computation and textual information for this particular report using reportService

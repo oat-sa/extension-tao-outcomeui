@@ -97,8 +97,7 @@ extends taoResults_models_classes_StatisticsService
 		$data1y = $this->flattenQuantiles($dataSet, "avg");
 		//print_r($data1y);
 		$data2y = $this->flattenQuantiles($dataSet, "sum");
-		//print_r($data2y);
-		//die();
+		
 		// Create the graph. These two calls are always required
 		$graph = new Graph(550,200,'auto');
 		$graph->SetScale("textlin");

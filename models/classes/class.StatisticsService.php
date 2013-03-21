@@ -44,15 +44,14 @@ class taoResults_models_classes_StatisticsService
 {
 	/**
 	* returns  a data set containing results data using and using an associative array
-	* with basic statistics related to a delivery class
-	* the returned dataset may be used to build different type of reports
-	* TODO : delegate the low level source data extraction based on the model of results storage
+	* with basic statistics related to a delivery class. 
+	* @author Patrick Plichart, <patrick.plichart@taotesting.com>
 	*/
 	public function extractDeliveryDataSet($deliveryClass){
 			
 	$deliveryDataSet = array(
 	"nbExecutions" => 0, //Number of collected executions of the delivery
-	"nbMaxExpectedExecutions"=>0, //Number of Test Takers
+	"nbMaxExpectedExecutions"=>0, //Number of Test asturias albenizTasturias albenizakers
 	"nbMaxExecutions"=>0, //Number of Executions tokens granted
 	"statisticsPerVariable"=>array(), //an array containing variables as keys, collected and computed data 					["statisticsPerTest"]=>array()
 	"statisticsPerDelivery"=>array()
@@ -74,7 +73,7 @@ class taoResults_models_classes_StatisticsService
 			
 			$variableIDentifier = $variableData["item"]->getUri().$variableData["variableIdentifier"];
 			
-			// we should parametrize if we consider multiple executions of the same test taker or not
+			// we should parametrize if we consider multiple executions of the same test taker or not, here all executions are considered
                         $statisticsGroupedPerVariable[$variableIDentifier]["data"][]=$variableData["value"];
 			$statisticsGroupedPerVariable[$variableIDentifier]["sum"]+= $variableData["value"];
 			$statisticsGroupedPerVariable[$variableIDentifier]["#"]+= 1;
@@ -104,11 +103,24 @@ class taoResults_models_classes_StatisticsService
 
 		return $deliveryDataSet;
 		}
-
+	/**
+	 * computeQuantiles 
+	 * @param array $statisticsGroupedPerDelivery
+	 * @param int $split
+	 * @author Patrick Plichart, <patrick.plichart@taotesting.com>
+	 * @return array
+	 */
 	protected function computeQuantiles($statisticsGroupedPerDelivery, $split = 10){
 		//computing average, std and distribution for the delivery 
 		 //TODO  search for some PHP stats extension
-                $slotSize = $statisticsGroupedPerDelivery["#"] / $split; //number of observations per slot
+                
+		
+		if ($statisticsGroupedPerDelivery["#"]< $split) {throw new common_Exception(__('The number of observations is too low').' #'.$statisticsGroupedPerDelivery["#"].'/'.$split);}
+		
+		//in case the number of observations is below the quantile size we lower it.
+		//$split = min(array($split,$statisticsGroupedPerDelivery["#"]));
+		
+		$slotSize = $statisticsGroupedPerDelivery["#"] / $split; //number of observations per slot
 		sort($statisticsGroupedPerDelivery["data"]);		                      
 			//sum all values for the slotsize
                         $slot = 0 ; 
@@ -124,7 +136,7 @@ class taoResults_models_classes_StatisticsService
 				$i++;
                         }
 			
-                        //compute the average
+                        //compute the average for each slot
                         foreach ( $statisticsGroupedPerDelivery["splitData"] as $slot => $struct){
                                 $statisticsGroupedPerDelivery["splitData"][$slot]["avg"] = 
                                 $statisticsGroupedPerDelivery["splitData"][$slot]["sum"] /  $statisticsGroupedPerDelivery["splitData"][$slot]["#"];
@@ -135,10 +147,13 @@ class taoResults_models_classes_StatisticsService
 	
 	//flatten the structure returned by the results data set extractor into a flat array for the graphics computation
 	protected function flattenQuantiles($quantiles, $criteria = "avg"){
+		
+		
 		$flatDecileAverages = array();		
 		foreach ($quantiles as $quantile){
 		$flatDecileAverages[]= $quantile[$criteria];		
 		}
+		
 		return $flatDecileAverages;
 	}	
 
