@@ -1,5 +1,5 @@
 <?php
-/*  
+/**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; under version 2
@@ -18,13 +18,13 @@
  *               
  * 
  */
-?>
-<?php
+
 
 /**
  * Results Controller provide actions performed from url resolution
  * 
- * @author Joel Bout, Patrick Plichart <info@taotesting.com>
+ * @author Joel Bout <joel@taotesting.com>
+ * @author Patrick Plichart <patrick@taotesting.com>
  * @package taoResults
  * @subpackage actions
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
