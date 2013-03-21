@@ -34,12 +34,13 @@ return array(
 	'version' => '2.4',
 	'author' => 'Open Assessment Technologies, CRP Henri Tudor',
 	'dependencies' => array('taoDelivery', 'taoTests'),
-	'models' => array('http://www.tao.lu/Ontologies/TAOResult.rdf',
-		'http://www.tao.lu/Ontologies/taoFuncACL.rdf'),
+	'models' => array(
+		'http://www.tao.lu/Ontologies/TAOResult.rdf'
+	),
 	'install' => array(
 		'rdf' => array(
-				array('ns' => 'http://www.tao.lu/Ontologies/TAOResult.rdf', 'file' => dirname(__FILE__). '/models/ontology/taoresult.rdf'),
-				array('ns' => 'http://www.tao.lu/Ontologies/TAOResult.rdf', 'file' => dirname(__FILE__). '/models/ontology/taoresult_alt.rdf'),
+			dirname(__FILE__). '/models/ontology/taoresult.rdf',
+			dirname(__FILE__). '/models/ontology/taoresult_alt.rdf'
 		),
 		'checks' => array(
 			array('type' => 'CheckFileSystemComponent', 'value' => array('id' => 'fs_taoResults_includes', 'location' => 'taoResults/includes', 'rights' => 'r'))
