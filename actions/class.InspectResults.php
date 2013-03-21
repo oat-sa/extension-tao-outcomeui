@@ -147,7 +147,8 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule
         $result = $this->getCurrentInstance();
         $testTaker = $this->service->getTestTaker($result);
         $this->setData('TestTakerLabel', $testTaker->getLabel());
-        $this->setData('TestTakerLogin', array_pop($testTaker->getPropertyValues(new core_kernel_classes_Property(PROPERTY_USER_LOGIN))));
+        $values = $testTaker->getPropertyValues(new core_kernel_classes_Property(PROPERTY_USER_LOGIN));
+        $this->setData('TestTakerLogin', array_pop($values));
 
         $variables = array();
         foreach ($this->service->getVariables($result) as $variable) {
