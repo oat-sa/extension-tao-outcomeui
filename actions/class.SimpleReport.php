@@ -64,20 +64,21 @@ class taoResults_actions_SimpleReport extends tao_actions_TaoModule {
     }
 
     /**
-     * build the report
+     * build the report using statistics service and feeding the report service
      *
-     * @param string view not used
      * @author Patrick Plichart, <patrick.plichart@taotesting.com>
      */
-    public function build($view = "simple_form")
+    public function build()
     {
 
         $selectedDeliveryClass = $this->getCurrentClass();
-        //extract statistics using the statistics service
-        $deliveryDataSet = $this->service->extractDeliveryDataSet($selectedDeliveryClass);
+        
+	$this->reportService->setContextClass($selectedDeliveryClass);
+	//extract statistics using the statistics service
+        $this->reportService->setDataSet($this->service->extractDeliveryDataSet($selectedDeliveryClass));
 
-        //add the required graphics computation and textual information for this particular report using reportService
-        $reportData = $this->reportService->buildSimpleReport($deliveryDataSet, $selectedDeliveryClass->getlabel());
+	//add the required graphics computation and textual information for this particular report using reportService
+        $reportData = $this->reportService->buildSimpleReport();
         foreach ($reportData as $dataIdentifier => $value) {
             $this->setData($dataIdentifier, $value);
         }
