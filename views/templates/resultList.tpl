@@ -7,7 +7,7 @@
 
 <div id="filter-container" class="data-container tabs-bottom">
 	<div class="ui-widget ui-state-default ui-widget-header ui-corner-top container-title" >
-		<?=__('Filter')?>
+		<?=__('Results Selection Filters')?>
 	</div>
 	<div id="tabs-1">
 		<div id="facet-filter">
@@ -22,7 +22,7 @@
 	</div>
 	<div align="right">
 		<span class="ui-state-default ui-corner-all">
-			<a href="#" id="buildTableButton"><?=__('build table')?></a>
+			<a href="#" id="buildTableButton"><?=__('Build/Export data table')?></a>
 		</span>
 	</div>
 </div>
@@ -78,7 +78,7 @@ $(function(){
 					iconUrl: root_url + '/tao/views/img/table.png',
 					callback: {
 						click: function(e) {
-							console.log(e);
+							//console.log(e);
 						}
 					}
 				}
