@@ -109,7 +109,7 @@ class taoResults_models_classes_StatisticsService
 		return $deliveryDataSet;
 		}
 
-	public function computeQuantiles($statisticsGroupedPerDelivery, $split = 10){
+	protected function computeQuantiles($statisticsGroupedPerDelivery, $split = 10){
 		//computing average, std and distribution for the delivery 
 		 //TODO  search for some PHP stats extension
                 $slotSize = $statisticsGroupedPerDelivery["#"] / $split; //number of observations per slot
@@ -138,7 +138,7 @@ class taoResults_models_classes_StatisticsService
 		}
 	
 	//flatten the structure returned by the results data set extractor into a flat array for the graphics computation
-	public function flattenQuantiles($quantiles, $criteria = "avg"){
+	protected function flattenQuantiles($quantiles, $criteria = "avg"){
 		$flatDecileAverages = array();		
 		foreach ($quantiles as $quantile){
 		$flatDecileAverages[]= $quantile[$criteria];		
