@@ -30,7 +30,7 @@ require_once ('tao/lib/jpgraph/jpgraph_bar.php');
 
 
 class taoResults_actions_SimpleReport extends tao_actions_TaoModule {
- 
+    protected $reportService = null;
     public function __construct() {
 
         parent::__construct();
