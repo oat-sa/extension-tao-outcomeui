@@ -41,9 +41,6 @@
     <rdfs:range rdf:resource="http://www.tao.lu/Ontologies/wfEngine#ClassProcessInstances"/>
     <generis:is_language_dependent rdf:resource="http://www.tao.lu/Ontologies/generis.rdf#False"/>
   </rdf:Description>
-  
-  
-  
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#Variable">
     <rdfs:label xml:lang="EN"><![CDATA[Result Variable]]></rdfs:label>
     <rdfs:comment xml:lang="EN"><![CDATA[Variable of a DeliveryResult]]></rdfs:comment>
