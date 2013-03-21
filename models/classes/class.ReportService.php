@@ -43,29 +43,35 @@ extends taoResults_models_classes_StatisticsService
 {
 	protected $deliveryDataSet = null;
 	
+	protected $contextClass;
+	
 	public function setDataSet($deliveryDataSet) {
 	$this->deliveryDataSet = $deliveryDataSet;
 	}
 	
-	public function buildSimpleReport($deliveryClasslabel){	
+	public function setContextClass($contextClass) {
+	$this->contextClass = $contextClass;
+	}
+	
+	public function buildSimpleReport(){	
 
 		$deliveryDataSet = $this->deliveryDataSet;
-		$urlDeliverybarChart = $this->computeBarChart($deliveryDataSet["statisticsPerDelivery"]["splitData"], "Average and Total Scores by deciles of the population (".$deliveryClasslabel.")");
+		$urlDeliverybarChart = $this->computeBarChart($this->deliveryDataSet["statisticsPerDelivery"]["splitData"], "Average and Total Scores by deciles of the population (".$this->contextClass->getLabel().")");
 		
 		$reportData['deliveryBarChart'] = $urlDeliverybarChart;
 		
-		$reportData['reportTitle'] = 'Statistical Report ('.$deliveryClasslabel.')';
-		$reportData['average'] =  $deliveryDataSet["statisticsPerDelivery"]["avg"];
-		$reportData['std'] =  $deliveryDataSet["statisticsPerDelivery"]["std"];
-		$reportData['nbExecutions'] =  $deliveryDataSet["nbExecutions"];
-		$reportData['#'] =  $deliveryDataSet["statisticsPerDelivery"]["#"];
-		$reportData['numberVariables'] =  $deliveryDataSet["statisticsPerDelivery"]["numberVariables"];	
+		$reportData['reportTitle'] = 'Statistical Report ('.$this->contextClass->getLabel().')';
+		$reportData['average'] =  $this->deliveryDataSet["statisticsPerDelivery"]["avg"];
+		$reportData['std'] =  $this->deliveryDataSet["statisticsPerDelivery"]["std"];
+		$reportData['nbExecutions'] =  $this->deliveryDataSet["nbExecutions"];
+		$reportData['#'] =  $this->deliveryDataSet["statisticsPerDelivery"]["#"];
+		$reportData['numberVariables'] =  $this->deliveryDataSet["statisticsPerDelivery"]["numberVariables"];	
 		
-		foreach ($deliveryDataSet["statisticsPerVariable"] as $predicateUri => $struct){
+		foreach ($this->deliveryDataSet["statisticsPerVariable"] as $predicateUri => $struct){
 		$scoreVariable = new core_kernel_classes_Resource($predicateUri);
 		$scoreVariableLabel = $scoreVariable->getlabel();
 		//compute every single distribution for each variable
-		$urlDeliveryVariablebarChart = $this->computeBarChart($deliveryDataSet["statisticsPerVariable"][$predicateUri]["splitData"], "Average and Total Scores by deciles of the population (".$scoreVariableLabel.")");
+		$urlDeliveryVariablebarChart = $this->computeBarChart($this->deliveryDataSet["statisticsPerVariable"][$predicateUri]["splitData"], "Average and Total Scores by deciles of the population (".$scoreVariableLabel.")");
 		
 		//build UX data structure		
 		$listOfVariables[]= array("label" => $scoreVariableLabel, "url" => $urlDeliveryVariablebarChart, "infos" => array("#" => $struct["#"], "sum" => $struct["sum"], "avg" => $struct["avg"]));
@@ -124,16 +130,15 @@ extends taoResults_models_classes_StatisticsService
 	*TODO move to an helper, attempt to get a unique file name
 	*/
 	private function getUniqueMediaFileName($fileExtension="")
-		{
-			return "taoResults/views/img/".microtime().'.'.fileExtension;
+		{	$fileName = base64_encode("sid_".session_id()."c_".$this->contextClass->getUri()).'.'.$fileExtension;
+			return "taoResults/views/genpics/".$fileName;
 		}
 	private function computeRadarPlot($sums,$avgs, $labels, $title)
 		{
-		
 		// Some data
 		$data1 = $sums ;
 		$data2 = $avgs ;
-		 
+		
 		// Setup a basic radar graph
 		$graph = new RadarGraph(880,400,'auto');
 
