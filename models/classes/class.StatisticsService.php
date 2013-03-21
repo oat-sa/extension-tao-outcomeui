@@ -57,15 +57,12 @@ class taoResults_models_classes_StatisticsService
 	"statisticsPerVariable"=>array(), //an array containing variables as keys, collected and computed data 					["statisticsPerTest"]=>array()
 	"statisticsPerDelivery"=>array()
 	);
-       
-	//strong assumption that the delivery results are not moved, etc. another cpu demanding way could be implemented asking explicitely for the related delivery uri
-	 $deliveryResults =  $deliveryClass->getInstances(false);
-         $deliveryDataSet["nbExecutions"] = sizeOf($deliveryResults);
+       	 $deliveryResults =  $deliveryClass->getInstances(false);
+	 if (count($deliveryResults)==0) {throw new common_Exception(__('The class you have selected contains no results to be analysed, please select a different class'));}
+         $deliveryDataSet["nbExecutions"] = count($deliveryResults);
 
         $statisticsGroupedPerVariable = array();
-	 /**
-        * The results model for storage in TAO has evolved over time, this dataset extractions is based on Younes Simple Mode$
-        */
+	
         foreach ($deliveryResults as $deliveryResult){
 		
 		$scoreVariables = $this->getScoreVariables($deliveryResult);
@@ -88,7 +85,6 @@ class taoResults_models_classes_StatisticsService
 			
                  }
         }
-		
 		 //compute basic statistics
                 $statisticsGroupedPerDelivery["avg"] =  $statisticsGroupedPerDelivery["sum"]/ $statisticsGroupedPerDelivery["#"];
 		//number of different type of variables collected

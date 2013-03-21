@@ -50,10 +50,9 @@ class taoResults_actions_SimpleReport extends tao_actions_TaoModule {
 	
 	$selectedDeliveryClass = $this->getCurrentClass();
 	//extract statistics using the statistics service 
-	$deliveryDataSet = $this->service->extractDeliveryDataSet($selectedDeliveryClass);
-	
+	$this->reportService->setDataSet($this->service->extractDeliveryDataSet($selectedDeliveryClass));
 	//add the required graphics computation and textual information for this particular report using reportService
-	$reportData = $this->reportService->buildSimpleReport($deliveryDataSet, $selectedDeliveryClass->getlabel());
+	$reportData = $this->reportService->buildSimpleReport($selectedDeliveryClass->getlabel());
 	foreach ($reportData as $dataIdentifier => $value){
 		    $this->setData($dataIdentifier, $value);
 	}

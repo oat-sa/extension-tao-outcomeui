@@ -41,11 +41,15 @@ if (0 > version_compare(PHP_VERSION, '5')) {
 class taoResults_models_classes_ReportService
 extends taoResults_models_classes_StatisticsService
 {
+	protected $deliveryDataSet = null;
 	
+	public function setDataSet($deliveryDataSet) {
+	$this->deliveryDataSet = $deliveryDataSet;
+	}
 	
-	public function buildSimpleReport($deliveryDataSet, $deliveryClasslabel){	
+	public function buildSimpleReport($deliveryClasslabel){	
 
-		
+		$deliveryDataSet = $this->deliveryDataSet;
 		$urlDeliverybarChart = $this->computeBarChart($deliveryDataSet["statisticsPerDelivery"]["splitData"], "Average and Total Scores by deciles of the population (".$deliveryClasslabel.")");
 		
 		$reportData['deliveryBarChart'] = $urlDeliverybarChart;
@@ -85,7 +89,10 @@ extends taoResults_models_classes_StatisticsService
 	private function computebarChart($dataSet, $title){
 		
 		$data1y = $this->flattenQuantiles($dataSet, "avg");
+		//print_r($data1y);
 		$data2y = $this->flattenQuantiles($dataSet, "sum");
+		//print_r($data2y);
+		//die();
 		// Create the graph. These two calls are always required
 		$graph = new Graph(550,200,'auto');
 		$graph->SetScale("textlin");
