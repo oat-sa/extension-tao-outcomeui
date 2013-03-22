@@ -33,7 +33,8 @@
 			    </td>
 			</tr>
 			<tr>
-				<td>
+				<td><i>Data extracted in <? echo get_data('dataExtractionTime').__(" seconds");?></i><br/>
+				    <i>Report built in <? echo get_data('reportBuildTime').__(" seconds");?></i>
 				</td>
 				<td><img src="<? echo get_data('variablesFreqComparison');?>"/></td>
 			</tr>

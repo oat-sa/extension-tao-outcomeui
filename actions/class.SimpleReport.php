@@ -33,7 +33,7 @@
 class taoResults_actions_SimpleReport extends tao_actions_TaoModule {
 
     /*
-     * @var taoResults_models_classes_ReportService
+     * @var taoResults_models_classes_ReportService 
      */
     protected $reportService = null;
 
@@ -55,16 +55,17 @@ class taoResults_actions_SimpleReport extends tao_actions_TaoModule {
      * get the main class
      *
      * @author Patrick Plichart, <patrick.plichart@taotesting.com>
-     * @return core_kernel_classes_Classes
+     * @return core_kernel_classes_Class
      */
 	protected function getRootClass() {
         return new core_kernel_classes_Class(RESULT_ONTOLOGY . "#" . "TAO_DELIVERY_RESULTS");
-    }
+	}
 
     /**
      * build the report using statistics service and feeding the report service
      *
      * @author Patrick Plichart, <patrick.plichart@taotesting.com>
+     * @return html stream
      */
     public function build()
     {
@@ -73,10 +74,13 @@ class taoResults_actions_SimpleReport extends tao_actions_TaoModule {
         
 	$this->reportService->setContextClass($selectedDeliveryClass);
 	//extract statistics using the statistics service and feed the report
-        $this->reportService->setDataSet($this->service->extractDeliveryDataSet($selectedDeliveryClass));
-
+	$startTime = microtime(true);
+	$this->reportService->setDataSet($this->service->extractDeliveryDataSet($selectedDeliveryClass));
+	$endTime = microtime(true);
+	$this->setData("dataExtractionTime",round($endTime-$startTime,3));
 	//add the required graphics computation and textual information for this particular report using reportService
         $reportData = $this->reportService->buildSimpleReport();
+	$this->setData("reportBuildTime",round(microtime(true)-$endTime,3));
         foreach ($reportData as $dataIdentifier => $value) {
             $this->setData($dataIdentifier, $value);
         }
