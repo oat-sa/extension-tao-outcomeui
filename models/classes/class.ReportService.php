@@ -80,7 +80,7 @@ extends taoResults_models_classes_StatisticsService
 		//compute every single distribution for each variable
 		    //$urlDeliveryVariablebarChartQuantiles = $this->computeBarChart($this->deliveryDataSet["statisticsPerVariable"][$variableIdentifier]["splitData"], "Average and Total Scores by deciles of the population (".$scoreVariableLabel.")");
 		
-		$urlDeliveryVariablebarChartScores = $this->computeBarChartScores($this->deliveryDataSet["statisticsPerVariable"][$variableIdentifier]["data"], "Observed Scores (".$scoreVariableLabel.")");
+		$urlDeliveryVariablebarChartScores = $this->computeBarChartScores($this->deliveryDataSet["statisticsPerVariable"][$variableIdentifier]["data"], "Sorted Collected Scores for the variable : ".$scoreVariableLabel."");
 		$urlDeliveryVariablebarChartScoresFequencies = $this->computebarChartScoresFrequencies($this->deliveryDataSet["statisticsPerVariable"][$variableIdentifier]["data"], "Grouped Scores Frequencies (".$scoreVariableLabel.")");
 		
 		
@@ -107,9 +107,9 @@ extends taoResults_models_classes_StatisticsService
 	 */
 	private function computebarChartScores($dataSet, $title){
 	    $datay = $dataSet;
-	    $datax = array(); for ($i=0; $i < count($dataSet); $i++) {$datax[] = "#".$i;}
-	    $legendTitle = __("Absolute Score");
-	    return $this->getChart($datax, array($legendTitle => $datay), $title, array("#cc0000", "#ff6600"));
+	    $datax = array(); for ($i=0; $i < count($dataSet); $i++) {$datax[] = "#";}
+	    $legendTitle = __("Score per Observation");
+	    return $this->getChart($datax, array($legendTitle => $datay), $title, "Observations", "Score");
 	}
 	
 	/**
@@ -128,8 +128,8 @@ extends taoResults_models_classes_StatisticsService
 		$datax[] = $value;
 		$datay[] = $frequency;
 	    }
-	    $legendTitle = __("Score Frequency");
-	    return $this->getChart($datax, array($legendTitle => $datay), $title, array("#003399", "#6699cc"));
+	    $legendTitle = __("Frequency per Score");
+	    return $this->getChart($datax, array($legendTitle => $datay), $title, "Score","Frequency (#)");
 	}
 	/**
 	 * @author Patrick plichart
@@ -139,7 +139,7 @@ extends taoResults_models_classes_StatisticsService
 	 * @return string the url of the generated graph
 	 */
 	
-	private function getChart($datax, $setOfySeries, $title, $colors = array("#ff3333", "#cc1111")){
+	private function getChart($datax, $setOfySeries, $title, $xAxisLabel = "", $yAxisLabel=""){
 	    $font = ROOT_PATH."/tao/lib/pChart/Fonts/pf_arma_five.ttf";
 	  // Dataset definition 
 	$DataSet = new pData;
@@ -148,15 +148,21 @@ extends taoResults_models_classes_StatisticsService
 	    $DataSet->SetSerieName($legend,$legend);
 	}
 	$DataSet->AddAllSeries();
-	 $DataSet->AddPoint($datax,"xLabels");
+	$DataSet->AddPoint($datax,"xLabels");
+	
+	$DataSet->SetYAxisName($yAxisLabel);
+	$DataSet->SetXAxisName($xAxisLabel);
 	
 	$DataSet->SetAbsciseLabelSerie("xLabels");
 	// Initialise the graph
-	$Test = new pChart(655,230);
+	$Test = new pChart(655,260);
 	$Test->setFontProperties($font,10);
-	$Test->setGraphArea(30,45,500,200);
-	$Test->drawFilledRoundedRectangle(7,7,693,223,5,240,240,240);
-	$Test->drawRoundedRectangle(5,5,695,225,5,230,230,230);
+	
+	$Test->setGraphArea(65,40,580,200);
+	//draw the background rectangle
+	$Test->drawFilledRoundedRectangle(7,7,655,253,5,240,240,240);
+	
+	$Test->drawRoundedRectangle(5,5,655,225,5,230,230,230);
 	$Test->drawGraphArea(255,255,255,TRUE);
 	$Test->drawScale($DataSet->GetData(),$DataSet->GetDataDescription(),SCALE_NORMAL,150,150,150,TRUE,0,2,TRUE);   
 	$Test->drawGrid(4,TRUE,230,230,230,50);
@@ -169,10 +175,10 @@ extends taoResults_models_classes_StatisticsService
 	$Test->drawBarGraph($DataSet->GetData(),$DataSet->GetDataDescription(),TRUE);
 
 	// Finish the graph
-	$Test->setFontProperties($font,9);
-	$Test->drawLegend(520,40,$DataSet->GetDataDescription(),255,255,255);
+	$Test->setFontProperties($font,8);
+	$Test->drawLegend(480,220,$DataSet->GetDataDescription(),255,255,255);
 	$Test->setFontProperties($font,10);
-	$Test->drawTitle(50,30,$title,50,50,50,585);
+	$Test->drawTitle(50,30,$title,50,80,50,585);
 	      $url = $this->getUniqueMediaFileName("png");
 	      $Test->Render(ROOT_PATH.$url);
 	      return ROOT_URL.$url;

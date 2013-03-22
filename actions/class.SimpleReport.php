@@ -20,9 +20,7 @@
  * 
  */
 
-require_once('tao/lib/jpgraph/jpgraph.php');
-require_once ('tao/lib/jpgraph/jpgraph_bar.php');
-//require_once ('tao/lib/jpgraph/jpgraph_radar.php');
+
 
 /**
  * SimpleReport Module
