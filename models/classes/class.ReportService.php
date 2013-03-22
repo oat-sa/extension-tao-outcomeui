@@ -19,6 +19,10 @@
  * 
  */
 
+
+require_once('tao/lib/pChart/pData.class');
+require_once ('tao/lib/pChart/pChart.class');
+
 /**
  * TAO - taoResults/models/classes/class.ReportService.php
  *
@@ -56,7 +60,8 @@ extends taoResults_models_classes_StatisticsService
 	public function buildSimpleReport(){	
 
 		$deliveryDataSet = $this->deliveryDataSet;
-		$urlDeliverybarChart = $this->computeBarChart($this->deliveryDataSet["statisticsPerDelivery"]["splitData"], "Average and Total Scores by deciles of the population (".$this->contextClass->getLabel().")");
+		//deprecated
+		//$urlDeliverybarChart = $this->computeBarChart($this->deliveryDataSet["statisticsPerDelivery"]["splitData"], "Average and Total Scores by deciles of the population (".$this->contextClass->getLabel().")");
 		
 		$reportData['deliveryBarChart'] = $urlDeliverybarChart;
 		
@@ -76,7 +81,7 @@ extends taoResults_models_classes_StatisticsService
 		    //$urlDeliveryVariablebarChartQuantiles = $this->computeBarChart($this->deliveryDataSet["statisticsPerVariable"][$variableIdentifier]["splitData"], "Average and Total Scores by deciles of the population (".$scoreVariableLabel.")");
 		
 		$urlDeliveryVariablebarChartScores = $this->computeBarChartScores($this->deliveryDataSet["statisticsPerVariable"][$variableIdentifier]["data"], "Observed Scores (".$scoreVariableLabel.")");
-		$urlDeliveryVariablebarChartScoresFequencies = $this->computebarChartScoresFrequencies($this->deliveryDataSet["statisticsPerVariable"][$variableIdentifier]["data"], "Observed Scores (".$scoreVariableLabel.")");
+		$urlDeliveryVariablebarChartScoresFequencies = $this->computebarChartScoresFrequencies($this->deliveryDataSet["statisticsPerVariable"][$variableIdentifier]["data"], "Grouped Scores Frequencies (".$scoreVariableLabel.")");
 		
 		
 		//build UX data structure		
@@ -103,8 +108,8 @@ extends taoResults_models_classes_StatisticsService
 	private function computebarChartScores($dataSet, $title){
 	    $datay = $dataSet;
 	    $datax = array(); for ($i=0; $i < count($dataSet); $i++) {$datax[] = "#".$i;}
-	    $legendTitle = __("Observed Scores");
-	    return $this->getChart($datax, array($legendTitle => $datay), $title);
+	    $legendTitle = __("Absolute Score");
+	    return $this->getChart($datax, array($legendTitle => $datay), $title, array("#cc0000", "#ff6600"));
 	}
 	
 	/**
@@ -123,8 +128,8 @@ extends taoResults_models_classes_StatisticsService
 		$datax[] = $value;
 		$datay[] = $frequency;
 	    }
-	    $legendTitle = __("Observed Scores Distribution");
-	    return $this->getChart($datax, array($legendTitle => $datay), $title);
+	    $legendTitle = __("Score Frequency");
+	    return $this->getChart($datax, array($legendTitle => $datay), $title, array("#003399", "#6699cc"));
 	}
 	/**
 	 * @author Patrick plichart
@@ -134,7 +139,46 @@ extends taoResults_models_classes_StatisticsService
 	 * @return string the url of the generated graph
 	 */
 	
-	private function getChart($datax, $setOfySeries, $title){
+	private function getChart($datax, $setOfySeries, $title, $colors = array("#ff3333", "#cc1111")){
+	    $font = ROOT_PATH."/tao/lib/pChart/Fonts/pf_arma_five.ttf";
+	  // Dataset definition 
+	$DataSet = new pData;
+	foreach ($setOfySeries as $legend => $ysery ){
+	    $DataSet->AddPoint($ysery,$legend);
+	    $DataSet->SetSerieName($legend,$legend);
+	}
+	$DataSet->AddAllSeries();
+	 $DataSet->AddPoint($datax,"xLabels");
+	
+	$DataSet->SetAbsciseLabelSerie("xLabels");
+	// Initialise the graph
+	$Test = new pChart(655,230);
+	$Test->setFontProperties($font,10);
+	$Test->setGraphArea(30,45,500,200);
+	$Test->drawFilledRoundedRectangle(7,7,693,223,5,240,240,240);
+	$Test->drawRoundedRectangle(5,5,695,225,5,230,230,230);
+	$Test->drawGraphArea(255,255,255,TRUE);
+	$Test->drawScale($DataSet->GetData(),$DataSet->GetDataDescription(),SCALE_NORMAL,150,150,150,TRUE,0,2,TRUE);   
+	$Test->drawGrid(4,TRUE,230,230,230,50);
+
+	// Draw the 0 line
+	$Test->setFontProperties($font,6);
+	$Test->drawTreshold(0,143,55,72,TRUE,TRUE);
+
+	// Draw the bar graph
+	$Test->drawBarGraph($DataSet->GetData(),$DataSet->GetDataDescription(),TRUE);
+
+	// Finish the graph
+	$Test->setFontProperties($font,9);
+	$Test->drawLegend(520,40,$DataSet->GetDataDescription(),255,255,255);
+	$Test->setFontProperties($font,10);
+	$Test->drawTitle(50,30,$title,50,50,50,585);
+	      $url = $this->getUniqueMediaFileName("png");
+	      $Test->Render(ROOT_PATH.$url);
+	      return ROOT_URL.$url;
+	    
+	    /*
+	    
 	    $graph = new Graph(550,200,'auto');
 	    $graph->SetScale("textlin");
 	    $graph->SetBox(false);
@@ -142,8 +186,8 @@ extends taoResults_models_classes_StatisticsService
 	    $plots = array();
 	    foreach ($setOfySeries as $legend => $ySery){
 	    $b1plot = new BarPlot($ySery);
-	    $b1plot->SetColor("white");
-	    $b1plot->SetFillColor("#cc1111");
+	    $b1plot->SetColor($colors[0]);
+	    $b1plot->SetFillColor($colors[1]);
 	    $b1plot->SetLegend($legend);
 	    $plots[] = $b1plot;
 	    }
@@ -154,7 +198,7 @@ extends taoResults_models_classes_StatisticsService
 		$url = $this->getUniqueMediaFileName("png");
 		// Display the graph
 		$graph->Stroke(ROOT_PATH.$url);
-		return ROOT_URL.$url;
+		return ROOT_URL.$url;*/
 	}
 	
 	/**
@@ -168,7 +212,7 @@ extends taoResults_models_classes_StatisticsService
 		}
 	/**
 	* deprecated
-	*/
+	
 	private function computebarChart($dataSet, $title){
 		
 		$data1y = $this->flattenQuantiles($dataSet, "avg");
@@ -201,10 +245,10 @@ extends taoResults_models_classes_StatisticsService
 		return ROOT_URL.$url;
 		}
 		
-	
+	*/
 	/*
 	 * deprecated
-	 */
+	 
 		
 	private function computeRadarPlot($sums,$avgs, $labels, $title)
 		{
@@ -239,6 +283,8 @@ extends taoResults_models_classes_StatisticsService
 		return ROOT_URL.$url;
 
 		}
+	 * 
+	 */
 
 } /* end of class taoResults_models_classes_ResultsService */
 

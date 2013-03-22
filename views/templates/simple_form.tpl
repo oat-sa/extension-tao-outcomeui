@@ -41,7 +41,7 @@
 				
 				<?=__('Collected Results')?>: <strong><?=$variable["infos"]["#"]?></strong>
 				<?=__('Average')?>: <strong><?=$variable["infos"]["avg"]?></strong>
-				<?=__('Standard Deviation')?>: <strong><?=$variable["infos"]["std"]?></strong><br /><em></em>
+				
 				
 				
 			</ul>
