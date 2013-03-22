@@ -191,30 +191,7 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule
     {
         return new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
     }
-
-
-    /**
-     * delete a subject or a subject model
-     * called via ajax
-     *
-     * @author Joel Bout <joel@taotesting.com>
-     */
-    public function delete()
-    {
-        if (!tao_helpers_Request::isAjax()) {
-            throw new Exception("wrong request mode");
-        }
-
-        $deleted = false;
-        if ($this->getRequestParameter('uri')) {
-            $deleted = $this->service->deleteResult($this->getCurrentInstance());
-        } else {
-            $deleted = $this->service->deleteResultClass($this->getCurrentClass());
-        }
-
-        echo json_encode(array('deleted' => $deleted));
-    }
-
+   
 }
 
 ?>
