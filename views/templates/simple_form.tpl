@@ -1,5 +1,6 @@
 <?include(TAO_TPL_PATH . 'header.tpl')?>
-
+<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>tao/views/css/custom-theme/jquery-ui-1.8.22.custom.css" />
+<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/result.css" />
 <div class="ui-helper-reset" style="height:100%;" >
 	<div id="form-title" class="ui-widget-header ui-corner-top ui-state-default">
 		<?=get_data('reportTitle')?>
@@ -19,7 +20,7 @@
 				<!--<li>Remaining Tokens: <strong><?=get_data('tokensLeft')?></strong><br /><em>*The number of remaining Tests delivery executions (according to the number of attempts granted)</em>-->
 				
 			</ul>
-				<table>
+				<table class="minimal">
 					<tr><td><?=__('VariableName')?></td><td><?=__('Average')?></td><td><?=__('St.Dev.')?></td><td>#</td></tr></strong>
 				    <?foreach (get_data('listOfVariables') as $variable) :?>
 				
