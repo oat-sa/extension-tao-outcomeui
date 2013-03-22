@@ -39,8 +39,7 @@ return array(
 	),
 	'install' => array(
 		'rdf' => array(
-			dirname(__FILE__). '/models/ontology/taoresult.rdf',
-			dirname(__FILE__). '/models/ontology/taoresult_alt.rdf'
+			dirname(__FILE__). '/models/ontology/taoresult.rdf'
 		),
 		'checks' => array(
 			array('type' => 'CheckFileSystemComponent', 'value' => array('id' => 'fs_taoResults_includes', 'location' => 'taoResults/includes', 'rights' => 'r')),
