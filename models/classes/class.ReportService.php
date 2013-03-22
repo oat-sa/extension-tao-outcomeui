@@ -45,9 +45,9 @@ if (0 > version_compare(PHP_VERSION, '5')) {
 class taoResults_models_classes_ReportService
 extends taoResults_models_classes_StatisticsService
 {
-	protected $deliveryDataSet = null;
+	private $deliveryDataSet = null;
 	
-	protected $contextClass;
+	private $contextClass;
 	
 	public function setDataSet($deliveryDataSet) {
 	$this->deliveryDataSet = $deliveryDataSet;
@@ -58,6 +58,8 @@ extends taoResults_models_classes_StatisticsService
 	}
 	/***
 	 * builSimpleReport compute report data and graphs using the statistics dataset
+	 * @author Patrick Plichart
+	 * @return array reportData an associatuve array with link to the generated graphs and general informations to be included in a view
 	 */
 	public function buildSimpleReport(){	
 		$deliveryDataSet = $this->deliveryDataSet;
@@ -123,7 +125,10 @@ extends taoResults_models_classes_StatisticsService
 	    $legendTitle = __("Frequency per Score");
 	    return $this->getChart($variableIdentifier."f", $datax, array($legendTitle => $datay), $title, "Score","Frequency (#)");
 	}
-	
+	/**
+	 * @author Patrick Plichart
+	 * @return string url to the picture
+	 */
 	private function computeRadarChartAverages(){
 	    foreach ($this->deliveryDataSet["statisticsPerVariable"] as $variableIDentifier => $statistics){
 		$sery1[] = $statistics["avg"];
@@ -131,6 +136,10 @@ extends taoResults_models_classes_StatisticsService
 	    }
 	    return $this->getRadar("varCompAvgs", __("Score average per Variable"), $xLabels, $sery1, __("score average"));
 	}
+	/**
+	 * @author Patrick Plichart
+	 * @return string url to the picture
+	 */
 	private function computeRadarChartFrequencies(){
 	    foreach ($this->deliveryDataSet["statisticsPerVariable"] as $variableIDentifier => $statistics){
 		$sery1[] = $statistics["#"];
@@ -149,10 +158,7 @@ extends taoResults_models_classes_StatisticsService
 	 * @param string yAxisLabel label of the y Axis
 	 * @return string the url of the generated graph
 	 */
-	
 	private function getChart($localGraphId, $datax, $setOfySeries, $title, $xAxisLabel = "", $yAxisLabel=""){
-	
-	
 	  // Dataset definition 
 	$dataSet = new pData;
 	foreach ($setOfySeries as $legend => $ysery ){

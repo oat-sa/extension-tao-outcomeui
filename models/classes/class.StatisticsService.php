@@ -18,26 +18,18 @@
  *               2008-2010 (update and modification) Deutsche Institut für Internationale Pädagogische Forschung (under the project TAO-TRANSFER);\n *               2009-2012 (update and modification) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV);
  * 
  */
-
+if (0 > version_compare(PHP_VERSION, '5')) {
+    die('This file was generated for PHP 5');
+}
 /**
  * TAO - taoResults/models/classes/class.StatisticsService.php
- *
- * $Id$
- *
- *
- * Automatically generated on 20.08.2012, 15:22:19 with ArgoUML PHP module 
- * (last revised $Date: 2010-01-12 20:14:42 +0100 (Tue, 12 Jan 2010) $)
+ * extracts dataSet with statistics from taoResults
+ * 
  *
  * @author Patrick Plichart, <patrick.plichart@taotesting.com>
  * @package taoResults
  * @subpackage models_classes
  */
-
-if (0 > version_compare(PHP_VERSION, '5')) {
-    die('This file was generated for PHP 5');
-}
-
-
 class taoResults_models_classes_StatisticsService
 
      extends taoResults_models_classes_ResultsService
@@ -46,7 +38,8 @@ class taoResults_models_classes_StatisticsService
 	* returns  a data set containing results data using and using an associative array
 	* with basic statistics related to a delivery class. 
 	* @author Patrick Plichart, <patrick.plichart@taotesting.com>
-	 * @param core_kernel_classes_Class deliveryClass 
+	 * @param core_kernel_classes_Class deliveryClass the current class selection
+	 * @return array an assocaitive array containing global statistics and per variable statistics
 	*/
 	public function extractDeliveryDataSet($deliveryClass){
 			
@@ -60,15 +53,11 @@ class taoResults_models_classes_StatisticsService
        	 $deliveryResults =  $deliveryClass->getInstances(false);
 	 if (count($deliveryResults)==0) {throw new common_Exception(__('The class you have selected contains no results to be analysed, please select a different class'));}
          $deliveryDataSet["nbExecutions"] = count($deliveryResults);
-
         $statisticsGroupedPerVariable = array();
-	
         foreach ($deliveryResults as $deliveryResult){
-		
 		$testTaker = $this->getTestTaker($deliveryResult);
 		$statisticsGrouped["distinctTestTaker"][$testTaker->getUri()] = $testTaker->getLabel() ;
 		$scoreVariables = $this->getScoreVariables($deliveryResult);
-		
                 foreach ($scoreVariables as $variable){
 			
 			$variableData = $this->getVariableData($variable);
@@ -78,24 +67,19 @@ class taoResults_models_classes_StatisticsService
 			$statisticsGroupedPerVariable[$variableIDentifier]["sum"]+= $variableData["value"];
 			$statisticsGroupedPerVariable[$variableIDentifier]["#"]+= 1;
 			$statisticsGroupedPerVariable[$variableIDentifier]["naturalid"]= $variableData["item"]->getLabel()." (".$variableData["variableIdentifier"].")";
-			
 			$statisticsGrouped["data"][]=$variableData["value"];
                         $statisticsGrouped["sum"]+= $variableData["value"];
                         $statisticsGrouped["#"]+= 1;
-			
                  }
         }
 		 //compute basic statistics
                 $statisticsGrouped["avg"] =  $statisticsGrouped["sum"]/ $statisticsGrouped["#"];
 		//number of different type of variables collected
 		$statisticsGrouped["numberVariables"] = sizeOf( $statisticsGroupedPerVariable);		
-		
 		//compute the deciles scores for the complete delivery
 		$statisticsGrouped= $this->computeQuantiles($statisticsGrouped, 10);
-
 		//computing average, std and distribution for every single variable
 		foreach ($statisticsGroupedPerVariable as $variableIdentifier => $data) {
-		
 		ksort($statisticsGroupedPerVariable[$variableIdentifier]["data"]);
 		//compute the total populationa verage score for this variable		
 		$statisticsGroupedPerVariable[$variableIdentifier]["avg"] = $statisticsGroupedPerVariable[$variableIdentifier]["sum"]/$statisticsGroupedPerVariable[$variableIdentifier]["#"];
@@ -111,19 +95,14 @@ class taoResults_models_classes_StatisticsService
 		return $deliveryDataSet;
 		}
 	/**
-	 * computeQuantiles 
+	 * computeQuantiles (deprecated)
 	 * @param array $statisticsGrouped
 	 * @param int $split
 	 * @author Patrick Plichart, <patrick.plichart@taotesting.com>
 	 * @return array
 	 */
 	protected function computeQuantiles($statisticsGrouped, $split = 10){
-		//computing average, std and distribution for the delivery 
-		 //TODO  search for some PHP stats extension
-                
-		
 		//if ($statisticsGrouped["#"]< $split) {throw new common_Exception(__('The number of observations is too low').' #'.$statisticsGrouped["#"].'/'.$split);}
-		
 		//in case the number of observations is below the quantile size we lower it.
 		//$split = min(array($split,$statisticsGrouped["#"]));
 		
@@ -148,14 +127,13 @@ class taoResults_models_classes_StatisticsService
                                 $statisticsGrouped["splitData"][$slot]["avg"] = 
                                 $statisticsGrouped["splitData"][$slot]["sum"] /  $statisticsGrouped["splitData"][$slot]["#"];
                         }
-		
 		return $statisticsGrouped;	
 		}
-	
+	/**
+	 * deprecated flatteQuantiles
+	 */
 	//flatten the structure returned by the results data set extractor into a flat array for the graphics computation
 	protected function flattenQuantiles($quantiles, $criteria = "avg"){
-		
-		
 		$flatDecileAverages = array();		
 		foreach ($quantiles as $quantile){
 		$flatDecileAverages[]= $quantile[$criteria];		
