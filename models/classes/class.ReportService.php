@@ -66,15 +66,21 @@ extends taoResults_models_classes_StatisticsService
 		$reportData['nbExecutions'] =  $this->deliveryDataSet["nbExecutions"];
 		$reportData['#'] =  $this->deliveryDataSet["statisticsPerDelivery"]["#"];
 		$reportData['numberVariables'] =  $this->deliveryDataSet["statisticsPerDelivery"]["numberVariables"];	
+		$reportData['numberOfDistinctTestTaker'] =  count($this->deliveryDataSet["statisticsPerDelivery"]["distinctTestTaker"]);
 		
-		foreach ($this->deliveryDataSet["statisticsPerVariable"] as $predicateUri => $struct){
-		$scoreVariable = new core_kernel_classes_Resource($predicateUri);
-		$scoreVariableLabel = $scoreVariable->getlabel();
+		foreach ($this->deliveryDataSet["statisticsPerVariable"] as $variableIdentifier => $struct){
+		
+		$scoreVariableLabel = $struct["naturalid"];
+		
 		//compute every single distribution for each variable
-		$urlDeliveryVariablebarChart = $this->computeBarChart($this->deliveryDataSet["statisticsPerVariable"][$predicateUri]["splitData"], "Average and Total Scores by deciles of the population (".$scoreVariableLabel.")");
+		    //$urlDeliveryVariablebarChartQuantiles = $this->computeBarChart($this->deliveryDataSet["statisticsPerVariable"][$variableIdentifier]["splitData"], "Average and Total Scores by deciles of the population (".$scoreVariableLabel.")");
+		
+		$urlDeliveryVariablebarChartScores = $this->computeBarChartScores($this->deliveryDataSet["statisticsPerVariable"][$variableIdentifier]["data"], "Observed Scores (".$scoreVariableLabel.")");
+		$urlDeliveryVariablebarChartScoresFequencies = $this->computebarChartScoresFrequencies($this->deliveryDataSet["statisticsPerVariable"][$variableIdentifier]["data"], "Observed Scores (".$scoreVariableLabel.")");
+		
 		
 		//build UX data structure		
-		$listOfVariables[]= array("label" => $scoreVariableLabel, "url" => $urlDeliveryVariablebarChart, "infos" => array("#" => $struct["#"], "sum" => $struct["sum"], "avg" => $struct["avg"]));
+		$listOfVariables[]= array("label" => $scoreVariableLabel, "urlFrequencies"=>$urlDeliveryVariablebarChartScoresFequencies, "urlScores"=> $urlDeliveryVariablebarChartScores, "urlQuantileDistrib" => $urlDeliveryVariablebarChartQuantiles, "infos" => array("#" => $struct["#"], "sum" => $struct["sum"], "avg" => $struct["avg"]));
 		
 		//build parallel arrays to maintain values for the graph computation showing all variables
 		$labels[] = $scoreVariableLabel;
@@ -89,15 +95,85 @@ extends taoResults_models_classes_StatisticsService
 		
 	}
 	/**
-	* TODO should be moved in a helper 
-	*compute a bar chart PNG picture, stores it and return its url
+	 * @author Patrick plichart
+	 * @param array $dataSet array of scores 
+	 * @param string $title
+	 * @return string the url of the generated graph
+	 */
+	private function computebarChartScores($dataSet, $title){
+	    $datay = $dataSet;
+	    $datax = array(); for ($i=0; $i < count($dataSet); $i++) {$datax[] = "#".$i;}
+	    $legendTitle = __("Observed Scores");
+	    return $this->getChart($datax, array($legendTitle => $datay), $title);
+	}
+	
+	/**
+	 * @author Patrick plichart
+	 * @param array $dataSet array of scores 
+	 * @param string $title
+	 * @return string the url of the generated graph
+	 */
+	private function computebarChartScoresFrequencies($dataSet, $title){
+	     
+	    $datax = array();
+	    $datay = array();
+	    //thanks php
+	    $frequencies = array_count_values($dataSet);
+	    foreach ($frequencies as $value => $frequency){
+		$datax[] = $value;
+		$datay[] = $frequency;
+	    }
+	    $legendTitle = __("Observed Scores Distribution");
+	    return $this->getChart($datax, array($legendTitle => $datay), $title);
+	}
+	/**
+	 * @author Patrick plichart
+	 * @param array $datax	a flat sery of x labels
+	 * @param array $setOfySeries	an array of y series to be drawn (needs to be consistent with xsery), keys indicates the legend title
+	 * @param string $title the title of the graph
+	 * @return string the url of the generated graph
+	 */
+	
+	private function getChart($datax, $setOfySeries, $title){
+	    $graph = new Graph(550,200,'auto');
+	    $graph->SetScale("textlin");
+	    $graph->SetBox(false);
+	    $graph->xaxis->SetTickLabels($datax);
+	    $plots = array();
+	    foreach ($setOfySeries as $legend => $ySery){
+	    $b1plot = new BarPlot($ySery);
+	    $b1plot->SetColor("white");
+	    $b1plot->SetFillColor("#cc1111");
+	    $b1plot->SetLegend($legend);
+	    $plots[] = $b1plot;
+	    }
+	    $gbplot = new GroupBarPlot($plots);
+	    $graph->Add($gbplot);
+	    
+           $graph->title->Set($title);
+		$url = $this->getUniqueMediaFileName("png");
+		// Display the graph
+		$graph->Stroke(ROOT_PATH.$url);
+		return ROOT_URL.$url;
+	}
+	
+	/**
+	*TODO move to an helper, attempt to get a unique file name
+	*/
+	private function getUniqueMediaFileName($fileExtension="")
+		{	//rofl
+			$id = rand(0,65535);
+			$fileName = base64_encode("sid_".session_id()."c_".$this->contextClass->getUri()).$id.'.'.$fileExtension;
+			return "taoResults/views/genpics/".$fileName;
+		}
+	/**
+	* deprecated
 	*/
 	private function computebarChart($dataSet, $title){
 		
 		$data1y = $this->flattenQuantiles($dataSet, "avg");
 		//print_r($data1y);
 		$data2y = $this->flattenQuantiles($dataSet, "sum");
-		
 		// Create the graph. These two calls are always required
 		$graph = new Graph(550,200,'auto');
 		$graph->SetScale("textlin");
@@ -125,13 +201,11 @@ extends taoResults_models_classes_StatisticsService
 		return ROOT_URL.$url;
 		}
 		
-	/**
-	*TODO move to an helper, attempt to get a unique file name
-	*/
-	private function getUniqueMediaFileName($fileExtension="")
-		{	$fileName = base64_encode("sid_".session_id()."c_".$this->contextClass->getUri()).'.'.$fileExtension;
-			return "taoResults/views/genpics/".$fileName;
-		}
+	
+	/*
+	 * deprecated
+	 */
+		
 	private function computeRadarPlot($sums,$avgs, $labels, $title)
 		{
 		// Some data

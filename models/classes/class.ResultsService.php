@@ -138,7 +138,7 @@ class taoResults_models_classes_ResultsService
     public function getVariableData( core_kernel_classes_Resource $variable)
     {
         $returnValue = array();
-	$returnValue["value"] = $variable->getUniquePropertyValue(new core_kernel_classes_Property(RDF_VALUE));
+	$returnValue["value"] = $variable->getUniquePropertyValue(new core_kernel_classes_Property(RDF_VALUE))->__toString();
 	$returnValue["variableIdentifier"] = $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_IDENTIFIER));
     //identify the item related to the score Variable
 	$variableOrigin = $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_ORIGIN));

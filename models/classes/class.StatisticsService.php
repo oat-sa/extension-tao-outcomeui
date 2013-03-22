@@ -46,6 +46,7 @@ class taoResults_models_classes_StatisticsService
 	* returns  a data set containing results data using and using an associative array
 	* with basic statistics related to a delivery class. 
 	* @author Patrick Plichart, <patrick.plichart@taotesting.com>
+	 * @param core_kernel_classes_Class deliveryClass 
 	*/
 	public function extractDeliveryDataSet($deliveryClass){
 			
@@ -64,85 +65,91 @@ class taoResults_models_classes_StatisticsService
 	
         foreach ($deliveryResults as $deliveryResult){
 		
+		$testTaker = $this->getTestTaker($deliveryResult);
+		$statisticsGrouped["distinctTestTaker"][$testTaker->getUri()] = $testTaker->getLabel() ;
 		$scoreVariables = $this->getScoreVariables($deliveryResult);
 		
                 foreach ($scoreVariables as $variable){
 			
 			$variableData = $this->getVariableData($variable);
-                        
-			
 			$variableIDentifier = $variableData["item"]->getUri().$variableData["variableIdentifier"];
-			
 			// we should parametrize if we consider multiple executions of the same test taker or not, here all executions are considered
                         $statisticsGroupedPerVariable[$variableIDentifier]["data"][]=$variableData["value"];
 			$statisticsGroupedPerVariable[$variableIDentifier]["sum"]+= $variableData["value"];
 			$statisticsGroupedPerVariable[$variableIDentifier]["#"]+= 1;
+			$statisticsGroupedPerVariable[$variableIDentifier]["naturalid"]= $variableData["item"]->getLabel()." (".$variableData["variableIdentifier"].")";
 			
-			$statisticsGroupedPerDelivery["data"][]=$variableData["value"];
-                        $statisticsGroupedPerDelivery["sum"]+= $variableData["value"];
-                        $statisticsGroupedPerDelivery["#"]+= 1;
+			$statisticsGrouped["data"][]=$variableData["value"];
+                        $statisticsGrouped["sum"]+= $variableData["value"];
+                        $statisticsGrouped["#"]+= 1;
 			
                  }
         }
 		 //compute basic statistics
-                $statisticsGroupedPerDelivery["avg"] =  $statisticsGroupedPerDelivery["sum"]/ $statisticsGroupedPerDelivery["#"];
+                $statisticsGrouped["avg"] =  $statisticsGrouped["sum"]/ $statisticsGrouped["#"];
 		//number of different type of variables collected
-		$statisticsGroupedPerDelivery["numberVariables"] = sizeOf( $statisticsGroupedPerVariable);		
+		$statisticsGrouped["numberVariables"] = sizeOf( $statisticsGroupedPerVariable);		
 		
 		//compute the deciles scores for the complete delivery
-		$statisticsGroupedPerDelivery= $this->computeQuantiles($statisticsGroupedPerDelivery, 10);
+		$statisticsGrouped= $this->computeQuantiles($statisticsGrouped, 10);
 
 		//computing average, std and distribution for every single variable
 		foreach ($statisticsGroupedPerVariable as $variableIdentifier => $data) {
+		
+		ksort($statisticsGroupedPerVariable[$variableIdentifier]["data"]);
 		//compute the total populationa verage score for this variable		
 		$statisticsGroupedPerVariable[$variableIdentifier]["avg"] = $statisticsGroupedPerVariable[$variableIdentifier]["sum"]/$statisticsGroupedPerVariable[$variableIdentifier]["#"];
 		$statisticsGroupedPerVariable[$variableIdentifier] = $this->computeQuantiles($statisticsGroupedPerVariable[$variableIdentifier], 10);
 		}
-		$deliveryDataSet["statisticsPerDelivery"] = $statisticsGroupedPerDelivery;
+		
+		ksort($statisticsGrouped["data"]);
+		natsort($statisticsGrouped["distinctTestTaker"]);
+		
+		$deliveryDataSet["statisticsPerDelivery"] = $statisticsGrouped;
 		$deliveryDataSet["statisticsPerVariable"] = $statisticsGroupedPerVariable;
-
+		
 		return $deliveryDataSet;
 		}
 	/**
 	 * computeQuantiles 
-	 * @param array $statisticsGroupedPerDelivery
+	 * @param array $statisticsGrouped
 	 * @param int $split
 	 * @author Patrick Plichart, <patrick.plichart@taotesting.com>
 	 * @return array
 	 */
-	protected function computeQuantiles($statisticsGroupedPerDelivery, $split = 10){
+	protected function computeQuantiles($statisticsGrouped, $split = 10){
 		//computing average, std and distribution for the delivery 
 		 //TODO  search for some PHP stats extension
                 
 		
-		if ($statisticsGroupedPerDelivery["#"]< $split) {throw new common_Exception(__('The number of observations is too low').' #'.$statisticsGroupedPerDelivery["#"].'/'.$split);}
+		//if ($statisticsGrouped["#"]< $split) {throw new common_Exception(__('The number of observations is too low').' #'.$statisticsGrouped["#"].'/'.$split);}
 		
 		//in case the number of observations is below the quantile size we lower it.
-		//$split = min(array($split,$statisticsGroupedPerDelivery["#"]));
+		//$split = min(array($split,$statisticsGrouped["#"]));
 		
-		$slotSize = $statisticsGroupedPerDelivery["#"] / $split; //number of observations per slot
-		sort($statisticsGroupedPerDelivery["data"]);		                      
+		$slotSize = $statisticsGrouped["#"] / $split; //number of observations per slot
+		sort($statisticsGrouped["data"]);		                      
 			//sum all values for the slotsize
                         $slot = 0 ; 
 			$i=1;
-                        foreach ($statisticsGroupedPerDelivery["data"] as $key => $value){
+                        foreach ($statisticsGrouped["data"] as $key => $value){
 				
                                 if (($i) > $slotSize && (!($slot+1==$split))) {$slot++;$i=1;}
-                                if (!(isset($statisticsGroupedPerDelivery["splitData"][$slot]))) {
-                                $statisticsGroupedPerDelivery["splitData"][$slot] = array("sum" => 0, "avg" =>0);
+                                if (!(isset($statisticsGrouped["splitData"][$slot]))) {
+                                $statisticsGrouped["splitData"][$slot] = array("sum" => 0, "avg" =>0);
                                 }
-                                $statisticsGroupedPerDelivery["splitData"][$slot]["sum"] += $value;
-				 $statisticsGroupedPerDelivery["splitData"][$slot]["#"] ++;
+                                $statisticsGrouped["splitData"][$slot]["sum"] += $value;
+				 $statisticsGrouped["splitData"][$slot]["#"] ++;
 				$i++;
                         }
 			
                         //compute the average for each slot
-                        foreach ( $statisticsGroupedPerDelivery["splitData"] as $slot => $struct){
-                                $statisticsGroupedPerDelivery["splitData"][$slot]["avg"] = 
-                                $statisticsGroupedPerDelivery["splitData"][$slot]["sum"] /  $statisticsGroupedPerDelivery["splitData"][$slot]["#"];
+                        foreach ( $statisticsGrouped["splitData"] as $slot => $struct){
+                                $statisticsGrouped["splitData"][$slot]["avg"] = 
+                                $statisticsGrouped["splitData"][$slot]["sum"] /  $statisticsGrouped["splitData"][$slot]["#"];
                         }
 		
-		return $statisticsGroupedPerDelivery;	
+		return $statisticsGrouped;	
 		}
 	
 	//flatten the structure returned by the results data set extractor into a flat array for the graphics computation
