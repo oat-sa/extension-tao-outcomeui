@@ -79,7 +79,7 @@ extends taoResults_models_classes_StatisticsService
 		$urlDeliveryVariablebarChartScoresFequencies = $this->computebarChartScoresFrequencies($variableIdentifier, "Grouped Scores Frequencies (".$scoreVariableLabel.")");
 		
 		//build UX data structure		
-		$listOfVariables[]= array("label" => $scoreVariableLabel, "urlFrequencies"=>$urlDeliveryVariablebarChartScoresFequencies, "urlScores"=> $urlDeliveryVariablebarChartScores, "urlQuantileDistrib" => $urlDeliveryVariablebarChartQuantiles, "infos" => array("#" => $struct["#"], "sum" => $struct["sum"], "avg" => $struct["avg"]));
+		$listOfVariables[]= array("label" => $scoreVariableLabel, "urlFrequencies"=>$urlDeliveryVariablebarChartScoresFequencies, "urlScores"=> $urlDeliveryVariablebarChartScores, "urlQuantileDistrib" => $urlDeliveryVariablebarChartQuantiles, "infos" => $struct);
 		
 		//build parallel arrays to maintain values for the graph computation showing all variables
 		$labels[] = $scoreVariableLabel;
@@ -211,8 +211,8 @@ extends taoResults_models_classes_StatisticsService
 	    $graph->drawFilledRoundedRectangle(7,7,593,493,5,240,240,240);  
 	    $graph->drawRoundedRectangle(5,5,593,493,5,230,230,230);  
 	    $graph->setGraphArea(120,70,520,420);  
-	    $graph->drawFilledRoundedRectangle(30,30,570,570,5,255,255,255);  
-	    $graph->drawRoundedRectangle(30,30,570,570,5,220,220,220);  
+	    $graph->drawFilledRoundedRectangle(30,30,570,470,5,255,255,255);  
+	    $graph->drawRoundedRectangle(30,30,570,470,5,220,220,220);  
 	    // Draw the radar graph  
 	    $graph->drawRadarAxis($dataSet->GetData(),$dataSet->GetDataDescription(),TRUE,20,120,120,120,125,125,125);  
 	    $graph->drawFilledRadar($dataSet->GetData(),$dataSet->GetDataDescription(),50,20);  

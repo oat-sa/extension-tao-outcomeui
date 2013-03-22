@@ -5,7 +5,9 @@
 		<?=get_data('reportTitle')?>
 	</div>
 	<div class="ui-widget-content ui-corner-right">
-		<div>
+		    <table><!--TODO CSS the table-->
+			<tr>
+			    <td >
 			<ul>			
 				
 				<li><?=__('# Collected Results')?>: <strong><?=get_data('nbExecutions')?></strong><br /><em>*The number of Tests delivery being executed and collected so far</em>
@@ -13,19 +15,34 @@
 				<li><?=__('# Collected Score Variables')?>: <strong><?=get_data('#')?></strong><br /><em>*The number of Score variables collected so far</em>
 				<li><?=__('# Distinct Test Takers')?>: : <strong><?=get_data('numberOfDistinctTestTaker')?></strong><br />
 				<li><?=__('Total Average')?>: <strong><?=get_data('average')?></strong><br /><em>*The score average considering all collected Tests Delivery executions score variables</em> 
-				
-				    <!--<li><li><?=__('Total Standard Deviation')?>: <strong><?=get_data('std')?></strong><br /><em></em>-->
+				<!--<li><li><?=__('Total Standard Deviation')?>: <strong><?=get_data('std')?></strong><br /><em></em>-->
 				<!--<li>Remaining Tokens: <strong><?=get_data('tokensLeft')?></strong><br /><em>*The number of remaining Tests delivery executions (according to the number of attempts granted)</em>-->
 				
-				
 			</ul>
-		</div>
-		<div style="border:1px;">
-			<!-- not very relevant yet without measurement boudaries<img src="<?=get_data('deliveryBarChart');?>"/>!-->
-		</div>
-		<div style="border:1px;">
-			<!-- requries upper version of jpgraph<img src="<?=get_data('compareVariablesPlot');?>"/>-->
-		</div>
+				<table>
+					<tr><td><?=__('VariableName')?></td><td><?=__('Average')?></td><td><?=__('St.Dev.')?></td><td>#</td></tr></strong>
+				    <?foreach (get_data('listOfVariables') as $variable) :?>
+				
+				    <tr><td><?=$variable["label"]?></td><td><?=round($variable["infos"]["avg"],2)?></td><td><?=$variable["infos"]["std"]?></td><td><?=$variable["infos"]["#"]?></td></tr>
+				    <? endforeach ?>
+				</table>
+			    </td>
+			    <td >	
+			        <img src="<? echo get_data('variablesAvgComparison');?>"/>
+			    </td>
+			</tr>
+			<tr>
+				<td>
+				</td>
+				<td><img src="<? echo get_data('variablesFreqComparison');?>"/></td>
+			</tr>
+		    </table>
+		<!-- not very relevant yet without measurement boudaries<div style="border:1px;">
+			<img src="<?=get_data('deliveryBarChart');?>"/>
+		</div>!-->
+		<!-- requries upper version of jpgraph<div style="border:1px;">
+			<img src="<?=get_data('compareVariablesPlot');?>"/>
+		</div>-->
 	</div>
 	<div id="form-title" class="ui-widget-header ui-corner-top ui-state-default">
 		<?=__('Observed performances per distinc score variable types ')?>
