@@ -76,11 +76,11 @@ class taoResults_actions_SimpleReport extends tao_actions_TaoModule {
 	//extract statistics using the statistics service and feed the report
 	$startTime = microtime(true);
 	$this->reportService->setDataSet($this->service->extractDeliveryDataSet($selectedDeliveryClass));
-	$endTime = microtime(true);
+	$dataTime = microtime(true);
 	$this->setData("dataExtractionTime",round($endTime-$startTime,3));
 	//add the required graphics computation and textual information for this particular report using reportService
         $reportData = $this->reportService->buildSimpleReport();
-	$this->setData("reportBuildTime",round(microtime(true)-$endTime,3));
+	$this->setData("reportBuildTime",round(microtime(true)-$dataTime,3));
         foreach ($reportData as $dataIdentifier => $value) {
             $this->setData($dataIdentifier, $value);
         }
