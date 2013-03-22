@@ -55,7 +55,7 @@ class taoResults_models_classes_StatisticsService
 	"nbMaxExpectedExecutions"=>0, //Number of Test asturias albenizTasturias albenizakers
 	"nbMaxExecutions"=>0, //Number of Executions tokens granted
 	"statisticsPerVariable"=>array(), //an array containing variables as keys, collected and computed data 					["statisticsPerTest"]=>array()
-	"statisticsPerDelivery"=>array()
+	"statistics"=>array()
 	);
        	 $deliveryResults =  $deliveryClass->getInstances(false);
 	 if (count($deliveryResults)==0) {throw new common_Exception(__('The class you have selected contains no results to be analysed, please select a different class'));}
@@ -105,7 +105,7 @@ class taoResults_models_classes_StatisticsService
 		ksort($statisticsGrouped["data"]);
 		natsort($statisticsGrouped["distinctTestTaker"]);
 		
-		$deliveryDataSet["statisticsPerDelivery"] = $statisticsGrouped;
+		$deliveryDataSet["statistics"] = $statisticsGrouped;
 		$deliveryDataSet["statisticsPerVariable"] = $statisticsGroupedPerVariable;
 		
 		return $deliveryDataSet;
@@ -160,7 +160,6 @@ class taoResults_models_classes_StatisticsService
 		foreach ($quantiles as $quantile){
 		$flatDecileAverages[]= $quantile[$criteria];		
 		}
-		
 		return $flatDecileAverages;
 	}	
 
