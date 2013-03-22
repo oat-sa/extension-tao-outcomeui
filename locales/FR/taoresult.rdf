@@ -12,7 +12,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#Result
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
-    <rdfs:label xml:lang="FR"><![CDATA[Result]]></rdfs:label>
+    <rdfs:label xml:lang="FR"><![CDATA[Résultat]]></rdfs:label>
     <!--
     @sourceLanguage EN
     @targetLanguage FR
@@ -20,7 +20,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#Result
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
-    <rdfs:comment xml:lang="FR"><![CDATA[Result]]></rdfs:comment>
+    <rdfs:comment xml:lang="FR"><![CDATA[La classe des résultats.]]></rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject">
     <!--
@@ -30,7 +30,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
-    <rdfs:label xml:lang="FR"><![CDATA[Test taker of result]]></rdfs:label>
+    <rdfs:label xml:lang="FR"><![CDATA[Participant du résultat]]></rdfs:label>
     <!--
     @sourceLanguage EN
     @targetLanguage FR
@@ -38,7 +38,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
-    <rdfs:comment xml:lang="FR"><![CDATA[Test taker of result]]></rdfs:comment>
+    <rdfs:comment xml:lang="FR"><![CDATA[La propriété contenant le participant du résultat.]]></rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult">
     <!--
@@ -48,7 +48,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
-    <rdfs:label xml:lang="FR"><![CDATA[Result]]></rdfs:label>
+    <rdfs:label xml:lang="FR"><![CDATA[Résultat]]></rdfs:label>
     <!--
     @sourceLanguage EN
     @targetLanguage FR
@@ -56,7 +56,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
-    <rdfs:comment xml:lang="FR"><![CDATA[Result]]></rdfs:comment>
+    <rdfs:comment xml:lang="FR"><![CDATA[La classé des résultats à la passation.]]></rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery">
     <!--
@@ -66,7 +66,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
-    <rdfs:label xml:lang="FR"><![CDATA[Delivery of result]]></rdfs:label>
+    <rdfs:label xml:lang="FR"><![CDATA[Passation du résultat]]></rdfs:label>
     <!--
     @sourceLanguage EN
     @targetLanguage FR
@@ -74,7 +74,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
-    <rdfs:comment xml:lang="FR"><![CDATA[Delivery of result]]></rdfs:comment>
+    <rdfs:comment xml:lang="FR"><![CDATA[La propriété contenant le résultat de la passation.]]></rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfProcess">
     <!--
@@ -84,7 +84,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfProcess
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
-    <rdfs:label xml:lang="FR"><![CDATA[ClassProcessInstance of result]]></rdfs:label>
+    <rdfs:label xml:lang="FR"><![CDATA[Résultat]]></rdfs:label>
     <!--
     @sourceLanguage EN
     @targetLanguage FR
@@ -92,7 +92,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfProcess
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
-    <rdfs:comment xml:lang="FR"><![CDATA[ClassProcessInstance of result]]></rdfs:comment>
+    <rdfs:comment xml:lang="FR"><![CDATA[La propriété contenant le résultat d'un processus.]]></rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#Variable">
     <!--
@@ -102,7 +102,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#Variable
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
-    <rdfs:label xml:lang="FR"><![CDATA[Result Variable]]></rdfs:label>
+    <rdfs:label xml:lang="FR"><![CDATA[Variable de résultat]]></rdfs:label>
     <!--
     @sourceLanguage EN
     @targetLanguage FR
@@ -110,7 +110,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#Variable
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
-    <rdfs:comment xml:lang="FR"><![CDATA[Variable of a DeliveryResult]]></rdfs:comment>
+    <rdfs:comment xml:lang="FR"><![CDATA[Variable d'un résultat de passation.]]></rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable">
     <!--
@@ -120,7 +120,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
-    <rdfs:label xml:lang="FR"><![CDATA[Response Variable]]></rdfs:label>
+    <rdfs:label xml:lang="FR"><![CDATA[Variable de réponse]]></rdfs:label>
     <!--
     @sourceLanguage EN
     @targetLanguage FR
@@ -128,7 +128,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
-    <rdfs:comment xml:lang="FR"><![CDATA[Response to an interaction]]></rdfs:comment>
+    <rdfs:comment xml:lang="FR"><![CDATA[Réponse à une intéraction dans une passation.]]></rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#GradeVariable">
     <!--
@@ -138,7 +138,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#GradeVariable
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
-    <rdfs:label xml:lang="FR"><![CDATA[Grade Variable]]></rdfs:label>
+    <rdfs:label xml:lang="FR"><![CDATA[Variable de grade]]></rdfs:label>
     <!--
     @sourceLanguage EN
     @targetLanguage FR
@@ -146,7 +146,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#GradeVariable
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
-    <rdfs:comment xml:lang="FR"><![CDATA[Grade of an interaction]]></rdfs:comment>
+    <rdfs:comment xml:lang="FR"><![CDATA[Grade d'une intéraction.]]></rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#memberOfDeliveryResult">
     <!--
@@ -156,7 +156,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#memberOfDeliveryResult
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
-    <rdfs:label xml:lang="FR"><![CDATA[Author of result]]></rdfs:label>
+    <rdfs:label xml:lang="FR"><![CDATA[Auteur du résultat]]></rdfs:label>
     <!--
     @sourceLanguage EN
     @targetLanguage FR
@@ -164,7 +164,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#memberOfDeliveryResult
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
-    <rdfs:comment xml:lang="FR"><![CDATA[Author of result]]></rdfs:comment>
+    <rdfs:comment xml:lang="FR"><![CDATA[Auteur du résultat]]></rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#variableIdentifier">
     <!--
@@ -174,7 +174,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#variableIdentifier
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
-    <rdfs:label xml:lang="FR"><![CDATA[Variable Identifier]]></rdfs:label>
+    <rdfs:label xml:lang="FR"><![CDATA[Identifiant de variable]]></rdfs:label>
     <!--
     @sourceLanguage EN
     @targetLanguage FR
@@ -182,7 +182,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#variableIdentifier
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
-    <rdfs:comment xml:lang="FR"><![CDATA[Variable Identifier]]></rdfs:comment>
+    <rdfs:comment xml:lang="FR"><![CDATA[Identifiant de variable]]></rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#variableComment">
     <!--
@@ -192,7 +192,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#variableComment
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
-    <rdfs:label xml:lang="FR"><![CDATA[Variable Comment]]></rdfs:label>
+    <rdfs:label xml:lang="FR"><![CDATA[Commentaire de variable]]></rdfs:label>
     <!--
     @sourceLanguage EN
     @targetLanguage FR
@@ -200,7 +200,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#variableComment
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
-    <rdfs:comment xml:lang="FR"><![CDATA[Variable Comment]]></rdfs:comment>
+    <rdfs:comment xml:lang="FR"><![CDATA[Commentaire de variable]]></rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#authoredBy">
     <!--
@@ -210,7 +210,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#authoredBy
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
-    <rdfs:label xml:lang="FR"><![CDATA[Variable Author]]></rdfs:label>
+    <rdfs:label xml:lang="FR"><![CDATA[Auteur de la variable]]></rdfs:label>
     <!--
     @sourceLanguage EN
     @targetLanguage FR
@@ -218,7 +218,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#authoredBy
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
-    <rdfs:comment xml:lang="FR"><![CDATA[Variable Author]]></rdfs:comment>
+    <rdfs:comment xml:lang="FR"><![CDATA[Auteur de la variable]]></rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#variableOrigin">
     <!--
@@ -228,7 +228,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#variableOrigin
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
-    <rdfs:label xml:lang="FR"><![CDATA[Variable Activity Origin]]></rdfs:label>
+    <rdfs:label xml:lang="FR"><![CDATA[Origine de la variable d'activité]]></rdfs:label>
     <!--
     @sourceLanguage EN
     @targetLanguage FR
@@ -236,7 +236,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#variableOrigin
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
-    <rdfs:comment xml:lang="FR"><![CDATA[Variable Activity Origin]]></rdfs:comment>
+    <rdfs:comment xml:lang="FR"><![CDATA[Origine de la variable d'activité]]></rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#derivatedFrom">
     <!--
@@ -246,7 +246,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#derivatedFrom
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
-    <rdfs:label xml:lang="FR"><![CDATA[Derivated From]]></rdfs:label>
+    <rdfs:label xml:lang="FR"><![CDATA[Dérivé de]]></rdfs:label>
     <!--
     @sourceLanguage EN
     @targetLanguage FR
@@ -254,7 +254,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#derivatedFrom
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
-    <rdfs:comment xml:lang="FR"><![CDATA[Variable was derivated from this variable]]></rdfs:comment>
+    <rdfs:comment xml:lang="FR"><![CDATA[La variable a été dérivée de cette variable.]]></rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#gradeFinal">
     <!--
@@ -272,7 +272,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#gradeFinal
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
-    <rdfs:comment xml:lang="FR"><![CDATA[Is the grade final?]]></rdfs:comment>
+    <rdfs:comment xml:lang="FR"><![CDATA[Est-ce que le grade est final ?]]></rdfs:comment>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole">
     <!--
@@ -282,7 +282,7 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole
     @predicate http://www.w3.org/2000/01/rdf-schema#label
     -->
-    <rdfs:label xml:lang="FR"><![CDATA[Results Manager]]></rdfs:label>
+    <rdfs:label xml:lang="FR"><![CDATA[Manager des résultats]]></rdfs:label>
     <!--
     @sourceLanguage EN
     @targetLanguage FR
@@ -290,6 +290,6 @@
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole
     @predicate http://www.w3.org/2000/01/rdf-schema#comment
     -->
-    <rdfs:comment xml:lang="FR"><![CDATA[The Results Manager Role]]></rdfs:comment>
+    <rdfs:comment xml:lang="FR"><![CDATA[Role du manager des résultats]]></rdfs:comment>
   </rdf:Description>
 </rdf:RDF>
