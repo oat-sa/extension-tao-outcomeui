@@ -63,14 +63,16 @@ class taoResults_models_classes_StatisticsService
 		$scoreVariables = $this->getScoreVariables($deliveryResult);
                 foreach ($scoreVariables as $variable){
 			$variableData = $this->getVariableData($variable);
-			$variableIDentifier = $variableData["item"]->getUri().$variableData["variableIdentifier"];
+			$activityIdentifier = "";$activityNaturalId = "";
+			    if (isset($variableData["item"])) {$activityIdentifier = $variableData["item"]->getUri(); $activityNaturalId = $variableData["item"]->getLabel();} 
+			$variableIDentifier = $activityIdentifier.$variableData["variableIdentifier"];
 			if (!(isset($statisticsGroupedPerVariable[$variableIDentifier]))) {$statisticsGroupedPerVariable[$variableIDentifier] = array("sum" => 0, "#" => 0);}
 			
 			// we should parametrize if we consider multiple executions of the same test taker or not, here all executions are considered
                         $statisticsGroupedPerVariable[$variableIDentifier]["data"][]=$variableData["value"];
 			$statisticsGroupedPerVariable[$variableIDentifier]["sum"]+= $variableData["value"];
 			$statisticsGroupedPerVariable[$variableIDentifier]["#"]+= 1;
-			$statisticsGroupedPerVariable[$variableIDentifier]["naturalid"]= $variableData["item"]->getLabel()." (".$variableData["variableIdentifier"].")";
+			$statisticsGroupedPerVariable[$variableIDentifier]["naturalid"]= $activityNaturalId." (".$variableData["variableIdentifier"].")";
 			$statisticsGrouped["data"][]=$variableData["value"];
                         $statisticsGrouped["sum"]+= $variableData["value"];
                         $statisticsGrouped["#"]+= 1;

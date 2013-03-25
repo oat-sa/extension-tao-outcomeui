@@ -39,9 +39,6 @@ error_reporting(E_ALL);
  * @subpackage models_classes
  */
 
-if (0 > version_compare(PHP_VERSION, '5')) {
-    die('This file was generated for PHP 5');
-}
 
 /**
  * Service methods to manage the Results business models using the RDF API.

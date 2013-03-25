@@ -35,10 +35,19 @@ class ResultsTestCase extends UnitTestCase {
 	 * 
 	 * @var taoResults_models_classes_ResultsService
 	 */
-	protected $resultsService = null;
+	private $resultsService = null;
+	
+	//a stored grade
+	private $grade = null;
 	
 	//a stored response
-	protected $grade = null;
+	private $response = null;
+	//core_kernel_classes_Class where the delviery result is being ceated
+	protected $subClass;
+	private $delivery;
+	private $activityExecution;
+	private $activityDefinition;
+	private $interactiveService;
 	/**
 	 * tests initialization
 	 */
@@ -47,13 +56,40 @@ class ResultsTestCase extends UnitTestCase {
 		
 		$resultsService = taoResults_models_classes_ResultsService::singleton();
 		$this->resultsService = $resultsService;
+		//create an activity execution
+		$activityExecutionClass = new core_kernel_classes_Class(CLASS_ACTIVITY_EXECUTION);
 		
-		$activityExecution = new core_kernel_classes_Resource("#MyActivityExecution");
+		//create an activity definition
+		$activityDefinitionClass = new core_kernel_classes_Class(CLASS_ACTIVITIES);
+		
+		
+		$this->activityExecution = $activityExecutionClass->createInstance("MyActivityExecution");
+		
+		//links the activity execution to the activity definition
+		$this->activityDefinition = $activityDefinitionClass->createInstance("MyActivityDefinition");
+		$this->activityExecution->setPropertyValue(new core_kernel_classes_Property(PROPERTY_ACTIVITY_EXECUTION_ACTIVITY), $this->activityDefinition->getUri());
+
+		//links the call of service to the activity execution 
+		$interactiveServiceClass = new core_kernel_classes_Class(CLASS_CALLOFSERVICES);
+		$this->interactiveService = $interactiveServiceClass->createInstance("MyInteractiveServiceCall");
+		$this->activityDefinition->setPropertyValue(new core_kernel_classes_Property(PROPERTY_ACTIVITIES_INTERACTIVESERVICES), $this->interactiveService->getUri());
+		
+		
+		$this->interactiveService->setPropertyValue(new core_kernel_classes_Property(PROPERTY_CALLOFSERVICES_SERVICEDEFINITION), "#interactiveServiceDefinition");
+		
+		
 		$deliveryResult = new core_kernel_classes_Resource("#MyDeliveryResult");
 		$variableIDentifier = "GRADE";
 		$value = 0.4;
-		$this->grade = $this->resultsService->storeGrade($deliveryResult,$activityExecution, $variableIDentifier, $value);
-
+		//create a small delivery
+		$this->subClass = $this->resultsService->createSubClass(new core_kernel_classes_Class(TAO_DELIVERY_RESULT), "UnitTestingGenClass");
+		$this->delivery = $this->subClass->createInstance("UnitTestingGenDelivery");
+		$this->delivery->setPropertyValue(new core_kernel_classes_Property(PROPERTY_RESULT_OF_DELIVERY), "#unitTestResultOfDelivery");
+		$this->delivery->setPropertyValue(new core_kernel_classes_Property(PROPERTY_RESULT_OF_SUBJECT), "#unitTestResultOfSubject");
+		$this->delivery->setPropertyValue(new core_kernel_classes_Property(PROPERTY_RESULT_OF_PROCESS), "#unitTestResultOfProcess");
+		//stores a grade in this delivery
+		$this->grade = $this->resultsService->storeGrade($this->delivery,$this->activityExecution, $variableIDentifier, $value);
+		$this->response = $this->resultsService->storeResponse($this->delivery,$this->activityExecution, $variableIDentifier, $value);
 	}
 	
 	/**
@@ -62,90 +98,103 @@ class ResultsTestCase extends UnitTestCase {
 	 * @see taoResults_models_classes_ResultsService::__construct
 	 */
 	public function testService(){
-		
-		
 		$this->assertIsA($this->resultsService, 'tao_models_classes_Service');
 		$this->assertIsA($this->resultsService, 'taoResults_models_classes_ResultsService');
-		
-		
 	}
 		
-	public function testStoreVariable(){
-	     $this->assertIsA($this->grade, 'core_kernel_classes_Resource');
+	public function testStoreGrade(){
+	    $this->assertIsA($this->grade, 'core_kernel_classes_Resource');
 	     //$this->fail("Not implemented yet");
-	    
 	}
 	
+	public function testStoreResponse(){
+	    $this->assertIsA($this->response, 'core_kernel_classes_Resource');
+	     //$this->fail("Not implemented yet");
+	}
 	public function testGetScoreVariables(){
-	    
-	    
-	    $deliveryResult = new core_kernel_classes_Resource("#MyDeliveryResult");
-	    
-	    
+	    $deliveryResult = $this->delivery;
 	    $scoreVariables = $this->resultsService->getScoreVariables($deliveryResult);
-	    
 	    //tricky if the unit test fails, it probably means that there is some ghost data not correctly removed from previous executions 
 	    $this->assertEqual(count($scoreVariables),1);
 	     $variable = array_pop($scoreVariables);
-	    
 	     $this->assertIsA($variable, 'core_kernel_classes_Resource');
-	    
-	   
-	    
 	    $value = $variable->getUniquePropertyValue(new core_kernel_classes_Property(RDF_VALUE));
 	    $variableIdentifier = $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_IDENTIFIER));
     	    $variableOrigin = $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_ORIGIN));
-	    
 	    $this->assertEqual($value,"0.4");
 	    $this->assertEqual($variableIdentifier,"GRADE");
-	    $this->assertEqual($variableOrigin->getUri(),"#MyActivityExecution");
+	     $this->assertIsA($variableOrigin, 'core_kernel_classes_Resource');
+	    $this->assertEqual($variableOrigin->getLabel(),"MyActivityExecution");
 	}
 	
 	public function testGetVariables(){
-	    
-	    
-	    $deliveryResult = new core_kernel_classes_Resource("#MyDeliveryResult");
-	    
-	    
+	    $deliveryResult = $this->delivery;
 	    $scoreVariables = $this->resultsService->getVariables($deliveryResult);
 	    
 	    //tricky if the unit test fails, it probably means that there is some ghost data not correctly removed from previous executions 
-	    $this->assertEqual(count($scoreVariables),1);
+	    $this->assertEqual(count($scoreVariables),2);
 	     $variable = array_pop($scoreVariables);
 	    
 	     $this->assertIsA($variable, 'core_kernel_classes_Resource');
-	    
-	   
-	    
 	    $value = $variable->getUniquePropertyValue(new core_kernel_classes_Property(RDF_VALUE));
 	    $variableIdentifier = $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_IDENTIFIER));
     	    $variableOrigin = $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_ORIGIN));
 	    
 	    $this->assertEqual($value,"0.4");
 	    $this->assertEqual($variableIdentifier,"GRADE");
-	    $this->assertEqual($variableOrigin->getUri(),"#MyActivityExecution");
+	    $this->assertIsA($variableOrigin, 'core_kernel_classes_Resource');
+	    $this->assertEqual($variableOrigin->getLabel(),"MyActivityExecution");
+	}
+	
+	public function getScoreVariables(){
+	    $deliveryResult = $this->delivery;
+	    $scoreVariables = $this->resultsService->getScoreVariables($deliveryResult);
+	    //tricky if the unit test fails, it probably means that there is some ghost data not correctly removed from previous executions 
+	    $this->assertEqual(count($scoreVariables),1);
 	}
 	
 	public function testGetTestTaker(){
-		 $deliveryResult = new core_kernel_classes_Resource("#MyDeliveryResult");
-		 $deliveryResult->setPropertyValue(new core_kernel_classes_Property(PROPERTY_RESULT_OF_SUBJECT),"#Patrick");
+		 $deliveryResult = $this->delivery;
+		
 		$testTaker = $this->resultsService->getTestTaker($deliveryResult);
 		 $this->assertIsA($testTaker, 'core_kernel_classes_Resource');
-		 $this->assertEqual($testTaker->getUri(),"#Patrick");
+		 $this->assertEqual($testTaker->getUri(),"#unitTestResultOfSubject");
+	}
+	
+	public function testDeliveryManagement(){
+	     //checks that the delviery created for the unit test has been successfully created
+	     $this->assertIsA($this->subClass, 'core_kernel_classes_Class');
+	     $this->assertEqual($this->subClass->getLabel(),"UnitTestingGenClass");
+	     
+	     $this->assertIsA($this->delivery, 'core_kernel_classes_Resource');
+	     $this->assertEqual($this->delivery->getLabel(),"UnitTestingGenDelivery");
+	     $this->assertEqual(count($this->subClass->getInstances()),1);
+	     
+	     
 	}
 	public function testGetVariableData(){
-	    /*
-	     * Needs to build an activity execution along the grade, etc.
+	    
 	    $variableData = $this->resultsService->getVariableData($this->grade);
-	    print_r($variableData);
-	     * 
-	    */
+	    $this->assertEqual(count($variableData),3);
+	    $this->assertEqual($variableData["value"],0.4);
+	    $this->assertEqual($variableData["variableIdentifier"], "GRADE"); 
 	    
 	}
 	
+	public function testGetRootClass(){
+	    $rootResultClass = $this->resultsService->getResultClass();
+	    $this->assertIsA($rootResultClass, "core_kernel_classes_Class");
+	    $this->assertEqual($rootResultClass->getUri(),TAO_DELIVERY_RESULT);
+	}
 	
 	public function tearDown(){
 	    $this->assertTrue($this->grade->delete());
+	    $this->assertTrue($this->subClass->delete());
+	    $this->assertTrue($this->delivery->delete());
+	    $this->assertTrue($this->activityExecution->delete());
+	    $this->assertTrue($this->activityDefinition->delete());
+	    $this->assertTrue($this->interactiveService->delete());
+	    
 	}
 }   
 ?>
