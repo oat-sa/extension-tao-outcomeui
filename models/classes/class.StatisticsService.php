@@ -55,14 +55,17 @@ class taoResults_models_classes_StatisticsService
 	 if (count($deliveryResults)==0) {throw new common_Exception(__('The class you have selected contains no results to be analysed, please select a different class'));}
          $deliveryDataSet["nbExecutions"] = count($deliveryResults);
         $statisticsGroupedPerVariable = array();
+	
+	$statisticsGrouped = array("sum" => 0, "#" => 0);
         foreach ($deliveryResults as $deliveryResult){
 		$testTaker = $this->getTestTaker($deliveryResult);
 		$statisticsGrouped["distinctTestTaker"][$testTaker->getUri()] = $testTaker->getLabel() ;
 		$scoreVariables = $this->getScoreVariables($deliveryResult);
                 foreach ($scoreVariables as $variable){
-			
 			$variableData = $this->getVariableData($variable);
 			$variableIDentifier = $variableData["item"]->getUri().$variableData["variableIdentifier"];
+			if (!(isset($statisticsGroupedPerVariable[$variableIDentifier]))) {$statisticsGroupedPerVariable[$variableIDentifier] = array("sum" => 0, "#" => 0);}
+			
 			// we should parametrize if we consider multiple executions of the same test taker or not, here all executions are considered
                         $statisticsGroupedPerVariable[$variableIDentifier]["data"][]=$variableData["value"];
 			$statisticsGroupedPerVariable[$variableIDentifier]["sum"]+= $variableData["value"];
@@ -116,10 +119,11 @@ class taoResults_models_classes_StatisticsService
 				
                                 if (($i) > $slotSize && (!($slot+1==$split))) {$slot++;$i=1;}
                                 if (!(isset($statisticsGrouped["splitData"][$slot]))) {
-                                $statisticsGrouped["splitData"][$slot] = array("sum" => 0, "avg" =>0);
+                                $statisticsGrouped["splitData"][$slot] = array("sum" => 0, "avg" =>0, "#"=> 0);
                                 }
+				
                                 $statisticsGrouped["splitData"][$slot]["sum"] += $value;
-				 $statisticsGrouped["splitData"][$slot]["#"] ++;
+				$statisticsGrouped["splitData"][$slot]["#"] ++;
 				$i++;
                         }
 			
