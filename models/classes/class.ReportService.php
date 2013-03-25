@@ -20,7 +20,7 @@
  * 
  */
 
-define(fontName, ROOT_PATH."/tao/lib/pChart/Fonts/pf_arma_five.ttf");
+define("fontName", ROOT_PATH."/tao/lib/pChart/Fonts/pf_arma_five.ttf");
 require_once('tao/lib/pChart/pData.class');
 require_once ('tao/lib/pChart/pChart.class');
 
