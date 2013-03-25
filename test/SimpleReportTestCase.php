@@ -31,14 +31,13 @@ include_once dirname(__FILE__) . '/../includes/raw_start.php';
  */
 
 //todo ppl move the setup to an helper
-class SimpleReportTestCase extends ResultsTestCase {
+class SimpleReportTestCase extends UnitTestCase {
 	
 	/**
 	 * 
 	 * @var taoResults_models_classes_StatisticsService
 	 */
 	private $statsService = null;
-	
 	/**
 	 * 
 	 * @var taoResults_models_classes_ReportService
@@ -49,15 +48,65 @@ class SimpleReportTestCase extends ResultsTestCase {
 	 * the data set produced by the statistics service
 	 */
 	private $dataSet;
+	
+	
+	//a stored grade
+	private $grade = null;
+	
+	//a stored response
+	private $response = null;
+	//core_kernel_classes_Class where the delviery result is being ceated
+	protected $subClass;
+	private $delivery;
+	private $activityExecution;
+	private $activityDefinition;
+	private $interactiveService;
+	private $resultsService;
 	/**
 	 * tests initialization
 	 */
 	public function setUp(){		
 		TaoTestRunner::initTest();
+		
+		$resultsService = taoResults_models_classes_ResultsService::singleton();
+		$this->resultsService = $resultsService;
+		
 		$this->statsService = taoResults_models_classes_StatisticsService::singleton();
 		$this->reportService = taoResults_models_classes_ReportService::singleton();
-		// The unit test initiate a delivery with a grade and a response, should move to an helper, lokos like the fw is running again all tests with reflection
-		parent::setUp();
+		//create an activity execution
+		$activityExecutionClass = new core_kernel_classes_Class(CLASS_ACTIVITY_EXECUTION);
+		
+		//create an activity definition
+		$activityDefinitionClass = new core_kernel_classes_Class(CLASS_ACTIVITIES);
+		
+		
+		$this->activityExecution = $activityExecutionClass->createInstance("MyActivityExecution");
+		
+		//links the activity execution to the activity definition
+		$this->activityDefinition = $activityDefinitionClass->createInstance("MyActivityDefinition");
+		$this->activityExecution->setPropertyValue(new core_kernel_classes_Property(PROPERTY_ACTIVITY_EXECUTION_ACTIVITY), $this->activityDefinition->getUri());
+
+		//links the call of service to the activity execution 
+		$interactiveServiceClass = new core_kernel_classes_Class(CLASS_CALLOFSERVICES);
+		$this->interactiveService = $interactiveServiceClass->createInstance("MyInteractiveServiceCall");
+		$this->activityDefinition->setPropertyValue(new core_kernel_classes_Property(PROPERTY_ACTIVITIES_INTERACTIVESERVICES), $this->interactiveService->getUri());
+		
+		
+		$this->interactiveService->setPropertyValue(new core_kernel_classes_Property(PROPERTY_CALLOFSERVICES_SERVICEDEFINITION), "#interactiveServiceDefinition");
+		
+		
+		$deliveryResult = new core_kernel_classes_Resource("#MyDeliveryResult");
+		$variableIDentifier = "GRADE";
+		$value = 0.4;
+		//create a small delivery
+		$this->subClass = $this->resultsService->createSubClass(new core_kernel_classes_Class(TAO_DELIVERY_RESULT), "UnitTestingGenClass");
+		$this->delivery = $this->subClass->createInstance("UnitTestingGenDelivery");
+		$this->delivery->setPropertyValue(new core_kernel_classes_Property(PROPERTY_RESULT_OF_DELIVERY), "#unitTestResultOfDelivery");
+		$this->delivery->setPropertyValue(new core_kernel_classes_Property(PROPERTY_RESULT_OF_SUBJECT), "#unitTestResultOfSubject");
+		$this->delivery->setPropertyValue(new core_kernel_classes_Property(PROPERTY_RESULT_OF_PROCESS), "#unitTestResultOfProcess");
+		//stores a grade in this delivery
+		$this->grade = $this->resultsService->storeGrade($this->delivery,$this->activityExecution, $variableIDentifier, $value);
+		$this->response = $this->resultsService->storeResponse($this->delivery,$this->activityExecution, $variableIDentifier, $value);
 
 	}
 	
@@ -114,7 +163,12 @@ class SimpleReportTestCase extends ResultsTestCase {
 	
 	
 	public function tearDown(){
-	    parent::tearDown();
+	    $this->assertTrue($this->grade->delete());
+	    $this->assertTrue($this->subClass->delete());
+	    $this->assertTrue($this->delivery->delete());
+	    $this->assertTrue($this->activityExecution->delete());
+	    $this->assertTrue($this->activityDefinition->delete());
+	    $this->assertTrue($this->interactiveService->delete());
 	}
 	
 	}
