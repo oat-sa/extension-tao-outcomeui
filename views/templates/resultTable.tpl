@@ -55,12 +55,12 @@
 	    <a href="#" id="getCsvFile">
 		    <img src="<?=TAOBASE_WWW?>img/download.png" alt="Download" /> <?=__('Download CSV File')?>
 	    </a>
-    </span>
+    </span><!--
      <span class="ui-state-disabled ui-corner-all">
 	    <a href="#" id="getCsvFile">
 		    <img src="<?=TAOBASE_WWW?>img/download.png" alt="Export Individual Report" /> <?=__('Download PDF File')?>
 	    </a>
-    </span>
+    </span>!-->
     </div>   
        
 </div>
