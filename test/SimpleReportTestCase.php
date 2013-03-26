@@ -171,6 +171,5 @@ class SimpleReportTestCase extends UnitTestCase {
 	    $this->assertTrue($this->interactiveService->delete());
 	}
 	
-	}
 }   
 ?>
