@@ -138,7 +138,7 @@ class taoResults_models_classes_StatisticsService
 		}
 	/**
 	 * deprecated flatteQuantiles
-	 */
+	 
 	//flatten the structure returned by the results data set extractor into a flat array for the graphics computation
 	protected function flattenQuantiles($quantiles, $criteria = "avg"){
 		$flatDecileAverages = array();		
@@ -147,6 +147,8 @@ class taoResults_models_classes_StatisticsService
 		}
 		return $flatDecileAverages;
 	}	
+	 * 
+	 */
 
 
 } /* end of class taoResults_models_classes_ResultsService */
