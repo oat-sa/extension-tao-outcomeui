@@ -104,9 +104,9 @@ extends taoResults_models_classes_StatisticsService
 	private function computebarChartScores($variableIdentifier, $title){
 	    
 	    $datay = $this->deliveryDataSet["statisticsPerVariable"][$variableIdentifier]["data"];
-	    $datax = array(); for ($i=0; $i < count($this->deliveryDataSet["statisticsPerVariable"][$variableIdentifier]["data"]); $i++) {$datax[] = "#";}
+	    $datax = array(); for ($i=0; $i < count($this->deliveryDataSet["statisticsPerVariable"][$variableIdentifier]["data"]); $i++) {$datax[] = "";}
 	    $legendTitle = __("Score per Observation");
-	    return $this->getChart($variableIdentifier."scores", $datax, array($legendTitle => $datay), $title, "Observations", "Score");
+	    return $this->getChart($variableIdentifier."scores", $datax, array($legendTitle => $datay), $title, "Sorted Observations", "Score");
 	}
 	/**
 	 * @author Patrick plichart
@@ -196,7 +196,7 @@ extends taoResults_models_classes_StatisticsService
 
 	// Finish the graph
 	$graph->setFontProperties(fontName,8);
-	$graph->drawLegend(480,220,$dataSet->GetDataDescription(),255,255,255);
+	$graph->drawLegend(475,220,$dataSet->GetDataDescription(),255,255,255);
 	$graph->setFontProperties(fontName,10);
 	$graph->drawTitle(50,30,$title,50,80,50,585);
 	      $url = $this->getUniqueMediaFileName($localGraphId, "png");
