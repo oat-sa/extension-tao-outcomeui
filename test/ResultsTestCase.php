@@ -98,6 +98,7 @@ class ResultsTestCase extends UnitTestCase {
 	 * @see taoResults_models_classes_ResultsService::__construct
 	 */
 	public function testService(){
+		$this->assertIsA($this->resultsService, 'tao_models_classes_GenerisService');
 		$this->assertIsA($this->resultsService, 'tao_models_classes_Service');
 		$this->assertIsA($this->resultsService, 'taoResults_models_classes_ResultsService');
 	}
