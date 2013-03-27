@@ -73,11 +73,10 @@ p strong{
 }
 .dataResult{
     font-weight:bold;
-    text-decoration: underline;
     text-align:right;<<
 }
 .headerRow{
-    background-color:#C3D9FF;
+    background-color:#bbbbbb;
     text-align:center;
 }
 .resultsTable{
@@ -88,7 +87,7 @@ p strong{
 }
 
 .row1{
-    background-color:#F0F0F0;
+    background-color:#eeeeee;
 }
 
 tr td{
