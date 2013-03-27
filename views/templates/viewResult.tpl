@@ -1,10 +1,10 @@
 <div id="form-title" class="ui-widget-header ui-corner-top ui-state-default"><?=__('View result')?></div>
-	<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>tao/views/css/custom-theme/jquery-ui-1.8.22.custom.css" />
-	<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/result.css" />
+<div class="ui-widget-content">
+    
+    
+    <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>tao/views/css/custom-theme/jquery-ui-1.8.22.custom.css" />
+    <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/result.css" />
 <script>
-    
-   
-    
     // needs strong refactoring. 
     function layoutdata(data){
     try{
@@ -31,8 +31,8 @@
     return layoutdata(oldhtml);
     });
     </script>
-<div id="main" class="ui-widget-content ui-corner-all" style="padding:10px" >
-		<div id="content" style="width:100%">
+
+		<div id="content">
 			<h2><?=get_data('deliveryResultLabel')?></h2>
 			<p>
 				<span id="TestTakerIdentification"><?=__('Performed by :')?> 
@@ -55,11 +55,12 @@
 			</p>			
 			<? } ?></table>
 		</div>
-</div>
 
 	
-	
-<div id="form-container" class="ui-widget-content ui-corner-bottom">
+
+
+</div>
+<div id="form-container" >
 
 	<?if(get_data('errorMessage')):?>
 		<fieldset class='ui-state-error'>
@@ -69,7 +70,4 @@
 	<?endif?>
 		
 </div>
-
-
-
 <?include(TAO_TPL_PATH . 'footer.tpl')?>
