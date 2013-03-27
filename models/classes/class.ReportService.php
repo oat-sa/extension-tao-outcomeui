@@ -68,7 +68,8 @@ extends taoResults_models_classes_StatisticsService
 		$reportData['variablesFreqComparison'] = $this->computeRadarChartFrequencies();
 		$reportData['reportTitle'] = __('Statistical Report for the current selection').' : '.$this->contextClass->getLabel().'';
 		$reportData['average'] =  $this->deliveryDataSet["statistics"]["avg"];
-		$reportData['std'] =  $this->deliveryDataSet["statistics"]["std"];
+		
+		$reportData['std'] =  isset($this->deliveryDataSet["statistics"]["std"]) ? $this->deliveryDataSet["statistics"]["std"] : 0 ;
 		$reportData['nbExecutions'] =  $this->deliveryDataSet["nbExecutions"];
 		$reportData['#'] =  $this->deliveryDataSet["statistics"]["#"];
 		$reportData['numberVariables'] =  $this->deliveryDataSet["statistics"]["numberVariables"];	
@@ -82,7 +83,7 @@ extends taoResults_models_classes_StatisticsService
 		$urlDeliveryVariablebarChartScoresFequencies = $this->computebarChartScoresFrequencies($variableIdentifier, "Grouped Scores Frequencies (".$scoreVariableLabel.")");
 		
 		//build UX data structure		
-		$listOfVariables[]= array("label" => $scoreVariableLabel, "urlFrequencies"=>$urlDeliveryVariablebarChartScoresFequencies, "urlScores"=> $urlDeliveryVariablebarChartScores, "urlQuantileDistrib" => $urlDeliveryVariablebarChartQuantiles, "infos" => $struct);
+		$listOfVariables[]= array("label" => $scoreVariableLabel, "urlFrequencies"=>$urlDeliveryVariablebarChartScoresFequencies, "urlScores"=> $urlDeliveryVariablebarChartScores, "infos" => $struct);
 		
 		//build parallel arrays to maintain values for the graph computation showing all variables
 		$labels[] = $scoreVariableLabel;

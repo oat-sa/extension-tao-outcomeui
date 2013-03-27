@@ -1,4 +1,3 @@
-<?include(TAO_TPL_PATH . 'header.tpl')?>
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>tao/views/css/custom-theme/jquery-ui-1.8.22.custom.css" />
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/result.css" />
 <div class="ui-helper-reset" style="height:100%;" >
@@ -21,10 +20,10 @@
 				
 			</ul>
 				<table class="minimal">
-					<tr><td><?=__('VariableName')?></td><td><?=__('Average')?></td><td><?=__('St.Dev.')?></td><td>#</td></tr></strong>
+					<tr><td><?=__('VariableName')?></td><td><?=__('Average')?></td><td>#</td></tr></strong>
 				    <?foreach (get_data('listOfVariables') as $variable) :?>
 				
-				    <tr><td><?=$variable["label"]?></td><td><?=round($variable["infos"]["avg"],2)?></td><td><?=$variable["infos"]["std"]?></td><td><?=$variable["infos"]["#"]?></td></tr>
+				    <tr><td><?=$variable["label"]?></td><td><?=round($variable["infos"]["avg"],2)?></td><td><?=$variable["infos"]["#"]?></td></tr>
 				    <? endforeach ?>
 				</table>
 			    </td>
