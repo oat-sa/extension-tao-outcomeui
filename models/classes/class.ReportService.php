@@ -64,11 +64,14 @@ extends taoResults_models_classes_StatisticsService
 	 */
 	public function buildSimpleReport(){	
 		$deliveryDataSet = $this->deliveryDataSet;
+		$reportData['date'] = date("F j, Y, g:i a");
 		$reportData['variablesAvgComparison'] = $this->computeRadarChartAverages();
 		$reportData['variablesFreqComparison'] = $this->computeRadarChartFrequencies();
 		$reportData['reportTitle'] = __('Statistical Report for the current selection').' : '.$this->contextClass->getLabel().'';
+		//needs toa dapt when we will build the report from the fitlers/criteria
+		$reportData['selectedFilter'] = $this->contextClass->getLabel();
 		$reportData['average'] =  $this->deliveryDataSet["statistics"]["avg"];
-		
+		$reportData['deliveries'] =  $this->deliveryDataSet["deliveries"];
 		$reportData['std'] =  isset($this->deliveryDataSet["statistics"]["std"]) ? $this->deliveryDataSet["statistics"]["std"] : 0 ;
 		$reportData['nbExecutions'] =  $this->deliveryDataSet["nbExecutions"];
 		$reportData['#'] =  $this->deliveryDataSet["statistics"]["#"];

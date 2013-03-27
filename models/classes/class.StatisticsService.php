@@ -61,7 +61,9 @@ class taoResults_models_classes_StatisticsService
 		$testTaker = $this->getTestTaker($deliveryResult);
 		$statisticsGrouped["distinctTestTaker"][$testTaker->getUri()] = $testTaker->getLabel() ;
 		$scoreVariables = $this->getScoreVariables($deliveryResult);
-                foreach ($scoreVariables as $variable){
+		$relatedDelivery = $this->getDelivery($deliveryResult);
+                $deliveryDataSet["deliveries"][$relatedDelivery->getUri()]= $relatedDelivery->getLabel();
+		foreach ($scoreVariables as $variable){
 			$variableData = $this->getVariableData($variable);
 			$activityIdentifier = "";$activityNaturalId = "";
 			    if (isset($variableData["item"])) {$activityIdentifier = $variableData["item"]->getUri(); $activityNaturalId = $variableData["item"]->getLabel();} 

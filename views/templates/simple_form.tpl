@@ -8,8 +8,16 @@
 		    <table><!--TODO CSS the table-->
 			<tr>
 			    <td >
-			<ul>			
-				
+				<?=__('Report generated from the following subset of results : ')?><strong><?=get_data('selectedFilter')?></strong><br/>
+				<?=__('Generated on : ')?><strong><?=get_data('date')?></strong><br /><br />
+				<?=__('The selection contains results related to the following delivery(ies) :')?><br />
+				<ul>
+				<?foreach (get_data('deliveries') as $delivery) :?>
+				<li>	<?=$delivery?>
+				 <? endforeach ?>
+				</ul>
+				<br /><?=__('Data collection statistics :')?>
+				<ul>
 				<li><?=__('# Collected Results')?>: <strong><?=get_data('nbExecutions')?></strong><br /><em>*The number of Tests delivery being executed and collected so far</em>
 				<li><?=__('# Distinct variable types')?>: <strong><?=get_data('numberVariables')?></strong><br /><em>*The number of different type of single score variables collected in this delivery definition</em>
 				<li><?=__('# Collected Score Variables')?>: <strong><?=get_data('#')?></strong><br /><em>*The number of Score variables collected so far</em>
@@ -17,8 +25,8 @@
 				<li><?=__('Total Average')?>: <strong><?=get_data('average')?></strong><br /><em>*The score average considering all collected Tests Delivery executions score variables</em> 
 				<!--<li><li><?=__('Total Standard Deviation')?>: <strong><?=get_data('std')?></strong><br /><em></em>-->
 				<!--<li>Remaining Tokens: <strong><?=get_data('tokensLeft')?></strong><br /><em>*The number of remaining Tests delivery executions (according to the number of attempts granted)</em>-->
-				
-			</ul>
+				</ul>
+				<br /><?=__('Scores and response rates statistics')?>
 				<table class="minimal">
 					<tr><td><?=__('VariableName')?></td><td><?=__('Average')?></td><td>#</td></tr></strong>
 				    <?foreach (get_data('listOfVariables') as $variable) :?>

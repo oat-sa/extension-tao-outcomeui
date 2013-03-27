@@ -101,6 +101,15 @@ class taoResults_models_classes_ResultsService
         return (array) $returnValue;
     }
     /**
+     * Return the corresponding delivery 
+     * @param core_kernel_classes_Resource $deliveryResult
+     * @return core_kernel_classes_Resource delviery
+     * @author Patrick Plichart, <patrick@taotesting.com>
+     */
+    public function getDelivery(core_kernel_classes_Resource $deliveryResult){
+	return $deliveryResult->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_RESULT_OF_DELIVERY));
+    }
+    /**
      * Retrieves all score variables pertaining to the deliveryResult
      *
      * @access public
