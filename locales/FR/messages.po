@@ -1,6 +1,6 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO v2.4-beta3\n"
+"Project-Id-Version: TAO v2.4-RC01\n"
 "PO-Revision-Date: 2013-03-22T14:23:13\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
@@ -30,7 +30,7 @@ msgid "Add Test Taker"
 msgstr ""
 
 msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
-msgstr ""
+msgstr "Les résultats de tous les tests passés avec les données des Participants, Groupes et Items comme les données récupérées pendant le déroulement de chaque test sont collectées et gérées ici."
 
 msgid "Anonymise"
 msgstr ""
@@ -66,7 +66,7 @@ msgid "Download PDF File"
 msgstr ""
 
 msgid "Edit result class"
-msgstr ""
+msgstr "Modifier la classe de résultat"
 
 msgid "Error"
 msgstr ""
@@ -125,17 +125,17 @@ msgid "Remove All responses"
 msgstr ""
 
 msgid "Result saved"
-msgstr ""
+msgstr "Résultat sauvegardé"
 
 #, tao-public
 msgid "Results"
-msgstr ""
+msgstr "Résultats"
 
 msgid "Results distribution"
 msgstr ""
 
 msgid "Results library"
-msgstr ""
+msgstr "Librairie de résultats"
 
 msgid "Results Selection Filters"
 msgstr ""
@@ -150,7 +150,7 @@ msgid "Standard Deviation"
 msgstr ""
 
 msgid "Template Saved"
-msgstr ""
+msgstr "Modèle sauvegardé"
 
 msgid "Test taker"
 msgstr ""
@@ -165,7 +165,7 @@ msgid "There was a problem generating your report, please try again."
 msgstr ""
 
 msgid "This module constitutes the final step."
-msgstr ""
+msgstr "Ce module constitue la dernière étape."
 
 msgid "Total Average"
 msgstr ""
@@ -175,11 +175,10 @@ msgstr ""
 
 #, tao-public
 msgid "View and format the collected results."
-msgstr ""
+msgstr "Visualiser et formater les données collectées."
 
 msgid "View result"
 msgstr ""
 
 msgid "We are preparing your report, please wait..."
 msgstr ""
-
