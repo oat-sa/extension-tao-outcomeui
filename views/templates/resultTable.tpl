@@ -72,8 +72,8 @@ require(['require', 'jquery', '/taoResults/views/js/viewResult', 'grid/tao.grid'
     function showGrid() {
     $('#result-table-grid').jqGrid('GridUnload');
     var myGrid = $("#result-table-grid").jqGrid({
-	url: "<?=_url('data')?>",
-	postData: {'filter': <?=tao_helpers_Javascript::buildObject($filter)?>, 'columns':document.columns},
+	url: document.dataUrl,
+	postData: {'filter': document.JsonFilter, 'columns':document.columns},
 	mtype: "post",
 	datatype: "json",
 	colNames: document.columns.values,
@@ -100,8 +100,9 @@ require(['require', 'jquery', '/taoResults/views/js/viewResult', 'grid/tao.grid'
      * Initiate the grid and shows it using a startup document.column and a document.models containing the ResultOfSubject property
      */
     function initiateGrid(){
-    $.getJSON("<?=_url('getResultOfSubjectColumn')?>", <?=tao_helpers_Javascript::buildObject(array('filter' => $filter))?>, function (data) {setColumns(data.columns)});
+    $.getJSON(document.getActionSubjectColumnUrl, document.JsonFilter, function (data) {setColumns(data.columns)});
     }
+   
     /*
     * Triggers the jquery jqGrid functionnality allowing to select columns to be displayed
     */
@@ -133,7 +134,7 @@ require(['require', 'jquery', '/taoResults/views/js/viewResult', 'grid/tao.grid'
     //Simple Properties 
     if (column.type == "tao_models_classes_table_PropertyColumn"){
     switch (column.prop){
-	case "<?php echo PROPERTY_RESULT_OF_SUBJECT;?>": {return  "<span class=highlight>"+data+"</span>";}
+	case document.resultOfSubjectConstant: {return  "<span class=highlight>"+data+"</span>";}
 	default:return data;
 	}
     }
@@ -175,8 +176,8 @@ require(['require', 'jquery', '/taoResults/views/js/viewResult', 'grid/tao.grid'
 	    if ($('#getScoreButton').hasClass("ui-state-default")) {
 	    $('#getScoreButton').addClass("ui-state-disabled").removeClass("ui-state-default");
 	    $('#rmScoreButton').addClass("ui-state-default").removeClass("ui-state-disabled");
-	    $.getJSON( "<?=_url('getGradeColumns')?>"
-		    , <?=tao_helpers_Javascript::buildObject(array('filter' => $filter))?>
+	    $.getJSON( document.getActionGradeColumnUrl
+		    , document.JsonFilterSelection
 		    , function (data) {
 			    setColumns(data.columns)
 		    }
@@ -189,8 +190,8 @@ require(['require', 'jquery', '/taoResults/views/js/viewResult', 'grid/tao.grid'
 	    if ($('#getResponseButton').hasClass("ui-state-default")) {
 	    $('#getResponseButton').addClass("ui-state-disabled").removeClass("ui-state-default");
 	    $('#rmResponseButton').addClass("ui-state-default").removeClass("ui-state-disabled");
-	    $.getJSON( "<?=_url('getResponseColumns')?>"
-		    , <?=tao_helpers_Javascript::buildObject(array('filter' => $filter))?>
+	    $.getJSON( document.getActionResponseColumnUrl
+		    , document.JsonFilterSelection
 		    , function (data) {
 			    setColumns(data.columns)
 		    }
@@ -203,8 +204,8 @@ require(['require', 'jquery', '/taoResults/views/js/viewResult', 'grid/tao.grid'
 	    if ($('#rmResponseButton').hasClass("ui-state-default")) {
 	    $('#rmResponseButton').addClass("ui-state-disabled").removeClass("ui-state-default");
 	    $('#getResponseButton').addClass("ui-state-default").removeClass("ui-state-disabled");
-	    $.getJSON( "<?=_url('getResponseColumns')?>"
-		    , <?=tao_helpers_Javascript::buildObject(array('filter' => $filter))?>
+	    $.getJSON( document.getActionResponseColumnUrl
+		    , document.JsonFilterSelection
 		    , function (data) {
 			    removeColumns(data.columns)
 		    }
@@ -217,8 +218,8 @@ require(['require', 'jquery', '/taoResults/views/js/viewResult', 'grid/tao.grid'
 	    if ($('#rmScoreButton').hasClass("ui-state-default")) {
 	    $('#rmScoreButton').addClass("ui-state-disabled").removeClass("ui-state-default");
 	    $('#getScoreButton').addClass("ui-state-default").removeClass("ui-state-disabled");
-	    $.getJSON( "<?=_url('getGradeColumns')?>"
-		    , <?=tao_helpers_Javascript::buildObject(array('filter' => $filter))?>
+	    $.getJSON( document.getActionGradeColumnUrl
+		    , document.JsonFilterSelection
 		    , function (data) {
 			   removeColumns(data.columns)
 		    }
@@ -234,13 +235,13 @@ require(['require', 'jquery', '/taoResults/views/js/viewResult', 'grid/tao.grid'
 	//The file is being flushed in the buffer by _url('getCsvFile') 
 	require([root_url  + 'tao/views/js/jquery.fileDownload.js'],
 			function(data){
-			$.fileDownload("<?=_url('getCsvFile')?>", {
+			$.fileDownload(document.getActionCsvFileUrl, {
 			    preparingMessageHtml: __("We are preparing your report, please wait..."),
 			    failMessageHtml: __("There was a problem generating your report, please try again."),
 			    successCallback: function () { },
 			    httpMethod: "POST",
 			     ////This gives the current selection of filters (facet based query) and the list of columns selected from the client (the list of columns is not kept on the server side class.taoTable.php
-			    data: {'filter': <?=tao_helpers_Javascript::buildObject($filter)?>, 'columns':document.columns}
+			    data: {'filter': document.JsonFilter, 'columns':document.columns}
 			});
 
 			}); 
@@ -250,8 +251,8 @@ require(['require', 'jquery', '/taoResults/views/js/viewResult', 'grid/tao.grid'
 	    if ($('#viewSubject').hasClass("ui-state-default")) {
 	    $('#viewSubject').addClass("ui-state-disabled").removeClass("ui-state-default");
 	    $('#removeSubject').addClass("ui-state-default").removeClass("ui-state-disabled");
-	    $.getJSON( "<?=_url('getResultOfSubjectColumn')?>"
-		    , <?=tao_helpers_Javascript::buildObject(array('filter' => $filter))?>
+	    $.getJSON( document.getActionSubjectColumnUrl
+		    , document.JsonFilterSelection
 		    , function (data) {
 			    setColumns(data.columns)
 		    }
@@ -263,8 +264,8 @@ require(['require', 'jquery', '/taoResults/views/js/viewResult', 'grid/tao.grid'
 	    if ($('#removeSubject').hasClass("ui-state-default")) {
 	    $('#removeSubject').addClass("ui-state-disabled").removeClass("ui-state-default");
 	    $('#viewSubject').addClass("ui-state-default").removeClass("ui-state-disabled");
-	    $.getJSON( "<?=_url('getResultOfSubjectColumn')?>"
-		    , <?=tao_helpers_Javascript::buildObject(array('filter' => $filter))?>
+	    $.getJSON( document.getActionSubjectColumnUrl
+		    , document.JsonFilterSelection
 		    , function (data) {
 			    removeColumns(data.columns)
 		    }
@@ -282,8 +283,24 @@ require(['require', 'jquery', '/taoResults/views/js/viewResult', 'grid/tao.grid'
 	    //models and columns are parameters used and manipulated by the table operations functions. 
 	    document.models = [];
 	    document.columns = [];
+
+	    //there is no _url helper in JS,
+	    // in order to avoid php call within JS and externalize the js 
+	    // of the grid in a separate js file, the links to he actions are stored
+	    // in the document
+	    
+	    document.dataUrl = "<?=_url('data')?>";
+	    document.getActionSubjectColumnUrl = "<?=_url('getResultOfSubjectColumn')?>";
+	    document.getActionGradeColumnUrl = "<?=_url('getGradeColumns')?>";
+	    document.getActionResponseColumnUrl = "<?=_url('getResponseColumns')?>";
+	    document.getActionCsvFileUrl = "<?=_url('getCsvFile')?>";
+	    document.JsonFilter = <?=tao_helpers_Javascript::buildObject(get_data("filter"))?>;
+	    document.JsonFilterSelection = <?=tao_helpers_Javascript::buildObject(array('filter' => get_data("filter")))?>;
+	    document.resultOfSubjectConstant = "<?php echo PROPERTY_RESULT_OF_SUBJECT;?>";
 	    initiateGrid();
 
+	    
+	    
     });
 });
 </script>

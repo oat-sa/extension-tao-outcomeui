@@ -131,8 +131,6 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule
 
         $resultsGrid = new taoResults_helpers_DeliveryResultGrid($data, $this->resultGridOptions);
         $data = $resultsGrid->toArray();
-        //var_dump($data);
-
         echo json_encode($data);
     }
 
