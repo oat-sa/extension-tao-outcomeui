@@ -4,33 +4,17 @@
     
     <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>tao/views/css/custom-theme/jquery-ui-1.8.22.custom.css" />
     <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/result.css" />
+<script type="text/javascript">
+	require(['require', 'jquery', '/taoResults/views/js/viewResult'], function () {
+	    $('.dataResult').html(function(index, oldhtml) {return layoutResponse(oldhtml);});
+	    }
+	);
+</script>
+    
 <script>
-    // needs strong refactoring. 
-    function layoutdata(data){
-    try{
-	var jsData = $.parseJSON(data);
-	var formattedData = "";
-	if (jsData instanceof Array) {
-	    formattedData = '<UL >';
-	    for (key in jsData){
-		formattedData += '<li >';
-		formattedData += jsData[key];
-		 formattedData += "</li>";
-		}
-	     formattedData += "</UL>";
-	} else {
-	formattedData = data;
-	}
-	}
-	catch(err){formattedData = data;}
-	return formattedData;
-	}
-	
-	//substitute score variables and response variables with rendered html 
-    $('.dataResult').html(function(index, oldhtml) {
-    return layoutdata(oldhtml);
-    });
-    </script>
+//substitute score variables and response variables with rendered html 
+
+</script>
 
 		<div id="content">
 			<h2><?=get_data('deliveryResultLabel')?></h2>

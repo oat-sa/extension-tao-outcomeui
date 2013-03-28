@@ -65,7 +65,7 @@
        
 </div>
 <script type="text/javascript">
-require(['require', 'jquery', 'grid/tao.grid'], function(req, $) {
+require(['require', 'jquery', '/taoResults/views/js/viewResult', 'grid/tao.grid'], function(req, $) {
     /**
      * Initiate or refresh the '#result-table-grid grid with data from _url('data') and using the columns document.columns/document.models current selection of data
      */
@@ -143,24 +143,7 @@ require(['require', 'jquery', 'grid/tao.grid'], function(req, $) {
     }
     //Actual responses properties
     else if ((column.type == "taoResults_models_classes_table_ResponseColumn")){
-	try{
-	var jsData = $.parseJSON(data);
-	var formattedData = "";
-	if (jsData instanceof Array) {
-	    //the formatter callback expects a string to be returned, normal DOM modifications seems not to work.
-	    formattedData = '<UL class="cellDataList">';
-	    for (key in jsData){
-		formattedData += '<li class="cellDataListElement">';
-		formattedData += jsData[key];
-		 formattedData += "</li>";
-		}
-	     formattedData += "</UL>";
-	} else {
-	formattedData = data;
-	}
-	}
-	catch(err){formattedData = data;}
-	return formattedData;
+	return layoutResponse(data);
 	}
 
     }
