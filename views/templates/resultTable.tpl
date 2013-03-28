@@ -3,7 +3,7 @@
 		<span><?=get_data('message')?></span>
 	</div>
 <?endif?>
-<div class="main-container">
+    <div class="main-container">
     <span>
     <div style="padding:10px">
     <span class="ui-state-disabled ui-corner-all" id="viewSubject">
@@ -62,10 +62,10 @@
 	    </a>
     </span>!-->
     </div>   
-       
 </div>
+
 <script type="text/javascript">
-require(['require', 'jquery', '/taoResults/views/js/viewResult', 'grid/tao.grid'], function(req, $) {
+require(['require', 'jquery', '/taoResults/views/js/viewResult', 'grid/tao.grid', '/taoResults/views/js/resultTable'], function(req, $) {
     /**
      * Initiate or refresh the '#result-table-grid grid with data from _url('data') and using the columns document.columns/document.models current selection of data
      */
@@ -90,7 +90,7 @@ require(['require', 'jquery', '/taoResults/views/js/viewResult', 'grid/tao.grid'
 	sortorder: "asc",
 	gridview : true,
 	caption: __("Delivery results"),
-	onCellSelect: function(rowid,iCol,cellcontent, e) {helpers.openTab(__('Delivery Result'), '<?=_url('viewResult','InspectResults')?>?uri='+escape(rowid));}
+	onCellSelect: function(rowid,iCol,cellcontent, e) {helpers.openTab(__('Delivery Result'), document.getActionViewResultUrl+'?uri='+escape(rowid));}
     });
     jQuery("#result-table-grid").jqGrid('navGrid','#pagera1', {edit:false,add:false,del:false,search:false,refresh:false});
     jQuery("#result-table-grid").jqGrid('navButtonAdd',"#pagera1", {caption:"Column chooser",title:"Column chooser", buttonicon :'ui-icon-gear',onClickButton:function(){columnChooser();}});
@@ -102,7 +102,33 @@ require(['require', 'jquery', '/taoResults/views/js/viewResult', 'grid/tao.grid'
     function initiateGrid(){
     $.getJSON(document.getActionSubjectColumnUrl, document.JsonFilter, function (data) {setColumns(data.columns)});
     }
-   
+    
+     /**
+     * Bind the click event to the function function and toggle the buttons class between fromButton toButton
+     * @param {type} buttonID
+     */
+    function bindTogglingButtons(fromButton, tobuttonID, actionCallUrl, operationType){
+	
+	    $(fromButton).click(function(e) {
+	    e.preventDefault();
+	    if ($(fromButton).hasClass("ui-state-default")) {
+	    $(fromButton).addClass("ui-state-disabled").removeClass("ui-state-default");
+	    $(tobuttonID).addClass("ui-state-default").removeClass("ui-state-disabled");
+	    $.getJSON( actionCallUrl
+		    , document.JsonFilterSelection
+		    , function (data) {
+			switch (operationType){
+			case "remove":removeColumns(data.columns);break;
+			case "add":setColumns(data.columns);break;
+			default:removeColumns(data.columns);break;
+			}
+			
+		    }
+	    );
+	    }
+	    });
+	
+    }
     /*
     * Triggers the jquery jqGrid functionnality allowing to select columns to be displayed
     */
@@ -170,137 +196,63 @@ require(['require', 'jquery', '/taoResults/views/js/viewResult', 'grid/tao.grid'
 	   }
 	    showGrid();
     }
-    //Bind the get score button click that add all variables that are taoCoding_models_classes_table_GradeColumn
-    $('#getScoreButton').click(function(e) {
-	    e.preventDefault();
-	    if ($('#getScoreButton').hasClass("ui-state-default")) {
-	    $('#getScoreButton').addClass("ui-state-disabled").removeClass("ui-state-default");
-	    $('#rmScoreButton').addClass("ui-state-default").removeClass("ui-state-disabled");
-	    $.getJSON( document.getActionGradeColumnUrl
-		    , document.JsonFilterSelection
-		    , function (data) {
-			    setColumns(data.columns)
-		    }
-	    );
-	    }
-    });
-     //Bind the get score button click that add all variables that are taoCoding_models_classes_table_ResponseColumn
-    $('#getResponseButton').click(function(e) {
-	    e.preventDefault();
-	    if ($('#getResponseButton').hasClass("ui-state-default")) {
-	    $('#getResponseButton').addClass("ui-state-disabled").removeClass("ui-state-default");
-	    $('#rmResponseButton').addClass("ui-state-default").removeClass("ui-state-disabled");
-	    $.getJSON( document.getActionResponseColumnUrl
-		    , document.JsonFilterSelection
-		    , function (data) {
-			    setColumns(data.columns)
-		    }
-	    );
-	    }
-    });
-     //Bind the remove score button click that removes all variables that are taoCoding_models_classes_table_ResponseColumn
-    $('#rmResponseButton').click(function(e) {
-	    e.preventDefault();
-	    if ($('#rmResponseButton').hasClass("ui-state-default")) {
-	    $('#rmResponseButton').addClass("ui-state-disabled").removeClass("ui-state-default");
-	    $('#getResponseButton').addClass("ui-state-default").removeClass("ui-state-disabled");
-	    $.getJSON( document.getActionResponseColumnUrl
-		    , document.JsonFilterSelection
-		    , function (data) {
-			    removeColumns(data.columns)
-		    }
-	    );
-	    }
-    });
-     //Bind the remove score button click that removes all variables that are taoCoding_models_classes_table_GradeColumn
-    $('#rmScoreButton').click(function(e) {
-	    e.preventDefault();
-	    if ($('#rmScoreButton').hasClass("ui-state-default")) {
-	    $('#rmScoreButton').addClass("ui-state-disabled").removeClass("ui-state-default");
-	    $('#getScoreButton').addClass("ui-state-default").removeClass("ui-state-disabled");
-	    $.getJSON( document.getActionGradeColumnUrl
-		    , document.JsonFilterSelection
-		    , function (data) {
-			   removeColumns(data.columns)
-		    }
-	    );
-	    }
-    });
-    /**
-    * Trigger the download of a csv file using the data provider used for the table display
-     */
-    $('#getCsvFile').click(function(e) {
-	e.preventDefault();
-	//jquery File Download is a jqueryplugin that allows to trigger a download within a Xhr request.
-	//The file is being flushed in the buffer by _url('getCsvFile') 
-	require([root_url  + 'tao/views/js/jquery.fileDownload.js'],
-			function(data){
-			$.fileDownload(document.getActionCsvFileUrl, {
-			    preparingMessageHtml: __("We are preparing your report, please wait..."),
-			    failMessageHtml: __("There was a problem generating your report, please try again."),
-			    successCallback: function () { },
-			    httpMethod: "POST",
-			     ////This gives the current selection of filters (facet based query) and the list of columns selected from the client (the list of columns is not kept on the server side class.taoTable.php
-			    data: {'filter': document.JsonFilter, 'columns':document.columns}
-			});
-
-			}); 
-    });
-    $('#viewSubject').click(function(e) {
-	    e.preventDefault();
-	    if ($('#viewSubject').hasClass("ui-state-default")) {
-	    $('#viewSubject').addClass("ui-state-disabled").removeClass("ui-state-default");
-	    $('#removeSubject').addClass("ui-state-default").removeClass("ui-state-disabled");
-	    $.getJSON( document.getActionSubjectColumnUrl
-		    , document.JsonFilterSelection
-		    , function (data) {
-			    setColumns(data.columns)
-		    }
-	    );
-	    }
-    });
-    $('#removeSubject').click(function(e) {
-	    e.preventDefault();
-	    if ($('#removeSubject').hasClass("ui-state-default")) {
-	    $('#removeSubject').addClass("ui-state-disabled").removeClass("ui-state-default");
-	    $('#viewSubject').addClass("ui-state-default").removeClass("ui-state-disabled");
-	    $.getJSON( document.getActionSubjectColumnUrl
-		    , document.JsonFilterSelection
-		    , function (data) {
-			    removeColumns(data.columns)
-		    }
-	    );
-	    }
-    });
-    //binds the column chooser button taht launches the feature from jqgrid allowing to make a selection of the columns displayed
-     $('#columnChooser').click(function(e) {
-	    e.preventDefault();
-	    columnChooser();
-
-    });
-
     $(function(){
 	    //models and columns are parameters used and manipulated by the table operations functions. 
 	    document.models = [];
 	    document.columns = [];
-
 	    //there is no _url helper in JS,
 	    // in order to avoid php call within JS and externalize the js 
 	    // of the grid in a separate js file, the links to he actions are stored
 	    // in the document
-	    
 	    document.dataUrl = "<?=_url('data')?>";
 	    document.getActionSubjectColumnUrl = "<?=_url('getResultOfSubjectColumn')?>";
 	    document.getActionGradeColumnUrl = "<?=_url('getGradeColumns')?>";
 	    document.getActionResponseColumnUrl = "<?=_url('getResponseColumns')?>";
 	    document.getActionCsvFileUrl = "<?=_url('getCsvFile')?>";
+	    document.getActionViewResultUrl= "<?=_url('viewResult','InspectResults')?>";
 	    document.JsonFilter = <?=tao_helpers_Javascript::buildObject(get_data("filter"))?>;
 	    document.JsonFilterSelection = <?=tao_helpers_Javascript::buildObject(array('filter' => get_data("filter")))?>;
 	    document.resultOfSubjectConstant = "<?php echo PROPERTY_RESULT_OF_SUBJECT;?>";
+	    //initiate the grid
 	    initiateGrid();
 
-	    
-	    
+	    //Bind the remove score button click that removes all variables that are taoCoding_models_classes_table_GradeColumn
+	    bindTogglingButtons('#rmScoreButton', '#getScoreButton', document.getActionGradeColumnUrl, 'remove');
+	    //Bind the remove score button click that removes all variables that are taoCoding_models_classes_table_ResponseColumn
+	    bindTogglingButtons('#rmResponseButton', '#getResponseButton', document.getActionResponseColumnUrl, 'remove');
+	    //Bind the get score button click that add all variables that are taoCoding_models_classes_table_ResponseColumn
+	    bindTogglingButtons('#getResponseButton', '#rmResponseButton', document.getActionResponseColumnUrl, 'add');
+	    //Bind the get score button click that add all variables that are taoCoding_models_classes_table_GradeColumn
+	    bindTogglingButtons('#getScoreButton', '#rmScoreButton', document.getActionGradeColumnUrl, 'add');
+	    bindTogglingButtons('#viewSubject', '#removeSubject', document.getActionSubjectColumnUrl, 'add');
+	    bindTogglingButtons('#removeSubject', '#viewSubject', document.getActionSubjectColumnUrl, 'remove');
+	    /**
+	    * Trigger the download of a csv file using the data provider used for the table display
+	     */
+	    $('#getCsvFile').click(function(e) {
+		e.preventDefault();
+		//jquery File Download is a jqueryplugin that allows to trigger a download within a Xhr request.
+		//The file is being flushed in the buffer by _url('getCsvFile') 
+		require([root_url  + 'tao/views/js/jquery.fileDownload.js'],
+				function(data){
+				$.fileDownload(document.getActionCsvFileUrl, {
+				    preparingMessageHtml: __("We are preparing your report, please wait..."),
+				    failMessageHtml: __("There was a problem generating your report, please try again."),
+				    successCallback: function () { },
+				    httpMethod: "POST",
+				     ////This gives the current selection of filters (facet based query) and the list of columns selected from the client (the list of columns is not kept on the server side class.taoTable.php
+				    data: {'filter': document.JsonFilter, 'columns':document.columns}
+				});
+
+				}); 
+	    });
+	    //binds the column chooser button taht launches the feature from jqgrid allowing to make a selection of the columns displayed
+	     $('#columnChooser').click(function(e) {
+		    e.preventDefault();
+		    columnChooser();
+
+	    });
+
     });
 });
 </script>
