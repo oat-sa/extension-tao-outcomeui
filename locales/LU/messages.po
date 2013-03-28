@@ -30,7 +30,7 @@ msgid "Add Test Taker"
 msgstr ""
 
 msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
-msgstr ""
+msgstr "All Resultater vun duerchgefouerten Tester, mat hieren entspriechenden Testpersounen, Gruppen, Item Daten an och all individeull Daten déi während der Testpassatioun gesammelt goufen, gin hei gespaichert"
 
 msgid "Anonymise"
 msgstr ""
@@ -66,7 +66,7 @@ msgid "Download PDF File"
 msgstr ""
 
 msgid "Edit result class"
-msgstr ""
+msgstr "Resultat Klass editéiren"
 
 msgid "Error"
 msgstr ""
@@ -125,17 +125,17 @@ msgid "Remove All responses"
 msgstr ""
 
 msgid "Result saved"
-msgstr ""
+msgstr "Resultat gespaichert"
 
 #, tao-public
 msgid "Results"
-msgstr ""
+msgstr "Resultater"
 
 msgid "Results distribution"
 msgstr ""
 
 msgid "Results library"
-msgstr ""
+msgstr "Resultater Sammlung"
 
 msgid "Results Selection Filters"
 msgstr ""
@@ -165,7 +165,7 @@ msgid "There was a problem generating your report, please try again."
 msgstr ""
 
 msgid "This module constitutes the final step."
-msgstr ""
+msgstr "Desen Modul stellt den letzen Schrack duer."
 
 msgid "Total Average"
 msgstr ""
