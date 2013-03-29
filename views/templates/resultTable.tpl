@@ -4,7 +4,7 @@
 	</div>
 <?endif?>
     <script type="text/javascript">
-require(['require', 'jquery', '/taoResults/views/js/viewResult', 'grid/tao.grid', '/taoResults/views/js/resultTable'], function(req, $) {
+require(['require', 'jquery', '/taoResults/views/js/viewResult.js', 'grid/tao.grid', '/taoResults/views/js/resultTable.js'], function(req, $) {
     
     $(function(){
 	    //models and columns are parameters used and manipulated by the table operations functions. 
