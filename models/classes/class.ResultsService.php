@@ -247,6 +247,39 @@ class taoResults_models_classes_ResultsService
 
         return $returnValue;
     }
+	
+	/**
+     * Short description of method deleteResult
+     *
+   
+     */
+    public function deleteResult( core_kernel_classes_Resource $result)
+    {
+        $returnValue = (bool) false;
+
+        // section 10-13-1-39-5129ca57:1276133a327:-8000:000000000000204D begin
+		if(!is_null($result)){
+			$returnValue = $result->delete();
+		}
+        // section 10-13-1-39-5129ca57:1276133a327:-8000:000000000000204D end
+
+        return (bool) $returnValue;
+    }
+
+    /**
+     * Short description of method deleteResultClass
+     *
+     */
+    public function deleteResultClass( core_kernel_classes_Class $clazz)
+    {
+        $returnValue = (bool) false;
+     
+		if(!is_null($clazz)){
+				$returnValue = $clazz->delete();
+		}
+       return (bool) $returnValue;
+    }
+	
 
 } /* end of class taoResults_models_classes_ResultsService */
 
