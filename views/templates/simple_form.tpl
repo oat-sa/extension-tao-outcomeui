@@ -62,7 +62,7 @@
 		<div id="form-title" class="ui-widget-header ui-corner-top ui-state-default">
 			<?=__('Results distribution')?> : <? echo $variable["label"];?>
 		</div>
-		<div class="ui-widget-content ui-corner-right">
+		
 		<ul>			
 				
 				<?=__('Collected Results')?>: <strong><?=$variable["infos"]["#"]?></strong>
@@ -71,11 +71,12 @@
 				
 				
 			</ul>
-		<div style="border:1px;">
+		
 			<img src="<? echo $variable["urlScores"];?>"/>
 			<img src="<? echo $variable["urlFrequencies"];?>"/>
 			     
-		</div>
+		
+		
 	
 		<? endforeach ?>
 	</div>
