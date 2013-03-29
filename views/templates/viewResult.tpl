@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>tao/views/css/custom-theme/jquery-ui-1.8.22.custom.css" />
     <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/result.css" />
 <script type="text/javascript">
-	require(['require', 'jquery', '/taoResults/views/js/viewResult'], function () {
+	require(['require', 'jquery', '/taoResults/views/js/viewResult.js'], function () {
 	    $('.dataResult').html(function(index, oldhtml) {return layoutResponse(oldhtml);});
 	    }
 	);
