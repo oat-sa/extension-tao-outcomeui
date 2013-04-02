@@ -192,6 +192,7 @@ class taoResults_models_classes_ResultsService
 			PROPERTY_VARIABLE_ORIGIN		=> $activityExecution,
 			PROPERTY_VARIABLE_IDENTIFIER	=> $identifier,
 			RDF_VALUE						=> $value,
+			PROPERTY_VARIABLE_EPOCH		=> time()
 		));
         // section 127-0-1-1-6befba6b:1394401f373:-8000:0000000000003B77 end
 
