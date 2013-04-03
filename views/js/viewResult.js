@@ -37,7 +37,7 @@
 		    if (data[key].length==2){
 		    observedData = data[key][0];
 		    observedDataEpoch = data[key][1];
-		    formattedData +=layoutResponse(observedData)+ " <span class=epoch>("+observedDataEpoch+")</span>";
+		    formattedData +="<div>"+layoutResponse(observedData)+ " <span class=epoch>("+observedDataEpoch+")</span></div>";
 		    }
 	    }
 	}
