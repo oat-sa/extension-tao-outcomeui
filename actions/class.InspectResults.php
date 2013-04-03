@@ -136,7 +136,7 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule
     }
 
     /**
-     * View Result
+     * todo ppl reminder be moved in the Results controller and use the service
      *
      * @author Joel Bout <joel@taotesting.com>
      * @author Patrick Plichart <patrick@taotesting.com>
@@ -156,6 +156,7 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule
                 new core_kernel_classes_Property(RDF_VALUE),
                 new core_kernel_classes_Property(RDF_TYPE),
                 new core_kernel_classes_Property(PROPERTY_VARIABLE_ORIGIN),
+		new core_kernel_classes_Property(PROPERTY_VARIABLE_EPOCH)
             ));
             $origin = array_pop($values[PROPERTY_VARIABLE_ORIGIN])->getUri();
             if (!isset($variables[$origin])) {
@@ -163,16 +164,22 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule
                     'vars' => array()
                 );
             }
-            $variables[$origin]['vars'][] = $values;
+	    
+	    $values[PROPERTY_VARIABLE_EPOCH] =  array("@".date("F j, Y, g:i:s a",array_pop($values[PROPERTY_VARIABLE_EPOCH])->literal));
+	    $variables[$origin]['vars'][] = $values;
         }
         foreach ($variables as $origin => $data) {
             $ae = new core_kernel_classes_Resource($origin);
-            $item = taoCoding_models_classes_CodingService::singleton()->getItemByActivityExecution($ae);
+            //todo , check relvance of this service within taoCoding
+	    $item = taoCoding_models_classes_CodingService::singleton()->getItemByActivityExecution($ae);
             $variables[$origin]['label'] = $item->getLabel();
             $itemModel = $item->getPropertyValues(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
             $itemModelResource = new core_kernel_classes_Resource(array_pop($itemModel));
             $variables[$origin]['itemModel'] = $itemModelResource->getLabel();
+
+	    
         }
+	
         $this->setData('deliveryResultLabel', $result->getLabel());
         //$this->setData('myForm', $myForm->render());
         $this->setData('variables', $variables);

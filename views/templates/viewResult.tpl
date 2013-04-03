@@ -24,16 +24,17 @@
 				    <span id=login>(<?=get_data('login')?><?=get_data('TestTakerLogin')?>)</span>
 				</span>
 			</p>
-			<table class="resultsTable" >
+			<table class="resultsTable" border="1" >
 			<?  foreach (get_data('variables') as $group){ ?>
 			<tr >
-			        <td class="headerRow" colspan="2"><span class="itemName"><?=__('Item')?> : <?=$group['label']?></span> <span class="itemModel">(<?=$group['itemModel']?>)</span></td>
+			        <td class="headerRow" colspan="3"><span class="itemName"><?=__('Item')?> : <?=$group['label']?></span> <span class="itemModel">(<?=$group['itemModel']?>)</span></td>
 			</tr>
 			    <?  foreach ($group['vars'] as $key => $variable){ ?>
 				<?php $rowOdd = $key % 2;?>
 				<tr class="row<?php echo $rowOdd ?>">
 				<td><?=array_pop($variable[PROPERTY_VARIABLE_IDENTIFIER])?> (<?=array_pop($variable[RDF_TYPE])->getLabel()?> ) :</td>
 				<td class="dataResult"><?=array_pop($variable[RDF_VALUE])?></td>
+				<td class="epoch"><?=array_pop($variable[PROPERTY_VARIABLE_EPOCH])?></td>
 				</tr>
 			    <? } ?>
 			</p>			
