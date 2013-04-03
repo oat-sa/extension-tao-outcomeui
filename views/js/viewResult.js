@@ -33,11 +33,12 @@
 	
 	if (data.length> 0){
 	    for (key in data) {
-		    console.log(data[key]);
 		    if (data[key].length==2){
 		    observedData = data[key][0];
 		    observedDataEpoch = data[key][1];
-		    formattedData +="<div>"+layoutResponse(observedData)+ " <span class=epoch>("+observedDataEpoch+")</span></div>";
+		    $timeAffix = "";
+		    if (observedDataEpoch!= '') {$timeAffix ="<span class=epoch>("+observedDataEpoch+")</span>";}
+		    formattedData +="<div>"+layoutResponse(observedData)+ " "+$timeAffix+"</div>";
 		    }
 	    }
 	}
