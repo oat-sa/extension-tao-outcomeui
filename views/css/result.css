@@ -29,10 +29,10 @@ h1{
 }
 
 #content{
-	width:400px;
-	padding:10px;
 	
-	width:100%;
+	padding : 20px;
+	
+	
 }
 
 p{
@@ -79,22 +79,34 @@ p strong{
     background-color:#bbbbbb;
     text-align:center;
 }
-.resultsTable{
-    padding-right:10px;
-    border-collapse:inherit;
-}
+
 
 .row1{
     background-color:#eeeeee;
 }
 
 tr td{
-    padding:10px;
+    padding:20px;
+}
+
+.epoch{
+    font-style:italic;
 }
 
 .ui-jqgrid .ui-jqgrid-htable th div {
     height:40px;
-    overflow:hidden;
+    overflow: hidden;
     vertical-align:text-top;
-    width:100%;
+}
+.ui-jqgrid-sortable{
+    
+}
+.ui-jqgrid-hdiv {
+     
+}
+.ui-jqgrid-bdiv{
+    
+}
+#result-table-grid{
+   
 }

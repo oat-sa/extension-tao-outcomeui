@@ -51,9 +51,8 @@
      * Update document.columns/document.models current selection of data with columns
      */
     function setColumns(columns) {
-	console.log(columns);
+	
 	columns = identifyColumns(columns);
-	console.log(columns);
 	for (key in columns) {
 		 //used for the inner function set in the formatter callback, do not remvoe, the value gets computed at callback time
 		 var currentColumn = columns[key];
@@ -77,7 +76,7 @@
 			columnIdentifier = columns[key].prop;
 			columnName = "<b>"+columns[key]['label']+"</b>";break;
 		    }
-		    default: {
+		    default: {//taoResults_models_classes_table_GradeColumn or taoResults_models_classes_table_ResponseColumn
 			columnIdentifier = columns[key]['ca'] + columns[key]['vid'];
 			columnName = "<b>"+columns[key]['label']+"</b><br />("+columns[key]['vid']+')';break;
 		    }
@@ -148,10 +147,10 @@
     }
     //Grade properties
     else if ((column.type == "taoResults_models_classes_table_GradeColumn")){
-    return  "<span class=numeric>"+data+"</span>";
+    return  layoutResponseArray(data);
     }
     //Actual responses properties
     else if ((column.type == "taoResults_models_classes_table_ResponseColumn")){
-	return layoutResponse(data);
+	return layoutResponseArray(data);
 	}
     }

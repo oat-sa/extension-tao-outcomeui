@@ -3,6 +3,8 @@
 		<span><?=get_data('message')?></span>
 	</div>
 <?endif?>
+    <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/result.css" />
+    
     <script type="text/javascript">
 require(['require', 'jquery', '/taoResults/views/js/viewResult.js', 'grid/tao.grid', '/taoResults/views/js/resultTable.js'], function(req, $) {
     

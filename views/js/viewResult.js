@@ -26,4 +26,20 @@
 	catch(err){formattedData = data;}
 	return formattedData;
 	}
+
+ //Multiple Entries with epoch
+ function layoutResponseArray(data){
+	var formattedData = "";
 	
+	if (data.length> 0){
+	    for (key in data) {
+		    console.log(data[key]);
+		    if (data[key].length==2){
+		    observedData = data[key][0];
+		    observedDataEpoch = data[key][1];
+		    formattedData +=layoutResponse(observedData)+ " <span class=epoch>("+observedDataEpoch+")</span>";
+		    }
+	    }
+	}
+	return formattedData;
+	}

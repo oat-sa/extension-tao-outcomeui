@@ -130,6 +130,7 @@ class taoResults_models_classes_table_VariableDataProvider
 					RDF_TYPE,
 					PROPERTY_VARIABLE_ORIGIN,
 					PROPERTY_VARIABLE_IDENTIFIER,
+					PROPERTY_VARIABLE_EPOCH,
 					RDF_VALUE
 				));
 				
@@ -141,7 +142,10 @@ class taoResults_models_classes_table_VariableDataProvider
 						&& $vid == $column->getIdentifier()) {
 							$value = (string)array_pop($props[RDF_VALUE]);
 							foreach ($props[RDF_TYPE] as $type) {
-								$this->cache[$type->getUri()][$result->getUri()][$classActivity->getUri()][$vid] = $value;
+							    $time = "";
+							    $epoch = (string)array_pop($props[PROPERTY_VARIABLE_EPOCH]);
+							    if ($epoch != "") {$time = "@". date("F j, Y, g:i:s a",$epoch);}
+							    $this->cache[$type->getUri()][$result->getUri()][$classActivity->getUri()][$vid][] =  array($value, $time);
 							}
 							continue;
 					}
@@ -174,7 +178,7 @@ class taoResults_models_classes_table_VariableDataProvider
         }
         // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C5D end
 
-        return (string) $returnValue;
+        return (array) $returnValue;
     }
 
     /**
