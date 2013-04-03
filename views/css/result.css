@@ -92,3 +92,9 @@ tr td{
     padding:10px;
 }
 
+.ui-jqgrid .ui-jqgrid-htable th div {
+    height:40px;
+    overflow:hidden;
+    vertical-align:text-top;
+    width:100%;
+}

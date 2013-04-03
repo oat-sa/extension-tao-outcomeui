@@ -90,6 +90,7 @@ abstract class taoResults_models_classes_table_VariableColumn
      */
     public $identifier = '';
 
+   
     // --- OPERATIONS ---
 
     /**
@@ -125,7 +126,7 @@ abstract class taoResults_models_classes_table_VariableColumn
     {
         // section 127-0-1-1--228e2cb4:13971ca3814:-8000:0000000000000C5C begin
         $item = taoTests_models_classes_TestAuthoringService::singleton()->getItemByActivity($classActivity);
-        parent::__construct($item->getLabel().' '.$identifier);
+        parent::__construct($item->getLabel());
         $this->classActivity = $classActivity;
         $this->identifier = $identifier;
         // section 127-0-1-1--228e2cb4:13971ca3814:-8000:0000000000000C5C end

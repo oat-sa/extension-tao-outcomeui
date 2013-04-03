@@ -51,13 +51,16 @@
      * Update document.columns/document.models current selection of data with columns
      */
     function setColumns(columns) {
+	console.log(columns);
+	columns = identifyColumns(columns);
+	console.log(columns);
 	for (key in columns) {
 		 //used for the inner function set in the formatter callback, do not remvoe, the value gets computed at callback time
 		 var currentColumn = columns[key];
 		 document.columns.push(columns[key]);
 		 document.models.push({
-			 'name': "<b>"+columns[key]['label']+"</b><br />("+columns[key]['vid']+')',
-			 'columnIdentifier' : columns[key]['ca'] + columns[key]['vid'],
+			 'name': columns[key].columnName,
+			 'columnIdentifier' : columns[key].columnIdentifier,
 			 cellattr: function(rowId, tv, rawObject, cm, rdata){return "data-uri=void, data-type=void";},
 			 formatter : function(value, options, rData){return layoutData(value,currentColumn);
 			 }
@@ -66,26 +69,41 @@
 	 }
 	 showGrid();
     }
+    //convenience method adding attributes identifying the columns usign their attributes, their attributes depends on htier type
+    function identifyColumns(columns){
+	for (key in columns) {
+	    switch (columns[key].type){
+		    case 'tao_models_classes_table_PropertyColumn' :{
+			columnIdentifier = columns[key].prop;
+			columnName = "<b>"+columns[key]['label']+"</b>";break;
+		    }
+		    default: {
+			columnIdentifier = columns[key]['ca'] + columns[key]['vid'];
+			columnName = "<b>"+columns[key]['label']+"</b><br />("+columns[key]['vid']+')';break;
+		    }
+		 }
+		 columns[key].columnIdentifier = columnIdentifier;
+		 columns[key].columnName = columnName;
+	}
+	return columns;
+    }
     /**
      * Update document.columns/document.models current selection of data with columns
      */
     function removeColumns(columns) {
-	   //loops on the columns parameter and find out if document.columns contains this column already. 
-	   for (key in columns) {
+	    columns = identifyColumns(columns);
+	    //loops on the columns parameter and find out if document.columns contains this column already.
+	    for (key in columns) {
 		    for (dockey in document.columns) {
-		    //if the property delivery result is the same and the facet (score, response) is the same) 
-
-
-		    if ((document.columns[dockey].ca == columns[key].ca) & (document.columns[dockey].vid == columns[key].vid)){
-			 document.columns.splice(dockey,1);
-			 //document.models.splice(modelkey,1);
-			}
-		    }
-
-		    for (modelkey in document.models) {
-		    if ((document.models[modelkey].columnIdentifier == columns[key]['ca'] + columns[key]['vid'])){
-			    document.models.splice(modelkey,1);
-			}
+			    if (document.columns[dockey].columnIdentifier == columns[key].columnIdentifier) {
+				 document.columns.splice(dockey,1);
+				}
+			    for (modelkey in document.models) {
+			    if ((document.models[modelkey].columnIdentifier == columns[key].columnIdentifier)){
+				    document.models.splice(modelkey,1);
+				}
+			    }
+			
 		    }
 	   }
 	    showGrid();
