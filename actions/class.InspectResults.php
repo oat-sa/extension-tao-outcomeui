@@ -72,10 +72,11 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule
         $properties = array();
         $properties[] = new core_kernel_classes_Property(PROPERTY_RESULT_OF_DELIVERY);
         $properties[] = new core_kernel_classes_Property(PROPERTY_RESULT_OF_SUBJECT);
-
+	//$properties[] = new core_kernel_classes_Property(RDF_TYPE);
+	
         //Monitoring grid
-        $processMonitoringGrid = new taoResults_helpers_DeliveryResultGrid(array(), $this->resultGridOptions);
-        $grid = $processMonitoringGrid->getGrid();
+        $deliveryResultGrid = new taoResults_helpers_DeliveryResultGrid(array(), $this->resultGridOptions);
+        $grid = $deliveryResultGrid->getGrid();
         $model = $grid->getColumnsModel();
 
         //Filtering data
@@ -84,7 +85,7 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule
 
         //Monitoring data
         $this->setData('model', json_encode($model));
-        $this->setData('data', $processMonitoringGrid->toArray());
+        $this->setData('data', $deliveryResultGrid->toArray());
 
         $this->setView('resultList.tpl');
     }

@@ -1,9 +1,4 @@
-<style>
-	#filter-container { width:19%;  height:561px; }
-	.main-container { height:584px; padding:0; margin:0; overflow:auto !important; }
-	#process-details-tabs { height:269px; }
-	#monitoring-processes-container, #process-details-container { padding:0; height:50%; overflow:auto; }
-</style>
+<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/resultList.css" />
 
 <div id="filter-container" class="data-container tabs-bottom">
 	<div class="ui-widget ui-state-default ui-widget-header ui-corner-top container-title" >
@@ -29,11 +24,7 @@
 
 <script type="text/javascript">
 //Global variable
-var monitoringGrid = null;
-//Selected process id
-//quick hack to test, to replace quickly
-var selectedProcessId = null;
-//var selectedActivityExecutionId = null;
+var deliveryResultGrid = null;
 
 //load the monitoring interface functions of the parameter filter
 function loadResults(filter) {
@@ -42,24 +33,18 @@ function loadResults(filter) {
 			'filter':filter
 		},
 		function (DATA) {
-			monitoringGrid.empty();
-			monitoringGrid.add(DATA);
-			selectedProcessId = null;
+			deliveryResultGrid.empty();
+			deliveryResultGrid.add(DATA);
+			
 		}
 	);
 }
 
 $(function(){
 	require(['require', 'jquery', 'generis.facetFilter', 'grid/tao.grid'], function(req, $, GenerisFacetFilterClass) {
+
 		//the grid model
 		model = <?=$model?>;
-
-		/*
-		 * Instantiate the tabs
-		 */
-		var filterTabs = new TaoTabsClass('#filter-container', {'position':'bottom'});
-		var processDetailsTabs = new TaoTabsClass('#process-details-tabs', {'position':'bottom'});
-
 		/*
 		 * instantiate the facet based filter widget
 		 */
@@ -73,21 +58,12 @@ $(function(){
 					loadResults(facetFilter.getFormatedFilterSelection());
 				}
 			},
-			itemActions: {
-				createTab: {
-					iconUrl: root_url + '/tao/views/img/table.png',
-					callback: {
-						click: function(e) {
-							//console.log(e);
-						}
-					}
-				}
-			}
+			
 		};
 
 		//set the filter nodes
 		var filterNodes = [
-<?foreach($properties as $property):?>
+			<?foreach($properties as $property):?>
 			{
 				id: '<?=md5($property->uriResource)?>',
 				label: '<?=$property->getLabel()?>',
@@ -98,21 +74,27 @@ $(function(){
 	        'filterItself': false
 				}
 			},
-<?endforeach;?>
+			<?endforeach;?>
 		];
 		//instantiate the facet filter
 		var facetFilter = new GenerisFacetFilterClass('#facet-filter', filterNodes, facetFilterOptions);
 
+		$( "#facet-filter" ).tabs( "option", "show", { effect: "blind", duration: 10000 });
+
 		/*
-		 * instantiate the monitoring grid
+		*  Results Delviery Grid
 		 */
-		//the monitoring grid options
+
+		/*
+		 * instantiate the delivery results grid
+		 */
+		//the delivery results grid options
 		var resultsGridOptions = {
 			'height': $('#monitoring-processes-grid').parent().height(),
 			'title': __('Delivery results'),
 			'callback': {
 				'onSelectRow': function(rowId) {
-					label = monitoringGrid.data[rowId]['http://www.w3.org/2000/01/rdf-schema#label'];
+					label = deliveryResultGrid.data[rowId]['http://www.w3.org/2000/01/rdf-schema#label'];
 					if (!label) {
 						label = __('Delivery Result');
 					}
@@ -122,8 +104,8 @@ $(function(){
 		};
 
 		//instantiate the grid widget
-		monitoringGrid = new TaoGridClass('#monitoring-processes-grid', model, '', resultsGridOptions);
-		//load monitoring grid
+		deliveryResultGrid = new TaoGridClass('#monitoring-processes-grid', model, '', resultsGridOptions);
+		//load delivery results grid
 		loadResults(null);
 
 		//width/height of the subgrids
@@ -138,7 +120,11 @@ $(function(){
 		});
 
 	});
+
+	
 });
+
+
 </script>
 
 <?include(TAO_TPL_PATH.'footer.tpl');?>

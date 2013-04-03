@@ -1,0 +1,14 @@
+/**
+* Styles used in the resultList.tpl template
+*/
+#filter-container { width:19%;  height:561px; }
+.main-container { height:584px; padding:0; margin:0; overflow:hidden !important; }
+#process-details-tabs { height:269px; }
+#monitoring-processes-container, #process-details-container { padding:0; height:50%; overflow:hidden; }
+
+#buildTableButton{
+    margin-top:20px;
+    padding : 20px;
+    
+    
+}

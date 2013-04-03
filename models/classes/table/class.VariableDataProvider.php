@@ -143,7 +143,7 @@ class taoResults_models_classes_table_VariableDataProvider
 							$value = (string)array_pop($props[RDF_VALUE]);
 							foreach ($props[RDF_TYPE] as $type) {
 							    $time = "";
-							    $epoch = (string)array_pop($props[PROPERTY_VARIABLE_EPOCH]);
+							    if (is_array($props[PROPERTY_VARIABLE_EPOCH])) {$epoch = (string)array_pop($props[PROPERTY_VARIABLE_EPOCH]);}
 							    if ($epoch != "") {$time = "@". date("F j, Y, g:i:s a",$epoch);}
 							    $this->cache[$type->getUri()][$result->getUri()][$classActivity->getUri()][$vid][] =  array($value, $time);
 							}
