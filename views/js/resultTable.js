@@ -52,11 +52,12 @@
      */
     function setColumns(columns) {
 	for (key in columns) {
-		 //used for the inner function set in the formatter callback
+		 //used for the inner function set in the formatter callback, do not remvoe, the value gets computed at callback time
 		 var currentColumn = columns[key];
 		 document.columns.push(columns[key]);
 		 document.models.push({
-			 'name': columns[key]['label'], 
+			 'name': "<b>"+columns[key]['label']+"</b><br />("+columns[key]['vid']+')',
+			 'columnIdentifier' : columns[key]['ca'] + columns[key]['vid'],
 			 cellattr: function(rowId, tv, rawObject, cm, rdata){return "data-uri=void, data-type=void";},
 			 formatter : function(value, options, rData){return layoutData(value,currentColumn);
 			 }
@@ -73,14 +74,16 @@
 	   for (key in columns) {
 		    for (dockey in document.columns) {
 		    //if the property delivery result is the same and the facet (score, response) is the same) 
-		    if ((document.columns[dockey].ca == columns[key].ca) & (document.columns[dockey].type == columns[key].type)){
+
+
+		    if ((document.columns[dockey].ca == columns[key].ca) & (document.columns[dockey].vid == columns[key].vid)){
 			 document.columns.splice(dockey,1);
 			 //document.models.splice(modelkey,1);
 			}
 		    }
 
 		    for (modelkey in document.models) {
-		    if ((document.models[modelkey].name == columns[key].label)){
+		    if ((document.models[modelkey].columnIdentifier == columns[key]['ca'] + columns[key]['vid'])){
 			    document.models.splice(modelkey,1);
 			}
 		    }
