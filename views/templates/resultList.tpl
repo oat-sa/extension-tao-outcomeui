@@ -90,7 +90,8 @@ $(function(){
 		 */
 		//the delivery results grid options
 		var resultsGridOptions = {
-			'height': $('#monitoring-processes-container').height(),
+			'height': 'auto',
+			
 			'title': __('Delivery results'),
 			'callback': {
 				'onSelectRow': function(rowId) {
