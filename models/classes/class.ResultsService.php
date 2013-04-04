@@ -147,8 +147,10 @@ class taoResults_models_classes_ResultsService
         $returnValue = array();
 	$returnValue["value"] = $variable->getUniquePropertyValue(new core_kernel_classes_Property(RDF_VALUE))->__toString();
 	$returnValue["variableIdentifier"] = $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_IDENTIFIER));
-	$returnValue["epoch"] = $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_EPOCH));
-    //identify the item related to the score Variable
+
+	//$returnValue["epoch"] = $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_EPOCH));
+
+	//identify the item related to the score Variable
 	$variableOrigin = $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_ORIGIN));
 	$activityDefinition = $variableOrigin->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_ACTIVITY_EXECUTION_ACTIVITY));
 	$returnValue["item"] = taoTests_models_classes_TestAuthoringService::singleton()->getItemByActivity($activityDefinition);

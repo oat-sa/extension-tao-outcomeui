@@ -170,7 +170,7 @@ class taoResults_actions_Results extends tao_actions_TaoModule {
         $this->setData('TestTakerLabel', $testTaker->getLabel());
         $values = $testTaker->getPropertyValues(new core_kernel_classes_Property(PROPERTY_USER_LOGIN));
         $this->setData('TestTakerLogin', array_pop($values));
-
+//$this service getVariableData( core_kernel_classes_Resource $variable) to be used in here
         $variables = array();
         foreach ($this->service->getVariables($result) as $variable) {
             $values = $variable->getPropertiesValues(array(

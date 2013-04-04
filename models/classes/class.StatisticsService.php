@@ -51,6 +51,7 @@ class taoResults_models_classes_StatisticsService
 	"statisticsPerVariable"=>array(), //an array containing variables as keys, collected and computed data 					["statisticsPerTest"]=>array()
 	"statistics"=>array()
 	);
+	
        	 $deliveryResults =  $deliveryClass->getInstances(false);
 	 if (count($deliveryResults)==0) {throw new common_Exception(__('The class you have selected contains no results to be analysed, please select a different class'));}
          $deliveryDataSet["nbExecutions"] = count($deliveryResults);

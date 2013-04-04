@@ -62,7 +62,7 @@ extends taoResults_models_classes_StatisticsService
 	 * @author Patrick Plichart
 	 * @return array reportData an associatuve array with link to the generated graphs and general informations to be included in a view
 	 */
-	public function buildSimpleReport(){	
+	public function buildSimpleReport(){
 		$deliveryDataSet = $this->deliveryDataSet;
 		$reportData['date'] = date("F j, Y, g:i a");
 		$reportData['variablesAvgComparison'] = $this->computeRadarChartAverages();
@@ -77,15 +77,15 @@ extends taoResults_models_classes_StatisticsService
 		$reportData['#'] =  $this->deliveryDataSet["statistics"]["#"];
 		$reportData['numberVariables'] =  $this->deliveryDataSet["statistics"]["numberVariables"];	
 		$reportData['numberOfDistinctTestTaker'] =  count($this->deliveryDataSet["statistics"]["distinctTestTaker"]);
-		
+
 		foreach ($this->deliveryDataSet["statisticsPerVariable"] as $variableIdentifier => $struct){
 		$scoreVariableLabel = $struct["naturalid"];
 		//compute every single distribution for each variable
 		//$urlDeliveryVariablebarChartQuantiles = $this->computeBarChart($this->deliveryDataSet["statisticsPerVariable"][$variableIdentifier]["splitData"], "Average and Total Scores by deciles of the population (".$scoreVariableLabel.")");
 		$urlDeliveryVariablebarChartScores = $this->computeBarChartScores($variableIdentifier, "Sorted Collected Scores for the variable : ".$scoreVariableLabel."");
 		$urlDeliveryVariablebarChartScoresFequencies = $this->computebarChartScoresFrequencies($variableIdentifier, "Grouped Scores Frequencies (".$scoreVariableLabel.")");
-		
-		//build UX data structure		
+
+		//build UX data structure
 		$listOfVariables[]= array("label" => $scoreVariableLabel, "urlFrequencies"=>$urlDeliveryVariablebarChartScoresFequencies, "urlScores"=> $urlDeliveryVariablebarChartScores, "infos" => $struct);
 		
 		//build parallel arrays to maintain values for the graph computation showing all variables
@@ -181,6 +181,8 @@ extends taoResults_models_classes_StatisticsService
 	// Initialise the graph
 	$graph = new pChart(655,260);
 	$graph->createColorGradientPalette($r,$g,$b,$r,$g,$b,5);
+	//aa is way too slow here
+	$graph->Antialias = FALSE;
 	$graph->setFontProperties(fontName,10);
 	
 	$graph->setGraphArea(65,40,580,200);
@@ -223,6 +225,8 @@ extends taoResults_models_classes_StatisticsService
 	    // Initialise the graph  
 	    $graph = new pChart(600,500);
 	    $graph->createColorGradientPalette($r,$g,$b,$r,$g,$b,5);
+	    //aa is way too slow here
+	    $graph->Antialias = FALSE;
 	    $graph->setFontProperties(fontName,9);  
 	    $graph->drawFilledRoundedRectangle(7,7,593,493,5,240,240,240);  
 	    $graph->drawRoundedRectangle(5,5,593,493,5,230,230,230);  
