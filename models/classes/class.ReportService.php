@@ -20,7 +20,7 @@
  * 
  */
 
-define("fontName", ROOT_PATH."/tao/lib/pChart/Fonts/pf_arma_five.ttf");
+define("fontName", ROOT_PATH."/tao/lib/pChart/Fonts/verdana.ttf");
 require_once('tao/lib/pChart/pData.class');
 require_once ('tao/lib/pChart/pChart.class');
 
@@ -163,9 +163,10 @@ extends taoResults_models_classes_StatisticsService
 	 * @param string yAxisLabel label of the y Axis
 	 * @return string the url of the generated graph
 	 */
-	private function getChart($localGraphId, $datax, $setOfySeries, $title, $xAxisLabel = "", $yAxisLabel=""){
+	private function getChart($localGraphId, $datax, $setOfySeries, $title, $xAxisLabel = "", $yAxisLabel="", $r = "208",$g ="2",$b = "57"){
 	  // Dataset definition 
-	$dataSet = new pData;
+
+	    $dataSet = new pData;
 	foreach ($setOfySeries as $legend => $ysery ){
 	    $dataSet->AddPoint($ysery,$legend);
 	    $dataSet->SetSerieName($legend,$legend);
@@ -179,6 +180,7 @@ extends taoResults_models_classes_StatisticsService
 	$dataSet->SetAbsciseLabelSerie("xLabels");
 	// Initialise the graph
 	$graph = new pChart(655,260);
+	$graph->createColorGradientPalette($r,$g,$b,$r,$g,$b,5);
 	$graph->setFontProperties(fontName,10);
 	
 	$graph->setGraphArea(65,40,580,200);
@@ -198,8 +200,8 @@ extends taoResults_models_classes_StatisticsService
 	$graph->drawBarGraph($dataSet->GetData(),$dataSet->GetDataDescription(),TRUE);
 
 	// Finish the graph
-	$graph->setFontProperties(fontName,8);
-	$graph->drawLegend(475,220,$dataSet->GetDataDescription(),255,255,255);
+	$graph->setFontProperties(fontName,9);
+	$graph->drawLegend(475,220,$dataSet->GetDataDescription(),254,254,254);
 	$graph->setFontProperties(fontName,10);
 	$graph->drawTitle(50,30,$title,50,80,50,585);
 	      $url = $this->getUniqueMediaFileName($localGraphId, "png");
@@ -207,9 +209,11 @@ extends taoResults_models_classes_StatisticsService
 	      return ROOT_URL.$url;
 	}
 	
-	private function getRadar($localGraphId, $title, $xLabels, $sery1, $legend){
+	private function getRadar($localGraphId, $title, $xLabels, $sery1, $legend, $r = "208",$g ="2",$b = "57"){
 	    // Dataset definition   
-	    $dataSet = new pData;  
+	    
+
+	    $dataSet = new pData;
 	    $dataSet->AddPoint($xLabels,"Label");  
 	    $dataSet->AddPoint($sery1,"Serie1");  
 	    $dataSet->AddSerie("Serie1");
@@ -217,18 +221,22 @@ extends taoResults_models_classes_StatisticsService
 	    $dataSet->SetSerieName($legend,"Serie1");  
 	    
 	    // Initialise the graph  
-	    $graph = new pChart(600,500);  
+	    $graph = new pChart(600,500);
+	    $graph->createColorGradientPalette($r,$g,$b,$r,$g,$b,5);
 	    $graph->setFontProperties(fontName,9);  
 	    $graph->drawFilledRoundedRectangle(7,7,593,493,5,240,240,240);  
 	    $graph->drawRoundedRectangle(5,5,593,493,5,230,230,230);  
 	    $graph->setGraphArea(120,70,520,420);  
-	    $graph->drawFilledRoundedRectangle(30,30,570,470,5,255,255,255);  
-	    $graph->drawRoundedRectangle(30,30,570,470,5,220,220,220);  
+	    $graph->drawFilledRoundedRectangle(30,30,570,470,5,254,254,254);
+	    $graph->drawRoundedRectangle(30,30,570,470,5,220,220,220);
+
+	    
 	    // Draw the radar graph  
-	    $graph->drawRadarAxis($dataSet->GetData(),$dataSet->GetDataDescription(),TRUE,20,120,120,120,125,125,125);  
+	    $graph->drawRadarAxis($dataSet->GetData(),$dataSet->GetDataDescription(),TRUE,20,120,120,120,5,5,5);
 	    $graph->drawFilledRadar($dataSet->GetData(),$dataSet->GetDataDescription(),50,20);  
 
-	    // Finish the graph  
+	    // Finish the graph
+	    $graph->setFontProperties(fontName,9);
 	    $graph->drawLegend(32,32,$dataSet->GetDataDescription(),255,255,255);  
 	    $graph->setFontProperties(fontName,10);  
 	    $graph->drawTitle(0,22,$title,50,50,50,400);  
