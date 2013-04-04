@@ -180,7 +180,7 @@ class taoResults_models_classes_table_VariableDataProvider
 
         return (array) $returnValue;
     }
-
+    
     /**
      * Short description of method singleton
      *

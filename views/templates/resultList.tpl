@@ -16,8 +16,8 @@
 		</table>
 	</div>
 	<div align="right">
-		<span class="ui-state-default ui-corner-all">
-			<a href="#" id="buildTableButton"><?=__('Build/Export data table')?></a>
+		<span id="buildTableButton" class="ui-state-default ui-corner-all">
+			<a href="#" ><?=__('Build/Export data table')?></a>
 		</span>
 	</div>
 </div>
@@ -90,7 +90,7 @@ $(function(){
 		 */
 		//the delivery results grid options
 		var resultsGridOptions = {
-			'height': $('#monitoring-processes-grid').parent().height(),
+			'height': $('#monitoring-processes-container').height(),
 			'title': __('Delivery results'),
 			'callback': {
 				'onSelectRow': function(rowId) {

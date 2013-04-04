@@ -72,7 +72,7 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule
         $properties = array();
         $properties[] = new core_kernel_classes_Property(PROPERTY_RESULT_OF_DELIVERY);
         $properties[] = new core_kernel_classes_Property(PROPERTY_RESULT_OF_SUBJECT);
-	//$properties[] = new core_kernel_classes_Property(RDF_TYPE);
+	$properties[] = new core_kernel_classes_Property(RDF_TYPE);
 	
         //Monitoring grid
         $deliveryResultGrid = new taoResults_helpers_DeliveryResultGrid(array(), $this->resultGridOptions);
