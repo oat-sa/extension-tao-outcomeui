@@ -65,65 +65,43 @@ require(['require', 'jquery', '/taoResults/views/js/viewResult.js', 'grid/tao.gr
     });
 });
 </script>
-    <div class="main-container">
-    <span>
-    <div style="padding:10px">
-    <span class="ui-state-disabled ui-corner-all" id="viewSubject">
-	    <a href="#" >
-		    <img src="<?=TAOBASE_WWW?>img/add.png" alt="add" /> <?=__('Add Test Taker')?>
-	    </a>
-    </span>
-    <span class="ui-state-default ui-corner-all" id="getScoreButton">
-	    <a href="#" >
-		    <img src="<?=TAOBASE_WWW?>img/add.png" alt="add" /> <?=__('Add All grades')?>
-	    </a>
-   </span>
-   <span class="ui-state-default ui-corner-all " id="getResponseButton">
-	    <a href="#" >
-		    <img src="<?=TAOBASE_WWW?>img/add.png" alt="add" /> <?=__('Add All responses')?>
-	    </a>
-    </span>
-    </div>
-    <div style="padding:10px">
-    <span class="ui-state-default ui-corner-all" id="removeSubject">
-	    <a href="#" >
-		    <img src="<?=TAOBASE_WWW?>img/delete.png" alt="remove" /> <?=__('Anonymise')?>
-	    </a>
-    </span>
-    <span class="ui-state-disabled ui-corner-all" id="rmScoreButton">
-	    <a href="#" >
-		    <img src="<?=TAOBASE_WWW?>img/delete.png" alt="remove" /> <?=__('Remove All grades')?>
-	    </a>
-    </span>
-    <span class="ui-state-disabled ui-corner-all " id="rmResponseButton">
-	    <a href="#" >
-		    <img src="<?=TAOBASE_WWW?>img/delete.png" alt="remove" /> <?=__('Remove All responses')?>
-	    </a>
-    </span>
-     </div>
-    </div>    
-
-    <table id="result-table-grid"></table>
-    <div id="pagera1"></div>
-
-    <div style="padding:10px">
-    <span class="ui-state-default ui-corner-all" id="columnChooser">
-	    <a href="#" >
-		    <img src="<?=TAOBASE_WWW?>img/wf_ico.png" alt="settings" /> <?=__('Filter columns')?>
-	    </a>
-    </span>
-     </span>
-     <span class="ui-state-default ui-corner-all">
-	    <a href="#" id="getCsvFile">
-		    <img src="<?=TAOBASE_WWW?>img/download.png" alt="Download" /> <?=__('Download CSV File')?>
-	    </a>
-    </span><!--
-     <span class="ui-state-disabled ui-corner-all">
-	    <a href="#" id="getCsvFile">
-		    <img src="<?=TAOBASE_WWW?>img/download.png" alt="Export Individual Report" /> <?=__('Download PDF File')?>
-	    </a>
-    </span>!-->
-    </div>   
+<div class="main-container">
+	<div id="results-custom-table-actions">
+	    <div>
+			<span class="ui-state-disabled ui-corner-all" id="viewSubject">
+				<a href="#"><img src="<?=TAOBASE_WWW?>img/add.png" alt="add"/><?=__('Add Test Taker')?></a>
+			</span>
+			<span class="ui-state-default ui-corner-all" id="getScoreButton">
+				<a href="#"><img src="<?=TAOBASE_WWW?>img/add.png" alt="add"/><?=__('Add All grades')?></a>
+			</span>
+			<span class="ui-state-default ui-corner-all " id="getResponseButton">
+				<a href="#"><img src="<?=TAOBASE_WWW?>img/add.png" alt="add"/><?=__('Add All responses')?></a>
+			</span>
+		</div>
+		    
+		<div>
+			<span class="ui-state-default ui-corner-all" id="removeSubject">
+				<a href="#"><img src="<?=TAOBASE_WWW?>img/delete.png" alt="remove"/><?=__('Anonymise')?></a>
+			</span>
+			<span class="ui-state-disabled ui-corner-all" id="rmScoreButton">
+				<a href="#"><img src="<?=TAOBASE_WWW?>img/delete.png" alt="remove"/><?=__('Remove All grades')?></a>
+			</span>
+			<span class="ui-state-disabled ui-corner-all " id="rmResponseButton">
+				<a href="#"><img src="<?=TAOBASE_WWW?>img/delete.png" alt="remove"/><?=__('Remove All responses')?></a>
+			</span>
+		</div>
+	</div>
+	<div id="result-table-container">
+    	<table id="result-table-grid"></table>
+	</div>
+	<div id="results-custom-table-tools">
+		<span class="ui-state-default ui-corner-all" id="columnChooser">
+			<a href="#"><img src="<?=TAOBASE_WWW?>img/wf_ico.png" alt="settings"/><?=__('Filter columns')?></a>
+		</span>
+		<span class="ui-state-default ui-corner-all">
+			<a href="#" id="getCsvFile"><img src="<?=TAOBASE_WWW?>img/download.png" alt="Download" /> <?=__('Download CSV File')?></a>
+    	</span>
+	</div>   
 </div>
 
 

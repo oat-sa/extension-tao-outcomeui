@@ -1,8 +1,5 @@
 <div id="form-title" class="ui-widget-header ui-corner-top ui-state-default"><?=__('View result')?></div>
-<div class="ui-widget-content">
-    
-    
-    <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>tao/views/css/custom-theme/jquery-ui-1.8.22.custom.css" />
+<div class="ui-widget-content ui-corner-bottom">
     <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/result.css" />
 <script type="text/javascript">
 	require(['require', 'jquery', '/taoResults/views/js/viewResult.js'], function () {
@@ -24,7 +21,7 @@
 				    <span id=login>(<?=get_data('login')?><?=get_data('TestTakerLogin')?>)</span>
 				</span>
 			</p>
-			<table class="resultsTable" border="1" >
+			<table class="resultsTable" border="1">
 			<?  foreach (get_data('variables') as $group){ ?>
 			<tr >
 			        <td class="headerRow" colspan="3"><span class="itemName"><?=__('Item')?> : <?=$group['label']?></span> <span class="itemModel">(<?=$group['itemModel']?>)</span></td>

@@ -11,8 +11,8 @@
 </div>
 
 <div class="main-container">
-	<div id="monitoring-processes-container">
-		<table id="monitoring-processes-grid">
+	<div id="inspect-results-container">
+		<table id="inspect-results-grid">
 		</table>
 	</div>
 	<div align="right">
@@ -26,7 +26,7 @@
 //Global variable
 var deliveryResultGrid = null;
 
-//load the monitoring interface functions of the parameter filter
+//load the results interface functions of the parameter filter
 function loadResults(filter) {
 	$.getJSON('<?=_url('getResults')?>',
 		{
@@ -105,7 +105,7 @@ $(function(){
 		};
 
 		//instantiate the grid widget
-		deliveryResultGrid = new TaoGridClass('#monitoring-processes-grid', model, '', resultsGridOptions);
+		deliveryResultGrid = new TaoGridClass('#inspect-results-grid', model, '', resultsGridOptions);
 		//load delivery results grid
 		loadResults(null);
 

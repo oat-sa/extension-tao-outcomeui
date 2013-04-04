@@ -1,24 +1,23 @@
 /* 
-    Document   : result
-    Created on : Mar 15, 2013, 2:25:29 PM
-    Author     : plichart
-    Description:
-        Purpose of the stylesheet follows.
+    Document    : result
+    Created on  : Mar 15, 2013, 2:25:29 PM
+    Author      : Patrick Plichart, <patrick@taotesting.com>
+    Description : Purpose of the stylesheet follows.
 */
 
-body{
+body {
 	background-color: #eee;
 	font-family: Verdana, Arial, sans-serif;
 	color: #3A3A3A;
 }
 
-h1{
+h1 {
 	text-align: center;
 	font-size: 22px;
 	margin-bottom: 35px;
 }
 
-#main{
+#main {
 	background-color: white;
 	background-position: 530px 30px;
 	min-height: 320px;
@@ -28,14 +27,11 @@ h1{
 	margin: 100px auto;
 }
 
-#content{
-	
+#content {	
 	padding : 20px;
-	
-	
 }
 
-p{
+p {
 	font-size:14px;
 	text-align: justify;
 	font-weight:normal;
@@ -44,71 +40,86 @@ p{
 	margin-bottom: 10px;
 }
 
-p strong{
+p strong {
 	font-weight: bold;	
 }
 
-#TestTakerIdentification{
+#TestTakerIdentification {
 	font-style:italic;
 }
-#TestTakerIdentification{
+
+#TestTakerIdentification {
 	font-style:italic;
 }
-#name{
+
+#name {
 	font-weight:bold;
-	
 }
-#login{
+
+#login {
 	text-decoration: underline;
 }
-.itemName{
+
+.itemName {
     font-size:15px;
-    
     text-decoration: underline;
-   
 }
-.itemModel{
+.itemModel {
 	font-style:italic;
 }
-.dataResult{
+.dataResult {
     font-weight:bold;
     text-align:right;
     
 }
-.headerRow{
+
+.resultsTable {
+	border-collapse: collapse;
+}
+
+.resultsTable .headerRow {
     background-color:#bbbbbb;
     text-align:center;
 }
 
 
-.row1{
+.row1 {
     background-color:#eeeeee;
 }
 
-tr td{
+tr td {
     padding:20px;
 }
 
-.epoch{
+.epoch {
     font-style:italic;
 }
 
-.ui-jqgrid .ui-jqgrid-htable th div {
-    height:40px;
+.ui-jqgrid .ui-jqgrid-htable th div{
     overflow: hidden;
     vertical-align:text-top;
 }
-.ui-jqgrid-sortable{
-    
-}
-.ui-jqgrid-hdiv {
-     
-}
-.ui-jqgrid-bdiv{
-    
-}
-#result-table-grid{
-   
+
+.ui-jqgrid .ui-jqgrid-pager .ui-pg-div span.ui-icon {
+	margin-top: -3px
 }
 
+#results-custom-table-actions {
+	margin: 15px 0;
+}
 
+#results-custom-table-actions > div {
+	margin-bottom: 15px;
+}
+
+#results-custom-table-tools {
+	margin-top: 15px;
+}
+
+#result-table-container {
+	margin: 4px;
+}
+
+#result-table-grid {
+	border: none;
+}
