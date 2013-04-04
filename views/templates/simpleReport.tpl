@@ -1,13 +1,13 @@
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>tao/views/css/custom-theme/jquery-ui-1.8.22.custom.css" />
-<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/result.css" />
+<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/simpleReport.css" />
 <div class="ui-helper-reset" style="height:100%;" >
 	<div id="form-title" class="ui-widget-header ui-corner-top ui-state-default">
 		<?=get_data('reportTitle')?>
 	</div>
-	<div class="ui-widget-content ui-corner-right">
+	<div class="report ui-widget-content ui-corner-right">
 		    <table><!--TODO CSS the table-->
 			<tr>
-			    <td >
+			    <td>
 				<?=__('Report generated from the following subset of results : ')?><strong><?=get_data('selectedFilter')?></strong><br/>
 				<?=__('Generated on : ')?><strong><?=get_data('date')?></strong><br /><br />
 				<?=__('The selection contains results related to the following delivery(ies) :')?><br />
@@ -35,15 +35,16 @@
 				    <? endforeach ?>
 				</table>
 			    </td>
-			    <td >	
-			        <img src="<? echo get_data('variablesAvgComparison');?>"/>
+			    <td rowspan="2">
+			        <img src="<? echo get_data('variablesAvgComparison');?>" />
+				<img src="<? echo get_data('variablesFreqComparison');?>" />
 			    </td>
 			</tr>
 			<tr>
 				<td><i>Data extracted in <? echo get_data('dataExtractionTime').__(" seconds");?></i><br/>
 				    <i>Report built in <? echo get_data('reportBuildTime').__(" seconds");?></i>
 				</td>
-				<td><img src="<? echo get_data('variablesFreqComparison');?>"/></td>
+				
 			</tr>
 		    </table>
 		<!-- not very relevant yet without measurement boudaries<div style="border:1px;">
