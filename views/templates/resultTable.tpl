@@ -21,7 +21,7 @@ require(['require', 'jquery', '/taoResults/views/js/viewResult.js', 'grid/tao.gr
 	    document.getActionGradeColumnUrl = "<?=_url('getGradeColumns')?>";
 	    document.getActionResponseColumnUrl = "<?=_url('getResponseColumns')?>";
 	    document.getActionCsvFileUrl = "<?=_url('getCsvFile')?>";
-	    document.getActionViewResultUrl= "<?=_url('viewResult','InspectResults')?>";
+	    document.getActionViewResultUrl= "<?=_url('viewResult','Results')?>";
 	    document.JsonFilter = <?=tao_helpers_Javascript::buildObject(get_data("filter"))?>;
 	    document.JsonFilterSelection = <?=tao_helpers_Javascript::buildObject(array('filter' => get_data("filter")))?>;
 	    document.resultOfSubjectConstant = "<?php echo PROPERTY_RESULT_OF_SUBJECT;?>";

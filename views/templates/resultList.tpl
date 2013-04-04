@@ -99,7 +99,7 @@ $(function(){
 					if (!label) {
 						label = __('Delivery Result');
 					}
-					helpers.openTab(label, '<?=_url('viewResult')?>?uri='+escape(rowId));
+					helpers.openTab(label, '<?=_url('viewResult', 'Results')?>?uri='+escape(rowId));
 				}
 			}
 		};
