@@ -109,7 +109,7 @@ extends taoResults_models_classes_StatisticsService
 	    $datay = $this->deliveryDataSet["statisticsPerVariable"][$variableIdentifier]["data"];
 	    $datax = array(); for ($i=0; $i < count($this->deliveryDataSet["statisticsPerVariable"][$variableIdentifier]["data"]); $i++) {$datax[] = "";}
 	    $legendTitle = __("Score per Observation");
-	    return $this->getChart($variableIdentifier."scores", $datax, array($legendTitle => $datay), $title, "Sorted Observations", "Score");
+	    return $this->getChart($variableIdentifier."scores", $datax, array($legendTitle => $datay), $title, "line", "Sorted Observations", "Score");
 	}
 	/**
 	 * @author Patrick plichart
@@ -128,7 +128,7 @@ extends taoResults_models_classes_StatisticsService
 		$datay[] = $frequency;
 	    }
 	    $legendTitle = __("Frequency per Score");
-	    return $this->getChart($variableIdentifier."f", $datax, array($legendTitle => $datay), $title, "Score","Frequency (#)");
+	    return $this->getChart($variableIdentifier."f", $datax, array($legendTitle => $datay), $title, "bar","Score","Frequency (#)");
 	}
 	/**
 	 * @author Patrick Plichart
@@ -163,7 +163,7 @@ extends taoResults_models_classes_StatisticsService
 	 * @param string yAxisLabel label of the y Axis
 	 * @return string the url of the generated graph
 	 */
-	private function getChart($localGraphId, $datax, $setOfySeries, $title, $xAxisLabel = "", $yAxisLabel="", $r = "208",$g ="2",$b = "57"){
+	private function getChart($localGraphId, $datax, $setOfySeries, $title, $type="bar", $xAxisLabel = "", $yAxisLabel="", $r = "208",$g ="2",$b = "57"){
 	  // Dataset definition 
 
 	    $dataSet = new pData;
@@ -199,8 +199,15 @@ extends taoResults_models_classes_StatisticsService
 	$graph->drawTreshold(0,143,55,72,TRUE,TRUE);
 
 	// Draw the bar graph
-	$graph->drawBarGraph($dataSet->GetData(),$dataSet->GetDataDescription(),TRUE);
+	switch ($type){
+	
+	    case "bar":{$graph->drawBarGraph($dataSet->GetData(),$dataSet->GetDataDescription(),TRUE);break;}
+	    case "line":{
+		    $graph->drawLineGraph($dataSet->GetData(),$dataSet->GetDataDescription());
+		    $graph->drawPlotGraph($dataSet->GetData(),$dataSet->GetDataDescription(),3,2,255,255,255);  break;
 
+	    }
+	}
 	// Finish the graph
 	$graph->setFontProperties(fontName,9);
 	$graph->drawLegend(50,220,$dataSet->GetDataDescription(),254,254,254);

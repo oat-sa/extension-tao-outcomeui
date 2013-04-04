@@ -13,6 +13,19 @@ body{
 	
 
 }
+@media print {
+  body * {
+    visibility:hidden;
+  }
+  #section_to_print, #section_to_print * {
+    visibility:visible;
+  }
+  #section_to_print {
+    position:absolute;
+    left:0;
+    top:0;
+  }
+}
 .report{
     padding: 15px;
     font-size: 11px;

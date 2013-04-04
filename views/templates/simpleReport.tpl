@@ -1,5 +1,5 @@
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/simpleReport.css" />
-<div class="ui-helper-reset" style="height:100%;" >
+<div class="ui-helper-reset" id="section_to_print" style="height:100%;" >
 	<div id="form-title" class="ui-widget-header ui-corner-top ui-state-default">
 		<?=get_data('reportTitle')?>
 	</div>
@@ -7,6 +7,11 @@
 		    <table><!--TODO CSS the table-->
 			<tr>
 			    <td>
+				<span id="printButton" class="ui-state-default ui-corner-all">
+					<a href="javascript:window.print()" ><?=__('Print Report')?></a>
+				</span>
+				<br />
+				<br />
 				<?=__('Report generated from the following subset of results : ')?><strong><?=get_data('selectedFilter')?></strong><br/>
 				<?=__('Generated on : ')?><strong><?=get_data('date')?></strong><br /><br />
 				<?=__('The selection contains results related to the following delivery(ies) :')?><br />
@@ -33,6 +38,8 @@
 				    <tr><td><?=$variable["label"]?></td><td><?=round($variable["infos"]["avg"],2)?></td><td><?=$variable["infos"]["#"]?></td></tr>
 				    <? endforeach ?>
 				</table>
+
+
 			    </td>
 			    <td rowspan="2">
 			        <img src="<? echo get_data('variablesAvgComparison');?>" />
