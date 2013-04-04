@@ -85,7 +85,7 @@ class taoResults_actions_SimpleReport extends tao_actions_TaoModule {
             $this->setData($dataIdentifier, $value);
         }
         //and select the corresponding view structure, could be (?) switched to something different
-        $this->setView('simple_form.tpl');
+        $this->setView('simpleReport.tpl');
     }
 
 
