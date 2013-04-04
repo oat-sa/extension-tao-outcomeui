@@ -179,13 +179,13 @@ extends taoResults_models_classes_StatisticsService
 	
 	$dataSet->SetAbsciseLabelSerie("xLabels");
 	// Initialise the graph
-	$graph = new pChart(655,260);
+	$graph = new pChart(490,260);
 	$graph->createColorGradientPalette($r,$g,$b,$r,$g,$b,5);
 	//aa is way too slow here
 	$graph->Antialias = FALSE;
-	$graph->setFontProperties(fontName,10);
+	$graph->setFontProperties(fontName,8);
 	
-	$graph->setGraphArea(65,40,580,200);
+	$graph->setGraphArea(55,40,450,200);
 	//draw the background rectangle
 	$graph->drawFilledRoundedRectangle(7,7,655,253,5,240,240,240);
 	
@@ -203,9 +203,9 @@ extends taoResults_models_classes_StatisticsService
 
 	// Finish the graph
 	$graph->setFontProperties(fontName,9);
-	$graph->drawLegend(475,220,$dataSet->GetDataDescription(),254,254,254);
-	$graph->setFontProperties(fontName,10);
-	$graph->drawTitle(50,30,$title,50,80,50,585);
+	$graph->drawLegend(50,220,$dataSet->GetDataDescription(),254,254,254);
+	$graph->setFontProperties(fontName,8);
+	$graph->drawTitle(15,30,$title,50,80,50);
 	      $url = $this->getUniqueMediaFileName($localGraphId, "png");
 	      $graph->Render(ROOT_PATH.$url);
 	      return ROOT_URL.$url;
@@ -223,16 +223,16 @@ extends taoResults_models_classes_StatisticsService
 	    $dataSet->SetSerieName($legend,"Serie1");  
 	    
 	    // Initialise the graph  
-	    $graph = new pChart(600,500);
+	    $graph = new pChart(500,500);
 	    $graph->createColorGradientPalette($r,$g,$b,$r,$g,$b,5);
 	    //aa is way too slow here
 	    $graph->Antialias = FALSE;
-	    $graph->setFontProperties(fontName,9);  
-	    $graph->drawFilledRoundedRectangle(7,7,593,493,5,240,240,240);  
-	    $graph->drawRoundedRectangle(5,5,593,493,5,230,230,230);  
-	    $graph->setGraphArea(120,70,520,420);  
-	    $graph->drawFilledRoundedRectangle(30,30,570,470,5,254,254,254);
-	    $graph->drawRoundedRectangle(30,30,570,470,5,220,220,220);
+	    $graph->setFontProperties(fontName,8);
+	    $graph->drawFilledRoundedRectangle(7,7,493,493,5,240,240,240);
+	    $graph->drawRoundedRectangle(5,5,493,493,5,230,230,230);
+	    $graph->setGraphArea(120,70,420,420);
+	    $graph->drawFilledRoundedRectangle(30,30,470,470,5,254,254,254);
+	    $graph->drawRoundedRectangle(30,30,470,470,5,220,220,220);
 
 	    
 	    // Draw the radar graph  

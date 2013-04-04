@@ -71,9 +71,9 @@
 				
 				
 			</ul>
-		
-			<img src="<? echo $variable["urlScores"];?>"/>
 			<img src="<? echo $variable["urlFrequencies"];?>"/>
+			<img src="<? echo $variable["urlScores"];?>"/>
+			
 			     
 		
 		
