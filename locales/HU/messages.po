@@ -1,17 +1,23 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TAO v2.4-beta3\n"
-"PO-Revision-Date: 2013-03-22T14:23:22\n"
+"PO-Revision-Date: 2013-04-05T18:39:33\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: HU\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
+msgid " seconds"
+msgstr ""
+
 msgid "# Collected Results"
 msgstr ""
 
 msgid "# Collected Score Variables"
+msgstr ""
+
+msgid "# data collected"
 msgstr ""
 
 msgid "# Distinct Test Takers"
@@ -50,6 +56,15 @@ msgstr ""
 msgid "custom table"
 msgstr ""
 
+msgid "Data Collection per Variable"
+msgstr ""
+
+msgid "Data collection statistics :"
+msgstr ""
+
+msgid "delete"
+msgstr ""
+
 msgid "Delivery"
 msgstr ""
 
@@ -62,9 +77,6 @@ msgstr ""
 msgid "Download CSV File"
 msgstr ""
 
-msgid "Download PDF File"
-msgstr ""
-
 msgid "Edit result class"
 msgstr ""
 
@@ -75,6 +87,12 @@ msgid "export"
 msgstr ""
 
 msgid "Filter columns"
+msgstr ""
+
+msgid "Frequency per Score"
+msgstr ""
+
+msgid "Generated on : "
 msgstr ""
 
 msgid "import"
@@ -109,19 +127,19 @@ msgstr ""
 msgid "Observed performances per distinc score variable types "
 msgstr ""
 
-msgid "Observed Scores"
-msgstr ""
-
-msgid "Observed Scores Distribution"
-msgstr ""
-
 msgid "Performed by :"
+msgstr ""
+
+msgid "Print Report"
 msgstr ""
 
 msgid "Remove All grades"
 msgstr ""
 
 msgid "Remove All responses"
+msgstr ""
+
+msgid "Report generated from the following subset of results : "
 msgstr ""
 
 msgid "Result saved"
@@ -140,16 +158,25 @@ msgstr ""
 msgid "Results Selection Filters"
 msgstr ""
 
+msgid "score average"
+msgstr ""
+
+msgid "Score average per Variable"
+msgstr ""
+
+msgid "Score per Observation"
+msgstr ""
+
+msgid "Scores and response rates statistics"
+msgstr ""
+
 msgid "search"
 msgstr ""
 
 msgid "simple report"
 msgstr ""
 
-msgid "Standard Deviation"
-msgstr ""
-
-msgid "Template Saved"
+msgid "Statistical Report for the current selection"
 msgstr ""
 
 msgid "Test taker"
@@ -159,6 +186,9 @@ msgid "The class you have selected contains no results to be analysed, please se
 msgstr ""
 
 msgid "The number of observations is too low"
+msgstr ""
+
+msgid "The selection contains results related to the following delivery(ies) :"
 msgstr ""
 
 msgid "There was a problem generating your report, please try again."
@@ -171,6 +201,9 @@ msgid "Total Average"
 msgstr ""
 
 msgid "Total Standard Deviation"
+msgstr ""
+
+msgid "VariableName"
 msgstr ""
 
 #, tao-public

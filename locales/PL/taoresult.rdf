@@ -184,6 +184,24 @@
     -->
     <rdfs:comment xml:lang="PL"><![CDATA[Variable Identifier]]></rdfs:comment>
   </rdf:Description>
+  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#variableEpoch">
+    <!--
+    @sourceLanguage EN
+    @targetLanguage PL
+    @source The epoch when the variable got stored
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#variableEpoch
+    @predicate http://www.w3.org/2000/01/rdf-schema#label
+    -->
+    <rdfs:label xml:lang="PL"><![CDATA[The epoch when the variable got stored]]></rdfs:label>
+    <!--
+    @sourceLanguage EN
+    @targetLanguage PL
+    @source The epoch when the variable got stored
+    @subject http://www.tao.lu/Ontologies/TAOResult.rdf#variableEpoch
+    @predicate http://www.w3.org/2000/01/rdf-schema#comment
+    -->
+    <rdfs:comment xml:lang="PL"><![CDATA[The epoch when the variable got stored]]></rdfs:comment>
+  </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#variableComment">
     <!--
     @sourceLanguage EN
