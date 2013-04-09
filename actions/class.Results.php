@@ -187,7 +187,7 @@ class taoResults_actions_Results extends tao_actions_TaoModule {
                 );
             }
 
-	    $values[PROPERTY_VARIABLE_EPOCH] =  array("@".date("F j, Y, g:i:s a",array_pop($values[PROPERTY_VARIABLE_EPOCH])->literal));
+	    $values[PROPERTY_VARIABLE_EPOCH] =  array("@".tao_helpers_Date::displayeDate(current($values[PROPERTY_VARIABLE_EPOCH]), tao_helpers_Date::FORMAT_VERBOSE));
 	    $variables[$origin]['vars'][] = $values;
         }
         foreach ($variables as $origin => $data) {
