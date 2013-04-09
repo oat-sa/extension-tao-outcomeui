@@ -194,7 +194,7 @@ class taoResults_actions_Results extends tao_actions_TaoModule {
             $ae = new core_kernel_classes_Resource($origin);
             //todo , check relvance of this service within taoCoding
 	    $item = taoCoding_models_classes_CodingService::singleton()->getItemByActivityExecution($ae);
-            if (is_null($item)) {throw new common_Exception("An item being referred to into the delivery of this result does not exist anymore");}
+            if (is_null($item)) {throw new common_Exception(__("An item being referred to into the delivery of this result does not exist anymore"));}
 	    $variables[$origin]['label'] = $item->getLabel();
             $itemModel = $item->getPropertyValues(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
             $itemModelResource = new core_kernel_classes_Resource(array_pop($itemModel));

@@ -126,7 +126,7 @@ abstract class taoResults_models_classes_table_VariableColumn
     {
         // section 127-0-1-1--228e2cb4:13971ca3814:-8000:0000000000000C5C begin
         $item = taoTests_models_classes_TestAuthoringService::singleton()->getItemByActivity($classActivity);
-        if (is_null($item)) {throw new common_Exception("An item being referred to into the current column selection does not exist anymore");}
+        if (is_null($item)) {throw new common_Exception(__("An item being referred to into the current column selection does not exist anymore"));}
 	parent::__construct($item->getLabel());
         $this->classActivity = $classActivity;
         $this->identifier = $identifier;
