@@ -29,7 +29,7 @@
  * @subpackage actions
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  */
-class taoResults_actions_Results extends tao_actions_TaoModule {
+class taoResults_actions_Results extends tao_actions_SaSModule {
 
 	/**
 	 * constructor: initialize the service and the default data
@@ -45,17 +45,10 @@ class taoResults_actions_Results extends tao_actions_TaoModule {
 		
 		$this->defaultData();
 	}
-/*
- * conveniance methods
- */
 	
-	/**
-	 * get the main class
-	 * @return core_kernel_classes_Classes
-	 */
-	protected function getRootClass()
+	protected function getClassService()
 	{
-		return $this->service->getResultClass();
+		return taoResults_models_classes_ResultsService::singleton();
 	}
 	
 /*
@@ -74,7 +67,7 @@ class taoResults_actions_Results extends tao_actions_TaoModule {
 			$this->setSessionAttribute('property_mode', $this->getRequestParameter('property_mode'));
 		}
 		
-		$myForm = $this->editClass($clazz, $this->service->getResultClass());
+		$myForm = $this->editClass($clazz, $this->service->getRootClass());
 		if($myForm->isSubmited()){
 			if($myForm->isValid()){
 				if($clazz instanceof core_kernel_classes_Resource){

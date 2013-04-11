@@ -183,7 +183,7 @@ class ResultsTestCase extends UnitTestCase {
 	}
 	
 	public function testGetRootClass(){
-	    $rootResultClass = $this->resultsService->getResultClass();
+	    $rootResultClass = $this->resultsService->getRootClass();
 	    $this->assertIsA($rootResultClass, "core_kernel_classes_Class");
 	    $this->assertEqual($rootResultClass->getUri(),TAO_DELIVERY_RESULT);
 	}

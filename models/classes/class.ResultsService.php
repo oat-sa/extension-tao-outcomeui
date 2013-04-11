@@ -65,8 +65,7 @@ error_reporting(E_ALL);
  * @subpackage models_classes
  */
 class taoResults_models_classes_ResultsService
-//was formerly extending taoResults_models_classes_LegacyResultsService
-     extends tao_models_classes_GenerisService
+     extends tao_models_classes_ClassService
 {
     // --- ASSOCIATIONS ---
 
@@ -74,9 +73,9 @@ class taoResults_models_classes_ResultsService
     // --- ATTRIBUTES ---
 
     // --- OPERATIONS ---
-    public function getResultClass()
+    public function getRootClass()
     {	
-	return new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
+		return new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
     }
     /**
      * Short description of method getVariables
