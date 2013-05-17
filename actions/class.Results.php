@@ -71,7 +71,7 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
 		if($myForm->isSubmited()){
 			if($myForm->isValid()){
 				if($clazz instanceof core_kernel_classes_Resource){
-					$this->setSessionAttribute("showNodeUri", tao_helpers_Uri::encode($clazz->uriResource));
+					$this->setSessionAttribute("showNodeUri", tao_helpers_Uri::encode($clazz->getUri()));
 				}
 				$this->setData('message', __('Class saved'));
 				$this->setData('reload', true);
@@ -101,7 +101,7 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
 				$this->setData('reload', true);
 			}
 		}
-		$this->setSessionAttribute("showNodeUri", tao_helpers_Uri::encode($result->uriResource));
+		$this->setSessionAttribute("showNodeUri", tao_helpers_Uri::encode($result->getUri()));
 		$relatedSubjects = tao_helpers_Uri::encodeArray($this->service->getRelatedSubjects($result), tao_helpers_Uri::ENCODE_ARRAY_VALUES, true, true);
 		$this->setData('relatedSubjects', json_encode(array_values($relatedSubjects)));
 		$relatedDeliveries = tao_helpers_Uri::encodeArray($this->service->getRelatedDeliveries($result), tao_helpers_Uri::ENCODE_ARRAY_VALUES, true, true);
