@@ -100,9 +100,11 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule
     public function getResults()
     {
         $returnValue = array();
-        $filter = null;
-
+	// Get filter parameter
+	$filter = array();
+	if($this->hasRequestParameter('filter')){
         $filter = $this->getFilterState('filter');
+	}
         //get the processes uris
         $processesUri = $this->hasRequestParameter('processesUri') ? $this->getRequestParameter('processesUri') : null;
 
