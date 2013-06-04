@@ -167,11 +167,11 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
         $variables = array();
         foreach ($this->service->getVariables($result) as $variable) {
             $values = $variable->getPropertiesValues(array(
-                new core_kernel_classes_Property(PROPERTY_VARIABLE_IDENTIFIER),
-                new core_kernel_classes_Property(RDF_VALUE),
-                new core_kernel_classes_Property(RDF_TYPE),
-                new core_kernel_classes_Property(PROPERTY_VARIABLE_ORIGIN),
-		new core_kernel_classes_Property(PROPERTY_VARIABLE_EPOCH)
+				new core_kernel_classes_Property(PROPERTY_VARIABLE_IDENTIFIER),
+				new core_kernel_classes_Property(RDF_VALUE),
+				new core_kernel_classes_Property(RDF_TYPE),
+				new core_kernel_classes_Property(PROPERTY_VARIABLE_ORIGIN),
+				new core_kernel_classes_Property(PROPERTY_VARIABLE_EPOCH)
             ));
             $origin = array_pop($values[PROPERTY_VARIABLE_ORIGIN])->getUri();
             if (!isset($variables[$origin])) {
@@ -180,8 +180,8 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
                 );
             }
 
-	    $values[PROPERTY_VARIABLE_EPOCH] =  array(tao_helpers_Date::displayeDate(current($values[PROPERTY_VARIABLE_EPOCH]), tao_helpers_Date::FORMAT_VERBOSE));
-	    $variables[$origin]['vars'][] = $values;
+			$values[PROPERTY_VARIABLE_EPOCH] =  array(tao_helpers_Date::displayeDate(current($values[PROPERTY_VARIABLE_EPOCH]), tao_helpers_Date::FORMAT_VERBOSE));
+			$variables[$origin]['vars'][] = $values;
         }
         foreach ($variables as $origin => $data) {
             $ae = new core_kernel_classes_Resource($origin);
