@@ -61,7 +61,7 @@
 		</div>-->
 	</div>
 	<div id="form-title" class="ui-widget-header ui-corner-top ui-state-default">
-		<?=__('Observed performances per distinc score variable types ')?>
+		<?=__('Observed performances per distinct score variable types ')?>
 	</div>
 	<div class="ui-widget-content ui-corner-right">
 				
