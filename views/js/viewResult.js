@@ -4,24 +4,23 @@
      * @param {string} data
      * @returns {string}
      */
-    
+
     function layoutResponse(data){
 	var formattedData = "";
-	//the data may be not valid json, in this case there is a silent fail and the data is returned. 
+	//the data may be not valid json, in this case there is a silent fail and the data is returned.
 	try{
 	var jsData = $.parseJSON(data);
-	
 	if (jsData instanceof Array) {
-	    formattedData = '<UL >';
+	    formattedData = '<OL >';
 	    for (key in jsData){
 		formattedData += '<li >';
 		formattedData += jsData[key];
 		 formattedData += "</li>";
 		}
-	     formattedData += "</UL>";
+	     formattedData += "</OL>";
 	} else {
-	formattedData = data;
-	}
+	    formattedData = data;
+	    }
 	}
 	catch(err){formattedData = data;}
 	return formattedData;
@@ -30,7 +29,7 @@
  //Multiple Entries with epoch
  function layoutResponseArray(data){
 	var formattedData = "";
-	
+
 	if (data.length> 0){
 	    for (key in data) {
 		    if (data[key].length==2){

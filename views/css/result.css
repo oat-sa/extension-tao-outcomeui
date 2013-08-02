@@ -96,7 +96,7 @@ tr td {
 }
 
 .ui-jqgrid .ui-jqgrid-htable th div{
-    overflow: hidden;
+    overflow: scroll;
     height:40px;
     vertical-align:text-top;
 }

@@ -93,6 +93,7 @@ require(['require', 'jquery', root_url + 'taoResults/views/js/viewResult.js', 'g
 	</div>
 	<div id="result-table-container">
     	<table id="result-table-grid"></table>
+	<div id="pagera1"></div>
 	</div>
 	<div id="results-custom-table-tools">
 		<span class="ui-state-default ui-corner-all" id="columnChooser">
