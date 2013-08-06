@@ -4,16 +4,16 @@
 	</div>
 <?endif?>
     <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/result.css" />
-    
+
     <script type="text/javascript">
 require(['require', 'jquery', root_url + 'taoResults/views/js/viewResult.js', 'grid/tao.grid', root_url + 'taoResults/views/js/resultTable.js'], function(req, $) {
-    
+
     $(function(){
-	    //models and columns are parameters used and manipulated by the table operations functions. 
+	    //models and columns are parameters used and manipulated by the table operations functions.
 	    document.models = [];
 	    document.columns = [];
 	    //there is no _url helper in JS,
-	    // in order to avoid php call within JS and externalize the js 
+	    // in order to avoid php call within JS and externalize the js
 	    // of the grid in a separate js file, the links to he actions are stored
 	    // in the document
 	    document.dataUrl = "<?=_url('data')?>";
@@ -43,7 +43,7 @@ require(['require', 'jquery', root_url + 'taoResults/views/js/viewResult.js', 'g
 	    $('#getCsvFile').click(function(e) {
 		e.preventDefault();
 		//jquery File Download is a jqueryplugin that allows to trigger a download within a Xhr request.
-		//The file is being flushed in the buffer by _url('getCsvFile') 
+		//The file is being flushed in the buffer by _url('getCsvFile')
 		require([root_url  + 'tao/views/js/jquery.fileDownload.js'],
 				function(data){
 				$.fileDownload(document.getActionCsvFileUrl, {
@@ -55,7 +55,7 @@ require(['require', 'jquery', root_url + 'taoResults/views/js/viewResult.js', 'g
 				    data: {'filter': document.JsonFilter, 'columns':document.columns}
 				});
 
-				}); 
+				});
 	    });
 	    //binds the column chooser button taht launches the feature from jqgrid allowing to make a selection of the columns displayed
 	     $('#columnChooser').click(function(e) {
@@ -78,7 +78,7 @@ require(['require', 'jquery', root_url + 'taoResults/views/js/viewResult.js', 'g
 				<a href="#"><img src="<?=TAOBASE_WWW?>img/add.png" alt="add"/><?=__('Add All responses')?></a>
 			</span>
 		</div>
-		    
+
 		<div>
 			<span class="ui-state-default ui-corner-all" id="removeSubject">
 				<a href="#"><img src="<?=TAOBASE_WWW?>img/delete.png" alt="remove"/><?=__('Anonymise')?></a>
@@ -96,13 +96,15 @@ require(['require', 'jquery', root_url + 'taoResults/views/js/viewResult.js', 'g
 	<div id="pagera1"></div>
 	</div>
 	<div id="results-custom-table-tools">
+		<!--
 		<span class="ui-state-default ui-corner-all" id="columnChooser">
-			<a href="#"><img src="<?=TAOBASE_WWW?>img/wf_ico.png" alt="settings"/><?=__('Filter columns')?></a>
+			<a href="#"><img src="<?=TAOBASE_WWW?>img/wf_ico.png" alt="settings"/><?=__('Column chooser')?></a>
 		</span>
+		-->
 		<span class="ui-state-default ui-corner-all">
-			<a href="#" id="getCsvFile"><img src="<?=TAOBASE_WWW?>img/download.png" alt="Download" /> <?=__('Download CSV File')?></a>
+			<a href="#" id="getCsvFile"><img src="<?=TAOBASE_WWW?>img/file_upload.png" alt="Download" /> <?=__('Export CSV File')?></a>
     	</span>
-	</div>   
+	</div>
 </div>
 
 

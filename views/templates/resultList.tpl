@@ -14,6 +14,7 @@
 	<div id="inspect-results-container">
 		<table id="inspect-results-grid">
 		</table>
+		<div id="pagera1"></div>
 	</div>
 	<div align="right">
 		<span id="buildTableButton" class="ui-state-default ui-corner-all">
@@ -35,7 +36,7 @@ function loadResults(filter) {
 		function (DATA) {
 			deliveryResultGrid.empty();
 			deliveryResultGrid.add(DATA);
-			
+
 		}
 	);
 }
@@ -58,19 +59,19 @@ $(function(){
 					loadResults(facetFilter.getFormatedFilterSelection());
 				}
 			},
-			
+
 		};
 
 		//set the filter nodes
 		var filterNodes = [
 			<?foreach($properties as $property):?>
 			{
-				id: '<?=md5($property->getUri())?>',
+				id: '<?=md5($property->uriResource)?>',
 				label: '<?=$property->getLabel()?>',
 				url: getUrl,
 				options: {
-					'propertyUri': '<?= $property->getUri() ?>',
-					'classUri': '<?= $clazz->getUri() ?>',
+					'propertyUri': '<?= $property->uriResource ?>',
+					'classUri': '<?= $clazz->uriResource ?>',
 	        'filterItself': false
 				}
 			},
@@ -91,7 +92,7 @@ $(function(){
 		//the delivery results grid options
 		var resultsGridOptions = {
 			'height': 'auto',
-			
+
 			'title': __('Delivery results'),
 			'callback': {
 				'onSelectRow': function(rowId) {
@@ -122,7 +123,7 @@ $(function(){
 
 	});
 
-	
+
 });
 
 

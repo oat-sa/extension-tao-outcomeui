@@ -62,7 +62,7 @@ p strong {
 
 .itemName {
     font-size:15px;
-    text-decoration: underline;
+    font-weight: : bold;
 }
 .itemModel {
 	font-style:italic;
