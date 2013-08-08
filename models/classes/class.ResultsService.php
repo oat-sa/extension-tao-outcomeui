@@ -200,7 +200,7 @@ class taoResults_models_classes_ResultsService
     * @param taoResultServer_models_classes_ItemVariable itemVariable
     * @param string callId an id for the item instanciation
     */
-    public function storeItemVariable(core_kernel_classes_Resource $deliveryResult, $test, $item, taoResultServer_models_classes_ItemVariable $itemVariable, $callId){
+    public function storeItemVariable(core_kernel_classes_Resource $deliveryResult, $test, $item, taoResultServer_models_classes_Variable $itemVariable, $callId){
 
         //lookup for ItemResult already set with this identifier (callId), creates it otherwise
         $itemResult = $this->getItemResult($deliveryResult, $callId, $test, $item);
@@ -249,8 +249,6 @@ class taoResults_models_classes_ResultsService
 
             $returnValue->setPropertyValue(new core_kernel_classes_Property(PROPERTY_RELATED_DELIVERY_RESULT), $itemResult->getUri());
         }
-
-        //
     }
 
     private function getItemResult(core_kernel_classes_Resource $deliveryResult, $callId, $test, $item) {
@@ -283,7 +281,7 @@ class taoResults_models_classes_ResultsService
 //    public function setItemResult($item, taoResultServer_models_classes_ItemResult $itemResult, $callId ) {}
 //    public function setTestResult($test, taoResultServer_models_classes_TestResult $testResult, $callId){}
 
-    public function setTestVariable($test, taoResultServer_models_classes_ItemVariable $testVariable, $callId){
+    public function setTestVariable($test, taoResultServer_models_classes_Variable $testVariable, $callId){
     }
 
 

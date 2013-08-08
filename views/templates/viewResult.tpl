@@ -29,7 +29,7 @@
 			    <?  foreach ($group['vars'] as $key => $variable){ ?>
 				<?php $rowOdd = $key % 2;?>
 				<tr class="row<?php echo $rowOdd ?>">
-				<td><?=array_pop($variable[PROPERTY_VARIABLE_IDENTIFIER])?> (<?=array_pop($variable[RDF_TYPE])->getLabel()?> ) :</td>
+				<td><?=array_pop($variable[PROPERTY_IDENTIFIER])?> (<?=array_pop($variable[RDF_TYPE])->getLabel()?> ) :</td>
 				<td class="dataResult"><?=array_pop($variable[RDF_VALUE])?></td>
 				<td class="epoch"><?=array_pop($variable[PROPERTY_VARIABLE_EPOCH])?></td>
 				</tr>

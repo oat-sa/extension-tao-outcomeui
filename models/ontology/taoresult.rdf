@@ -45,20 +45,18 @@
     <rdfs:label xml:lang="en-US"><![CDATA[Delivery of result]]></rdfs:label>
     <rdfs:comment xml:lang="en-US"><![CDATA[Delivery of result]]></rdfs:comment>
     <rdfs:domain rdf:resource="http://www.tao.lu/Ontologies/TAOResult.rdf#ItemResult"/>
+    <rdfs:domain rdf:resource="http://www.tao.lu/Ontologies/TAOResult.rdf#Variable"/>
     <widget:widget rdf:resource="http://www.tao.lu/datatypes/WidgetDefinitions.rdf#CheckBox"/>
-    <rdfs:range rdf:resource="http://www.tao.lu/Ontologies/TAODelivery.rdf#DeliveryResult"/>
+    <rdfs:range rdf:resource="http://www.tao.lu/Ontologies/TAODelivery.rdf#Result"/>
     <generis:is_language_dependent rdf:resource="http://www.tao.lu/Ontologies/generis.rdf#False"/>
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#RelatedTest">
     <rdfs:label xml:lang="en-US"><![CDATA[Related Item]]></rdfs:label>
     <rdfs:comment xml:lang="en-US"><![CDATA[Related Item]]></rdfs:comment>
      <rdfs:domain rdf:resource="http://www.tao.lu/Ontologies/TAOResult.rdf#ItemResult"/>
+     <rdfs:domain rdf:resource="http://www.tao.lu/Ontologies/TAOResult.rdf#Variable"/>
     <rdfs:range rdf:resource="http://www.tao.lu/Ontologies/TAOTest.rdf#TAOTest"/>
   </rdf:Description>
-
-
-
-
 
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#Identifier">
     <rdf:type rdf:resource="http://www.w3.org/1999/02/22-rdf-syntax-ns#Property"/>
