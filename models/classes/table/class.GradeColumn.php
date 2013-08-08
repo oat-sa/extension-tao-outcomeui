@@ -87,7 +87,7 @@ class taoResults_models_classes_table_GradeColumn
         $returnValue = null;
 
         // section 127-0-1-1--1b42b935:1397d0ae818:-8000:0000000000000C7E begin
-        $returnValue = new core_kernel_classes_Class(TAO_RESULT_GRADE);
+        $returnValue = new core_kernel_classes_Class(CLASS_OUTCOME_VARIABLE);
         // section 127-0-1-1--1b42b935:1397d0ae818:-8000:0000000000000C7E end
 
         return $returnValue;

@@ -38,22 +38,30 @@ class taoResults_models_classes_ResultsService
      * @access public
      * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  Resource deliveryResult
+     * @param core_kernel_classes_Class to restrict to a specific class of variables
      * @return array
      */
-    public function getVariables( core_kernel_classes_Resource $deliveryResult)
+    public function getVariables( core_kernel_classes_Resource $deliveryResult, $variableClass = null)
     {
         $returnValue = array();
         // section 127-0-1-1-16e239f7:13925739ce2:-8000:0000000000003B74 begin
         foreach ($this->getItemResultsFromDeliveryResult($deliveryResult) as $itemResult){
-            $itemResultVariables = $this->getVariablesFromItemResult($itemResult);
+            $itemResultVariables = $this->getVariablesFromItemResult($itemResult, $variableClass);
             $returnValue = array_merge($itemResultVariables, $returnValue);
         }
         // section 127-0-1-1-16e239f7:13925739ce2:-8000:0000000000003B74 end
         return (array) $returnValue;
     }
-    public function getVariablesFromItemResult(core_kernel_classes_Resource $itemResult){
-            $type = new core_kernel_classes_Class(TAO_RESULT_VARIABLE);
-            $itemResultVariables = $type->searchInstances(
+    /**
+    * @param  Resource deliveryResult
+    * @param core_kernel_classes_Class to restrict to a specific class of variables
+    * @return array
+    */
+    public function getVariablesFromItemResult(core_kernel_classes_Resource $itemResult, $variableClass = null){
+            if (is_null($variableClass)) {
+                $variableClass = new core_kernel_classes_Class(TAO_RESULT_VARIABLE);
+            }
+            $itemResultVariables = $variableClass->searchInstances(
         	array(PROPERTY_RELATED_ITEM_RESULT	=> $itemResult->getUri()),
         	array('recursive' => true, 'like' => false)
             );
@@ -94,6 +102,7 @@ class taoResults_models_classes_ResultsService
             $item = $itemResult->getUniquePropertyValue($relatedItem);
            return $item;
     }
+
     public function getItemFromVariable(core_kernel_classes_Resource $variable){
             return $this->getItemFromItemResult($this->getItemResultFromVariable($variable));
     }
@@ -200,6 +209,7 @@ class taoResults_models_classes_ResultsService
     * @param taoResultServer_models_classes_ItemVariable itemVariable
     * @param string callId an id for the item instanciation
     */
+    /*todo dependency due to object*/
     public function storeItemVariable(core_kernel_classes_Resource $deliveryResult, $test, $item, taoResultServer_models_classes_Variable $itemVariable, $callId){
 
         //lookup for ItemResult already set with this identifier (callId), creates it otherwise
@@ -281,7 +291,7 @@ class taoResults_models_classes_ResultsService
 //    public function setItemResult($item, taoResultServer_models_classes_ItemResult $itemResult, $callId ) {}
 //    public function setTestResult($test, taoResultServer_models_classes_TestResult $testResult, $callId){}
 
-    public function setTestVariable($test, taoResultServer_models_classes_Variable $testVariable, $callId){
+    public function setTestVariable(core_kernel_classes_Resource $deliveryResult, $test, taoResultServer_models_classes_Variable $testVariable, $callId){
     }
 
 

@@ -122,13 +122,18 @@ abstract class taoResults_models_classes_table_VariableColumn
      * @param  string identifier
      * @return mixed
      */
-    public function __construct( core_kernel_classes_Resource $classActivity, $identifier)
+    public function __construct( $classActivity, $identifier)
     {
         // section 127-0-1-1--228e2cb4:13971ca3814:-8000:0000000000000C5C begin
+        /*
         $item = taoTests_models_classes_TestAuthoringService::singleton()->getItemByActivity($classActivity);
         if (is_null($item)) {throw new common_Exception(__("An item being referred to into the current column selection does not exist anymore"));}
-	parent::__construct($item->getLabel());
+        parent::__construct($item->getLabel());
+         *
+
         $this->classActivity = $classActivity;
+         *
+         */
         $this->identifier = $identifier;
         // section 127-0-1-1--228e2cb4:13971ca3814:-8000:0000000000000C5C end
     }
@@ -200,7 +205,7 @@ abstract class taoResults_models_classes_table_VariableColumn
 
         // section 127-0-1-1--8febfab:13977a059a7:-8000:0000000000004002 begin
         $returnValue = parent::toArray();
-        $returnValue['ca'] = $this->classActivity->getUri();
+        $returnValue['ca'] = "deprecated";
         $returnValue['vid'] = $this->identifier;
         // section 127-0-1-1--8febfab:13977a059a7:-8000:0000000000004002 end
 

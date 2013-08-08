@@ -87,7 +87,7 @@ class taoResults_models_classes_table_ResponseColumn
         $returnValue = null;
 
         // section 127-0-1-1--1b42b935:1397d0ae818:-8000:0000000000000C80 begin
-        $returnValue = new core_kernel_classes_Class(TAO_RESULT_RESPONSE);
+        $returnValue = new core_kernel_classes_Class(CLASS_RESPONSE_VARIABLE);
         // section 127-0-1-1--1b42b935:1397d0ae818:-8000:0000000000000C80 end
 
         return $returnValue;

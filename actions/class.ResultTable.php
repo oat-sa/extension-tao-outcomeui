@@ -36,9 +36,12 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
      * constructor: initialize the service and the default data
      * @return Results
      */
+    protected $service;
+    
     public function __construct() {
 
         parent::__construct();
+        $this->service = taoResults_models_classes_ResultsService::singleton();
     }
 
     /**
@@ -58,7 +61,6 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
      * @return void - a csv string is being sent out by parent class -> data method into the buffer
      */
     public function getCsvFile(){
-        //This action
          $this->data("csv");
     }
    
@@ -77,12 +79,12 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
   
    
     public function getResponseColumns() {
-	$this->getVariableColumns(TAO_RESULT_RESPONSE);
+	$this->getVariableColumns(CLASS_RESPONSE_VARIABLE);
     }
     /** Returns all columns with all grades pertaining to the current delivery results selection
      */
      public function getGradeColumns() {
-              $this->getVariableColumns(TAO_RESULT_GRADE);
+              $this->getVariableColumns(CLASS_OUTCOME_VARIABLE);
     }
       /**Retrieve the different variables columns pertainign to the current selection of results
      * Implementation note : it nalyses all the data collected to identify the different response variables submitted by the items in the context of activities
@@ -97,43 +99,25 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
 		$results	= $deliveryResultClass->searchInstances($filter, array ('recursive'=>true));
 
 		//retrieveing all individual response variables referring to the  selected delivery results
-		$selectedResponseVariables = array ();
+		$selectedVariables = array ();
 		foreach ($results as $result){
-		$responseVariableClass = new core_kernel_classes_Class($variableClassUri);
-		$responseVariables = $responseVariableClass->searchInstances( array(PROPERTY_MEMBER_OF_RESULT=> $result->getUri()));
-		$selectedResponseVariables = array_merge($selectedResponseVariables, $responseVariables);
+            $variables = $this->service->getVariables($result, new core_kernel_classes_Class($variableClassUri) );
+            $selectedVariables = array_merge($selectedVariables, $variables);
 		}
 		//retrieving The list of the variables identifiers per activities defintions as observed
-		$variableTypesPerActivity = array();
-		foreach ($selectedResponseVariables as $responseVariable)
-		    {
-			//activityExecution
-			$activityExecutionOriginProperty = new core_kernel_classes_Property(PROPERTY_VARIABLE_ORIGIN);
-			$activityExecution = $responseVariable->getUniquePropertyValue($activityExecutionOriginProperty);
-			$activityDefinitionProperty = new core_kernel_classes_Property(PROPERTY_ACTIVITY_EXECUTION_ACTIVITY);
-			$activityDefinition = $activityExecution->getUniquePropertyValue($activityDefinitionProperty);
-
-			//variableIdentifier
-			$variableIdentifierProperty = new core_kernel_classes_Property(PROPERTY_VARIABLE_IDENTIFIER);
-			$variableIdentifier = $responseVariable->getUniquePropertyValue($variableIdentifierProperty);
-
-			//feeding our list of variables per activities, and merge them.
-			$variableTypesPerActivity[$activityDefinition->getUri()."_".$variableIdentifier] = array("activityDefinition" => $activityDefinition, "variableIdentifier" => $variableIdentifier->literal);
-
-			/*
-			$measurements = taoItems_models_classes_ItemsService::singleton()->getItemMeasurements($item);
-				foreach ($measurements as $measurement) {
-					$columns[] = new taoResults_models_classes_table_GradeColumn($activity, $measurement->getIdentifier());
-				}
-			 * 
-			 */
+		$variableTypes = array();
+		foreach ($selectedVariables as $variable) {
+                //variableIdentifier
+                $variableIdentifierProperty = new core_kernel_classes_Property(PROPERTY_IDENTIFIER);
+                $variableIdentifier = $variable->getUniquePropertyValue($variableIdentifierProperty)->__toString();
+                //feeding our list of variables per activities, and merge them.
+                $variableTypes[$variableIdentifier] = array("activityDefinition" => "deprecated", "variableIdentifier" => $variableIdentifier);
 		    }
-
-		foreach ($variableTypesPerActivity as $variable){
+		foreach ($variableTypes as $variable){
 		    //should be fine grained at the level of the variable
 		    switch ($variableClassUri){
-			case TAO_RESULT_RESPONSE:{ $columns[] = new taoResults_models_classes_table_ResponseColumn($variable["activityDefinition"], $variable["variableIdentifier"]);break;}
-			case TAO_RESULT_GRADE: { $columns[] = new taoResults_models_classes_table_GradeColumn($variable["activityDefinition"], $variable["variableIdentifier"]);break;}
+			case CLASS_RESPONSE_VARIABLE:{ $columns[] = new taoResults_models_classes_table_ResponseColumn($variable["activityDefinition"], $variable["variableIdentifier"]);break;}
+			case CLASS_OUTCOME_VARIABLE: { $columns[] = new taoResults_models_classes_table_GradeColumn($variable["activityDefinition"], $variable["variableIdentifier"]);break;}
 			default:{$columns[] = new taoResults_models_classes_table_ResponseColumn($variable["activityDefinition"], $variable["variableIdentifier"]);}
 			}
 		}

@@ -18,10 +18,6 @@
  *               
  * 
  */
-?>
-<?php
-
-error_reporting(E_ALL);
 
 /**
  * tao - taoResults/models/classes/table/class.VariableDataProvider.php
@@ -38,9 +34,6 @@ error_reporting(E_ALL);
  * @subpackage models_classes_table
  */
 
-if (0 > version_compare(PHP_VERSION, '5')) {
-    die('This file was generated for PHP 5');
-}
 
 /**
  * include tao_models_classes_table_DataProvider
@@ -89,6 +82,8 @@ class taoResults_models_classes_table_VariableDataProvider
      */
     public static $singleton = null;
 
+    public $resultService;
+
     // --- OPERATIONS ---
 
     /**
@@ -119,17 +114,14 @@ class taoResults_models_classes_table_VariableDataProvider
         }
         
 		foreach($resources as $result){
-			
-			$vars = $varClass->searchInstances(array(
-				PROPERTY_MEMBER_OF_RESULT => $result->getUri()
-			), array ('recursive'=>true));
-			
+
+            $vars = $this->resultService->getVariables($result, $varClass);
 			$cellData = array();
 			foreach ($vars as $var) {
 				$props = $var->getPropertiesValues(array(
 					RDF_TYPE,
 					PROPERTY_VARIABLE_ORIGIN,
-					PROPERTY_VARIABLE_IDENTIFIER,
+					PROPERTY_IDENTIFIER,
 					PROPERTY_VARIABLE_EPOCH,
 					RDF_VALUE
 				));
@@ -195,6 +187,7 @@ class taoResults_models_classes_table_VariableDataProvider
         // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C69 begin
         if (is_null(self::$singleton)) {
         	self::$singleton = new self();
+            self::$resultService = taoResults_models_classes_ResultsService::singleton();
         }
         return self::$singleton;
         // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C69 end
