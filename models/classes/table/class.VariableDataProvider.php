@@ -61,11 +61,6 @@ require_once('tao/models/classes/table/interface.DataProvider.php');
 class taoResults_models_classes_table_VariableDataProvider
         implements tao_models_classes_table_DataProvider
 {
-    // --- ASSOCIATIONS ---
-
-
-    // --- ATTRIBUTES ---
-
     /**
      * Short description of attribute cache
      *
@@ -82,7 +77,7 @@ class taoResults_models_classes_table_VariableDataProvider
      */
     public static $singleton = null;
 
-    public $resultService;
+
 
     // --- OPERATIONS ---
 
@@ -91,54 +86,30 @@ class taoResults_models_classes_table_VariableDataProvider
      *
      * @access public
      * @author Joel Bout, <joel.bout@tudor.lu>
-     * @param  array resources
-     * @param  array columns
+     * @param  array resources  results
+     * @param  array columns    variables
      * @return mixed
      */
     public function prepare($resources, $columns)
     {
+        $resultsService = taoResults_models_classes_ResultsService::singleton();
         // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C5B begin
-        $vClasses = array();
-        foreach ($columns as $column) {
-        	$vClasses[] = $column->getVariableClass();
-        }
-        $vClasses = array_unique($vClasses); 
-        // nothing to do?
-        if (count($vClasses) == 0) {
-        	return;
-        }
-        if (count($vClasses) == 1) {
-        	$varClass = array_pop($vClasses);
-        } else {
-        	$varClass = new core_kernel_classes_Class(TAO_RESULT_VARIABLE);
-        }
-        
-		foreach($resources as $result){
 
-            $vars = $this->resultService->getVariables($result, $varClass);
-			$cellData = array();
+        foreach($resources as $result){
+
+            $vars = $resultsService->getVariables($result, new core_kernel_classes_Class(TAO_RESULT_VARIABLE));
+
+            $cellData = array();
 			foreach ($vars as $var) {
-				$props = $var->getPropertiesValues(array(
-					RDF_TYPE,
-					PROPERTY_VARIABLE_ORIGIN,
-					PROPERTY_IDENTIFIER,
-					PROPERTY_VARIABLE_EPOCH,
-					RDF_VALUE
-				));
-				
-				$classActivityExecution = array_pop($props[PROPERTY_VARIABLE_ORIGIN]);
-				$classActivity = $classActivityExecution->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_ACTIVITY_EXECUTION_ACTIVITY));
-				$vid = (string)array_pop($props[PROPERTY_VARIABLE_IDENTIFIER]);
+
+                $varData = $resultsService->getVariableData($var);
+				$vid = (string)$varData["identifier"];
 				foreach ($columns as $column) {
-					if ($classActivity->getUri() == $column->getClassActivity()->getUri()
-						&& $vid == $column->getIdentifier()) {
-							$value = (string)array_pop($props[RDF_VALUE]);
-							foreach ($props[RDF_TYPE] as $type) {
-							    $time = "";
-							    if (is_array($props[PROPERTY_VARIABLE_EPOCH])) {$epoch = (string)array_pop($props[PROPERTY_VARIABLE_EPOCH]);}
-							    if ($epoch != "") {$time = "@". date("F j, Y, g:i:s a",$epoch);}
-							    $this->cache[$type->getUri()][$result->getUri()][$classActivity->getUri()][$vid][] =  array($value, $time);
-							}
+					if ($vid == $column->getIdentifier()) {
+							$value = (string)$varData["value"];
+						    $time = "";
+						    if ($varData["epoch"] != "") {$time = "@". date("F j, Y, g:i:s a",$varData["epoch"]);}
+						    $this->cache[$varData["type"]->getUri()][$result->getUri()][$vid][] =  array($value, $time);
 							continue;
 					}
 				}
@@ -163,10 +134,10 @@ class taoResults_models_classes_table_VariableDataProvider
 
         // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C5D begin
         $vcUri = $column->getVariableClass()->getUri();
-        if (isset($this->cache[$vcUri][$resource->getUri()][$column->getClassActivity()->getUri()][$column->getIdentifier()])) {
-        	$returnValue = $this->cache[$vcUri][$resource->getUri()][$column->getClassActivity()->getUri()][$column->getIdentifier()];
+        if (isset($this->cache[$vcUri][$resource->getUri()][$column->getIdentifier()])) {
+        	$returnValue = $this->cache[$vcUri][$resource->getUri()][$column->getIdentifier()];
         } else {
-        	common_Logger::i('no data for resource: '.$resource->getUri().' column: '.$column->getClassActivity()->getUri().'-'.$column->getIdentifier());
+        	common_Logger::i('no data for resource: '.$resource->getUri().' column: '.$column->getIdentifier());
         }
         // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C5D end
 
@@ -187,7 +158,6 @@ class taoResults_models_classes_table_VariableDataProvider
         // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C69 begin
         if (is_null(self::$singleton)) {
         	self::$singleton = new self();
-            self::$resultService = taoResults_models_classes_ResultsService::singleton();
         }
         return self::$singleton;
         // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C69 end

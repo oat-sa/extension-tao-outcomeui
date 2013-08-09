@@ -447,18 +447,32 @@ class taoResults_models_classes_ResultsService
         return (array) $returnValue;
     }
 /**
-     * Retrieves information about the variable, including the related item
+     * Retrieves information about the variable, including or not the related item (slower)
      * @access public
      * @author Patrick Plichart, <patrick.plichart@taotesting.com>
      * @param  Resource variable
      * @return array simple associative$returnValue = taoTests_models_classes_TestAuthoringService::singleton()->getItemByActivity($activityClass);
      */
-    public function getVariableData( core_kernel_classes_Resource $variable)
+    public function getVariableData( core_kernel_classes_Resource $variable, $getItem = false)
     {
         $returnValue = array();
-    	$returnValue["value"] = $variable->getUniquePropertyValue(new core_kernel_classes_Property(RDF_VALUE))->__toString();
-    	$returnValue["variableIdentifier"] = $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_IDENTIFIER));
-        $returnValue["item"] = getItemFromVariable($variable);
+        $propValues = $variable->getPropertiesValues(array(
+					RDF_TYPE,
+					PROPERTY_IDENTIFIER,
+					PROPERTY_VARIABLE_EPOCH,
+					RDF_VALUE,
+                    PROPERTY_VARIABLE_CARDINALITY,
+                    PROPERTY_VARIABLE_BASETYPE
+
+				));
+
+    	$returnValue["value"] = current($propValues[RDF_VALUE])->__toString();
+    	$returnValue["identifier"] = current($propValues[PROPERTY_IDENTIFIER])->__toString();
+        $returnValue["type"] = current($propValues[RDF_TYPE]);
+        $returnValue["epoch"] = current($propValues[PROPERTY_VARIABLE_EPOCH])->__toString();
+        $returnValue["cardinality"] = current($propValues[PROPERTY_VARIABLE_CARDINALITY])->__toString();
+        $returnValue["basetype"] = current($propValues[PROPERTY_VARIABLE_BASETYPE])->__toString();
+        if ($getItem) {$returnValue["item"] = $this->getItemFromVariable($variable);}
 	//$returnValue["epoch"] = $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_EPOCH));
         return (array) $returnValue;
     }
