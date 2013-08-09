@@ -68,14 +68,14 @@ class taoResults_models_classes_StatisticsService
 			$variableData = $this->getVariableData($variable);
 			$activityIdentifier = "";$activityNaturalId = "";
 			    if (isset($variableData["item"])) {$activityIdentifier = $variableData["item"]->getUri(); $activityNaturalId = $variableData["item"]->getLabel();} 
-			$variableIDentifier = $activityIdentifier.$variableData["variableIdentifier"];
+			$variableIDentifier = $activityIdentifier.$variableData["identifier"];
 			if (!(isset($statisticsGroupedPerVariable[$variableIDentifier]))) {$statisticsGroupedPerVariable[$variableIDentifier] = array("sum" => 0, "#" => 0);}
 			
 			// we should parametrize if we consider multiple executions of the same test taker or not, here all executions are considered
                         $statisticsGroupedPerVariable[$variableIDentifier]["data"][]=$variableData["value"];
 			$statisticsGroupedPerVariable[$variableIDentifier]["sum"]+= $variableData["value"];
 			$statisticsGroupedPerVariable[$variableIDentifier]["#"]+= 1;
-			$statisticsGroupedPerVariable[$variableIDentifier]["naturalid"]= $activityNaturalId." (".$variableData["variableIdentifier"].")";
+			$statisticsGroupedPerVariable[$variableIDentifier]["naturalid"]= $activityNaturalId." (".$variableData["identifier"].")";
 			$statisticsGrouped["data"][]=$variableData["value"];
                         $statisticsGrouped["sum"]+= $variableData["value"];
                         $statisticsGrouped["#"]+= 1;

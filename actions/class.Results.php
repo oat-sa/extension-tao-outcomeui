@@ -155,10 +155,13 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
     public function viewResult()
     {
         $result = $this->getCurrentInstance();
-        $testTaker = $this->service->getTestTaker($result);
-        $this->setData('TestTakerLabel', $testTaker->getLabel());
-        $values = $testTaker->getPropertyValues(new core_kernel_classes_Property(PROPERTY_USER_LOGIN));
-        $this->setData('TestTakerLogin', array_pop($values));
+        $testTaker = $this->service->getTestTakerData($result);
+        //todo testTaker object
+        $this->setData('userLogin', current($testTaker[PROPERTY_USER_LOGIN])->literal);
+        $this->setData('userLabel', current($testTaker[RDFS_LABEL])->literal);
+        $this->setData('userFirstName', current($testTaker[PROPERTY_USER_FIRSTNAME])->literal);
+         $this->setData('userLastName', current($testTaker[PROPERTY_USER_LASTNAME])->literal);
+        $this->setData('userEmail', current($testTaker[PROPERTY_USER_MAIL])->literal);
         $variablesByItem = $this->service->getItemVariableDataFromDeliveryResult($result);
         $this->setData('deliveryResultLabel', $result->getLabel());
         $this->setData('variables',  $variablesByItem);

@@ -1,4 +1,4 @@
-<div id="form-title" class="ui-widget-header ui-corner-top ui-state-default"><?=__('View result')?></div>
+<div id="form-title" class="ui-widget-header ui-corner-top ui-state-default"><?=__('View result')?> - <?=get_data('deliveryResultLabel')?></div>
 <div class="ui-widget-content ui-corner-bottom">
     <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/result.css" />
 <script type="text/javascript">
@@ -14,13 +14,28 @@
 </script>
 
 		<div id="content">
-			<h2><?=get_data('deliveryResultLabel')?></h2>
-			<p>
-				<span id="TestTakerIdentification"><?=__('Performed by :')?> 
-				    <span id="name"><?=get_data('TestTakerLabel')?></span> 
-				    <span id=login>(<?=get_data('login')?><?=get_data('TestTakerLogin')?>)</span>
+			
+				<span id="TestTakerIdentificationBox"><strong><?=__('Results for:')?></strong>
+				    <table class="mini">
+					<tr><td class="field"><?=__('Login:')?></td><td class="fieldValue"><?=get_data('userLogin')?></td></tr>
+					<tr><td class="field"><?=__('Label:')?></td><td class="fieldValue"><?=get_data('userLabel')?></td></tr>
+					<tr><td class="field"><?=__('Last Name:')?></td><td class="fieldValue"><?=get_data('userLastName')?></td></tr>
+					<tr><td class="field"><?=__('First Name:')?></td><td class="fieldValue"><?=get_data('userFirstName')?></td></tr>
+					<tr><td class="field"><?=__('Email:')?></td><td class="fieldValue userMail"><?=get_data('userEmail')?></td></tr>
+				    </table>
 				</span>
-			</p>
+				<span id="ScoresSummaryBox">
+				    <span id="correctScoresBox">
+					   
+						<img src="/taoResults/views/img/dialog-clean.png" />3/5<?=__('Correct')?>
+					    
+				    </span>
+				    <span id="incorrectScoresBox"><img src="/taoResults/views/img/dialog-error-5.png" />1/5<?=__('Incorrect')?>
+				    </span>
+				    <span id="naScoresBox"><img src="/taoResults/views/img/dialog-important-2.png" />1/5 <?=__('Not Scored')?>
+				    </span>
+				</span>
+			<span>
 			<table class="resultsTable" border="1">
 			<?  foreach (get_data('variables') as $group){ ?>
 			<tr >
@@ -36,6 +51,7 @@
 			    <? } ?>
 			</p>			
 			<? } ?></table>
+			    </span>
 		</div>
 
 	

@@ -435,16 +435,7 @@ class taoResults_models_classes_ResultsService
      */
     public function getScoreVariables( core_kernel_classes_Resource $deliveryResult)
     {
-        $returnValue = array();
-
-        // section 127-0-1-1-16e239f7:13925739ce2:-8000:0000000000003B74 begin
-    	$type = new core_kernel_classes_Class(TAO_RESULT_GRADE); //TAO_RESULT_GRADE
-        $returnValue = $type->searchInstances(
-        	array(PROPERTY_MEMBER_OF_RESULT	=> $deliveryResult->getUri()),
-		array('recursive' => true, 'like' => false)
-        );
-        // section 127-0-1-1-16e239f7:13925739ce2:-8000:0000000000003B74 end
-        return (array) $returnValue;
+        return $this->getVariables($deliveryResult, new core_kernel_classes_Class(CLASS_OUTCOME_VARIABLE));
     }
 /**
      * Retrieves information about the variable, including or not the related item (slower)
@@ -475,6 +466,23 @@ class taoResults_models_classes_ResultsService
         if ($getItem) {$returnValue["item"] = $this->getItemFromVariable($variable);}
 	//$returnValue["epoch"] = $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_EPOCH));
         return (array) $returnValue;
+    }
+    /**
+     * To be reviewed as it implies a dependency towards taoSubjects
+     * @param core_kernel_classes_Resource $deliveryResult
+     */
+    public function getTestTakerData(core_kernel_classes_Resource $deliveryResult) {
+        $testTaker = $this->gettestTaker($deliveryResult);
+        $propValues =  $testTaker->getPropertiesValues(array(
+					RDFS_LABEL,
+                    PROPERTY_USER_LOGIN,
+					PROPERTY_USER_FIRSTNAME,
+					PROPERTY_USER_LASTNAME,
+                    PROPERTY_USER_MAIL,
+				));
+       
+        return $propValues;
+
     }
 
 } /* end of class taoResults_models_classes_ResultsService */

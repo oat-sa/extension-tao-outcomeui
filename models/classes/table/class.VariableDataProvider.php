@@ -98,10 +98,8 @@ class taoResults_models_classes_table_VariableDataProvider
         foreach($resources as $result){
 
             $vars = $resultsService->getVariables($result, new core_kernel_classes_Class(TAO_RESULT_VARIABLE));
-
             $cellData = array();
 			foreach ($vars as $var) {
-
                 $varData = $resultsService->getVariableData($var);
 				$vid = (string)$varData["identifier"];
 				foreach ($columns as $column) {

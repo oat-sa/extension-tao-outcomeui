@@ -32,7 +32,7 @@ h1 {
 }
 
 p {
-	font-size:14px;
+	
 	text-align: justify;
 	font-weight:normal;
 	line-height:18px;
@@ -43,33 +43,78 @@ p {
 p strong {
 	font-weight: bold;	
 }
-
-#TestTakerIdentification {
-	font-style:italic;
+p span.field
+{
+    display: block;
+    
+}
+#TestTakerIdentificationBox {
+    padding:3px;
+    float:left;
+    -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background-color:#eeeeee;
+    width:35%;
+    font-size:14px;
+}
+.userMail{
+    font-style: italic;
 }
 
-#TestTakerIdentification {
-	font-style:italic;
+#ScoresSummaryBox {
+    display:block;
+    float:right;
+    vertical-align:middle;
+     -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background-color:#eeeeee;
+    width:50%;
 }
+#correctScoresBox {
+    display:block;
+    float:left;
+    vertical-align:middle;
 
-#name {
-	font-weight:bold;
+    width:50%;
 }
+img {
+    vertical-align:middle;
+}
+#incorrectScoresBox {
+    display:block;
+    float:right;
+    width:50%;
+}
+#naScoresBox {
+     display:block;
+    float:right;
+     -moz-border-radius: 10px;
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    width:50%;
+}
+table.mini tr td{
+    padding:2px;
+}
+.field{
 
-#login {
-	text-decoration: underline;
+}
+.fieldValue{
+
 }
 
 .itemName {
     font-size:15px;
-    font-weight: : bold;
+    font-weight: bold;
 }
 .itemModel {
 	font-style:italic;
 }
 .dataResult {
     font-weight:bold;
-    text-align:right;
+    text-align:left;
     
 }
 
@@ -78,8 +123,8 @@ p strong {
 }
 
 .resultsTable .headerRow {
-    background-color:#bbbbbb;
-    text-align:center;
+    background-color:#dddddd;
+    text-align:left;
 }
 
 
