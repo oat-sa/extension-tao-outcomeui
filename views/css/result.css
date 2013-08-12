@@ -64,37 +64,15 @@ p span.field
 
 #ScoresSummaryBox {
     display:block;
+    padding:20px;
     float:right;
-    vertical-align:middle;
      -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     border-radius: 10px;
     background-color:#eeeeee;
-    width:50%;
+    width:40%;
 }
-#correctScoresBox {
-    display:block;
-    float:left;
-    vertical-align:middle;
 
-    width:50%;
-}
-img {
-    vertical-align:middle;
-}
-#incorrectScoresBox {
-    display:block;
-    float:right;
-    width:50%;
-}
-#naScoresBox {
-     display:block;
-    float:right;
-     -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-    width:50%;
-}
 table.mini tr td{
     padding:2px;
 }
@@ -120,20 +98,55 @@ table.mini tr td{
 
 .resultsTable {
 	border-collapse: collapse;
+	position:relative;
+	top:10px;
 }
 
 .resultsTable .headerRow {
     background-color:#dddddd;
     text-align:left;
 }
-
-
-.row1 {
-    background-color:#eeeeee;
+.resultsTable .subHeaderRow {
+    background-color:#efefef;
+    text-align:left;
 }
+/* classes used for the layout of responses based on their evaluation*/
+.correct{
+   
+    background-image: url(/taoResults/views/img/dialog-clean.png);
+    background-repeat:no-repeat;
+    width: 32px;
+    height: 32px;
+    align:center;
+    
+}
+.incorrect{
 
+    background-image: url(/taoResults/views/img/dialog-error-5.png);
+    background-repeat:no-repeat;
+    width: 32px;
+    height: 32px;
+    align:center;
+}
+.unscored{
+    background-image: url(/taoResults/views/img/dialog-important-2.png);
+    background-repeat:no-repeat;
+    width: 32px;
+    height: 32px;
+    align:center;
+}
+.headerColumn{
+     align:center
+	 background-color:#efefef;
+}
+a {
+    font-weight: normal;
+    text-decoration: none;
+    border-bottom: 1px black dotted;
+
+}
 tr td {
-    padding:20px;
+    padding:5px;
 }
 
 .epoch {

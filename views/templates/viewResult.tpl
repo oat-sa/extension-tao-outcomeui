@@ -25,31 +25,92 @@
 				    </table>
 				</span>
 				<span id="ScoresSummaryBox">
-				    <span id="correctScoresBox">
+				    <table class="mini">
+					<tr><td colspan="2"><?=__('Responses Evaluation:')?></td><td></td></tr>
+					<tr>
+					    <td><center><img src="/taoResults/views/img/dialog-clean.png" /><br/>
+					<?=get_data("nbCorrectResponses")?>/<?=get_data('nbResponses')?> <?=__('Correct')?></center></td>
 					   
-						<img src="/taoResults/views/img/dialog-clean.png" />3/5<?=__('Correct')?>
-					    
-				    </span>
-				    <span id="incorrectScoresBox"><img src="/taoResults/views/img/dialog-error-5.png" />1/5<?=__('Incorrect')?>
-				    </span>
-				    <span id="naScoresBox"><img src="/taoResults/views/img/dialog-important-2.png" />1/5 <?=__('Not Scored')?>
+					    <td><center><img src="/taoResults/views/img/dialog-error-5.png" /><br/>
+					<?=get_data("nbIncorrectResponses")?>/<?=get_data('nbResponses')?> <?=__('Incorrect')?></center></td>
+
+					     <td><center><img src="/taoResults/views/img/dialog-important-2.png" /><br/>
+					<?=get_data("nbUnscoredResponses")?>/<?=get_data('nbResponses')?> <?=__('Not Scored')?></center></td>
+					</tr>
+				    </table>
+				    <br/>
+				    <span id="Settings">
+					<form>
+					    <input type="checkbox" name="vehicle" value="Bike"><?=__('Last submitted responses only')?>
+					</form>
 				    </span>
 				</span>
+				
 			<span>
+			
 			<table class="resultsTable" border="1">
-			<?  foreach (get_data('variables') as $group){ ?>
+			<?  foreach (get_data('variables') as $item){ ?>
 			<tr >
-			        <td class="headerRow" colspan="3"><span class="itemName"><?=__('Item')?> : <?=$group['label']?></span> <span class="itemModel">(<?=$group['itemModel']?>)</span></td>
+			        <td class="headerRow" colspan="4"><span class="itemName"><?=__('Item')?> : <?=$item['label']?></span> <span class="itemModel">(<?=$item['itemModel']?>)</span></td>
 			</tr>
-			    <?  foreach ($group['vars'] as $key => $variable){ ?>
+			<!--<tr><td class="headerColumn"><?=__('Variable Name')?></td><td class="headerColumn"><?=__('Collected Value')?></td><td class="headerColumn"><?=__('Correctness')?></td><td class="headerColumn"><?=__('Timestamp')?></td></tr>!-->
+			<tr ><td class="subHeaderRow" colspan="4"><?=__('Responses')?> :</td></tr>
+			<?
+				
+				foreach ($item['sortedVars'][CLASS_RESPONSE_VARIABLE] as $variableIdentifier  => $observations){
+				    $rowspan = 'rowspan="'.count($observations).'"';
+				    foreach ($observations as $key=>$observation) {
+			?>
 				<?php $rowOdd = $key % 2;?>
 				<tr class="row<?php echo $rowOdd ?>">
-				<td><?=array_pop($variable[PROPERTY_IDENTIFIER])?> (<?=array_pop($variable[RDF_TYPE])->getLabel()?> ) :</td>
-				<td class="dataResult"><?=array_pop($variable[RDF_VALUE])?></td>
-				<td class="epoch"><?=array_pop($variable[PROPERTY_VARIABLE_EPOCH])?></td>
+				<? if ($key==0) {?>
+				     <td <?=$rowspan?>><?=$variableIdentifier?>:</td>
+				<?}?>
+				<td class="dataResult"><?=nl2br(array_pop($observation[RDF_VALUE]))?></td>
+				<td class="<?=$observation['isCorrect']?>" />
+				<td class="epoch"><?=array_pop($observation[PROPERTY_VARIABLE_EPOCH])?></td>
 				</tr>
-			    <? } ?>
-			</p>			
+			<?	
+				    }
+				}
+			?>
+			<tr> <td class="subHeaderRow" colspan="4"><?=__('Grades')?> :</td></tr>
+			<?
+
+				foreach ($item['sortedVars'][CLASS_OUTCOME_VARIABLE] as $variableIdentifier  => $observations){
+				   $rowspan = 'rowspan="'.count($observations).'"';
+				    foreach ($observations as $observation) {
+			?>
+				<?php $rowOdd = $key % 2;?>
+				<tr class="row<?php echo $rowOdd ?>">
+				<td ><?=$variableIdentifier?>:</td>
+				<td class="dataResult"><?=nl2br(array_pop($observation[RDF_VALUE]))?></td>
+				<td class="" />
+				<td class="epoch"><?=array_pop($observation[PROPERTY_VARIABLE_EPOCH])?></td>
+				</tr>
+			<?	
+				    }
+				}
+			?>
+			<tr> <td class="subHeaderRow" colspan="4"><?=__('Traces')?> :</td></tr>
+			<?
+
+				foreach ($item['sortedVars'][CLASS_TRACE_VARIABLE] as $variableIdentifier  => $observations){
+				   $rowspan = 'rowspan="'.count($observations).'"';
+				    foreach ($observations as $observation) {
+			?>
+				<?php $rowOdd = $key % 2;?>
+				<tr class="row<?php echo $rowOdd ?>">
+				<td ><?=$variableIdentifier?>:</td>
+				<td class="dataResult"><a href="#"><?=__('download')?></a></td>
+				<td class="" />
+				<td class="epoch"><?=array_pop($observation[PROPERTY_VARIABLE_EPOCH])?></td>
+				</tr>
+			<?
+				    }
+				}
+			?>
+			
 			<? } ?></table>
 			    </span>
 		</div>

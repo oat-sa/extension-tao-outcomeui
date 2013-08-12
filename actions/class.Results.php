@@ -157,14 +157,19 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
         $result = $this->getCurrentInstance();
         $testTaker = $this->service->getTestTakerData($result);
         //todo testTaker object
+        $stats = $this->service->getItemVariableDataStatsFromDeliveryResult($result);
+        $this->setData('nbResponses',  $stats["nbResponses"]);
+        $this->setData('nbCorrectResponses',  $stats["nbCorrectResponses"]);
+        $this->setData('nbIncorrectResponses',  $stats["nbIncorrectResponses"]);
+        $this->setData('nbUnscoredResponses',  $stats["nbUnscoredResponses"]);
         $this->setData('userLogin', current($testTaker[PROPERTY_USER_LOGIN])->literal);
         $this->setData('userLabel', current($testTaker[RDFS_LABEL])->literal);
         $this->setData('userFirstName', current($testTaker[PROPERTY_USER_FIRSTNAME])->literal);
          $this->setData('userLastName', current($testTaker[PROPERTY_USER_LASTNAME])->literal);
         $this->setData('userEmail', current($testTaker[PROPERTY_USER_MAIL])->literal);
-        $variablesByItem = $this->service->getItemVariableDataFromDeliveryResult($result);
+       // $variablesByItem = $this->service->getItemVariableDataFromDeliveryResult($result);
         $this->setData('deliveryResultLabel', $result->getLabel());
-        $this->setData('variables',  $variablesByItem);
+        $this->setData('variables',  $stats["data"]);
         $this->setView('viewResult.tpl');
     }
 
