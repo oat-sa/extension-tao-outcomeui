@@ -106,8 +106,15 @@ class taoResults_models_classes_ResultsService
     public function getItemFromVariable(core_kernel_classes_Resource $variable){
             return $this->getItemFromItemResult($this->getItemResultFromVariable($variable));
     }
-    public function getItemVariableDataStatsFromDeliveryResult(core_kernel_classes_Resource $deliveryResult){
-            $variablesData = $this->getItemVariableDataFromDeliveryResult($deliveryResult);
+    
+    /**
+     *
+     * @param core_kernel_classes_Resource $deliveryResult
+     * @param string $filter 'lastSubmitted', 'firstSubmitted'
+     * @return type
+     */
+    public function getItemVariableDataStatsFromDeliveryResult(core_kernel_classes_Resource $deliveryResult, $filter = null){
+            $variablesData = $this->getItemVariableDataFromDeliveryResult($deliveryResult, $filter);
             $numberOfResponseVariables = 0;
             $numberOfCorrectResponseVariables = 0;
             $numberOfInCorrectResponseVariables = 0;
@@ -115,32 +122,38 @@ class taoResults_models_classes_ResultsService
              $numberOfOutcomeVariables = 0;
             //$numberOfOutcomeVariables = $numberOfOutcomeVariables - ($numberOfCorrectOutcomeVariables + $numberOfInCorrectOutcomeVariables);
             foreach ($variablesData as $itemVariables) {
-                foreach ($itemVariables['vars'] as $var) {
-                    //$types = $var[RDF_TYPE];
-                    $type = current($var[RDF_TYPE]);
-                    $correctResponse = current($var[PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE]);
-                    if ($type->getUri() == CLASS_RESPONSE_VARIABLE){
-                    $numberOfResponseVariables++;
-                        
-                        if (get_class($correctResponse)=='core_kernel_classes_Resource') {
-                            
-                            if ($correctResponse->getUri() == GENERIS_TRUE) {
-                            $numberOfCorrectResponseVariables++;
-                            } else {
-                                if ($correctResponse->getUri() == GENERIS_FALSE) {
-                                    $numberOfInCorrectResponseVariables++;
-                                } else { //an unknown core_kernel_classes_Resource
-                                    $numberOfUnscoredResponseVariables++;
+
+                foreach ($itemVariables['sortedVars'] as $variableType=>$variables) {
+                        foreach ($variables as $variableIdentifier => $observations){
+                            foreach ($observations as $var) {
+                                $type = $variableType;
+                                $correctResponse = current($var[PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE]);
+                                if ($type == CLASS_RESPONSE_VARIABLE){
+                                $numberOfResponseVariables++;
+                                    if (get_class($correctResponse)=='core_kernel_classes_Resource') {
+                                        if ($correctResponse->getUri() == GENERIS_TRUE) {
+                                        $numberOfCorrectResponseVariables++;
+                                        } else {
+                                            if ($correctResponse->getUri() == GENERIS_FALSE) {
+                                                $numberOfInCorrectResponseVariables++;
+                                            } else { //an unknown core_kernel_classes_Resource
+                                                $numberOfUnscoredResponseVariables++;
+                                            }
+                                        }
+                                    } else {
+                                                $numberOfUnscoredResponseVariables++;
+                                    }
                                 }
+                                 else {
+                                 $numberOfOutcomeVariables++;
+                                 }
                             }
-                        } else {
-                                    $numberOfUnscoredResponseVariables++;
                         }
-                    }
-                     else {
-                     $numberOfOutcomeVariables++;
-                    }
                 }
+
+
+
+
             }
             $stats = array(
                 "nbResponses" => $numberOfResponseVariables,
@@ -153,11 +166,11 @@ class taoResults_models_classes_ResultsService
             return $stats;
     }
     /**
-     *  prepare a data set as an assocaittive array, service intended to populate gui controller
-     *
+     *  prepare a data set as an associative array, service intended to populate gui controller
+     * @param string $filter 'lastSubmitted', 'firstSubmitted'
      */
 
-    public function getItemVariableDataFromDeliveryResult(core_kernel_classes_Resource $deliveryResult){
+    public function getItemVariableDataFromDeliveryResult(core_kernel_classes_Resource $deliveryResult, $filter){
             
             $itemResults = $this->getItemResultsFromDeliveryResult($deliveryResult);
             $variablesByItem = array();
@@ -175,11 +188,7 @@ class taoResults_models_classes_ResultsService
                 }
                 foreach ($this->getVariablesFromItemResult($itemResult) as $variable) {
                     $variableDescription = $variable->getPropertiesValues(array(
-                        new core_kernel_classes_Property(PROPERTY_IDENTIFIER),
-                        new core_kernel_classes_Property(RDF_VALUE),
-                        new core_kernel_classes_Property(RDF_TYPE),
-                         new core_kernel_classes_Property(PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE),
-                        new core_kernel_classes_Property(PROPERTY_VARIABLE_EPOCH)
+                        PROPERTY_IDENTIFIER, RDF_VALUE, RDF_TYPE, PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE, PROPERTY_VARIABLE_EPOCH
                     ));
                    $relatedItem = $this->getItemFromVariable($variable);
                    if (get_class($relatedItem)=="core_kernel_classes_Literal") {
@@ -194,7 +203,9 @@ class taoResults_models_classes_ResultsService
                    }
                 $type = current($variableDescription[RDF_TYPE])->getUri();
                 $variableIdentifier = current( $variableDescription[PROPERTY_IDENTIFIER])->__toString();
-                $variableDescription[PROPERTY_VARIABLE_EPOCH] =  array(tao_helpers_Date::displayeDate(current($variableDescription[PROPERTY_VARIABLE_EPOCH]), tao_helpers_Date::FORMAT_VERBOSE));
+                $epoch = current($variableDescription[PROPERTY_VARIABLE_EPOCH])->__toString();
+               
+                $variableDescription["epoch"] =  array(tao_helpers_Date::displayeDate($epoch, tao_helpers_Date::FORMAT_VERBOSE));
                 $correctResponse = current($variableDescription[PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE]);
                 if (get_class($correctResponse)=='core_kernel_classes_Resource') {
                             if ($correctResponse->getUri() == GENERIS_TRUE) {
@@ -206,14 +217,36 @@ class taoResults_models_classes_ResultsService
                                     $variableDescription["isCorrect"] = "unscored";
                                 }
                             }
-                } else { 
+                } else {
                     $variableDescription["isCorrect"] = "unscored";
                 }
-                $variablesByItem[$itemIdentifier]['vars'][] = $variableDescription;
-                $variablesByItem[$itemIdentifier]['sortedVars'][$type][$variableIdentifier][] = $variableDescription;
+                
+                $variablesByItem[$itemIdentifier]['sortedVars'][$type][$variableIdentifier][$epoch] = $variableDescription;
                 $variablesByItem[$itemIdentifier]['label'] = $itemLabel;
                 }
-        }
+            }
+                //sort by epoch and filter
+                foreach ($variablesByItem as $itemIdentifier =>$itemVariables){
+                   
+                    foreach ($itemVariables['sortedVars'] as $variableType=>$variables) {
+                        foreach ($variables as $variableIdentifier => $observation) {
+                            ksort($variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier]);
+                            switch ($filter){
+                                case "lastSubmitted":{
+                                        $variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier] =
+                                            array(array_pop( $variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier]));
+                                        break;}
+                                case "firstSubmitted":{
+                                        $variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier] =
+                                            array(array_shift( $variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier]));
+                                        break;
+                                        
+                                }
+                            }
+                        }
+                    }
+                }
+
         return $variablesByItem;
     }
     /**
