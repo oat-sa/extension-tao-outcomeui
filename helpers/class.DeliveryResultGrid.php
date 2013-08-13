@@ -94,14 +94,17 @@ class taoResults_helpers_DeliveryResultGrid
 		$processProperties = array(
 			RDFS_LABEL					=> __('Label'),
 			PROPERTY_RESULT_OF_DELIVERY	=> __('Delivery'),
-			PROPERTY_RESULT_OF_SUBJECT	=> __('Test taker')
+			PROPERTY_RESULT_OF_SUBJECT	=> __('Test taker'),
+            RDF_TYPE                	=> __('Class')
 		);
 		
 		foreach($processProperties as $processPropertyUri => $label){
 			if(!isset($excludedProperties[$processPropertyUri])){
 				$column = $this->grid->addColumn($processPropertyUri, $label);
+               
 			}
 		}
+
 		$this->grid->setColumnsAdapter(
 			array_keys($processProperties),
 			new tao_helpers_grid_Cell_ResourceLabelAdapter()

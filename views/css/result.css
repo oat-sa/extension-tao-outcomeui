@@ -10,13 +10,13 @@ body {
 	font-family: Verdana, Arial, sans-serif;
 	color: #3A3A3A;
 }
-
+/*
 h1 {
 	text-align: center;
 	font-size: 22px;
 	margin-bottom: 35px;
 }
-
+*/
 #main {
 	background-color: white;
 	background-position: 530px 30px;
@@ -72,6 +72,12 @@ p span.field
     background-color:#eeeeee;
     width:40%;
 }
+#resultsBox {
+    display:block;
+    float:center;
+    padding-top: 20px;
+}
+
 
 table.mini tr td{
     padding:2px;
@@ -97,6 +103,7 @@ table.mini tr td{
 }
 
 .resultsTable {
+	padding-top:10px;
 	border-collapse: collapse;
 
 
@@ -153,32 +160,3 @@ tr td {
     font-style:italic;
 }
 
-.ui-jqgrid .ui-jqgrid-htable th div{
-    overflow: hidden;
-    height:40px;
-    vertical-align:text-top;
-}
-
-.ui-jqgrid .ui-jqgrid-pager .ui-pg-div span.ui-icon {
-	margin-top: -3px
-}
-
-#results-custom-table-actions {
-	margin: 15px 0;
-}
-
-#results-custom-table-actions > div {
-	margin-bottom: 15px;
-}
-
-#results-custom-table-tools {
-	margin-top: 15px;
-}
-
-#result-table-container {
-	margin: 4px;
-}
-
-#result-table-grid {
-	border: none;
-}

@@ -21,6 +21,7 @@
 
 
 /**
+ * should be entirelyrefactored
  * Results Controller provide actions performed from url resolution
  *
  * @author Joel Bout <joel@taotesting.com>
@@ -129,6 +130,172 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
     		'columns' => $arr
     	));
     }
-    
+
+    /**
+     * @return string A csv file with the data table
+     * @param columns an array of column objects including the property information and as it is used in the tao class.Table.php context
+     */
+    private function dataToCsv($columns, $rows, $delimiter, $enclosure){
+       //opens a temporary stream rather than producing a file and get benefit of csv php helpers
+        $handle = fopen('php://temp', 'r+');
+        //print_r($this->columnsToFlatArray($columns));
+       fputcsv($handle, $this->columnsToFlatArray($columns), $delimiter, $enclosure);
+       foreach ($rows as $line) {
+	   $seralizedData = array();
+	   foreach ($line["cell"] as $cellData){
+	       $seralizedData[] = $this->cellDataToString($cellData);
+	   }
+           fputcsv($handle, $seralizedData, $delimiter, $enclosure);
+       }
+       rewind($handle);
+       //read the content of the csv
+       $encodedData = "";
+       while (!feof($handle)) {
+       $encodedData .= fread($handle, 8192);
+       }
+       fclose($handle);
+       return $encodedData;
+    }
+    /**todo ppl delegate this to the dataprovider impleemntation
+     *  Convenience function that attempts to support cases where the data provider set complex data objects into cellvalues
+     * @return (string)
+     */
+    private function cellDataToString($cellData, $pieceDelimiters = array("", '     ') ){
+	$strCellData = "";$currentDelimiter = array_shift($pieceDelimiters);
+	//return serialize($cellData);
+	if (is_array($cellData)) {
+	    $arKeys = array_keys($cellData);
+	    $last = array_pop($arKeys);
+	    foreach ($cellData as $key => $cellDataPiece){
+		if (isset($cellDataPiece[0]) and (is_array($cellDataPiece[0]))) {
+		    $strCellData .= $this->cellDataToString($cellDataPiece, $pieceDelimiters);
+		}
+		else {
+		    if (count($cellDataPiece)>1) {$strCellData .= implode($currentDelimiter, $cellDataPiece);} else {$strCellData .=array_pop($cellDataPiece);}
+		    if ($key!=$last) {$strCellData.=array_shift($pieceDelimiters);}
+		}
+
+	    }
+	}
+	else {
+	    if (is_object($cellData)) { $strCellData = serialize($cellData);}
+	    else {
+	    $strCellData = $cellData;
+	    }
+	}
+	return $strCellData;
+    }
+    /**
+     * Returns a flat array with the list of column labels.
+     * @param columns an array of column object including the property information and that is used within tao class.Table context
+     */
+    private function columnsToFlatArray($columns){
+        $flatColumnsArray = array();
+        foreach ($columns as $column){
+            $flatColumnsArray[] = $column->label;
+        }
+        return $flatColumnsArray;
+        }
+     /**
+     * Data provider for the table, returns json encoded data according to the parameter
+     * @author Bertrand Chevrier, <taosupport@tudor.lu>,
+     *
+     * @param type $format  json, csv
+     */
+    public function data($format ="json") {
+
+       	$filterData =  $this->getRequestParameter('filterData');
+    	$columns = $this->hasRequestParameter('columns') ? $this->getColumns('columns') : array();
+    	$page = $this->getRequestParameter('page');
+		$limit = $this->getRequestParameter('rows');
+		$sidx = $this->getRequestParameter('sidx');
+		$sord = $this->getRequestParameter('sord');
+		$searchField = $this->getRequestParameter('searchField');
+		$searchOper = $this->getRequestParameter('searchOper');
+		$searchString = $this->getRequestParameter('searchString');
+		$start = $limit * $page - $limit;
+        $response = new stdClass();
+       	$clazz = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
+		$results	= $clazz->searchInstances($filter, array ('recursive'=>true));
+		$counti		= $clazz->countInstances($filter, array ('recursive'=>true));
+		$dpmap = array();
+		foreach ($columns as $column) {
+			$dataprovider = $column->getDataProvider();
+			$found = false;
+			foreach ($dpmap as $k => $dp) {
+				if ($dp['instance'] == $dataprovider) {
+					$found = true;
+					$dpmap[$k]['columns'][] = $column;
+				}
+			}
+			if (!$found) {
+				$dpmap[] = array(
+					'instance'	=> $dataprovider,
+					'columns'	=> array(
+						$column
+					)
+				);
+			}
+		}
+		foreach ($dpmap as $arr) {
+			$arr['instance']->prepare($results, $arr['columns']);
+		}
+		foreach($results as $result) {
+			$cellData = array();
+			foreach ($columns as $column) {
+                //dataProvider should implement a few settings for early filtering
+                $cellData[]=self::filterCellData($column->getDataProvider()->getValue($result, $column), $filterData);
+			}
+			$response->rows[] = array(
+				'id' => $result->getUri(),
+				'cell' => $cellData
+			);
+		}
+		$response->page = $page;
+		if ($limit!=0) {
+		$response->total = ceil($counti / $limit);//$total_pages;
+		}
+		else
+		{
+		$response->total = 1;
+		}
+		$response->records = count($results);
+
+		switch ($format) {
+                    case "csv":$encodedData = $this->dataToCsv($columns, $response->rows,';','"');
+                        header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
+                        setcookie("fileDownload","true", 0, "/");
+                        header("Content-type: text/csv");
+                        header('Content-Disposition: attachment; filename=Data.csv');
+                    break;
+
+                    default: $encodedData = json_encode($response);
+                    break;
+                }
+
+                echo $encodedData;
+    }
+    private static function filterCellData($observationsList, $filterData){
+        //return $observationsList;
+        if (
+                ($filterData=="lastSubmitted" or $filterData=="firstSubmitted")
+                and
+                (is_array($observationsList))
+            ){
+            $returnValue = array();
+            $sortedByTime=array();
+            foreach ($observationsList as $observation) {
+                $epoch = $observation[1];
+                $sortedByTime[$epoch] = $observation[0];
+            }
+            ksort($sortedByTime);
+           
+            $returnValue[]=($filterData=='lastSubmitted') ? array(array_pop($sortedByTime)) : array(array_shift($sortedByTime));
+            } else
+            {
+                $returnValue = $observationsList;
+            }
+        return $returnValue;
+    }
 }
 ?>

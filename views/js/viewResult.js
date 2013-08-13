@@ -39,7 +39,12 @@
 		    if (observedDataEpoch!= '') {$timeAffix ="<span class=epoch>("+observedDataEpoch+")</span>";}
 		    formattedData +="<div>"+layoutResponse(observedData)+ " "+$timeAffix+"</div>";
 		    }
+		    if (data[key].length==1){
+		    observedData = data[key][0];
+		    formattedData +="<div>"+layoutResponse(observedData)+"</div>";
+		    }
 	    }
 	}
+	//alert('0');
 	return formattedData;
 	}

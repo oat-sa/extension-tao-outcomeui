@@ -3,7 +3,7 @@
 		<span><?=get_data('message')?></span>
 	</div>
 <?endif?>
-    <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/result.css" />
+    <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/resultTable.css" />
 
     <script type="text/javascript">
 require(['require', 'jquery', root_url + 'taoResults/views/js/viewResult.js', 'grid/tao.grid', root_url + 'taoResults/views/js/resultTable.js'], function(req, $) {
@@ -12,6 +12,7 @@ require(['require', 'jquery', root_url + 'taoResults/views/js/viewResult.js', 'g
 	    //models and columns are parameters used and manipulated by the table operations functions.
 	    document.models = [];
 	    document.columns = [];
+	    document.dataFilter='all';
 	    //there is no _url helper in JS,
 	    // in order to avoid php call within JS and externalize the js
 	    // of the grid in a separate js file, the links to he actions are stored
@@ -57,6 +58,13 @@ require(['require', 'jquery', root_url + 'taoResults/views/js/viewResult.js', 'g
 
 				});
 	    });
+
+	    $('#dataFilter').change(function(e) {
+		$("#result-table-grid").jqGrid().setGridParam({ url: document.dataUrl+'?filterData='+$( this ).val() });
+		$("#result-table-grid").trigger( 'reloadGrid' );
+		
+		});
+
 	    //binds the column chooser button taht launches the feature from jqgrid allowing to make a selection of the columns displayed
 	     $('#columnChooser').click(function(e) {
 		    e.preventDefault();
@@ -91,6 +99,14 @@ require(['require', 'jquery', root_url + 'taoResults/views/js/viewResult.js', 'g
 			</span>
 		</div>
 	</div>
+	<span id="settingsBox"><?=__('Filter values:')?>
+			<select id="dataFilter">
+			    <option  value="all"><?=__('All collected values')?></option>
+			    <option  value="firstSubmitted"><?=__('First submitted responses only')?></option>
+			    <option  value="lastSubmitted"><?=__('Last submitted responses only')?></option>
+			</select>
+
+	</span>
 	<div id="result-table-container">
     	<table id="result-table-grid"></table>
 	<div id="pagera1"></div>

@@ -18,14 +18,14 @@
 	colModel: document.models,
 	rowNum:20,
 	height:'auto',
-	width: (parseInt($("#result-table-grid").width())),
+	width: (parseInt($("#result-table-grid").width())-20),
 	rowNum:20,
 	rowList:[5,10,30],
 	pager: '#pagera1',
 	sortName: 'id',
 	viewrecords: true,
 	rownumbers: true,
-	sortorder: "asc",
+	sortable: false,
 	gridview : true,
 	caption: __("Delivery results"),
 	onCellSelect: function(rowid,iCol,cellcontent, e) {helpers.openTab(__('Delivery Result'), document.getActionViewResultUrl+'?uri='+escape(rowid));}
@@ -60,6 +60,7 @@
 		 document.models.push({
 			 'name': columns[key].columnName,
 			 'columnIdentifier' : columns[key].columnIdentifier,
+			 sortable : false,
 			 cellattr: function(rowId, tv, rawObject, cm, rdata){return "data-uri=void, data-type=void";},
 			 formatter : function(value, options, rData){return layoutData(value,currentColumn);
 			 }

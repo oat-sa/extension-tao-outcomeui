@@ -123,12 +123,14 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule
         foreach ($results as $res) {
             $props = $res->getPropertiesValues(array(
                 PROPERTY_RESULT_OF_DELIVERY,
-                PROPERTY_RESULT_OF_SUBJECT
+                PROPERTY_RESULT_OF_SUBJECT,
+                RDF_TYPE
             ));
             $data[$res->getUri()] = array(
                 RDFS_LABEL => $res->getLabel(),
                 PROPERTY_RESULT_OF_DELIVERY => array_shift($props[PROPERTY_RESULT_OF_DELIVERY]),
-                PROPERTY_RESULT_OF_SUBJECT => array_shift($props[PROPERTY_RESULT_OF_SUBJECT])
+                PROPERTY_RESULT_OF_SUBJECT => array_shift($props[PROPERTY_RESULT_OF_SUBJECT]),
+                RDF_TYPE => array_shift($props[RDF_TYPE])
             );
         }
 

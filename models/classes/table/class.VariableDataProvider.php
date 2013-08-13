@@ -105,10 +105,12 @@ class taoResults_models_classes_table_VariableDataProvider
 				foreach ($columns as $column) {
 					if ($vid == $column->getIdentifier()) {
 							$value = (string)$varData["value"];
-						    $time = "";
-						    if ($varData["epoch"] != "") {$time = "@". date("F j, Y, g:i:s a",$varData["epoch"]);}
-						    $this->cache[$varData["type"]->getUri()][$result->getUri()][$vid][] =  array($value, $time);
-							continue;
+						    $epoch = (float)$varData["epoch"];
+                            //echo $epoch;
+                            $readableTime = "";
+						    if ($epoch != "") {$readableTime = "@". date("F j, Y, g:i:s a",$varData["epoch"]);}
+						    $this->cache[$varData["type"]->getUri()][$result->getUri()][$vid][] =  array($value, $readableTime);
+							
 					}
 				}
 			}
@@ -134,6 +136,7 @@ class taoResults_models_classes_table_VariableDataProvider
         $vcUri = $column->getVariableClass()->getUri();
         if (isset($this->cache[$vcUri][$resource->getUri()][$column->getIdentifier()])) {
         	$returnValue = $this->cache[$vcUri][$resource->getUri()][$column->getIdentifier()];
+            
         } else {
         	common_Logger::i('no data for resource: '.$resource->getUri().' column: '.$column->getIdentifier());
         }

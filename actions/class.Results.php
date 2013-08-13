@@ -178,6 +178,15 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
           $this->setData('filter',$this->getRequestParameter("filter"));
         $this->setView('viewResult.tpl');
     }
+    public function getTrace(){
+        $variableUri = $this->getRequestParameter("variableUri");
+        $trace = $this->service->getVariableValue($variableUri);
+         header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
+         setcookie("fileDownload","true", 0, "/");
+         header("Content-type: text/xml");
+         header('Content-Disposition: attachment; filename=trace.xml');
+         echo $trace;
+    }
 
 
 

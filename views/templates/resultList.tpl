@@ -10,7 +10,7 @@
 	</div>
 </div>
 
-<div class="main-container">
+<div id="main-container">
 	<div id="inspect-results-container">
 		<table id="inspect-results-grid">
 		</table>
@@ -18,7 +18,7 @@
 	</div>
 	<div align="right">
 		<span id="buildTableButton" class="ui-state-default ui-corner-all">
-			<a href="#" ><?=__('Build/Export data table')?></a>
+			<a href="#" ><?=__('Export Table')?></a>
 		</span>
 	</div>
 </div>
@@ -29,7 +29,7 @@ var deliveryResultGrid = null;
 
 //load the results interface functions of the parameter filter
 function loadResults(filter) {
-	$.getJSON('<?=_url('getResults')?>',
+	$.getJSON('<?=_url("getResults")?>',
 		{
 			'filter':filter
 		},
@@ -49,7 +49,7 @@ $(function(){
 		/*
 		 * instantiate the facet based filter widget
 		 */
-		var getUrl = '<?=_url('getFilteredInstancesPropertiesValues')?>';
+		var getUrl = '<?=_url("getFilteredInstancesPropertiesValues")?>';
 
 		//the facet filter options
 		var facetFilterOptions = {
@@ -92,7 +92,7 @@ $(function(){
 		//the delivery results grid options
 		var resultsGridOptions = {
 			'height': 'auto',
-
+			width: (parseInt($("#inspect-results-grid").width()-40)),
 			'title': __('Delivery results'),
 			'callback': {
 				'onSelectRow': function(rowId) {
@@ -100,7 +100,7 @@ $(function(){
 					if (!label) {
 						label = __('Delivery Result');
 					}
-					helpers.openTab(label, '<?=_url('viewResult', 'Results')?>?uri='+escape(rowId));
+					//helpers.openTab(label, '<?=_url('viewResult', 'Results')?>?uri='+escape(rowId));
 				}
 			}
 		};
