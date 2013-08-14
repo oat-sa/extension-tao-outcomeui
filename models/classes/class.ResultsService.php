@@ -270,8 +270,19 @@ class taoResults_models_classes_ResultsService
      * @return core_kernel_classes_resource
      * @throws common_exception_Error
      */
-    public function storeDeliveryResult($deliveryResultIdentifier){
+    public function storeDeliveryResult($deliveryResultIdentifier = null){
+
         $deliveryResultClass = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
+        if (is_null($deliveryResultIdentifier)) {
+            $deliveryResult = $deliveryResultClass->createInstanceWithProperties(array(
+					RDFS_LABEL					=> uniqid(),
+                    PROPERTY_IDENTIFIER	=> $deliveryResultIdentifier
+				));
+            $deliveryResult->editPropertyValues(new core_kernel_classes_Property(PROPERTY_IDENTIFIER), $deliveryResult->getUri());
+            return $deliveryResult;
+        }
+
+        
         $deliveryResults = $deliveryResultClass->searchInstances(array(
 	        	PROPERTY_IDENTIFIER	=> $deliveryResultIdentifier
 	        ));
@@ -281,6 +292,7 @@ class taoResults_models_classes_ResultsService
 	        	$returnValue = array_shift($deliveryResults);
 				common_Logger::d('found Delivery Result after search for '.$deliveryResultIdentifier);
 	        } else {
+
 				$returnValue = $deliveryResultClass->createInstanceWithProperties(array(
 					RDFS_LABEL					=> $deliveryResultIdentifier,
                     PROPERTY_IDENTIFIER	=> $deliveryResultIdentifier
