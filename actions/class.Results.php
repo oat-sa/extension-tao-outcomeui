@@ -155,9 +155,23 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
     public function viewResult()
     {
         $result = $this->getCurrentInstance();
-        $testTaker = $this->service->getTestTakerData($result);
 
-        
+        $testTaker = $this->service->getTestTakerData($result);
+        if (get_class($testTaker)=='core_kernel_classes_Literal') {
+        $this->setData('userLogin', $testTaker);
+        $this->setData('userLabel', $testTaker);
+        $this->setData('userFirstName', $testTaker);
+        $this->setData('userLastName', $testTaker);
+        $this->setData('userEmail', $testTaker);
+        } else {
+            //the test taker is unknown
+           
+            $this->setData('userLogin', current($testTaker[PROPERTY_USER_LOGIN])->literal);
+            $this->setData('userLabel', current($testTaker[RDFS_LABEL])->literal);
+            $this->setData('userFirstName', current($testTaker[PROPERTY_USER_FIRSTNAME])->literal);
+            $this->setData('userLastName', current($testTaker[PROPERTY_USER_LASTNAME])->literal);
+            $this->setData('userEmail', current($testTaker[PROPERTY_USER_MAIL])->literal);
+        }
 
         //todo testTaker object
         $stats = $this->service->getItemVariableDataStatsFromDeliveryResult($result, $this->getRequestParameter("filter"));
@@ -165,11 +179,7 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
         $this->setData('nbCorrectResponses',  $stats["nbCorrectResponses"]);
         $this->setData('nbIncorrectResponses',  $stats["nbIncorrectResponses"]);
         $this->setData('nbUnscoredResponses',  $stats["nbUnscoredResponses"]);
-        $this->setData('userLogin', current($testTaker[PROPERTY_USER_LOGIN])->literal);
-        $this->setData('userLabel', current($testTaker[RDFS_LABEL])->literal);
-        $this->setData('userFirstName', current($testTaker[PROPERTY_USER_FIRSTNAME])->literal);
-        $this->setData('userLastName', current($testTaker[PROPERTY_USER_LASTNAME])->literal);
-        $this->setData('userEmail', current($testTaker[PROPERTY_USER_MAIL])->literal);
+        
         $this->setData('deliveryResultLabel', $result->getLabel());
         $this->setData('variables',  $stats["data"]);
 

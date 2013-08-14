@@ -47,6 +47,8 @@ require(['require', 'jquery', root_url + 'taoResults/views/js/viewResult.js', 'g
 		//The file is being flushed in the buffer by _url('getCsvFile')
 		require([root_url  + 'tao/views/js/jquery.fileDownload.js'],
 				function(data){
+
+				alert(document.getActionCsvFileUrl);
 				$.fileDownload(document.getActionCsvFileUrl, {
 				    preparingMessageHtml: __("We are preparing your report, please wait..."),
 				    failMessageHtml: __("There was a problem generating your report, please try again."),
@@ -62,6 +64,7 @@ require(['require', 'jquery', root_url + 'taoResults/views/js/viewResult.js', 'g
 	    $('#dataFilter').change(function(e) {
 		$("#result-table-grid").jqGrid().setGridParam({ url: document.dataUrl+'?filterData='+$( this ).val() });
 		$("#result-table-grid").trigger( 'reloadGrid' );
+		document.getActionCsvFileUrl = '/taoResults/ResultTable/getCsvFile?filterData='+$( this ).val() });
 		
 		});
 
@@ -71,7 +74,7 @@ require(['require', 'jquery', root_url + 'taoResults/views/js/viewResult.js', 'g
 		    columnChooser();
 	    });
     });
-});
+
 </script>
 <div class="main-container">
 	<div id="results-custom-table-actions">

@@ -575,6 +575,10 @@ class taoResults_models_classes_ResultsService
      */
     public function getTestTakerData(core_kernel_classes_Resource $deliveryResult) {
         $testTaker = $this->gettestTaker($deliveryResult);
+        if (get_class($testTaker)=='core_kernel_classes_Literal') {
+             return $testTaker;
+        }
+        else {
         $propValues =  $testTaker->getPropertiesValues(array(
 					RDFS_LABEL,
                     PROPERTY_USER_LOGIN,
@@ -582,7 +586,7 @@ class taoResults_models_classes_ResultsService
 					PROPERTY_USER_LASTNAME,
                     PROPERTY_USER_MAIL,
 				));
-       
+        }
         return $propValues;
 
     }

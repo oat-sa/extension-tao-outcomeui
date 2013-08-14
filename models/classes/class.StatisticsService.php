@@ -60,7 +60,15 @@ class taoResults_models_classes_StatisticsService
 	$statisticsGrouped = array("sum" => 0, "#" => 0);
         foreach ($deliveryResults as $deliveryResult){
 		$testTaker = $this->getTestTaker($deliveryResult);
-		$statisticsGrouped["distinctTestTaker"][$testTaker->getUri()] = $testTaker->getLabel() ;
+        if (get_class($testTaker)=='core_kernel_classes_Literal') {
+            $testTakerIdentifier == $testTaker->__toString();
+            $testTakerLabel = $testTaker->__toString();
+        } else {
+            $testTakerIdentifier == $testTaker->getUri();
+            $testTakerLabel == $testTaker->getLabel();
+        }
+
+		$statisticsGrouped["distinctTestTaker"][$testTakerIdentifier] = $testTakerLabel ;
 		$scoreVariables = $this->getScoreVariables($deliveryResult);
 		$relatedDelivery = $this->getDelivery($deliveryResult);
                 $deliveryDataSet["deliveries"][$relatedDelivery->getUri()]= $relatedDelivery->getLabel();
