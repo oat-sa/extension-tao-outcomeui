@@ -93,6 +93,8 @@
 		    <td class="headerRow" colspan="4"><span class="itemName"><?=__('Item')?> : <?=$item['label']?></span> <span class="itemModel">(<?=$item['itemModel']?>)</span></td>
 	    </tr>
 	    <!--<tr><td class="headerColumn"><?=__('Variable Name')?></td><td class="headerColumn"><?=__('Collected Value')?></td><td class="headerColumn"><?=__('Correctness')?></td><td class="headerColumn"><?=__('Timestamp')?></td></tr>!-->
+
+	     <? if (isset($item['sortedVars'][CLASS_RESPONSE_VARIABLE])) {?>
 	    <tr ><td class="subHeaderRow" colspan="4"><?=__('Responses')?> :</td></tr>
 	    <?
 
@@ -113,6 +115,8 @@
 			}
 		    }
 	    ?>
+	<? } ?>
+	     <? if (isset($item['sortedVars'][CLASS_OUTCOME_VARIABLE])) {?>
 	    <tr> <td class="subHeaderRow" colspan="4"><?=__('Grades')?> :</td></tr>
 	    <?
 
@@ -131,6 +135,8 @@
 			}
 		    }
 	    ?>
+	<?} ?>
+	    <? if (isset($item['sortedVars'][CLASS_TRACE_VARIABLE])) {?>
 	    <tr> <td class="subHeaderRow" colspan="4"><?=__('Traces')?> :</td></tr>
 	    <?
 
@@ -149,7 +155,7 @@
 			}
 		    }
 	    ?>
-
+	    <?} ?>
 	    <? } ?></table>
 		</span>
     </div>
