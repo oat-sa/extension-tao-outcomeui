@@ -20,17 +20,20 @@ class taoResults_models_classes_DbResult
 
     public function __construct(){
 		parent::__construct();
+        common_ext_ExtensionsManager::getExtensionById("taoResults");
 		$this->taoResultsStorage = new taoResults_models_classes_ResultsService();
        
     }
     /**
      * In the case of a taoResultsDB storage and if the consumer asks for an identifer a uri is returned
+     * * //you may also provide your own identifier to the other services like a lis_result_sourcedid:GUID
      */
     public function spawnResult(){
         return $this->taoResultsStorage->storeDeliveryResult()->getUri();
     }
     /**
     * @param string testTakerIdentifier (uri recommended)
+     *
     */
     public function storeRelatedTestTaker($deliveryResultIdentifier, $testTakerIdentifier) {
          //spawns a new delivery result or retrieve an existing one with this identifier
@@ -56,7 +59,10 @@ class taoResults_models_classes_DbResult
          //spawns a new delivery result or retrieve an existing one with this identifier
        $deliveryResult = $this->taoResultsStorage->storeDeliveryResult($deliveryResultIdentifier);
         $this->taoResultsStorage->storeItemVariable($deliveryResult, $test, $item, $itemVariable, $callIdItem);
-        
+            /*
+     *  CreateResultValue(sourcedId,ResultValueRecord)
+     *  CreateLineItem(sourcedId,lineItemRecord:LineItemRecord)
+     */
     }
     /** Submit a complete Item result
     *
@@ -72,7 +78,7 @@ class taoResults_models_classes_DbResult
 
     }
 
-    public function configure(core_kernel_classes_Resource $resultServer) {
+    public function configure(core_kernel_classes_Resource $resultServer, $callOptions = array()) {
         //nothing to configure in the case of taoResults storage
     }
 
