@@ -157,7 +157,7 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
         $result = $this->getCurrentInstance();
 
         $testTaker = $this->service->getTestTakerData($result);
-        if (get_class($testTaker)=='core_kernel_classes_Literal') {
+        if (is_object($testTaker) and (get_class($testTaker)=='core_kernel_classes_Literal')) {
             //the test taker is unknown
         $this->setData('userLogin', $testTaker);
         $this->setData('userLabel', $testTaker);
