@@ -29,7 +29,10 @@ class taoResults_models_classes_DbResult
      * * //you may also provide your own identifier to the other services like a lis_result_sourcedid:GUID
      */
     public function spawnResult(){
-        return $this->taoResultsStorage->storeDeliveryResult()->getUri();
+        
+        $spawnedResult =  $this->taoResultsStorage->storeDeliveryResult()->getUri();
+        common_Logger::i("taoResults storage spawned result:".$spawnedResult);
+        return $spawnedResult;
     }
     /**
     * @param string testTakerIdentifier (uri recommended)
