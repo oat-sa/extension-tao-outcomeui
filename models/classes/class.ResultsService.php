@@ -294,7 +294,7 @@ class taoResults_models_classes_ResultsService
 	        } else {
 
 				$returnValue = $deliveryResultClass->createInstanceWithProperties(array(
-					RDFS_LABEL					=> $deliveryResultIdentifier,
+					RDFS_LABEL					=> uniqid(),
                     PROPERTY_IDENTIFIER	=> $deliveryResultIdentifier
 				));
 				common_Logger::d('spawned Delivery Result for '.$deliveryResultIdentifier);
