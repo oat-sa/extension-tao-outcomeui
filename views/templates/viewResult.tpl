@@ -10,6 +10,8 @@
 	data.uri = '<?=get_data("uri")?>';
 	data.classUri = '<?=get_data("classUri")?>';
     /**/
+	$(function () {
+
 	require(['require', 'jquery', '/taoResults/views/js/viewResult.js'], function () {
 	    $('.dataResult').html(function(index, oldhtml) {
 		return layoutResponse(oldhtml);
@@ -43,7 +45,7 @@
 		});
 		
 	    
-	
+	});
 
 
 </script>
