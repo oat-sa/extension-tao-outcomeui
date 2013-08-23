@@ -20,7 +20,7 @@ class taoResults_models_classes_DbResult
 
     public function __construct(){
 		parent::__construct();
-        common_ext_ExtensionsManager::getExtensionById("taoResults");
+        common_ext_ExtensionsManager::singleton()->getExtensionById("taoResults");
 		$this->taoResultsStorage = new taoResults_models_classes_ResultsService();
        
     }
