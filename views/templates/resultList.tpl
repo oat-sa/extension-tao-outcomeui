@@ -44,6 +44,7 @@ function loadResults(filter) {
 $(function(){
 	require(['require', 'jquery', 'generis.facetFilter', 'grid/tao.grid'], function(req, $, GenerisFacetFilterClass) {
 
+
 		//the grid model
 		model = <?=$model?>;
 		/*
@@ -104,7 +105,8 @@ $(function(){
 				}
 			}
 		};
-
+		//tao grid class override
+		TaoGridClass.prototype.editRow = function(rowId){;}
 		//instantiate the grid widget
 		deliveryResultGrid = new TaoGridClass('#inspect-results-grid', model, '', resultsGridOptions);
 		//load delivery results grid
