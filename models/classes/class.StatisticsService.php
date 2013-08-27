@@ -19,9 +19,7 @@
  *               2009-2012 (update and modification) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV);
  * 
  */
-if (0 > version_compare(PHP_VERSION, '5')) {
-    die('This file was generated for PHP 5');
-}
+
 /**
  * TAO - taoResults/models/classes/class.StatisticsService.php
  * extracts dataSet with statistics from taoResults
@@ -70,8 +68,13 @@ class taoResults_models_classes_StatisticsService
 
 		$statisticsGrouped["distinctTestTaker"][$testTakerIdentifier] = $testTakerLabel ;
 		$scoreVariables = $this->getScoreVariables($deliveryResult);
+        try {
 		$relatedDelivery = $this->getDelivery($deliveryResult);
-                $deliveryDataSet["deliveries"][$relatedDelivery->getUri()]= $relatedDelivery->getLabel();
+        $deliveryDataSet["deliveries"][$relatedDelivery->getUri()]= $relatedDelivery->getLabel();
+        } catch (Exception $e) {
+            $deliveryDataSet["deliveries"]["undefined"]= "Unknown Delivery";
+        }
+                
 		foreach ($scoreVariables as $variable){
 			$variableData = $this->getVariableData($variable);
 			$activityIdentifier = "";$activityNaturalId = "";
@@ -126,20 +129,17 @@ class taoResults_models_classes_StatisticsService
 		$slotSize = $statisticsGrouped["#"] / $split; //number of observations per slot
 		sort($statisticsGrouped["data"]);		                      
 			//sum all values for the slotsize
-                        $slot = 0 ; 
+            $slot = 0 ; 
 			$i=1;
                         foreach ($statisticsGrouped["data"] as $key => $value){
-				
                                 if (($i) > $slotSize && (!($slot+1==$split))) {$slot++;$i=1;}
                                 if (!(isset($statisticsGrouped["splitData"][$slot]))) {
                                 $statisticsGrouped["splitData"][$slot] = array("sum" => 0, "avg" =>0, "#"=> 0);
                                 }
-				
                                 $statisticsGrouped["splitData"][$slot]["sum"] += $value;
 				$statisticsGrouped["splitData"][$slot]["#"] ++;
 				$i++;
                         }
-			
                         //compute the average for each slot
                         foreach ( $statisticsGrouped["splitData"] as $slot => $struct){
                                 $statisticsGrouped["splitData"][$slot]["avg"] = 
