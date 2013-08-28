@@ -55,7 +55,7 @@ p span.field
     -webkit-border-radius: 10px;
     border-radius: 10px;
     background-color:#eeeeee;
-    width:35%;
+    width:45%;
     font-size:14px;
 }
 .userMail{
@@ -64,14 +64,42 @@ p span.field
 
 #ScoresSummaryBox {
     display:block;
-    padding:20px;
+
+    padding:0px;
     float:right;
      -moz-border-radius: 10px;
     -webkit-border-radius: 10px;
     border-radius: 10px;
-    background-color:#eeeeee;
+    /*background-color:#eeeeee;*/
     width:40%;
 }
+#scoresTable{
+    padding:0px;
+    margin:0px;
+    padding-left:0px;
+
+}
+#respEval{
+    
+    padding-left:0px;
+    padding-top:0px;
+    padding-bottom:0px;
+   
+}
+.valid{
+    color:'green';
+}
+.invalid{
+    color:'#FF0000';
+}
+.uneval{
+    color:'#00000FF'
+
+}
+.respEvalHeader{
+    font-weight: normal;
+}
+
 #resultsBox {
     display:block;
     float:center;
@@ -81,6 +109,7 @@ p span.field
 
 table.mini tr td{
     padding:2px;
+    padding-left:10px;
 }
 .field{
 
@@ -108,7 +137,10 @@ table.mini tr td{
 
 
 }
-
+#testTakerHeader{
+    padding-left: 15px;
+    vertical-align: top;
+}
 .resultsTable .headerRow {
     background-color:#dddddd;
     text-align:left;
@@ -125,6 +157,7 @@ table.mini tr td{
     width: 32px;
     height: 32px;
     align:center;
+    border-left: 0px;/*TOFIX*/
     
 }
 .incorrect{

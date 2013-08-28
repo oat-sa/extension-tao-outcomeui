@@ -53,7 +53,7 @@
 
     <div id="content">
 
-	<span id="TestTakerIdentificationBox"><strong><?=__('Results for:')?></strong>
+	<span id="TestTakerIdentificationBox"><strong>&nbsp;<img src="/tao/views/js/jsTree/themes/custom/subject.png" /><span id="testTakerHeader"><?=__('Test Taker')?></span></strong>
 	    <table class="mini">
 		<tr><td class="field"><?=__('Login:')?></td><td class="fieldValue"><?=get_data('userLogin')?></td></tr>
 		<tr><td class="field"><?=__('Label:')?></td><td class="fieldValue"><?=get_data('userLabel')?></td></tr>
@@ -63,28 +63,25 @@
 	    </table>
 	</span>
 	<span id="ScoresSummaryBox">
-		<table class="mini">
-		    <tr><td colspan="2"><?=__('Responses Evaluation:')?></td><td></td></tr>
-		    <tr>
-			<td><center><img src="/taoResults/views/img/dialog-clean.png" /><br/>
-		    <?=get_data("nbCorrectResponses")?>/<?=get_data('nbResponses')?> <?=__('Correct')?></center></td>
-
-			<td><center><img src="/taoResults/views/img/dialog-error-5.png" /><br/>
-		    <?=get_data("nbIncorrectResponses")?>/<?=get_data('nbResponses')?> <?=__('Incorrect')?></center></td>
-
-			 <td><center><img src="/taoResults/views/img/dialog-important-2.png" /><br/>
-		    <?=get_data("nbUnscoredResponses")?>/<?=get_data('nbResponses')?> <?=__('Not Scored')?></center></td>
-		    </tr>
-		</table>
-		<br/>
-		<span id="Settings"><?=__('Filter values:')?>
+		
+			<?=__('Filter values:')?>
 			<select id="filter">
 			    <option  value="all"><?=__('All collected values')?></option>
 			    <option  value="firstSubmitted"><?=__('First submitted responses only')?></option>
 			    <option  value="lastSubmitted"><?=__('Last submitted responses only')?></option>
 			</select>
 
-		</span>
+		<br/>
+		<br/>
+		<b><?=__('Responses Evaluation')?></b>
+		<table id="respEval">
+		    <tr><td><span class="valid"><?=__('Correct')?>: </span></td><td><?=get_data("nbCorrectResponses")?>/<?=get_data('nbResponses')?></td> <td><img src="/taoResults/views/img/dialog-clean.png" /></td></tr>
+		    <tr><td><span class="invalid"><?=__('Incorrect')?>: </span></td><td><?=get_data("nbIncorrectResponses")?>/<?=get_data('nbResponses')?></td><td><img src="/taoResults/views/img/dialog-error-5.png" /></td></tr>
+		    <tr><td><span class="uneval"><?=__('Not Evaluated')?>: </span></td><td><?=get_data("nbUnscoredResponses")?>/<?=get_data('nbResponses')?></td><td><img src="/taoResults/views/img/dialog-error-5.png" /></td></tr>
+		 </table>
+		
+		<br/>
+		
 	</span>
 
 	    <span id="resultsBox">
@@ -92,12 +89,12 @@
 	    <table class="resultsTable" border="1">
 	    <?  foreach (get_data('variables') as $item){ ?>
 	    <tr >
-		    <td class="headerRow" colspan="4"><span class="itemName"><?=__('Item')?> : <?=$item['label']?></span> <span class="itemModel">(<?=$item['itemModel']?>)</span></td>
+		    <td class="headerRow" colspan="4"><span class="itemName"><?=__('Item')?>: <?=$item['label']?></span> <span class="itemModel">(<?=$item['itemModel']?>)</span></td>
 	    </tr>
 	    <!--<tr><td class="headerColumn"><?=__('Variable Name')?></td><td class="headerColumn"><?=__('Collected Value')?></td><td class="headerColumn"><?=__('Correctness')?></td><td class="headerColumn"><?=__('Timestamp')?></td></tr>!-->
 
 	     <? if (isset($item['sortedVars'][CLASS_RESPONSE_VARIABLE])) {?>
-	    <tr ><td class="subHeaderRow" colspan="4"><?=__('Responses')?> :</td></tr>
+	    <tr ><td class="subHeaderRow" colspan="4"><b><?=__('Responses')?> </b></td></tr>
 	    <?
 
 		    foreach ($item['sortedVars'][CLASS_RESPONSE_VARIABLE] as $variableIdentifier  => $observations){
@@ -107,7 +104,7 @@
 
 		    <tr >
 		    <? if ($key === key($observations)) {?>
-			 <td <?=$rowspan?>><?=$variableIdentifier?>:</td>
+			 <td <?=$rowspan?>><?=$variableIdentifier?></td>
 		    <?}?>
 		    <td class="dataResult"><?=nl2br(array_pop($observation[RDF_VALUE]))?></td>
 		    <td class="<?=$observation['isCorrect']?>" />
@@ -119,7 +116,7 @@
 	    ?>
 	<? } ?>
 	     <? if (isset($item['sortedVars'][CLASS_OUTCOME_VARIABLE])) {?>
-	    <tr> <td class="subHeaderRow" colspan="4"><?=__('Grades')?> :</td></tr>
+	    <tr> <td class="subHeaderRow" colspan="4"><b><?=__('Grades')?></b></td></tr>
 	    <?
 
 		    foreach ($item['sortedVars'][CLASS_OUTCOME_VARIABLE] as $variableIdentifier  => $observations){
@@ -128,9 +125,9 @@
 	    ?>
 
 		    <tr>
-		    <td ><?=$variableIdentifier?>:</td>
-		    <td class="dataResult"><?=nl2br(array_pop($observation[RDF_VALUE]))?></td>
-		    <td class="" />
+		    <td ><?=$variableIdentifier?></td>
+		    <td colspan="2" class="dataResult"><?=nl2br(array_pop($observation[RDF_VALUE]))?></td>
+		
 		    <td class="epoch"><?=array_pop($observation["epoch"])?></td>
 		    </tr>
 	    <?
@@ -139,7 +136,7 @@
 	    ?>
 	<?} ?>
 	    <? if (isset($item['sortedVars'][CLASS_TRACE_VARIABLE])) {?>
-	    <tr> <td class="subHeaderRow" colspan="4"><?=__('Traces')?> :</td></tr>
+	    <tr> <td class="subHeaderRow" colspan="4"><b><?=__('Traces')?></b></td></tr>
 	    <?
 
 		    foreach ($item['sortedVars'][CLASS_TRACE_VARIABLE] as $variableIdentifier  => $observations){
@@ -148,9 +145,9 @@
 	    ?>
 
 		    <tr>
-		    <td ><?=$variableIdentifier?>:</td>
-		    <td class="dataResult"><button class="traceDownload" value="<?=$observation["uri"]?>"><?=__('download')?></button></td>
-		    <td class="" />
+		    <td ><?=$variableIdentifier?></td>
+		    <td colspan="2" class="dataResult"><button class="traceDownload" value="<?=$observation["uri"]?>"><?=__('download')?></button></td>
+		    
 		    <td class="epoch"><?=array_pop($observation["epoch"])?></td>
 		    </tr>
 	    <?

@@ -203,7 +203,8 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
      * @param type $format  json, csv
      */
     public function data($format ="json") {
-
+        
+        $filter =  $this->hasRequestParameter('filter') ? $this->getFilterState('filter') : array();
        	$filterData =  $this->getRequestParameter('filterData');
     	$columns = $this->hasRequestParameter('columns') ? $this->getColumns('columns') : array();
     	$page = $this->getRequestParameter('page');
