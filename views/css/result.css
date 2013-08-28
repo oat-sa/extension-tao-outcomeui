@@ -57,6 +57,7 @@ p span.field
     background-color:#eeeeee;
     width:45%;
     font-size:14px;
+    box-shadow: 3px 3px 5px #aaa;
 }
 .userMail{
     font-style: italic;
@@ -87,14 +88,13 @@ p span.field
    
 }
 .valid{
-    color:'green';
+    /*color:green;*/
 }
 .invalid{
-    color:'#FF0000';
+    /*color:#FF0000;*/
 }
 .uneval{
-    color:'#00000FF'
-
+    /*color:#0061aC;*/
 }
 .respEvalHeader{
     font-weight: normal;
@@ -152,28 +152,31 @@ table.mini tr td{
 /* classes used for the layout of responses based on their evaluation*/
 .correct{
    
-    background-image: url(/taoResults/views/img/dialog-clean.png);
+    background-image: url(/taoResults/views/img/correct.png);
     background-repeat:no-repeat;
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     align:center;
     border-left: 0px;/*TOFIX*/
+    background-position: 5px 5px;
     
 }
 .incorrect{
 
-    background-image: url(/taoResults/views/img/dialog-error-5.png);
+    background-image: url(/taoResults/views/img/incorrect.png);
     background-repeat:no-repeat;
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     align:center;
+       background-position: 5px 5px;
 }
 .unscored{
-    background-image: url(/taoResults/views/img/dialog-important-2.png);
+    background-image: url(/taoResults/views/img/non-evaluated.png.png);
     background-repeat:no-repeat;
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     align:center;
+       background-position: 5px 5px;
 }
 .headerColumn{
      align:center
@@ -191,5 +194,8 @@ tr td {
 
 .epoch {
     font-style:italic;
+}
+.traceDownload{
+    cursor:pointer;
 }
 

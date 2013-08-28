@@ -75,9 +75,9 @@
 		<br/>
 		<b><?=__('Responses Evaluation')?></b>
 		<table id="respEval">
-		    <tr><td><span class="valid"><?=__('Correct')?>: </span></td><td><?=get_data("nbCorrectResponses")?>/<?=get_data('nbResponses')?></td> <td><img src="/taoResults/views/img/dialog-clean.png" /></td></tr>
-		    <tr><td><span class="invalid"><?=__('Incorrect')?>: </span></td><td><?=get_data("nbIncorrectResponses")?>/<?=get_data('nbResponses')?></td><td><img src="/taoResults/views/img/dialog-error-5.png" /></td></tr>
-		    <tr><td><span class="uneval"><?=__('Not Evaluated')?>: </span></td><td><?=get_data("nbUnscoredResponses")?>/<?=get_data('nbResponses')?></td><td><img src="/taoResults/views/img/dialog-error-5.png" /></td></tr>
+		    <tr><td><span class="valid"><?=__('Correct')?>: </span></td><td><?=get_data("nbCorrectResponses")?>/<?=get_data('nbResponses')?></td> <td><img src="/taoResults/views/img/correct.png" /></td></tr>
+		    <tr><td><span class="invalid"><?=__('Incorrect')?>: </span></td><td><?=get_data("nbIncorrectResponses")?>/<?=get_data('nbResponses')?></td><td><img src="/taoResults/views/img/incorrect.png" /></td></tr>
+		    <tr><td><span class="uneval"><?=__('Not Evaluated')?>: </span></td><td><?=get_data("nbUnscoredResponses")?>/<?=get_data('nbResponses')?></td><td><img src="/taoResults/views/img/non-evaluated.png" /></td></tr>
 		 </table>
 		
 		<br/>
