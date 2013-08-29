@@ -430,6 +430,16 @@ class taoResults_models_classes_ResultsService
 
         // section 10-13-1-39-5129ca57:1276133a327:-8000:000000000000204D begin
 		if(!is_null($result)){
+
+            $itemResults = $this->getItemResultsFromDeliveryResult($result);
+            $variables = $this->getVariables($result);
+            foreach  ($itemResults as $itemResult){
+                $itemResult->delete();
+            }
+            foreach  ($variables as $variable){
+                $variable->delete();
+            }
+
 			$returnValue = $result->delete();
 		}
         // section 10-13-1-39-5129ca57:1276133a327:-8000:000000000000204D end
