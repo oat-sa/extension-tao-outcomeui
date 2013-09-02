@@ -352,7 +352,7 @@ class taoResults_models_classes_ResultsService
                     PROPERTY_VARIABLE_BASETYPE      => $itemVariable->getBaseType(),
                     //put as rdf#boolean
                     PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE => $isCorrect,
-                    PROPERTY_RESPONSE_VARIABLE_CANDIDATERESPONSE=> $itemVariable->getCandidateResponse(),
+                    //PROPERTY_RESPONSE_VARIABLE_CANDIDATERESPONSE=> $itemVariable->getCandidateResponse(),
                     RDF_VALUE						=> $itemVariable->getCandidateResponse(),
                     PROPERTY_VARIABLE_EPOCH		=> microtime()
                 ));
@@ -375,7 +375,7 @@ class taoResults_models_classes_ResultsService
         }
     }
 
-    private function getItemResult(core_kernel_classes_Resource $deliveryResult, $callId, $test, $item) {
+    public function getItemResult(core_kernel_classes_Resource $deliveryResult, $callId, $test, $item) {
         $itemResultsClass = new core_kernel_classes_Class(ITEM_RESULT);
         $itemResults = $itemResultsClass->searchInstances(array(
 	        	PROPERTY_IDENTIFIER	=> $callId
@@ -388,6 +388,7 @@ class taoResults_models_classes_ResultsService
 	        } else {
 				$returnValue = $itemResultsClass->createInstanceWithProperties(array(
 					RDFS_LABEL					=> $callId,
+                    PROPERTY_IDENTIFIER	=> $callId,
                     PROPERTY_RELATED_ITEM    => $item,
                     PROPERTY_RELATED_TEST   => $test,
                     PROPERTY_RELATED_DELIVERY_RESULT => $deliveryResult->getUri()
