@@ -353,7 +353,7 @@ class taoResults_models_classes_ResultsService
                     //put as rdf#boolean
                     PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE => $isCorrect,
                     //PROPERTY_RESPONSE_VARIABLE_CANDIDATERESPONSE=> $itemVariable->getCandidateResponse(),
-                    RDF_VALUE						=> $itemVariable->getCandidateResponse(),
+                    RDF_VALUE						=> serialize($itemVariable->getCandidateResponse()),
                     PROPERTY_VARIABLE_EPOCH		=> microtime()
                 ));
                 break;}
