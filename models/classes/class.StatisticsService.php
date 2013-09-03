@@ -76,17 +76,24 @@ class taoResults_models_classes_StatisticsService
         }
                 
 		foreach ($scoreVariables as $variable){
-			$variableData = $this->getVariableData($variable);
-			$activityIdentifier = "";$activityNaturalId = "";
-			    if (isset($variableData["item"])) {$activityIdentifier = $variableData["item"]->getUri(); $activityNaturalId = $variableData["item"]->getLabel();} 
-			$variableIDentifier = $activityIdentifier.$variableData["identifier"];
-			if (!(isset($statisticsGroupedPerVariable[$variableIDentifier]))) {$statisticsGroupedPerVariable[$variableIDentifier] = array("sum" => 0, "#" => 0);}
+			$variableData = $this->getVariableData($variable, true);
+
+			$activityIdentifier = "";
+            $activityNaturalId = "";
+         
+			if (isset($variableData["item"])and (get_class($variableData["item"]) == "core_kernel_classes_Resource") ) {
+                $activityIdentifier = $variableData["item"]->getUri();
+                $activityNaturalId = $variableData["item"]->getLabel();
+                
+            }
+			$variableIdentifier = $activityIdentifier.$variableData["identifier"];
+			if (!(isset($statisticsGroupedPerVariable[$variableIdentifier]))) {$statisticsGroupedPerVariable[$variableIdentifier] = array("sum" => 0, "#" => 0);}
 			
 			// we should parametrize if we consider multiple executions of the same test taker or not, here all executions are considered
-                        $statisticsGroupedPerVariable[$variableIDentifier]["data"][]=$variableData["value"];
-			$statisticsGroupedPerVariable[$variableIDentifier]["sum"]+= $variableData["value"];
-			$statisticsGroupedPerVariable[$variableIDentifier]["#"]+= 1;
-			$statisticsGroupedPerVariable[$variableIDentifier]["naturalid"]= $activityNaturalId." (".$variableData["identifier"].")";
+            $statisticsGroupedPerVariable[$variableIdentifier]["data"][]=$variableData["value"];
+			$statisticsGroupedPerVariable[$variableIdentifier]["sum"]+= $variableData["value"];
+			$statisticsGroupedPerVariable[$variableIdentifier]["#"]+= 1;
+			$statisticsGroupedPerVariable[$variableIdentifier]["naturalid"]= $activityNaturalId." (".$variableData["identifier"].")";
 			$statisticsGrouped["data"][]=$variableData["value"];
                         $statisticsGrouped["sum"]+= $variableData["value"];
                         $statisticsGrouped["#"]+= 1;
