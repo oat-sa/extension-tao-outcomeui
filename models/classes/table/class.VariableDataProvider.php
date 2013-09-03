@@ -104,12 +104,15 @@ class taoResults_models_classes_table_VariableDataProvider
 				$vid = (string)$varData["identifier"];
 				foreach ($columns as $column) {
 					if ($vid == $column->getIdentifier()) {
-							$value = (string)$varData["value"];
-						    $epoch = (float)$varData["epoch"];
+							$value = (string)unserialize($varData["value"]);
+						    //echo $varData["epoch"];
+                            $epoch = $varData["epoch"];
                             //echo $epoch;
                             $readableTime = "";
-						    if ($epoch != "") {$readableTime = "@". date("F j, Y, g:i:s a",$varData["epoch"]);}
-						    $this->cache[$varData["type"]->getUri()][$result->getUri()][$vid][] =  array($value, $readableTime);
+						    //if ($epoch != "") {$readableTime = "@". date("F j, Y, g:i:s a",$varData["epoch"]);}
+						    if ($epoch != "") {$readableTime = "@". tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE);}
+
+                            $this->cache[$varData["type"]->getUri()][$result->getUri()][$vid][] =  array($value, $readableTime);
 							
 					}
 				}
@@ -118,7 +121,7 @@ class taoResults_models_classes_table_VariableDataProvider
 
         // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C5B end
     }
-
+    
     /**
      * Short description of method getValue
      *
@@ -130,7 +133,7 @@ class taoResults_models_classes_table_VariableDataProvider
      */
     public function getValue( core_kernel_classes_Resource $resource,  tao_models_classes_table_Column $column)
     {
-        $returnValue = (string) '';
+        $returnValue = array();
 
         // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C5D begin
         $vcUri = $column->getVariableClass()->getUri();
@@ -141,8 +144,7 @@ class taoResults_models_classes_table_VariableDataProvider
         	common_Logger::i('no data for resource: '.$resource->getUri().' column: '.$column->getIdentifier());
         }
         // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C5D end
-
-        return (array) $returnValue;
+        return $returnValue;
     }
     
     /**

@@ -133,25 +133,26 @@ class taoResults_models_classes_ResultsService
                             foreach ($observations as $var) {
                                 $type = $variableType;
                                 $correctResponse = current($var[PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE]);
-                                if ($type == CLASS_RESPONSE_VARIABLE){
-                                $numberOfResponseVariables++;
-                                    if (get_class($correctResponse)=='core_kernel_classes_Resource') {
-                                        if ($correctResponse->getUri() == GENERIS_TRUE) {
-                                        $numberOfCorrectResponseVariables++;
-                                        } else {
-                                            if ($correctResponse->getUri() == GENERIS_FALSE) {
-                                                $numberOfInCorrectResponseVariables++;
-                                            } else { //an unknown core_kernel_classes_Resource
-                                                $numberOfUnscoredResponseVariables++;
+
+                                    if ($type == CLASS_RESPONSE_VARIABLE){
+                                    $numberOfResponseVariables++;
+                                        if ($correctResponse and (get_class($correctResponse)=='core_kernel_classes_Resource')) {
+                                            if ($correctResponse->getUri() == GENERIS_TRUE) {
+                                            $numberOfCorrectResponseVariables++;
+                                            } else {
+                                                if ($correctResponse->getUri() == GENERIS_FALSE) {
+                                                    $numberOfInCorrectResponseVariables++;
+                                                } else { //an unknown core_kernel_classes_Resource
+                                                    $numberOfUnscoredResponseVariables++;
+                                                }
                                             }
+                                        } else {
+                                                    $numberOfUnscoredResponseVariables++;
                                         }
-                                    } else {
-                                                $numberOfUnscoredResponseVariables++;
                                     }
-                                }
-                                 else {
-                                 $numberOfOutcomeVariables++;
-                                 }
+                                     else {
+                                     $numberOfOutcomeVariables++;
+                                     }
                             }
                         }
                 }
@@ -207,7 +208,7 @@ class taoResults_models_classes_ResultsService
                 $epoch = current($variableDescription[PROPERTY_VARIABLE_EPOCH])->__toString();
                 $variableDescription["uri"] = $variable->getUri();
                 $variableDescription["epoch"] =  array(tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE));
-               
+                
                 $correctResponse = current($variableDescription[PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE]);
                 if ($correctResponse and (get_class($correctResponse)=='core_kernel_classes_Resource')) {
                             if ($correctResponse->getUri() == GENERIS_TRUE) {
@@ -337,7 +338,7 @@ class taoResults_models_classes_ResultsService
                     PROPERTY_VARIABLE_BASETYPE      => $itemVariable->getBaseType(),
                     PROPERTY_OUTCOME_VARIABLE_NORMALMAXIMUM => $itemVariable->getNormalMaximum(),
                     PROPERTY_OUTCOME_VARIABLE_NORMALMINIMUM => $itemVariable->getNormalMinimum(),
-                    RDF_VALUE						=> $itemVariable->getValue(),
+                    RDF_VALUE						=> serialize($itemVariable->getValue()),
                     PROPERTY_VARIABLE_EPOCH		=> microtime()
                 ));
 
@@ -586,8 +587,12 @@ class taoResults_models_classes_ResultsService
     	$returnValue["identifier"] = current($propValues[PROPERTY_IDENTIFIER])->__toString();
         $returnValue["type"] = current($propValues[RDF_TYPE]);
         $returnValue["epoch"] = current($propValues[PROPERTY_VARIABLE_EPOCH])->__toString();
+        if (count($propValues[PROPERTY_VARIABLE_CARDINALITY]) > 0){
         $returnValue["cardinality"] = current($propValues[PROPERTY_VARIABLE_CARDINALITY])->__toString();
+        }
+       if (count($propValues[PROPERTY_VARIABLE_BASETYPE]) > 0){
         $returnValue["basetype"] = current($propValues[PROPERTY_VARIABLE_BASETYPE])->__toString();
+        }
         if ($getItem) {$returnValue["item"] = $this->getItemFromVariable($variable);}
 	//$returnValue["epoch"] = $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_EPOCH));
         return (array) $returnValue;

@@ -87,14 +87,12 @@ class taoResults_update_taoResultsUpdate extends tao_scripts_Runner {
             }
         //PROPERTY_VARIABLE_EPOCH converted from time to microtime
         $oldEpoch = $oldVariableInstance->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_EPOCH));
-        $newEpoch = "0 ".$oldEpoch;
+        $newEpoch = "111111 ".$oldEpoch;
         self::log("Changing ... ".$oldVariableInstance->getUri(). " epoch to ".$newEpoch."");;
         $oldVariableInstance->editPropertyValues(new core_kernel_classes_Property(PROPERTY_VARIABLE_EPOCH), array($newEpoch) );
 
         $oldType = $oldVariableInstance->getUniquePropertyValue(new core_kernel_classes_Property(RDF_TYPE));
-        //values are now stored serialized
-       self::log( "Changing ... ".$oldVariableInstance->getUri(). " value to ".$oldValue."");
-        $oldVariableInstance->editPropertyValues(new core_kernel_classes_Property(RDF_VALUE), array(serialize($oldValue)) );
+        
         //links the variable to the itemResult
         self::log("Changing ... ".$oldVariableInstance->getUri(). " related item result to ".$itemResult->getUri()."");
         $oldVariableInstance->editPropertyValues(new core_kernel_classes_Property(PROPERTY_RELATED_ITEM_RESULT), array($itemResult->getUri()) );
@@ -111,7 +109,13 @@ class taoResults_update_taoResultsUpdate extends tao_scripts_Runner {
         if ($oldType->getUri() == "http://www.tao.lu/Ontologies/TAOResult.rdf#GradeVariable") {
             $oldVariableInstance->editPropertyValues(new core_kernel_classes_Property(RDF_TYPE), array("http://www.tao.lu/Ontologies/TAOResult.rdf#OutcomeVariable"));
             self::log("Changing ...".$oldVariableInstance->getUri(). " type (GRADE)"."");
+        } else
+        {
+            
         }
+        //values are now stored serialized
+       self::log( "Changing ... ".$oldVariableInstance->getUri(). " value to ".$oldValue."");
+        $oldVariableInstance->editPropertyValues(new core_kernel_classes_Property(RDF_VALUE), array(serialize($oldValue)) );
 
         //set default values
         //PROPERTY_VARIABLE_CARDINALITY   => $itemVariable->getCardinality(),
