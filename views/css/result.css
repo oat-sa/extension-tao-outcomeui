@@ -57,7 +57,7 @@ p span.field
     background-color:#eeeeee;
     width:45%;
     font-size:14px;
-    box-shadow: 3px 3px 5px #aaa;
+   /* box-shadow: 3px 3px 5px #aaa;*/
 }
 .userMail{
     font-style: italic;
@@ -92,6 +92,7 @@ p span.field
 }
 .invalid{
     /*color:#FF0000;*/
+   
 }
 .uneval{
     /*color:#0061aC;*/
@@ -151,26 +152,26 @@ table.mini tr td{
 }
 /* classes used for the layout of responses based on their evaluation*/
 .correct{
+   float:right;
    
     background-image: url(/taoResults/views/img/correct.png);
     background-repeat:no-repeat;
     width: 24px;
     height: 24px;
-    align:center;
-    border-left: 0px;/*TOFIX*/
-    background-position: 5px 5px;
+    background-position: 0px 0px;
     
 }
 .incorrect{
-
+    float:right;
     background-image: url(/taoResults/views/img/incorrect.png);
     background-repeat:no-repeat;
     width: 24px;
     height: 24px;
     align:center;
-       background-position: 5px 5px;
+       background-position: 0px 0px;
 }
 .unscored{
+    float:right;
     background-image: url(/taoResults/views/img/non-evaluated.png.png);
     background-repeat:no-repeat;
     width: 24px;
