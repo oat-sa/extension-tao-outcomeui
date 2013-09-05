@@ -65,7 +65,7 @@
 		    <? if ($key === key($observations)) {?>
 			 <td <?=$rowspan?>><?=$variableIdentifier?></td>
 		    <?}?>
-		    <td class="dataResult" colspan="2"><?=nl2br(unserialize(array_pop($observation[RDF_VALUE])))?>
+		    <td class="dataResult" colspan="2"><?=nl2br(array_pop($observation[RDF_VALUE]))?>
 		    <span class="<?=$observation['isCorrect']?>" />
 		    </td>
 		    <td class="epoch"><?=array_pop($observation["epoch"])?></td>

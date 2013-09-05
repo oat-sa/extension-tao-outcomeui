@@ -345,7 +345,18 @@ class taoResults_models_classes_ResultsService
                 break;}
             case "taoResultServer_models_classes_ResponseVariable":{
                 $responseVariableClass = new core_kernel_classes_Class(CLASS_RESPONSE_VARIABLE);
-                if ($itemVariable->getCorrectResponse()) {$isCorrect = GENERIS_TRUE;} else {$isCorrect = GENERIS_FALSE;}
+                       if (is_null($itemVariable->getCorrectResponse())) {
+                    $isCorrect = ""; 
+                }
+                else {
+                    if ($itemVariable->getCorrectResponse()) {
+                    $isCorrect = GENERIS_TRUE;
+
+                    } else
+                    {
+                        $isCorrect = GENERIS_FALSE;
+                     }
+                }
                 $returnValue = $responseVariableClass->createInstanceWithProperties(array(
                     PROPERTY_RELATED_ITEM_RESULT		=> $itemResult->getUri(),
                     PROPERTY_IDENTIFIER	=> $itemVariable->getIdentifier(),
