@@ -33,7 +33,7 @@ class taoResults_update_taoResultsUpdate extends tao_scripts_Runner {
 
     public function preRun(){
         if (self::isMigrated()) {
-            self::err("taoResults seems already migrated, script aborted", true);
+            $this->err("taoResults seems already migrated, script aborted", true);
         }
     }
 
