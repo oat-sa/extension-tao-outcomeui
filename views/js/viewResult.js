@@ -2,7 +2,8 @@
 $(function () {
     require(['require', 'jquery', '/taoResults/views/js/viewResult.js',root_url  + 'tao/views/js/jquery.fileDownload.js'], function () {
 	$('.dataResult').html(function(index, oldhtml) {
-	    return layoutResponse(oldhtml);
+	    
+	    return oldhtml;
 	    });
 	$('#filter').change(function(e) {
 	    url = root_url + 'taoResults/Results/viewResult';
