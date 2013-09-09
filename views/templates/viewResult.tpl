@@ -39,8 +39,9 @@
     </span>
 
     <span id="resultsBox">
-	<table class="resultsTable" border="1">
 	<?  foreach (get_data('variables') as $item){ ?>
+	<table class="resultsTable" border="1">
+	
 	<tr >
 		<td class="headerRow" colspan="4"><span class="itemName"><?=__('Item')?>: <?=$item['label']?></span> <span class="itemModel">(<?=$item['itemModel']?>)</span></td>
 	</tr>
@@ -55,7 +56,7 @@
 	?>
 		<tr >
 		<? if ($key === key($observations)) {?>
-		     <td <?=$rowspan?>><?=$variableIdentifier?></td>
+		     <td <?=$rowspan?> class="variableIdentifierField"><?=$variableIdentifier?></td>
 		<?}?>
 		<td class="dataResult" colspan="2">
 		    <?php
@@ -123,7 +124,10 @@
 		}
 	?>
 	<?} ?>
-	<? } ?></table>
+	
+	</table>
+	<br />
+	<? } ?>
 	</span>
 </div>
 </div>

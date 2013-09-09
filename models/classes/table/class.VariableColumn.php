@@ -134,6 +134,7 @@ abstract class taoResults_models_classes_table_VariableColumn
         $this->classActivity = $classActivity;
          *
          */
+        parent::__construct( $classActivity);
         $this->identifier = $identifier;
         // section 127-0-1-1--228e2cb4:13971ca3814:-8000:0000000000000C5C end
     }

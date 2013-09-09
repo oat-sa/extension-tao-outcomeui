@@ -85,6 +85,7 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
     /** Returns all columns with all grades pertaining to the current delivery results selection
      */
      public function getGradeColumns() {
+        
               $this->getVariableColumns(CLASS_OUTCOME_VARIABLE);
     }
       /**Retrieve the different variables columns pertainign to the current selection of results
@@ -111,11 +112,14 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
                 //variableIdentifier
                 $variableIdentifierProperty = new core_kernel_classes_Property(PROPERTY_IDENTIFIER);
                 $variableIdentifier = $variable->getUniquePropertyValue($variableIdentifierProperty)->__toString();
-                //feeding our list of variables per activities, and merge them.
-                $variableTypes[$variableIdentifier] = array("activityDefinition" => "deprecated", "variableIdentifier" => $variableIdentifier);
+               
+                $item = $this->service->getItemFromVariable($variable);
+                $contextIdentifierLabel = $item->getLabel(); //grouped by Item <> by callId
+                $contextIdentifier = $item->getUri();
+                $variableTypes[$contextIdentifier.$variableIdentifier] = array("activityDefinition" => $contextIdentifierLabel, "variableIdentifier" => $variableIdentifier);
 		    }
 		foreach ($variableTypes as $variable){
-		    //should be fine grained at the level of the variable
+		    
 		    switch ($variableClassUri){
 			case CLASS_RESPONSE_VARIABLE:{ $columns[] = new taoResults_models_classes_table_ResponseColumn($variable["activityDefinition"], $variable["variableIdentifier"]);break;}
 			case CLASS_OUTCOME_VARIABLE: { $columns[] = new taoResults_models_classes_table_GradeColumn($variable["activityDefinition"], $variable["variableIdentifier"]);break;}
