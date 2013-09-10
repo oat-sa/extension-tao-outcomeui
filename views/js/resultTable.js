@@ -31,7 +31,7 @@
 	onCellSelect: function(rowid,iCol,cellcontent, e) {helpers.openTab(__('Delivery Result'), document.getActionViewResultUrl+'?uri='+escape(rowid));}
     });
     jQuery("#result-table-grid").jqGrid('navGrid','#pagera1', {edit:false,add:false,del:false,search:false,refresh:false});
-    jQuery("#result-table-grid").jqGrid('navButtonAdd',"#pagera1", {caption:"Column chooser",title:"Column chooser", buttonicon :'ui-icon-gear',onClickButton:function(){columnChooser();}});
+    //jQuery("#result-table-grid").jqGrid('navButtonAdd',"#pagera1", {caption:"Column chooser",title:"Column chooser", buttonicon :'ui-icon-gear',onClickButton:function(){columnChooser();}});
     //jQuery("#result-table-grid").jqGrid('filterToolbar');
     }
     /**
@@ -51,26 +51,22 @@
      * Update document.columns/document.models current selection of data with columns
      */
     function setColumns(columns) {
-	
-	columns = identifyColumns(columns);
+
+	//columns = identifyColumns(columns);
+	console.log(columns);
 	for (key in columns) {
-		 //used for the inner function set in the formatter callback, do not remvoe, the value gets computed at callback time
+		//used for the inner function set in the formatter callback, do not remvoe, the value gets computed at callback time
 		 var currentColumn = columns[key];
 		 document.columns.push(columns[key]);
-		 document.models.push({
-			 'name': columns[key].columnName,
-			 'columnIdentifier' : columns[key].columnIdentifier,
-			 sortable : false,
-			 cellattr: function(rowId, tv, rawObject, cm, rdata){return "data-uri=void, data-type=void";},
-			 formatter : function(value, options, rData){return layoutData(value,currentColumn);
-			 }
-		 });
-
+		 columns[key].cellattr = function(rowId, tv, rawObject, cm, rdata){return "data-uri=void, data-type=void";};
+		 columns[key].formatter = function(value, options, rData){return layoutData(value,currentColumn); };
+		 document.models.push(columns[key]);
 	 }
 	 showGrid();
     }
     //convenience method adding attributes identifying the columns usign their attributes, their attributes depends on htier type
-    function identifyColumns(columns){
+    /*
+	     function identifyColumns(columns){
 	for (key in columns) {
 	    switch (columns[key].type){
 		    case 'tao_models_classes_table_PropertyColumn' :{
@@ -87,20 +83,33 @@
 	}
 	return columns;
     }
+	     */
     /**
      * Update document.columns/document.models current selection of data with columns
      */
     function removeColumns(columns) {
-	    columns = identifyColumns(columns);
+	    
 	    //loops on the columns parameter and find out if document.columns contains this column already.
 	    for (key in columns) {
 		    for (dockey in document.columns) {
-			    if (document.columns[dockey].columnIdentifier == columns[key].columnIdentifier) {
+			    if (
+				    (document.columns[dockey].contextId == columns[key].contextId)
+				    &
+				    (document.columns[dockey].variableIdentifier == columns[key].variableIdentifier)
+				)
+				{
 				 document.columns.splice(dockey,1);
 				}
+			    
+
 			    for (modelkey in document.models) {
-			    if ((document.models[modelkey].columnIdentifier == columns[key].columnIdentifier)){
-				    document.models.splice(modelkey,1);
+			    if (
+				    (document.models[modelkey].contextId == columns[key].contextId)
+				    &
+				    (document.models[modelkey].variableIdentifier == columns[key].variableIdentifier)
+				)
+				{
+				 document.models.splice(modelkey,1);
 				}
 			    }
 			

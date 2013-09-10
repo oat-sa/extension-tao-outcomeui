@@ -112,18 +112,18 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
                 //variableIdentifier
                 $variableIdentifierProperty = new core_kernel_classes_Property(PROPERTY_IDENTIFIER);
                 $variableIdentifier = $variable->getUniquePropertyValue($variableIdentifierProperty)->__toString();
-               
-                $item = $this->service->getItemFromVariable($variable);
-                $contextIdentifierLabel = $item->getLabel(); //grouped by Item <> by callId
-                $contextIdentifier = $item->getUri();
-                $variableTypes[$contextIdentifier.$variableIdentifier] = array("activityDefinition" => $contextIdentifierLabel, "variableIdentifier" => $variableIdentifier);
+                $itemResult = $this->service->getItemResultFromVariable($variable);
+                $item = $this->service->getItemFromItemResult($itemResult);
+                $contextIdentifierLabel = $item->getLabel(); 
+                $contextIdentifier = $item->getUri(); // use the callId/itemResult identifier
+                $variableTypes[$contextIdentifier.$variableIdentifier] = array("contextLabel" => $contextIdentifierLabel, "contextId" => $contextIdentifier, "variableIdentifier" => $variableIdentifier);
 		    }
 		foreach ($variableTypes as $variable){
 		    
 		    switch ($variableClassUri){
-			case CLASS_RESPONSE_VARIABLE:{ $columns[] = new taoResults_models_classes_table_ResponseColumn($variable["activityDefinition"], $variable["variableIdentifier"]);break;}
-			case CLASS_OUTCOME_VARIABLE: { $columns[] = new taoResults_models_classes_table_GradeColumn($variable["activityDefinition"], $variable["variableIdentifier"]);break;}
-			default:{$columns[] = new taoResults_models_classes_table_ResponseColumn($variable["activityDefinition"], $variable["variableIdentifier"]);}
+                case CLASS_RESPONSE_VARIABLE:{ $columns[] = new taoResults_models_classes_table_ResponseColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);break;}
+                case CLASS_OUTCOME_VARIABLE: { $columns[] = new taoResults_models_classes_table_GradeColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);break;}
+                default:{$columns[] = new taoResults_models_classes_table_ResponseColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);}
 			}
 		}
 		$arr = array();
@@ -200,6 +200,22 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
         }
         return $flatColumnsArray;
         }
+
+
+
+     protected  function getColumns($identifier) {
+    	 if (!$this->hasRequestParameter($identifier)) {
+    	 	throw new common_Exception('Missing parameter "'.$identifier.'" for getColumns()');
+    	 }
+    	 $columns = array();
+    	 foreach ($this->getRequestParameter($identifier) as $array) {
+    	 	$column = tao_models_classes_table_Column::buildColumnFromArray($array);
+    	 	if (!is_null($column)) {
+    	 		$columns[] = $column;
+    	 	}
+    	 }
+    	 return $columns;
+    }
      /**
      * Data provider for the table, returns json encoded data according to the parameter
      * @author Bertrand Chevrier, <taosupport@tudor.lu>,
@@ -211,6 +227,7 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
         $filter =  $this->hasRequestParameter('filter') ? $this->getFilterState('filter') : array();
        	$filterData =  $this->getRequestParameter('filterData');
     	$columns = $this->hasRequestParameter('columns') ? $this->getColumns('columns') : array();
+        
     	$page = $this->getRequestParameter('page');
 		$limit = $this->getRequestParameter('rows');
 		$sidx = $this->getRequestParameter('sidx');

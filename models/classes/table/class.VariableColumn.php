@@ -106,8 +106,11 @@ abstract class taoResults_models_classes_table_VariableColumn
         $returnValue = null;
 
         // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C74 begin
-        $ca = new core_kernel_classes_Resource($array['ca']);
-		$returnValue = new static($ca, $array['vid']);
+        
+        $contextId = $array['contextId'];
+        $contextLabel = $array['contextLabel'];
+        $variableIdentifier =  $array['variableIdentifier'];
+		$returnValue = new static($contextId, $contextLabel, $variableIdentifier);
         // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C74 end
 
         return $returnValue;
@@ -122,20 +125,12 @@ abstract class taoResults_models_classes_table_VariableColumn
      * @param  string identifier
      * @return mixed
      */
-    public function __construct( $classActivity, $identifier)
+    public function __construct( $contextIdentifier,$contextLabel, $identifier)
     {
-        // section 127-0-1-1--228e2cb4:13971ca3814:-8000:0000000000000C5C begin
-        /*
-        $item = taoTests_models_classes_TestAuthoringService::singleton()->getItemByActivity($classActivity);
-        if (is_null($item)) {throw new common_Exception(__("An item being referred to into the current column selection does not exist anymore"));}
-        parent::__construct($item->getLabel());
-         *
-
-        $this->classActivity = $classActivity;
-         *
-         */
-        parent::__construct( $classActivity);
+        parent::__construct( $contextLabel. "-" .$identifier);
         $this->identifier = $identifier;
+        $this->contextIdentifier = $contextIdentifier;
+        $this->contextLabel = $contextLabel;
         // section 127-0-1-1--228e2cb4:13971ca3814:-8000:0000000000000C5C end
     }
 
@@ -158,18 +153,18 @@ abstract class taoResults_models_classes_table_VariableColumn
     }
 
     /**
-     * Short description of method getClassActivity
+     * Short description of method getContextIdentifier
      *
      * @access public
      * @author Joel Bout, <joel.bout@tudor.lu>
      * @return core_kernel_classes_Resource
      */
-    public function getClassActivity()
+    public function getContextIdentifier()
     {
         $returnValue = null;
 
         // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C6E begin
-        return $this->classActivity;
+        return $this->contextIdentifier;
         // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C6E end
 
         return $returnValue;
@@ -206,8 +201,10 @@ abstract class taoResults_models_classes_table_VariableColumn
 
         // section 127-0-1-1--8febfab:13977a059a7:-8000:0000000000004002 begin
         $returnValue = parent::toArray();
-        $returnValue['ca'] = "deprecated";
-        $returnValue['vid'] = $this->identifier;
+        //$returnValue['ca'] = "deprecated";
+        $returnValue['contextId'] = $this->contextIdentifier;
+        $returnValue['contextLabel'] = $this->contextLabel;
+        $returnValue['variableIdentifier'] = $this->identifier;
         // section 127-0-1-1--8febfab:13977a059a7:-8000:0000000000004002 end
 
         return (array) $returnValue;

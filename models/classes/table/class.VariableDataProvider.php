@@ -94,26 +94,32 @@ class taoResults_models_classes_table_VariableDataProvider
     {
         $resultsService = taoResults_models_classes_ResultsService::singleton();
         // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C5B begin
-
         foreach($resources as $result){
-
             $vars = $resultsService->getVariables($result, new core_kernel_classes_Class(TAO_RESULT_VARIABLE));
             $cellData = array();
 			foreach ($vars as $var) {
                 $varData = $resultsService->getVariableData($var);
-				$vid = (string)$varData["identifier"];
+                
+				//should be improved 
+                $variableIdentifier = (string)$varData["identifier"];
+                $itemResult = $resultsService->getItemResultFromVariable($var);
+                $item = $resultsService->getItemFromItemResult($itemResult);
+                $contextIdentifier = (string)$item->getUri();
 				foreach ($columns as $column) {
-					if ($vid == $column->getIdentifier()) {
-							$value = (string)unserialize($varData["value"]);
+					if (
+                        $variableIdentifier == $column->getIdentifier()
+                        and
+                        $contextIdentifier == $column->getContextIdentifier()
+                        ) {
+							$value = (string)$varData["value"];
+                            
 						    //echo $varData["epoch"];
                             $epoch = $varData["epoch"];
                             //echo $epoch;
                             $readableTime = "";
 						    //if ($epoch != "") {$readableTime = "@". date("F j, Y, g:i:s a",$varData["epoch"]);}
 						    if ($epoch != "") {$readableTime = "@". tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE);}
-
-                            $this->cache[$varData["type"]->getUri()][$result->getUri()][$vid][] =  array($value, $readableTime);
-							
+                            $this->cache[$varData["type"]->getUri()][$result->getUri()][$contextIdentifier.$variableIdentifier][] =  array($value, $readableTime);
 					}
 				}
 			}
@@ -137,8 +143,8 @@ class taoResults_models_classes_table_VariableDataProvider
 
         // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C5D begin
         $vcUri = $column->getVariableClass()->getUri();
-        if (isset($this->cache[$vcUri][$resource->getUri()][$column->getIdentifier()])) {
-        	$returnValue = $this->cache[$vcUri][$resource->getUri()][$column->getIdentifier()];
+        if (isset($this->cache[$vcUri][$resource->getUri()][$column->getContextIdentifier().$column->getIdentifier()])) {
+        	$returnValue = $this->cache[$vcUri][$resource->getUri()][$column->getContextIdentifier().$column->getIdentifier()];
             
         } else {
         	common_Logger::i('no data for resource: '.$resource->getUri().' column: '.$column->getIdentifier());
