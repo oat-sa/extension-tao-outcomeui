@@ -77,7 +77,7 @@ class taoResults_models_classes_DbResult
 
     public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest){
         $deliveryResult = $this->taoResultsStorage->storeDeliveryResult($deliveryResultIdentifier);
-        $this->taoResultsStorage->storeTestVariable($deliveryResult, $test, $item, $testVariable, $callIdItem);
+        $this->taoResultsStorage->storeTestVariable($deliveryResult, $test,  $testVariable, $callIdTest);
 
     }
 

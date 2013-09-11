@@ -28,8 +28,6 @@
     <rdfs:comment xml:lang="en-US"><![CDATA[Result]]></rdfs:comment>
     <rdfs:subClassOf rdf:resource="http://www.tao.lu/Ontologies/TAOResult.rdf#Result"/>
   </rdf:Description>
-
-
  <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#ItemResult">
     <rdfs:label xml:lang="en-US"><![CDATA[Item Result]]></rdfs:label>
     <rdfs:comment xml:lang="en-US"><![CDATA[Result]]></rdfs:comment>

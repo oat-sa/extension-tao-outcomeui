@@ -327,15 +327,15 @@ class taoResults_models_classes_ResultsService
     public function storeItemVariable(core_kernel_classes_Resource $deliveryResult, $test, $item, taoResultServer_models_classes_Variable $itemVariable, $callId){
         //lookup for ItemResult already set with this identifier (callId), creates it otherwise
         $itemResult = $this->getItemResult($deliveryResult, $callId, $test, $item);
-        return $this->storeVariable($itemVariable, $deliveryResult, $itemResult);
+        $storedVariable = $this->storeVariable($itemVariable);
+        $storedVariable->setPropertyValue(new core_kernel_classes_Property(PROPERTY_RELATED_ITEM_RESULT), $itemResult->getUri());
     }
     
-    private function storeVariable($itemVariable, core_kernel_classes_Resource $deliveryResult, $itemResult = null) {
+    private function storeVariable($itemVariable) {
             switch (get_class($itemVariable)) {
             case "taoResultServer_models_classes_OutcomeVariable":{
                 $outComeVariableClass = new core_kernel_classes_Class(CLASS_OUTCOME_VARIABLE);
                 $returnValue = $outComeVariableClass->createInstanceWithProperties(array(
-                    PROPERTY_RELATED_ITEM_RESULT		=> $itemResult->getUri(),
                     PROPERTY_IDENTIFIER	=> $itemVariable->getIdentifier(),
                     PROPERTY_VARIABLE_CARDINALITY   => $itemVariable->getCardinality(),
                     PROPERTY_VARIABLE_BASETYPE      => $itemVariable->getBaseType(),
@@ -361,7 +361,6 @@ class taoResults_models_classes_ResultsService
                      }
                 }
                 $returnValue = $responseVariableClass->createInstanceWithProperties(array(
-                    PROPERTY_RELATED_ITEM_RESULT		=> $itemResult->getUri(),
                     PROPERTY_IDENTIFIER	=> $itemVariable->getIdentifier(),
                     PROPERTY_VARIABLE_CARDINALITY   => $itemVariable->getCardinality(),
                     PROPERTY_VARIABLE_BASETYPE      => $itemVariable->getBaseType(),
@@ -375,7 +374,6 @@ class taoResults_models_classes_ResultsService
               case "taoResultServer_models_classes_TraceVariable":{
                 $traceVariableClass = new core_kernel_classes_Class(CLASS_TRACE_VARIABLE);
                 $returnValue = $traceVariableClass->createInstanceWithProperties(array(
-                    PROPERTY_RELATED_ITEM_RESULT		=> $itemResult->getUri(),
                     PROPERTY_IDENTIFIER	=> $itemVariable->getIdentifier(),
                     PROPERTY_VARIABLE_CARDINALITY   => $itemVariable->getCardinality(),
                     PROPERTY_VARIABLE_BASETYPE      => $itemVariable->getBaseType(),
@@ -386,12 +384,13 @@ class taoResults_models_classes_ResultsService
                 break;}
             default:{throw new common_exception_Error("The variable class is not supported");break;}
             }
-
+            return $returnValue;
             //$returnValue->setPropertyValue(new core_kernel_classes_Property(PROPERTY_RELATED_DELIVERY_RESULT), $delvieryResult->getUri());
-
+           
     }
     public function storeTestVariable(core_kernel_classes_Resource $deliveryResult, $test, taoResultServer_models_classes_Variable $itemVariable, $callId) {
-        $this->storeVariable($itemVariable, $deliveryResult, $deliveryResult);
+        $storedVariable = $this->storeVariable($itemVariable);
+        $storedVariable->setPropertyValue(new core_kernel_classes_Property(PROPERTY_RELATED_DELIVERY_RESULT), $deliveryResult->getUri());
     }
 
     public function getItemResult(core_kernel_classes_Resource $deliveryResult, $callId, $test, $item) {
