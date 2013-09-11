@@ -201,6 +201,7 @@ tr td {
 }
 .traceDownload{
     cursor:pointer;
+    padding:5px;
 }
 .traceDownload:hover{
      background-color:#D00239 ;
@@ -208,6 +209,7 @@ tr td {
 }
 
 Select:hover, Select option:hover{
-         background-color:#D00239 ;
-    color:#fff;
+	background-color:#D00239 ;
+	color:#fff;
+	cursor:pointer;
 }

@@ -325,10 +325,13 @@ class taoResults_models_classes_ResultsService
     */
     /*todo dependency due to object*/
     public function storeItemVariable(core_kernel_classes_Resource $deliveryResult, $test, $item, taoResultServer_models_classes_Variable $itemVariable, $callId){
-
         //lookup for ItemResult already set with this identifier (callId), creates it otherwise
         $itemResult = $this->getItemResult($deliveryResult, $callId, $test, $item);
-        switch (get_class($itemVariable)) {
+        return $this->storeVariable($itemVariable, $deliveryResult, $itemResult);
+    }
+    
+    private function storeVariable($itemVariable, core_kernel_classes_Resource $deliveryResult, $itemResult = null) {
+            switch (get_class($itemVariable)) {
             case "taoResultServer_models_classes_OutcomeVariable":{
                 $outComeVariableClass = new core_kernel_classes_Class(CLASS_OUTCOME_VARIABLE);
                 $returnValue = $outComeVariableClass->createInstanceWithProperties(array(
@@ -346,7 +349,7 @@ class taoResults_models_classes_ResultsService
             case "taoResultServer_models_classes_ResponseVariable":{
                 $responseVariableClass = new core_kernel_classes_Class(CLASS_RESPONSE_VARIABLE);
                        if (is_null($itemVariable->getCorrectResponse())) {
-                    $isCorrect = ""; 
+                    $isCorrect = "";
                 }
                 else {
                     if ($itemVariable->getCorrectResponse()) {
@@ -376,15 +379,19 @@ class taoResults_models_classes_ResultsService
                     PROPERTY_IDENTIFIER	=> $itemVariable->getIdentifier(),
                     PROPERTY_VARIABLE_CARDINALITY   => $itemVariable->getCardinality(),
                     PROPERTY_VARIABLE_BASETYPE      => $itemVariable->getBaseType(),
-                    RDF_VALUE						=> $itemVariable->getTrace(), //todo store a file
+                    RDF_VALUE						=> serialize($itemVariable->getTrace()), //todo store a file
                     PROPERTY_VARIABLE_EPOCH		=> microtime()
                 ));
 
                 break;}
             default:{throw new common_exception_Error("The variable class is not supported");break;}
+            }
 
-            $returnValue->setPropertyValue(new core_kernel_classes_Property(PROPERTY_RELATED_DELIVERY_RESULT), $itemResult->getUri());
-        }
+            //$returnValue->setPropertyValue(new core_kernel_classes_Property(PROPERTY_RELATED_DELIVERY_RESULT), $delvieryResult->getUri());
+
+    }
+    public function storeTestVariable(core_kernel_classes_Resource $deliveryResult, $test, taoResultServer_models_classes_Variable $itemVariable, $callId) {
+        $this->storeVariable($itemVariable, $deliveryResult, $deliveryResult);
     }
 
     public function getItemResult(core_kernel_classes_Resource $deliveryResult, $callId, $test, $item) {
@@ -480,34 +487,7 @@ class taoResults_models_classes_ResultsService
     /***********************************************/
 
 
-    /**
-     * Short description of method storeVariable
-     *
-     * @access protected
-     * @author Joel Bout, <joel.bout@tudor.lu>
-     * @param  Class type
-     * @param  Resource deliveryResult
-     * @param  Resource activityExecution
-     * @param  string identifier
-     * @param  string value
-     * @return core_kernel_classes_Resource$returnValue = taoTests_models_classes_TestAuthoringService::singleton()->getItemByActivity($activityClass);
-     */
-    protected function storeVariable( core_kernel_classes_Class $type,  core_kernel_classes_Resource $deliveryResult,  core_kernel_classes_Resource $activityExecution, $identifier, $value)
-    {
-        $returnValue = null;
-
-        // section 127-0-1-1-6befba6b:1394401f373:-8000:0000000000003B77 begin
-        $returnValue = $type->createInstanceWithProperties(array(
-			PROPERTY_MEMBER_OF_RESULT		=> $deliveryResult,
-			PROPERTY_VARIABLE_ORIGIN		=> $activityExecution,
-			PROPERTY_VARIABLE_IDENTIFIER	=> $identifier,
-			RDF_VALUE						=> $value,
-			PROPERTY_VARIABLE_EPOCH		=> time()
-		));
-        // section 127-0-1-1-6befba6b:1394401f373:-8000:0000000000003B77 end
-
-        return $returnValue;
-    }
+    
 
     /**
      * Short description of method storeResponse

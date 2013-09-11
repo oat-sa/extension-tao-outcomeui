@@ -18,7 +18,7 @@
 	</div>
 	<div align="right">
 		<span id="buildTableButton" class="ui-state-default ui-corner-all">
-			<a href="#" ><?=__('Export Table')?></a>
+			<?=__('Export Table')?>
 		</span>
 	</div>
 </div>

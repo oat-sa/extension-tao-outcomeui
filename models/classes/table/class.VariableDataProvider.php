@@ -100,12 +100,20 @@ class taoResults_models_classes_table_VariableDataProvider
 			foreach ($vars as $var) {
                 $varData = $resultsService->getVariableData($var);
                 
+                if (is_array($varData["value"])) {
+                    $varData["value"] = json_encode($varData["value"]);
+                }
+                
 				//should be improved 
                 $variableIdentifier = (string)$varData["identifier"];
                 $itemResult = $resultsService->getItemResultFromVariable($var);
                 $item = $resultsService->getItemFromItemResult($itemResult);
+                if (get_class($item) == "core_kernel_classes_Resource") {
                 $contextIdentifier = (string)$item->getUri();
-				foreach ($columns as $column) {
+                } else {
+                $contextIdentifier = (string)$item->__toString();    
+                }
+                foreach ($columns as $column) {
 					if (
                         $variableIdentifier == $column->getIdentifier()
                         and

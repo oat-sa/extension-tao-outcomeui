@@ -6,6 +6,7 @@
 	var data;
 	data.uri = '<?=get_data("uri")?>';
 	data.classUri = '<?=get_data("classUri")?>';
+	var filter = '<?=get_data("filter")?>';
 	
 </script>
 <script src="<?=BASE_WWW?>js/viewResult.js"></script>
@@ -19,13 +20,13 @@
 	    <tr><td class="field"><?=__('Email:')?></td><td class="fieldValue userMail"><?=get_data('userEmail')?></td></tr>
 	</table>
     </span>
-
+    
     <span id="ScoresSummaryBox">
 	<?=__('Filter values:')?>
 	<select id="filter">
-	    <option  value="all"><?=__('All collected values')?></option>
-	    <option  value="firstSubmitted"><?=__('First submitted responses only')?></option>
-	    <option  value="lastSubmitted"><?=__('Last submitted responses only')?></option>
+	    <option  value="all" ><?=__('All collected values')?></option>
+	    <option  value="firstSubmitted" ><?=__('First submitted responses only')?></option>
+	    <option  value="lastSubmitted" ><?=__('Last submitted responses only')?></option>
 	</select>
         <br/>
         <br/>

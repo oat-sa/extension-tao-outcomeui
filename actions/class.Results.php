@@ -184,9 +184,10 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
         $this->setData('deliveryResultLabel', $result->getLabel());
         $this->setData('variables',  $stats["data"]);
 
-         $this->setData('uri',$this->getRequestParameter("uri"));
-         $this->setData('classUri',$this->getRequestParameter("classUri"));
-          $this->setData('filter',$this->getRequestParameter("filter"));
+        $this->setData('uri',$this->getRequestParameter("uri"));
+        $this->setData('classUri',$this->getRequestParameter("classUri"));
+        $this->setData('filter',$this->getRequestParameter("filter"));
+        
         $this->setView('viewResult.tpl');
     }
     public function getTrace(){

@@ -1,6 +1,7 @@
 
 $(function () {
     require(['require', 'jquery', '/taoResults/views/js/viewResult.js',root_url  + 'tao/views/js/jquery.fileDownload.js'], function () {
+	$('#filter').val(filter);
 	$('.dataResult').html(function(index, oldhtml) {
 	    
 	    return oldhtml;
@@ -10,7 +11,7 @@ $(function () {
 	    data.filter = $( this ).val();
 	    helpers._load(helpers.getMainContainerSelector(uiBootstrap.tabs), url, data);
 	    });
-	    $('#filter').val('<?=get_data("filter")?>');
+	    
 	    });
 	$('.traceDownload').click(function (e) {
 	  var variableUri = $(this).val();
@@ -23,6 +24,7 @@ $(function () {
 	      data: {'variableUri': variableUri}
 	  });
 	});
+	
 
     });
 /*

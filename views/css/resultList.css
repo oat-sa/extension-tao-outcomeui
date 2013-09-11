@@ -38,6 +38,8 @@ th td tr tbody table .ui-jqgrid tr.jqgrow td{
    top: 5px;
 }
 #buildTableButton:hover{
-   background-color:#D00239 ;
+    background:none;
+    cursor:pointer;
+    background-color:#D00239 ;
     color:#fff;
     }

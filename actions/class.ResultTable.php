@@ -114,8 +114,14 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
                 $variableIdentifier = $variable->getUniquePropertyValue($variableIdentifierProperty)->__toString();
                 $itemResult = $this->service->getItemResultFromVariable($variable);
                 $item = $this->service->getItemFromItemResult($itemResult);
+                if (get_class($item) == "core_kernel_classes_Resource") {
                 $contextIdentifierLabel = $item->getLabel(); 
                 $contextIdentifier = $item->getUri(); // use the callId/itemResult identifier
+                }
+                else {
+                    $contextIdentifierLabel = $item->__toString();
+                $contextIdentifier = $item->__toString(); 
+                }
                 $variableTypes[$contextIdentifier.$variableIdentifier] = array("contextLabel" => $contextIdentifierLabel, "contextId" => $contextIdentifier, "variableIdentifier" => $variableIdentifier);
 		    }
 		foreach ($variableTypes as $variable){
