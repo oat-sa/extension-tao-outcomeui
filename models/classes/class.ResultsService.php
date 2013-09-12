@@ -171,7 +171,6 @@ class taoResults_models_classes_ResultsService
      *  prepare a data set as an associative array, service intended to populate gui controller
      * @param string $filter 'lastSubmitted', 'firstSubmitted'
      */
-
     public function getItemVariableDataFromDeliveryResult(core_kernel_classes_Resource $deliveryResult, $filter){
             
             $itemResults = $this->getItemResultsFromDeliveryResult($deliveryResult);
@@ -251,6 +250,25 @@ class taoResults_models_classes_ResultsService
                 }
 
         return $variablesByItem;
+    }
+    /**
+     * return all variables linked to the delviery result and that are not linked to a particular itemResult
+     */
+    public function getVariableDataFromDeliveryResult(core_kernel_classes_Resource $deliveryResult){
+
+            $variablesData = array();
+
+            $variableClass = new core_kernel_classes_Class(TAO_RESULT_VARIABLE);
+            $variables = $variableClass->searchInstances(
+        	array(PROPERTY_RELATED_DELIVERY_RESULT	=> $deliveryResult->getUri()),
+        	array('recursive' => true, 'like' => false)
+            );
+            foreach ($variables as $variable) {
+            $variablesData[] = $variable->getPropertiesValues(array(
+            PROPERTY_IDENTIFIER, RDF_VALUE, RDF_TYPE, PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE, PROPERTY_VARIABLE_EPOCH
+            ));
+
+            }
     }
     /**
      * returns the test taker related to the delivery

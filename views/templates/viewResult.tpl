@@ -1,5 +1,6 @@
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/result.css" />
-<div id="form-title" class="ui-widget-header ui-corner-top ui-state-default"><?=__('View result')?> - <?=get_data('deliveryResultLabel')?></div>
+<div id="form-title" class="ui-widget-header ui-corner-top ui-state-default">
+    <?=__('View result')?> - <?=get_data('deliveryResultLabel')?></div>
 <div class="ui-widget-content ui-corner-bottom">
 
 <script type="text/javascript">
@@ -40,9 +41,25 @@
     </span>
 
     <span id="resultsBox">
+
+	<table class="resultsTable" border="1">
+	<tr >
+		<td class="headerRow" colspan="4"><span class="itemName"><?=__('Test Variables')?></span> </td>
+	</tr>
+	<? foreach ($deliveryVariables as $testVariable){ ?>
+		<tr>
+		<td><?=$testVariable[PROPERTY_IDENTIFIER]?></td>
+		<td><?=$testVariable[RDF_VALUE]?></td>
+		</tr>
+	</tr>
+	<?
+	}
+	?>
+	</table>
+
+	<br /> 
 	<?  foreach (get_data('variables') as $item){ ?>
 	<table class="resultsTable" border="1">
-	
 	<tr >
 		<td class="headerRow" colspan="4"><span class="itemName"><?=__('Item')?>: <?=$item['label']?></span> <span class="itemModel">(<?=$item['itemModel']?>)</span></td>
 	</tr>

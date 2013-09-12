@@ -153,7 +153,7 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
      * @author Patrick Plichart <patrick@taotesting.com>
      */
     public function viewResult()
-    {
+    {   
         $result = $this->getCurrentInstance();
 
         $testTaker = $this->service->getTestTakerData($result);
@@ -183,11 +183,14 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
         
         $this->setData('deliveryResultLabel', $result->getLabel());
         $this->setData('variables',  $stats["data"]);
+        //retireve variables not related to item executions
+        $deliveryVariables = $this->service->getVariableDataFromDeliveryResult($result);
+
 
         $this->setData('uri',$this->getRequestParameter("uri"));
         $this->setData('classUri',$this->getRequestParameter("classUri"));
         $this->setData('filter',$this->getRequestParameter("filter"));
-        
+       
         $this->setView('viewResult.tpl');
     }
     public function getTrace(){
