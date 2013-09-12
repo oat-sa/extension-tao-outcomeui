@@ -183,15 +183,10 @@ table.mini tr td{
        background-position: 5px 5px;
 }
 .headerColumn{
-     align:center
-	 background-color:#efefef;
+	align:center;
+	background-color:#efefef;
 }
-a {
-    font-weight: normal;
-    text-decoration: none;
-    border-bottom: 1px black dotted;
 
-}
 tr td {
     padding:5px;
 }
