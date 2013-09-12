@@ -72,7 +72,7 @@ class taoResults_scripts_update_taoResultsUpdate extends tao_scripts_Runner {
     }
     private static function log($msg){
         //self::log($msg;
-        echo $msg."\n";
+        //echo $msg."\n";
         common_Logger::i($msg);
     }
     private static function migrateVariable(core_kernel_classes_Resource $oldResult, $oldVariableInstance){
@@ -172,7 +172,8 @@ class taoResults_scripts_update_taoResultsUpdate extends tao_scripts_Runner {
     private static function migrateModel(){
 
         //import the new ontology model 
-        $newModelLocation = BASE_PATH. '/models/ontology/taoresult.rdf';
+        $basepath = dirname(__FILE__) . '/../../';
+        $newModelLocation = $basepath. '/models/ontology/taoresult.rdf';
         $targetNameSpace = "http://www.tao.lu/Ontologies/TAOResult.rdf";
         try {
        core_kernel_impl_ApiModelOO::singleton()->importXmlRdf($targetNameSpace, $newModelLocation);
