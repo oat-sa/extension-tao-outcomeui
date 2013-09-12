@@ -29,7 +29,7 @@
  * @package taoResults
  * @subpackage test
  */
-class taoResults_update_taoResultsUpdate extends tao_scripts_Runner {
+class taoResults_scripts_update_taoResultsUpdate extends tao_scripts_Runner {
 
     public function preRun(){
         if (self::isMigrated()) {
