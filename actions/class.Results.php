@@ -185,7 +185,7 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
         $this->setData('variables',  $stats["data"]);
         //retireve variables not related to item executions
         $deliveryVariables = $this->service->getVariableDataFromDeliveryResult($result);
-
+         $this->setData('deliveryVariables', $deliveryVariables);
 
         $this->setData('uri',$this->getRequestParameter("uri"));
         $this->setData('classUri',$this->getRequestParameter("classUri"));

@@ -269,6 +269,7 @@ class taoResults_models_classes_ResultsService
             ));
 
             }
+            return $variablesData;
     }
     /**
      * returns the test taker related to the delivery

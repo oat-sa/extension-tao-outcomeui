@@ -46,10 +46,10 @@
 	<tr >
 		<td class="headerRow" colspan="4"><span class="itemName"><?=__('Test Variables')?></span> </td>
 	</tr>
-	<? foreach ($deliveryVariables as $testVariable){ ?>
+	<? foreach (get_data("deliveryVariables") as $testVariable){ ?>
 		<tr>
-		<td><?=$testVariable[PROPERTY_IDENTIFIER]?></td>
-		<td><?=$testVariable[RDF_VALUE]?></td>
+		<td><?=current($testVariable[PROPERTY_IDENTIFIER])?></td>
+		<td><?=unserialize(current($testVariable[RDF_VALUE]))?></td>
 		</tr>
 	</tr>
 	<?
