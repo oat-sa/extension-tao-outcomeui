@@ -59,11 +59,11 @@ class taoResults_models_classes_StatisticsService
         foreach ($deliveryResults as $deliveryResult){
 		$testTaker = $this->getTestTaker($deliveryResult);
         if (get_class($testTaker)=='core_kernel_classes_Literal') {
-            $testTakerIdentifier == $testTaker->__toString();
+            $testTakerIdentifier = $testTaker->__toString();
             $testTakerLabel = $testTaker->__toString();
         } else {
-            $testTakerIdentifier == $testTaker->getUri();
-            $testTakerLabel == $testTaker->getLabel();
+            $testTakerIdentifier = $testTaker->getUri();
+            $testTakerLabel = $testTaker->getLabel();
         }
 
 		$statisticsGrouped["distinctTestTaker"][$testTakerIdentifier] = $testTakerLabel ;

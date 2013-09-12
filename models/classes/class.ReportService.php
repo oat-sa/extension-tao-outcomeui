@@ -121,7 +121,8 @@ extends taoResults_models_classes_StatisticsService
 
 	    $datax = array();
 	    $datay = array();
-	    //thanks php
+	   
+
 	    $frequencies = array_count_values($this->deliveryDataSet["statisticsPerVariable"][$variableIdentifier]["data"]);
 	    foreach ($frequencies as $value => $frequency){
 		$datax[] = $value;
@@ -165,7 +166,9 @@ extends taoResults_models_classes_StatisticsService
 	 */
 	private function getChart($localGraphId, $datax, $setOfySeries, $title, $type="bar", $xAxisLabel = "", $yAxisLabel="", $r = "208",$g ="2",$b = "57"){
 	  // Dataset definition
-
+    if (count($datax)==0) {
+        throw common_exception_ClientException("Empty data set");
+    }
 	    $dataSet = new pData;
 	foreach ($setOfySeries as $legend => $ysery ){
 	    $dataSet->AddPoint($ysery,$legend);
@@ -220,7 +223,9 @@ extends taoResults_models_classes_StatisticsService
 
 	private function getRadar($localGraphId, $title, $xLabels, $sery1, $legend, $r = "208",$g ="2",$b = "57"){
 	    // Dataset definition
-
+        if (count($sery1)==0) {
+        throw common_exception_ClientException("Empty data set");
+        }
 
 	    $dataSet = new pData;
 	    $dataSet->AddPoint($xLabels,"Label");

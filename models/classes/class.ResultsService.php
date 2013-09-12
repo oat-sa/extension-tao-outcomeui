@@ -572,8 +572,8 @@ class taoResults_models_classes_ResultsService
                     PROPERTY_VARIABLE_BASETYPE
 
 				));
-
-    	$returnValue["value"] = unserialize(current($propValues[RDF_VALUE])->__toString());
+        
+    	$returnValue["value"] = (string)unserialize(current($propValues[RDF_VALUE])->__toString());
     	$returnValue["identifier"] = current($propValues[PROPERTY_IDENTIFIER])->__toString();
         $returnValue["type"] = current($propValues[RDF_TYPE]);
         $returnValue["epoch"] = current($propValues[PROPERTY_VARIABLE_EPOCH])->__toString();
