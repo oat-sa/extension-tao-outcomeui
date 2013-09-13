@@ -157,7 +157,7 @@ table.mini tr td{
 .correct{
    float:right;
    
-    background-image: url(/taoResults/views/img/correct.png);
+    background-image: url(../../views/img/correct.png);
     background-repeat:no-repeat;
     width: 24px;
     height: 24px;
@@ -166,7 +166,7 @@ table.mini tr td{
 }
 .incorrect{
     float:right;
-    background-image: url(/taoResults/views/img/incorrect.png);
+    background-image: url(../../views/img/incorrect.png);
     background-repeat:no-repeat;
     width: 24px;
     height: 24px;
@@ -175,7 +175,7 @@ table.mini tr td{
 }
 .unscored{
     float:right;
-    background-image: url(/taoResults/views/img/non-evaluated.png);
+    background-image: url(../../views/img/non-evaluated.png);
     background-repeat:no-repeat;
     width: 24px;
     height: 24px;

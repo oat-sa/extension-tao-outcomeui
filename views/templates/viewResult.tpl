@@ -12,7 +12,7 @@
 </script>
 <script src="<?=BASE_WWW?>js/viewResult.js"></script>
 <div id="content">
-    <span id="TestTakerIdentificationBox"><strong>&nbsp;<img src="/tao/views/js/jsTree/themes/custom/subject.png" /><span id="testTakerHeader"><?=__('Test Taker')?></span></strong>
+    <span id="TestTakerIdentificationBox"><strong>&nbsp;<img src="<?=TAOBASE_WWW?>/js/jsTree/themes/custom/subject.png" /><span id="testTakerHeader"><?=__('Test Taker')?></span></strong>
 	<table class="mini">
 	    <tr><td class="field"><?=__('Login:')?></td><td class="fieldValue"><?=get_data('userLogin')?></td></tr>
 	    <tr><td class="field"><?=__('Label:')?></td><td class="fieldValue"><?=get_data('userLabel')?></td></tr>
