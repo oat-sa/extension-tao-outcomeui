@@ -157,7 +157,12 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
         $result = $this->getCurrentInstance();
 
         $testTaker = $this->service->getTestTakerData($result);
-        if (is_object($testTaker) and (get_class($testTaker)=='core_kernel_classes_Literal')) {
+
+        if (
+                (is_object($testTaker) and (get_class($testTaker)=='core_kernel_classes_Literal'))
+                or 
+                (is_null($testTaker))
+            ) {
             //the test taker is unknown
         $this->setData('userLogin', $testTaker);
         $this->setData('userLabel', $testTaker);
@@ -165,13 +170,17 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
         $this->setData('userLastName', $testTaker);
         $this->setData('userEmail', $testTaker);
         } else {
-            
-           
-            $this->setData('userLogin', current($testTaker[PROPERTY_USER_LOGIN])->literal);
-            $this->setData('userLabel', current($testTaker[RDFS_LABEL])->literal);
-            $this->setData('userFirstName', current($testTaker[PROPERTY_USER_FIRSTNAME])->literal);
-            $this->setData('userLastName', current($testTaker[PROPERTY_USER_LASTNAME])->literal);
-            $this->setData('userEmail', current($testTaker[PROPERTY_USER_MAIL])->literal);
+           $login = (count($testTaker[PROPERTY_USER_LOGIN])>0) ? current($testTaker[PROPERTY_USER_LOGIN])->literal :"";
+            $label = (count($testTaker[RDFS_LABEL])>0) ? current($testTaker[RDFS_LABEL])->literal:"";
+            $firstName = (count($testTaker[PROPERTY_USER_FIRSTNAME])>0) ? current($testTaker[PROPERTY_USER_FIRSTNAME])->literal:"";
+            $userLastName = (count($testTaker[PROPERTY_USER_LASTNAME])>0) ? current($testTaker[PROPERTY_USER_LASTNAME])->literal:"";
+            $userEmail = (count($testTaker[PROPERTY_USER_MAIL])>0) ? current($testTaker[PROPERTY_USER_MAIL])->literal:"";
+
+            $this->setData('userLogin', $login);
+            $this->setData('userLabel', $label);
+            $this->setData('userFirstName', $firstName);
+            $this->setData('userLastName', $userLastName);
+            $this->setData('userEmail', $userEmail);
         }
 
         //todo testTaker object
