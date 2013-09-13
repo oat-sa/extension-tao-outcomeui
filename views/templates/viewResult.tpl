@@ -108,11 +108,13 @@
 
 		foreach ($item['sortedVars'][CLASS_OUTCOME_VARIABLE] as $variableIdentifier  => $observations){
 		   $rowspan = 'rowspan="'.count($observations).'"';
-		    foreach ($observations as $observation) {
+		    foreach ($observations as $key=>$observation) {
 	?>
 
 		<tr>
-		<td ><?=$variableIdentifier?></td>
+		<? if ($key === key($observations)) {?>
+		     <td <?=$rowspan?> class="variableIdentifierField"><?=$variableIdentifier?></td>
+		<?}?>
 		<td colspan="2" class="dataResult"><?=nl2br(unserialize(array_pop($observation[RDF_VALUE])))?></td>
 
 		<td class="epoch"><?=array_pop($observation["epoch"])?></td>
