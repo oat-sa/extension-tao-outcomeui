@@ -209,7 +209,7 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
          setcookie("fileDownload","true", 0, "/");
          header("Content-type: text/xml");
          header('Content-Disposition: attachment; filename=trace.xml');
-         echo $trace;
+         echo unserialize($trace);
     }
 
 
