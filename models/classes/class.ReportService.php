@@ -269,7 +269,7 @@ extends taoResults_models_classes_StatisticsService
 	private function getUniqueMediaFileName($localToReportId, $fileExtension="")
 		{
 
-			$fileName = base64_encode("sid_".session_id()."c_".$this->contextClass->getUri().$localToReportId).'.'.$fileExtension;
+			$fileName = base64_encode(uniqid().$localToReportId).'.'.$fileExtension;
 			return "taoResults/views/genpics/".$fileName;
 		}
 
