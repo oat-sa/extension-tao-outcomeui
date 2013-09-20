@@ -1,5 +1,5 @@
 <?php
-/*
+/**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; under version 2
@@ -37,11 +37,6 @@ require_once ('tao/lib/pChart/pChart.class');
  * @package taoResults
  * @subpackage models_classes
  */
-
-if (0 > version_compare(PHP_VERSION, '5')) {
-    die('This file was generated for PHP 5');
-}
-
 
 class taoResults_models_classes_ReportService
 extends taoResults_models_classes_StatisticsService
@@ -185,7 +180,7 @@ extends taoResults_models_classes_StatisticsService
 	$graph = new pChart(490,260);
 	$graph->createColorGradientPalette($r,$g,$b,$r,$g,$b,5);
 	//aa is way too slow here
-	$graph->Antialias = FALSE;
+	$graph->Antialias = false;
 	$graph->setFontProperties(fontName,8);
 
 	$graph->setGraphArea(55,40,450,200);
