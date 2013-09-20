@@ -188,13 +188,13 @@ extends taoResults_models_classes_StatisticsService
 	$graph->drawFilledRoundedRectangle(7,7,655,253,5,240,240,240);
 
 	$graph->drawRoundedRectangle(5,5,655,225,5,230,230,230);
-	$graph->drawGraphArea(255,255,255,TRUE);
+	$graph->drawGraphArea(255,255,255,true);
 	$graph->drawScale($dataSet->GetData(),$dataSet->GetDataDescription(), SCALE_START0,150,150,150,TRUE,0,2,TRUE);
-	$graph->drawGrid(4,TRUE,230,230,230,50);
+	$graph->drawGrid(4,true,230,230,230,50);
 
 	// Draw the 0 line
 	$graph->setFontProperties(fontName,6);
-	$graph->drawTreshold(0,143,55,72,TRUE,TRUE);
+	$graph->drawTreshold(0,143,55,72,true,true);
 
 	// Draw the bar graph
 	switch ($type){
@@ -233,7 +233,7 @@ extends taoResults_models_classes_StatisticsService
 	    $graph = new pChart(500,500);
 	    $graph->createColorGradientPalette($r,$g,$b,$r,$g,$b,5);
 	    //aa is way too slow here
-	    $graph->Antialias = FALSE;
+	    $graph->Antialias = false;
 	    $graph->setFontProperties(fontName,8);
 	    $graph->drawFilledRoundedRectangle(7,7,493,493,5,240,240,240);
 	    $graph->drawRoundedRectangle(5,5,493,493,5,230,230,230);
