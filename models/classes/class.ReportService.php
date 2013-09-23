@@ -189,7 +189,7 @@ extends taoResults_models_classes_StatisticsService
 
 	$graph->drawRoundedRectangle(5,5,655,225,5,230,230,230);
 	$graph->drawGraphArea(255,255,255,true);
-	$graph->drawScale($dataSet->GetData(),$dataSet->GetDataDescription(), SCALE_START0,150,150,150,TRUE,0,2,TRUE);
+	$graph->drawScale($dataSet->GetData(),$dataSet->GetDataDescription(), SCALE_START0,150,150,150,true,0,2,true);
 	$graph->drawGrid(4,true,230,230,230,50);
 
 	// Draw the 0 line
@@ -199,7 +199,7 @@ extends taoResults_models_classes_StatisticsService
 	// Draw the bar graph
 	switch ($type){
 
-	    case "bar":{$graph->drawBarGraph($dataSet->GetData(),$dataSet->GetDataDescription(),TRUE);break;}
+	    case "bar":{$graph->drawBarGraph($dataSet->GetData(),$dataSet->GetDataDescription(),true);break;}
 	    case "line":{
 		    $graph->drawLineGraph($dataSet->GetData(),$dataSet->GetDataDescription());
 		    $graph->drawPlotGraph($dataSet->GetData(),$dataSet->GetDataDescription(),3,2,255,255,255);  break;
@@ -243,7 +243,7 @@ extends taoResults_models_classes_StatisticsService
 
 
 	    // Draw the radar graph
-	    $graph->drawRadarAxis($dataSet->GetData(),$dataSet->GetDataDescription(),TRUE,20,120,120,120,5,5,5);
+	    $graph->drawRadarAxis($dataSet->GetData(),$dataSet->GetDataDescription(),true,20,120,120,120,5,5,5);
 	    $graph->drawFilledRadar($dataSet->GetData(),$dataSet->GetDataDescription(),50,20);
 
 	    // Finish the graph
