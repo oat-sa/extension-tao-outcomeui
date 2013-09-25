@@ -33,9 +33,9 @@
         <br/>
 	<b><?=__('Responses Evaluation')?></b>
 	<table id="respEval">
-	    <tr><td><span class="valid"><?=__('Correct')?>: </span></td><td><?=get_data("nbCorrectResponses")?>/<?=get_data('nbResponses')?></td> <td><img src="/taoResults/views/img/tag_green.png" /></td></tr>
-	    <tr><td><span class="invalid"><?=__('Incorrect')?>: </span></td><td><?=get_data("nbIncorrectResponses")?>/<?=get_data('nbResponses')?></td><td><img src="/taoResults/views/img/tag_red.png" /></td></tr>
-	    <tr><td><span class="uneval"><?=__('Not Evaluated')?>: </span></td><td><?=get_data("nbUnscoredResponses")?>/<?=get_data('nbResponses')?></td><td><img src="/taoResults/views/img/tag_purple.png" /></td></tr>
+	    <tr><td><span class="valid"><?=__('Correct')?>: </span></td><td><?=get_data("nbCorrectResponses")?>/<?=get_data('nbResponses')?></td> <td><img src="<?=BASE_WWW?>img/tag_green.png" /></td></tr>
+	    <tr><td><span class="invalid"><?=__('Incorrect')?>: </span></td><td><?=get_data("nbIncorrectResponses")?>/<?=get_data('nbResponses')?></td><td><img src="<?=BASE_WWW?>img/tag_red.png" /></td></tr>
+	    <tr><td><span class="uneval"><?=__('Not Evaluated')?>: </span></td><td><?=get_data("nbUnscoredResponses")?>/<?=get_data('nbResponses')?></td><td><img src="<?=BASE_WWW?>img/tag_purple.png" /></td></tr>
 	 </table>
 	<br/>
     </span>
