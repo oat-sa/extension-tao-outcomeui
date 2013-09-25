@@ -182,9 +182,9 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
             $this->setData('userLastName', $userLastName);
             $this->setData('userEmail', $userEmail);
         }
-
+        $filter = ($this->hasRequestParameter("filter")) ? $this->getRequestParameter("filter") : "lastSubmitted";
         //todo testTaker object
-        $stats = $this->service->getItemVariableDataStatsFromDeliveryResult($result, $this->getRequestParameter("filter"));
+        $stats = $this->service->getItemVariableDataStatsFromDeliveryResult($result, $filter);
         $this->setData('nbResponses',  $stats["nbResponses"]);
         $this->setData('nbCorrectResponses',  $stats["nbCorrectResponses"]);
         $this->setData('nbIncorrectResponses',  $stats["nbIncorrectResponses"]);
@@ -198,7 +198,7 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
 
         $this->setData('uri',$this->getRequestParameter("uri"));
         $this->setData('classUri',$this->getRequestParameter("classUri"));
-        $this->setData('filter',$this->getRequestParameter("filter"));
+        $this->setData('filter',$filter);
        
         $this->setView('viewResult.tpl');
     }
