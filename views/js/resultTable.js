@@ -10,7 +10,7 @@
     function showGrid() {
     $('#result-table-grid').jqGrid('GridUnload');
     var myGrid = $("#result-table-grid").jqGrid({
-	url: document.dataUrl,
+	url: document.dataUrl+'?filterData=lastSubmitted',
 	postData: {'filter': document.JsonFilter, 'columns':document.columns},
 	mtype: "post",
 	datatype: "json",

@@ -21,7 +21,7 @@ require(['require', 'jquery', 'grid/tao.grid', root_url + 'taoResults/views/js/r
 	    document.getActionSubjectColumnUrl = "<?=_url('getResultOfSubjectColumn')?>";
 	    document.getActionGradeColumnUrl = "<?=_url('getGradeColumns')?>";
 	    document.getActionResponseColumnUrl = "<?=_url('getResponseColumns')?>";
-	    document.getActionCsvFileUrl = "<?=_url('getCsvFile')?>";
+	    document.getActionCsvFileUrl = "<?=_url('getCsvFile')?>?filterData=lastSubmitted";
 	    document.getActionViewResultUrl= "<?=_url('viewResult','Results')?>";
 	    document.JsonFilter = <?=tao_helpers_Javascript::buildObject(get_data("filter"))?>;
 	    document.JsonFilterSelection = <?=tao_helpers_Javascript::buildObject(array('filter' => get_data("filter")))?>;
@@ -104,7 +104,7 @@ require(['require', 'jquery', 'grid/tao.grid', root_url + 'taoResults/views/js/r
 			<select id="dataFilter">
 			    <option  value="all"><?=__('All collected values')?></option>
 			    <option  value="firstSubmitted"><?=__('First submitted responses only')?></option>
-			    <option  value="lastSubmitted"><?=__('Last submitted responses only')?></option>
+			    <option  value="lastSubmitted" selected><?=__('Last submitted responses only')?></option>
 			</select>
 
 	</span>
