@@ -53,7 +53,7 @@
     function setColumns(columns) {
 
 	//columns = identifyColumns(columns);
-	console.log(columns);
+	//console.log(columns);
 	for (key in columns) {
 		//used for the inner function set in the formatter callback, do not remvoe, the value gets computed at callback time
 		 var currentColumn = columns[key];
