@@ -157,7 +157,7 @@ table.mini tr td{
 .correct{
    float:right;
    
-    background-image: url(../../views/img/mtick.png);
+    background-image: url(../../views/img/tick.png);
     background-repeat:no-repeat;
     width: 24px;
     height: 24px;
