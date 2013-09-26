@@ -62,7 +62,7 @@ require(['require', 'jquery', 'grid/tao.grid', root_url + 'taoResults/views/js/r
 	    $('#dataFilter').change(function(e) {
 		$("#result-table-grid").jqGrid().setGridParam({ url: document.dataUrl+'?filterData='+$( this ).val() });
 		$("#result-table-grid").trigger( 'reloadGrid' );
-		document.getActionCsvFileUrl = '/taoResults/ResultTable/getCsvFile?filterData='+$( this ).val() });
+		document.getActionCsvFileUrl = '<?=_url('getCsvFile')?>'+'?filterData='+$( this ).val() });
 		
 		});
 
