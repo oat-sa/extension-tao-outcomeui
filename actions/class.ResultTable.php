@@ -244,7 +244,7 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
 		$start = $limit * $page - $limit;
         $response = new stdClass();
        	$clazz = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
-		$results	= $clazz->searchInstances($filter, array ('recursive'=>true));
+		$results	= $clazz->searchInstances($filter, array ('recursive'=>true, 'offset' => $start, 'limit' => $limit));
 		$counti		= $clazz->countInstances($filter, array ('recursive'=>true));
 		$dpmap = array();
 		foreach ($columns as $column) {
