@@ -311,14 +311,18 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
                 (is_array($observationsList))
             ){
             $returnValue = array();
-            $sortedByTime=array();
-            foreach ($observationsList as $observation) {
+           
+            /*
+            foreach ($observationsList as $key => $observation) {
                 $epoch = $observation[1];
                 $sortedByTime[$epoch] = $observation[0];
-            }
-            ksort($sortedByTime);
-           
-            $returnValue[]=($filterData=='lastSubmitted') ? array(array_pop($sortedByTime)) : array(array_shift($sortedByTime));
+                common_Logger::i($key);
+            }*/
+            //sort by timestamp observation
+           uksort($observationsList, "taoResults_models_classes_ResultsService::sortTimeStamps" );
+           $filteredObservation = ($filterData=='lastSubmitted') ? array_pop($observationsList) : array_shift($observationsList);
+            $returnValue[]= $filteredObservation;
+
             } else
             {
                 $returnValue = $observationsList;

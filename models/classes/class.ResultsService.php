@@ -232,7 +232,11 @@ class taoResults_models_classes_ResultsService
                    
                     foreach ($itemVariables['sortedVars'] as $variableType=>$variables) {
                         foreach ($variables as $variableIdentifier => $observation) {
-                            ksort($variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier]);
+
+                            uksort($variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier], "self::sortTimeStamps" );
+                           
+                            //print_r($observation);
+
                             switch ($filter){
                                 case "lastSubmitted":{
                                         $variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier] =
