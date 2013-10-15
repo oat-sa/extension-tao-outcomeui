@@ -31,23 +31,6 @@ h1 {
 	padding : 20px;
 }
 
-p {
-	
-	text-align: justify;
-	font-weight:normal;
-	line-height:18px;
-	position:relative;
-	margin-bottom: 10px;
-}
-
-p strong {
-	font-weight: bold;	
-}
-p span.field
-{
-    display: block;
-    
-}
 #TestTakerIdentificationBox {
     padding:3px;
     float:left;
