@@ -177,20 +177,27 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
 	    $arKeys = array_keys($cellData);
 	    $last = array_pop($arKeys);
 	    foreach ($cellData as $key => $cellDataPiece){
-		if (isset($cellDataPiece[0]) and (is_array($cellDataPiece[0]))) {
+		if (isset($cellDataPiece[0]) and (is_array($cellDataPiece)) and (is_array($cellDataPiece[0]))) {
 		    $strCellData .= $this->cellDataToString($cellDataPiece, $pieceDelimiters);
 		}
 		else {
-		    if (count($cellDataPiece)>1) {$strCellData .= implode($currentDelimiter, $cellDataPiece);} else {$strCellData .=array_pop($cellDataPiece);}
-		    if ($key!=$last) {$strCellData.=array_shift($pieceDelimiters);}
+		    if (count($cellDataPiece)>1) {
+                $strCellData .= implode($currentDelimiter, $cellDataPiece);
+            } else {
+                $strCellData .=array_pop($cellDataPiece);
+            }
+		    if ($key!=$last) {
+                $strCellData.=array_shift($pieceDelimiters);
+            }
 		}
 
 	    }
 	}
 	else {
-	    if (is_object($cellData)) { $strCellData = serialize($cellData);}
+	    if (is_object($cellData)) {
+            $strCellData = serialize($cellData);}
 	    else {
-	    $strCellData = $cellData;
+            $strCellData = $cellData;
 	    }
 	}
 	return $strCellData;
@@ -245,7 +252,7 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
         $response = new stdClass();
        	$clazz = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
 		$results	= $clazz->searchInstances($filter, array ('recursive'=>true, 'offset' => $start, 'limit' => $limit));
-		$counti		= $clazz->countInstances($filter, array ('recursive'=>true));
+		$counti		= $clazz->countInstances($filter, array ('recursive'=>true, 'offset' => $start, 'limit' => $limit));
 		$dpmap = array();
 		foreach ($columns as $column) {
 			$dataprovider = $column->getDataProvider();
