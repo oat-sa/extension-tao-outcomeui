@@ -171,21 +171,36 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
      * @return (string)
      */
     private function cellDataToString($cellData, $pieceDelimiters = array("", '     ') ){
-	$strCellData = "";$currentDelimiter = array_shift($pieceDelimiters);
+	$strCellData = "";
+    $currentDelimiter = array_shift($pieceDelimiters);
 	//return serialize($cellData);
 	if (is_array($cellData)) {
 	    $arKeys = array_keys($cellData);
 	    $last = array_pop($arKeys);
 	    foreach ($cellData as $key => $cellDataPiece){
-		if (isset($cellDataPiece[0]) and (is_array($cellDataPiece)) and (is_array($cellDataPiece[0]))) {
+		if (
+
+                (is_array($cellDataPiece))
+                and (isset($cellDataPiece[0]))
+                and (is_array($cellDataPiece[0]))
+            ) {
 		    $strCellData .= $this->cellDataToString($cellDataPiece, $pieceDelimiters);
 		}
 		else {
-		    if (count($cellDataPiece)>1) {
-                $strCellData .= implode($currentDelimiter, $cellDataPiece);
+            if (is_array($cellDataPiece)) {
+                //there are multiple observation for the variable
+                if (count($cellDataPiece)>1) {
+                    $strCellData .= implode($currentDelimiter, $cellDataPiece);
+
+                //there is only one observation for the variable
+                } else {
+                    $strCellData .=array_pop($cellDataPiece);
+                }
             } else {
-                $strCellData .=array_pop($cellDataPiece);
+            //there are no observations for the variable
+                $strCellData.="";
             }
+
 		    if ($key!=$last) {
                 $strCellData.=array_shift($pieceDelimiters);
             }
