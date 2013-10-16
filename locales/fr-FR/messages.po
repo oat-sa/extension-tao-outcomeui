@@ -63,10 +63,10 @@ msgid "Data collection statistics :"
 msgstr ""
 
 msgid "delete"
-msgstr ""
+msgstr "Supprimer"
 
 msgid "Delivery"
-msgstr "Délivrance"
+msgstr "Passation"
 
 msgid "Delivery Result"
 msgstr "Résultat de délivrance"
@@ -100,29 +100,29 @@ msgstr ""
 
 #, tao-public
 msgid "Inspect Results"
-msgstr "Examiner les Résultats"
+msgstr "Examen des résultats"
 
 msgid "Item"
 msgstr ""
 
 msgid "Label"
-msgstr ""
+msgstr "Libellé"
 
 msgid "lists"
-msgstr ""
+msgstr "Listes"
 
 #, tao-public
 msgid "Manage Results"
-msgstr "Gérer les résultats"
+msgstr "Gestion des résultats"
 
 msgid "meta data"
-msgstr ""
+msgstr "Méta-données"
 
 msgid "move"
-msgstr ""
+msgstr "Déplacer"
 
 msgid "new class"
-msgstr ""
+msgstr "Créer classe"
 
 msgid "Observed performances per distinc score variable types "
 msgstr ""
@@ -131,7 +131,7 @@ msgid "Performed by :"
 msgstr ""
 
 msgid "Print Report"
-msgstr ""
+msgstr "Imprimer Rapport"
 
 msgid "Remove All grades"
 msgstr ""
@@ -153,10 +153,10 @@ msgid "Results distribution"
 msgstr ""
 
 msgid "Results library"
-msgstr "Bibliothèque de résultats"
+msgstr "Résultats"
 
 msgid "Results Selection Filters"
-msgstr ""
+msgstr "Filtres de sélection des résultats"
 
 msgid "score average"
 msgstr ""
@@ -180,7 +180,7 @@ msgid "Statistical Report for the current selection"
 msgstr ""
 
 msgid "Test taker"
-msgstr ""
+msgstr "Participant"
 
 msgid "The class you have selected contains no results to be analysed, please select a different class"
 msgstr ""
@@ -192,7 +192,7 @@ msgid "The selection contains results related to the following delivery(ies) :"
 msgstr "Cette sélection contient des résultats liés à la ou aux délivrance(s) suivante(s) :"
 
 msgid "There was a problem generating your report, please try again."
-msgstr ""
+msgstr "Un problème s'est produit à la génération du rapport, veuillez réessayer."
 
 msgid "This module constitutes the final step."
 msgstr "Ce module constitue la dernière étape."
@@ -216,3 +216,17 @@ msgstr ""
 msgid "We are preparing your report, please wait..."
 msgstr ""
 
+msgid "Logged in as:"
+msgstr "Connecté en tant que : "
+
+msgid "Settings"
+msgstr "Réglages"
+
+msgid "User Management"
+msgstr "Gestion des utilisateurs"
+
+msgid "There is currently no delivery defined in the system that requires Human Based Grading. Please configure a delivery accordingly."
+msgstr "Il n'y a pas de délivrance définie actuellement dans le système demandant le Human Based Grading. Veuillez configurer une délivrance en conséquence."
+
+msgid "summary report"
+msgstr "Rapport résumé"
