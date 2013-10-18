@@ -255,6 +255,24 @@ class taoResults_models_classes_ResultsService
 
         return $variablesByItem;
     }
+
+    static function sortTimeStamps($a, $b){
+        list($usec, $sec) = explode(" ", $a);
+        $floata = ((float)$usec + (float)$sec);
+        list($usec, $sec) = explode(" ", $b);
+        $floatb = ((float)$usec + (float)$sec);
+        common_Logger::i($a." ".$floata);
+        common_Logger::i($b. " ".$floatb);
+        //the callback is expecting an int returned, for the case where the difference is of less than a second
+        //intval(round(floatval($b) - floatval($a),1, PHP_ROUND_HALF_EVEN));
+        if ((floatval($floata) - floatval($floatb)) > 0) {
+            return 1;
+        } elseif ((floatval($floata) - floatval($floatb)) < 0) {
+            return -1;
+        } else {
+            return 0;
+        }
+    }
     /**
      * return all variables linked to the delviery result and that are not linked to a particular itemResult
      */
