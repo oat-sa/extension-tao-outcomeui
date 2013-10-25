@@ -8,7 +8,7 @@
 	data.uri = '<?=get_data("uri")?>';
 	data.classUri = '<?=get_data("classUri")?>';
 	var filter = '<?=get_data("filter")?>';
-	
+
 </script>
 <script src="<?=BASE_WWW?>js/viewResult.js"></script>
 <div id="content">
@@ -21,7 +21,7 @@
 	    <tr><td class="field"><?=__('Email:')?></td><td class="fieldValue userMail"><?=get_data('userEmail')?></td></tr>
 	</table>
     </span>
-    
+
     <span id="ScoresSummaryBox">
 	<?=__('Filter values:')?>
 	<select id="filter">
@@ -57,7 +57,7 @@
 	?>
 	</table>
 
-	<br /> 
+	<br />
 	<?  foreach (get_data('variables') as $item){ ?>
 	<table class="resultsTable" border="1">
 	<tr >
@@ -83,14 +83,14 @@
 			    echo "<OL>";
 			    foreach ($rdfValue as $value) {
 				echo "<LI>";
-				    echo nl2br($value);
+				    echo tao_helpers_Display::htmlEscape(nl2br($value));
 				echo "</LI>";
 			    }
 			    echo "</OL>";
 			} elseif (is_string($rdfValue)) {
-			    echo nl2br($rdfValue);
+			    echo tao_helpers_Display::htmlEscape(nl2br($rdfValue));
 			} else {
-			    echo $rdfValue;
+			    echo tao_helpers_Display::htmlEscape($rdfValue);
 			}
 		    ?>
 		<span class="<?=$observation['isCorrect']?>" />
@@ -115,7 +115,7 @@
 		<? if ($key === key($observations)) {?>
 		     <td <?=$rowspan?> class="variableIdentifierField"><?=$variableIdentifier?></td>
 		<?}?>
-		<td colspan="2" class="dataResult"><?=nl2br(unserialize(array_pop($observation[RDF_VALUE])))?></td>
+		<td colspan="2" class="dataResult"><?=tao_helpers_Display::htmlEscape(nl2br(unserialize(array_pop($observation[RDF_VALUE]))))?></td>
 
 		<td class="epoch"><?=array_pop($observation["epoch"])?></td>
 		</tr>
@@ -144,7 +144,7 @@
 		}
 	?>
 	<?} ?>
-	
+
 	</table>
 	<br />
 	<? } ?>
@@ -159,6 +159,6 @@
 			<?=get_data('errorMessage')?>
 		</fieldset>
 	<?endif?>
-		
+
 </div>
 <?include(TAO_TPL_PATH . 'footer.tpl')?>
