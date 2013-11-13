@@ -230,3 +230,7 @@ msgstr "Il n'y a pas de délivrance définie actuellement dans le système deman
 
 msgid "summary report"
 msgstr "Rapport résumé"
+
+msgid "Beta version"
+msgstr "Version bêta"
+
