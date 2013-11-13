@@ -1,224 +1,236 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TAO v2.5-alpha\n"
-"PO-Revision-Date: 2013-06-18T15:46:19\n"
-"Last-Translator: TAO Translation Team <translation@tao.lu>\n"
+"PO-Revision-Date: 2013-11-11 18:43-0000\n"
+"Last-Translator: Paulo Amorim <paulo@amorims.com>\n"
 "MIME-Version: 1.0\n"
 "Language: pt-PT\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: \n"
+"Language-Team: \n"
+"X-Generator: Poedit 1.5.7\n"
 
 msgid " seconds"
-msgstr ""
+msgstr "segundos"
 
 msgid "# Collected Results"
-msgstr ""
+msgstr "# Resultados colhidos"
 
 msgid "# Collected Score Variables"
-msgstr ""
+msgstr "# Pontuações Variáveis Colhidas"
 
 msgid "# data collected"
-msgstr ""
+msgstr "# dados colhidos"
 
 msgid "# Distinct Test Takers"
-msgstr ""
+msgstr "# Examinado distinto"
 
 msgid "# Distinct variable types"
-msgstr ""
+msgstr "# Tipos de variáveis distintas"
 
 msgid "Add All grades"
-msgstr ""
+msgstr "Adicionar todos os anos"
 
 msgid "Add All responses"
-msgstr ""
+msgstr "Adicionar todas as respostas"
 
 msgid "Add Test Taker"
-msgstr ""
+msgstr "Adicionar examinado"
 
-msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
+msgid ""
+"All results of passed Tests with their referring Subject, Group and Item "
+"specific data, as well as the individual data collected during Test "
+"execution are stored and managed here."
 msgstr ""
+"Todos os resultados dos testes realizados  com o assunto referindo-se, Grupo "
+"e dados específicos do item, bem como os dados individuais colhidos durante "
+"a execução do teste são armazenados e geridos aqui"
 
-msgid "An item being referred to into the current column selection does not exist anymore"
-msgstr ""
+msgid ""
+"An item being referred to into the current column selection does not exist "
+"anymore"
+msgstr "Um item referido nesta coluna seleccionada não existe"
 
-msgid "An item being referred to into the delivery of this result does not exist anymore"
-msgstr ""
+msgid ""
+"An item being referred to into the delivery of this result does not exist "
+"anymore"
+msgstr "Um item referido na distribuição deste resultado não existe"
 
 msgid "Anonymise"
-msgstr ""
+msgstr "Anónimos"
 
 msgid "Average"
-msgstr ""
+msgstr "Media"
 
 msgid "Build/Export data table"
-msgstr ""
+msgstr "Construir/Exportar tabela de dados"
 
 msgid "Class saved"
-msgstr ""
+msgstr "Disciplina guardada"
 
 msgid "Collected Results"
-msgstr ""
+msgstr "Colher resultados"
 
 msgid "custom table"
-msgstr ""
+msgstr "Tabela personalizada"
 
 msgid "Data Collection per Variable"
-msgstr ""
+msgstr "Colher informação por variaveis"
 
 msgid "Data collection statistics :"
-msgstr ""
+msgstr "Estatísticas da informação colhida:"
 
 msgid "delete"
-msgstr ""
+msgstr "eliminar"
 
 msgid "Delivery"
-msgstr ""
+msgstr "Distribuir"
 
 msgid "Delivery Result"
-msgstr ""
+msgstr "Resultado da distribuição"
 
 msgid "Delivery results"
-msgstr ""
+msgstr "Resultados da distribuição"
 
 msgid "Download CSV File"
-msgstr ""
+msgstr "Baixar ficheiro CSV"
 
 msgid "Edit result class"
-msgstr ""
+msgstr "Editar resultados da disciplina"
 
 msgid "Error"
-msgstr ""
+msgstr "Erro"
 
 msgid "export"
-msgstr ""
+msgstr "Exportar"
 
 msgid "Filter columns"
-msgstr ""
+msgstr "Filtrar colunas"
 
 msgid "Frequency per Score"
-msgstr ""
+msgstr "Frequência de pontuações"
 
 msgid "Generated on : "
-msgstr ""
+msgstr "Gerado em:"
 
 msgid "import"
-msgstr ""
+msgstr "importar"
 
-#, tao-public
 msgid "Inspect Results"
-msgstr ""
+msgstr "Inspeccionar resultados"
 
 msgid "Item"
-msgstr ""
+msgstr "Item"
 
 msgid "Label"
-msgstr ""
+msgstr "Rotulo"
 
 msgid "lists"
-msgstr ""
+msgstr "Listas"
 
-#, tao-public
 msgid "Manage Results"
-msgstr ""
+msgstr "Gerir resultados"
 
 msgid "meta data"
-msgstr ""
+msgstr "meta dados"
 
 msgid "move"
-msgstr ""
+msgstr "mover"
 
 msgid "new class"
-msgstr ""
+msgstr "nova disciplina"
 
 msgid "Observed performances per distinc score variable types "
-msgstr ""
+msgstr "Performances observadas por tipos de variáveis distintos"
 
 msgid "Performed by :"
-msgstr ""
+msgstr "Realizado por:"
 
 msgid "Print Report"
-msgstr ""
+msgstr "Imprime relatório"
 
 msgid "Remove All grades"
-msgstr ""
+msgstr "Remover todos os anos"
 
 msgid "Remove All responses"
-msgstr ""
+msgstr "Remover todas as respostas"
 
 msgid "Report generated from the following subset of results : "
-msgstr ""
+msgstr "Relatório gerado pelos seguintes sub-conjuntos de resultados:"
 
 msgid "Result saved"
-msgstr ""
+msgstr "Resultado guardado"
 
-#, tao-public
 msgid "Results"
-msgstr ""
+msgstr "Resultados"
 
 msgid "Results distribution"
-msgstr ""
+msgstr "Distribuição de resultados"
 
 msgid "Results library"
-msgstr ""
+msgstr "Biblioteca de resultados"
 
 msgid "Results Selection Filters"
-msgstr ""
+msgstr "Filtro de seleção de resultados"
 
 msgid "score average"
-msgstr ""
+msgstr "pontuação media"
 
 msgid "Score average per Variable"
-msgstr ""
+msgstr "Pontuação media por variável"
 
 msgid "Score per Observation"
-msgstr ""
+msgstr "Pontuação por observação"
 
 msgid "Scores and response rates statistics"
-msgstr ""
+msgstr "Estatística de Respostas e pontuações"
 
 msgid "search"
-msgstr ""
+msgstr "procurar"
 
 msgid "simple report"
-msgstr ""
+msgstr "Relatório simples"
 
 msgid "Statistical Report for the current selection"
-msgstr ""
+msgstr "Relatório estatístico para a actual selecção"
 
 msgid "Test taker"
-msgstr ""
+msgstr "examinado"
 
-msgid "The class you have selected contains no results to be analysed, please select a different class"
+msgid ""
+"The class you have selected contains no results to be analysed, please "
+"select a different class"
 msgstr ""
+"Os anos que seleccionou não contem resultados para serem analisados, por "
+"favor seleccione outro ano"
 
 msgid "The number of observations is too low"
-msgstr ""
+msgstr "O numero de observações é demasiado baixo"
 
 msgid "The selection contains results related to the following delivery(ies) :"
-msgstr ""
+msgstr "A selecção contem resultados relativos as seguintes distribuições:"
 
 msgid "There was a problem generating your report, please try again."
-msgstr ""
+msgstr "Houve um problema a gerar este relatório, por favor tente de novo."
 
 msgid "This module constitutes the final step."
-msgstr ""
+msgstr "Este modulo contitui o passo final."
 
 msgid "Total Average"
-msgstr ""
+msgstr "Media total"
 
 msgid "Total Standard Deviation"
-msgstr ""
+msgstr "Desvio total normal"
 
 msgid "VariableName"
-msgstr ""
+msgstr "Nome da variável"
 
-#, tao-public
 msgid "View and format the collected results."
-msgstr ""
+msgstr "Ver e formatar resultados colhidos"
 
 msgid "View result"
-msgstr ""
+msgstr "Ver resultado"
 
 msgid "We are preparing your report, please wait..."
-msgstr ""
-
+msgstr "Estamos a preparar o ser relatório, por favor aguarde..."
