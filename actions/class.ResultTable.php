@@ -38,7 +38,7 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
      * @return Results
      */
     protected $service;
-    
+
     public function __construct() {
 
         parent::__construct();
@@ -64,7 +64,7 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
     public function getCsvFile(){
          $this->data("csv");
     }
-   
+
     /**
      * Returns the default column selection that contains the Result of Subject property (This has been removed from the other commodity function adding grades and responses)
      */
@@ -77,15 +77,15 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
                 ));
     }
 
-  
-   
+
+
     public function getResponseColumns() {
 	$this->getVariableColumns(CLASS_RESPONSE_VARIABLE);
     }
     /** Returns all columns with all grades pertaining to the current delivery results selection
      */
      public function getGradeColumns() {
-        
+
               $this->getVariableColumns(CLASS_OUTCOME_VARIABLE);
     }
       /**Retrieve the different variables columns pertainign to the current selection of results
@@ -115,17 +115,17 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
                 $itemResult = $this->service->getItemResultFromVariable($variable);
                 $item = $this->service->getItemFromItemResult($itemResult);
                 if (get_class($item) == "core_kernel_classes_Resource") {
-                $contextIdentifierLabel = $item->getLabel(); 
+                $contextIdentifierLabel = $item->getLabel();
                 $contextIdentifier = $item->getUri(); // use the callId/itemResult identifier
                 }
                 else {
                     $contextIdentifierLabel = $item->__toString();
-                $contextIdentifier = $item->__toString(); 
+                $contextIdentifier = $item->__toString();
                 }
                 $variableTypes[$contextIdentifier.$variableIdentifier] = array("contextLabel" => $contextIdentifierLabel, "contextId" => $contextIdentifier, "variableIdentifier" => $variableIdentifier);
 		    }
 		foreach ($variableTypes as $variable){
-		    
+
 		    switch ($variableClassUri){
                 case CLASS_RESPONSE_VARIABLE:{ $columns[] = new taoResults_models_classes_table_ResponseColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);break;}
                 case CLASS_OUTCOME_VARIABLE: { $columns[] = new taoResults_models_classes_table_GradeColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);break;}
@@ -153,7 +153,15 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
        foreach ($rows as $line) {
 	   $seralizedData = array();
 	   foreach ($line["cell"] as $cellData){
-	       $seralizedData[] = $this->cellDataToString($cellData);
+
+         if (!is_array($cellData)) {
+             $seralizedData[] = $cellData;
+         } else {
+             $seralizedData[] = array_pop($cellData);
+         }
+
+
+           //$seralizedData[] = $this->cellDataToString($cellData);
 	   }
            fputcsv($handle, $seralizedData, $delimiter, $enclosure);
        }
@@ -166,57 +174,7 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
        fclose($handle);
        return $encodedData;
     }
-    /**todo ppl delegate this to the dataprovider impleemntation
-     *  Convenience function that attempts to support cases where the data provider set complex data objects into cellvalues
-     * @return (string)
-     */
-    private function cellDataToString($cellData, $pieceDelimiters = array("", '     ') ){
-	$strCellData = "";
-    $currentDelimiter = array_shift($pieceDelimiters);
-	//return serialize($cellData);
-	if (is_array($cellData)) {
-	    $arKeys = array_keys($cellData);
-	    $last = array_pop($arKeys);
-	    foreach ($cellData as $key => $cellDataPiece){
-		if (
 
-                (is_array($cellDataPiece))
-                and (isset($cellDataPiece[0]))
-                and (is_array($cellDataPiece[0]))
-            ) {
-		    $strCellData .= $this->cellDataToString($cellDataPiece, $pieceDelimiters);
-		}
-		else {
-            if (is_array($cellDataPiece)) {
-                //there are multiple observation for the variable
-                if (count($cellDataPiece)>1) {
-                    $strCellData .= implode($currentDelimiter, $cellDataPiece);
-
-                //there is only one observation for the variable
-                } else {
-                    $strCellData .=array_pop($cellDataPiece);
-                }
-            } else {
-            //there are no observations for the variable
-                $strCellData.="";
-            }
-
-		    if ($key!=$last) {
-                $strCellData.=array_shift($pieceDelimiters);
-            }
-		}
-
-	    }
-	}
-	else {
-	    if (is_object($cellData)) {
-            $strCellData = serialize($cellData);}
-	    else {
-            $strCellData = $cellData;
-	    }
-	}
-	return $strCellData;
-    }
     /**
      * Returns a flat array with the list of column labels.
      * @param columns an array of column object including the property information and that is used within tao class.Table context
@@ -251,11 +209,11 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
      * @param type $format  json, csv
      */
     public function data($format ="json") {
-        
+
         $filter =  $this->hasRequestParameter('filter') ? $this->getFilterState('filter') : array();
        	$filterData =  $this->getRequestParameter('filterData');
     	$columns = $this->hasRequestParameter('columns') ? $this->getColumns('columns') : array();
-        
+
     	$page = $this->getRequestParameter('page');
 		$limit = $this->getRequestParameter('rows');
 		$sidx = $this->getRequestParameter('sidx');
@@ -267,7 +225,7 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
         $response = new stdClass();
        	$clazz = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
 		$results	= $clazz->searchInstances($filter, array ('recursive'=>true, 'offset' => $start, 'limit' => $limit));
-		$counti		= $clazz->countInstances($filter, array ('recursive'=>true, 'offset' => $start, 'limit' => $limit));
+        $counti		= $clazz->countInstances($filter, array ('recursive'=>true, 'offset' => $start, 'limit' => $limit));
 		$dpmap = array();
 		foreach ($columns as $column) {
 			$dataprovider = $column->getDataProvider();
@@ -313,10 +271,12 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
 
 		switch ($format) {
                     case "csv":$encodedData = $this->dataToCsv($columns, $response->rows,';','"');
+
                         header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
                         setcookie("fileDownload","true", 0, "/");
                         header("Content-type: text/csv");
                         header('Content-Disposition: attachment; filename=Data.csv');
+
                     break;
 
                     default: $encodedData = json_encode($response);
@@ -326,30 +286,36 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
                 echo $encodedData;
     }
     private static function filterCellData($observationsList, $filterData){
-        //return $observationsList;
-        if (
+        //if the cell content is not an array with multiple entries, do not filter
+
+        if (!(is_array($observationsList))){
+            return $observationsList;
+
+        }
+        //takes only the alst or the first observation
+            if (
                 ($filterData=="lastSubmitted" or $filterData=="firstSubmitted")
                 and
                 (is_array($observationsList))
             ){
             $returnValue = array();
-           
-            /*
-            foreach ($observationsList as $key => $observation) {
-                $epoch = $observation[1];
-                $sortedByTime[$epoch] = $observation[0];
-                common_Logger::i($key);
-            }*/
+
             //sort by timestamp observation
            uksort($observationsList, "taoResults_models_classes_ResultsService::sortTimeStamps" );
            $filteredObservation = ($filterData=='lastSubmitted') ? array_pop($observationsList) : array_shift($observationsList);
-            $returnValue[]= $filteredObservation;
+            $returnValue[]= $filteredObservation[0];
 
-            } else
-            {
-                $returnValue = $observationsList;
+            } else {
+               $cellData = "";
+               foreach ($observationsList as $observation) {
+                   $cellData.= $observation[0].$observation[1].'
+                       ';
+               }
+                $returnValue = $cellData;
             }
         return $returnValue;
     }
+
+
 }
 ?>
