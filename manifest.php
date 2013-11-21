@@ -49,6 +49,9 @@ return array(
 		)
 	),
 	'managementRole' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole',
+    'acl' => array(
+        array('grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', array('ext'=>'taoResults'))
+    ),
 	'constants' => array(
 	 	# actions directory
 	 	"DIR_ACTIONS"			=> $extpath."actions".DIRECTORY_SEPARATOR,
