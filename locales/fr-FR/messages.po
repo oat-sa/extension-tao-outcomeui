@@ -15,7 +15,7 @@ msgid "# Collected Results"
 msgstr "# Résultats Collectés"
 
 msgid "# Collected Score Variables"
-msgstr ""
+msgstr "# Variables score collectées"
 
 msgid "# data collected"
 msgstr "# données collectées"
@@ -27,25 +27,25 @@ msgid "# Distinct variable types"
 msgstr "# types de variable distincts"
 
 msgid "Add All grades"
-msgstr ""
+msgstr "Ajouter tous les grades"
 
 msgid "Add All responses"
-msgstr ""
+msgstr "Ajouter toutes les réponses"
 
 msgid "Add Test Taker"
-msgstr ""
+msgstr "Ajouter le participant"
 
 msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
 msgstr "Les résultats de tous les tests passés avec les données des participants, groupes et items, ainsi que les données récupérées pendant le déroulement de chaque test sont collectés et gérés ici."
 
 msgid "Anonymise"
-msgstr ""
+msgstr "Anonymiser"
 
 msgid "Average"
 msgstr "Moyenne"
 
 msgid "Build/Export data table"
-msgstr ""
+msgstr "Construire/exporter la table de données"
 
 msgid "Class saved"
 msgstr "Classe enregistrée"
@@ -54,13 +54,13 @@ msgid "Collected Results"
 msgstr "Résultats Collectés"
 
 msgid "custom table"
-msgstr ""
+msgstr "table personnalisée"
 
 msgid "Data Collection per Variable"
-msgstr ""
+msgstr "Collection de données par variable"
 
 msgid "Data collection statistics :"
-msgstr ""
+msgstr "Statistiques de la collection de données :"
 
 msgid "delete"
 msgstr "Supprimer"
@@ -75,35 +75,35 @@ msgid "Delivery results"
 msgstr "Résultats de la délivrance"
 
 msgid "Download CSV File"
-msgstr ""
+msgstr "Télécharger le fichier CSV"
 
 msgid "Edit result class"
 msgstr "Modifier la classe de résultat"
 
 msgid "Error"
-msgstr ""
+msgstr "Erreur"
 
 msgid "export"
-msgstr ""
+msgstr "Exporter"
 
 msgid "Filter columns"
-msgstr ""
+msgstr "Filtrer les colonnes"
 
 msgid "Frequency per Score"
-msgstr ""
+msgstr "Fréquence par score"
 
 msgid "Generated on : "
-msgstr ""
+msgstr "Généré le : "
 
 msgid "import"
-msgstr ""
+msgstr "Importer"
 
 #, tao-public
 msgid "Inspect Results"
 msgstr "Examen des résultats"
 
 msgid "Item"
-msgstr ""
+msgstr "Item"
 
 msgid "Label"
 msgstr "Libellé"
@@ -125,22 +125,22 @@ msgid "new class"
 msgstr "Créer classe"
 
 msgid "Observed performances per distinc score variable types "
-msgstr ""
+msgstr "Performances observées par types de variables de score distincts "
 
 msgid "Performed by :"
-msgstr ""
+msgstr "Effectué par :"
 
 msgid "Print Report"
 msgstr "Imprimer Rapport"
 
 msgid "Remove All grades"
-msgstr ""
+msgstr "Supprimer tous les grades"
 
 msgid "Remove All responses"
-msgstr ""
+msgstr "Supprimer toutes les réponses"
 
 msgid "Report generated from the following subset of results : "
-msgstr ""
+msgstr "Rapport généré à partir du sous-ensemble de résultats suivant : "
 
 msgid "Result saved"
 msgstr "Résultat enregistré"
@@ -150,7 +150,7 @@ msgid "Results"
 msgstr "Résultats"
 
 msgid "Results distribution"
-msgstr ""
+msgstr "Distribution des résultats"
 
 msgid "Results library"
 msgstr "Résultats"
@@ -159,34 +159,36 @@ msgid "Results Selection Filters"
 msgstr "Filtres de sélection des résultats"
 
 msgid "score average"
-msgstr ""
+msgstr "moyenne de score"
 
 msgid "Score average per Variable"
-msgstr ""
+msgstr "Score moyen par variable"
 
 msgid "Score per Observation"
-msgstr ""
+msgstr "Score par observation"
 
 msgid "Scores and response rates statistics"
-msgstr ""
+msgstr "Scores et statistiques de taux de réponse"
 
 msgid "search"
-msgstr ""
+msgstr "Rechercher"
 
 msgid "simple report"
-msgstr ""
+msgstr "rapport simple"
 
 msgid "Statistical Report for the current selection"
-msgstr ""
+msgstr "Rapport statistique pour la sélection courante"
 
 msgid "Test taker"
 msgstr "Participant"
 
 msgid "The class you have selected contains no results to be analysed, please select a different class"
 msgstr ""
+"La classe sélectionnée ne contient pas de résultat à analyser, veuillez en "
+"choisir une autre."
 
 msgid "The number of observations is too low"
-msgstr ""
+msgstr "Le nombre d'observations est trop faible."
 
 msgid "The selection contains results related to the following delivery(ies) :"
 msgstr "Cette sélection contient des résultats liés à la ou aux délivrance(s) suivante(s) :"
@@ -198,23 +200,23 @@ msgid "This module constitutes the final step."
 msgstr "Ce module constitue la dernière étape."
 
 msgid "Total Average"
-msgstr ""
+msgstr "Moyenne totale"
 
 msgid "Total Standard Deviation"
-msgstr ""
+msgstr "Déviation standard totale"
 
 msgid "VariableName"
-msgstr ""
+msgstr "Nom de variable"
 
 #, tao-public
 msgid "View and format the collected results."
 msgstr "Visualiser et formater les données collectées."
 
 msgid "View result"
-msgstr ""
+msgstr "Voir le résultat"
 
 msgid "We are preparing your report, please wait..."
-msgstr ""
+msgstr "Nous préparons votre rapport, veuillez patienter..."
 
 msgid "Logged in as:"
 msgstr "Connecté en tant que : "
