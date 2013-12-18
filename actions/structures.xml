@@ -15,9 +15,9 @@
 		    />
 		</trees>
 		<actions>
-		<action name="new class" js="generisActions.subClass" url="/taoResults/Results/addSubClass" context="class" />
-		<action name="move" js="generisActions.moveNode" url="" context="instance" />
-		<action name="delete" js="generisActions.removeNode" url="/taoResults/Results/delete" context="resource" />
+		<action name="new class" js="subClass" url="/taoResults/Results/addSubClass" context="class" />
+		<action name="move" js="moveNode" url="" context="instance" />
+		<action name="delete" js="removeNode" url="/taoResults/Results/delete" context="resource" />
 		<action name="summary report" url="/taoResults/SimpleReport/build" context="class" />
 		</actions>
 	    </section>

@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/resultTable.css" />
 
     <script type="text/javascript">
-require(['require', 'jquery', 'grid/tao.grid', root_url + 'taoResults/views/js/resultTable.js'], function(req, $) {
+require(['jquery', 'i18n', 'taoResults/resultTable', 'grid/tao.grid'], function($, __, resultTable) {
 
     $(function(){
 	    //models and columns are parameters used and manipulated by the table operations functions.
@@ -27,17 +27,17 @@ require(['require', 'jquery', 'grid/tao.grid', root_url + 'taoResults/views/js/r
 	    document.JsonFilterSelection = <?=tao_helpers_Javascript::buildObject(array('filter' => get_data("filter")))?>;
 	    document.resultOfSubjectConstant = "<?php echo PROPERTY_RESULT_OF_SUBJECT;?>";
 	    //initiate the grid
-	    initiateGrid();
+	    resultTable.initiateGrid();
 	    //Bind the remove score button click that removes all variables that are taoCoding_models_classes_table_GradeColumn
-	    bindTogglingButtons('#rmScoreButton', '#getScoreButton', document.getActionGradeColumnUrl, 'remove');
+	    resultTable.bindTogglingButtons('#rmScoreButton', '#getScoreButton', document.getActionGradeColumnUrl, 'remove');
 	    //Bind the remove score button click that removes all variables that are taoCoding_models_classes_table_ResponseColumn
-	    bindTogglingButtons('#rmResponseButton', '#getResponseButton', document.getActionResponseColumnUrl, 'remove');
+	    resultTable.bindTogglingButtons('#rmResponseButton', '#getResponseButton', document.getActionResponseColumnUrl, 'remove');
 	    //Bind the get score button click that add all variables that are taoCoding_models_classes_table_ResponseColumn
-	    bindTogglingButtons('#getResponseButton', '#rmResponseButton', document.getActionResponseColumnUrl, 'add');
+	    resultTable.bindTogglingButtons('#getResponseButton', '#rmResponseButton', document.getActionResponseColumnUrl, 'add');
 	    //Bind the get score button click that add all variables that are taoCoding_models_classes_table_GradeColumn
-	    bindTogglingButtons('#getScoreButton', '#rmScoreButton', document.getActionGradeColumnUrl, 'add');
-	    bindTogglingButtons('#viewSubject', '#removeSubject', document.getActionSubjectColumnUrl, 'add');
-	    bindTogglingButtons('#removeSubject', '#viewSubject', document.getActionSubjectColumnUrl, 'remove');
+	    resultTable.bindTogglingButtons('#getScoreButton', '#rmScoreButton', document.getActionGradeColumnUrl, 'add');
+	    resultTable.bindTogglingButtons('#viewSubject', '#removeSubject', document.getActionSubjectColumnUrl, 'add');
+	    resultTable.bindTogglingButtons('#removeSubject', '#viewSubject', document.getActionSubjectColumnUrl, 'remove');
 	    /**
 	    * Trigger the download of a csv file using the data provider used for the table display
 	     */
@@ -69,7 +69,7 @@ require(['require', 'jquery', 'grid/tao.grid', root_url + 'taoResults/views/js/r
 	    //binds the column chooser button taht launches the feature from jqgrid allowing to make a selection of the columns displayed
 	     $('#columnChooser').click(function(e) {
 		    e.preventDefault();
-		    columnChooser();
+		    resultTable.columnChooser();
 	    });
     });
 

@@ -42,7 +42,7 @@ function loadResults(filter) {
 }
 
 $(function(){
-	require(['require', 'jquery', 'generis.facetFilter', 'grid/tao.grid'], function(req, $, GenerisFacetFilterClass) {
+	require(['jquery', 'i18n', 'helpers', 'generis.facetFilter', 'grid/tao.grid'], function($, __, helpers, GenerisFacetFilterClass) {
 
 
 		//the grid model

@@ -4,15 +4,18 @@
 <div class="ui-widget-content ui-corner-bottom">
 
 <script type="text/javascript">
-	var data;
-	data.uri = '<?=get_data("uri")?>';
-	data.classUri = '<?=get_data("classUri")?>';
-	var filter = '<?=get_data("filter")?>';
-
+requirejs.config({
+    config: {
+        'taoResults/controller/viewResult': {
+           uri : '<?=get_data("uri")?>',
+           classUri : '<?=get_data("classUri")?>',
+           filter : '<?=get_data("filter")?>'
+        }
+    }
+});
 </script>
-<script src="<?=BASE_WWW?>js/viewResult.js"></script>
 <div id="content">
-    <span id="TestTakerIdentificationBox"><strong>&nbsp;<img src="<?=TAOBASE_WWW?>/js/jsTree/themes/custom/subject.png" /><span id="testTakerHeader"><?=__('Test Taker')?></span></strong>
+    <span id="TestTakerIdentificationBox"><strong>&nbsp;<img src="<?=TAOBASE_WWW?>/js/lib/jsTree/themes/custom/subject.png" /><span id="testTakerHeader"><?=__('Test Taker')?></span></strong>
 	<table class="mini">
 	    <tr><td class="field"><?=__('Login:')?></td><td class="fieldValue"><?=get_data('userLogin')?></td></tr>
 	    <tr><td class="field"><?=__('Label:')?></td><td class="fieldValue"><?=get_data('userLabel')?></td></tr>
