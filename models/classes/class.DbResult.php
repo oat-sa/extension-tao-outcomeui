@@ -9,7 +9,7 @@
  */
 class taoResults_models_classes_DbResult
     extends tao_models_classes_GenerisService
-    implements taoResultServer_models_classes_ResultStorage {
+    implements taoResultServer_models_classes_WritableResultStorage {
 
     private $taoResultsStorage;
 
