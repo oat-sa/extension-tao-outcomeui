@@ -383,7 +383,7 @@ class taoResults_models_classes_ResultsService
                     PROPERTY_OUTCOME_VARIABLE_NORMALMAXIMUM => $itemVariable->getNormalMaximum(),
                     PROPERTY_OUTCOME_VARIABLE_NORMALMINIMUM => $itemVariable->getNormalMinimum(),
                     RDF_VALUE						=> serialize($itemVariable->getValue()),
-                    PROPERTY_VARIABLE_EPOCH		=> microtime()
+                    PROPERTY_VARIABLE_EPOCH		=> (($itemVariable->isSetEpoch())) ? $itemVariable->getEpoch() : microtime()
                 ));
 
                 break;}
@@ -409,7 +409,7 @@ class taoResults_models_classes_ResultsService
                     PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE => $isCorrect,
                     //PROPERTY_RESPONSE_VARIABLE_CANDIDATERESPONSE=> $itemVariable->getCandidateResponse(),
                     RDF_VALUE						=> serialize($itemVariable->getCandidateResponse()),
-                    PROPERTY_VARIABLE_EPOCH		=> microtime()
+                    PROPERTY_VARIABLE_EPOCH		=> (($itemVariable->isSetEpoch())) ? $itemVariable->getEpoch() : microtime()
                 ));
                 break;}
               case "taoResultServer_models_classes_TraceVariable":{
@@ -419,7 +419,7 @@ class taoResults_models_classes_ResultsService
                     PROPERTY_VARIABLE_CARDINALITY   => $itemVariable->getCardinality(),
                     PROPERTY_VARIABLE_BASETYPE      => $itemVariable->getBaseType(),
                     RDF_VALUE						=> serialize($itemVariable->getTrace()), //todo store a file
-                    PROPERTY_VARIABLE_EPOCH		=> microtime()
+                    PROPERTY_VARIABLE_EPOCH		=> (($itemVariable->isSetEpoch())) ? $itemVariable->getEpoch() : microtime()
                 ));
 
                 break;}
