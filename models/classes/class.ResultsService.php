@@ -30,7 +30,7 @@ class taoResults_models_classes_ResultsService
 {
     public function getRootClass()
     {	
-	return new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
+		return new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
     }
     /**
      * return all variable for taht deliveryResults (uri identifiers) 
@@ -167,6 +167,16 @@ class taoResults_models_classes_ResultsService
             
             return $stats;
     }
+    
+    /**
+     * references on items, delivery, etc. submitted by be unknown, 
+     * attempt to retrieve the label
+     * @param reference
+     */
+    private function getLabel($reference) {
+        
+    }
+    
     /**
      *  prepare a data set as an associative array, service intended to populate gui controller
      * @param string $filter 'lastSubmitted', 'firstSubmitted'
@@ -184,8 +194,13 @@ class taoResults_models_classes_ResultsService
                  } else{
                 $itemIdentifier =  $relatedItem->getUri();
                 $itemLabel =  $relatedItem->getLabel();
-                $itemModel =  $relatedItem->getUniquePropertyValue(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
-                $variablesByItem[$itemIdentifier]['itemModel'] = $itemModel->getLabel();
+               
+                    try {
+                    $itemModel =  $relatedItem->getUniquePropertyValue(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
+                    $variablesByItem[$itemIdentifier]['itemModel'] = $itemModel->getLabel();
+                    } catch (Exception $e) { //a resource but unknown
+                         $variablesByItem[$itemIdentifier]['itemModel'] = 'unknwon';
+                    }
                 }
                 foreach ($this->getVariablesFromItemResult($itemResult) as $variable) {
                     $variableDescription = $variable->getPropertiesValues(array(
@@ -199,8 +214,12 @@ class taoResults_models_classes_ResultsService
                    } else{
                         $itemIdentifier =  $relatedItem->getUri();
                         $itemLabel =  $relatedItem->getLabel();
+                        try {
                         $itemModel =  $relatedItem->getUniquePropertyValue(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
                         $variablesByItem[$itemIdentifier]['itemModel'] = $itemModel->getLabel();
+                        } catch (Exception $e) { //a resource but unknown
+                         $variablesByItem[$itemIdentifier]['itemModel'] = 'unknwon';
+                        }
                    }
                 $type = current($variableDescription[RDF_TYPE])->getUri();
                 $variableIdentifier = current( $variableDescription[PROPERTY_IDENTIFIER])->__toString();
