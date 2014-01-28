@@ -30,7 +30,7 @@ class taoResults_models_classes_ResultsService
 {
     public function getRootClass()
     {	
-		return new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
+	return new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
     }
     /**
      * return all variable for taht deliveryResults (uri identifiers) 
@@ -315,37 +315,32 @@ class taoResults_models_classes_ResultsService
     public function storeDeliveryResult($deliveryResultIdentifier = null){
 
         $deliveryResultClass = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
-        
-     
-        
         if (is_null($deliveryResultIdentifier)) {
             $deliveryResult = $deliveryResultClass->createInstanceWithProperties(array(
-                    RDFS_LABEL					=> '('.uniqid().')',
-                    PROPERTY_IDENTIFIER	=> $deliveryResultIdentifier
-				));
+            RDFS_LABEL	=> '('.uniqid().')',
+		));
             $deliveryResult->editPropertyValues(new core_kernel_classes_Property(PROPERTY_IDENTIFIER), $deliveryResult->getUri());
             return $deliveryResult;
         }
-
         
+        $options = array('like' => false, 'recursive' => false);
         $deliveryResults = $deliveryResultClass->searchInstances(array(
-	        	PROPERTY_IDENTIFIER	=> $deliveryResultIdentifier
-	        ));
+	       PROPERTY_IDENTIFIER	=> $deliveryResultIdentifier
+                ), $options);
         
-                if (count( $deliveryResults) > 1) {
-	        	throw new common_exception_Error('More than 1 deliveryResult for the corresponding Id '.$deliveryResultIdentifier);
-	        } elseif (count($deliveryResults) == 1) {
-	        	$returnValue = array_shift($deliveryResults);
-				common_Logger::d('found Delivery Result after search for '.$deliveryResultIdentifier);
-	        } else {
-
-				$returnValue = $deliveryResultClass->createInstanceWithProperties(array(
-					RDFS_LABEL		=> '('.uniqid().')',
-                                        PROPERTY_IDENTIFIER	=>  $deliveryResultIdentifier
-				));
-				common_Logger::d('spawned Delivery Result for '.$deliveryResultIdentifier);
-	        }
-            return $returnValue;
+        if (count( $deliveryResults) > 1) {             
+                throw new common_exception_Error('More than 1 deliveryResult for the corresponding Id '.$deliveryResultIdentifier);
+        } elseif (count($deliveryResults) == 1) {
+                $returnValue = array_shift($deliveryResults);
+                common_Logger::d('found Delivery Result after search for '.$deliveryResultIdentifier);
+        } else {
+                $returnValue = $deliveryResultClass->createInstanceWithProperties(array(
+                        RDFS_LABEL		=> '('.uniqid().')',
+                        PROPERTY_IDENTIFIER	=>  $deliveryResultIdentifier
+                ));
+                common_Logger::d('spawned Delivery Result for '.$deliveryResultIdentifier);
+        }
+        return $returnValue;
     }
     /**
     * @param string testTakerIdentifier (uri recommended)
