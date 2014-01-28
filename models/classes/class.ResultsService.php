@@ -315,9 +315,12 @@ class taoResults_models_classes_ResultsService
     public function storeDeliveryResult($deliveryResultIdentifier = null){
 
         $deliveryResultClass = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
+        
+     
+        
         if (is_null($deliveryResultIdentifier)) {
             $deliveryResult = $deliveryResultClass->createInstanceWithProperties(array(
-					RDFS_LABEL					=> uniqid(),
+                    RDFS_LABEL					=> '('.uniqid().')',
                     PROPERTY_IDENTIFIER	=> $deliveryResultIdentifier
 				));
             $deliveryResult->editPropertyValues(new core_kernel_classes_Property(PROPERTY_IDENTIFIER), $deliveryResult->getUri());
@@ -328,7 +331,8 @@ class taoResults_models_classes_ResultsService
         $deliveryResults = $deliveryResultClass->searchInstances(array(
 	        	PROPERTY_IDENTIFIER	=> $deliveryResultIdentifier
 	        ));
-         if (count( $deliveryResults) > 1) {
+        
+                if (count( $deliveryResults) > 1) {
 	        	throw new common_exception_Error('More than 1 deliveryResult for the corresponding Id '.$deliveryResultIdentifier);
 	        } elseif (count($deliveryResults) == 1) {
 	        	$returnValue = array_shift($deliveryResults);
@@ -336,8 +340,8 @@ class taoResults_models_classes_ResultsService
 	        } else {
 
 				$returnValue = $deliveryResultClass->createInstanceWithProperties(array(
-					RDFS_LABEL					=> uniqid(),
-                    PROPERTY_IDENTIFIER	=> $deliveryResultIdentifier
+					RDFS_LABEL		=> '('.uniqid().')',
+                                        PROPERTY_IDENTIFIER	=>  $deliveryResultIdentifier
 				));
 				common_Logger::d('spawned Delivery Result for '.$deliveryResultIdentifier);
 	        }
@@ -349,6 +353,16 @@ class taoResults_models_classes_ResultsService
     public function storeTestTaker(core_kernel_classes_Resource $deliveryResult, $testTakerIdentifier) {
         $propResultOfSubject = new core_kernel_classes_Property(PROPERTY_RESULT_OF_SUBJECT);
         $deliveryResult->editPropertyValues($propResultOfSubject, $testTakerIdentifier);
+        
+        try {
+        //if the delviery information is provided, update to a more meaningful delvieryResult Label
+        $testTaker = new core_kernel_classes_Resource($testTakerIdentifier);
+        $testTakerLabel = $testTaker->getLabel();
+        $deliveryResult->setLabel(
+                $testTakerLabel."-".str_replace("-". $testTakerLabel, "", $deliveryResult->getLabel())
+                
+                );
+        } catch (Exception $e) {;}
     }
     /**
     * @param string deliveryIdentifier (uri recommended)
@@ -356,6 +370,18 @@ class taoResults_models_classes_ResultsService
     public function storeDelivery(core_kernel_classes_Resource $deliveryResult, $deliveryIdentifier) {
         $propResultOfDelivery = new core_kernel_classes_Property(PROPERTY_RESULT_OF_DELIVERY);
         $deliveryResult->editPropertyValues($propResultOfDelivery, $deliveryIdentifier);
+        
+        try {
+        //if the delviery information is provided, update to a more meaningful delvieryResult Label
+        $delivery = new core_kernel_classes_Resource($deliveryIdentifier);
+        $deliveryLabel = $delivery->getLabel();
+        $deliveryResult->setLabel(
+                str_replace("-".$deliveryLabel, "", $deliveryResult->getLabel())
+                ."-".$deliveryLabel
+                );
+         } catch (Exception $e) {;}
+         
+        
     }
     /**
     * Submit a specific Item Variable, (ResponseVariable and OutcomeVariable shall be used respectively for collected data and score/interpretation computation)
