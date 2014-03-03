@@ -7,16 +7,24 @@ define(['module', 'jquery', 'context', 'i18n', 'helpers', 'lib/jquery.fileDownlo
 
             start : function(){
                 
-                $('#filter').val(conf.filter);
-                
+               
+                $('#filter').val(module.config().filter);
+              
                 $('.dataResult').html(function(index, oldhtml) {
                     return oldhtml;
                 });
                 
                 $('#filter').change(function(e) {
                     var url = context.root_url + 'taoResults/Results/viewResult';
-                    conf.filter = $( this ).val();
-                    helpers._load(helpers.getMainContainerSelector(), url, conf);
+                    //conf.filter = $( this ).val();
+                    helpers._load(helpers.getMainContainerSelector(), url, {
+                    uri: conf.uri,
+                    classUri:  conf.classUri,
+                    filter: $( this ).val()
+                     });
+                    
+                   
+                
                 });
 
 
