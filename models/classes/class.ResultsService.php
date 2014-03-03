@@ -308,8 +308,8 @@ class taoResults_models_classes_ResultsService
         $floata = ((float)$usec + (float)$sec);
         list($usec, $sec) = explode(" ", $b);
         $floatb = ((float)$usec + (float)$sec);
-        common_Logger::i($a." ".$floata);
-        common_Logger::i($b. " ".$floatb);
+        //common_Logger::i($a." ".$floata);
+        //common_Logger::i($b. " ".$floatb);
         //the callback is expecting an int returned, for the case where the difference is of less than a second
         //intval(round(floatval($b) - floatval($a),1, PHP_ROUND_HALF_EVEN));
         if ((floatval($floata) - floatval($floatb)) > 0) {
