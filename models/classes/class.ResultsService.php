@@ -178,49 +178,77 @@ class taoResults_models_classes_ResultsService
     }
     
     /**
+     * 
      *  prepare a data set as an associative array, service intended to populate gui controller
-     * @param string $filter 'lastSubmitted', 'firstSubmitted'
+     *  should be optimised (related tiem and item model computation)
+     *  @param string $filter 'lastSubmitted', 'firstSubmitted'
      */
     public function getItemVariableDataFromDeliveryResult(core_kernel_classes_Resource $deliveryResult, $filter){
             
+            $undefinedStr = __('unknown'); //an application model-dependant working on top of open data; a human readable substitution for missing data.           
+            
             $itemResults = $this->getItemResultsFromDeliveryResult($deliveryResult);
             $variablesByItem = array();
+            
             foreach ($itemResults as $itemResult){
-                $relatedItem = $this->getItemFromItemResult($itemResult);
-                 if (get_class($relatedItem)=="core_kernel_classes_Literal") {
-                $itemIdentifier = $relatedItem->__toString();
-                $itemLabel = $relatedItem->__toString();
-                $itemModel = "unknown";
-                 } else{
-                $itemIdentifier =  $relatedItem->getUri();
-                $itemLabel =  $relatedItem->getLabel();
-               
+                try {
+                    common_Logger::d("Retrieving related Item for itemResult ".$itemResult->getUri(). "");
+                    $relatedItem = $this->getItemFromItemResult($itemResult);
+                } catch (common_Exception $e) {
+                    common_Logger::w("The itemResult ".$itemResult->getUri(). " is not linked to a valid item. (deleted item ?)");
+                    $relatedItem = null;
+                }
+                if (get_class($relatedItem)=="core_kernel_classes_Literal") {
+                    $itemIdentifier = $relatedItem->__toString();
+                    $itemLabel = $relatedItem->__toString();
+                    $itemModel = $undefinedStr;
+                 } elseif (get_class($relatedItem)=="core_kernel_classes_Resource") {
+                    $itemIdentifier =  $relatedItem->getUri();
+                    $itemLabel =  $relatedItem->getLabel();
+                    
                     try {
-                    $itemModel =  $relatedItem->getUniquePropertyValue(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
-                    $variablesByItem[$itemIdentifier]['itemModel'] = $itemModel->getLabel();
+                        common_Logger::d("Retrieving related Item model for item ".$relatedItem->getUri(). "");
+                        $itemModel =  $relatedItem->getUniquePropertyValue(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
+                        $variablesByItem[$itemIdentifier]['itemModel'] = $itemModel->getLabel();
                     } catch (Exception $e) { //a resource but unknown
-                         $variablesByItem[$itemIdentifier]['itemModel'] = 'unknwon';
+                         $variablesByItem[$itemIdentifier]['itemModel'] = 'unknown';
                     }
+                } else {
+                    $itemIdentifier = $undefinedStr;
+                    $itemLabel = $undefinedStr;
+                    $variablesByItem[$itemIdentifier]['itemModel'] = $undefinedStr;
                 }
                 foreach ($this->getVariablesFromItemResult($itemResult) as $variable) {
                     $variableDescription = $variable->getPropertiesValues(array(
                         PROPERTY_IDENTIFIER, RDF_VALUE, RDF_TYPE, PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE, PROPERTY_VARIABLE_EPOCH
                     ));
-                   $relatedItem = $this->getItemFromVariable($variable);
+                    try {
+                    common_Logger::d("Retrieving related Item for itemResult ".$itemResult->getUri(). "");
+                    $relatedItem = $this->getItemFromVariable($variable);
+                     }
+                    catch (common_Exception $e) {
+                    common_Logger::w("The variable ".$variable->getUri(). " is not linked to a valid item. (deleted item ?)");
+                    $relatedItem = null;
+                    }
+                   
                    if (get_class($relatedItem)=="core_kernel_classes_Literal") {
                         $itemIdentifier = $relatedItem->__toString();
                         $itemLabel = $relatedItem->__toString();
-                         $variablesByItem[$itemIdentifier]['itemModel'] = "unknown";
-                   } else{
+                         $variablesByItem[$itemIdentifier]['itemModel'] = $undefinedStr;
+                   } elseif (get_class($relatedItem)=="core_kernel_classes_Resource") {
                         $itemIdentifier =  $relatedItem->getUri();
                         $itemLabel =  $relatedItem->getLabel();
                         try {
                         $itemModel =  $relatedItem->getUniquePropertyValue(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
                         $variablesByItem[$itemIdentifier]['itemModel'] = $itemModel->getLabel();
                         } catch (Exception $e) { //a resource but unknown
-                         $variablesByItem[$itemIdentifier]['itemModel'] = 'unknwon';
+                         $variablesByItem[$itemIdentifier]['itemModel'] = $undefinedStr;
                         }
-                   }
+                    } else {
+                    $itemIdentifier = $undefinedStr;
+                    $itemLabel = $undefinedStr;
+                    $variablesByItem[$itemIdentifier]['itemModel'] = $undefinedStr;
+                    }
                 $type = current($variableDescription[RDF_TYPE])->getUri();
                 $variableIdentifier = current( $variableDescription[PROPERTY_IDENTIFIER])->__toString();
                 $epoch = current($variableDescription[PROPERTY_VARIABLE_EPOCH])->__toString();
