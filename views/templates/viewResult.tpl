@@ -1,4 +1,7 @@
+<link rel="stylesheet" type="text/css" media="screen" href="<?=TAOBASE_WWW?>css/style.css"/>
+<link rel="stylesheet" type="text/css" media="screen" href="<?=TAOBASE_WWW?>css/layout.css"/>
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/result.css" />
+
 <div id="form-title" class="ui-widget-header ui-corner-top ui-state-default">
     <?=__('View result')?> - <?=get_data('deliveryResultLabel')?></div>
 <div class="ui-widget-content ui-corner-bottom">
@@ -14,7 +17,7 @@ requirejs.config({
     }
 });
 </script>
-<div id="content">
+<div id="content" class="tao-scope">
     <span id="TestTakerIdentificationBox"><strong>&nbsp;<img src="<?=TAOBASE_WWW?>/js/lib/jsTree/themes/custom/subject.png" /><span id="testTakerHeader"><?=__('Test Taker')?></span></strong>
 	<table class="mini">
 	    <tr><td class="field"><?=__('Login:')?></td><td class="fieldValue"><?=get_data('userLogin')?></td></tr>
@@ -26,8 +29,8 @@ requirejs.config({
     </span>
 
     <span id="ScoresSummaryBox">
-	<?=__('Filter values:')?>
-	<select id="filter">
+	<?=__('Filter values')?>
+	<select id="filter" >
 	    <option  value="all" ><?=__('All collected values')?></option>
 	    <option  value="firstSubmitted" ><?=__('First submitted responses only')?></option>
 	    <option  value="lastSubmitted" ><?=__('Last submitted responses only')?></option>
