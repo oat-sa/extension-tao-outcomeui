@@ -1,14 +1,15 @@
 define(['module', 'jquery', 'context', 'i18n', 'helpers', 'lib/jquery.fileDownload'], function (module, $, context, __,  helpers) {
         
-       var conf = module.config();
+       
         
         
        return {
 
             start : function(){
                 
+               var conf = module.config();
                
-                $('#filter').val(module.config().filter);
+                $('#filter').val(conf.filter);
               
                 $('.dataResult').html(function(index, oldhtml) {
                     return oldhtml;
