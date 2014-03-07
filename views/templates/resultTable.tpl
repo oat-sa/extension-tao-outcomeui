@@ -6,7 +6,7 @@
     <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/resultTable.css" />
 
     <script type="text/javascript">
-require(['jquery', 'i18n', 'taoResults/resultTable', 'grid/tao.grid'], function($, __, resultTable) {
+require(['jquery', 'i18n', 'taoResults/resultTable', 'grid/tao.grid', 'jquery.filedownload'], function($, __, resultTable) {
 
     $(function(){
 	    //models and columns are parameters used and manipulated by the table operations functions.
@@ -45,18 +45,16 @@ require(['jquery', 'i18n', 'taoResults/resultTable', 'grid/tao.grid'], function(
 		e.preventDefault();
 		//jquery File Download is a jqueryplugin that allows to trigger a download within a Xhr request.
 		//The file is being flushed in the buffer by _url('getCsvFile')
-		require([root_url  + 'tao/views/js/jquery.fileDownload.js'],
-				function(data){
-				$.fileDownload(document.getActionCsvFileUrl, {
-				    preparingMessageHtml: __("We are preparing your report, please wait..."),
-				    failMessageHtml: __("There was a problem generating your report, please try again."),
-				    successCallback: function () { },
-				    httpMethod: "POST",
-				     ////This gives the current selection of filters (facet based query) and the list of columns selected from the client (the list of columns is not kept on the server side class.taoTable.php
-				    data: {'filter': document.JsonFilter, 'columns':document.columns}
-				});
+	
+                $.fileDownload(document.getActionCsvFileUrl, {
+                    preparingMessageHtml: __("We are preparing your report, please wait..."),
+                    failMessageHtml: __("There was a problem generating your report, please try again."),
+                    successCallback: function () { },
+                    httpMethod: "POST",
+                     ////This gives the current selection of filters (facet based query) and the list of columns selected from the client (the list of columns is not kept on the server side class.taoTable.php
+                    data: {'filter': document.JsonFilter, 'columns':document.columns}
+                });
 
-				});
 	    });
 
 	    $('#dataFilter').change(function(e) {
@@ -119,8 +117,11 @@ require(['jquery', 'i18n', 'taoResults/resultTable', 'grid/tao.grid'], function(
 		</span>
 		-->
 		<span class="ui-state-default ui-corner-all">
-			<a href="#" id="getCsvFile"><img src="<?=TAOBASE_WWW?>img/file_upload.png" alt="Download" /> <?=__('Export CSV File')?></a>
-    	</span>
+			<a href="#" id="getCsvFile">
+                            <img src="<?=TAOBASE_WWW?>img/file_upload.png" alt="Download" /> 
+                            <?=__('Export CSV File')?>
+                        </a>
+                </span>
 	</div>
 </div>
 
