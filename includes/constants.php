@@ -86,6 +86,9 @@ $todefine = array(
 	'PROP_RESULT_ITEM_ID'			=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_ITEM_ID',
 	'PROP_RESULT_SUBJECT_ID'		=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_SUBJECT_ID',
 	'PROP_RESULT_ITEM_VARIABLE_ID'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_ITEM_VARIABLE_ID',
-	'PROP_RESULT_ITEM_VARIABLE_VALUE' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_ITEM_VARIABLE_VALUE'
+	'PROP_RESULT_ITEM_VARIABLE_VALUE' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_ITEM_VARIABLE_VALUE',
+        
+    'RESOURCE_TAORESULT_SERVER' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#taoResultServer'
+        
 );
 ?>

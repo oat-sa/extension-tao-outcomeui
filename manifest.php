@@ -46,7 +46,10 @@ return array(
 		),
 		'checks' => array(
 			array('type' => 'CheckFileSystemComponent', 'value' => array('id' => 'fs_taoResults_views_genpics', 'location' => 'taoResults/views/genpics', 'rights' => 'rw'))
-		)
+		),
+	    'php' => array(
+            dirname(__FILE__). '/scripts/install/postInstall.php'
+        )
 	),
 	'managementRole' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole',
     'acl' => array(
