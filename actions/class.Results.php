@@ -82,35 +82,6 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
 		$this->setView('form.tpl', 'tao');
 	}
 	/**
-	 * Edit a result instance
-	 * @return void
-	 */
-	public function editResult()
-	{
-		$clazz = $this->getCurrentClass();
-		$result = $this->getCurrentInstance();
-		$formContainer = new tao_actions_form_Instance($clazz, $result);
-		$myForm = $formContainer->getForm();
-		if($myForm->isSubmited()){
-			if($myForm->isValid()){
-				
-				$binder = new tao_models_classes_dataBinding_GenerisFormDataBinder($result);
-				$result = $binder->bind($myForm->getValues());
-				
-				$this->setData('message', __('Result saved'));
-				$this->setData('reload', true);
-			}
-		}
-		$this->setSessionAttribute("showNodeUri", tao_helpers_Uri::encode($result->getUri()));
-		$relatedSubjects = tao_helpers_Uri::encodeArray($this->service->getRelatedSubjects($result), tao_helpers_Uri::ENCODE_ARRAY_VALUES, true, true);
-		$this->setData('relatedSubjects', json_encode(array_values($relatedSubjects)));
-		$relatedDeliveries = tao_helpers_Uri::encodeArray($this->service->getRelatedDeliveries($result), tao_helpers_Uri::ENCODE_ARRAY_VALUES, true, true);
-		$this->setData('relatedDeliveries', json_encode($relatedDeliveries));
-		$this->setData('formTitle', 'Edit result');
-		$this->setData('myForm', $myForm->render());
-		$this->setView('form_result.tpl');
-	}
-	/**
 	 * Add a result subclass
 	 * @return void
 	 */
