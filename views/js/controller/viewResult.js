@@ -15,13 +15,13 @@ define(['module', 'jquery', 'context', 'i18n', 'helpers', 'lib/jquery.fileDownlo
                     return oldhtml;
                 });
                 
-                $('#filter').change(function(e) {
+                $('#btnFilter').click(function(e) {
                     var url = context.root_url + 'taoResults/Results/viewResult';
                     //conf.filter = $( this ).val();
                     helpers._load(helpers.getMainContainerSelector(), url, {
                     uri: conf.uri,
                     classUri:  conf.classUri,
-                    filter: $( this ).val()
+                    filter: $('#filter').val()
                      });
                     
                    

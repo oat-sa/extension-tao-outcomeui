@@ -1,5 +1,4 @@
-<link rel="stylesheet" type="text/css" media="screen" href="<?=TAOBASE_WWW?>css/style.css"/>
-<link rel="stylesheet" type="text/css" media="screen" href="<?=TAOBASE_WWW?>css/layout.css"/>
+
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/result.css" />
 
 <div id="form-title" class="ui-widget-header ui-corner-top ui-state-default">
@@ -18,39 +17,60 @@ requirejs.config({
 });
 </script>
 <div id="content" class="tao-scope">
-    <span id="TestTakerIdentificationBox"><strong>&nbsp;<img src="<?=TAOBASE_WWW?>/js/lib/jsTree/themes/custom/subject.png" /><span id="testTakerHeader"><?=__('Test Taker')?></span></strong>
-	<table class="mini">
-	    <tr><td class="field"><?=__('Login:')?></td><td class="fieldValue"><?=get_data('userLogin')?></td></tr>
-	    <tr><td class="field"><?=__('Label:')?></td><td class="fieldValue"><?=get_data('userLabel')?></td></tr>
-	    <tr><td class="field"><?=__('Last Name:')?></td><td class="fieldValue"><?=get_data('userLastName')?></td></tr>
-	    <tr><td class="field"><?=__('First Name:')?></td><td class="fieldValue"><?=get_data('userFirstName')?></td></tr>
-	    <tr><td class="field"><?=__('Email:')?></td><td class="fieldValue userMail"><?=get_data('userEmail')?></td></tr>
-	</table>
-    </span>
+    
+    <div id="resultsViewTools">
+        <select id="filter" >
+                <option  value="all" ><?=__('All collected variables')?></option>
+                <option  value="firstSubmitted" ><?=__('First submitted variable only')?></option>
+                <option  value="lastSubmitted" ><?=__('Last submitted variable only')?></option>
+        </select>
+        <button class="btn-info small" id="btnFilter"><?=__('Filter');?></button>
+    </div>
+   
+    
+    <div id="resultsHeader">
+        <div class="tile testtaker">
+            <strong>
+                <span class="icon-test-taker"/>
+                <?=__('Test Taker')?>
+            </strong>
+            <table class="mini">
+                <tr><td class="field"><?=__('Login:')?></td><td class="fieldValue"><?=get_data('userLogin')?></td></tr>
+                <tr><td class="field"><?=__('Label:')?></td><td class="fieldValue"><?=get_data('userLabel')?></td></tr>
+                <tr><td class="field"><?=__('Last Name:')?></td><td class="fieldValue"><?=get_data('userLastName')?></td></tr>
+                <tr><td class="field"><?=__('First Name:')?></td><td class="fieldValue"><?=get_data('userFirstName')?></td></tr>
+                <tr><td class="field"><?=__('Email:')?></td><td class="fieldValue userMail"><?=get_data('userEmail')?></td></tr>
+            </table>
+        </div>
 
-    <span id="ScoresSummaryBox">
-	<?=__('Filter values')?>
-	<select id="filter" >
-	    <option  value="all" ><?=__('All collected values')?></option>
-	    <option  value="firstSubmitted" ><?=__('First submitted responses only')?></option>
-	    <option  value="lastSubmitted" ><?=__('Last submitted responses only')?></option>
-	</select>
-        <br/>
-        <br/>
-	<b><?=__('Responses Evaluation')?></b>
-	<table id="respEval">
-	    <tr><td><span class="valid"><?=__('Correct')?>: </span></td><td><?=get_data("nbCorrectResponses")?>/<?=get_data('nbResponses')?></td> <td><img src="<?=BASE_WWW?>img/tick.png" /></td></tr>
-	    <tr><td><span class="invalid"><?=__('Incorrect')?>: </span></td><td><?=get_data("nbIncorrectResponses")?>/<?=get_data('nbResponses')?></td><td><img src="<?=BASE_WWW?>img/cross.png" /></td></tr>
-	    <tr><td><span class="uneval"><?=__('Not Evaluated')?>: </span></td><td><?=get_data("nbUnscoredResponses")?>/<?=get_data('nbResponses')?></td><td><img src="<?=BASE_WWW?>img/tag_purple.png" /></td></tr>
-	 </table>
-	<br/>
-    </span>
-
-    <span id="resultsBox">
-
-	<table class="resultsTable" border="1">
+        <div class="tile statistics">
+            <strong><span class="icon-result"/>
+                <?=__('Responses Evaluation')?>
+            </strong>
+            <table class="mini">
+                <tr>
+                    <td><span class="valid"><?=__('Correct')?>: </span></td>
+                    <td><?=get_data("nbCorrectResponses")?>/<?=get_data('nbResponses')?></td>
+                    <td><span class="icon-result-ok"/></td>
+                </tr>
+                <tr>
+                    <td><span class="invalid"><?=__('Incorrect')?>: </span></td><td><?=get_data("nbIncorrectResponses")?>/<?=get_data('nbResponses')?></td>
+                    <td><span class="icon-result-nok"/></td>
+                </tr>
+                <tr>
+                    <td><span class="uneval"><?=__('Not Evaluated')?>: </span></td><td><?=get_data("nbUnscoredResponses")?>/<?=get_data('nbResponses')?></td>
+                    <td><span class="icon-not-evaluated"/></td>
+                </tr>
+             </table>
+        </div>
+    </div>
+    
+    <div id="resultsBox">
+	<table class="resultsTable">
 	<tr >
-		<td class="headerRow" colspan="4"><span class="itemName"><?=__('Test Variables')?></span> </td>
+		<td class="headerRow" colspan="4">
+                    <span class="itemName"><?=__('Test Variables')?> (<?=count(get_data("deliveryVariables"))?>)</span>
+                </td>
 	</tr>
 	<? foreach (get_data("deliveryVariables") as $testVariable){ ?>
 		<tr>
@@ -65,13 +85,13 @@ requirejs.config({
 
 	<br />
 	<?  foreach (get_data('variables') as $item){ ?>
-	<table class="resultsTable" border="1">
+	<table class="resultsTable">
 	<tr >
 		<td class="headerRow" colspan="4"><span class="itemName"><?=__('Item')?>: <?=$item['label']?></span> <span class="itemModel">(<?=$item['itemModel']?>)</span></td>
 	</tr>
-	<!--<tr><td class="headerColumn"><?=__('Variable Name')?></td><td class="headerColumn"><?=__('Collected Value')?></td><td class="headerColumn"><?=__('Correctness')?></td><td class="headerColumn"><?=__('Timestamp')?></td></tr>!-->
+	
 	 <? if (isset($item['sortedVars'][CLASS_RESPONSE_VARIABLE])) {?>
-	<tr ><td class="subHeaderRow" colspan="4"><b><?=__('Responses')?> </b></td></tr>
+	<tr ><td class="subHeaderRow" colspan="4"><b><?=__('Responses')?> (<?=count($item['sortedVars'][CLASS_RESPONSE_VARIABLE]) ?>)</b></td></tr>
 	<?
 
 		foreach ($item['sortedVars'][CLASS_RESPONSE_VARIABLE] as $variableIdentifier  => $observations){
@@ -99,7 +119,16 @@ requirejs.config({
 			    echo tao_helpers_Display::htmlEscape($rdfValue);
 			}
 		    ?>
-		<span class="<?=$observation['isCorrect']?>" />
+                
+                <span class="    
+                <?php
+                    switch ($observation['isCorrect']){
+                        case "correct":{ echo "icon-result-ok";break;}
+                        case "incorrect":{ echo "icon-result-nok"; break;}
+                        default: { echo "icon-not-evaluated";break;}
+                    }
+                ?>
+		 rgt" />
 		</td>
 		<td class="epoch"><?=array_pop($observation["epoch"])?></td>
 		</tr>
@@ -109,7 +138,7 @@ requirejs.config({
 	?>
     <? } ?>
 	 <? if (isset($item['sortedVars'][CLASS_OUTCOME_VARIABLE])) {?>
-	<tr> <td class="subHeaderRow" colspan="4"><b><?=__('Grades')?></b></td></tr>
+	<tr> <td class="subHeaderRow" colspan="4"><b><?=__('Grades')?>  (<?=count($item['sortedVars'][CLASS_OUTCOME_VARIABLE]) ?>)</b></td></tr>
 	<?
 
 		foreach ($item['sortedVars'][CLASS_OUTCOME_VARIABLE] as $variableIdentifier  => $observations){
@@ -154,7 +183,7 @@ requirejs.config({
 	</table>
 	<br />
 	<? } ?>
-	</span>
+	</div>
 </div>
 </div>
 <div id="form-container" >

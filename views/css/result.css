@@ -1,116 +1,61 @@
-/* 
-    Document    : result
-    Created on  : Mar 15, 2013, 2:25:29 PM
-    Author      : Patrick Plichart, <patrick@taotesting.com>
-    Description : Purpose of the stylesheet follows.
-*/
 
 body {
-	background-color: #eee;
-	font-family: Verdana, Arial, sans-serif;
-	color: #3A3A3A;
-}
-/*
-h1 {
-	text-align: center;
-	font-size: 22px;
-	margin-bottom: 35px;
-}
-*/
-#main {
-	background-color: white;
-	background-position: 530px 30px;
-	min-height: 320px;
-	width: 740px;
-	padding: 40px;
-	background-repeat: no-repeat;
-	margin: 100px auto;
+    color: #222;
+    font-size: 14px;
+
 }
 
 #content {	
-	padding : 20px;
+    padding : 20px;
 }
 
-#TestTakerIdentificationBox {
-    padding:3px;
-    float:left;
-    -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-    background-color:#eeeeee;
-    width:45%;
-    font-size:14px;
-   /* box-shadow: 3px 3px 5px #aaa;*/
+//reset table margins 
+table, tr, td {
+    margin : 0px;
 }
+
+
+#resultsHeader{
+    overflow:auto;
+    margin-bottom:10px;
+}
+
+.tile {
+    display:block;
+    border: 1px solid #ddd;
+    padding:6px;
+}
+.tile.testtaker{
+     float:left;
+     width:54%;
+}
+.tile.statistics{
+     float:right;
+     width:45%;
+}
+
+#resultsViewTools{
+    display:block;
+    //text-align:right;
+    float:right;
+    margin-left:10px;
+}
+
 .userMail{
     font-style: italic;
 }
 .variableIdentifierField{
     width: 20%;
 }
-
-#ScoresSummaryBox {
-    display:block;
-
-    padding:0px;
-    float:right;
-     -moz-border-radius: 10px;
-    -webkit-border-radius: 10px;
-    border-radius: 10px;
-    /*background-color:#eeeeee;*/
-    width:40%;
-}
-#scoresTable{
-    padding:0px;
-    margin:0px;
-    padding-left:0px;
-
-}
-#respEval{
-    
-    padding-left:0px;
-    padding-top:0px;
-    padding-bottom:0px;
-   
-}
-.valid{
-    /*color:green;*/
-}
-.invalid{
-    /*color:#FF0000;*/
-   
-}
-.uneval{
-    /*color:#0061aC;*/
-}
-.respEvalHeader{
-    font-weight: normal;
-}
-
-#resultsBox {
-    display:block;
-    float:center;
-    padding-top: 20px;
-}
-
-
 table.mini tr td{
-    padding:2px;
     padding-left:10px;
-}
-.field{
-
-}
-.fieldValue{
-
 }
 
 .itemName {
-    font-size:15px;
     font-weight: bold;
 }
 .itemModel {
-	font-style:italic;
+    font-style:italic;
 }
 .dataResult {
     font-weight:bold;
@@ -118,28 +63,20 @@ table.mini tr td{
     width: 50%;
 }
 
-.resultsTable {
-	padding-top:10px;
-	border-collapse: collapse;
-
-
-}
-#testTakerHeader{
-    padding-left: 15px;
-    vertical-align: top;
-}
 .resultsTable .headerRow {
-    background-color:#dddddd;
+    background-color:#d4d5d7;
     text-align:left;
 }
 .resultsTable .subHeaderRow {
-    background-color:#efefef;
+    background-color:#f3f1ef;
     text-align:left;
+}
+.resultsTable tr, .resultsTable td {
+    border: 1px solid #ddd;
 }
 /* classes used for the layout of responses based on their evaluation*/
 .correct{
    float:right;
-   
     background-image: url(../../views/img/tick.png);
     background-repeat:no-repeat;
     width: 24px;
@@ -185,9 +122,3 @@ tr td {
      background-color:#D00239 ;
     color:#fff;
 }
-
-/*Select:hover, Select option:hover{
-	background-color:#D00239 ;
-	color:#fff;
-	cursor:pointer;
-}*/
