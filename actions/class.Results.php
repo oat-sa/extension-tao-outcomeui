@@ -81,25 +81,6 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
 		$this->setData('myForm', $myForm->render());
 		$this->setView('form.tpl', 'tao');
 	}
-	/**
-	 * Add a result subclass
-	 * @return void
-	 */
-	public function addSubClass()
-	{
-		if(!tao_helpers_Request::isAjax()){
-			throw new Exception("wrong request mode");
-		}
-		$clazz = $this->service->createSubClass($this->getCurrentClass());
-		if(is_null($clazz) || !$clazz instanceof core_kernel_classes_Class){
-		    throw new common_exception_Error('Unable to subclass '.$this->getCurrentClass()->getUri());
-		}
-		echo json_encode(array(
-			'label'	=> $clazz->getLabel(),
-			'uri' 	=> tao_helpers_Uri::encode($clazz->getUri())
-		));
-		
-	}
 	
 	/**
 	 * Delete a result or a result class

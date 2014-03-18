@@ -9,7 +9,8 @@
 		    <tree name="Results library"
 			className="Result"
 			dataUrl="/taoResults/Results/getOntologyData"
-			editClassUrl="/taoResults/Results/editResultClass"
+			addSubClassUrl="/taoResults/Results/addSubClass"
+			editClassUrl="/taoResults/Results/index"
 			editInstanceUrl="/taoResults/Results/viewResult"
 			moveInstanceUrl="/taoResults/Results/moveInstance"
 		    />
