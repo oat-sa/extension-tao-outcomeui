@@ -27,7 +27,7 @@
  *
  * @author Patrick plichart, <patrick@taotesting.com>
  * @package taoResults
- * @subpackage test
+ 
  */
 class taoResults_scripts_update_taoResultsUpdate extends tao_scripts_Runner {
 

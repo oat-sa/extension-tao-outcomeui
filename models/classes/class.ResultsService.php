@@ -23,7 +23,7 @@
  * @access public
  * @author Joel Bout, <joel.bout@tudor.lu>
  * @package taoResults
- * @subpackage models_classes
+ 
  */
 class taoResults_models_classes_ResultsService
      extends tao_models_classes_ClassService

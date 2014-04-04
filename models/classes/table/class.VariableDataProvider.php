@@ -31,7 +31,7 @@
  *
  * @author Joel Bout, <joel.bout@tudor.lu>
  * @package taoResults
- * @subpackage models_classes_table
+ 
  */
 
 
@@ -56,7 +56,7 @@ require_once('tao/models/classes/table/interface.DataProvider.php');
  * @access public
  * @author Joel Bout, <joel.bout@tudor.lu>
  * @package taoResults
- * @subpackage models_classes_table
+ 
  */
 class taoResults_models_classes_table_VariableDataProvider
         implements tao_models_classes_table_DataProvider

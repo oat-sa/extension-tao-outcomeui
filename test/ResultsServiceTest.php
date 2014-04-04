@@ -19,7 +19,7 @@
  *
  * @author "Lionel Lecaque, <lionel@taotesting.com>"
  * @package taoResults
- * @subpackage test
+ 
  */
 require_once dirname(__FILE__) . '/../../tao/test/TaoTestRunner.php';
 include_once dirname(__FILE__) . '/../includes/raw_start.php';

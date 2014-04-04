@@ -35,7 +35,7 @@ require_once ('tao/lib/pChart/pChart.class');
  *
  * @author Patrick Plichart, <patrick.plichart@taotesting.com>
  * @package taoResults
- * @subpackage models_classes
+ 
  */
 
 class taoResults_models_classes_ReportService

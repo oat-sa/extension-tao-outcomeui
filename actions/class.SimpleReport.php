@@ -27,7 +27,7 @@
  *
  * @author Patrick Plichart, <patrick.plichart@taotesting.com>
  * @package taoResults
- * @subpackage actions
+ 
  *
  */
 class taoResults_actions_SimpleReport extends tao_actions_TaoModule {
