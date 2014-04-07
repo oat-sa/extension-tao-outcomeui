@@ -702,7 +702,7 @@ class taoResults_models_classes_ResultsService
             case "file": {
                 
                 $value = (base64_decode($this->getVariableValue($variableUri)));
-                common_Logger::i(var_export(strlen($value)));
+                common_Logger::i(var_export(strlen($value), true));
                 $decodedFile = taoResults_helpers_Datatypes::decodeFile($value);
                 common_Logger::i("FileName:");
                 common_Logger::i(var_export($decodedFile["name"], true));
