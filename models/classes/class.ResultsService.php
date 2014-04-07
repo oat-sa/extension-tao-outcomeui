@@ -717,7 +717,7 @@ class taoResults_models_classes_ResultsService
             }
             default:{ //legacy files
                 $file = array(
-                "data" => $this->getVariableValue($variableUri),
+                "data" => base64_decode($this->getVariableValue($variableUri)),
                 "mimetype" => "Content-type: text/xml",
                 "filename" => "trace.xml");
             }
