@@ -19,7 +19,7 @@ requirejs.config({
 <div id="content" class="tao-scope">
     
     <div id="resultsViewTools">
-        <select id="filter" >
+        <select id="filter" class="select2">
                 <option  value="all" ><?=__('All collected variables')?></option>
                 <option  value="firstSubmitted" ><?=__('First submitted variable only')?></option>
                 <option  value="lastSubmitted" ><?=__('Last submitted variable only')?></option>
@@ -87,24 +87,26 @@ requirejs.config({
 	<?  foreach (get_data('variables') as $item){ ?>
 	<table class="resultsTable">
 	<tr >
-		<td class="headerRow" colspan="4"><span class="itemName"><?=__('Item')?>: <?=$item['label']?></span> <span class="itemModel">(<?=$item['itemModel']?>)</span></td>
+		<td class="headerRow" colspan="5"><span class="itemName"><?=__('Item')?>: <?=$item['label']?></span> <span class="itemModel">(<?=$item['itemModel']?>)</span></td>
 	</tr>
 	
 	 <? if (isset($item['sortedVars'][CLASS_RESPONSE_VARIABLE])) {?>
-	<tr ><td class="subHeaderRow" colspan="4"><b><?=__('Responses')?> (<?=count($item['sortedVars'][CLASS_RESPONSE_VARIABLE]) ?>)</b></td></tr>
+	<tr ><td class="subHeaderRow" colspan="5"><b><?=__('Responses')?> (<?=count($item['sortedVars'][CLASS_RESPONSE_VARIABLE]) ?>)</b></td></tr>
 	<?
 
 		foreach ($item['sortedVars'][CLASS_RESPONSE_VARIABLE] as $variableIdentifier  => $observations){
 		    $rowspan = 'rowspan="'.count($observations).'"';
 		    foreach ($observations as $key=>$observation) {
+                        $baseType = array_pop($observation[PROPERTY_VARIABLE_BASETYPE]);
 	?>
 		<tr >
 		<? if ($key === key($observations)) {?>
 		     <td <?=$rowspan?> class="variableIdentifierField"><?=$variableIdentifier?></td>
 		<?}?>
+                
 		<td class="dataResult" colspan="2">
 		    <?php
-			$rdfValue = unserialize(array_pop($observation[RDF_VALUE]));
+                        $rdfValue = unserialize(array_pop($observation[RDF_VALUE]));
 			if (is_array($rdfValue)) {
 			    echo "<OL>";
 			    foreach ($rdfValue as $value) {
@@ -119,6 +121,11 @@ requirejs.config({
 			    echo tao_helpers_Display::htmlEscape($rdfValue);
 			}
 		    ?>
+                    <?php
+                        if ($baseType=="file") {
+                        echo '<button class="download" value="'.$observation["uri"].'">'.__('download').'</button>';
+                        }
+                    ?>
                 
                 <span class="    
                 <?php
@@ -130,6 +137,11 @@ requirejs.config({
                 ?>
 		 rgt" />
 		</td>
+                <td> 
+                    <?php 
+                        echo $baseType;
+                    ?>
+                </td>
 		<td class="epoch"><?=array_pop($observation["epoch"])?></td>
 		</tr>
 	<?
@@ -138,20 +150,32 @@ requirejs.config({
 	?>
     <? } ?>
 	 <? if (isset($item['sortedVars'][CLASS_OUTCOME_VARIABLE])) {?>
-	<tr> <td class="subHeaderRow" colspan="4"><b><?=__('Grades')?>  (<?=count($item['sortedVars'][CLASS_OUTCOME_VARIABLE]) ?>)</b></td></tr>
+	<tr> <td class="subHeaderRow" colspan="5"><b><?=__('Grades')?>  (<?=count($item['sortedVars'][CLASS_OUTCOME_VARIABLE]) ?>)</b></td></tr>
 	<?
 
 		foreach ($item['sortedVars'][CLASS_OUTCOME_VARIABLE] as $variableIdentifier  => $observations){
 		   $rowspan = 'rowspan="'.count($observations).'"';
 		    foreach ($observations as $key=>$observation) {
+                         $baseType = array_pop($observation[PROPERTY_VARIABLE_BASETYPE]);
 	?>
 
 		<tr>
 		<? if ($key === key($observations)) {?>
 		     <td <?=$rowspan?> class="variableIdentifierField"><?=$variableIdentifier?></td>
 		<?}?>
-		<td colspan="2" class="dataResult"><?=tao_helpers_Display::htmlEscape(nl2br(unserialize(array_pop($observation[RDF_VALUE]))))?></td>
-
+		<td colspan="2" class="dataResult">
+                    <?=tao_helpers_Display::htmlEscape(nl2br(unserialize(array_pop($observation[RDF_VALUE]))))?>
+                    <?php
+                        if ($baseType=="file") {
+                        echo '<button class="download" value="'.$observation["uri"].'">'.__('download').'</button>';
+                        }
+                    ?>
+                </td>
+                <td> 
+                    <?php 
+                        echo $baseType;
+                    ?>
+                </td>
 		<td class="epoch"><?=array_pop($observation["epoch"])?></td>
 		</tr>
 	<?
@@ -160,18 +184,24 @@ requirejs.config({
 	?>
     <?} ?>
 	<? if (isset($item['sortedVars'][CLASS_TRACE_VARIABLE])) {?>
-	<tr> <td class="subHeaderRow" colspan="4"><b><?=__('Traces')?></b></td></tr>
+	<tr> <td class="subHeaderRow" colspan="5"><b><?=__('Traces')?></b></td></tr>
 	<?
 
 		foreach ($item['sortedVars'][CLASS_TRACE_VARIABLE] as $variableIdentifier  => $observations){
 		   $rowspan = 'rowspan="'.count($observations).'"';
 		    foreach ($observations as $observation) {
+                         $baseType = array_pop($observation[PROPERTY_VARIABLE_BASETYPE]);
+                         echo $baseType;
 	?>
 
 		<tr>
 		<td ><?=$variableIdentifier?></td>
 		<td colspan="2" class="dataResult"><button class="traceDownload" value="<?=$observation["uri"]?>"><?=__('download')?></button></td>
-
+                <td> 
+                    <?php 
+                        echo $baseType;
+                    ?>
+                </td>
 		<td class="epoch"><?=array_pop($observation["epoch"])?></td>
 		</tr>
 	<?

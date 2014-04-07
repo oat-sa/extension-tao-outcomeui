@@ -29,9 +29,9 @@ define(['module', 'jquery', 'context', 'i18n', 'helpers', 'lib/jquery.fileDownlo
                 });
 
 
-                $('.traceDownload').on("click", function (e) {
+                $('.download').on("click", function (e) {
                     var variableUri = $(this).val();
-                    $.fileDownload(context.root_url + 'taoResults/Results/getTrace', {
+                    $.fileDownload(context.root_url + 'taoResults/Results/getFile', {
                       preparingMessageHtml: __("We are preparing your report, please wait..."),
                       failMessageHtml: __("There was a problem generating your report, please try again."),
                       successCallback: function () { },

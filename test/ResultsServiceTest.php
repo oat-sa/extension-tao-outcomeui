@@ -21,17 +21,19 @@
  * @package taoResults
  
  */
-require_once dirname(__FILE__) . '/../../tao/test/TaoTestRunner.php';
+require_once dirname(__FILE__) . '/../../tao/test/TaoPhpUnitTestRunner.php';
 include_once dirname(__FILE__) . '/../includes/raw_start.php';
 
 class ResultsServiceTestCase extends TaoPhpUnitTestRunner {
-
+    
+    protected $service =null;
     /**
      * @access public
      * @author "Lionel Lecaque, <lionel@taotesting.com>"
      */
     public function setUp(){
         TaoPhpUnitTestRunner::initTest();
+        $this->service = taoResults_models_classes_ResultsService::singleton();
     }
     
     /**
@@ -45,5 +47,40 @@ class ResultsServiceTestCase extends TaoPhpUnitTestRunner {
         $this->assertIsA($service, 'tao_models_classes_Service');
         $this->assertIsA($service, 'taoResults_models_classes_ResultsService');
     }
+    /**
+     * 
+     * @access 
+     * @author "Patrick Plichart <patrick@taotesting.com>"
+     */
+    public function testStoreDeliveryResult(){
+        $deliveryResult = $this->service->storeDeliveryResult();
+        $this->assertIsA($deliveryResult, 'core_kernel_classes_Resource');
+        $deliveryResult->delete();
+        
+        $deliveryResult = $this->service->storeDeliveryResult("1");
+        $this->assertIsA($deliveryResult, 'core_kernel_classes_Resource');
+        
+        
+        $deliveryResult->delete();
+    }
+    /**
+     * 
+     * @access 
+     * @author "Patrick Plichart <patrick@taotesting.com>"
+     */
+    public function testStoreItemVariable(){
+        //storeItemVariable(core_kernel_classes_Resource $deliveryResult, $test, $item, taoResultServer_models_classes_Variable $itemVariable, $callId)
+        $deliveryResult = $this->service->storeDeliveryResult();
+        $this->service->storeTestTaker($deliveryResult, "unittest_testtaker");
+        
+        $itemVariable = new taoResultServer_models_classes_ResponseVariable();
+        $itemVariable->setCandidateResponse("unittest_candidateResponse");
+        $itemVariable->setIdentifier("unittest_identifier");
+        $itemVariable->setBaseType("file");
+        
+        $storedVariable = $this->service->storeItemVariable($deliveryResult, "myTest", "myItem", $itemVariable, "callid_31");    
+        
+    }
+    
     
 }

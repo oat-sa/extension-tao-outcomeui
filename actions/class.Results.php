@@ -135,7 +135,6 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
             $this->setData('userEmail', $userEmail);
         }
         $filter = ($this->hasRequestParameter("filter")) ? $this->getRequestParameter("filter") : "lastSubmitted";
-        //todo testTaker object
         $stats = $this->service->getItemVariableDataStatsFromDeliveryResult($result, $filter);
         $this->setData('nbResponses',  $stats["nbResponses"]);
         $this->setData('nbCorrectResponses',  $stats["nbCorrectResponses"]);
@@ -154,19 +153,16 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
        
         $this->setView('viewResult.tpl');
     }
-    public function getTrace(){
+   
+     public function getFile(){
         $variableUri = $this->getRequestParameter("variableUri");
-        $trace = $this->service->getVariableValue($variableUri);
-         header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
-         setcookie("fileDownload","true", 0, "/");
-         header("Content-type: text/xml");
-         header('Content-Disposition: attachment; filename=trace.xml');
-         echo unserialize($trace);
+        $file = $this->service->getVariableFile($variableUri); 
+        $trace = $file["data"];
+        header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
+        setcookie("fileDownload","true", 0, "/");
+        header("Content-type: ".$file["mimetype"]);
+        header('Content-Disposition: attachment; filename='.$file["fileName"]);
+        echo unserialize($file["data"]);
     }
-
-
-
-
-    
 }
 ?>

@@ -72,26 +72,7 @@ define(['jquery', 'i18n', 'helpers'], function($, __, helpers){
              this.showGrid();
         },
 
-        //convenience method adding attributes identifying the columns usign their attributes, their attributes depends on htier type
-        /*
-                 function identifyColumns(columns){
-            for (key in columns) {
-                switch (columns[key].type){
-                        case 'tao_models_classes_table_PropertyColumn' :{
-                            columnIdentifier = columns[key].prop;
-                            columnName = "<b>"+columns[key]['label']+"</b>";break;
-                        }
-                        default: {//taoResults_models_classes_table_GradeColumn or taoResults_models_classes_table_ResponseColumn
-                            columnIdentifier = columns[key]['ca'] + columns[key]['vid'];
-                            columnName = "<b>"+columns[key]['label']+"</b><br />("+columns[key]['vid']+')';break;
-                        }
-                     }
-                     columns[key].columnIdentifier = columnIdentifier;
-                     columns[key].columnName = columnName;
-            }
-            return columns;
-        }
-                 */
+        
         /**
          * Update document.columns/document.models current selection of data with columns
          */

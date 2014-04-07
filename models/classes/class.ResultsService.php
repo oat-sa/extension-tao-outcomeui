@@ -107,7 +107,7 @@ class taoResults_models_classes_ResultsService
             return $this->getItemFromItemResult($this->getItemResultFromVariable($variable));
     }
 
-      public function getVariableValue($variableUri){
+    public function getVariableValue($variableUri){
             $variable = new core_kernel_classes_Resource($variableUri);
             return $variable->getUniquePropertyValue(new core_kernel_classes_Property(RDF_VALUE));
     }
@@ -180,12 +180,11 @@ class taoResults_models_classes_ResultsService
     /**
      * 
      *  prepare a data set as an associative array, service intended to populate gui controller
-     *  should be optimised (related tiem and item model computation)
      *  @param string $filter 'lastSubmitted', 'firstSubmitted'
      */
     public function getItemVariableDataFromDeliveryResult(core_kernel_classes_Resource $deliveryResult, $filter){
             
-            $undefinedStr = __('unknown'); //an application model-dependant working on top of open data; a human readable substitution for missing data.           
+            $undefinedStr = __('unknown'); //some data may have not been submitted           
             
             $itemResults = $this->getItemResultsFromDeliveryResult($deliveryResult);
             $variablesByItem = array();
@@ -219,9 +218,27 @@ class taoResults_models_classes_ResultsService
                     $variablesByItem[$itemIdentifier]['itemModel'] = $undefinedStr;
                 }
                 foreach ($this->getVariablesFromItemResult($itemResult) as $variable) {
+                    
+                    $baseTypes = $variable->getPropertyValues(new core_kernel_classes_Property(PROPERTY_VARIABLE_BASETYPE));
+                    $baseType = current($baseTypes);
+                    if ($baseType!="file") {
                     $variableDescription = $variable->getPropertiesValues(array(
-                        PROPERTY_IDENTIFIER, RDF_VALUE, RDF_TYPE, PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE, PROPERTY_VARIABLE_EPOCH
+                        PROPERTY_IDENTIFIER,
+                        RDF_VALUE,
+                        RDF_TYPE,
+                        PROPERTY_VARIABLE_BASETYPE,
+                        PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE,
+                        PROPERTY_VARIABLE_EPOCH
                     ));
+                    } else {
+                        $variableDescription = $variable->getPropertiesValues(array(
+                        PROPERTY_IDENTIFIER,
+                        RDF_TYPE,
+                        PROPERTY_VARIABLE_BASETYPE,
+                        PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE,
+                        PROPERTY_VARIABLE_EPOCH
+                    ));
+                    }
                     try {
                     common_Logger::d("Retrieving related Item for itemResult ".$itemResult->getUri(). "");
                     $relatedItem = $this->getItemFromVariable($variable);
@@ -438,6 +455,7 @@ class taoResults_models_classes_ResultsService
         $itemResult = $this->getItemResult($deliveryResult, $callId, $test, $item);
         $storedVariable = $this->storeVariable($itemVariable);
         $storedVariable->setPropertyValue(new core_kernel_classes_Property(PROPERTY_RELATED_ITEM_RESULT), $itemResult->getUri());
+        return $storedVariable;
     }
     
     private function storeVariable($itemVariable) {
@@ -450,7 +468,7 @@ class taoResults_models_classes_ResultsService
                     PROPERTY_VARIABLE_BASETYPE      => $itemVariable->getBaseType(),
                     PROPERTY_OUTCOME_VARIABLE_NORMALMAXIMUM => $itemVariable->getNormalMaximum(),
                     PROPERTY_OUTCOME_VARIABLE_NORMALMINIMUM => $itemVariable->getNormalMinimum(),
-                    RDF_VALUE						=> serialize($itemVariable->getValue()),
+                    RDF_VALUE				=> serialize($itemVariable->getValue()),
                     PROPERTY_VARIABLE_EPOCH		=> (($itemVariable->isSetEpoch())) ? $itemVariable->getEpoch() : microtime()
                 ));
 
@@ -662,27 +680,47 @@ class taoResults_models_classes_ResultsService
     {
         return $this->getVariables($deliveryResult, new core_kernel_classes_Class(CLASS_OUTCOME_VARIABLE));
     }
+    public function getVariableFile($variableUri)
+    {   //default values for legacy result variables
+        $file = array(
+            "data" => $this->getVariableValue($variableUri),
+            "mimetype" => "Content-type: text/xml",
+            "filename" => "trace.xml");
+        return $file;
+    }
 /**
-     * Retrieves information about the variable, including or not the related item (slower)
+     * Retrieves information about the variable, including or not the related item $getItem (slower)
      * @access public
      * @author Patrick Plichart, <patrick.plichart@taotesting.com>
      * @param  Resource variable
-     * @return array simple associative$returnValue = taoTests_models_classes_TestAuthoringService::singleton()->getItemByActivity($activityClass);
+     * @param  bool getItem retireve associated item reference
+     * @return array simple associative
      */
     public function getVariableData( core_kernel_classes_Resource $variable, $getItem = false)
     {
         $returnValue = array();
-        $propValues = $variable->getPropertiesValues(array(
-					RDF_TYPE,
-					PROPERTY_IDENTIFIER,
-					PROPERTY_VARIABLE_EPOCH,
-					RDF_VALUE,
-                    PROPERTY_VARIABLE_CARDINALITY,
-                    PROPERTY_VARIABLE_BASETYPE
-
-				));
-        
-    	$returnValue["value"] = (string)unserialize(current($propValues[RDF_VALUE])->__toString());
+        $baseTypes = $variable->getPropertyValues(new core_kernel_classes_Property(PROPERTY_VARIABLE_BASETYPE));
+        $baseType = current($baseTypes);
+        if ($baseType!="file") {
+            $propValues = $variable->getPropertiesValues(array(
+                RDF_TYPE,
+                PROPERTY_IDENTIFIER,
+                PROPERTY_VARIABLE_EPOCH,
+                RDF_VALUE,
+                PROPERTY_VARIABLE_CARDINALITY,
+                PROPERTY_VARIABLE_BASETYPE
+                ));
+            $returnValue["value"] = (string)unserialize(current($propValues[RDF_VALUE])->__toString());
+        } else {
+            $propValues = $variable->getPropertiesValues(array(
+               RDF_TYPE,
+               PROPERTY_IDENTIFIER,
+               PROPERTY_VARIABLE_EPOCH,
+               PROPERTY_VARIABLE_CARDINALITY,
+               PROPERTY_VARIABLE_BASETYPE
+               ));
+            $returnValue["value"] = "";
+        }
     	$returnValue["identifier"] = current($propValues[PROPERTY_IDENTIFIER])->__toString();
         $returnValue["type"] = current($propValues[RDF_TYPE]);
         $returnValue["epoch"] = current($propValues[PROPERTY_VARIABLE_EPOCH])->__toString();
@@ -692,6 +730,9 @@ class taoResults_models_classes_ResultsService
        if (count($propValues[PROPERTY_VARIABLE_BASETYPE]) > 0){
         $returnValue["basetype"] = current($propValues[PROPERTY_VARIABLE_BASETYPE])->__toString();
         }
+      
+
+        
         if ($getItem) {$returnValue["item"] = $this->getItemFromVariable($variable);}
 	//$returnValue["epoch"] = $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_EPOCH));
         return (array) $returnValue;
