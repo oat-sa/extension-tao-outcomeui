@@ -139,18 +139,15 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
         $this->setData('nbResponses',  $stats["nbResponses"]);
         $this->setData('nbCorrectResponses',  $stats["nbCorrectResponses"]);
         $this->setData('nbIncorrectResponses',  $stats["nbIncorrectResponses"]);
-        $this->setData('nbUnscoredResponses',  $stats["nbUnscoredResponses"]);
-        
+        $this->setData('nbUnscoredResponses',  $stats["nbUnscoredResponses"]);   
         $this->setData('deliveryResultLabel', $result->getLabel());
         $this->setData('variables',  $stats["data"]);
         //retireve variables not related to item executions
         $deliveryVariables = $this->service->getVariableDataFromDeliveryResult($result);
-         $this->setData('deliveryVariables', $deliveryVariables);
-
+        $this->setData('deliveryVariables', $deliveryVariables);
         $this->setData('uri',$this->getRequestParameter("uri"));
         $this->setData('classUri',$this->getRequestParameter("classUri"));
         $this->setData('filter',$filter);
-       
         $this->setView('viewResult.tpl');
     }
    
@@ -161,8 +158,13 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
         header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
         setcookie("fileDownload","true", 0, "/");
         header("Content-type: ".$file["mimetype"]);
-        header('Content-Disposition: attachment; filename='.$file["fileName"]);
-        echo unserialize($file["data"]);
+        if (!isset($file["filename"]) || $file["filename"]==""){
+            header('Content-Disposition: attachment; filename=download');
+        } else {
+            header('Content-Disposition: attachment; filename='.$file["filename"]);
+        }
+        
+        echo $file["data"];
     }
 }
 ?>

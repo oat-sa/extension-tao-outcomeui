@@ -75,7 +75,19 @@ requirejs.config({
 	<? foreach (get_data("deliveryVariables") as $testVariable){ ?>
 		<tr>
 		<td><?=current($testVariable[PROPERTY_IDENTIFIER])?></td>
-		<td><?=unserialize(current($testVariable[RDF_VALUE]))?></td>
+		<td><?=current($testVariable[RDF_VALUE])?></td>
+                <td> 
+                    <?php 
+                        echo $cardinality;
+                    ?>
+                </td>
+                <td> 
+                    <?php 
+                        echo $baseType;
+                    ?>
+                </td>
+              
+
 		</tr>
 	</tr>
 	<?
@@ -107,7 +119,7 @@ requirejs.config({
                 
 		<td class="dataResult" colspan="2">
 		    <?php
-                        $rdfValue = unserialize(array_pop($observation[RDF_VALUE]));
+                        $rdfValue = array_pop($observation[RDF_VALUE]);
 			if (is_array($rdfValue)) {
 			    echo "<OL>";
 			    foreach ($rdfValue as $value) {
@@ -172,7 +184,7 @@ requirejs.config({
 		     <td <?=$rowspan?> class="variableIdentifierField"><?=$variableIdentifier?></td>
 		<?}?>
 		<td colspan="2" class="dataResult">
-                    <?=tao_helpers_Display::htmlEscape(nl2br(unserialize(array_pop($observation[RDF_VALUE]))))?>
+                    <?=tao_helpers_Display::htmlEscape(nl2br(array_pop($observation[RDF_VALUE])))?>
                     <?php
                         if ($baseType=="file") {
                         echo '<button class="download" value="'.$observation["uri"].'">'.__('download').'</button>';

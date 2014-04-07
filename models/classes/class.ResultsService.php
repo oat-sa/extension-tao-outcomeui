@@ -111,6 +111,10 @@ class taoResults_models_classes_ResultsService
             $variable = new core_kernel_classes_Resource($variableUri);
             return $variable->getUniquePropertyValue(new core_kernel_classes_Property(RDF_VALUE));
     }
+    public function getVariableBaseType($variableUri){
+            $variable = new core_kernel_classes_Resource($variableUri);
+            return $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_BASETYPE));
+    }
     
     /**
      *
@@ -231,6 +235,9 @@ class taoResults_models_classes_ResultsService
                         PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE,
                         PROPERTY_VARIABLE_EPOCH
                     ));
+                    
+                   $variableDescription[RDF_VALUE] = array(base64_decode(current($variableDescription[RDF_VALUE])));
+                   
                     } else {
                         $variableDescription = $variable->getPropertiesValues(array(
                         PROPERTY_IDENTIFIER,
@@ -352,9 +359,12 @@ class taoResults_models_classes_ResultsService
         	array('recursive' => true, 'like' => false)
             );
             foreach ($variables as $variable) {
-            $variablesData[] = $variable->getPropertiesValues(array(
+            
+            $variableDescription = $variable->getPropertiesValues(array(
             PROPERTY_IDENTIFIER, RDF_VALUE, RDF_TYPE, PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE, PROPERTY_VARIABLE_EPOCH
             ));
+            $variableDescription[RDF_VALUE] = array(base64_decode(current($variableDescription[RDF_VALUE])));
+            $variablesData[] =  $variableDescription;
 
             }
             return $variablesData;
@@ -470,7 +480,9 @@ class taoResults_models_classes_ResultsService
                     PROPERTY_VARIABLE_BASETYPE      => $itemVariable->getBaseType(),
                     PROPERTY_OUTCOME_VARIABLE_NORMALMAXIMUM => $itemVariable->getNormalMaximum(),
                     PROPERTY_OUTCOME_VARIABLE_NORMALMINIMUM => $itemVariable->getNormalMinimum(),
-                    RDF_VALUE				=> serialize($itemVariable->getValue()),
+                    //the php obect is stored as such (serialized), 
+                    //the value itselfs is being base64encoded as a member fo that object
+                    RDF_VALUE				=> base64_encode($itemVariable->getValue()),
                     PROPERTY_VARIABLE_EPOCH		=> (($itemVariable->isSetEpoch())) ? $itemVariable->getEpoch() : microtime()
                 ));
 
@@ -496,7 +508,7 @@ class taoResults_models_classes_ResultsService
                     //put as rdf#boolean
                     PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE => $isCorrect,
                     //PROPERTY_RESPONSE_VARIABLE_CANDIDATERESPONSE=> $itemVariable->getCandidateResponse(),
-                    RDF_VALUE						=> serialize($itemVariable->getCandidateResponse()),
+                    RDF_VALUE						=> base64_encode($itemVariable->getCandidateResponse()),
                     PROPERTY_VARIABLE_EPOCH		=> (($itemVariable->isSetEpoch())) ? $itemVariable->getEpoch() : microtime()
                 ));
                 break;}
@@ -506,7 +518,7 @@ class taoResults_models_classes_ResultsService
                     PROPERTY_IDENTIFIER	=> $itemVariable->getIdentifier(),
                     PROPERTY_VARIABLE_CARDINALITY   => $itemVariable->getCardinality(),
                     PROPERTY_VARIABLE_BASETYPE      => $itemVariable->getBaseType(),
-                    RDF_VALUE						=> serialize($itemVariable->getTrace()), //todo store a file
+                    RDF_VALUE						=> base64_encode($itemVariable->getTrace()), //todo store a file
                     PROPERTY_VARIABLE_EPOCH		=> (($itemVariable->isSetEpoch())) ? $itemVariable->getEpoch() : microtime()
                 ));
 
@@ -682,12 +694,34 @@ class taoResults_models_classes_ResultsService
     {
         return $this->getVariables($deliveryResult, new core_kernel_classes_Class(CLASS_OUTCOME_VARIABLE));
     }
-    public function getVariableFile($variableUri)
-    {   //default values for legacy result variables
-        $file = array(
-            "data" => $this->getVariableValue($variableUri),
-            "mimetype" => "Content-type: text/xml",
-            "filename" => "trace.xml");
+    public function getVariableFile($variableUri)         
+    {   
+        //distinguish QTI file from other "file" base type
+        $baseType = $this->getVariableBaseType($variableUri);
+        switch ($baseType){
+            case "file": {
+                
+                $value = (base64_decode($this->getVariableValue($variableUri)));
+                common_Logger::i(var_export(strlen($value)));
+                $decodedFile = taoResults_helpers_Datatypes::decodeFile($value);
+                common_Logger::i("FileName:");
+                common_Logger::i(var_export($decodedFile["name"], true));
+                common_Logger::i("Mime Type:");
+                common_Logger::i(var_export($decodedFile["mime"], true ));
+              
+                $file = array(
+                "data" => $decodedFile["data"],
+                "mimetype" => "Content-type: ".$decodedFile["mime"],
+                "filename" => $decodedFile["name"]);
+                break;
+            }
+            default:{ //legacy files
+                $file = array(
+                "data" => $this->getVariableValue($variableUri),
+                "mimetype" => "Content-type: text/xml",
+                "filename" => "trace.xml");
+            }
+        }
         return $file;
     }
 /**
@@ -712,7 +746,7 @@ class taoResults_models_classes_ResultsService
                 PROPERTY_VARIABLE_CARDINALITY,
                 PROPERTY_VARIABLE_BASETYPE
                 ));
-            $returnValue["value"] = (string)unserialize(current($propValues[RDF_VALUE])->__toString());
+            $returnValue["value"] = (string)base64_decode(current($propValues[RDF_VALUE]));
         } else {
             $propValues = $variable->getPropertiesValues(array(
                RDF_TYPE,

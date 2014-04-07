@@ -72,9 +72,11 @@ class ResultsServiceTestCase extends TaoPhpUnitTestRunner {
         //storeItemVariable(core_kernel_classes_Resource $deliveryResult, $test, $item, taoResultServer_models_classes_Variable $itemVariable, $callId)
         $deliveryResult = $this->service->storeDeliveryResult();
         $this->service->storeTestTaker($deliveryResult, "unittest_testtaker");
+        $this->service->storeDelivery($deliveryResult, "unittest_delivery");
         
         $itemVariable = new taoResultServer_models_classes_ResponseVariable();
         $itemVariable->setCandidateResponse("unittest_candidateResponse");
+        $itemVariable->setCardinality("single");
         $itemVariable->setIdentifier("unittest_identifier");
         $itemVariable->setBaseType("file");
         
