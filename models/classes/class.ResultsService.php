@@ -227,6 +227,7 @@ class taoResults_models_classes_ResultsService
                         RDF_VALUE,
                         RDF_TYPE,
                         PROPERTY_VARIABLE_BASETYPE,
+                        PROPERTY_VARIABLE_CARDINALITY,
                         PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE,
                         PROPERTY_VARIABLE_EPOCH
                     ));
@@ -235,6 +236,7 @@ class taoResults_models_classes_ResultsService
                         PROPERTY_IDENTIFIER,
                         RDF_TYPE,
                         PROPERTY_VARIABLE_BASETYPE,
+                        PROPERTY_VARIABLE_CARDINALITY,
                         PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE,
                         PROPERTY_VARIABLE_EPOCH
                     ));

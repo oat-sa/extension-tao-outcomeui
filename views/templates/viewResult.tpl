@@ -87,17 +87,18 @@ requirejs.config({
 	<?  foreach (get_data('variables') as $item){ ?>
 	<table class="resultsTable">
 	<tr >
-		<td class="headerRow" colspan="5"><span class="itemName"><?=__('Item')?>: <?=$item['label']?></span> <span class="itemModel">(<?=$item['itemModel']?>)</span></td>
+		<td class="headerRow" colspan="6"><span class="itemName"><?=__('Item')?>: <?=$item['label']?></span> <span class="itemModel">(<?=$item['itemModel']?>)</span></td>
 	</tr>
 	
 	 <? if (isset($item['sortedVars'][CLASS_RESPONSE_VARIABLE])) {?>
-	<tr ><td class="subHeaderRow" colspan="5"><b><?=__('Responses')?> (<?=count($item['sortedVars'][CLASS_RESPONSE_VARIABLE]) ?>)</b></td></tr>
+	<tr ><td class="subHeaderRow" colspan="6"><b><?=__('Responses')?> (<?=count($item['sortedVars'][CLASS_RESPONSE_VARIABLE]) ?>)</b></td></tr>
 	<?
 
 		foreach ($item['sortedVars'][CLASS_RESPONSE_VARIABLE] as $variableIdentifier  => $observations){
 		    $rowspan = 'rowspan="'.count($observations).'"';
 		    foreach ($observations as $key=>$observation) {
                         $baseType = array_pop($observation[PROPERTY_VARIABLE_BASETYPE]);
+                        $cardinality = array_pop($observation[PROPERTY_VARIABLE_CARDINALITY]);
 	?>
 		<tr >
 		<? if ($key === key($observations)) {?>
@@ -139,9 +140,15 @@ requirejs.config({
 		</td>
                 <td> 
                     <?php 
+                        echo $cardinality;
+                    ?>
+                </td>
+                <td> 
+                    <?php 
                         echo $baseType;
                     ?>
                 </td>
+                 
 		<td class="epoch"><?=array_pop($observation["epoch"])?></td>
 		</tr>
 	<?
@@ -150,13 +157,14 @@ requirejs.config({
 	?>
     <? } ?>
 	 <? if (isset($item['sortedVars'][CLASS_OUTCOME_VARIABLE])) {?>
-	<tr> <td class="subHeaderRow" colspan="5"><b><?=__('Grades')?>  (<?=count($item['sortedVars'][CLASS_OUTCOME_VARIABLE]) ?>)</b></td></tr>
+	<tr> <td class="subHeaderRow" colspan="6"><b><?=__('Grades')?>  (<?=count($item['sortedVars'][CLASS_OUTCOME_VARIABLE]) ?>)</b></td></tr>
 	<?
 
 		foreach ($item['sortedVars'][CLASS_OUTCOME_VARIABLE] as $variableIdentifier  => $observations){
 		   $rowspan = 'rowspan="'.count($observations).'"';
 		    foreach ($observations as $key=>$observation) {
                          $baseType = array_pop($observation[PROPERTY_VARIABLE_BASETYPE]);
+                         $cardinality = array_pop($observation[PROPERTY_VARIABLE_CARDINALITY]);
 	?>
 
 		<tr>
@@ -173,6 +181,11 @@ requirejs.config({
                 </td>
                 <td> 
                     <?php 
+                        echo $cardinality;
+                    ?>
+                </td>
+                <td> 
+                    <?php 
                         echo $baseType;
                     ?>
                 </td>
@@ -184,19 +197,24 @@ requirejs.config({
 	?>
     <?} ?>
 	<? if (isset($item['sortedVars'][CLASS_TRACE_VARIABLE])) {?>
-	<tr> <td class="subHeaderRow" colspan="5"><b><?=__('Traces')?></b></td></tr>
+	<tr> <td class="subHeaderRow" colspan="6"><b><?=__('Traces')?></b></td></tr>
 	<?
 
 		foreach ($item['sortedVars'][CLASS_TRACE_VARIABLE] as $variableIdentifier  => $observations){
 		   $rowspan = 'rowspan="'.count($observations).'"';
 		    foreach ($observations as $observation) {
                          $baseType = array_pop($observation[PROPERTY_VARIABLE_BASETYPE]);
-                         echo $baseType;
+                         $cardinality = array_pop($observation[PROPERTY_VARIABLE_CARDINALITY]);
 	?>
 
 		<tr>
 		<td ><?=$variableIdentifier?></td>
 		<td colspan="2" class="dataResult"><button class="traceDownload" value="<?=$observation["uri"]?>"><?=__('download')?></button></td>
+                <td> 
+                    <?php 
+                        echo $cardinality;
+                    ?>
+                </td>
                 <td> 
                     <?php 
                         echo $baseType;
