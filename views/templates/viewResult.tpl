@@ -1,4 +1,3 @@
-
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/result.css" />
 
 <div id="form-title" class="ui-widget-header ui-corner-top ui-state-default">
@@ -72,7 +71,11 @@ requirejs.config({
                     <span class="itemName"><?=__('Test Variables')?> (<?=count(get_data("deliveryVariables"))?>)</span>
                 </td>
 	</tr>
-	<? foreach (get_data("deliveryVariables") as $testVariable){ ?>
+	<? foreach (get_data("deliveryVariables") as $testVariable){
+                $baseType = current($testVariable[PROPERTY_VARIABLE_BASETYPE]);
+                $cardinality = current($testVariable[PROPERTY_VARIABLE_CARDINALITY]);
+        ?>
+                
 		<tr>
 		<td><?=current($testVariable[PROPERTY_IDENTIFIER])?></td>
 		<td><?=current($testVariable[RDF_VALUE])?></td>

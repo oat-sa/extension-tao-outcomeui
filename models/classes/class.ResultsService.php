@@ -361,7 +361,8 @@ class taoResults_models_classes_ResultsService
             foreach ($variables as $variable) {
             
             $variableDescription = $variable->getPropertiesValues(array(
-            PROPERTY_IDENTIFIER, RDF_VALUE, RDF_TYPE, PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE, PROPERTY_VARIABLE_EPOCH
+            PROPERTY_IDENTIFIER,
+            RDF_VALUE, PROPERTY_VARIABLE_CARDINALITY,PROPERTY_VARIABLE_BASETYPE, RDF_TYPE, PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE, PROPERTY_VARIABLE_EPOCH
             ));
             $variableDescription[RDF_VALUE] = array(base64_decode(current($variableDescription[RDF_VALUE])));
             $variablesData[] =  $variableDescription;
