@@ -1,3 +1,6 @@
+<?php
+use oat\tao\helpers\Template;
+?>
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/resultList.css" />
 
 <div id="filter-container" class="data-container tabs-bottom">
@@ -130,5 +133,6 @@ $(function(){
 
 
 </script>
-
-<?include(TAO_TPL_PATH.'footer.tpl');?>
+<?php
+Template::inc('footer.tpl', 'tao');
+?>
