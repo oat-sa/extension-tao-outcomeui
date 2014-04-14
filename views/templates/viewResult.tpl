@@ -125,20 +125,22 @@ requirejs.config({
                 
 		<td class="dataResult" colspan="2">
 		    <?php
-                        $rdfValue = array_pop($observation[RDF_VALUE]);
-			if (is_array($rdfValue)) {
-			    echo "<OL>";
-			    foreach ($rdfValue as $value) {
-				echo "<LI>";
-				    echo tao_helpers_Display::htmlEscape(nl2br($value));
-				echo "</LI>";
-			    }
-			    echo "</OL>";
-			} elseif (is_string($rdfValue)) {
-			    echo tao_helpers_Display::htmlEscape(nl2br($rdfValue));
-			} else {
-			    echo tao_helpers_Display::htmlEscape($rdfValue);
-			}
+                        if (is_array($observation[RDF_VALUE])){
+                            $rdfValue = array_pop($observation[RDF_VALUE]);
+                            if (is_array($rdfValue)) {
+                                echo "<OL>";
+                                foreach ($rdfValue as $value) {
+                                    echo "<LI>";
+                                        echo tao_helpers_Display::htmlEscape(nl2br($value));
+                                    echo "</LI>";
+                                }
+                                echo "</OL>";
+                            } elseif (is_string($rdfValue)) {
+                                echo tao_helpers_Display::htmlEscape(nl2br($rdfValue));
+                            } else {
+                                echo tao_helpers_Display::htmlEscape($rdfValue);
+                            }
+                        }
 		    ?>
                     <?php
                         if ($baseType=="file") {
