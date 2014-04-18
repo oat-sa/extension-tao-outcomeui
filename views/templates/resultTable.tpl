@@ -10,8 +10,7 @@ use oat\tao\helpers\Template;
 
     <script type="text/javascript">
 require(['jquery', 'i18n', 'taoResults/resultTable', 'grid/tao.grid', 'jquery.filedownload'], function($, __, resultTable) {
-
-    $(function(){
+ 
 	    //models and columns are parameters used and manipulated by the table operations functions.
 	    document.models = [];
 	    document.columns = [];
@@ -63,15 +62,16 @@ require(['jquery', 'i18n', 'taoResults/resultTable', 'grid/tao.grid', 'jquery.fi
 	    $('#dataFilter').change(function(e) {
 		$("#result-table-grid").jqGrid().setGridParam({ url: document.dataUrl+'?filterData='+$( this ).val() });
 		$("#result-table-grid").trigger( 'reloadGrid' );
-		document.getActionCsvFileUrl = '<?=_url('getCsvFile')?>'+'?filterData='+$( this ).val() });
+		document.getActionCsvFileUrl = '<?=_url('getCsvFile')?>'+'?filterData='+$( this ).val() ;
+                });
 		
-		});
+		
 
 	    //binds the column chooser button taht launches the feature from jqgrid allowing to make a selection of the columns displayed
 	     $('#columnChooser').click(function(e) {
 		    e.preventDefault();
 		    resultTable.columnChooser();
-	    });
+             });
     });
 
 </script>
