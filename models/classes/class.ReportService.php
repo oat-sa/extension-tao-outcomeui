@@ -20,9 +20,9 @@
  *
  */
 
-define("fontName", ROOT_PATH."/tao/lib/pChart/Fonts/verdana.ttf");
-require_once('tao/lib/pChart/pData.class');
-require_once ('tao/lib/pChart/pChart.class');
+define("fontName", ROOT_PATH."tao/lib/pChart/Fonts/verdana.ttf");
+require_once(ROOT_PATH.'tao/lib/pChart/pData.class');
+require_once (ROOT_PATH.'tao/lib/pChart/pChart.class');
 
 /**
  * TAO - taoResults/models/classes/class.ReportService.php

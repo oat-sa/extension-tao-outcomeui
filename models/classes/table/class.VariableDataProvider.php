@@ -20,37 +20,6 @@
  */
 
 /**
- * tao - taoResults/models/classes/table/class.VariableDataProvider.php
- *
- * $Id$
- *
- * This file is part of tao.
- *
- * Automatically generated on 31.08.2012, 10:14:43 with ArgoUML PHP module 
- * (last revised $Date: 2010-01-12 20:14:42 +0100 (Tue, 12 Jan 2010) $)
- *
- * @author Joel Bout, <joel.bout@tudor.lu>
- * @package taoResults
- 
- */
-
-
-/**
- * include tao_models_classes_table_DataProvider
- *
- * @author Joel Bout, <joel.bout@tudor.lu>
- */
-require_once('tao/models/classes/table/interface.DataProvider.php');
-
-/* user defined includes */
-// section 127-0-1-1--8febfab:13977a059a7:-8000:0000000000004006-includes begin
-// section 127-0-1-1--8febfab:13977a059a7:-8000:0000000000004006-includes end
-
-/* user defined constants */
-// section 127-0-1-1--8febfab:13977a059a7:-8000:0000000000004006-constants begin
-// section 127-0-1-1--8febfab:13977a059a7:-8000:0000000000004006-constants end
-
-/**
  * Short description of class
  *
  * @access public
@@ -195,6 +164,4 @@ class taoResults_models_classes_table_VariableDataProvider
         // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C6C end
     }
 
-} /* end of class taoResults_models_classes_table_VariableDataProvider */
-
-?>
+}
