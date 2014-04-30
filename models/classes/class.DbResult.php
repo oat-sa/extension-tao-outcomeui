@@ -39,9 +39,9 @@ class taoResults_models_classes_DbResult
      * In the case of a taoResultsDB storage and if the consumer asks for an identifer a uri is returned
      * * //you may also provide your own identifier to the other services like a lis_result_sourcedid:GUID
      */
-    public function spawnResult(){
+    public function spawnResult($deliveryResultIdentifier = null){
         
-        $spawnedResult =  $this->taoResultsStorage->storeDeliveryResult()->getUri();
+        $spawnedResult =  $this->taoResultsStorage->storeDeliveryResult($deliveryResultIdentifier)->getUri();
         common_Logger::i("taoResults storage spawned result:".$spawnedResult);
         return $spawnedResult;
     }
