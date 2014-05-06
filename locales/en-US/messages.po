@@ -21,7 +21,7 @@ msgid "# data collected"
 msgstr ""
 
 msgid "# Distinct Test Takers"
-msgstr ""
+msgstr "# Distinct Test-Takers"
 
 msgid "# Distinct variable types"
 msgstr ""
@@ -33,7 +33,7 @@ msgid "Add All responses"
 msgstr ""
 
 msgid "Add Test Taker"
-msgstr ""
+msgstr "Add Test-Taker"
 
 msgid "All collected values"
 msgstr ""
@@ -231,10 +231,10 @@ msgid "summary report"
 msgstr ""
 
 msgid "Test Taker"
-msgstr ""
+msgstr "Test-Taker"
 
 msgid "Test taker"
-msgstr ""
+msgstr "Test-taker"
 
 msgid "Test Variables"
 msgstr ""
@@ -270,3 +270,5 @@ msgstr ""
 msgid "We are preparing your report, please wait..."
 msgstr ""
 
+msgid "Test takers"
+msgstr "Test-takers"
