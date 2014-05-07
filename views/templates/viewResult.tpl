@@ -125,7 +125,7 @@ requirejs.config({
                 
 		<td class="dataResult" colspan="2">
 		    <?php
-                        if (is_array($observation[RDF_VALUE])){
+                        if (isset($observation[RDF_VALUE]) and is_array($observation[RDF_VALUE])){
                             $rdfValue = array_pop($observation[RDF_VALUE]);
                             if (is_array($rdfValue)) {
                                 echo "<OL>";
