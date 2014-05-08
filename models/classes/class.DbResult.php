@@ -18,8 +18,8 @@
  *
  *
  */
-class taoResults_models_classes_DbResult
-    extends tao_models_classes_GenerisService
+class taoResults_models_classes_DbResult 
+    extends tao_models_classes_GenerisService 
     implements taoResultServer_models_classes_WritableResultStorage {
 
     private $taoResultsStorage;
@@ -50,8 +50,8 @@ class taoResults_models_classes_DbResult
      *
     */
     public function storeRelatedTestTaker($deliveryResultIdentifier, $testTakerIdentifier) {
-         //spawns a new delivery result or retrieve an existing one with this identifier
-       $deliveryResult = $this->taoResultsStorage->storeDeliveryResult($deliveryResultIdentifier);
+            // spawns a new delivery result or retrieve an existing one with this identifier
+        $deliveryResult = $this->taoResultsStorage->storeDeliveryResult($deliveryResultIdentifier);
         $this->taoResultsStorage->storeTestTaker($deliveryResult, $testTakerIdentifier);
     }
     /**
@@ -73,19 +73,13 @@ class taoResults_models_classes_DbResult
          //spawns a new delivery result or retrieve an existing one with this identifier
        $deliveryResult = $this->taoResultsStorage->storeDeliveryResult($deliveryResultIdentifier);
         $this->taoResultsStorage->storeItemVariable($deliveryResult, $test, $item, $itemVariable, $callIdItem);
-            /*
-     *  CreateResultValue(sourcedId,ResultValueRecord)
-     *  CreateLineItem(sourcedId,lineItemRecord:LineItemRecord)
-     */
+
     }
     /** Submit a complete Item result
     *
     * @param taoResultServer_models_classes_ItemResult itemResult
     * @param string callId an id for the item instanciation
     */
-//    public function setItemResult($item, taoResultServer_models_classes_ItemResult $itemResult, $callId ) {}
-//    public function setTestResult($test, taoResultServer_models_classes_TestResult $testResult, $callId){}
-
     public function storeTestVariable($deliveryResultIdentifier, $test, taoResultServer_models_classes_Variable $testVariable, $callIdTest){
         $deliveryResult = $this->taoResultsStorage->storeDeliveryResult($deliveryResultIdentifier);
         $this->taoResultsStorage->storeTestVariable($deliveryResult, $test,  $testVariable, $callIdTest);

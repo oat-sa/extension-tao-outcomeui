@@ -38,8 +38,7 @@ require_once (ROOT_PATH.'tao/lib/pChart/pChart.class');
  
  */
 
-class taoResults_models_classes_ReportService
-extends taoResults_models_classes_StatisticsService
+class taoResults_models_classes_ReportService extends taoResults_models_classes_StatisticsService
 {
 	private $deliveryDataSet = null;
 
@@ -52,7 +51,7 @@ extends taoResults_models_classes_StatisticsService
 	public function setContextClass($contextClass) {
 	$this->contextClass = $contextClass;
 	}
-	/***
+	/**
 	 * builSimpleReport compute report data and graphs using the statistics dataset
 	 * @author Patrick Plichart
 	 * @return array reportData an associatuve array with link to the generated graphs and general informations to be included in a view
@@ -160,103 +159,108 @@ extends taoResults_models_classes_StatisticsService
 	 * @return string the url of the generated graph
 	 */
 	private function getChart($localGraphId, $datax, $setOfySeries, $title, $type="bar", $xAxisLabel = "", $yAxisLabel="", $r = "208",$g ="2",$b = "57"){
-	  // Dataset definition
-    if (count($datax)==0) {
-        throw common_exception_ClientException("Empty data set");
-    }
-	    $dataSet = new pData;
-	foreach ($setOfySeries as $legend => $ysery ){
-	    $dataSet->AddPoint($ysery,$legend);
-	    $dataSet->SetSerieName($legend,$legend);
-	}
-	$dataSet->AddAllSeries();
-	$dataSet->AddPoint($datax,"xLabels");
-
-	$dataSet->SetYAxisName($yAxisLabel);
-	$dataSet->SetXAxisName($xAxisLabel);
-
-	$dataSet->SetAbsciseLabelSerie("xLabels");
-	// Initialise the graph
-	$graph = new pChart(490,260);
-	$graph->createColorGradientPalette($r,$g,$b,$r,$g,$b,5);
-	//aa is way too slow here
-	$graph->Antialias = false;
-	$graph->setFontProperties(fontName,8);
-
-	$graph->setGraphArea(55,40,450,200);
-	//draw the background rectangle
-	$graph->drawFilledRoundedRectangle(7,7,655,253,5,240,240,240);
-
-	$graph->drawRoundedRectangle(5,5,655,225,5,230,230,230);
-	$graph->drawGraphArea(255,255,255,true);
-	$graph->drawScale($dataSet->GetData(),$dataSet->GetDataDescription(), SCALE_START0,150,150,150,true,0,2,true);
-	$graph->drawGrid(4,true,230,230,230,50);
-
-	// Draw the 0 line
-	$graph->setFontProperties(fontName,6);
-	$graph->drawTreshold(0,143,55,72,true,true);
-
-	// Draw the bar graph
-	switch ($type){
-
-	    case "bar":{$graph->drawBarGraph($dataSet->GetData(),$dataSet->GetDataDescription(),true);break;}
-	    case "line":{
-		    $graph->drawLineGraph($dataSet->GetData(),$dataSet->GetDataDescription());
-		    $graph->drawPlotGraph($dataSet->GetData(),$dataSet->GetDataDescription(),3,2,255,255,255);  break;
-
-	    }
-	}
-	// Finish the graph
-	$graph->setFontProperties(fontName,9);
-	$graph->drawLegend(50,220,$dataSet->GetDataDescription(),254,254,254);
-	$graph->setFontProperties(fontName,8);
-	$graph->drawTitle(15,30,$title,50,80,50);
-	      $url = $this->getUniqueMediaFileName($localGraphId, "png");
-	      $graph->Render(ROOT_PATH.$url);
-	      return ROOT_URL.$url;
+            // Dataset definition
+        if (count($datax) == 0) {
+            throw common_exception_ClientException("Empty data set");
+        }
+        $dataSet = new pData();
+        foreach ($setOfySeries as $legend => $ysery) {
+            $dataSet->AddPoint($ysery, $legend);
+            $dataSet->SetSerieName($legend, $legend);
+        }
+        $dataSet->AddAllSeries();
+        $dataSet->AddPoint($datax, "xLabels");
+        
+        $dataSet->SetYAxisName($yAxisLabel);
+        $dataSet->SetXAxisName($xAxisLabel);
+        
+        $dataSet->SetAbsciseLabelSerie("xLabels");
+        // Initialise the graph
+        $graph = new pChart(490, 260);
+        $graph->createColorGradientPalette($r, $g, $b, $r, $g, $b, 5);
+        // aa is way too slow here
+        $graph->Antialias = false;
+        $graph->setFontProperties(fontName, 8);
+        
+        $graph->setGraphArea(55, 40, 450, 200);
+        // draw the background rectangle
+        $graph->drawFilledRoundedRectangle(7, 7, 655, 253, 5, 240, 240, 240);
+        
+        $graph->drawRoundedRectangle(5, 5, 655, 225, 5, 230, 230, 230);
+        $graph->drawGraphArea(255, 255, 255, true);
+        $graph->drawScale($dataSet->GetData(), $dataSet->GetDataDescription(), SCALE_START0, 150, 150, 150, true, 0, 2, true);
+        $graph->drawGrid(4, true, 230, 230, 230, 50);
+        
+        // Draw the 0 line
+        $graph->setFontProperties(fontName, 6);
+        $graph->drawTreshold(0, 143, 55, 72, true, true);
+        
+        // Draw the bar graph
+        switch ($type) {
+            
+            case "bar":
+                {
+                    $graph->drawBarGraph($dataSet->GetData(), $dataSet->GetDataDescription(), true);
+                    break;
+                }
+            case "line":
+                {
+                    $graph->drawLineGraph($dataSet->GetData(), $dataSet->GetDataDescription());
+                    $graph->drawPlotGraph($dataSet->GetData(), $dataSet->GetDataDescription(), 3, 2, 255, 255, 255);
+                    break;
+                }
+        }
+        // Finish the graph
+        $graph->setFontProperties(fontName, 9);
+        $graph->drawLegend(50, 220, $dataSet->GetDataDescription(), 254, 254, 254);
+        $graph->setFontProperties(fontName, 8);
+        $graph->drawTitle(15, 30, $title, 50, 80, 50);
+        $url = $this->getUniqueMediaFileName($localGraphId, "png");
+        $graph->Render(ROOT_PATH . $url);
+        return ROOT_URL . $url;
 	}
 
 	private function getRadar($localGraphId, $title, $xLabels, $sery1, $legend, $r = "208",$g ="2",$b = "57"){
-	    // Dataset definition
-        if (count($sery1)==0) {
-        throw common_exception_ClientException("Empty data set");
+            // Dataset definition
+        if (count($sery1) == 0) {
+            throw common_exception_ClientException("Empty data set");
         }
-
-	    $dataSet = new pData;
-	    $dataSet->AddPoint($xLabels,"Label");
-	    $dataSet->AddPoint($sery1,"Serie1");
-	    $dataSet->AddSerie("Serie1");
-	    $dataSet->SetAbsciseLabelSerie("Label");
-	    $dataSet->SetSerieName($legend,"Serie1");
-
-	    // Initialise the graph
-	    $graph = new pChart(500,500);
-	    $graph->createColorGradientPalette($r,$g,$b,$r,$g,$b,5);
-	    //aa is way too slow here
-	    $graph->Antialias = false;
-	    $graph->setFontProperties(fontName,8);
-	    $graph->drawFilledRoundedRectangle(7,7,493,493,5,240,240,240);
-	    $graph->drawRoundedRectangle(5,5,493,493,5,230,230,230);
-	    $graph->setGraphArea(120,70,420,420);
-	    $graph->drawFilledRoundedRectangle(30,30,470,470,5,254,254,254);
-	    $graph->drawRoundedRectangle(30,30,470,470,5,220,220,220);
-
-
-	    // Draw the radar graph
-	    $graph->drawRadarAxis($dataSet->GetData(),$dataSet->GetDataDescription(),true,20,120,120,120,5,5,5);
-	    $graph->drawFilledRadar($dataSet->GetData(),$dataSet->GetDataDescription(),50,20);
-
-	    // Finish the graph
-	    $graph->setFontProperties(fontName,9);
-	    $graph->drawLegend(32,32,$dataSet->GetDataDescription(),255,255,255);
-	    $graph->setFontProperties(fontName,10);
-	    $graph->drawTitle(0,22,$title,50,50,50,400);
-	     $url = $this->getUniqueMediaFileName($localGraphId, "png");
-	      $graph->Render(ROOT_PATH.$url);
-	      return ROOT_URL.$url;
-	}
+        
+        $dataSet = new pData();
+        $dataSet->AddPoint($xLabels, "Label");
+        $dataSet->AddPoint($sery1, "Serie1");
+        $dataSet->AddSerie("Serie1");
+        $dataSet->SetAbsciseLabelSerie("Label");
+        $dataSet->SetSerieName($legend, "Serie1");
+        
+        // Initialise the graph
+        $graph = new pChart(500, 500);
+        $graph->createColorGradientPalette($r, $g, $b, $r, $g, $b, 5);
+        // aa is way too slow here
+        $graph->Antialias = false;
+        $graph->setFontProperties(fontName, 8);
+        $graph->drawFilledRoundedRectangle(7, 7, 493, 493, 5, 240, 240, 240);
+        $graph->drawRoundedRectangle(5, 5, 493, 493, 5, 230, 230, 230);
+        $graph->setGraphArea(120, 70, 420, 420);
+        $graph->drawFilledRoundedRectangle(30, 30, 470, 470, 5, 254, 254, 254);
+        $graph->drawRoundedRectangle(30, 30, 470, 470, 5, 220, 220, 220);
+        
+        // Draw the radar graph
+        $graph->drawRadarAxis($dataSet->GetData(), $dataSet->GetDataDescription(), true, 20, 120, 120, 120, 5, 5, 5);
+        $graph->drawFilledRadar($dataSet->GetData(), $dataSet->GetDataDescription(), 50, 20);
+        
+        // Finish the graph
+        $graph->setFontProperties(fontName, 9);
+        $graph->drawLegend(32, 32, $dataSet->GetDataDescription(), 255, 255, 255);
+        $graph->setFontProperties(fontName, 10);
+        $graph->drawTitle(0, 22, $title, 50, 50, 50, 400);
+        $url = $this->getUniqueMediaFileName($localGraphId, "png");
+        $graph->Render(ROOT_PATH . $url);
+        return ROOT_URL . $url;
+    }
 	/**
-	*TODO move to an helper, get a unique file name
+	 * TODO move to an helper, get a unique file name
+	 * 
 	 * @param string localToReportId a consumer scriptlocal id
 	 * @param string the extension of the media
 	 * @return a file path and a filename within the results extension

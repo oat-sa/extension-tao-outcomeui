@@ -36,90 +36,99 @@ class taoResults_models_classes_StatisticsService
 	/**
 	* returns  a data set containing results data using and using an associative array
 	* with basic statistics related to a delivery class. 
+	* 
 	* @author Patrick Plichart, <patrick.plichart@taotesting.com>
-	 * @param core_kernel_classes_Class deliveryClass the current class selection
-	 * @return array an assocaitive array containing global statistics and per variable statistics
+	* @param core_kernel_classes_Class deliveryClass the current class selection
+	* @return array an assocaitive array containing global statistics and per variable statistics
 	*/
 	public function extractDeliveryDataSet($deliveryClass){
-			
-	$deliveryDataSet = array(
-	"nbExecutions" => 0, //Number of collected executions of the delivery
-	"nbMaxExpectedExecutions"=>0, //Number of Test asturias albenizTasturias albenizakers
-	"nbMaxExecutions"=>0, //Number of Executions tokens granted
-	"statisticsPerVariable"=>array(), //an array containing variables as keys, collected and computed data 					["statisticsPerTest"]=>array()
-	"statistics"=>array()
-	);
-	
-       	 $deliveryResults =  $deliveryClass->getInstances(false);
-	 if (count($deliveryResults)==0) {throw new common_Exception(__('The class you have selected contains no results to be analysed, please select a different class'));}
-         $deliveryDataSet["nbExecutions"] = count($deliveryResults);
+        $deliveryDataSet = array(
+            "nbExecutions" => 0, // Number of collected executions of the delivery
+            "nbMaxExpectedExecutions" => 0, // Number of Test asturias albenizTasturias albenizakers
+            "nbMaxExecutions" => 0, // Number of Executions tokens granted
+            "statisticsPerVariable" => array(), // an array containing variables as keys, collected and computed data ["statisticsPerTest"]=>array()
+            "statistics" => array()
+        );
+        
+        $deliveryResults = $deliveryClass->getInstances(false);
+        if (count($deliveryResults) == 0) {
+            throw new common_Exception(__('The class you have selected contains no results to be analysed, please select a different class'));
+        }
+        $deliveryDataSet["nbExecutions"] = count($deliveryResults);
         $statisticsGroupedPerVariable = array();
-	
-	$statisticsGrouped = array("sum" => 0, "#" => 0);
-        foreach ($deliveryResults as $deliveryResult){
-		$testTaker = $this->getTestTaker($deliveryResult);
-        if (get_class($testTaker)=='core_kernel_classes_Literal') {
-            $testTakerIdentifier = $testTaker->__toString();
-            $testTakerLabel = $testTaker->__toString();
-        } else {
-            $testTakerIdentifier = $testTaker->getUri();
-            $testTakerLabel = $testTaker->getLabel();
-        }
-
-		$statisticsGrouped["distinctTestTaker"][$testTakerIdentifier] = $testTakerLabel ;
-		$scoreVariables = $this->getScoreVariables($deliveryResult);
-        try {
-		$relatedDelivery = $this->getDelivery($deliveryResult);
-        $deliveryDataSet["deliveries"][$relatedDelivery->getUri()]= $relatedDelivery->getLabel();
-        } catch (Exception $e) {
-            $deliveryDataSet["deliveries"]["undefined"]= "Unknown Delivery";
-        }
-                
-		foreach ($scoreVariables as $variable){
-			$variableData = $this->getVariableData($variable, true);
-
-			$activityIdentifier = "";
-            $activityNaturalId = "";
-         
-			if (isset($variableData["item"])and (get_class($variableData["item"]) == "core_kernel_classes_Resource") ) {
-                $activityIdentifier = $variableData["item"]->getUri();
-                $activityNaturalId = $variableData["item"]->getLabel();
-                
+        
+        $statisticsGrouped = array(
+            "sum" => 0,
+            "#" => 0
+        );
+        foreach ($deliveryResults as $deliveryResult) {
+            $testTaker = $this->getTestTaker($deliveryResult);
+            if (get_class($testTaker) == 'core_kernel_classes_Literal') {
+                $testTakerIdentifier = $testTaker->__toString();
+                $testTakerLabel = $testTaker->__toString();
+            } else {
+                $testTakerIdentifier = $testTaker->getUri();
+                $testTakerLabel = $testTaker->getLabel();
             }
-			$variableIdentifier = $activityIdentifier.$variableData["identifier"];
-			if (!(isset($statisticsGroupedPerVariable[$variableIdentifier]))) {$statisticsGroupedPerVariable[$variableIdentifier] = array("sum" => 0, "#" => 0);}
-			
-			// we should parametrize if we consider multiple executions of the same test taker or not, here all executions are considered
-            $statisticsGroupedPerVariable[$variableIdentifier]["data"][]=$variableData["value"];
-			$statisticsGroupedPerVariable[$variableIdentifier]["sum"]+= $variableData["value"];
-			$statisticsGroupedPerVariable[$variableIdentifier]["#"]+= 1;
-			$statisticsGroupedPerVariable[$variableIdentifier]["naturalid"]= $activityNaturalId." (".$variableData["identifier"].")";
-			$statisticsGrouped["data"][]=$variableData["value"];
-                        $statisticsGrouped["sum"]+= $variableData["value"];
-                        $statisticsGrouped["#"]+= 1;
-                 }
+            
+            $statisticsGrouped["distinctTestTaker"][$testTakerIdentifier] = $testTakerLabel;
+            $scoreVariables = $this->getScoreVariables($deliveryResult);
+            try {
+                $relatedDelivery = $this->getDelivery($deliveryResult);
+                $deliveryDataSet["deliveries"][$relatedDelivery->getUri()] = $relatedDelivery->getLabel();
+            } catch (Exception $e) {
+                $deliveryDataSet["deliveries"]["undefined"] = "Unknown Delivery";
+            }
+            
+            foreach ($scoreVariables as $variable) {
+                $variableData = $this->getVariableData($variable, true);
+                
+                $activityIdentifier = "";
+                $activityNaturalId = "";
+                
+                if (isset($variableData["item"]) and (get_class($variableData["item"]) == "core_kernel_classes_Resource")) {
+                    $activityIdentifier = $variableData["item"]->getUri();
+                    $activityNaturalId = $variableData["item"]->getLabel();
+                }
+                $variableIdentifier = $activityIdentifier . $variableData["identifier"];
+                if (! (isset($statisticsGroupedPerVariable[$variableIdentifier]))) {
+                    $statisticsGroupedPerVariable[$variableIdentifier] = array(
+                        "sum" => 0,
+                        "#" => 0
+                    );
+                }
+                
+                // we should parametrize if we consider multiple executions of the same test taker or not, here all executions are considered
+                $statisticsGroupedPerVariable[$variableIdentifier]["data"][] = $variableData["value"];
+                $statisticsGroupedPerVariable[$variableIdentifier]["sum"] += $variableData["value"];
+                $statisticsGroupedPerVariable[$variableIdentifier]["#"] += 1;
+                $statisticsGroupedPerVariable[$variableIdentifier]["naturalid"] = $activityNaturalId . " (" . $variableData["identifier"] . ")";
+                $statisticsGrouped["data"][] = $variableData["value"];
+                $statisticsGrouped["sum"] += $variableData["value"];
+                $statisticsGrouped["#"] += 1;
+            }
         }
-		 //compute basic statistics
-                $statisticsGrouped["avg"] =  $statisticsGrouped["sum"]/ $statisticsGrouped["#"];
-		//number of different type of variables collected
-		$statisticsGrouped["numberVariables"] = sizeOf( $statisticsGroupedPerVariable);		
-		//compute the deciles scores for the complete delivery
-		$statisticsGrouped= $this->computeQuantiles($statisticsGrouped, 10);
-		//computing average, std and distribution for every single variable
-		foreach ($statisticsGroupedPerVariable as $variableIdentifier => $data) {
-		ksort($statisticsGroupedPerVariable[$variableIdentifier]["data"]);
-		//compute the total populationa verage score for this variable		
-		$statisticsGroupedPerVariable[$variableIdentifier]["avg"] = $statisticsGroupedPerVariable[$variableIdentifier]["sum"]/$statisticsGroupedPerVariable[$variableIdentifier]["#"];
-		$statisticsGroupedPerVariable[$variableIdentifier] = $this->computeQuantiles($statisticsGroupedPerVariable[$variableIdentifier], 10);
-		}
-		
-		ksort($statisticsGrouped["data"]);
-		natsort($statisticsGrouped["distinctTestTaker"]);
-		
-		$deliveryDataSet["statistics"] = $statisticsGrouped;
-		$deliveryDataSet["statisticsPerVariable"] = $statisticsGroupedPerVariable;
-		
-		return $deliveryDataSet;
+        // compute basic statistics
+        $statisticsGrouped["avg"] = $statisticsGrouped["sum"] / $statisticsGrouped["#"];
+        // number of different type of variables collected
+        $statisticsGrouped["numberVariables"] = sizeOf($statisticsGroupedPerVariable);
+        // compute the deciles scores for the complete delivery
+        $statisticsGrouped = $this->computeQuantiles($statisticsGrouped, 10);
+        // computing average, std and distribution for every single variable
+        foreach ($statisticsGroupedPerVariable as $variableIdentifier => $data) {
+            ksort($statisticsGroupedPerVariable[$variableIdentifier]["data"]);
+            // compute the total populationa verage score for this variable
+            $statisticsGroupedPerVariable[$variableIdentifier]["avg"] = $statisticsGroupedPerVariable[$variableIdentifier]["sum"] / $statisticsGroupedPerVariable[$variableIdentifier]["#"];
+            $statisticsGroupedPerVariable[$variableIdentifier] = $this->computeQuantiles($statisticsGroupedPerVariable[$variableIdentifier], 10);
+        }
+        
+        ksort($statisticsGrouped["data"]);
+        natsort($statisticsGrouped["distinctTestTaker"]);
+        
+        $deliveryDataSet["statistics"] = $statisticsGrouped;
+        $deliveryDataSet["statisticsPerVariable"] = $statisticsGroupedPerVariable;
+        
+        return $deliveryDataSet;
 		}
 	/**
 	 * computeQuantiles (deprecated)
@@ -154,21 +163,9 @@ class taoResults_models_classes_StatisticsService
                         }
 		return $statisticsGrouped;	
 		}
-	/**
-	 * deprecated flatteQuantiles
-	 
-	//flatten the structure returned by the results data set extractor into a flat array for the graphics computation
-	protected function flattenQuantiles($quantiles, $criteria = "avg"){
-		$flatDecileAverages = array();		
-		foreach ($quantiles as $quantile){
-		$flatDecileAverages[]= $quantile[$criteria];		
-		}
-		return $flatDecileAverages;
-	}	
-	 * 
-	 */
 
 
-} /* end of class taoResults_models_classes_ResultsService */
+
+} 
 
 ?>

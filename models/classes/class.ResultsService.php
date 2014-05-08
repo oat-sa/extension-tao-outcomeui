@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; under version 2
@@ -17,18 +17,19 @@
  * 
  * Copyright (c) 2013 Open Assessment Technologies S.A.
  * 
- */
-
-/**
- * Short description of class taoResults_models_classes_ResultsService
  *
  * @access public
  * @author Joel Bout, <joel.bout@tudor.lu>
  * @package taoResults
-
+ * 
  */
+
 class taoResults_models_classes_ResultsService extends tao_models_classes_ClassService {
 
+    /**
+     * (non-PHPdoc)
+     * @see tao_models_classes_ClassService::getRootClass()
+     */
     public function getRootClass() {
         return new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
     }
@@ -91,27 +92,53 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
         return $returnValue;
     }
 
+    /**
+     * 
+     * @param core_kernel_classes_Resource $variable
+     * @return common_Object
+     */
     public function getItemResultFromVariable(core_kernel_classes_Resource $variable) {
         $relatedItemResult = new core_kernel_classes_Property(PROPERTY_RELATED_ITEM_RESULT);
         $itemResult = $variable->getUniquePropertyValue($relatedItemResult);
         return $itemResult;
     }
 
+    /**
+     * 
+     * @param core_kernel_classes_Resource $itemResult
+     * @return common_Object
+     */
     public function getItemFromItemResult(core_kernel_classes_Resource $itemResult) {
         $relatedItem = new core_kernel_classes_Property(PROPERTY_RELATED_ITEM);
         $item = $itemResult->getUniquePropertyValue($relatedItem);
         return $item;
     }
 
+    /**
+     * 
+     * @param core_kernel_classes_Resource $variable
+     * @return common_Object
+     */
     public function getItemFromVariable(core_kernel_classes_Resource $variable) {
         return $this->getItemFromItemResult($this->getItemResultFromVariable($variable));
     }
 
+    /**
+     * 
+     * @param unknown $variableUri 
+     * @return common_Object
+     * 
+     */
     public function getVariableValue($variableUri) {
         $variable = new core_kernel_classes_Resource($variableUri);
         return $variable->getUniquePropertyValue(new core_kernel_classes_Property(RDF_VALUE));
     }
 
+    /**
+     * 
+     * @param unknown $variableUri
+     * @return common_Object
+     */
     public function getVariableBaseType($variableUri) {
         $variable = new core_kernel_classes_Resource($variableUri);
         return $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_BASETYPE));
@@ -170,8 +197,8 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
         return $stats;
     }
     /**
-     * 
      *  prepare a data set as an associative array, service intended to populate gui controller
+     *  
      *  @param string $filter 'lastSubmitted', 'firstSubmitted'
      */
     public function getItemVariableDataFromDeliveryResult(core_kernel_classes_Resource $deliveryResult, $filter) {
@@ -312,8 +339,13 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
 
         return $variablesByItem;
     }
-
-    static function sortTimeStamps($a, $b) {
+    /**
+     * 
+     * @param unknown $a
+     * @param unknown $b
+     * @return number
+     */
+    public static function sortTimeStamps($a, $b) {
         list($usec, $sec) = explode(" ", $a);
         $floata = ((float) $usec + (float) $sec);
         list($usec, $sec) = explode(" ", $b);
@@ -333,22 +365,35 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
 
     /**
      * return all variables linked to the delviery result and that are not linked to a particular itemResult
+     * 
+     * @param core_kernel_classes_Resource $deliveryResult
+     * @return multitype:multitype:string
      */
     public function getVariableDataFromDeliveryResult(core_kernel_classes_Resource $deliveryResult) {
 
         $variablesData = array();
-
+        
         $variableClass = new core_kernel_classes_Class(TAO_RESULT_VARIABLE);
-        $variables = $variableClass->searchInstances(
-                array(PROPERTY_RELATED_DELIVERY_RESULT => $deliveryResult->getUri()), array('recursive' => true, 'like' => false)
-        );
+        $variables = $variableClass->searchInstances(array(
+            PROPERTY_RELATED_DELIVERY_RESULT => $deliveryResult->getUri()
+        ), array(
+            'recursive' => true,
+            'like' => false
+        ));
         foreach ($variables as $variable) {
-
+            
             $variableDescription = $variable->getPropertiesValues(array(
                 PROPERTY_IDENTIFIER,
-                RDF_VALUE, PROPERTY_VARIABLE_CARDINALITY, PROPERTY_VARIABLE_BASETYPE, RDF_TYPE, PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE, PROPERTY_VARIABLE_EPOCH
+                RDF_VALUE,
+                PROPERTY_VARIABLE_CARDINALITY,
+                PROPERTY_VARIABLE_BASETYPE,
+                RDF_TYPE,
+                PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE,
+                PROPERTY_VARIABLE_EPOCH
             ));
-            $variableDescription[RDF_VALUE] = array(base64_decode(current($variableDescription[RDF_VALUE])));
+            $variableDescription[RDF_VALUE] = array(
+                base64_decode(current($variableDescription[RDF_VALUE]))
+            );
             $variablesData[] = $variableDescription;
         }
         return $variablesData;
@@ -370,21 +415,23 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
      * @throws common_exception_Error
      */
     public function storeDeliveryResult($deliveryResultIdentifier = null) {
-
         $deliveryResultClass = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
         if (is_null($deliveryResultIdentifier)) {
             $deliveryResult = $deliveryResultClass->createInstanceWithProperties(array(
-                RDFS_LABEL => '(' . uniqid() . ')',
+                RDFS_LABEL => '(' . uniqid() . ')'
             ));
             $deliveryResult->editPropertyValues(new core_kernel_classes_Property(PROPERTY_IDENTIFIER), $deliveryResult->getUri());
             return $deliveryResult;
         }
-
-        $options = array('like' => false, 'recursive' => false);
+        
+        $options = array(
+            'like' => false,
+            'recursive' => false
+        );
         $deliveryResults = $deliveryResultClass->searchInstances(array(
             PROPERTY_IDENTIFIER => $deliveryResultIdentifier
-                ), $options);
-
+        ), $options);
+        
         if (count($deliveryResults) > 1) {
             throw new common_exception_Error('More than 1 deliveryResult for the corresponding Id ' . $deliveryResultIdentifier);
         } elseif (count($deliveryResults) == 1) {
@@ -406,17 +453,14 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
     public function storeTestTaker(core_kernel_classes_Resource $deliveryResult, $testTakerIdentifier) {
         $propResultOfSubject = new core_kernel_classes_Property(PROPERTY_RESULT_OF_SUBJECT);
         $deliveryResult->editPropertyValues($propResultOfSubject, $testTakerIdentifier);
-
+        
         try {
-            //if the delviery information is provided, update to a more meaningful delvieryResult Label
+            // if the delviery information is provided, update to a more meaningful delvieryResult Label
             $testTaker = new core_kernel_classes_Resource($testTakerIdentifier);
             $testTakerLabel = $testTaker->getLabel();
-            $deliveryResult->setLabel(
-                    $testTakerLabel . "-" . str_replace("-" . $testTakerLabel, "", $deliveryResult->getLabel())
-            );
+            $deliveryResult->setLabel($testTakerLabel . "-" . str_replace("-" . $testTakerLabel, "", $deliveryResult->getLabel()));
         } catch (common_Exception $e) {
-            //the test taker to be referrd in the delivery Result does not exist (or the label is not stated)
-
+            // the test taker to be referrd in the delivery Result does not exist (or the label is not stated)
         }
     }
     /**
@@ -454,6 +498,12 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
         $storedVariable->setPropertyValue(new core_kernel_classes_Property(PROPERTY_RELATED_ITEM_RESULT), $itemResult->getUri());
         return $storedVariable;
     }
+    /**
+     * 
+     * @param unknown $itemVariable
+     * @throws common_exception_Error
+     * @return core_kernel_classes_Resource
+     */
     private function storeVariable($itemVariable) {
         switch (get_class($itemVariable)) {
             case "taoResultServer_models_classes_OutcomeVariable": {
@@ -515,11 +565,27 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
         return $returnValue;
     }
 
+    /**
+     * 
+     * @param core_kernel_classes_Resource $deliveryResult
+     * @param unknown $test
+     * @param taoResultServer_models_classes_Variable $itemVariable
+     * @param unknown $callId
+     */
     public function storeTestVariable(core_kernel_classes_Resource $deliveryResult, $test, taoResultServer_models_classes_Variable $itemVariable, $callId) {
         $storedVariable = $this->storeVariable($itemVariable);
         $storedVariable->setPropertyValue(new core_kernel_classes_Property(PROPERTY_RELATED_DELIVERY_RESULT), $deliveryResult->getUri());
     }
 
+    /**
+     * 
+     * @param core_kernel_classes_Resource $deliveryResult
+     * @param unknown $callId
+     * @param unknown $test
+     * @param unknown $item
+     * @throws common_exception_Error
+     * @return Ambigous <mixed, core_kernel_classes_Resource>
+     */
     public function getItemResult(core_kernel_classes_Resource $deliveryResult, $callId, $test, $item) {
         $itemResultsClass = new core_kernel_classes_Class(ITEM_RESULT);
         $itemResults = $itemResultsClass->searchInstances(array(
