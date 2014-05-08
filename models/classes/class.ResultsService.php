@@ -201,7 +201,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
                     common_Logger::d("Retrieving related Item model for item " . $relatedItem->getUri() . "");
                     $itemModel = $relatedItem->getUniquePropertyValue(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
                     $variablesByItem[$itemIdentifier]['itemModel'] = $itemModel->getLabel();
-                } catch (Exception $e) { //a resource but unknown
+                } catch (common_Exception $e) { //a resource but unknown
                     $variablesByItem[$itemIdentifier]['itemModel'] = 'unknown';
                 }
             } else {
@@ -253,7 +253,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
                     try {
                         $itemModel = $relatedItem->getUniquePropertyValue(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
                         $variablesByItem[$itemIdentifier]['itemModel'] = $itemModel->getLabel();
-                    } catch (Exception $e) { //a resource but unknown
+                    } catch (common_Exception $e) { //a resource but unknown
                         $variablesByItem[$itemIdentifier]['itemModel'] = $undefinedStr;
                     }
                 } else {
@@ -414,8 +414,9 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
             $deliveryResult->setLabel(
                     $testTakerLabel . "-" . str_replace("-" . $testTakerLabel, "", $deliveryResult->getLabel())
             );
-        } catch (Exception $e) {
-;
+        } catch (common_Exception $e) {
+            //the test taker to be referrd in the delivery Result does not exist (or the label is not stated)
+
         }
     }
     /**
@@ -434,7 +435,8 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
                     . "-" . $deliveryLabel
             );
         } catch (Exception $e) {
-;
+            //the test taker to be referrd in the delivery Result does not exist (or the label is not stated)
+
         }
     }
     /**
