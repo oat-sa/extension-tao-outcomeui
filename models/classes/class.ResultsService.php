@@ -88,7 +88,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
         $type = new core_kernel_classes_Class(ITEM_RESULT);
         $returnValue = $type->searchInstances(
                 array(PROPERTY_RELATED_DELIVERY_RESULT => $deliveryResult->getUri())
-        );
+        ,array('like' => false));
         return $returnValue;
     }
 
