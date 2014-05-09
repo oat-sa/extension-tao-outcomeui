@@ -61,53 +61,45 @@ class taoResults_models_classes_table_VariableDataProvider
      */
     public function prepare($resources, $columns)
     {   
-        $cacheItemResultsRelatedItem =array(); //a local cache with correspondances ItemResult -> Item
         $resultsService = taoResults_models_classes_ResultsService::singleton();
         // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C5B begin
+        
         foreach($resources as $result){
-             
-            $vars = $resultsService->getVariables($result, new core_kernel_classes_Class(TAO_RESULT_VARIABLE));
+            $itemresults = $resultsService->getVariables($result, new core_kernel_classes_Class(TAO_RESULT_VARIABLE), false);
             $cellData = array();
-             
-            foreach ($vars as $var) {
-                 
-            $varData = $resultsService->getVariableData($var);
-             
-            if (is_array($varData["value"])) {
-                $varData["value"] = json_encode($varData["value"]);
-            }
-            $variableIdentifier = (string)$varData["identifier"];
-            $itemResult = $resultsService->getItemResultFromVariable($var);
-            $itemResultUri = $itemResult->getUri();
-            // as small local optim. to fetch the related item
-            if (!(isset($cacheItemResultsRelatedItem[$itemResultUri]))) {
-                $item = $resultsService->getItemFromItemResult($itemResult);
-                $cacheItemResultsRelatedItem[$itemResultUri] = $item;
-            } else {
-                $item = $cacheItemResultsRelatedItem[$itemResultUri];
-            }
-            if (get_class($item) == "core_kernel_classes_Resource") {
-            $contextIdentifier = (string)$item->getUri();
-            } else {
-            $contextIdentifier = (string)$item->__toString();    
-            }
-            
-            foreach ($columns as $column) {
-                if (
-                    $variableIdentifier == $column->getIdentifier()
-                    and
-                    $contextIdentifier == $column->getContextIdentifier()
-                    ) {
-                    $value = (string)$varData["value"];
-                    $epoch = $varData["epoch"];
-                    $readableTime = "";
-                    if ($epoch != "") {
-                        $readableTime = "@". tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE);
+            foreach ($itemresults as $itemResultUri=>$vars) {
+                $item = $resultsService->getItemFromItemResult(new core_kernel_classes_Resource($itemResultUri));
+                if (get_class($item) == "core_kernel_classes_Resource") {
+                   $contextIdentifier = (string)$item->getUri();
+                   } else {
+                   $contextIdentifier = (string)$item->__toString();    
+                   }
+                foreach ($vars as $var) {
+                    $start = microtime();
+                    $varData = $resultsService->getVariableData($var);
+                    $end = microtime();
+                    $total = $total+($end-$start);
+                    if (is_array($varData["value"])) {
+                        $varData["value"] = json_encode($varData["value"]);
                     }
-                    $this->cache[$varData["type"]->getUri()][$result->getUri()][$contextIdentifier.$variableIdentifier][(string)$epoch] =  array($value, $readableTime);
+                    $variableIdentifier = (string)$varData["identifier"];                   
+                    foreach ($columns as $column) {
+                        if (
+                            $variableIdentifier == $column->getIdentifier()
+                            and
+                            $contextIdentifier == $column->getContextIdentifier()
+                            ) {
+                            $value = (string)$varData["value"];
+                            $epoch = $varData["epoch"];
+                            $readableTime = "";
+                            if ($epoch != "") {
+                                $readableTime = "@". tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE);
+                            }
+                            $this->cache[$varData["type"]->getUri()][$result->getUri()][$contextIdentifier.$variableIdentifier][(string)$epoch] =  array($value, $readableTime);
+                            }
                     }
-             }
-             
+
+                }
             }
     }
            
