@@ -209,81 +209,84 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
      * @param type $format  json, csv
      */
     public function data($format ="json") {
-
+        
         $filter =  $this->hasRequestParameter('filter') ? $this->getFilterState('filter') : array();
        	$filterData =  $this->getRequestParameter('filterData');
     	$columns = $this->hasRequestParameter('columns') ? $this->getColumns('columns') : array();
 
     	$page = $this->getRequestParameter('page');
-		$limit = $this->getRequestParameter('rows');
-		$sidx = $this->getRequestParameter('sidx');
-		$sord = $this->getRequestParameter('sord');
-		$searchField = $this->getRequestParameter('searchField');
-		$searchOper = $this->getRequestParameter('searchOper');
-		$searchString = $this->getRequestParameter('searchString');
-		$start = $limit * $page - $limit;
+        $limit = $this->getRequestParameter('rows');
+        $sidx = $this->getRequestParameter('sidx');
+        $sord = $this->getRequestParameter('sord');
+        $searchField = $this->getRequestParameter('searchField');
+        $searchOper = $this->getRequestParameter('searchOper');
+        $searchString = $this->getRequestParameter('searchString');
+        $start = $limit * $page - $limit;
         $response = new stdClass();
        	$clazz = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
-		$results	= $clazz->searchInstances($filter, array ('recursive'=>true, 'offset' => $start, 'limit' => $limit));
-        $counti		= $clazz->countInstances($filter, array ('recursive'=>true, 'offset' => $start, 'limit' => $limit));
-		$dpmap = array();
-		foreach ($columns as $column) {
-			$dataprovider = $column->getDataProvider();
-			$found = false;
-			foreach ($dpmap as $k => $dp) {
-				if ($dp['instance'] == $dataprovider) {
-					$found = true;
-					$dpmap[$k]['columns'][] = $column;
-				}
-			}
-			if (!$found) {
-				$dpmap[] = array(
-					'instance'	=> $dataprovider,
-					'columns'	=> array(
-						$column
-					)
-				);
-			}
-		}
-		foreach ($dpmap as $arr) {
-			$arr['instance']->prepare($results, $arr['columns']);
-		}
-		foreach($results as $result) {
-			$cellData = array();
-			foreach ($columns as $column) {
+        $results = $clazz->searchInstances($filter, array ('recursive'=>true, 'like' => false,'offset' => $start, 'limit' => $limit));
+        $counti	= count($results);
+        $dpmap = array();
+        foreach ($columns as $column) {
+                $dataprovider = $column->getDataProvider();
+                $found = false;
+                foreach ($dpmap as $k => $dp) {
+                        if ($dp['instance'] == $dataprovider) {
+                                $found = true;
+                                $dpmap[$k]['columns'][] = $column;
+                        }
+                }
+                if (!$found) {
+                        $dpmap[] = array(
+                                'instance'	=> $dataprovider,
+                                'columns'	=> array(
+                                        $column
+                                )
+                        );
+                }
+        }
+
+        foreach ($dpmap as $arr) {
+                $arr['instance']->prepare($results, $arr['columns']);
+        }
+
+        foreach($results as $result) {
+                $cellData = array();
+                foreach ($columns as $column) {
                 //dataProvider should implement a few settings for early filtering
                 $cellData[]=self::filterCellData($column->getDataProvider()->getValue($result, $column), $filterData);
-			}
-			$response->rows[] = array(
-				'id' => $result->getUri(),
-				'cell' => $cellData
-			);
-		}
-		$response->page = $page;
-		if ($limit!=0) {
-		$response->total = ceil($counti / $limit);//$total_pages;
-		}
-		else
-		{
-		$response->total = 1;
-		}
-		$response->records = count($results);
-
-		switch ($format) {
-                    case "csv":$encodedData = $this->dataToCsv($columns, $response->rows,';','"');
-
-                        header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
-                        setcookie("fileDownload","true", 0, "/");
-                        header("Content-type: text/csv");
-                        header('Content-Disposition: attachment; filename=Data.csv');
-
-                    break;
-
-                    default: $encodedData = json_encode($response);
-                    break;
                 }
+                $response->rows[] = array(
+                        'id' => $result->getUri(),
+                        'cell' => $cellData
+                );
+        }
+        $response->page = $page;
+        if ($limit!=0) {
+        $response->total = ceil($counti / $limit);//$total_pages;
+        }
+        else
+        {
+        $response->total = 1;
+        }
+        $response->records = count($results);
 
-                echo $encodedData;
+        switch ($format) {
+            case "csv":$encodedData = $this->dataToCsv($columns, $response->rows,';','"');
+
+                header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
+                setcookie("fileDownload","true", 0, "/");
+                header("Content-type: text/csv");
+                header('Content-Disposition: attachment; filename=Data.csv');
+
+            break;
+
+            default: $encodedData = json_encode($response);
+            break;
+        }
+
+        echo $encodedData;
+                
     }
     private static function filterCellData($observationsList, $filterData){
         //if the cell content is not an array with multiple entries, do not filter
