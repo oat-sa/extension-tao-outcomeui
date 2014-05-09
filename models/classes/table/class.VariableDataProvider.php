@@ -75,10 +75,7 @@ class taoResults_models_classes_table_VariableDataProvider
                    $contextIdentifier = (string)$item->__toString();    
                    }
                 foreach ($vars as $var) {
-                    $start = microtime();
                     $varData = $resultsService->getVariableData($var);
-                    $end = microtime();
-                    $total = $total+($end-$start);
                     if (is_array($varData["value"])) {
                         $varData["value"] = json_encode($varData["value"]);
                     }
