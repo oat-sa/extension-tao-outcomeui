@@ -243,14 +243,16 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
                         );
                 }
         }
+
         foreach ($dpmap as $arr) {
+
                 $arr['instance']->prepare($results, $arr['columns']);
+
         }
         
         foreach($results as $result) {
                 $cellData = array();
                 foreach ($columns as $column) {
-                //dataProvider should implement a few settings for early filtering
                 $cellData[]=self::filterCellData($column->getDataProvider()->getValue($result, $column), $filterData);
                 }
                 $response->rows[] = array(
@@ -281,8 +283,7 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
             default: $encodedData = json_encode($response);
             break;
         }
-        echo $encodedData;
-                
+        echo $encodedData;           
     }
     private static function filterCellData($observationsList, $filterData){
         //if the cell content is not an array with multiple entries, do not filter
