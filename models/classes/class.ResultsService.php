@@ -590,7 +590,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
         $itemResultsClass = new core_kernel_classes_Class(ITEM_RESULT);
         $itemResults = $itemResultsClass->searchInstances(array(
             PROPERTY_IDENTIFIER => $callId
-        ));
+        ), array("like" => false));
         if (count($itemResults) > 1) {
             throw new common_exception_Error('More then 1 itemResult for the corresponding Id ' . $deliveryResultIdentifier);
         } elseif (count($itemResults) == 1) {
