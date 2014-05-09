@@ -41,14 +41,21 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
      * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  Resource deliveryResult
      * @param core_kernel_classes_Class to restrict to a specific class of variables
+     * @param boolean flat a falt array is returned or a structured delvieryResult-ItemResult-Variable
      * @return array
      */
-    public function getVariables(core_kernel_classes_Resource $deliveryResult, $variableClass = null) {
+    public function getVariables(core_kernel_classes_Resource $deliveryResult, $variableClass = null, $flat = true) {
         $returnValue = array();
         // section 127-0-1-1-16e239f7:13925739ce2:-8000:0000000000003B74 begin
         foreach ($this->getItemResultsFromDeliveryResult($deliveryResult) as $itemResult) {
             $itemResultVariables = $this->getVariablesFromItemResult($itemResult, $variableClass);
-            $returnValue = array_merge($itemResultVariables, $returnValue);
+            if ($flat) {
+                $returnValue = array_merge($itemResultVariables, $returnValue);
+            } else {
+                $itemResultUri = $itemResult->getUri();
+                $returnValue[$itemResultUri] = $itemResultVariables; 
+            }
+                
         }
         // section 127-0-1-1-16e239f7:13925739ce2:-8000:0000000000003B74 end
         return (array) $returnValue;
