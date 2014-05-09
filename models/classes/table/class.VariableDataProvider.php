@@ -60,49 +60,58 @@ class taoResults_models_classes_table_VariableDataProvider
      * @return mixed
      */
     public function prepare($resources, $columns)
-    {
+    {   
+        $cacheItemResultsRelatedItem =array(); //a local cache with correspondances ItemResult -> Item
         $resultsService = taoResults_models_classes_ResultsService::singleton();
         // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C5B begin
         foreach($resources as $result){
+             
             $vars = $resultsService->getVariables($result, new core_kernel_classes_Class(TAO_RESULT_VARIABLE));
             $cellData = array();
-			foreach ($vars as $var) {
-                $varData = $resultsService->getVariableData($var);
-                
-                if (is_array($varData["value"])) {
-                    $varData["value"] = json_encode($varData["value"]);
-                }
-                
-				//should be improved 
-                $variableIdentifier = (string)$varData["identifier"];
-                $itemResult = $resultsService->getItemResultFromVariable($var);
+             
+            foreach ($vars as $var) {
+                 
+            $varData = $resultsService->getVariableData($var);
+             
+            if (is_array($varData["value"])) {
+                $varData["value"] = json_encode($varData["value"]);
+            }
+            $variableIdentifier = (string)$varData["identifier"];
+            $itemResult = $resultsService->getItemResultFromVariable($var);
+            $itemResultUri = $itemResult->getUri();
+            // as small local optim. to fetch the related item
+            if (!(isset($cacheItemResultsRelatedItem[$itemResultUri]))) {
                 $item = $resultsService->getItemFromItemResult($itemResult);
-                if (get_class($item) == "core_kernel_classes_Resource") {
-                $contextIdentifier = (string)$item->getUri();
-                } else {
-                $contextIdentifier = (string)$item->__toString();    
-                }
-                foreach ($columns as $column) {
-					if (
-                        $variableIdentifier == $column->getIdentifier()
-                        and
-                        $contextIdentifier == $column->getContextIdentifier()
-                        ) {
-							$value = (string)$varData["value"];
-                            
-						    //echo $varData["epoch"];
-                            $epoch = $varData["epoch"];
-                            //echo $epoch;
-                            $readableTime = "";
-						    //if ($epoch != "") {$readableTime = "@". date("F j, Y, g:i:s a",$varData["epoch"]);}
-						    if ($epoch != "") {$readableTime = "@". tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE);}
-                            $this->cache[$varData["type"]->getUri()][$result->getUri()][$contextIdentifier.$variableIdentifier][(string)$epoch] =  array($value, $readableTime);
-					}
-				}
-			}
-		}
+                $cacheItemResultsRelatedItem[$itemResultUri] = $item;
+            } else {
+                $item = $cacheItemResultsRelatedItem[$itemResultUri];
+            }
+            if (get_class($item) == "core_kernel_classes_Resource") {
+            $contextIdentifier = (string)$item->getUri();
+            } else {
+            $contextIdentifier = (string)$item->__toString();    
+            }
+            
+            foreach ($columns as $column) {
+                if (
+                    $variableIdentifier == $column->getIdentifier()
+                    and
+                    $contextIdentifier == $column->getContextIdentifier()
+                    ) {
+                    $value = (string)$varData["value"];
+                    $epoch = $varData["epoch"];
+                    $readableTime = "";
+                    if ($epoch != "") {
+                        $readableTime = "@". tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE);
+                    }
+                    $this->cache[$varData["type"]->getUri()][$result->getUri()][$contextIdentifier.$variableIdentifier][(string)$epoch] =  array($value, $readableTime);
+                    }
+             }
+             
+            }
+    }
+           
 
-        // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C5B end
     }
     
     /**
@@ -124,7 +133,7 @@ class taoResults_models_classes_table_VariableDataProvider
         	$returnValue = $this->cache[$vcUri][$resource->getUri()][$column->getContextIdentifier().$column->getIdentifier()];
             
         } else {
-        	common_Logger::i('no data for resource: '.$resource->getUri().' column: '.$column->getIdentifier());
+        	common_Logger::d('no data for resource: '.$resource->getUri().' column: '.$column->getIdentifier());
         }
         // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C5D end
         return $returnValue;
