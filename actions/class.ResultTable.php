@@ -209,11 +209,9 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
      * @param type $format  json, csv
      */
     public function data($format ="json") {
-        
         $filter =  $this->hasRequestParameter('filter') ? $this->getFilterState('filter') : array();
        	$filterData =  $this->getRequestParameter('filterData');
     	$columns = $this->hasRequestParameter('columns') ? $this->getColumns('columns') : array();
-
     	$page = $this->getRequestParameter('page');
         $limit = $this->getRequestParameter('rows');
         $sidx = $this->getRequestParameter('sidx');
@@ -245,11 +243,10 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
                         );
                 }
         }
-
         foreach ($dpmap as $arr) {
                 $arr['instance']->prepare($results, $arr['columns']);
         }
-
+        
         foreach($results as $result) {
                 $cellData = array();
                 foreach ($columns as $column) {
@@ -284,7 +281,6 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
             default: $encodedData = json_encode($response);
             break;
         }
-
         echo $encodedData;
                 
     }
