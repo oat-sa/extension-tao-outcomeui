@@ -26,6 +26,9 @@
 
 class taoResults_models_classes_ResultsService extends tao_models_classes_ClassService {
 
+    
+    private $cacheItemResult = array(); // a local cache built upon need of  (string)$callId=> (core_kernel_classes_Resource) $itemResult
+    
     /**
      * (non-PHPdoc)
      * @see tao_models_classes_ClassService::getRootClass()
@@ -594,10 +597,19 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
      * @return Ambigous <mixed, core_kernel_classes_Resource>
      */
     public function getItemResult(core_kernel_classes_Resource $deliveryResult, $callId, $test, $item) {
+        
+
+        //check first from the local cache 
+        if (isset($this->cacheItemResult[$callId])) {
+            return $this->cacheItemResult[$callId];
+        }
+        
         $itemResultsClass = new core_kernel_classes_Class(ITEM_RESULT);
         $itemResults = $itemResultsClass->searchInstances(array(
             PROPERTY_IDENTIFIER => $callId
-        ), array("like" => false));
+        ), array(
+            "like" => false
+            ));
         if (count($itemResults) > 1) {
             throw new common_exception_Error('More then 1 itemResult for the corresponding Id ' . $deliveryResultIdentifier);
         } elseif (count($itemResults) == 1) {
@@ -611,8 +623,8 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
                 PROPERTY_RELATED_TEST => $test,
                 PROPERTY_RELATED_DELIVERY_RESULT => $deliveryResult->getUri()
             ));
-            common_Logger::d('spawned Item Result for ' . $callId);
         }
+        $this->cacheItemResult[$callId]= $returnValue;
         return $returnValue;
     }
 
@@ -698,6 +710,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
 
     /**
      * Retrieves information about the variable, including or not the related item $getItem (slower)
+     * 
      * @access public
      * @author Patrick Plichart, <patrick.plichart@taotesting.com>
      * @param  Resource variable
@@ -742,6 +755,8 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
         }
         return (array) $returnValue;
     }
+    
+
     /**
      * To be reviewed as it implies a dependency towards taoSubjects
      * @param core_kernel_classes_Resource $deliveryResult
