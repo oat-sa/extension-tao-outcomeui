@@ -62,7 +62,7 @@ class taoResults_models_classes_table_VariableDataProvider
     public function prepare($resources, $columns)
     {   
         $resultsService = taoResults_models_classes_ResultsService::singleton();
-        // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C5B begin
+        
         
         foreach($resources as $result){
             $itemresults = $resultsService->getVariables($result, new core_kernel_classes_Class(TAO_RESULT_VARIABLE), false);
@@ -116,7 +116,7 @@ class taoResults_models_classes_table_VariableDataProvider
     {
         $returnValue = array();
 
-        // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C5D begin
+        
         $vcUri = $column->getVariableClass()->getUri();
         if (isset($this->cache[$vcUri][$resource->getUri()][$column->getContextIdentifier().$column->getIdentifier()])) {
         	$returnValue = $this->cache[$vcUri][$resource->getUri()][$column->getContextIdentifier().$column->getIdentifier()];
@@ -124,7 +124,7 @@ class taoResults_models_classes_table_VariableDataProvider
         } else {
         	common_Logger::d('no data for resource: '.$resource->getUri().' column: '.$column->getIdentifier());
         }
-        // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C5D end
+        
         return $returnValue;
     }
     
@@ -139,12 +139,12 @@ class taoResults_models_classes_table_VariableDataProvider
     {
         $returnValue = null;
 
-        // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C69 begin
+        
         if (is_null(self::$singleton)) {
         	self::$singleton = new self();
         }
         return self::$singleton;
-        // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C69 end
+        
 
         return $returnValue;
     }
@@ -158,8 +158,8 @@ class taoResults_models_classes_table_VariableDataProvider
      */
     private function __construct()
     {
-        // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C6C begin
-        // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C6C end
+        
+        
     }
 
 }

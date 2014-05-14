@@ -67,13 +67,13 @@ abstract class taoResults_models_classes_table_VariableColumn
     {
         $returnValue = null;
 
-        // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C74 begin
+        
         
         $contextId = $array['contextId'];
         $contextLabel = $array['contextLabel'];
         $variableIdentifier =  $array['variableIdentifier'];
 		$returnValue = new static($contextId, $contextLabel, $variableIdentifier);
-        // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C74 end
+        
 
         return $returnValue;
     }
@@ -93,7 +93,7 @@ abstract class taoResults_models_classes_table_VariableColumn
         $this->identifier = $identifier;
         $this->contextIdentifier = $contextIdentifier;
         $this->contextLabel = $contextLabel;
-        // section 127-0-1-1--228e2cb4:13971ca3814:-8000:0000000000000C5C end
+        
     }
 
     /**
@@ -107,9 +107,9 @@ abstract class taoResults_models_classes_table_VariableColumn
     {
         $returnValue = null;
 
-        // section 127-0-1-1--8febfab:13977a059a7:-8000:0000000000004004 begin
+        
         $returnValue = taoResults_models_classes_table_VariableDataProvider::singleton();
-        // section 127-0-1-1--8febfab:13977a059a7:-8000:0000000000004004 end
+        
 
         return $returnValue;
     }
@@ -125,9 +125,9 @@ abstract class taoResults_models_classes_table_VariableColumn
     {
         $returnValue = null;
 
-        // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C6E begin
+        
         return $this->contextIdentifier;
-        // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C6E end
+        
 
         return $returnValue;
     }
@@ -143,9 +143,9 @@ abstract class taoResults_models_classes_table_VariableColumn
     {
         $returnValue = (string) '';
 
-        // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C70 begin
+        
         return $this->identifier;
-        // section 127-0-1-1--920ca93:1397ba721e9:-8000:0000000000000C70 end
+        
 
         return (string) $returnValue;
     }
@@ -161,13 +161,13 @@ abstract class taoResults_models_classes_table_VariableColumn
     {
         $returnValue = array();
 
-        // section 127-0-1-1--8febfab:13977a059a7:-8000:0000000000004002 begin
+        
         $returnValue = parent::toArray();
         //$returnValue['ca'] = "deprecated";
         $returnValue['contextId'] = $this->contextIdentifier;
         $returnValue['contextLabel'] = $this->contextLabel;
         $returnValue['variableIdentifier'] = $this->identifier;
-        // section 127-0-1-1--8febfab:13977a059a7:-8000:0000000000004002 end
+        
 
         return (array) $returnValue;
     }

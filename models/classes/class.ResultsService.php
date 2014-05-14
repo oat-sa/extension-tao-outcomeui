@@ -49,7 +49,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
      */
     public function getVariables(core_kernel_classes_Resource $deliveryResult, $variableClass = null, $flat = true) {
         $returnValue = array();
-        // section 127-0-1-1-16e239f7:13925739ce2:-8000:0000000000003B74 begin
+        
         foreach ($this->getItemResultsFromDeliveryResult($deliveryResult) as $itemResult) {
             $itemResultVariables = $this->getVariablesFromItemResult($itemResult, $variableClass);
             if ($flat) {
@@ -60,7 +60,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
             }
                 
         }
-        // section 127-0-1-1-16e239f7:13925739ce2:-8000:0000000000003B74 end
+        
         return (array) $returnValue;
     }
 
@@ -666,7 +666,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
     public function deleteResult(core_kernel_classes_Resource $result) {
         $returnValue = (bool) false;
 
-        // section 10-13-1-39-5129ca57:1276133a327:-8000:000000000000204D begin
+        
         if (!is_null($result)) {
 
             $itemResults = $this->getItemResultsFromDeliveryResult($result);
@@ -680,7 +680,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
 
             $returnValue = $result->delete();
         }
-        // section 10-13-1-39-5129ca57:1276133a327:-8000:000000000000204D end
+        
 
         return (bool) $returnValue;
     }
