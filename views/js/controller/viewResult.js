@@ -1,7 +1,4 @@
-define(['module', 'jquery', 'context', 'i18n', 'helpers', 'lib/jquery.fileDownload'], function (module, $, context, __,  helpers) {
-        
-       
-        
+define(['module', 'jquery', 'context', 'i18n', 'helpers', 'jquery.fileDownload'], function (module, $, context, __,  helpers) {
         
        return {
 
@@ -23,9 +20,6 @@ define(['module', 'jquery', 'context', 'i18n', 'helpers', 'lib/jquery.fileDownlo
                     classUri:  conf.classUri,
                     filter: $('#filter').val()
                      });
-                    
-                   
-                
                 });
 
 
