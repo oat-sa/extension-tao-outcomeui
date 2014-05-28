@@ -52,7 +52,16 @@ return array(
 	'managementRole' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole',
     'acl' => array(
         array('grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', array('ext'=>'taoResults'))
-    ),
+    ),'optimizableClasses' => array(
+/*			'http://www.tao.lu/Ontologies/TAOResult.rdf#Result',
+			'http://www.tao.lu/Ontologies/TAOResult.rdf#Variable',*/
+			'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable',
+			'http://www.tao.lu/Ontologies/TAOResult.rdf#OutcomeVariable',
+                        'http://www.tao.lu/Ontologies/TAOResult.rdf#TraceVariable',
+                        'http://www.tao.lu/Ontologies/TAOResult.rdf#ItemResult'/*
+ * 
+ */
+	),
 	'constants' => array(
 	 	# actions directory
 	 	"DIR_ACTIONS"			=> $extpath."actions".DIRECTORY_SEPARATOR,
