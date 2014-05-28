@@ -173,7 +173,9 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
                 foreach ($variables as $variableIdentifier => $observations) {
                     foreach ($observations as $var) {
                         $type = $variableType;
+                        if (isset($var[PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE])) {
                         $correctResponse = current($var[PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE]);
+                        }
 
                         if ($type == CLASS_RESPONSE_VARIABLE) {
                             $numberOfResponseVariables++;
@@ -247,30 +249,32 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
                 $variablesByItem[$itemIdentifier]['itemModel'] = $undefinedStr;
             }
             foreach ($this->getVariablesFromItemResult($itemResult) as $variable) {
-
+                //retrieve the type of the variable
+                $class =  current($variable->getTypes());    
+                $type= $class->getUri();
+                
+                //common properties to all variables
+                $properties = array(
+                        PROPERTY_IDENTIFIER,
+                        PROPERTY_VARIABLE_BASETYPE,
+                        PROPERTY_VARIABLE_CARDINALITY,
+                        PROPERTY_VARIABLE_EPOCH
+                    );
+                
+                //specific property Response Variable
+                if ($type == TAO_RESULT_RESPONSE) {
+                    $properties[] = PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE;
+                }
+                
                 $baseTypes = $variable->getPropertyValues(new core_kernel_classes_Property(PROPERTY_VARIABLE_BASETYPE));
                 $baseType = current($baseTypes);
                 if ($baseType != "file") {
-                    $variableDescription = $variable->getPropertiesValues(array(
-                        PROPERTY_IDENTIFIER,
-                        RDF_VALUE,
-                        RDF_TYPE,
-                        PROPERTY_VARIABLE_BASETYPE,
-                        PROPERTY_VARIABLE_CARDINALITY,
-                        PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE,
-                        PROPERTY_VARIABLE_EPOCH
-                    ));
+                    $properties[] = RDF_VALUE;
+                    $variableDescription = $variable->getPropertiesValues($properties);
 
                     $variableDescription[RDF_VALUE] = array(base64_decode(current($variableDescription[RDF_VALUE])));
                 } else {
-                    $variableDescription = $variable->getPropertiesValues(array(
-                        PROPERTY_IDENTIFIER,
-                        RDF_TYPE,
-                        PROPERTY_VARIABLE_BASETYPE,
-                        PROPERTY_VARIABLE_CARDINALITY,
-                        PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE,
-                        PROPERTY_VARIABLE_EPOCH
-                    ));
+                    $variableDescription = $variable->getPropertiesValues($properties);
                 }
                 try {
                     common_Logger::d("Retrieving related Item for itemResult " . $itemResult->getUri() . "");
@@ -298,13 +302,16 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
                     $itemLabel = $undefinedStr;
                     $variablesByItem[$itemIdentifier]['itemModel'] = $undefinedStr;
                 }
-                $type = current($variableDescription[RDF_TYPE])->getUri();
+                
+                
                 $variableIdentifier = current($variableDescription[PROPERTY_IDENTIFIER])->__toString();
                 $epoch = current($variableDescription[PROPERTY_VARIABLE_EPOCH])->__toString();
                 $variableDescription["uri"] = $variable->getUri();
                 $variableDescription["epoch"] = array(tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE));
-
+                
+                if (isset($variableDescription[PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE])) {
                 $correctResponse = current($variableDescription[PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE]);
+                }
                 if ($correctResponse and (get_class($correctResponse) == 'core_kernel_classes_Resource')) {
                     if ($correctResponse->getUri() == GENERIS_TRUE) {
                         $variableDescription["isCorrect"] = "correct";
@@ -754,7 +761,6 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
         $baseType = current($baseTypes);
         if ($baseType != "file") {
             $propValues = $variable->getPropertiesValues(array(
-                RDF_TYPE,
                 PROPERTY_IDENTIFIER,
                 PROPERTY_VARIABLE_EPOCH,
                 RDF_VALUE,
@@ -764,7 +770,6 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
             $returnValue["value"] = (string) base64_decode(current($propValues[RDF_VALUE]));
         } else {
             $propValues = $variable->getPropertiesValues(array(
-                RDF_TYPE,
                 PROPERTY_IDENTIFIER,
                 PROPERTY_VARIABLE_EPOCH,
                 PROPERTY_VARIABLE_CARDINALITY,
@@ -773,7 +778,8 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
             $returnValue["value"] = "";
         }
         $returnValue["identifier"] = current($propValues[PROPERTY_IDENTIFIER])->__toString();
-        $returnValue["type"] = current($propValues[RDF_TYPE]);
+        $class =  current($variable->getTypes());    
+        $returnValue["type"]= $class;
         $returnValue["epoch"] = current($propValues[PROPERTY_VARIABLE_EPOCH])->__toString();
         if (count($propValues[PROPERTY_VARIABLE_CARDINALITY]) > 0) {
             $returnValue["cardinality"] = current($propValues[PROPERTY_VARIABLE_CARDINALITY])->__toString();
