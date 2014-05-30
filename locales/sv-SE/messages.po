@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO v2.4-beta3\n"
-"PO-Revision-Date: 2013-04-05T18:39:33\n"
+"Project-Id-Version: TAO v2.6-beta2\n"
+"PO-Revision-Date: 2014-05-30T15:54:31\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: sv-SE\n"
@@ -35,6 +35,12 @@ msgstr ""
 msgid "Add Test Taker"
 msgstr ""
 
+msgid "All collected values"
+msgstr ""
+
+msgid "All collected variables"
+msgstr ""
+
 msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
 msgstr "Alla resultat av avklarade tester med data om testtagare, grupper och moment, liksom särskild data insamlad under testutförandet samlas och hanteras här."
 
@@ -44,13 +50,19 @@ msgstr ""
 msgid "Average"
 msgstr ""
 
-msgid "Build/Export data table"
+msgid "Class"
 msgstr ""
 
 msgid "Class saved"
 msgstr ""
 
 msgid "Collected Results"
+msgstr ""
+
+msgid "Column chooser"
+msgstr ""
+
+msgid "Correct"
 msgstr ""
 
 msgid "custom table"
@@ -74,28 +86,49 @@ msgstr ""
 msgid "Delivery results"
 msgstr ""
 
-msgid "Download CSV File"
+msgid "download"
 msgstr ""
 
 msgid "Edit result class"
 msgstr "Redigera resultatklass"
 
+msgid "Email:"
+msgstr ""
+
 msgid "Error"
 msgstr ""
 
-msgid "export"
+msgid "Export CSV File"
 msgstr ""
 
-msgid "Filter columns"
+msgid "Export Table"
+msgstr ""
+
+msgid "Filter"
+msgstr ""
+
+msgid "Filter values:"
+msgstr ""
+
+msgid "First Name:"
+msgstr ""
+
+msgid "First submitted responses only"
+msgstr ""
+
+msgid "First submitted variable only"
 msgstr ""
 
 msgid "Frequency per Score"
 msgstr ""
 
-msgid "Generated on : "
+msgid "Generated on: "
 msgstr ""
 
-msgid "import"
+msgid "Grades"
+msgstr ""
+
+msgid "Incorrect"
 msgstr ""
 
 #, tao-public
@@ -108,14 +141,23 @@ msgstr ""
 msgid "Label"
 msgstr ""
 
-msgid "lists"
+msgid "Label:"
+msgstr ""
+
+msgid "Last Name:"
+msgstr ""
+
+msgid "Last submitted responses only"
+msgstr ""
+
+msgid "Last submitted variable only"
+msgstr ""
+
+msgid "Login:"
 msgstr ""
 
 #, tao-public
 msgid "Manage Results"
-msgstr ""
-
-msgid "meta data"
 msgstr ""
 
 msgid "move"
@@ -124,13 +166,16 @@ msgstr ""
 msgid "new class"
 msgstr ""
 
+msgid "Not Evaluated"
+msgstr ""
+
 msgid "Observed performances per distinc score variable types "
 msgstr ""
 
-msgid "Performed by :"
+msgid "Print Report"
 msgstr ""
 
-msgid "Print Report"
+msgid "Related Deliveries:"
 msgstr ""
 
 msgid "Remove All grades"
@@ -142,8 +187,11 @@ msgstr ""
 msgid "Report generated from the following subset of results : "
 msgstr ""
 
-msgid "Result saved"
-msgstr "Resultat sparat"
+msgid "Responses"
+msgstr ""
+
+msgid "Responses Evaluation"
+msgstr ""
 
 #, tao-public
 msgid "Results"
@@ -158,6 +206,9 @@ msgstr "Resultatarkiv"
 msgid "Results Selection Filters"
 msgstr ""
 
+msgid "Score average"
+msgstr ""
+
 msgid "score average"
 msgstr ""
 
@@ -170,16 +221,19 @@ msgstr ""
 msgid "Scores and response rates statistics"
 msgstr ""
 
-msgid "search"
+msgid "Summary Report"
 msgstr ""
 
-msgid "simple report"
-msgstr ""
-
-msgid "Statistical Report for the current selection"
+msgid "summary report"
 msgstr ""
 
 msgid "Test taker"
+msgstr ""
+
+msgid "Test Taker"
+msgstr ""
+
+msgid "Test Variables"
 msgstr ""
 
 msgid "The class you have selected contains no results to be analysed, please select a different class"
@@ -188,19 +242,16 @@ msgstr ""
 msgid "The number of observations is too low"
 msgstr ""
 
-msgid "The selection contains results related to the following delivery(ies) :"
-msgstr ""
-
 msgid "There was a problem generating your report, please try again."
 msgstr ""
 
-msgid "This module constitutes the final step."
-msgstr "Denna modul utgör det slutgiltiga steget"
-
-msgid "Total Average"
+msgid "Total Standard Deviation"
 msgstr ""
 
-msgid "Total Standard Deviation"
+msgid "Traces"
+msgstr ""
+
+msgid "unknown"
 msgstr ""
 
 msgid "VariableName"

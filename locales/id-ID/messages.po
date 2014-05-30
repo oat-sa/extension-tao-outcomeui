@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO v2.5-rc01\n"
-"PO-Revision-Date: 2013-10-09T11:08:13\n"
+"Project-Id-Version: TAO v2.6-beta2\n"
+"PO-Revision-Date: 2014-05-30T15:54:31\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: id-ID\n"
@@ -38,6 +38,9 @@ msgstr ""
 msgid "All collected values"
 msgstr ""
 
+msgid "All collected variables"
+msgstr ""
+
 msgid "All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."
 msgstr ""
 
@@ -56,16 +59,10 @@ msgstr ""
 msgid "Collected Results"
 msgstr ""
 
-msgid "Collected Value"
-msgstr ""
-
 msgid "Column chooser"
 msgstr ""
 
 msgid "Correct"
-msgstr ""
-
-msgid "Correctness"
 msgstr ""
 
 msgid "custom table"
@@ -107,6 +104,9 @@ msgstr ""
 msgid "Export Table"
 msgstr ""
 
+msgid "Filter"
+msgstr ""
+
 msgid "Filter values:"
 msgstr ""
 
@@ -114,6 +114,9 @@ msgid "First Name:"
 msgstr ""
 
 msgid "First submitted responses only"
+msgstr ""
+
+msgid "First submitted variable only"
 msgstr ""
 
 msgid "Frequency per Score"
@@ -145,6 +148,9 @@ msgid "Last Name:"
 msgstr ""
 
 msgid "Last submitted responses only"
+msgstr ""
+
+msgid "Last submitted variable only"
 msgstr ""
 
 msgid "Login:"
@@ -185,9 +191,6 @@ msgid "Responses"
 msgstr ""
 
 msgid "Responses Evaluation"
-msgstr ""
-
-msgid "Result saved"
 msgstr ""
 
 #, tao-public
@@ -242,19 +245,13 @@ msgstr ""
 msgid "There was a problem generating your report, please try again."
 msgstr ""
 
-msgid "This module constitutes the final step."
-msgstr ""
-
-msgid "Timestamp"
-msgstr ""
-
 msgid "Total Standard Deviation"
 msgstr ""
 
 msgid "Traces"
 msgstr ""
 
-msgid "Variable Name"
+msgid "unknown"
 msgstr ""
 
 msgid "VariableName"

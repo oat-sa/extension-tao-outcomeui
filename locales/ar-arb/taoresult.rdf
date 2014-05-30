@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
 -->
 <rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" xml:base="http://www.tao.lu/Ontologies/TAOResult.rdf#">
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#Result">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#Result
@@ -14,7 +14,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[Result]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#Result
@@ -24,7 +24,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Test taker of result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject
@@ -32,7 +32,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[Test taker of result]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Test taker of result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject
@@ -42,7 +42,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult
@@ -50,7 +50,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[Result]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult
@@ -60,7 +60,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#ItemResult">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Item Result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#ItemResult
@@ -68,7 +68,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[Item Result]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#ItemResult
@@ -78,7 +78,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#RelatedItem">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Related Item
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#RelatedItem
@@ -86,7 +86,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[Related Item]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Related Item
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#RelatedItem
@@ -96,7 +96,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#relatedDeliveryResult">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Delivery of result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#relatedDeliveryResult
@@ -104,7 +104,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[Delivery of result]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Delivery of result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#relatedDeliveryResult
@@ -114,7 +114,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#RelatedTest">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Related Item
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#RelatedTest
@@ -122,7 +122,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[Related Item]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Related Item
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#RelatedTest
@@ -132,7 +132,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#Identifier">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Result Identifier
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#Identifier
@@ -140,7 +140,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[Result Identifier]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source An identifier related to the instanciation of a delivery a test an item or a variable . If the item is used twice, different ids are setup
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#Identifier
@@ -150,7 +150,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Delivery of result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery
@@ -158,7 +158,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[Delivery of result]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Delivery of result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery
@@ -168,7 +168,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#Variable">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Result Variable
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#Variable
@@ -176,7 +176,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[Result Variable]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Variable of a DeliveryResult
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#Variable
@@ -186,7 +186,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#cardinality">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Related Item result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#cardinality
@@ -194,7 +194,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[Related Item result]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Related Item result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#cardinality
@@ -204,7 +204,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#baseType">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Related Item result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#baseType
@@ -212,7 +212,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[Related Item result]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Related Item result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#baseType
@@ -222,7 +222,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Response Variable
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable
@@ -230,7 +230,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[Response Variable]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Response to an interaction
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable
@@ -240,7 +240,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#correctResponse">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source The correct expected response
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#correctResponse
@@ -248,7 +248,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[The correct expected response]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Related Item result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#correctResponse
@@ -258,7 +258,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#candidateResponse">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source The candidate response
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#candidateResponse
@@ -266,7 +266,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[The candidate response]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source The candidate response
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#candidateResponse
@@ -276,7 +276,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#OutcomeVariable">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source OutCome Variable
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#OutcomeVariable
@@ -284,7 +284,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[OutCome Variable]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source OutCome Variable
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#OutcomeVariable
@@ -294,7 +294,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#normalMaximum">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Related Item result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#normalMaximum
@@ -302,7 +302,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[Related Item result]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Related Item result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#normalMaximum
@@ -312,7 +312,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#normalMinimum">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Related Item result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#normalMinimum
@@ -320,7 +320,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[Related Item result]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Related Item result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#normalMinimum
@@ -330,7 +330,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#TraceVariable">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Trace Variable
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#TraceVariable
@@ -338,7 +338,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[Trace Variable]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Trace Variable
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#TraceVariable
@@ -348,7 +348,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#relatedItemResult">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Related Item result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#relatedItemResult
@@ -356,7 +356,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[Related Item result]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Related Item result
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#relatedItemResult
@@ -366,7 +366,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#variableEpoch">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source The epoch when the variable got stored
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#variableEpoch
@@ -374,7 +374,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[The epoch when the variable got stored]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source The epoch when the variable got stored
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#variableEpoch
@@ -384,7 +384,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#variableComment">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Variable Comment
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#variableComment
@@ -392,7 +392,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[Variable Comment]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Variable Comment
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#variableComment
@@ -402,7 +402,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source Results Manager
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole
@@ -410,7 +410,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[Results Manager]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source The Results Manager Role
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole
@@ -420,7 +420,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#taoResultServerModel">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source taoResults storage (database)
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#taoResultServerModel
@@ -428,7 +428,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[taoResults storage (database)]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source TAO Result Server 2.5 (DB storage)
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#taoResultServerModel
@@ -438,7 +438,7 @@
   </rdf:Description>
   <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#taoResultServer">
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source TAO Result Server 2.5 (DB storage)
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#taoResultServer
@@ -446,7 +446,7 @@
     -->
     <rdfs:label xml:lang="ar-arb"><![CDATA[TAO Result Server 2.5 (DB storage)]]></rdfs:label>
     <!--
-    @sourceLanguage EN
+    @sourceLanguage en-US
     @targetLanguage ar-arb
     @source TAO Result Server 2.5 (using DB storage)
     @subject http://www.tao.lu/Ontologies/TAOResult.rdf#taoResultServer
