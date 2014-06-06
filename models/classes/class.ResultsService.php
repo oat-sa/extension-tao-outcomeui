@@ -310,7 +310,10 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
                 $variableDescription["epoch"] = array(tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE));
                 
                 if (isset($variableDescription[PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE])) {
-                $correctResponse = current($variableDescription[PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE]);
+                    $correctResponse = current($variableDescription[PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE]);
+                }
+                else{
+                    $correctResponse = false;
                 }
                 if ($correctResponse and (get_class($correctResponse) == 'core_kernel_classes_Resource')) {
                     if ($correctResponse->getUri() == GENERIS_TRUE) {
