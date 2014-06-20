@@ -12,8 +12,8 @@ $GLOBALS['__l10n']["Add / Edit lists"]="إضافة / تعديل القوائم";
 $GLOBALS['__l10n']["Add a user"]="اضافة مستخدم";
 $GLOBALS['__l10n']["Add property"]="إضافة خاصية";
 $GLOBALS['__l10n']["Advanced Mode"]="طريقة متقدمة";
-$GLOBALS['__l10n']["All"]="كل";
 $GLOBALS['__l10n']["all"]="كل";
+$GLOBALS['__l10n']["All"]="كل";
 $GLOBALS['__l10n']["All (the complete TAO Module)"]="الكل";
 $GLOBALS['__l10n']["All results of passed Tests with their referring Subject, Group and Item specific data, as well as the individual data collected during Test execution are stored and managed here."]="نتائج كل الاختبارات التي مرت مع معطيات المترشحين,المجموعات و الاسئلةوايضا المعطيات المتحصل عليها اثناء اجراء اي اختبار تجمع وتسير هنا";
 $GLOBALS['__l10n']["Allowed files types: "]="أنواع الملفات المسموحة";
@@ -40,14 +40,14 @@ $GLOBALS['__l10n']["Deliveries"]="Deliveries";
 $GLOBALS['__l10n']["Don't set"]="لا تدرج";
 $GLOBALS['__l10n']["Download"]="تحميل";
 $GLOBALS['__l10n']["duplicate"]="تكرار";
-$GLOBALS['__l10n']["edit"]="تحرير";
 $GLOBALS['__l10n']["Edit"]="تحرير";
+$GLOBALS['__l10n']["edit"]="تحرير";
 $GLOBALS['__l10n']["Edit a user"]="تحرير مستخدم";
 $GLOBALS['__l10n']["Edit Comment"]="تحرير تعليق";
 $GLOBALS['__l10n']["Edit result class"]="تعديل صنف نتيجة";
 $GLOBALS['__l10n']["Edit user"]="تحرير مستخدم";
-$GLOBALS['__l10n']["element"]="عنصر";
 $GLOBALS['__l10n']["Element"]="العنصر";
+$GLOBALS['__l10n']["element"]="عنصر";
 $GLOBALS['__l10n']["element deleted"]="عنصر محذوف";
 $GLOBALS['__l10n']["Error during file import"]="خطأ أثناء استيراد الملف";
 $GLOBALS['__l10n']["Exclusive (OR)"]="Exclusif (OU)";
@@ -59,8 +59,8 @@ $GLOBALS['__l10n']["Filters"]="Filtres";
 $GLOBALS['__l10n']["Groups"]="مجموعات";
 $GLOBALS['__l10n']["Import"]="استيراد";
 $GLOBALS['__l10n']["Inclusive (AND)"]="Inclusif (ET)";
-$GLOBALS['__l10n']["Interface Language"]="لغة الواجهة";
 $GLOBALS['__l10n']["Interface language"]="لغة الواجهة";
+$GLOBALS['__l10n']["Interface Language"]="لغة الواجهة";
 $GLOBALS['__l10n']["Invalid field length"]="طول الحقل غير صحيح";
 $GLOBALS['__l10n']["Invalid field range"]="Le rang du champ est invalide";
 $GLOBALS['__l10n']["Invalid file size"]="حجم الملف غير صحيح";
@@ -79,7 +79,6 @@ $GLOBALS['__l10n']["Lists"]="القوائم";
 $GLOBALS['__l10n']["Local Data (the local namespace containing only the data inserted by the users)"]="(البيانات المحلية (مساحة الاسم المحلي الذي يحتوي فقط على البيانات المدرجة من قبل المستخدمين";
 $GLOBALS['__l10n']["Login"]="الدخول";
 $GLOBALS['__l10n']["Manage data list"]="إدارة قائمة البيانات";
-$GLOBALS['__l10n']["Manage deliveries"]="Gérer les deliveries";
 $GLOBALS['__l10n']["Manage groups"]="إدارة المجموعات";
 $GLOBALS['__l10n']["Manage items"]="ادارة الاسئلة";
 $GLOBALS['__l10n']["Manage test takers"]="إدارة المتقدمين للاختبار";
@@ -124,8 +123,8 @@ $GLOBALS['__l10n']["Right click the tree to manage your lists"]="استعمل ز
 $GLOBALS['__l10n']["Save"]="حفظ";
 $GLOBALS['__l10n']["Search"]="بحث";
 $GLOBALS['__l10n']["Search results"]="البحث عن النتائج";
-$GLOBALS['__l10n']["select"]="اختر";
 $GLOBALS['__l10n']["Select"]="حدد";
+$GLOBALS['__l10n']["select"]="اختر";
 $GLOBALS['__l10n']["Select a language"]="حدد اللغة";
 $GLOBALS['__l10n']["Select the element destination"]="حدد العنصر المستقبل";
 $GLOBALS['__l10n']["selected"]="محدد";
@@ -134,7 +133,7 @@ $GLOBALS['__l10n']["Selection saved successfully"]="تم حفظ التحديد �
 $GLOBALS['__l10n']["Simple Mode"]="الطريقة البسيطة";
 $GLOBALS['__l10n']["Start upload"]="بدء التحميل";
 $GLOBALS['__l10n']["Supported export formats"]="صيغ الاستيراد المعتمدة";
-$GLOBALS['__l10n']["TAO Back Office"]="TAO: Outils d'administration";
+$GLOBALS['__l10n']["TAO Delivery Server"]="Serveur de delivery TAO";
 $GLOBALS['__l10n']["Tests"]="الاختبارات";
 $GLOBALS['__l10n']["The format of this field is not valid."]="تنسيق هذا الحقل غير صالح";
 $GLOBALS['__l10n']["The uploaded file is too large"]="الملف المحمول كبير جدا";
