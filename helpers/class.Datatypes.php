@@ -51,16 +51,19 @@ class taoResults_helpers_Datatypes {
         
         $returnValue = array('name' => '', 'mime' => '', 'data' => '');
         
-        $filenameLen = current(unpack('S', substr($binary, 0, 2)));
-        if ($filenameLen > 0) {
-            $returnValue['name'] = substr($binary, 2, $filenameLen);
+        if (empty($binary) === false) {
+            
+            $filenameLen = current(unpack('S', substr($binary, 0, 2)));
+            if ($filenameLen > 0) {
+                $returnValue['name'] = substr($binary, 2, $filenameLen);
+            }
+            
+            $mimetypeLen = current(unpack('S', substr($binary, 2 + $filenameLen, 2)));
+            $returnValue['mime'] = substr($binary, 4 + $filenameLen, $mimetypeLen);
+            
+            $returnValue['data'] = substr($binary, 4 + $filenameLen + $mimetypeLen);
         }
         
-        $mimetypeLen = current(unpack('S', substr($binary, 2 + $filenameLen, 2)));
-        $returnValue['mime'] = substr($binary, 4 + $filenameLen, $mimetypeLen);
-        
-        $returnValue['data'] = substr($binary, 4 + $filenameLen + $mimetypeLen);
         return $returnValue;
     }
-    
 }
