@@ -141,9 +141,8 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
      */
     public function getVariableValue($variableUri) {
         $variable = new core_kernel_classes_Resource($variableUri);
-        core_kernel_classes_DbWrapper::singleton()->debug = true;
         $return =  $variable->getUniquePropertyValue(new core_kernel_classes_Property(RDF_VALUE));
-        core_kernel_classes_DbWrapper::singleton()->debug = false;
+
         return $return;
     }
 
@@ -735,7 +734,6 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
         if (core_kernel_classes_DbWrapper::singleton()->getPlatForm()->getName() == 'mysql') {            
             if (defined("PDO::MYSQL_ATTR_MAX_BUFFER_SIZE")) {
                 $maxBuffer = (is_int(ini_get('upload_max_filesize'))) ? (ini_get('upload_max_filesize')* 1.5) : 10485760 ;
-                common_Logger::i("PDO::MYSQL_ATTR_MAX_BUFFER_SIZE : ".PDO::MYSQL_ATTR_MAX_BUFFER_SIZE);
                 core_kernel_classes_DbWrapper::singleton()->getSchemaManager()->setAttribute(PDO::MYSQL_ATTR_MAX_BUFFER_SIZE,$maxBuffer);
             }
         }
