@@ -141,7 +141,10 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
      */
     public function getVariableValue($variableUri) {
         $variable = new core_kernel_classes_Resource($variableUri);
-        return $variable->getUniquePropertyValue(new core_kernel_classes_Property(RDF_VALUE));
+        core_kernel_classes_DbWrapper::singleton()->debug = true;
+        $return =  $variable->getUniquePropertyValue(new core_kernel_classes_Property(RDF_VALUE));
+        core_kernel_classes_DbWrapper::singleton()->debug = false;
+        return $return;
     }
 
     /**
@@ -394,6 +397,8 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
         $variablesData = array();
         
         $variableClass = new core_kernel_classes_Class(TAO_RESULT_VARIABLE);
+        
+        
         $variables = $variableClass->searchInstances(array(
             PROPERTY_RELATED_DELIVERY_RESULT => $deliveryResult->getUri()
         ), array(
@@ -401,16 +406,17 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
             'like' => false
         ));
         foreach ($variables as $variable) {
-            
+
             $variableDescription = $variable->getPropertiesValues(array(
                 PROPERTY_IDENTIFIER,
                 RDF_VALUE,
                 PROPERTY_VARIABLE_CARDINALITY,
                 PROPERTY_VARIABLE_BASETYPE,
-                RDF_TYPE,
-                PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE,
                 PROPERTY_VARIABLE_EPOCH
             ));
+            core_kernel_classes_DbWrapper::singleton()->debug=false;
+            $class = current($variable->getTypes());
+            $variableDescription[RDF_TYPE] =  $class->getUri(); 
             $variableDescription[RDF_VALUE] = array(
                 base64_decode(current($variableDescription[RDF_VALUE]))
             );
