@@ -549,8 +549,6 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
         switch (get_class($itemVariable)) {
             case "taoResultServer_models_classes_OutcomeVariable": {
                     $outComeVariableClass = new core_kernel_classes_Class(CLASS_OUTCOME_VARIABLE);
-                    
-                    
                     $properties = array(
                         PROPERTY_IDENTIFIER => $itemVariable->getIdentifier(),
                         PROPERTY_VARIABLE_CARDINALITY => $itemVariable->getCardinality(),
@@ -730,6 +728,19 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
     public function getVariableFile($variableUri) {
         //distinguish QTI file from other "file" base type
         $baseType = $this->getVariableBaseType($variableUri);
+        
+        // https://bugs.php.net/bug.php?id=52623 ; 
+        // if the constant for max buffering, mysqlnd or similar driver
+        // is being used without need to adapt buffer size as it is atutomatically adapted for all the data. 
+        if (core_kernel_classes_DbWrapper::singleton()->getPlatForm()->getName() == 'mysql') {            
+            if (defined("PDO::MYSQL_ATTR_MAX_BUFFER_SIZE")) {
+                $maxBuffer = (is_int(ini_get('upload_max_filesize'))) ? (ini_get('upload_max_filesize')* 1.5) : 10485760 ;
+                common_Logger::i("PDO::MYSQL_ATTR_MAX_BUFFER_SIZE : ".PDO::MYSQL_ATTR_MAX_BUFFER_SIZE);
+                core_kernel_classes_DbWrapper::singleton()->getSchemaManager()->setAttribute(PDO::MYSQL_ATTR_MAX_BUFFER_SIZE,$maxBuffer);
+            }
+        }
+        
+        
         switch ($baseType) {
             case "file": {
                     $value = (base64_decode($this->getVariableValue($variableUri)));
