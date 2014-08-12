@@ -21,7 +21,7 @@ requirejs.config({
 <div id="content" class="tao-scope">
     
     <div id="resultsViewTools">
-        <select id="filter" class="select2">
+        <select id="filter" class="select2" data-has-search="false">
                 <option  value="all" ><?=__('All collected variables')?></option>
                 <option  value="firstSubmitted" ><?=__('First submitted variable only')?></option>
                 <option  value="lastSubmitted" ><?=__('Last submitted variable only')?></option>
