@@ -24,7 +24,7 @@
                         <icon id="icon-move-item"/>
                     </action>
                     <action name="Delete" js="removeNode" url="/taoResults/Results/delete" context="resource" group="tree">
-                        <icon id="icon-eraser"/>
+                        <icon id="icon-bin"/>
                     </action>
                     <action name="Summary report" url="/taoResults/SimpleReport/build" context="class" group="tree">
                         <icon id="icon-summary-report"/>
