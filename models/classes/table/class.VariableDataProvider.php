@@ -61,21 +61,34 @@ class taoResults_models_classes_table_VariableDataProvider
      */
     public function prepare($resources, $columns)
     {   
-        $resultsService = taoResults_models_classes_ResultsService::singleton();
-        
-        
+        $resultsService = taoResults_models_classes_ResultsService::singleton();      
+
         foreach($resources as $result){
             $itemresults = $resultsService->getVariables($result, new core_kernel_classes_Class(TAO_RESULT_VARIABLE), false);
             $cellData = array();
             foreach ($itemresults as $itemResultUri=>$vars) {
-                $item = $resultsService->getItemFromItemResult(new core_kernel_classes_Resource($itemResultUri));
+                //cache the item information pertaining to a given itemResult (stable over time)
+                if (common_cache_FileCache::singleton()->has('itemResultItemCache'.$itemResultUri)) {
+                    $itemUri = common_cache_FileCache::singleton()->get('itemResultItemCache'.$itemResultUri);
+                    $item = new core_kernel_classes_Resource($itemUri);
+                } else {
+                    $item = $resultsService->getItemFromItemResult(new core_kernel_classes_Resource($itemResultUri));
+                    common_cache_FileCache::singleton()->put($item->getUri(), 'itemResultItemCache'.$itemResultUri);
+                    
+                }
                 if (get_class($item) == "core_kernel_classes_Resource") {
                    $contextIdentifier = (string)$item->getUri();
                    } else {
                    $contextIdentifier = (string)$item->__toString();    
                    }
                 foreach ($vars as $var) {
-                    $varData = $resultsService->getVariableData($var);
+                    //cache the variable data
+                    if (common_cache_FileCache::singleton()->has('variableDataCache'.$var->getUri())) {                    
+                        $varData = common_cache_FileCache::singleton()->get('variableDataCache'.$var->getUri());
+                    } else {
+                        $varData = $resultsService->getVariableData($var);
+                        common_cache_FileCache::singleton()->put($varData, 'variableDataCache'.$var->getUri());
+                    }
                     if (is_array($varData["value"])) {
                         $varData["value"] = json_encode($varData["value"]);
                     }
@@ -100,7 +113,7 @@ class taoResults_models_classes_table_VariableDataProvider
             }
     }
            
-
+        
     }
     
     /**
