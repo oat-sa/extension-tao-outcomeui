@@ -48,18 +48,44 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
      * @return array
      */
     public function getVariables(core_kernel_classes_Resource $deliveryResult, $variableClass = null, $flat = true) {
-        $returnValue = array();
-        
-        foreach ($this->getItemResultsFromDeliveryResult($deliveryResult) as $itemResult) {
-            $itemResultVariables = $this->getVariablesFromItemResult($itemResult, $variableClass);
-            if ($flat) {
-                $returnValue = array_merge($itemResultVariables, $returnValue);
-            } else {
-                $itemResultUri = $itemResult->getUri();
-                $returnValue[$itemResultUri] = $itemResultVariables; 
-            }
-                
+        $variables = array();
+        //this service is slow due to the way the data model design  
+        //if the delvieryResult related execution is finished, the data is stored in cache. 
+        $serial = 'deliveryResultVariables';
+        if ($variableClass != null) {
+            $serial.=$variableClass->getUri();
         }
+        if (common_cache_FileCache::singleton()->has($serial)) {
+            $variables = common_cache_FileCache::singleton()->get($serial);
+        } else {           
+           foreach ($this->getItemResultsFromDeliveryResult($deliveryResult) as $itemResult) {
+                $itemResultVariables = $this->getVariablesFromItemResult($itemResult, $variableClass);
+                $itemResultUri = $itemResult->getUri();
+                $variables[$itemResultUri] = $itemResultVariables;        
+           }          
+           //overhead for cache handling, the data is stored only when the underlying deliveryExecution is finished
+           try {
+                $executionIdentifier = $deliveryResult->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_IDENTIFIER));
+                $status = $executionIdentifier->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_DELVIERYEXECUTION_STATUS));
+                if ($status->getUri()== INSTANCE_DELIVERYEXEC_FINISHED ) {
+                    common_cache_FileCache::singleton()->put($variables, $serial);
+                }
+           
+           }catch (common_Exception $e) {
+               common_Logger::i("List of variables of results of ".$deliveryResult->getUri()." could not be reliable cached due to an unfinished execution");
+           }
+           
+           
+        }
+         if ($flat) {
+                $returnValue = array();
+                foreach ($variables as $itemResultVariables) {
+                $returnValue = array_merge($itemResultVariables, $returnValue);
+                }
+            } else {
+                $returnValue = $variables;
+            }
+        
         
         return (array) $returnValue;
     }
