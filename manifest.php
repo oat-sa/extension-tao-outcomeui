@@ -51,7 +51,9 @@ return array(
 	),
 	'managementRole' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole',
     'acl' => array(
-        array('grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', array('ext'=>'taoResults'))
+        array('grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', array('ext'=>'taoResults')),
+        array('grant', 'http://www.tao.lu/Ontologies/generis.rdf#AnonymousRole', array('ext'=>'taoResults', 'mod' => 'RestResults'))
+        
     ),'optimizableClasses' => array(
 /*			'http://www.tao.lu/Ontologies/TAOResult.rdf#Result',
 			'http://www.tao.lu/Ontologies/TAOResult.rdf#Variable',*/
