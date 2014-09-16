@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE extension SYSTEM "../../tao/doc/structures.dtd">
+<!DOCTYPE structures SYSTEM "../../tao/doc/structures.dtd">
 <structures>
-    <structure id="results" name="Results" level="5" visible="true">
+    <structure id="results" name="Results" level="5" group="main">
         <description>View and format the collected results.</description>
         <icon id="icon-result" src=""/>
         <sections>
