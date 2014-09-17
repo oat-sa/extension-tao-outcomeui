@@ -10,13 +10,20 @@
                     <tree name="Results library"
                           className="Result"
                           dataUrl="/taoResults/Results/getOntologyData"
-                          addSubClassUrl="/taoResults/Results/addSubClass"
-                          editClassUrl="/taoResults/Results/index"
-                          editInstanceUrl="/taoResults/Results/viewResult"
-                          moveInstanceUrl="/taoResults/Results/moveInstance"
+                            selectClass="Edit class"
+                            selectInstance="Edit test"
+                            moveInstance="Move"
+                            delete="Delete" 
                             />
                 </trees>
                 <actions>
+                	<action name="Edit class" url="/taoResults/Resuls/index" group="hidden" context="class">
+                        <icon id="icon-edit"/>
+                    </action>
+
+                    <action name="Edit result"  url="/taoResults/Results/viewResult" group="content" context="instance">
+                        <icon id="icon-edit"/>
+                    </action>
                     <action name="New class" js="subClass" url="/taoResults/Results/addSubClass" context="class" group="content">
                         <icon id="icon-folder-open"/>
                     </action>
