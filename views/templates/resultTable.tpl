@@ -78,25 +78,25 @@ require(['jquery', 'i18n', 'taoResults/resultTable', 'grid/tao.grid', 'jquery.fi
 	<div id="results-custom-table-actions">
 	    <div>
 			<span class="ui-state-disabled ui-corner-all" id="viewSubject">
-				<a href="#"><img src="<?=TAOBASE_WWW?>img/add.png" alt="add"/><?=__('Add Test Taker')?></a>
+				<a href="#"><img src="<?= Template::img('add.png', 'tao') ?>" alt="add"/><?=__('Add Test Taker')?></a>
 			</span>
 			<span class="ui-state-default ui-corner-all" id="getScoreButton">
-				<a href="#"><img src="<?=TAOBASE_WWW?>img/add.png" alt="add"/><?=__('Add All grades')?></a>
+				<a href="#"><img src="<?= Template::img('add.png', 'tao') ?>" alt="add"/><?=__('Add All grades')?></a>
 			</span>
 			<span class="ui-state-default ui-corner-all " id="getResponseButton">
-				<a href="#"><img src="<?=TAOBASE_WWW?>img/add.png" alt="add"/><?=__('Add All responses')?></a>
+				<a href="#"><img src="<?= Template::img('add.png', 'tao') ?>" alt="add"/><?=__('Add All responses')?></a>
 			</span>
 		</div>
 
 		<div>
 			<span class="ui-state-default ui-corner-all" id="removeSubject">
-				<a href="#"><img src="<?=TAOBASE_WWW?>img/delete.png" alt="remove"/><?=__('Anonymise')?></a>
+				<a href="#"><img src="<?= Template::img('delete.png', 'tao') ?>" alt="remove"/><?=__('Anonymise')?></a>
 			</span>
 			<span class="ui-state-disabled ui-corner-all" id="rmScoreButton">
-				<a href="#"><img src="<?=TAOBASE_WWW?>img/delete.png" alt="remove"/><?=__('Remove All grades')?></a>
+				<a href="#"><img src="<?= Template::img('delete.png', 'tao') ?>" alt="remove"/><?=__('Remove All grades')?></a>
 			</span>
 			<span class="ui-state-disabled ui-corner-all " id="rmResponseButton">
-				<a href="#"><img src="<?=TAOBASE_WWW?>img/delete.png" alt="remove"/><?=__('Remove All responses')?></a>
+				<a href="#"><img src="<?= Template::img('delete.png', 'tao') ?>" alt="remove"/><?=__('Remove All responses')?></a>
 			</span>
 		</div>
 	</div>
@@ -115,12 +115,12 @@ require(['jquery', 'i18n', 'taoResults/resultTable', 'grid/tao.grid', 'jquery.fi
 	<div id="results-custom-table-tools">
 		<!--
 		<span class="ui-state-default ui-corner-all" id="columnChooser">
-			<a href="#"><img src="<?=TAOBASE_WWW?>img/wf_ico.png" alt="settings"/><?=__('Column chooser')?></a>
+			<a href="#"><img src="<?= Template::img('wf_ico.pn', 'tao') ?>" alt="settings"/><?=__('Column chooser')?></a>
 		</span>
 		-->
 		<span class="ui-state-default ui-corner-all">
 			<a href="#" id="getCsvFile">
-                            <img src="<?=TAOBASE_WWW?>img/file_upload.png" alt="Download" /> 
+                            <img src="<?= Template::img('file_upload.png', 'tao') ?>" alt="Download" /> 
                             <?=__('Export CSV File')?>
                         </a>
                 </span>

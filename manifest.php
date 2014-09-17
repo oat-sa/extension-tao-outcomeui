@@ -88,8 +88,5 @@ return array(
 
 		#the path were the event logs are saved
 		'EVENT_LOG_PATH'		=> ROOT_PATH.'taoResults/data',
-
-	 	#TAO extension Paths
-		'TAOBASE_WWW'			=> ROOT_URL	.'tao/views/',
 	)
 );
