@@ -1,11 +1,11 @@
 <?php
 use oat\tao\helpers\Template;
 ?>
-<?if(get_data('message')):?>
+<?php if(get_data('message')):?>
 	<div id="info-box" class="ui-widget-header ui-corner-all auto-slide">
 		<span><?=get_data('message')?></span>
 	</div>
-<?endif?>
+<?php endif?>
     <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/resultTable.css" />
 
     <script type="text/javascript">

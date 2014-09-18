@@ -19,9 +19,9 @@ use oat\tao\helpers\Template;
 				<?=__('Generated on: ')?><strong><?=get_data('date')?></strong><br /><br />
 				<?=__('Related Deliveries:')?><br />
 				<ul>
-				<?foreach (get_data('deliveries') as $delivery) :?>
+				<?php foreach (get_data('deliveries') as $delivery) :?>
 				<li>	<?=$delivery?>
-				 <? endforeach ?>
+				 <?php endforeach ?>
 				</ul>
 				<br /><?=__('Data collection statistics :')?>
 				<ul>
@@ -36,24 +36,24 @@ use oat\tao\helpers\Template;
 				<br /><?=__('Scores and response rates statistics')?>
 				<table class="minimal">
 					<tr><td><?=__('VariableName')?></td><td><?=__('Average')?></td><td>#</td></tr></strong>
-				    <?foreach (get_data('listOfVariables') as $variable) :?>
+				    <?php foreach (get_data('listOfVariables') as $variable) :?>
 
 				    <tr><td><?=$variable["label"]?></td><td><?=round($variable["infos"]["avg"],2)?></td><td><?=$variable["infos"]["#"]?></td></tr>
 
-				    <? endforeach ?>
+				    <?php endforeach ?>
 				     <tr><td><b>Total Average Score</b></td><td><b><?=get_data('average')?></b></td><td></tr>
 				</table>
 
 
 			    </td>
 			    <td rowspan="2">
-			        <img src="<? echo get_data('variablesAvgComparison');?>" />
-				<img src="<? echo get_data('variablesFreqComparison');?>" />
+			        <img src="<?php echo get_data('variablesAvgComparison');?>" />
+				<img src="<?php echo get_data('variablesFreqComparison');?>" />
 			    </td>
 			</tr>
 			<tr>
-				<td><i>Data extracted in <? echo get_data('dataExtractionTime').__(" seconds");?></i><br/>
-				    <i>Report built in <? echo get_data('reportBuildTime').__(" seconds");?></i>
+				<td><i>Data extracted in <?php echo get_data('dataExtractionTime').__(" seconds");?></i><br/>
+				    <i>Report built in <?php echo get_data('reportBuildTime').__(" seconds");?></i>
 				</td>
 
 			</tr>
@@ -72,28 +72,28 @@ use oat\tao\helpers\Template;
     -->
 	<div class="ui-widget-content ui-corner-right">
 
-		<?foreach (get_data('listOfVariables') as $variable) :?>
+		<?php foreach (get_data('listOfVariables') as $variable) :?>
 		<div id="form-title" class="ui-widget-header ui-corner-top ui-state-default">
-			<?=__('Results distribution')?> : <? echo $variable["label"];?>
+			<?=__('Results distribution')?> : <?php echo $variable["label"];?>
 		</div>
 
 
 		<ul>
 				<ul>
 				<li><?=__('Collected Results')?>: <strong><?=$variable["infos"]["#"]?></strong><br />
-				<li><?=__('Score average')?>: <strong><? echo round($variable["infos"]["avg"],2); ?></strong>
+				<li><?=__('Score average')?>: <strong><?php echo round($variable["infos"]["avg"],2); ?></strong>
 				</ul>
 
 
 			</ul>
-			<img src="<? echo $variable["urlFrequencies"];?>"/>
-			<img src="<? echo $variable["urlScores"];?>"/>
+			<img src="<?php echo $variable["urlFrequencies"];?>"/>
+			<img src="<?php echo $variable["urlScores"];?>"/>
 
 
 
 
 
-		<? endforeach ?>
+		<?php endforeach ?>
 
 	<span id="printButton" class="ui-state-default ui-corner-all">
 					<a href="javascript:window.print()" ><?=__('Print Report')?></a>

@@ -68,7 +68,7 @@ $(function(){
 
 		//set the filter nodes
 		var filterNodes = [
-			<?foreach($properties as $property):?>
+			<?php foreach($properties as $property):?>
 			{
 				id: '<?=md5($property->uriResource)?>',
 				label: '<?=$property->getLabel()?>',
@@ -79,7 +79,7 @@ $(function(){
 	        'filterItself': false
 				}
 			},
-			<?endforeach;?>
+			<?php endforeach;?>
 		];
 		//instantiate the facet filter
 		var facetFilter = new GenerisFacetFilterClass('#facet-filter', filterNodes, facetFilterOptions);

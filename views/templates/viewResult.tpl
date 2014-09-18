@@ -74,7 +74,7 @@ use oat\tao\helpers\Template;
                     </th>
                 </tr>
                 </thead>
-                <? foreach (get_data("deliveryVariables") as $testVariable){
+                <?php foreach (get_data("deliveryVariables") as $testVariable){
                 $baseType = current($testVariable[PROPERTY_VARIABLE_BASETYPE]);
                 $cardinality = current($testVariable[PROPERTY_VARIABLE_CARDINALITY]);
                 ?>
@@ -98,7 +98,7 @@ use oat\tao\helpers\Template;
                 }
                 ?>
             </table>
-            <?  foreach (get_data('variables') as $itemUri => $item){
+            <?php  foreach (get_data('variables') as $itemUri => $item){
            ?>
            
             <table class="matrix">
@@ -125,7 +125,7 @@ use oat\tao\helpers\Template;
                     </tr>
                 </thead>
                 <tbody>
-                    <? if (isset($item['sortedVars'][CLASS_RESPONSE_VARIABLE])) {?>
+                    <?php if (isset($item['sortedVars'][CLASS_RESPONSE_VARIABLE])) {?>
                     <tr>
                         <th colspan="6" class="italic">
                             <i><?=__('Responses')?> (<?=count($item['sortedVars'][CLASS_RESPONSE_VARIABLE]) ?>)</i>
@@ -139,7 +139,7 @@ use oat\tao\helpers\Template;
                         $cardinality = array_pop($observation[PROPERTY_VARIABLE_CARDINALITY]);
         	?>
 		<tr>
-		<? if ($key === key($observations)) {?>
+		<?php if ($key === key($observations)) {?>
 		     <td <?=$rowspan?> class="variableIdentifierField"><?=$variableIdentifier?></td>
 		<?}?>
 		<td class="dataResult" colspan="2">
@@ -193,8 +193,8 @@ use oat\tao\helpers\Template;
                           }
                           }
                           ?>
-                          <? } ?>
-                          <? if (isset($item['sortedVars'][CLASS_OUTCOME_VARIABLE])) {?>
+                          <?php } ?>
+                          <?php if (isset($item['sortedVars'][CLASS_OUTCOME_VARIABLE])) {?>
                 <tr>
                     <th colspan="6" class="italic">
                         <i><?=__('Grades')?>  (<?=count($item['sortedVars'][CLASS_OUTCOME_VARIABLE]) ?>)</i>
@@ -208,7 +208,7 @@ use oat\tao\helpers\Template;
                          $cardinality = array_pop($observation[PROPERTY_VARIABLE_CARDINALITY]);
         	?>
 		<tr>
-		<? if ($key === key($observations)) {?>
+		<?php if ($key === key($observations)) {?>
 		     <td <?=$rowspan?> class="variableIdentifierField"><?=$variableIdentifier?></td>
 		<?}?>
 		<td colspan="2" class="dataResult">
@@ -236,7 +236,7 @@ use oat\tao\helpers\Template;
                           }
                           ?>
                           <?} ?>
-                          <? if (isset($item['sortedVars'][CLASS_TRACE_VARIABLE])) {?>
+                          <?php if (isset($item['sortedVars'][CLASS_TRACE_VARIABLE])) {?>
                 <tr>
                     <th colspan="6" class="italic">
                     <i><?=__('Traces')?></i></th>
@@ -273,18 +273,18 @@ use oat\tao\helpers\Template;
                           </tbody>
                 </table>
                 <br />
-                <? } ?>
+                <?php } ?>
             </div>
         </div>
     </div>
     <div id="form-container" >
 
-        <?if(get_data('errorMessage')):?>
+        <?php if(get_data('errorMessage')):?>
         <fieldset class='ui-state-error'>
             <legend><strong><?=__('Error')?></strong></legend>
             <?=get_data('errorMessage')?>
         </fieldset>
-        <?endif?>
+        <?php endif?>
 
     </div>
     <?php
