@@ -94,7 +94,7 @@ use oat\tao\helpers\Template;
                     </td>
                 </tr>
                 </tbody>
-                <?
+                <?php
                 }
                 ?>
             </table>
@@ -131,7 +131,7 @@ use oat\tao\helpers\Template;
                             <i><?=__('Responses')?> (<?=count($item['sortedVars'][CLASS_RESPONSE_VARIABLE]) ?>)</i>
                         </th>
                     </tr>
-                <?
+                <?php
 		foreach ($item['sortedVars'][CLASS_RESPONSE_VARIABLE] as $variableIdentifier  => $observations){
 		    $rowspan = 'rowspan="'.count($observations).'"';
 		    foreach ($observations as $key=>$observation) {
@@ -141,7 +141,7 @@ use oat\tao\helpers\Template;
 		<tr>
 		<?php if ($key === key($observations)) {?>
 		     <td <?=$rowspan?> class="variableIdentifierField"><?=$variableIdentifier?></td>
-		<?}?>
+		<?php }?>
 		<td class="dataResult" colspan="2">
 		    <?php
                         if (isset($observation[RDF_VALUE]) and is_array($observation[RDF_VALUE])){
@@ -189,7 +189,7 @@ use oat\tao\helpers\Template;
 
                           <td class="epoch"><?=array_pop($observation["epoch"])?></td>
                           </tr>
-                          <?
+                          <?php
                           }
                           }
                           ?>
@@ -200,7 +200,7 @@ use oat\tao\helpers\Template;
                         <i><?=__('Grades')?>  (<?=count($item['sortedVars'][CLASS_OUTCOME_VARIABLE]) ?>)</i>
                     </th>
                 </tr>
-                <?
+                <?php
 		foreach ($item['sortedVars'][CLASS_OUTCOME_VARIABLE] as $variableIdentifier  => $observations){
 		   $rowspan = 'rowspan="'.count($observations).'"';
 		    foreach ($observations as $key=>$observation) {
@@ -210,7 +210,7 @@ use oat\tao\helpers\Template;
 		<tr>
 		<?php if ($key === key($observations)) {?>
 		     <td <?=$rowspan?> class="variableIdentifierField"><?=$variableIdentifier?></td>
-		<?}?>
+		<?php }?>
 		<td colspan="2" class="dataResult">
                     <?=tao_helpers_Display::htmlEscape(nl2br(array_pop($observation[RDF_VALUE])))?>
                     <?php
@@ -231,17 +231,17 @@ use oat\tao\helpers\Template;
                           </td>
                           <td class="epoch"><?=array_pop($observation["epoch"])?></td>
                           </tr>
-                          <?
+                          <?php
                           }
                           }
                           ?>
-                          <?} ?>
+                          <?php } ?>
                           <?php if (isset($item['sortedVars'][CLASS_TRACE_VARIABLE])) {?>
                 <tr>
                     <th colspan="6" class="italic">
                     <i><?=__('Traces')?></i></th>
                 </tr>
-                <?
+                <?php
 
 		foreach ($item['sortedVars'][CLASS_TRACE_VARIABLE] as $variableIdentifier  => $observations){
 		   $rowspan = 'rowspan="'.count($observations).'"';
@@ -265,11 +265,11 @@ use oat\tao\helpers\Template;
                 </td>
 		<td class="epoch"><?=array_pop($observation["epoch"])?></td>
 		</tr>
-	<?
+	<?php
                           }
                           }
                           ?>
-                          <?} ?>
+                          <?php } ?>
                           </tbody>
                 </table>
                 <br />
