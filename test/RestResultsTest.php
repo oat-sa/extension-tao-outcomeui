@@ -1,5 +1,5 @@
 <?php
-require_once dirname(__FILE__) . '/../../tao/test/RestTestCase.php';
+use oat\tao\test\RestTestCase;
 
 class RestResultsTest extends RestTestCase
 {
@@ -9,4 +9,3 @@ class RestResultsTest extends RestTestCase
         );
     }
 }
-?>
