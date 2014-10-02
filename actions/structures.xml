@@ -11,7 +11,7 @@
                           className="Result"
                           dataUrl="/taoResults/Results/getOntologyData"
                             selectClass="Edit class"
-                            selectInstance="Edit test"
+                            selectInstance="Edit result"
                             moveInstance="Move"
                             delete="Delete" 
                             />
