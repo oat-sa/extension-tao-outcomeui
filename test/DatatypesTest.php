@@ -1,4 +1,7 @@
 <?php
+use oat\tao\test\TaoPhpUnitTestRunner;
+include_once dirname(__FILE__) . '/../includes/raw_start.php';
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,8 +20,6 @@
  * Copyright (c) 2014 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
-require_once dirname(__FILE__) . '/../../tao/test/TaoPhpUnitTestRunner.php';
-include_once dirname(__FILE__) . '/../includes/raw_start.php';
 
 class DatatypesTest extends TaoPhpUnitTestRunner {
 
