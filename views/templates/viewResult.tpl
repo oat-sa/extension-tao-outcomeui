@@ -75,13 +75,13 @@ use oat\tao\helpers\Template;
                 </tr>
                 </thead>
                 <?php foreach (get_data("deliveryVariables") as $testVariable){
-                $baseType = current($testVariable[PROPERTY_VARIABLE_BASETYPE]);
-                $cardinality = current($testVariable[PROPERTY_VARIABLE_CARDINALITY]);
+                $baseType = $testVariable[PROPERTY_VARIABLE_BASETYPE];
+                $cardinality = $testVariable[PROPERTY_VARIABLE_CARDINALITY];
                 ?>
                 <tbody>
                 <tr>
-                    <td><?=current($testVariable[PROPERTY_IDENTIFIER])?></td>
-                    <td><?=current($testVariable[RDF_VALUE])?></td>
+                    <td><?=$testVariable[PROPERTY_IDENTIFIER]?></td>
+                    <td><?=$testVariable[RDF_VALUE]?></td>
                     <td> 
                         <?php 
                         echo $cardinality;
@@ -135,8 +135,8 @@ use oat\tao\helpers\Template;
 		foreach ($item['sortedVars'][CLASS_RESPONSE_VARIABLE] as $variableIdentifier  => $observations){
 		    $rowspan = 'rowspan="'.count($observations).'"';
 		    foreach ($observations as $key=>$observation) {
-                        $baseType = array_pop($observation[PROPERTY_VARIABLE_BASETYPE]);
-                        $cardinality = array_pop($observation[PROPERTY_VARIABLE_CARDINALITY]);
+                        $baseType = $observation[PROPERTY_VARIABLE_BASETYPE];
+                        $cardinality = $observation[PROPERTY_VARIABLE_CARDINALITY];
         	?>
 		<tr>
 		<?php if ($key === key($observations)) {?>
@@ -204,8 +204,8 @@ use oat\tao\helpers\Template;
 		foreach ($item['sortedVars'][CLASS_OUTCOME_VARIABLE] as $variableIdentifier  => $observations){
 		   $rowspan = 'rowspan="'.count($observations).'"';
 		    foreach ($observations as $key=>$observation) {
-                         $baseType = array_pop($observation[PROPERTY_VARIABLE_BASETYPE]);
-                         $cardinality = array_pop($observation[PROPERTY_VARIABLE_CARDINALITY]);
+                         $baseType = $observation[PROPERTY_VARIABLE_BASETYPE];
+                         $cardinality = $observation[PROPERTY_VARIABLE_CARDINALITY];
         	?>
 		<tr>
 		<?php if ($key === key($observations)) {?>

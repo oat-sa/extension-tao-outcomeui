@@ -37,6 +37,12 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
         return new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
     }
 
+    public function getImplementations(){
+        return array(
+            new \oat\taoOutcomeRds\model\RdsResultStorage()
+        );
+    }
+
     /**
      * return all variable for taht deliveryResults (uri identifiers) 
      *
@@ -91,18 +97,15 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
     }
 
     /**
-     * @param  Resource deliveryResult
-     * @param core_kernel_classes_Class to restrict to a specific class of variables
+     * @param  Resource Itemresult
      * @return array
      */
-    public function getVariablesFromItemResult(core_kernel_classes_Resource $itemResult, $variableClass = null) {
-        if (is_null($variableClass)) {
-            $variableClass = new core_kernel_classes_Class(TAO_RESULT_VARIABLE);
+    public function getVariablesFromItemResult($itemResult) {
+        $variables = array();
+        foreach($this->getImplementations() as $impl){
+            $variables = array_merge($variables,$impl->getVariables($itemResult));
         }
-        $itemResultVariables = $variableClass->searchInstances(
-                array(PROPERTY_RELATED_ITEM_RESULT => $itemResult->getUri()), array('recursive' => true, 'like' => false)
-        );
-        return $itemResultVariables;
+        return $variables;
     }
 
     /**
@@ -116,16 +119,16 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
     }
 
     /**
-     * Returns all itemResults related to the delvieryResults
+     * Returns all label of itemResults related to the delvieryResults
      * @param core_kernel_classes_Resource $deliveryResult
      * @return array core_kernel_classes_Resource
      * */
     public function getItemResultsFromDeliveryResult(core_kernel_classes_Resource $deliveryResult) {
-        $type = new core_kernel_classes_Class(ITEM_RESULT);
-        $returnValue = $type->searchInstances(
-                array(PROPERTY_RELATED_DELIVERY_RESULT => $deliveryResult->getUri())
-        ,array('like' => false));
-        return $returnValue;
+        $callIds = array();
+        foreach($this->getImplementations() as $impl){
+            $callIds = array_merge($callIds, $impl->getRelatedItemCallIds($deliveryResult->getUri()));
+        }
+        return $callIds;
     }
 
     /**
@@ -144,9 +147,12 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
      * @param core_kernel_classes_Resource $itemResult
      * @return common_Object
      */
-    public function getItemFromItemResult(core_kernel_classes_Resource $itemResult) {
-        $relatedItem = new core_kernel_classes_Property(PROPERTY_RELATED_ITEM);
-        $item = $itemResult->getUniquePropertyValue($relatedItem);
+    public function getItemFromItemResult($itemResult) {
+        $variables = array();
+        foreach($this->getImplementations() as $impl){
+            $variables = array_merge($variables,$impl->getVariables($itemResult));
+        }
+        $item = new core_kernel_classes_Resource(array_shift($variables)[0]->item);
         return $item;
     }
 
@@ -189,42 +195,38 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
      * @return type
      */
     public function getItemVariableDataStatsFromDeliveryResult(core_kernel_classes_Resource $deliveryResult, $filter = null) {
-        $variablesData = $this->getItemVariableDataFromDeliveryResult($deliveryResult, $filter);
+        $itemResults = $this->getItemResultsFromDeliveryResult($deliveryResult);
         $numberOfResponseVariables = 0;
         $numberOfCorrectResponseVariables = 0;
         $numberOfInCorrectResponseVariables = 0;
         $numberOfUnscoredResponseVariables = 0;
         $numberOfOutcomeVariables = 0;
+        $variablesData = $this->getItemVariableDataFromDeliveryResult($deliveryResult, $filter);
         foreach ($variablesData as $itemVariables) {
-
-            foreach ($itemVariables['sortedVars'] as $variableType => $variables) {
-                foreach ($variables as $variableIdentifier => $observations) {
-                    foreach ($observations as $var) {
-                        $type = $variableType;
-                        if (isset($var[PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE])) {
-                        $correctResponse = current($var[PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE]);
-                        }
-
-                        if ($type == CLASS_RESPONSE_VARIABLE) {
-                            $numberOfResponseVariables++;
-                            if ($correctResponse and (get_class($correctResponse) == 'core_kernel_classes_Resource')) {
-                                if ($correctResponse->getUri() == GENERIS_TRUE) {
-                                    $numberOfCorrectResponseVariables++;
-                                } else {
-                                    if ($correctResponse->getUri() == GENERIS_FALSE) {
-                                        $numberOfInCorrectResponseVariables++;
-                                    } else { //an unknown core_kernel_classes_Resource
-                                        $numberOfUnscoredResponseVariables++;
-                                    }
-                                }
-                            } else {
+            foreach($itemVariables['sortedVars'] as $key => $value){
+                if($key == CLASS_RESPONSE_VARIABLE){
+                    foreach($value as $variable){
+                        $numberOfResponseVariables++;
+                        switch($variable[0]['isCorrect']){
+                            case 'correct':
+                                $numberOfCorrectResponseVariables++;
+                                break;
+                            case 'incorrect':
+                                $numberOfInCorrectResponseVariables++;
+                                break;
+                            case 'unscored':
                                 $numberOfUnscoredResponseVariables++;
-                            }
-                        } else {
-                            $numberOfOutcomeVariables++;
+                                break;
+                            default:
+                                common_Logger::w('The value '.$variable[0]['isCorrect'].' is not a valid value');
+                                break;
                         }
                     }
                 }
+                else{
+                    $numberOfOutcomeVariables++;
+                }
+
             }
         }
         $stats = array(
@@ -250,10 +252,10 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
 
         foreach ($itemResults as $itemResult) {
             try {
-                common_Logger::d("Retrieving related Item for itemResult " . $itemResult->getUri() . "");
+                common_Logger::d("Retrieving related Item for itemResult " . $itemResult . "");
                 $relatedItem = $this->getItemFromItemResult($itemResult);
             } catch (common_Exception $e) {
-                common_Logger::w("The itemResult " . $itemResult->getUri() . " is not linked to a valid item. (deleted item ?)");
+                common_Logger::w("The itemResult " . $itemResult . " is not linked to a valid item. (deleted item ?)");
                 $relatedItem = null;
             }
             if (get_class($relatedItem) == "core_kernel_classes_Literal") {
@@ -278,80 +280,50 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
             }
             foreach ($this->getVariablesFromItemResult($itemResult) as $variable) {
                 //retrieve the type of the variable
-                $class =  current($variable->getTypes());    
-                $type= $class->getUri();
-                
-                //common properties to all variables
-                $properties = array(
-                        PROPERTY_IDENTIFIER,
-                        PROPERTY_VARIABLE_BASETYPE,
-                        PROPERTY_VARIABLE_CARDINALITY,
-                        PROPERTY_VARIABLE_EPOCH
-                    );
-                
-                //specific property Response Variable
-                if ($type == TAO_RESULT_RESPONSE) {
-                    $properties[] = PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE;
-                }
-                
-                $baseTypes = $variable->getPropertyValues(new core_kernel_classes_Property(PROPERTY_VARIABLE_BASETYPE));
-                $baseType = current($baseTypes);
-                if ($baseType != "file") {
-                    $properties[] = RDF_VALUE;
-                    $variableDescription = $variable->getPropertiesValues($properties);
-
-                    $variableDescription[RDF_VALUE] = array(base64_decode(current($variableDescription[RDF_VALUE])));
-                } else {
-                    $variableDescription = $variable->getPropertiesValues($properties);
-                }
-                try {
-                    common_Logger::d("Retrieving related Item for itemResult " . $itemResult->getUri() . "");
-                    $relatedItem = $this->getItemFromVariable($variable);
-                } catch (common_Exception $e) {
-                    common_Logger::w("The variable " . $variable->getUri() . " is not linked to a valid item. (deleted item ?)");
-                    $relatedItem = null;
-                }
-
-                if (get_class($relatedItem) == "core_kernel_classes_Literal") {
-                    $itemIdentifier = $relatedItem->__toString();
-                    $itemLabel = $relatedItem->__toString();
-                    $variablesByItem[$itemIdentifier]['itemModel'] = $undefinedStr;
-                } elseif (get_class($relatedItem) == "core_kernel_classes_Resource") {
-                    $itemIdentifier = $relatedItem->getUri();
-                    $itemLabel = $relatedItem->getLabel();
-                    try {
-                        $itemModel = $relatedItem->getUniquePropertyValue(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
-                        $variablesByItem[$itemIdentifier]['itemModel'] = $itemModel->getLabel();
-                    } catch (common_Exception $e) { //a resource but unknown
-                        $variablesByItem[$itemIdentifier]['itemModel'] = $undefinedStr;
+                $variableTemp = (array)$variable[0]->variable;
+                $variableDescription = array();
+                foreach($variableTemp as $key => $value){
+                    switch($key){
+                        case 'value':
+                            $variableDescription[RDF_VALUE] = $value;
+                            break;
+                        case 'identifier':
+                            $variableDescription[PROPERTY_IDENTIFIER] = $value;
+                            break;
+                        case 'epoch':
+                            $variableDescription[PROPERTY_VARIABLE_EPOCH] = $value;
+                            break;
+                        default:
+                            $variableDescription[RESULT_ONTOLOGY.'#'.$key] = $value;
+                            break;
                     }
-                } else {
-                    $itemIdentifier = $undefinedStr;
-                    $itemLabel = $undefinedStr;
-                    $variablesByItem[$itemIdentifier]['itemModel'] = $undefinedStr;
                 }
-                
-                
-                $variableIdentifier = current($variableDescription[PROPERTY_IDENTIFIER])->__toString();
-                $epoch = current($variableDescription[PROPERTY_VARIABLE_EPOCH])->__toString();
-                $variableDescription["uri"] = $variable->getUri();
-                $variableDescription["epoch"] = array(tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE));
-                
-                if (isset($variableDescription[PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE])) {
-                    $correctResponse = current($variableDescription[PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE]);
+                $type = get_class($variable[0]->variable);
+                if ($type == "taoResultServer_models_classes_OutcomeVariable") {
+                    $variableDescription[RDF_VALUE] = array(base64_decode($variableDescription[RDF_VALUE]));
+                    $type = CLASS_OUTCOME_VARIABLE;
                 }
                 else{
-                    $correctResponse = false;
+                    $variableDescription[RDF_VALUE] = array(base64_decode($variableDescription[PROPERTY_RESPONSE_VARIABLE_CANDIDATERESPONSE]));
+                    $type = CLASS_RESPONSE_VARIABLE;
                 }
-                if ($correctResponse and (get_class($correctResponse) == 'core_kernel_classes_Resource')) {
-                    if ($correctResponse->getUri() == GENERIS_TRUE) {
+
+                $variableIdentifier = $variableDescription[PROPERTY_IDENTIFIER];
+                $epoch = $variableDescription[PROPERTY_VARIABLE_EPOCH];
+                $variableDescription["epoch"] = array(tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE));
+
+                if (isset($variableDescription[PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE])) {
+                    $correctResponse = $variableDescription[PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE];
+                }
+                else{
+                    $correctResponse = null;
+                }
+                if (!is_null($correctResponse)) {
+                    if($correctResponse >= 1){
                         $variableDescription["isCorrect"] = "correct";
-                    } else {
-                        if ($correctResponse->getUri() == GENERIS_FALSE) {
-                            $variableDescription["isCorrect"] = "incorrect";
-                        } else { //an unknown core_kernel_classes_Resource
-                            $variableDescription["isCorrect"] = "unscored";
-                        }
+                    }
+                    else{
+                        $variableDescription["isCorrect"] = "incorrect";
                     }
                 } else {
                     $variableDescription["isCorrect"] = "unscored";
@@ -419,34 +391,35 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
      */
     public function getVariableDataFromDeliveryResult(core_kernel_classes_Resource $deliveryResult) {
 
-        $variablesData = array();
-        
-        $variableClass = new core_kernel_classes_Class(TAO_RESULT_VARIABLE);
-        
-        
-        $variables = $variableClass->searchInstances(array(
-            PROPERTY_RELATED_DELIVERY_RESULT => $deliveryResult->getUri()
-        ), array(
-            'recursive' => true,
-            'like' => false
-        ));
-        foreach ($variables as $variable) {
-
-            $variableDescription = $variable->getPropertiesValues(array(
-                PROPERTY_IDENTIFIER,
-                RDF_VALUE,
-                PROPERTY_VARIABLE_CARDINALITY,
-                PROPERTY_VARIABLE_BASETYPE,
-                PROPERTY_VARIABLE_EPOCH
-            ));
-            core_kernel_classes_DbWrapper::singleton()->debug=false;
-            $class = current($variable->getTypes());
-            $variableDescription[RDF_TYPE] =  $class->getUri(); 
-            $variableDescription[RDF_VALUE] = array(
-                base64_decode(current($variableDescription[RDF_VALUE]))
-            );
-            $variablesData[] = $variableDescription;
+        $variables = array();
+        foreach($this->getImplementations() as $impl){
+            $variables = array_merge($impl->getVariables($deliveryResult->getUri()), $variables);
         }
+
+        $variablesData = array();
+        foreach($variables as $variable){
+            if($variable[0]->callIdTest != ""){
+                $variableDescription = array();
+                foreach((array)$variable[0]->variable as $key => $value){
+                    switch($key){
+                        case 'value':
+                            $variableDescription[RDF_VALUE] = base64_decode($value);
+                            break;
+                        case 'identifier':
+                            $variableDescription[PROPERTY_IDENTIFIER] = $value;
+                            break;
+                        case 'epoch':
+                            $variableDescription[PROPERTY_VARIABLE_EPOCH] = $value;
+                            break;
+                        default:
+                            $variableDescription[RESULT_ONTOLOGY.'#'.$key] = $value;
+                            break;
+                    }
+                }
+                $variablesData[] = $variableDescription;
+            }
+        }
+
         return $variablesData;
     }
 
@@ -456,8 +429,14 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
      * @author Patrick Plichart, <patrick.plichart@taotesting.com>
      */
     public function getTestTaker(core_kernel_classes_Resource $deliveryResult) {
-        $propResultOfSubject = new core_kernel_classes_Property(PROPERTY_RESULT_OF_SUBJECT);
-        return $deliveryResult->getUniquePropertyValue($propResultOfSubject);
+        $testTaker = '';
+        foreach($this->getImplementations() as $impl){
+            if($impl->getTestTaker($deliveryResult->getUri()) != ''){
+                $testTaker = $impl->getTestTaker($deliveryResult->getUri());
+                break;
+            }
+        }
+        return new core_kernel_classes_Resource($testTaker);
     }
     /**
      *

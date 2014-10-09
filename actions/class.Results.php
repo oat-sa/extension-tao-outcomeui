@@ -38,11 +38,7 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
 	public function __construct()
 	{
 		parent::__construct();
-		
-		//the service is initialized by default
-		$this->service = taoResults_models_classes_ResultsService::singleton();
-		
-		
+
 		$this->defaultData();
 	}
 	
@@ -50,7 +46,172 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
 	{
 		return taoResults_models_classes_ResultsService::singleton();
 	}
-	
+
+    public function getOntologyData(){
+        if(!tao_helpers_Request::isAjax()){
+            throw new common_exception_IsAjaxAction(__FUNCTION__);
+        }
+
+        $options = array(
+            'subclasses' => true,
+            'instances' => true,
+            'highlightUri' => '',
+            'labelFilter' => '',
+            'chunk' => false,
+            'offset' => 0,
+            'limit' => 0
+        );
+
+        if($this->hasRequestParameter('filter')){
+            $options['labelFilter'] = $this->getRequestParameter('filter');
+        }
+
+        if($this->hasRequestParameter("selected")){
+            $options['browse'] = array($this->getRequestParameter("selected"));
+        }
+        if($this->hasRequestParameter('hideInstances')){
+            if((bool) $this->getRequestParameter('hideInstances')){
+                $options['instances'] = false;
+            }
+        }
+        if($this->hasRequestParameter('classUri')){
+            $clazz = $this->getCurrentClass();
+            $options['chunk'] = true;
+        }
+        else{
+            $clazz = $this->getRootClass();
+        }
+        if($this->hasRequestParameter('offset')){
+            $options['offset'] = $this->getRequestParameter('offset');
+        }
+        if($this->hasRequestParameter('limit')){
+            $options['limit'] = $this->getRequestParameter('limit');
+        }
+        if($this->hasRequestParameter('subclasses')){
+            $options['subclasses'] = $this->getRequestParameter('subclasses');
+        }
+
+        $children = array();
+        $returnValue = array();
+        if($options['labelFilter'] != '*'){
+            // get results
+            foreach($this->getClassService()->getImplementations() as $impl){
+                foreach($impl->getAllTestTakerIds() as $key => $association){
+                    $result = new core_kernel_classes_Resource($association["deliveryResultIdentifier"]);
+                    $child = array();
+                    $delivery = new core_kernel_classes_Resource($impl->getDelivery($result->getUri()));
+                    $testTaker = new core_kernel_classes_Resource($association["testTakerIdentifier"]);
+                    if(strpos(strtolower($testTaker->getLabel()),$options['labelFilter']) !== FALSE || strpos(strtolower($delivery->getLabel()),$options['labelFilter']) !== FALSE){
+                        $child["attributes"] = array("id" => tao_helpers_Uri::encode($result->getUri()), "class" => "node-instance");
+                        $title = $testTaker->getLabel()."-(".$result->getUri().")- ".$delivery->getLabel();
+
+                        $child["data"] = tao_helpers_Display::textCutter($title, 16);
+                        $child["type"] = "instance";
+                        $children[] = $child;
+                    }
+                }
+            }
+            $childrenLimited = array_slice($children,$options['offset'],$options['limit']);
+            if(count($children) != 0){
+                $returnValue = array(
+                    "attributes" => array(
+                        "class" => "node-class",
+                        "id" => tao_helpers_Uri::encode(TAO_DELIVERY_RESULT),
+                    ),
+                    "children" => $childrenLimited,
+                    "count" => count($children),
+                    "data" => "Result",
+                    "type" => "class",
+                );
+            }
+        }
+        else{
+            //root class
+            if(!$options['chunk']){
+                // get subclasses
+                foreach ($clazz->getSubClasses(false) as $subclass) {
+                    $child["attributes"] = array("id" => tao_helpers_Uri::encode($subclass->getUri()), "class" => "node-class");
+                    $child["data"] = $subclass->getLabel();
+                    $child["type"] = "class";
+
+                    if($subclass->countInstances() > 0){
+                        $child["state"] = "closed";
+                    }
+
+                    $children[] = $child;
+                }
+                if($options['instances']){
+                    // get results
+                    $instances = array();
+                    foreach($this->getClassService()->getImplementations() as $impl){
+                        foreach($impl->getAllTestTakerIds() as $key => $association){
+                                $result = new core_kernel_classes_Resource($association["deliveryResultIdentifier"]);
+                                if(in_array(CLASS_DELVIERYEXECUTION,array_keys($result->getTypes())) || in_array(TAO_DELIVERY_RESULT,array_keys($result->getTypes()))){
+                                    $child = array();
+                                    $delivery = new core_kernel_classes_Resource($impl->getDelivery($result->getUri()));
+                                    $child["attributes"] = array("id" => tao_helpers_Uri::encode($result->getUri()), "class" => "node-instance");
+                                    $testTaker = new core_kernel_classes_Resource($association["testTakerIdentifier"]);
+                                    $title = $testTaker->getLabel()."-(".$result->getUri().")- ".$delivery->getLabel();
+
+                                    $child["data"] = tao_helpers_Display::textCutter($title, 16);
+                                    $child["type"] = "instance";
+                                    $instances[] = $child;
+                                }
+                        }
+                    }
+                }
+                $childrenLimited = array_merge($children,array_slice($instances,$options['offset'], $options['limit']));
+                $returnValue = array(
+                    "attributes" => array(
+                        "class" => "node-class",
+                        "id" => tao_helpers_Uri::encode(TAO_DELIVERY_RESULT),
+                    ),
+                    "children" => $childrenLimited,
+                    "count" => count($instances),
+                    "data" => "Result",
+                    "state" => "open",
+                    "type" => "class",
+
+                );
+            }
+            // subclass details
+            else{
+                // get subclasses
+                foreach ($clazz->getSubClasses(false) as $subclass) {
+                    $child["attributes"] = array("id" => tao_helpers_Uri::encode($subclass->getUri()), "class" => "node-class");
+                    $child["data"] = $subclass->getLabel();
+                    $child["type"] = "class";
+
+                    if($subclass->countInstances()){
+                        $child["state"] = "closed";
+                    }
+
+                    $children[] = $child;
+                }
+                if($options['instances']){
+                    // get results
+                    $instances = $clazz->searchInstances(array(RDF_TYPE => $clazz->getUri()), array('recursive' => false));
+                    foreach($instances as $instance){
+                        foreach($this->getClassService()->getImplementations() as $impl){
+                            $child = array();
+                            $delivery = new core_kernel_classes_Resource($impl->getDelivery($instance->getUri()));
+                            $child["attributes"] = array("id" => tao_helpers_Uri::encode($instance->getUri()), "class" => "node-instance");
+                            $testTaker = new core_kernel_classes_Resource($impl->getTestTaker($instance->getUri()));
+                            $title = $testTaker->getLabel()."-(".$instance->getUri().")- ".$delivery->getLabel();
+
+                            $child["data"] = tao_helpers_Display::textCutter($title, 16);
+                            $child["type"] = "instance";
+                            $children[] = $child;
+                        }
+                    }
+                }
+                $returnValue = $children;
+            }
+
+        }
+        echo json_encode($returnValue);
+    }
+
 /*
  * controller actions
  */
@@ -67,7 +228,7 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
 			$this->setSessionAttribute('property_mode', $this->getRequestParameter('property_mode'));
 		}
 		
-		$myForm = $this->editClass($clazz, $this->service->getRootClass());
+		$myForm = $this->editClass($clazz, $this->getClassService()->getRootClass());
 		if($myForm->isSubmited()){
 			if($myForm->isValid()){
 				if($clazz instanceof core_kernel_classes_Resource){
@@ -93,10 +254,10 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
 		}
 		$deleted = false;
 		if($this->getRequestParameter('uri')){
-			$deleted = $this->service->deleteResult($this->getCurrentInstance());
+			$deleted = $this->getClassService()->deleteResult($this->getCurrentInstance());
 		}
 		else{
-			$deleted = $this->service->deleteResultClass($this->getCurrentClass());
+			$deleted = $this->getClassService()->deleteResultClass($this->getCurrentClass());
 		}
 		echo json_encode(array('deleted'	=> $deleted));
 	}
@@ -108,7 +269,7 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
     {   
         $result = $this->getCurrentInstance();
 
-        $testTaker = $this->service->getTestTakerData($result);
+        $testTaker = $this->getClassService()->getTestTakerData($result);
 
         if (
                 (is_object($testTaker) and (get_class($testTaker)=='core_kernel_classes_Literal'))
@@ -135,7 +296,7 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
             $this->setData('userEmail', $userEmail);
         }
         $filter = ($this->hasRequestParameter("filter")) ? $this->getRequestParameter("filter") : "lastSubmitted";
-        $stats = $this->service->getItemVariableDataStatsFromDeliveryResult($result, $filter);
+        $stats = $this->getClassService()->getItemVariableDataStatsFromDeliveryResult($result, $filter);
         $this->setData('nbResponses',  $stats["nbResponses"]);
         $this->setData('nbCorrectResponses',  $stats["nbCorrectResponses"]);
         $this->setData('nbIncorrectResponses',  $stats["nbIncorrectResponses"]);
@@ -143,7 +304,7 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
         $this->setData('deliveryResultLabel', $result->getLabel());
         $this->setData('variables',  $stats["data"]);
         //retireve variables not related to item executions
-        $deliveryVariables = $this->service->getVariableDataFromDeliveryResult($result);
+        $deliveryVariables = $this->getClassService()->getVariableDataFromDeliveryResult($result);
         $this->setData('deliveryVariables', $deliveryVariables);
         $this->setData('uri',$this->getRequestParameter("uri"));
         $this->setData('classUri',$this->getRequestParameter("classUri"));
@@ -153,7 +314,7 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
    
      public function getFile(){
         $variableUri = $this->getRequestParameter("variableUri");
-        $file = $this->service->getVariableFile($variableUri); 
+        $file = $this->getClassService()->getVariableFile($variableUri);
         $trace = $file["data"];
         header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
         setcookie("fileDownload","true", 0, "/");
