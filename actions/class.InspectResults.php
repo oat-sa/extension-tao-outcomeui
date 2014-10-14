@@ -57,6 +57,95 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule
         $this->defaultData();
     }
 
+    private function getImplementations(){
+        return array(
+            new \oat\taoOutcomeRds\model\RdsResultStorage()
+        );
+    }
+
+    /**
+     * override the getFilteredInstancesPropertiesValues method from TaoModule
+     */
+    public function getFilteredInstancesPropertiesValues()
+    {
+
+        if(!tao_helpers_Request::isAjax()){
+            throw new Exception("wrong request mode");
+        }
+
+
+        // Get the target property
+        if($this->hasRequestParameter('propertyUri')){
+            $propertyUri = $this->getRequestParameter('propertyUri');
+        } else {
+            $propertyUri = RDFS_LABEL;
+        }
+        $property = new core_kernel_classes_Property($propertyUri);
+
+
+        $propertyValuesFormated = array ();
+        if($propertyUri == PROPERTY_RESULT_OF_DELIVERY){
+            $deliveriesInArray = array();
+            foreach($this->getImplementations() as $impl){
+                $deliveries = $impl->getAllDeliveryIds();
+                foreach($deliveries as $delivery){
+                    if(!in_array($delivery['deliveryIdentifier'], $deliveriesInArray)){
+                        $deliveryResource = new core_kernel_classes_Resource($delivery['deliveryIdentifier']);
+
+                        $propertyValueFormated = array(
+                            'data' 	=> $deliveryResource->getLabel(),
+                            'type'	=> 'instance',
+                            'attributes' => array(
+                                'id' => tao_helpers_Uri::encode($delivery['deliveryIdentifier']),
+                                'class' => 'node-instance'
+                            )
+                        );
+                        $deliveriesInArray[] = $delivery['deliveryIdentifier'];
+                        $propertyValuesFormated[] = $propertyValueFormated;
+                    }
+                }
+            }
+
+        }
+        else if($propertyUri == PROPERTY_RESULT_OF_SUBJECT){
+            $testTakersInArray = array();
+            foreach($this->getImplementations() as $impl){
+                $testTakers = $impl->getAllTestTakerIds();
+                foreach($testTakers as $testTaker){
+                    if(!in_array($testTaker['testTakerIdentifier'], $testTakersInArray)){
+                        $deliveryResource = new core_kernel_classes_Resource($testTaker['testTakerIdentifier']);
+
+                        $propertyValueFormated = array(
+                            'data' 	=> $deliveryResource->getLabel(),
+                            'type'	=> 'instance',
+                            'attributes' => array(
+                                'id' => tao_helpers_Uri::encode($testTaker['testTakerIdentifier']),
+                                'class' => 'node-instance'
+                            )
+                        );
+                        $testTakersInArray[] = $testTaker['testTakerIdentifier'];
+                        $propertyValuesFormated[] = $propertyValueFormated;
+                    }
+                }
+            }
+        }
+
+        $data = array(
+            'data' 	=> $this->hasRequestParameter('rootNodeName') ? $this->getRequestParameter('rootNodeName') : tao_helpers_Display::textCutter($property->getLabel(), 16),
+            'type'	=> 'class',
+            'count' => count($propertyValuesFormated),
+            'attributes' => array(
+                'id' => tao_helpers_Uri::encode($property->getUri()),
+                'class' => 'node-class'
+            ),
+            'children' => $propertyValuesFormated
+        );
+
+        echo json_encode($data);
+    }
+
+
+
     /*
      *  index action
      *
@@ -100,11 +189,11 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule
     public function getResults()
     {
         $returnValue = array();
-	// Get filter parameter
-	$filter = array();
-	if($this->hasRequestParameter('filter')){
-        $filter = $this->getFilterState('filter');
-	}
+        // Get filter parameter
+        $filter = array();
+        if($this->hasRequestParameter('filter')){
+            $filter = $this->getFilterState('filter');
+        }
         //get the processes uris
         $processesUri = $this->hasRequestParameter('processesUri') ? $this->getRequestParameter('processesUri') : null;
 
@@ -120,20 +209,23 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule
         }
 
         $data = array();
-        foreach ($results as $res) {
-            $props = $res->getPropertiesValues(array(
-                PROPERTY_RESULT_OF_DELIVERY,
-                PROPERTY_RESULT_OF_SUBJECT,
-                RDF_TYPE
-            ));
-            $data[$res->getUri()] = array(
-                RDFS_LABEL => $res->getLabel(),
-                PROPERTY_RESULT_OF_DELIVERY => array_shift($props[PROPERTY_RESULT_OF_DELIVERY]),
-                PROPERTY_RESULT_OF_SUBJECT => array_shift($props[PROPERTY_RESULT_OF_SUBJECT]),
-                RDF_TYPE => array_shift($props[RDF_TYPE])
-            );
-        }
+        foreach($this->getImplementations() as $impl){
+            $results = $impl->getResultByColumn(array_keys($filter), $filter);
 
+
+            $testTakers = $impl->getAllTestTakerIds();
+            foreach($results as $value){
+                $deliveryResult = new core_kernel_classes_Resource($value['deliveryResultIdentifier']);
+                $types = $deliveryResult->getTypes();
+                $data[$value['deliveryResultIdentifier']] = array(
+                    RDFS_LABEL  => $deliveryResult->getLabel(),
+                    PROPERTY_RESULT_OF_DELIVERY => $value['deliveryIdentifier'],
+                    PROPERTY_RESULT_OF_SUBJECT  => $value['testTakerIdentifier'],
+                    RDF_TYPE    => array_shift($types)
+                );
+            }
+
+        }
         $resultsGrid = new taoResults_helpers_DeliveryResultGrid($data, $this->resultGridOptions);
         $data = $resultsGrid->toArray();
         echo json_encode($data);
