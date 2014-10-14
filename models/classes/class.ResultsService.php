@@ -66,7 +66,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
         } else {           
            foreach ($this->getItemResultsFromDeliveryResult($deliveryResult) as $itemResult) {
                 $itemResultVariables = $this->getVariablesFromItemResult($itemResult, $variableClass);
-                $itemResultUri = $itemResult->getUri();
+                $itemResultUri = $itemResult;
                 $variables[$itemResultUri] = $itemResultVariables;        
            }          
            //overhead for cache handling, the data is stored only when the underlying deliveryExecution is finished

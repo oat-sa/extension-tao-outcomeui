@@ -45,6 +45,12 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
         $this->service = taoResults_models_classes_ResultsService::singleton();
     }
 
+    private function getImplementations(){
+        return array(
+            new \oat\taoOutcomeRds\model\RdsResultStorage()
+        );
+    }
+
     /**
      * get the main class
      * @return core_kernel_classes_Classes
@@ -80,15 +86,15 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
 
 
     public function getResponseColumns() {
-	$this->getVariableColumns(CLASS_RESPONSE_VARIABLE);
+	    $this->getVariableColumns(CLASS_RESPONSE_VARIABLE);
     }
     /** Returns all columns with all grades pertaining to the current delivery results selection
      */
      public function getGradeColumns() {
-
-              $this->getVariableColumns(CLASS_OUTCOME_VARIABLE);
+        $this->getVariableColumns(CLASS_OUTCOME_VARIABLE);
     }
-      /**Retrieve the different variables columns pertainign to the current selection of results
+     /**
+     * Retrieve the different variables columns pertainign to the current selection of results
      * Implementation note : it nalyses all the data collected to identify the different response variables submitted by the items in the context of activities
      */
     public function getVariableColumns($variableClassUri) {
@@ -98,22 +104,25 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
 		$deliveryResultClass	= new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
 
 		//The list of delivery Results matching the current selection filters
-		$results	= $deliveryResultClass->searchInstances($filter, array ('recursive'=>true));
+        $results = array();
+        foreach($this->getImplementations() as $impl){
+            $results = array_merge($results, $impl->getResultByColumn(array_keys($filter), $filter));
+        }
 
 		//retrieveing all individual response variables referring to the  selected delivery results
 		$selectedVariables = array ();
 		foreach ($results as $result){
-            $variables = $this->service->getVariables($result, new core_kernel_classes_Class($variableClassUri) );
+            $variables = $this->service->getVariables(new core_kernel_classes_Resource($result['deliveryResultIdentifier']), new core_kernel_classes_Class($variableClassUri) );
             $selectedVariables = array_merge($selectedVariables, $variables);
 		}
 		//retrieving The list of the variables identifiers per activities defintions as observed
 		$variableTypes = array();
 		foreach ($selectedVariables as $variable) {
+            if((get_class($variable[0]->variable) == 'taoResultServer_models_classes_OutcomeVariable' && $variableClassUri == CLASS_OUTCOME_VARIABLE)
+            || (get_class($variable[0]->variable) == 'taoResultServer_models_classes_ResponseVariable' && $variableClassUri == CLASS_RESPONSE_VARIABLE)){
                 //variableIdentifier
-                $variableIdentifierProperty = new core_kernel_classes_Property(PROPERTY_IDENTIFIER);
-                $variableIdentifier = $variable->getUniquePropertyValue($variableIdentifierProperty)->__toString();
-                $itemResult = $this->service->getItemResultFromVariable($variable);
-                $item = $this->service->getItemFromItemResult($itemResult);
+                $variableIdentifier = $variable[0]->variable->identifier;
+                $item = new core_kernel_classes_Resource($variable[0]->item);
                 if (get_class($item) == "core_kernel_classes_Resource") {
                 $contextIdentifierLabel = $item->getLabel();
                 $contextIdentifier = $item->getUri(); // use the callId/itemResult identifier
@@ -123,7 +132,8 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
                 $contextIdentifier = $item->__toString();
                 }
                 $variableTypes[$contextIdentifier.$variableIdentifier] = array("contextLabel" => $contextIdentifierLabel, "contextId" => $contextIdentifier, "variableIdentifier" => $variableIdentifier);
-		    }
+            }
+        }
 		foreach ($variableTypes as $variable){
 
 		    switch ($variableClassUri){
@@ -222,7 +232,14 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
         $start = $limit * $page - $limit;
         $response = new stdClass();
        	$clazz = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
-        $results = $clazz->searchInstances($filter, array ('recursive'=>true, 'like' => false,'offset' => $start, 'limit' => $limit));
+        $results = array();
+        foreach($this->getImplementations() as $impl){
+            $deliveryResults = $impl->getResultByColumn(array_keys($filter), $filter);
+            foreach($deliveryResults as $deliveryResult){
+                $results[] = new core_kernel_classes_Resource($deliveryResult['deliveryResultIdentifier']);
+            }
+        }
+
         $counti	= count($results);
         $dpmap = array();
         foreach ($columns as $column) {
@@ -245,15 +262,18 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
         }
 
         foreach ($dpmap as $arr) {
-
                 $arr['instance']->prepare($results, $arr['columns']);
 
         }
-        
         foreach($results as $result) {
                 $cellData = array();
                 foreach ($columns as $column) {
-                $cellData[]=self::filterCellData($column->getDataProvider()->getValue($result, $column), $filterData);
+                    if(count($column->getDataProvider()->cache) > 0){
+                        $cellData[]=self::filterCellData($column->getDataProvider()->getValue($result, $column), $filterData);
+                    }
+                    else{
+                        $cellData[] = self::filterCellData($this->service->getTestTaker($result)->getLabel(),$filterData);
+                    }
                 }
                 $response->rows[] = array(
                         'id' => $result->getUri(),
