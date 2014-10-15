@@ -57,10 +57,8 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule
         $this->defaultData();
     }
 
-    private function getImplementations(){
-        return array(
-            new \oat\taoOutcomeRds\model\RdsResultStorage()
-        );
+    private function getImplementation(){
+        return new \oat\taoOutcomeRds\model\RdsResultStorage();
     }
 
     /**
@@ -86,46 +84,42 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule
         $propertyValuesFormated = array ();
         if($propertyUri == PROPERTY_RESULT_OF_DELIVERY){
             $deliveriesInArray = array();
-            foreach($this->getImplementations() as $impl){
-                $deliveries = $impl->getAllDeliveryIds();
-                foreach($deliveries as $delivery){
-                    if(!in_array($delivery['deliveryIdentifier'], $deliveriesInArray)){
-                        $deliveryResource = new core_kernel_classes_Resource($delivery['deliveryIdentifier']);
+            $deliveries = $this->getImplementation()->getAllDeliveryIds();
+            foreach($deliveries as $delivery){
+                if(!in_array($delivery['deliveryIdentifier'], $deliveriesInArray)){
+                    $deliveryResource = new core_kernel_classes_Resource($delivery['deliveryIdentifier']);
 
-                        $propertyValueFormated = array(
-                            'data' 	=> $deliveryResource->getLabel(),
-                            'type'	=> 'instance',
-                            'attributes' => array(
-                                'id' => tao_helpers_Uri::encode($delivery['deliveryIdentifier']),
-                                'class' => 'node-instance'
-                            )
-                        );
-                        $deliveriesInArray[] = $delivery['deliveryIdentifier'];
-                        $propertyValuesFormated[] = $propertyValueFormated;
-                    }
+                    $propertyValueFormated = array(
+                        'data' 	=> $deliveryResource->getLabel(),
+                        'type'	=> 'instance',
+                        'attributes' => array(
+                            'id' => tao_helpers_Uri::encode($delivery['deliveryIdentifier']),
+                            'class' => 'node-instance'
+                        )
+                    );
+                    $deliveriesInArray[] = $delivery['deliveryIdentifier'];
+                    $propertyValuesFormated[] = $propertyValueFormated;
                 }
             }
 
         }
         else if($propertyUri == PROPERTY_RESULT_OF_SUBJECT){
             $testTakersInArray = array();
-            foreach($this->getImplementations() as $impl){
-                $testTakers = $impl->getAllTestTakerIds();
-                foreach($testTakers as $testTaker){
-                    if(!in_array($testTaker['testTakerIdentifier'], $testTakersInArray)){
-                        $deliveryResource = new core_kernel_classes_Resource($testTaker['testTakerIdentifier']);
+            $testTakers = $this->getImplementation()->getAllTestTakerIds();
+            foreach($testTakers as $testTaker){
+                if(!in_array($testTaker['testTakerIdentifier'], $testTakersInArray)){
+                    $deliveryResource = new core_kernel_classes_Resource($testTaker['testTakerIdentifier']);
 
-                        $propertyValueFormated = array(
-                            'data' 	=> $deliveryResource->getLabel(),
-                            'type'	=> 'instance',
-                            'attributes' => array(
-                                'id' => tao_helpers_Uri::encode($testTaker['testTakerIdentifier']),
-                                'class' => 'node-instance'
-                            )
-                        );
-                        $testTakersInArray[] = $testTaker['testTakerIdentifier'];
-                        $propertyValuesFormated[] = $propertyValueFormated;
-                    }
+                    $propertyValueFormated = array(
+                        'data' 	=> $deliveryResource->getLabel(),
+                        'type'	=> 'instance',
+                        'attributes' => array(
+                            'id' => tao_helpers_Uri::encode($testTaker['testTakerIdentifier']),
+                            'class' => 'node-instance'
+                        )
+                    );
+                    $testTakersInArray[] = $testTaker['testTakerIdentifier'];
+                    $propertyValuesFormated[] = $propertyValueFormated;
                 }
             }
         }
@@ -209,23 +203,21 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule
         }
 
         $data = array();
-        foreach($this->getImplementations() as $impl){
-            $results = $impl->getResultByColumn(array_keys($filter), $filter);
+        $results = $this->getImplementation()->getResultByColumn(array_keys($filter), $filter);
 
 
-            $testTakers = $impl->getAllTestTakerIds();
-            foreach($results as $value){
-                $deliveryResult = new core_kernel_classes_Resource($value['deliveryResultIdentifier']);
-                $types = $deliveryResult->getTypes();
-                $data[$value['deliveryResultIdentifier']] = array(
-                    RDFS_LABEL  => $deliveryResult->getLabel(),
-                    PROPERTY_RESULT_OF_DELIVERY => $value['deliveryIdentifier'],
-                    PROPERTY_RESULT_OF_SUBJECT  => $value['testTakerIdentifier'],
-                    RDF_TYPE    => array_shift($types)
-                );
-            }
-
+        $testTakers = $this->getImplementation()->getAllTestTakerIds();
+        foreach($results as $value){
+            $deliveryResult = new core_kernel_classes_Resource($value['deliveryResultIdentifier']);
+            $types = $deliveryResult->getTypes();
+            $data[$value['deliveryResultIdentifier']] = array(
+                RDFS_LABEL  => $deliveryResult->getLabel(),
+                PROPERTY_RESULT_OF_DELIVERY => $value['deliveryIdentifier'],
+                PROPERTY_RESULT_OF_SUBJECT  => $value['testTakerIdentifier'],
+                RDF_TYPE    => array_shift($types)
+            );
         }
+
         $resultsGrid = new taoResults_helpers_DeliveryResultGrid($data, $this->resultGridOptions);
         $data = $resultsGrid->toArray();
         echo json_encode($data);

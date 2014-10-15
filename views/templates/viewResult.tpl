@@ -40,7 +40,6 @@ use oat\tao\helpers\Template;
                     <tr><td class="field"><?=__('Email:')?></td><td class="fieldValue userMail"><?=get_data('userEmail')?></td></tr>
                 </table>
             </div>
-            <!--
             <div class="tile statistics">
                 <strong><span class="icon-result"/>
                     <?=__('Responses Evaluation')?>
@@ -61,7 +60,6 @@ use oat\tao\helpers\Template;
                     </tr>
                 </table>
             </div>
-            -->
         </div>
         <div id="resultsBox">
             <table class="matrix">

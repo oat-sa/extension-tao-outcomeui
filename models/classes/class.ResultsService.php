@@ -37,10 +37,8 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
         return new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
     }
 
-    public function getImplementations(){
-        return array(
-            new \oat\taoOutcomeRds\model\RdsResultStorage()
-        );
+    public function getImplementation(){
+        return new \oat\taoOutcomeRds\model\RdsResultStorage();
     }
 
     /**
@@ -101,11 +99,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
      * @return array
      */
     public function getVariablesFromItemResult($itemResult) {
-        $variables = array();
-        foreach($this->getImplementations() as $impl){
-            $variables = array_merge($variables,$impl->getVariables($itemResult));
-        }
-        return $variables;
+        return $this->getImplementation()->getVariables($itemResult);
     }
 
     /**
@@ -115,11 +109,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
      * @author Patrick Plichart, <patrick@taotesting.com>
      */
     public function getDelivery(core_kernel_classes_Resource $deliveryResult) {
-        $variables = array();
-        foreach($this->getImplementations() as $impl){
-            $variables[] = new core_kernel_classes_Resource($impl->getDelivery($deliveryResult->getUri()));
-        }
-        return $variables;
+        return new core_kernel_classes_Resource($this->getImplementation()->getDelivery($deliveryResult->getUri()));
     }
 
     /**
@@ -128,11 +118,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
      * @return array core_kernel_classes_Resource
      * */
     public function getItemResultsFromDeliveryResult(core_kernel_classes_Resource $deliveryResult) {
-        $callIds = array();
-        foreach($this->getImplementations() as $impl){
-            $callIds = array_merge($callIds, $impl->getRelatedItemCallIds($deliveryResult->getUri()));
-        }
-        return $callIds;
+        return $this->getImplementation()->getRelatedItemCallIds($deliveryResult->getUri());
     }
 
     /**
@@ -152,11 +138,8 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
      * @return common_Object
      */
     public function getItemFromItemResult($itemResult) {
-        $variables = array();
-        foreach($this->getImplementations() as $impl){
-            $variables = array_merge($variables,$impl->getVariables($itemResult));
-        }
-        $item = new core_kernel_classes_Resource(array_shift($variables)[0]->item);
+        $items = $this->getImplementation()->getVariables($itemResult);
+        $item = new core_kernel_classes_Resource(array_shift($items)[0]->item);
         return $item;
     }
 
@@ -176,10 +159,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
      * 
      */
     public function getVariableValue($variableUri) {
-        $variable = new core_kernel_classes_Resource($variableUri);
-        $return =  $variable->getUniquePropertyValue(new core_kernel_classes_Property(RDF_VALUE));
-
-        return $return;
+        return $this->getImplementation()->getVariableProperty($variableUri, 'value');
     }
 
     /**
@@ -188,8 +168,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
      * @return common_Object
      */
     public function getVariableBaseType($variableUri) {
-        $variable = new core_kernel_classes_Resource($variableUri);
-        return $variable->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_VARIABLE_BASETYPE));
+        return $this->getImplementation()->getVariableProperty($variableUri, 'baseType');
     }
 
     /**
@@ -253,7 +232,6 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
 
         $itemResults = $this->getItemResultsFromDeliveryResult($deliveryResult);
         $variablesByItem = array();
-
         foreach ($itemResults as $itemResult) {
             try {
                 common_Logger::d("Retrieving related Item for itemResult " . $itemResult . "");
@@ -291,6 +269,8 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
                         case 'value':
                             $variableDescription[RDF_VALUE] = $value;
                             break;
+                        case 'uri':
+                            break;
                         case 'identifier':
                             $variableDescription[PROPERTY_IDENTIFIER] = $value;
                             break;
@@ -311,9 +291,9 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
                     $variableDescription[RDF_VALUE] = array(base64_decode($variableDescription[PROPERTY_RESPONSE_VARIABLE_CANDIDATERESPONSE]));
                     $type = CLASS_RESPONSE_VARIABLE;
                 }
-
                 $variableIdentifier = $variableDescription[PROPERTY_IDENTIFIER];
                 $epoch = $variableDescription[PROPERTY_VARIABLE_EPOCH];
+                $variableDescription["uri"] = $variable[0]->uri;
                 $variableDescription["epoch"] = array(tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE));
 
                 if (isset($variableDescription[PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE])) {
@@ -395,11 +375,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
      */
     public function getVariableDataFromDeliveryResult(core_kernel_classes_Resource $deliveryResult) {
 
-        $variables = array();
-        foreach($this->getImplementations() as $impl){
-            $variables = array_merge($impl->getVariables($deliveryResult->getUri()), $variables);
-        }
-
+        $variables = $this->getImplementation()->getVariables($deliveryResult->getUri());
         $variablesData = array();
         foreach($variables as $variable){
             if($variable[0]->callIdTest != ""){
@@ -423,7 +399,6 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
                 $variablesData[] = $variableDescription;
             }
         }
-
         return $variablesData;
     }
 
@@ -433,13 +408,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
      * @author Patrick Plichart, <patrick.plichart@taotesting.com>
      */
     public function getTestTaker(core_kernel_classes_Resource $deliveryResult) {
-        $testTaker = '';
-        foreach($this->getImplementations() as $impl){
-            if($impl->getTestTaker($deliveryResult->getUri()) != ''){
-                $testTaker = $impl->getTestTaker($deliveryResult->getUri());
-                break;
-            }
-        }
+        $testTaker = $this->getImplementation()->getTestTaker($deliveryResult->getUri());
         return new core_kernel_classes_Resource($testTaker);
     }
     /**
@@ -664,7 +633,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
             "like" => false
             ));
         if (count($itemResults) > 1) {
-            throw new common_exception_Error('More then 1 itemResult for the corresponding Id ' . $deliveryResultIdentifier);
+            throw new common_exception_Error('More then 1 itemResult for the corresponding Id ' . $callId);
         } elseif (count($itemResults) == 1) {
             $returnValue = array_shift($itemResults);
             common_Logger::d('found Item Result after search for ' . $callId);
