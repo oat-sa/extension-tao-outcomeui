@@ -51,9 +51,7 @@ return array(
 	),
 	'managementRole' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole',
     'acl' => array(
-        array('grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', array('ext'=>'taoResults')),
-        array('grant', 'http://www.tao.lu/Ontologies/generis.rdf#AnonymousRole', array('ext'=>'taoResults', 'mod' => 'RestResults'))
-        
+        array('grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', array('ext'=>'taoResults'))
     ),'optimizableClasses' => array(
 /*			'http://www.tao.lu/Ontologies/TAOResult.rdf#Result',
 			'http://www.tao.lu/Ontologies/TAOResult.rdf#Variable',*/
@@ -88,5 +86,8 @@ return array(
 
 		#the path were the event logs are saved
 		'EVENT_LOG_PATH'		=> ROOT_PATH.'taoResults/data',
+
+	 	#TAO extension Paths
+		'TAOBASE_WWW'			=> ROOT_URL	.'tao/views/',
 	)
 );
