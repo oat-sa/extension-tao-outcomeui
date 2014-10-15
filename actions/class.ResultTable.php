@@ -78,9 +78,9 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
 
 		$testtaker = new tao_models_classes_table_PropertyColumn(new core_kernel_classes_Property(PROPERTY_RESULT_OF_SUBJECT));
 		$arr[] = $testtaker->toArray();
-                echo json_encode(array(
-                        'columns' => $arr
-                ));
+        echo json_encode(array(
+                'columns' => $arr
+        ));
     }
 
 

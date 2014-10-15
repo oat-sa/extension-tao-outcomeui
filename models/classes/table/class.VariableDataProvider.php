@@ -172,9 +172,6 @@ class taoResults_models_classes_table_VariableDataProvider
         	self::$singleton = new self();
         }
         return self::$singleton;
-        
-
-        return $returnValue;
     }
 
     /**

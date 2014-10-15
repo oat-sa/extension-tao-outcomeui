@@ -115,7 +115,11 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
      * @author Patrick Plichart, <patrick@taotesting.com>
      */
     public function getDelivery(core_kernel_classes_Resource $deliveryResult) {
-        return $deliveryResult->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_RESULT_OF_DELIVERY));
+        $variables = array();
+        foreach($this->getImplementations() as $impl){
+            $variables[] = new core_kernel_classes_Resource($impl->getDelivery($deliveryResult->getUri()));
+        }
+        return $variables;
     }
 
     /**
