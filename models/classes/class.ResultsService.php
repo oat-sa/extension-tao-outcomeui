@@ -29,6 +29,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
     
     private $cacheItemResult = array(); // a local cache (string)$callId=> (core_kernel_classes_Resource) $itemResult
     private $cacheDeliveryResult = array(); // a local cache (string)identifier=> (core_kernel_classes_Resource) $deliveryResult
+    private $implementation = null;
     /**
      * (non-PHPdoc)
      * @see tao_models_classes_ClassService::getRootClass()
@@ -37,8 +38,17 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
         return new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
     }
 
+    public function setImplementation($implementationClass){
+        if(class_exists($implementationClass)){
+            $this->implementation = new $implementationClass;
+        }
+    }
+
     public function getImplementation(){
-        return new \oat\taoOutcomeRds\model\RdsResultStorage();
+        if($this->implementation == null){
+            $this->implementation = new \oat\taoOutcomeRds\model\RdsResultStorage();
+        }
+        return $this->implementation;
     }
 
     /**

@@ -45,10 +45,6 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
         $this->service = taoResults_models_classes_ResultsService::singleton();
     }
 
-    private function getImplementation(){
-        return new \oat\taoOutcomeRds\model\RdsResultStorage();
-    }
-
     /**
      * get the main class
      * @return core_kernel_classes_Classes
@@ -102,7 +98,7 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
 		$deliveryResultClass	= new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
 
 		//The list of delivery Results matching the current selection filters
-        $results = $this->getImplementation()->getResultByColumn(array_keys($filter), $filter);
+        $results = $this->service->getImplementation()->getResultByColumn(array_keys($filter), $filter);
 
 		//retrieveing all individual response variables referring to the  selected delivery results
 		$selectedVariables = array ();
@@ -228,7 +224,7 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
         $response = new stdClass();
        	$clazz = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
         $results = array();
-        $deliveryResults = $this->getImplementation()->getResultByColumn(array_keys($filter), $filter);
+        $deliveryResults = $this->service->getImplementation()->getResultByColumn(array_keys($filter), $filter);
         foreach($deliveryResults as $deliveryResult){
             $results[] = new core_kernel_classes_Resource($deliveryResult['deliveryResultIdentifier']);
         }

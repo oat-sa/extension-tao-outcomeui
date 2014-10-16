@@ -262,6 +262,9 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
     public function viewResult()
     {   
         $result = $this->getCurrentInstance();
+        if($this->hasRequestParameter('implementation')){
+            $this->getClassService()->setImplementation($this->getRequestParameter('implementation'));
+        }
 
         $testTaker = $this->getClassService()->getTestTakerData($result);
 
