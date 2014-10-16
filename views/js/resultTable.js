@@ -18,7 +18,7 @@ define(['jquery', 'i18n', 'helpers'], function($, __, helpers){
                 postData: {'filter': document.JsonFilter, 'columns':document.columns},
                 mtype: "post",
                 datatype: "json",
-                colNames: document.columns,
+                colNames: document.columns.label,
                 colModel: document.models,
                 rowNum:20,
                 height:'auto',
