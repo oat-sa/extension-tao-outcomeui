@@ -1,4 +1,4 @@
-define(['jquery', 'i18n', 'helpers'], function($, __, helpers){
+define(['jquery', 'i18n', 'helpers', 'layout/section'], function($, __, helpers, section){
     
     var resultTable = {
 
@@ -32,7 +32,14 @@ define(['jquery', 'i18n', 'helpers'], function($, __, helpers){
                 sortable: false,
                 gridview : true,
                 caption: __("Delivery results"),
-                onCellSelect: function(rowid,iCol,cellcontent, e) {helpers.openTab(__('Delivery Result'), document.getActionViewResultUrl+'?uri='+escape(rowid));}
+                onCellSelect: function(rowid,iCol,cellcontent, e) {
+			section.create({
+		            id : 'delivery-results-' + rowid,
+		            name : __('Delivery Result'),
+		            url : document.getActionViewResultUrl+'?uri='+escape(rowid)
+		        })
+		        .show(); 
+		}
             });
             jQuery("#result-table-grid").jqGrid('navGrid','#pagera1', {edit:false,add:false,del:false,search:false,refresh:false});
             //jQuery("#result-table-grid").jqGrid('navButtonAdd',"#pagera1", {caption:"Column chooser",title:"Column chooser", buttonicon :'ui-icon-gear',onClickButton:function(){columnChooser();}});
