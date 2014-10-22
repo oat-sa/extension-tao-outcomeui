@@ -1,28 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE extension SYSTEM "../../tao/doc/structures.dtd">
+<!DOCTYPE structures SYSTEM "../../tao/doc/structures.dtd">
 <structures>
-	<structure id="results" name="Results" level="5" visible="true">
-		<description>View and format the collected results.</description>
-	<sections>
-	    <section id="manage_results" name="Manage Results" url="/taoResults/Results/index">
-		<trees>
-		    <tree name="Results library"
-			className="Result"
-			dataUrl="/taoResults/Results/getOntologyData"
-			addSubClassUrl="/taoResults/Results/addSubClass"
-			editClassUrl="/taoResults/Results/index"
-			editInstanceUrl="/taoResults/Results/viewResult"
-			moveInstanceUrl="/taoResults/Results/moveInstance"
-		    />
-		</trees>
-		<actions>
-		<action name="new class" js="subClass" url="/taoResults/Results/addSubClass" context="class" />
-		<action name="move" js="moveNode" url="" context="instance" />
-		<action name="delete" js="removeNode" url="/taoResults/Results/delete" context="resource" />
-		<action name="summary report" url="/taoResults/SimpleReport/build" context="class" />
-		</actions>
-	    </section>
-	    <section id="inspect_results" name="Inspect Results" url="/taoResults/InspectResults/index" />
-	  </sections>
-	</structure>
+    <structure id="results" name="Results" level="5" group="main">
+        <description>View and format the collected results.</description>
+        <icon id="icon-result" src=""/>
+        <sections>
+            <section id="manage_results" name="Manage Results" url="/taoResults/Results/index">
+                <trees>
+                    <tree name="Results library"
+                          className="Result"
+                          dataUrl="/taoResults/Results/getOntologyData"
+                          selectClass="results-index"
+                          selectInstance="results-view"
+                          moveInstance="results-move"
+                          delete="results-delete"
+                            />
+                </trees>
+                <actions>
+                    <action id="results-index" name="Index" url="/taoResults/Results/index" group="none" context="class">
+                        <icon id="icon-edit"/>
+                    </action>
+                    <action id="results-view" name="View result"  url="/taoResults/Results/viewResult" group="content" context="instance">
+                        <icon id="icon-edit"/>
+                    </action>
+                    <action id="results-class" name="New class" binding="subClass" url="/taoResults/Results/addSubClass" context="class" group="content">
+                        <icon id="icon-folder-open"/>
+                    </action>
+                    <action id="results-move" name="Move" binding="moveNode" url="/taoResults/Results/moveInstance" context="instance" group="none">
+                        <icon id="icon-move-item"/>
+                    </action>
+                    <action id="results-delete" name="Delete" binding="removeNode" url="/taoResults/Results/delete" context="resource" group="tree">
+                        <icon id="icon-bin"/>
+                    </action>
+                    <action id="results-report" name="Summary report" url="/taoResults/SimpleReport/build" context="class" group="tree">
+                        <icon id="icon-summary-report"/>
+                    </action>
+                </actions>
+            </section>
+            <section id="inspect_results" name="Inspect Results" url="/taoResults/InspectResults/index"/>
+        </sections>
+    </structure>
 </structures>

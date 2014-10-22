@@ -38,6 +38,8 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
 	public function __construct()
 	{
 		parent::__construct();
+        // load the constants
+        common_ext_ExtensionsManager::singleton()->getExtensionById('taoDelivery');
 
 		$this->defaultData();
 	}
@@ -90,9 +92,9 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
         if($this->hasRequestParameter('subclasses')){
             $options['subclasses'] = $this->getRequestParameter('subclasses');
         }
-
         $children = array();
         $returnValue = array();
+
         if($options['labelFilter'] != '*'){
             // get results
             foreach($this->getClassService()->getImplementation()->getAllTestTakerIds() as $key => $association){
@@ -104,7 +106,7 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
                     $child["attributes"] = array("id" => tao_helpers_Uri::encode($result->getUri()), "class" => "node-instance");
                     $title = $testTaker->getLabel()."-(".$result->getUri().")- ".$delivery->getLabel();
 
-                    $child["data"] = tao_helpers_Display::textCutter($title, 16);
+                    $child["data"] = $title;
                     $child["type"] = "instance";
                     $children[] = $child;
                 }
@@ -150,7 +152,7 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
                                 $testTaker = new core_kernel_classes_Resource($association["testTakerIdentifier"]);
                                 $title = $testTaker->getLabel()."-(".$result->getUri().")- ".$delivery->getLabel();
 
-                                $child["data"] = tao_helpers_Display::textCutter($title, 16);
+                                $child["data"] = $title;
                                 $child["type"] = "instance";
                                 $instances[] = $child;
                             }
@@ -194,7 +196,7 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
                             $testTaker = new core_kernel_classes_Resource($this->getClassService()->getImplementation()->getTestTaker($instance->getUri()));
                             $title = $testTaker->getLabel()."-(".$instance->getUri().")- ".$delivery->getLabel();
 
-                            $child["data"] = tao_helpers_Display::textCutter($title, 16);
+                            $child["data"] = $title;
                             $child["type"] = "instance";
                             $children[] = $child;
                     }
