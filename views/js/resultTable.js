@@ -1,5 +1,5 @@
-define(['jquery', 'i18n', 'helpers', 'layout/section'], function($, __, helpers, section){
-    
+define(['jquery', 'i18n', 'helpers', 'layout/section', 'generis.facetFilter', 'grid/tao.grid'], function($, __, helpers, section, GenerisFacetFilterClass) {
+
     var resultTable = {
 
         /**
@@ -13,17 +13,24 @@ define(['jquery', 'i18n', 'helpers', 'layout/section'], function($, __, helpers,
          */
         showGrid : function () {
             $('#result-table-grid').jqGrid('GridUnload');
-            var myGrid = $("#result-table-grid").jqGrid({
+
+            var headers = [],
+                columns = document.columns;
+            for (var key in columns) {
+                headers.push(columns[key].label);
+            }
+
+            $("#result-table-grid").jqGrid({
                 url: document.dataUrl+'?filterData=lastSubmitted',
-                postData: {'filter': document.JsonFilter, 'columns':document.columns},
+                postData: {'filter': document.JsonFilter, 'columns':columns},
                 mtype: "post",
                 datatype: "json",
-                colNames: document.columns.values,
+                colNames: headers,
                 colModel: document.models,
                 rowNum:20,
                 height:'auto',
-                width: (parseInt($("#result-table-grid").width())-20),
-                rowNum:20,
+                width: null,
+                autowidth: true,
                 rowList:[5,10,30],
                 pager: '#pagera1',
                 sortName: 'id',
@@ -32,16 +39,16 @@ define(['jquery', 'i18n', 'helpers', 'layout/section'], function($, __, helpers,
                 sortable: false,
                 gridview : true,
                 caption: __("Delivery results"),
-                onCellSelect: function(rowid,iCol,cellcontent, e) {
-			section.create({
-		            id : 'delivery-results-' + rowid,
-		            name : __('Delivery Result'),
-		            url : document.getActionViewResultUrl+'?uri='+escape(rowid)
-		        })
-		        .show(); 
-		}
+                onCellSelect: function(rowid) {
+                    var $section = section.create({
+                        id : 'delivery-results-' + rowid.replace(/[^a-z0-9-_]+/ig, "_"),
+                        name : __('Delivery Result'),
+                        url : document.getActionViewResultUrl+'?uri='+escape(rowid)
+                    })
+                    $section.show(); 
+                }
             });
-            jQuery("#result-table-grid").jqGrid('navGrid','#pagera1', {edit:false,add:false,del:false,search:false,refresh:false});
+            $("#result-table-grid").jqGrid('navGrid','#pagera1', {edit:false,add:false,del:false,search:false,refresh:false});
             //jQuery("#result-table-grid").jqGrid('navButtonAdd',"#pagera1", {caption:"Column chooser",title:"Column chooser", buttonicon :'ui-icon-gear',onClickButton:function(){columnChooser();}});
             //jQuery("#result-table-grid").jqGrid('filterToolbar');
         },
@@ -51,7 +58,13 @@ define(['jquery', 'i18n', 'helpers', 'layout/section'], function($, __, helpers,
          */
        initiateGrid : function (){
            var self = this;
-            $.getJSON(document.getActionSubjectColumnUrl, document.JsonFilter, function (data) {self.setColumns(data.columns)});
+            $.getJSON(
+                document.getActionSubjectColumnUrl,
+                document.JsonFilter,
+                function (data) {
+                    self.setColumns(data.columns)
+        			$('#lui_result-table-grid').hide();
+                });
         },
 
          /*
@@ -122,21 +135,26 @@ define(['jquery', 'i18n', 'helpers', 'layout/section'], function($, __, helpers,
             var self = this;
             $(fromButton).click(function(e) {
                 e.preventDefault();
-                if ($(fromButton).hasClass("ui-state-default")) {
-                $(fromButton).addClass("ui-state-disabled").removeClass("ui-state-default");
-                $(tobuttonID).addClass("ui-state-default").removeClass("ui-state-disabled");
+                if ($(fromButton).hasClass("disabled")) {
+                    return;
+                }
+
+                $(fromButton).addClass("disabled");
+                $(tobuttonID).removeClass("disabled");
                 $.getJSON( actionCallUrl
                         , document.JsonFilterSelection
                         , function (data) {
-                            switch (operationType){
-                            case "remove":self.removeColumns(data.columns);break;
-                            case "add":self.setColumns(data.columns);break;
-                            default:self.removeColumns(data.columns);break;
+                            if (operationType == "add"){
+                                self.setColumns(data.columns);
                             }
+                            else {
+                                self.removeColumns(data.columns);
+                            }
+            			    $('#lui_result-table-grid').hide();
 
                         }
                 );
-                }
+
             });
         },
 
