@@ -45,7 +45,7 @@ function loadResults(filter) {
 }
 
 $(function(){
-	require(['jquery', 'i18n', 'helpers', 'generis.facetFilter', 'grid/tao.grid'], function($, __, helpers, GenerisFacetFilterClass) {
+	require(['jquery', 'i18n', 'helpers', 'layout/section', 'generis.facetFilter', 'grid/tao.grid'], function($, __, helpers, section, GenerisFacetFilterClass) {
 
 
 		//the grid model
@@ -122,8 +122,15 @@ $(function(){
 		$('#buildTableButton').click(function(e) {
 			e.preventDefault();
 			filterSelection = facetFilter.getFormatedFilterSelection();
-			uri = '<?=_url('index','ResultTable')?>?'+$.param({'filter': filterSelection});
-			helpers.openTab(__('custom table'), uri);
+			uri = helpers._url('index', 'ResultTable', 'taoResults', {'filter': filterSelection});
+
+			$section = section.create({
+                id      : 'buildTableTab',
+                name    : __('Export Delivery Results'),
+                url     : uri,
+                contentBlock : true
+            });
+            $section.activate();
 		});
 
 	});
