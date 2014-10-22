@@ -130,7 +130,7 @@ $(function(){
                 url     : uri,
                 contentBlock : true
             });
-            $section.activate();
+            $section.show();
 		});
 
 	});
