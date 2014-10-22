@@ -108,6 +108,10 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
 
                     $child["data"] = $title;
                     $child["type"] = "instance";
+                    $child["_data"] = array(
+                        "uri" => $result->getUri(),
+                        "class_uri" => TAO_DELIVERY_RESULT
+                    );
                     $children[] = $child;
                 }
             }
@@ -117,6 +121,10 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
                     "attributes" => array(
                         "class" => "node-class",
                         "id" => tao_helpers_Uri::encode(TAO_DELIVERY_RESULT),
+                    ),
+                    "_data" => array(
+                        "uri" => TAO_DELIVERY_RESULT,
+                        "class_uri" => null
                     ),
                     "children" => $childrenLimited,
                     "count" => count($children),
@@ -151,7 +159,10 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
                                 $child["attributes"] = array("id" => tao_helpers_Uri::encode($result->getUri()), "class" => "node-instance");
                                 $testTaker = new core_kernel_classes_Resource($association["testTakerIdentifier"]);
                                 $title = $testTaker->getLabel()."-(".$result->getUri().")- ".$delivery->getLabel();
-
+                                $child["_data"] = array(
+                                    "uri" => $result->getUri(),
+                                    "class_uri" => TAO_DELIVERY_RESULT
+                                );
                                 $child["data"] = $title;
                                 $child["type"] = "instance";
                                 $instances[] = $child;
@@ -163,6 +174,10 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
                     "attributes" => array(
                         "class" => "node-class",
                         "id" => tao_helpers_Uri::encode(TAO_DELIVERY_RESULT),
+                    ),
+                    "_data" => array(
+                        "uri" => TAO_DELIVERY_RESULT,
+                        "class_uri" => null
                     ),
                     "children" => $childrenLimited,
                     "count" => count($instances),
@@ -179,7 +194,10 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
                     $child["attributes"] = array("id" => tao_helpers_Uri::encode($subclass->getUri()), "class" => "node-class");
                     $child["data"] = $subclass->getLabel();
                     $child["type"] = "class";
-
+                    $child["_data"] = array(
+                        "uri" => $subclass->getUri(),
+                        "class_uri" => $clazz->getUri()
+                    );
                     if($subclass->countInstances()){
                         $child["state"] = "closed";
                     }
@@ -198,6 +216,10 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
 
                             $child["data"] = $title;
                             $child["type"] = "instance";
+                            $child["_data"] = array(
+                                "uri" => $instance->getUri(),
+                                "class_uri" => $clazz->getUri()
+                            );
                             $children[] = $child;
                     }
                 }
