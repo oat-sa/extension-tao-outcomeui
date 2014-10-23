@@ -1,10 +1,8 @@
 .main-container {
-    padding:0px;
-    margin:0px;
+    width: 100%
 }
-.result-table-container{
-    padding:0px;
-    margin:0px;
+#result-table-container{
+    overflow-x: auto;
     padding-bottom: 25px;
 }
 
@@ -34,6 +32,15 @@
 	margin: 4px;
 }
 
-#result-table-grid {
+#result-table-grid,
+#result-table-grid th {
 	border: none;
+}
+
+#result-table-grid .jqgrid-rownum {
+	border-left: none;
+}
+
+.ui-jqgrid-labels th.ui-th-column {
+    border: none
 }
