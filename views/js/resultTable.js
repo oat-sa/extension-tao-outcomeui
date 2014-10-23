@@ -23,7 +23,6 @@ define(['jquery', 'i18n', 'helpers', 'layout/section'], function($, __, helpers,
                 rowNum:20,
                 height:'auto',
                 width: (parseInt($("#result-table-grid").width())-20),
-                rowNum:20,
                 rowList:[5,10,30],
                 pager: '#pagera1',
                 sortName: 'id',
@@ -41,7 +40,7 @@ define(['jquery', 'i18n', 'helpers', 'layout/section'], function($, __, helpers,
 		        .show(); 
 		}
             });
-            jQuery("#result-table-grid").jqGrid('navGrid','#pagera1', {edit:false,add:false,del:false,search:false,refresh:false});
+            $("#result-table-grid").jqGrid('navGrid','#pagera1', {edit:false,add:false,del:false,search:false,refresh:false});
             //jQuery("#result-table-grid").jqGrid('navButtonAdd',"#pagera1", {caption:"Column chooser",title:"Column chooser", buttonicon :'ui-icon-gear',onClickButton:function(){columnChooser();}});
             //jQuery("#result-table-grid").jqGrid('filterToolbar');
         },

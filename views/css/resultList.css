@@ -2,19 +2,6 @@
 * Styles used in the resultList.tpl template
 */
 /*The facet based used to fitler delivery results */
-#filter-container {
-    width:19%;
-    padding:0px;
-    margin:0px
-}
-
-/*The workspace */
-#main-container {
-    width:100%;
-
-
-}
-
 /*The grid of delivery results according to the filters */
 #inspect-results-container {
     padding:0px;
@@ -32,6 +19,17 @@ th td tr tbody table .ui-jqgrid tr.jqgrow td{
     border: 0px;
 }
 
+.ui-jqgrid-htable {
+    margin-bottom: 0px;
+}
+
+.ui-state-default.ui-jqgrid-hdiv{
+    border-width: 0;
+}
+
+.ui-jqgrid-labels .s-ico {
+    float: right;
+}
 
 #buildTableButton{
    position: relative;
