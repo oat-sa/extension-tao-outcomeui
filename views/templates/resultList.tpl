@@ -39,7 +39,7 @@ function loadResults(filter) {
 		function (DATA) {
 			deliveryResultGrid.empty();
 			deliveryResultGrid.add(DATA);
-
+			$('#lui_' + deliveryResultGrid.jqGrid[0].p.id).hide();
 		}
 	);
 }
@@ -62,7 +62,7 @@ $(function(){
 				'onFilter': function(facetFilter) {
 					loadResults(facetFilter.getFormatedFilterSelection());
 				}
-			},
+			}
 
 		};
 
