@@ -141,6 +141,12 @@ use oat\tao\helpers\Template;
 		     <td <?=$rowspan?> class="variableIdentifierField"><?=$variableIdentifier?></td>
 		<?php }?>
 		<td class="dataResult" colspan="2">
+            <?php
+            if ($baseType=="file") {
+                    echo '<button class="download" value="'.$observation["uri"].'">'.__('download').'</button>';
+            }
+            else{
+            ?>
 		    <?php
                         if (isset($observation[RDF_VALUE]) and is_array($observation[RDF_VALUE])){
                             $rdfValue = array_pop($observation[RDF_VALUE]);
@@ -158,12 +164,9 @@ use oat\tao\helpers\Template;
                     echo tao_helpers_Display::htmlEscape($rdfValue);
                     }
                     }
+            }
                     ?>
-                    <?php
-                    if ($baseType=="file") {
-                    echo '<button class="download" value="'.$observation["uri"].'">'.__('download').'</button>';
-                    }
-                    ?>
+
                 <span class="    
                       <?php
                       switch ($observation['isCorrect']){
