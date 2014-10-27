@@ -20,8 +20,7 @@
  *
  * @access public
  * @author Joel Bout, <joel.bout@tudor.lu>
- * @package taoResults
- * 
+ * @package taoOutcomeUi
  */
 
 namespace oat\taoOutcomeUi\model;

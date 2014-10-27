@@ -29,8 +29,7 @@ use \tao_models_classes_table_Column;
  * @abstract
  * @access public
  * @author Joel Bout, <joel.bout@tudor.lu>
- * @package taoResults
- 
+ * @package taoOutcomeUi
  */
 abstract class VariableColumn
     extends tao_models_classes_table_Column

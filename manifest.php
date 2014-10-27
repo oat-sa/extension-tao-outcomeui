@@ -33,16 +33,22 @@ return array(
     //taoItems is only needed for the item model property retrieval
 	'requires' => array(
 	    'taoResultServer'  => '2.6',
-        'taoItems' => '*'
+        'taoItems' => '*',
+	    'taoDelivery' => '*'
     ),
 	'install' => array(
 		'checks' => array(
 			array('type' => 'CheckFileSystemComponent', 'value' => array('id' => 'fs_taoResults_views_genpics', 'location' => 'taoResults/views/genpics', 'rights' => 'rw'))
 		)
 	),
+    'uninstall' => array(
+	),
 	'managementRole' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole',
     'acl' => array(
-        array('grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', array('ext'=>'taoResults'))
+        array('grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', array('ext'=>'taoOutcomeUi'))
+    ),
+    'routes' => array(
+        '/taoOutcomeUi' => 'oat\\taoOutcomeUi\\controller'
     ),
 	'constants' => array(
 	 	# actions directory
@@ -61,15 +67,18 @@ return array(
 		'BASE_PATH'				=> $extpath,
 	
 		#BASE URL (usually the domain root)
-		'BASE_URL'				=> ROOT_URL	.'taoResults/',
+		'BASE_URL'				=> ROOT_URL	.'taoOutcomeUi/',
 	
 		#BASE WWW the web resources path
-		'BASE_WWW'				=> ROOT_URL .'taoResults/views/',
+		'BASE_WWW'				=> ROOT_URL .'taoOutcomeUi/views/',
 
 		#the path were the event logs are saved
-		'EVENT_LOG_PATH'		=> ROOT_PATH.'taoResults/data',
+		'EVENT_LOG_PATH'		=> ROOT_PATH.'taoOutcomeUi/data',
 
 	 	#TAO extension Paths
 		'TAOBASE_WWW'			=> ROOT_URL	.'tao/views/',
-	)
+	),
+    'extra' => array(
+        'structures' => dirname(__FILE__).DIRECTORY_SEPARATOR.'controller'.DIRECTORY_SEPARATOR.'structures.xml',
+    )
 );

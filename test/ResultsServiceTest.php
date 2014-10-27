@@ -1,5 +1,8 @@
 <?php
+
+use oat\taoOutcomeUi\model\ResultsService;
 use oat\tao\test\TaoPhpUnitTestRunner;
+
 include_once dirname(__FILE__) . '/../includes/raw_start.php';
 
 /**
@@ -34,7 +37,7 @@ class ResultsServiceTestCase extends TaoPhpUnitTestRunner {
      */
     public function setUp(){
         TaoPhpUnitTestRunner::initTest();
-        $this->service = taoResults_models_classes_ResultsService::singleton();
+        $this->service = ResultsService::singleton();
     }
     
     /**
@@ -44,9 +47,9 @@ class ResultsServiceTestCase extends TaoPhpUnitTestRunner {
      */
     public function testService(){
     
-        $service = taoResults_models_classes_ResultsService::singleton();
+        $service = ResultsService::singleton();
         $this->assertIsA($service, 'tao_models_classes_Service');
-        $this->assertIsA($service, 'taoResults_models_classes_ResultsService');
+        $this->assertIsA($service, 'oat\\taoOutcomeUi\\model\\ResultsService');
     }
     /**
      * 

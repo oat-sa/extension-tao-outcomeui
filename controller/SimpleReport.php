@@ -33,8 +33,7 @@ use oat\taoOutcomeUi\model\StatisticsService;
  * SimpleReport Module
  *
  * @author Patrick Plichart, <patrick.plichart@taotesting.com>
- * @package taoResults
- 
+ * @package taoOutcomeUi
  *
  */
 class SimpleReport extends tao_actions_TaoModule {

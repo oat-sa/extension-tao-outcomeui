@@ -1,5 +1,8 @@
 <?php
+
+use oat\taoOutcomeUi\helper\Datatypes;
 use oat\tao\test\TaoPhpUnitTestRunner;
+
 include_once dirname(__FILE__) . '/../includes/raw_start.php';
 
 /**
@@ -30,7 +33,7 @@ class DatatypesTest extends TaoPhpUnitTestRunner {
      * @param array $expected
      */
     public function testDecodeFile($binary, array $expected) {
-        $this->assertEquals($expected, taoResults_helpers_Datatypes::decodeFile($binary));
+        $this->assertEquals($expected, Datatypes::decodeFile($binary));
     }
     
     public function decodeFileProvider() {

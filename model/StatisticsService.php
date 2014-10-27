@@ -31,8 +31,7 @@ use \common_Exception;
  * 
  *
  * @author Patrick Plichart, <patrick.plichart@taotesting.com>
- * @package taoResults
- 
+ * @package taoOutcomeUi
  */
 class StatisticsService
 

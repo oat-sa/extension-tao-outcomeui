@@ -38,8 +38,7 @@ require_once (ROOT_PATH.'tao/lib/pChart/pChart.class');
  * (last revised $Date: 2010-01-12 20:14:42 +0100 (Tue, 12 Jan 2010) $)
  *
  * @author Patrick Plichart, <patrick.plichart@taotesting.com>
- * @package taoResults
- 
+ * @package taoOutcomeUi
  */
 
 class ReportService extends StatisticsService
@@ -273,7 +272,7 @@ class ReportService extends StatisticsService
 		{
 
 			$fileName = base64_encode(uniqid().$localToReportId).'.'.$fileExtension;
-			return "taoResults/views/genpics/".$fileName;
+			return "taoOutcomeUi/views/genpics/".$fileName;
 		}
 
 

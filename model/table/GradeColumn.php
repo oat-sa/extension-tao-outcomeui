@@ -28,8 +28,7 @@ use \core_kernel_classes_Class;
  *
  * @access public
  * @author Joel Bout, <joel.bout@tudor.lu>
- * @package taoResults
- 
+ * @package taoOutcomeUi
  */
 class GradeColumn
     extends VariableColumn

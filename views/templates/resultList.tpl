@@ -1,7 +1,7 @@
 <?php
 use oat\tao\helpers\Template;
 ?>
-<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/resultList.css" />
+<link rel="stylesheet" type="text/css" href="<?= Template::css('resultList.css') ?>" />
 
 <div id="filter-container" class="data-container tabs-bottom">
 	<div class="ui-widget ui-state-default ui-widget-header ui-corner-top container-title" >

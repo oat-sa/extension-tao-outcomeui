@@ -13,7 +13,7 @@ define(['module', 'jquery', 'context', 'i18n', 'helpers', 'jquery.fileDownload']
                 });
                 
                 $('#btnFilter').click(function(e) {
-                    var url = context.root_url + 'taoResults/Results/viewResult';
+                    var url = context.root_url + 'taoOutcomeUi/Results/viewResult';
                     //conf.filter = $( this ).val();
                     helpers._load(helpers.getMainContainerSelector(), url, {
                     uri: conf.uri,
@@ -25,7 +25,7 @@ define(['module', 'jquery', 'context', 'i18n', 'helpers', 'jquery.fileDownload']
 
                 $('.download').on("click", function (e) {
                     var variableUri = $(this).val();
-                    $.fileDownload(context.root_url + 'taoResults/Results/getFile', {
+                    $.fileDownload(context.root_url + 'taoOutcomeUi/Results/getFile', {
                       preparingMessageHtml: __("We are preparing your report, please wait..."),
                       failMessageHtml: __("There was a problem generating your report, please try again."),
                       successCallback: function () { },

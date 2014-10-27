@@ -29,6 +29,7 @@ use \tao_helpers_Display;
 use \tao_helpers_Request;
 use \tao_helpers_Uri;
 use oat\taoOutcomeUi\model\ResultsService;
+use Doctrine\DBAL\Schema\Index;
 
 /**
  * Results Controller provide actions performed from url resolution
@@ -36,8 +37,7 @@ use oat\taoOutcomeUi\model\ResultsService;
  *
  * @author Patrick Plichart <patrick@taotesting.com>
  * @author Bertrand Chevrier, <taosupport@tudor.lu>
- * @package taoResults
- 
+ * @package taoOutcomeUi
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  */
 class Results extends tao_actions_SaSModule {
@@ -335,5 +335,8 @@ class Results extends tao_actions_SaSModule {
         
         echo $file["data"];
     }
+    
+    public function index() {
+        echo 'xxxx';
+    }
 }
-?>

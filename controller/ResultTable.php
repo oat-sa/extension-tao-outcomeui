@@ -39,8 +39,7 @@ use oat\taoOutcomeUi\model\table\ResponseColumn;
  *
  * @author Joel Bout <joel@taotesting.com>
  * @author Patrick Plichart <patrick@taotesting.com>
- * @package taoResults
- 
+ * @package taoOutcomeUi
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  *
  */

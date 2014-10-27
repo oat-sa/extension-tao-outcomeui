@@ -9,7 +9,7 @@ use oat\tao\helpers\Template;
     <script type="text/javascript">
         requirejs.config({
             config: {
-                'taoResults/controller/viewResult': {
+                'taoOutcomeUi/controller/viewResult': {
                     uri: '<?=get_data("uri")?>',
                     classUri: '<?=get_data("classUri")?>',
                     filter: '<?=get_data("filter")?>'

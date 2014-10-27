@@ -18,6 +18,9 @@
  *               2009-2012 (update and modification) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV);
  * 
  */
+
+use oat\taoOutcomeUi\model\ResultsService;
+
 ?>
 <?php
 //TODO simpletest testcase that need to be migrate to phpunit
@@ -33,7 +36,7 @@ class ResultsTestCase extends UnitTestCase {
 	
 	/**
 	 * 
-	 * @var taoResults_models_classes_ResultsService
+	 * @var oat\taoOutcomeUi\model\ResultsService
 	 */
 	private $resultsService = null;
 	
@@ -54,7 +57,7 @@ class ResultsTestCase extends UnitTestCase {
 	public function setUp(){		
 		TaoTestRunner::initTest();
 		
-		$resultsService = taoResults_models_classes_ResultsService::singleton();
+		$resultsService = ResultsService::singleton();
 		$this->resultsService = $resultsService;
 		//create an activity execution
 		$activityExecutionClass = new core_kernel_classes_Class(CLASS_ACTIVITY_EXECUTION);
@@ -95,12 +98,12 @@ class ResultsTestCase extends UnitTestCase {
 	/**
 	 * Test the user service implementation
 	 * @see tao_models_classes_ServiceFactory::get
-	 * @see taoResults_models_classes_ResultsService::__construct
+	 * @see oat\taoOutcomeUi\model\ResultsService::__construct
 	 */
 	public function testService(){
 		$this->assertIsA($this->resultsService, 'tao_models_classes_GenerisService');
 		$this->assertIsA($this->resultsService, 'tao_models_classes_Service');
-		$this->assertIsA($this->resultsService, 'taoResults_models_classes_ResultsService');
+		$this->assertIsA($this->resultsService, 'oat\\taoOutcomeUi\\model\\ResultsService');
 	}
 		
 	public function testStoreGrade(){

@@ -36,8 +36,7 @@ use oat\taoOutcomeUi\model\ResultsService;
  * Results Controller provide actions performed from url resolution
  *
  * @author Joel Bout, Patrick Plichart, <info@taotesting.com>
- * @package taoResults
- 
+ * @package taoOutcomeUi
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
 
  */

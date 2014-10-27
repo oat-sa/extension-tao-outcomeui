@@ -36,8 +36,7 @@ use oat\taoOutcomeUi\model\ResultsService;
  *
  * @access public
  * @author Joel Bout, <joel.bout@tudor.lu>
- * @package taoResults
- 
+ * @package taoOutcomeUi
  */
 class VariableDataProvider
         implements tao_models_classes_table_DataProvider

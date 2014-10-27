@@ -1,7 +1,7 @@
 <?php
 use oat\tao\helpers\Template;
 ?>
-<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/simpleReport.css" />
+<link rel="stylesheet" type="text/css" href="<?= Template::css('simpleReport.css') ?>" />
 <div class="ui-helper-reset" id="section_to_print" style="height:100%;" >
 	<div id="form-title" class="ui-widget-header ui-corner-top ui-state-default">
 		<?=get_data('reportTitle')?>

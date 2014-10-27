@@ -18,6 +18,11 @@
  *               2009-2012 (update and modification) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV);
  * 
  */
+
+use oat\taoOutcomeUi\model\ReportService;
+use oat\taoOutcomeUi\model\ResultsService;
+use oat\taoOutcomeUi\model\StatisticsService;
+
 ?>
 <?php
 require_once dirname(__FILE__) . '/../../tao/test/TaoTestRunner.php';
@@ -35,12 +40,12 @@ class SimpleReportTestCase extends UnitTestCase {
 	
 	/**
 	 * 
-	 * @var taoResults_models_classes_StatisticsService
+	 * @var oat\taoOutcomeUi\model\StatisticsService
 	 */
 	private $statsService = null;
 	/**
 	 * 
-	 * @var taoResults_models_classes_ReportService
+	 * @var oat\taoOutcomeUi\model\ReportService
 	 */
 	private $reportService = null;
 	
@@ -68,11 +73,11 @@ class SimpleReportTestCase extends UnitTestCase {
 	public function setUp(){		
 		TaoTestRunner::initTest();
 		
-		$resultsService = taoResults_models_classes_ResultsService::singleton();
+		$resultsService = ResultsService::singleton();
 		$this->resultsService = $resultsService;
 		
-		$this->statsService = taoResults_models_classes_StatisticsService::singleton();
-		$this->reportService = taoResults_models_classes_ReportService::singleton();
+		$this->statsService = StatisticsService::singleton();
+		$this->reportService = ReportService::singleton();
 		//create an activity execution
 		$activityExecutionClass = new core_kernel_classes_Class(CLASS_ACTIVITY_EXECUTION);
 		
@@ -112,11 +117,11 @@ class SimpleReportTestCase extends UnitTestCase {
 	
 	/**
 	** @see tao_models_classes_ServiceFactory::get
-	 * @see taoResults_models_classes_ResultsService::__construct
+	 * @see oat\taoOutcomeUi\model\ResultsService::__construct
 	 */
 	public function testService(){
-		$this->assertIsA($this->statsService, 'taoResults_models_classes_StatisticsService');
-		$this->assertIsA($this->reportService, 'taoResults_models_classes_ReportService');
+		$this->assertIsA($this->statsService, 'oat\\taoOutcomeUi\\model\\StatisticsService');
+		$this->assertIsA($this->reportService, 'oat\\taoOutcomeUi\\model\\ReportService');
 	}
 		
 	public function testExtractDeliveryDataSet(){

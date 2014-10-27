@@ -6,10 +6,10 @@ use oat\tao\helpers\Template;
 		<span><?=get_data('message')?></span>
 	</div>
 <?php endif?>
-    <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/resultTable.css" />
+    <link rel="stylesheet" type="text/css" href="<?= Template::css('resultTable.css') ?>" />
 
     <script type="text/javascript">
-require(['jquery', 'i18n', 'taoResults/resultTable', 'grid/tao.grid', 'jquery.fileDownload'], function($, __, resultTable) { 
+require(['jquery', 'i18n', 'taoOutcomeUi/resultTable', 'grid/tao.grid', 'jquery.fileDownload'], function($, __, resultTable) { 
 	    //models and columns are parameters used and manipulated by the table operations functions.
 	    document.models = [];
 	    document.columns = [];
