@@ -19,6 +19,17 @@
  *               2009-2012 (update and modification) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV); *
  */
 
+namespace oat\taoOutcomeUi\controller;
+
+use \Exception;
+use \common_exception_IsAjaxAction;
+use \core_kernel_classes_Resource;
+use \tao_actions_SaSModule;
+use \tao_helpers_Display;
+use \tao_helpers_Request;
+use \tao_helpers_Uri;
+use oat\taoOutcomeUi\model\ResultsService;
+
 /**
  * Results Controller provide actions performed from url resolution
  *
@@ -29,7 +40,7 @@
  
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  */
-class taoResults_actions_Results extends tao_actions_SaSModule {
+class Results extends tao_actions_SaSModule {
 
 	/**
 	 * constructor: initialize the service and the default data
@@ -44,7 +55,7 @@ class taoResults_actions_Results extends tao_actions_SaSModule {
 	
 	protected function getClassService()
 	{
-		return taoResults_models_classes_ResultsService::singleton();
+		return ResultsService::singleton();
 	}
 
     public function getOntologyData(){

@@ -19,11 +19,16 @@
  */
 
 
-class taoResults_actions_RestResults extends tao_actions_CommonRestModule {
+namespace oat\taoOutcomeUi\controller;
+
+use \tao_actions_CommonRestModule;
+use oat\taoOutcomeUi\model\CrudResultsService;
+
+class RestResults extends tao_actions_CommonRestModule {
 
 	public function __construct(){
 		parent::__construct();
-		$this->service = taoResults_models_classes_CrudResultsService::singleton();
+		$this->service = CrudResultsService::singleton();
 	}
 	
 	/**

@@ -24,8 +24,8 @@ $extpath = dirname(__FILE__).DIRECTORY_SEPARATOR;
 $taopath = dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'tao'.DIRECTORY_SEPARATOR;
 
 return array(
-	'name' => 'taoResults',
-    'label' => 'Result storage ontology',
+	'name' => 'taoOutcomeUi',
+    'label' => 'Result visualisation',
 	'description' => 'TAO Results extension',
     'license' => 'GPL-2.0',
     'version' => '2.6',
@@ -35,33 +35,15 @@ return array(
 	    'taoResultServer'  => '2.6',
         'taoItems' => '*'
     ),
-	'models' => array(
-		'http://www.tao.lu/Ontologies/TAOResult.rdf'
-	),
 	'install' => array(
-		'rdf' => array(
-			dirname(__FILE__). '/models/ontology/taoresult.rdf'
-		),
 		'checks' => array(
 			array('type' => 'CheckFileSystemComponent', 'value' => array('id' => 'fs_taoResults_views_genpics', 'location' => 'taoResults/views/genpics', 'rights' => 'rw'))
-		),
-	    'php' => array(
-            dirname(__FILE__). '/scripts/install/postInstall.php'
-        )
+		)
 	),
 	'managementRole' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole',
     'acl' => array(
         array('grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', array('ext'=>'taoResults'))
-    ),'optimizableClasses' => array(
-/*			'http://www.tao.lu/Ontologies/TAOResult.rdf#Result',
-			'http://www.tao.lu/Ontologies/TAOResult.rdf#Variable',*/
-			'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable',
-			'http://www.tao.lu/Ontologies/TAOResult.rdf#OutcomeVariable',
-                        'http://www.tao.lu/Ontologies/TAOResult.rdf#TraceVariable',
-                        'http://www.tao.lu/Ontologies/TAOResult.rdf#ItemResult'/*
- * 
- */
-	),
+    ),
 	'constants' => array(
 	 	# actions directory
 	 	"DIR_ACTIONS"			=> $extpath."actions".DIRECTORY_SEPARATOR,

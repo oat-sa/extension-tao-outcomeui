@@ -20,6 +20,11 @@
  * 
  */
 
+namespace oat\taoOutcomeUi\model;
+
+use \Exception;
+use \common_Exception;
+
 /**
  * TAO - taoResults/models/classes/class.StatisticsService.php
  * extracts dataSet with statistics from taoResults
@@ -29,9 +34,9 @@
  * @package taoResults
  
  */
-class taoResults_models_classes_StatisticsService
+class StatisticsService
 
-     extends taoResults_models_classes_ResultsService
+     extends ResultsService
 {
 	/**
 	* returns  a data set containing results data using and using an associative array

@@ -19,6 +19,8 @@
  *               2009-2012 (update and modification) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV);
  * 
  */
+namespace oat\taoOutcomeUi\controller;
+
 ?>
 <?php
 /**
@@ -29,6 +31,6 @@
  
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  */
-class taoResults_actions_SaSResult extends taoResults_actions_Results {
+class SaSResult extends Results {
 }
 ?>

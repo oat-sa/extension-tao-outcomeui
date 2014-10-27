@@ -18,6 +18,8 @@
  *
  */
 
+namespace oat\taoOutcomeUi\helper;
+
 /**
  * A class focusing on providing utility methods for the various result datatypes
  * that might be sent/stored to/by a result server.
@@ -25,7 +27,7 @@
  * @author Jérôme Bogaerts <jerome@taotesting.com>
  *
  */
-class taoResults_helpers_Datatypes {
+class Datatypes {
     
     /**
      * Decode a binary string representing a file into an array.

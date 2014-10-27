@@ -20,6 +20,19 @@
  */
 
 
+namespace oat\taoOutcomeUi\controller;
+
+use \common_Exception;
+use \core_kernel_classes_Class;
+use \core_kernel_classes_Property;
+use \core_kernel_classes_Resource;
+use \tao_actions_Table;
+use \tao_models_classes_table_Column;
+use \tao_models_classes_table_PropertyColumn;
+use oat\taoOutcomeUi\model\ResultsService;
+use oat\taoOutcomeUi\model\table\GradeColumn;
+use oat\taoOutcomeUi\model\table\ResponseColumn;
+
 /**
  * should be entirelyrefactored
  * Results Controller provide actions performed from url resolution
@@ -31,7 +44,7 @@
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  *
  */
-class taoResults_actions_ResultTable extends tao_actions_Table {
+class ResultTable extends tao_actions_Table {
 
     /**
      * constructor: initialize the service and the default data
@@ -42,7 +55,7 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
     public function __construct() {
 
         parent::__construct();
-        $this->service = taoResults_models_classes_ResultsService::singleton();
+        $this->service = ResultsService::singleton();
     }
 
     /**
@@ -128,9 +141,9 @@ class taoResults_actions_ResultTable extends tao_actions_Table {
 		foreach ($variableTypes as $variable){
 
 		    switch ($variableClassUri){
-                case CLASS_RESPONSE_VARIABLE:{ $columns[] = new taoResults_models_classes_table_ResponseColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);break;}
-                case CLASS_OUTCOME_VARIABLE: { $columns[] = new taoResults_models_classes_table_GradeColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);break;}
-                default:{$columns[] = new taoResults_models_classes_table_ResponseColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);}
+                case CLASS_RESPONSE_VARIABLE:{ $columns[] = new ResponseColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);break;}
+                case CLASS_OUTCOME_VARIABLE: { $columns[] = new GradeColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);break;}
+                default:{$columns[] = new ResponseColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);}
 			}
 		}
 		$arr = array();

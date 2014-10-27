@@ -24,7 +24,23 @@
  * 
  */
 
-class taoResults_models_classes_ResultsService extends tao_models_classes_ClassService {
+namespace oat\taoOutcomeUi\model;
+
+use \Exception;
+use \common_Exception;
+use \common_Logger;
+use \common_cache_FileCache;
+use \common_exception_Error;
+use \core_kernel_classes_Class;
+use \core_kernel_classes_DbWrapper;
+use \core_kernel_classes_Property;
+use \core_kernel_classes_Resource;
+use \taoResultServer_models_classes_Variable;
+use \tao_helpers_Date;
+use \tao_models_classes_ClassService;
+use oat\taoOutcomeUi\helper\Datatypes;
+
+class ResultsService extends tao_models_classes_ClassService {
 
     
     private $cacheItemResult = array(); // a local cache (string)$callId=> (core_kernel_classes_Resource) $itemResult
@@ -731,7 +747,7 @@ class taoResults_models_classes_ResultsService extends tao_models_classes_ClassS
             case "file": {
                     $value = (base64_decode($this->getVariableValue($variableUri)));
                     common_Logger::i(var_export(strlen($value), true));
-                    $decodedFile = taoResults_helpers_Datatypes::decodeFile($value);
+                    $decodedFile = Datatypes::decodeFile($value);
                     common_Logger::i("FileName:");
                     common_Logger::i(var_export($decodedFile["name"], true));
                     common_Logger::i("Mime Type:");

@@ -20,6 +20,10 @@
  *
  */
 
+namespace oat\taoOutcomeUi\model;
+
+use \common_exception_ClientException;
+
 define("fontName", ROOT_PATH."tao/lib/pChart/Fonts/verdana.ttf");
 require_once(ROOT_PATH.'tao/lib/pChart/pData.class');
 require_once (ROOT_PATH.'tao/lib/pChart/pChart.class');
@@ -38,7 +42,7 @@ require_once (ROOT_PATH.'tao/lib/pChart/pChart.class');
  
  */
 
-class taoResults_models_classes_ReportService extends taoResults_models_classes_StatisticsService
+class ReportService extends StatisticsService
 {
 	private $deliveryDataSet = null;
 
@@ -273,6 +277,6 @@ class taoResults_models_classes_ReportService extends taoResults_models_classes_
 		}
 
 
-} /* end of class taoResults_models_classes_ResultsService */
+} /* end of class oat\taoOutcomeUi\model\ResultsService */
 
 ?>

@@ -22,6 +22,13 @@
 
 
 
+namespace oat\taoOutcomeUi\controller;
+
+use \core_kernel_classes_Class;
+use \tao_actions_TaoModule;
+use oat\taoOutcomeUi\model\ReportService;
+use oat\taoOutcomeUi\model\StatisticsService;
+
 /**
  * SimpleReport Module
  *
@@ -30,10 +37,10 @@
  
  *
  */
-class taoResults_actions_SimpleReport extends tao_actions_TaoModule {
+class SimpleReport extends tao_actions_TaoModule {
 
     /*
-     * @var taoResults_models_classes_ReportService 
+     * @var oat\taoOutcomeUi\model\ReportService 
      */
     protected $reportService = null;
 
@@ -45,10 +52,10 @@ class taoResults_actions_SimpleReport extends tao_actions_TaoModule {
     public function __construct() {
 
         parent::__construct();
-        $this->service = taoResults_models_classes_StatisticsService::singleton();
+        $this->service = StatisticsService::singleton();
         $this->defaultData();
 	    //TODO define a hook for implemeitng differently the report structure with an interface
-	$this->reportService = taoResults_models_classes_ReportService::singleton();
+	$this->reportService = ReportService::singleton();
     }
 
     /**

@@ -19,6 +19,18 @@
  * 
  */
 
+namespace oat\taoOutcomeUi\model\table;
+
+use \common_Logger;
+use \common_cache_FileCache;
+use \core_kernel_classes_Class;
+use \core_kernel_classes_Resource;
+use \tao_helpers_Date;
+use \tao_helpers_Uri;
+use \tao_models_classes_table_Column;
+use \tao_models_classes_table_DataProvider;
+use oat\taoOutcomeUi\model\ResultsService;
+
 /**
  * Short description of class
  *
@@ -27,7 +39,7 @@
  * @package taoResults
  
  */
-class taoResults_models_classes_table_VariableDataProvider
+class VariableDataProvider
         implements tao_models_classes_table_DataProvider
 {
     /**
@@ -61,7 +73,7 @@ class taoResults_models_classes_table_VariableDataProvider
      */
     public function prepare($resources, $columns)
     {   
-        $resultsService = taoResults_models_classes_ResultsService::singleton();      
+        $resultsService = ResultsService::singleton();      
 
         foreach($resources as $result){
             $itemresults = $resultsService->getVariables($result, new core_kernel_classes_Class(TAO_RESULT_VARIABLE), false);
@@ -161,7 +173,7 @@ class taoResults_models_classes_table_VariableDataProvider
      *
      * @access public
      * @author Joel Bout, <joel.bout@tudor.lu>
-     * @return taoResults_models_classes_table_VariableDataProvider
+     * @return oat\taoOutcomeUi\model\table\VariableDataProvider
      */
     public static function singleton()
     {

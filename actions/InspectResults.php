@@ -19,6 +19,19 @@
  * 
  */
 
+namespace oat\taoOutcomeUi\controller;
+
+use \Exception;
+use \core_kernel_classes_Class;
+use \core_kernel_classes_Property;
+use \core_kernel_classes_Resource;
+use \tao_actions_TaoModule;
+use \tao_helpers_Display;
+use \tao_helpers_Request;
+use \tao_helpers_Uri;
+use oat\taoOutcomeUi\helper\DeliveryResultGrid;
+use oat\taoOutcomeUi\model\ResultsService;
+
 /**
  * Results Controller provide actions performed from url resolution
  *
@@ -28,7 +41,7 @@
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
 
  */
-class taoResults_actions_InspectResults extends tao_actions_TaoModule
+class InspectResults extends tao_actions_TaoModule
 {
     /**
      * @var array
@@ -46,7 +59,7 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule
         parent::__construct();
 
         //the service is initialized by default
-        $this->service = taoResults_models_classes_ResultsService::singleton();
+        $this->service = ResultsService::singleton();
         $this->resultGridOptions = array(
             'columns' => array(
                 RDFS_LABEL => array('weight' => 2),
@@ -158,7 +171,7 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule
         //$properties[] = new core_kernel_classes_Property(RDF_TYPE);
 	
         //Monitoring grid
-        $deliveryResultGrid = new taoResults_helpers_DeliveryResultGrid(array(), $this->resultGridOptions);
+        $deliveryResultGrid = new DeliveryResultGrid(array(), $this->resultGridOptions);
         $grid = $deliveryResultGrid->getGrid();
         $model = $grid->getColumnsModel();
 
@@ -218,7 +231,7 @@ class taoResults_actions_InspectResults extends tao_actions_TaoModule
             );
         }
 
-        $resultsGrid = new taoResults_helpers_DeliveryResultGrid($data, $this->resultGridOptions);
+        $resultsGrid = new DeliveryResultGrid($data, $this->resultGridOptions);
         $data = $resultsGrid->toArray();
         echo json_encode($data);
     }

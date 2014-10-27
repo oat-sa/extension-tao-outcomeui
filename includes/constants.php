@@ -28,12 +28,6 @@
  *
  */
 $todefine = array(
-	'RESULT_ONTOLOGY'		=> 'http://www.tao.lu/Ontologies/TAOResult.rdf',
-	'ITEM_ONTOLOGY'			=> 'http://www.tao.lu/Ontologies/TAOItem.rdf',
-	'GROUP_ONTOLOGY'		=> 'http://www.tao.lu/Ontologies/TAOGroup.rdf',
-	'TEST_ONTOLOGY'			=> 'http://www.tao.lu/Ontologies/TAOTest.rdf',
-	'SUBJECT_ONTOLOGY'		=> 'http://www.tao.lu/Ontologies/TAOSubject.rdf',
-
 	'SCORE_ID'					=> 'SCORE',
 	'SCORE_MIN_ID'				=> 'SCORE_MIN',
 	'SCORE_MAX_ID'				=> 'SCORE_MAX',
@@ -78,16 +72,7 @@ $todefine = array(
     'PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE'  =>'http://www.tao.lu/Ontologies/TAOResult.rdf#correctResponse',
     'PROPERTY_RESPONSE_VARIABLE_CANDIDATERESPONSE'  =>'http://www.tao.lu/Ontologies/TAOResult.rdf#candidateResponse',
     //
-	// old
-	'TAO_ITEM_RESULTS_CLASS'=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_ITEM_RESULTS',
-	'PROP_RESULT_PROCESS_EXEC_ID'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_PROCESS_EXEC_ID',
-	'PROP_RESULT_DELIVERY_ID'		=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_DELIVERY_ID',
-	'PROP_RESULT_TEST_ID'			=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_TEST_ID',
-	'PROP_RESULT_ITEM_ID'			=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_ITEM_ID',
-	'PROP_RESULT_SUBJECT_ID'		=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_SUBJECT_ID',
-	'PROP_RESULT_ITEM_VARIABLE_ID'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_ITEM_VARIABLE_ID',
-	'PROP_RESULT_ITEM_VARIABLE_VALUE' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_ITEM_VARIABLE_VALUE',
-        
+	
     'RESOURCE_TAORESULT_SERVER' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#taoResultServer'
         
 );

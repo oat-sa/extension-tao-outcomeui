@@ -19,16 +19,20 @@
  * 
  */
 
+namespace oat\taoOutcomeUi\model\table;
+
+use \core_kernel_classes_Class;
+
 /**
- * Short description of class taoResults_models_classes_table_GradeColumn
+ * Short description of class oat\taoOutcomeUi\model\table\ResponseColumn
  *
  * @access public
  * @author Joel Bout, <joel.bout@tudor.lu>
  * @package taoResults
  
  */
-class taoResults_models_classes_table_GradeColumn
-    extends taoResults_models_classes_table_VariableColumn
+class ResponseColumn
+    extends VariableColumn
 {
     // --- ASSOCIATIONS ---
 
@@ -49,12 +53,12 @@ class taoResults_models_classes_table_GradeColumn
         $returnValue = null;
 
         
-        $returnValue = new core_kernel_classes_Class(CLASS_OUTCOME_VARIABLE);
+        $returnValue = new core_kernel_classes_Class(CLASS_RESPONSE_VARIABLE);
         
 
         return $returnValue;
     }
 
-} /* end of class taoResults_models_classes_table_GradeColumn */
+} /* end of class oat\taoOutcomeUi\model\table\ResponseColumn */
 
 ?>

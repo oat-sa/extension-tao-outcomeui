@@ -22,15 +22,20 @@
 
 
 
+namespace oat\taoOutcomeUi\helper;
+
+use \tao_helpers_grid_Cell_ResourceLabelAdapter;
+use \tao_helpers_grid_GridContainer;
+
 /**
- * Short description of class taoResults_helpers_DeliveryResultGrid
+ * Short description of class oat\taoOutcomeUi\helper\DeliveryResultGrid
  *
  * @access public
  * @author Somsack Sipasseuth, <somsack.sipasseuth@tudor.lu>
  * @package wfEngine
  
  */
-class taoResults_helpers_DeliveryResultGrid
+class DeliveryResultGrid
     extends tao_helpers_grid_GridContainer
 {
     // --- ASSOCIATIONS ---
@@ -86,6 +91,6 @@ class taoResults_helpers_DeliveryResultGrid
     }
 
 
-} /* end of class taoResults_helpers_DeliveryResultGrid*/
+} /* end of class oat\taoOutcomeUi\helper\DeliveryResultGrid*/
 
 ?>

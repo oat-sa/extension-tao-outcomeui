@@ -19,8 +19,12 @@
  * 
  */
 
+namespace oat\taoOutcomeUi\model\table;
+
+use \tao_models_classes_table_Column;
+
 /**
- * Short description of class taoResults_models_classes_table_VariableColumn
+ * Short description of class oat\taoOutcomeUi\model\table\VariableColumn
  *
  * @abstract
  * @access public
@@ -28,7 +32,7 @@
  * @package taoResults
  
  */
-abstract class taoResults_models_classes_table_VariableColumn
+abstract class VariableColumn
     extends tao_models_classes_table_Column
 {
     // --- ASSOCIATIONS ---
@@ -61,7 +65,7 @@ abstract class taoResults_models_classes_table_VariableColumn
      * @access protected
      * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  array array
-     * @return taoResults_models_classes_table_VariableColumn
+     * @return oat\taoOutcomeUi\model\table\VariableColumn
      */
     protected static function fromArray($array)
     {
@@ -108,7 +112,7 @@ abstract class taoResults_models_classes_table_VariableColumn
         $returnValue = null;
 
         
-        $returnValue = taoResults_models_classes_table_VariableDataProvider::singleton();
+        $returnValue = VariableDataProvider::singleton();
         
 
         return $returnValue;
@@ -172,6 +176,6 @@ abstract class taoResults_models_classes_table_VariableColumn
         return (array) $returnValue;
     }
 
-} /* end of abstract class taoResults_models_classes_table_VariableColumn */
+} /* end of abstract class oat\taoOutcomeUi\model\table\VariableColumn */
 
 ?>

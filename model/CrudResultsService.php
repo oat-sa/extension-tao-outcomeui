@@ -19,6 +19,12 @@
  * 
  */
 
+namespace oat\taoOutcomeUi\model;
+
+use \common_exception_NoImplementation;
+use \core_kernel_classes_Resource;
+use \tao_models_classes_CrudService;
+
 /**
  * Crud services implements basic CRUD services, orginally intended for 
  * REST controllers/ HTTP exception handlers.
@@ -26,7 +32,7 @@
  * 
  * @author Patrick Plichart, patrick@taotesting.com
  */
-class taoResults_models_classes_CrudResultsService extends tao_models_classes_CrudService
+class CrudResultsService extends tao_models_classes_CrudService
 {
 
     /**
@@ -36,7 +42,7 @@ class taoResults_models_classes_CrudResultsService extends tao_models_classes_Cr
      */
     protected function getClassService()
     {
-        return taoResults_models_classes_ResultsService::singleton();
+        return ResultsService::singleton();
     }
 
     /**
