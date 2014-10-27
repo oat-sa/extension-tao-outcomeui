@@ -10,30 +10,29 @@
                     <tree name="Results library"
                           className="Result"
                           dataUrl="/taoOutcomeUi/Results/getOntologyData"
-                          selectClass="Edit class"
-                          selectInstance="Edit test"
-                          moveInstance="Move"
-                          delete="Delete" 
-                    />
+                          selectClass="results-index"
+                          selectInstance="results-view"
+                          moveInstance="results-move"
+                          delete="results-delete"
+                            />
                 </trees>
                 <actions>
-                	<action name="Edit class" url="/taoOutcomeUi/Resuls/index" group="hidden" context="class">
+                    <action id="results-index" name="Index" url="/taoOutcomeUi/Results/index" group="none" context="class">
                         <icon id="icon-edit"/>
                     </action>
-
-                    <action name="Edit result"  url="/taoOutcomeUi/Results/viewResult" group="content" context="instance">
+                    <action id="results-view" name="View result"  url="/taoOutcomeUi/Results/viewResult" group="content" context="instance">
                         <icon id="icon-edit"/>
                     </action>
-                    <action name="New class" js="subClass" url="/taoOutcomeUi/Results/addSubClass" context="class" group="content">
+                    <action id="results-class" name="New class" binding="subClass" url="/taoOutcomeUi/Results/addSubClass" context="class" group="content">
                         <icon id="icon-folder-open"/>
                     </action>
-                    <action name="Move" js="moveNode" url="" context="instance" group="tree">
+                    <action id="results-move" name="Move" binding="moveNode" url="/taoOutcomeUi/Results/moveInstance" context="instance" group="none">
                         <icon id="icon-move-item"/>
                     </action>
-                    <action name="Delete" js="removeNode" url="/taoOutcomeUi/Results/delete" context="resource" group="tree">
+                    <action id="results-delete" name="Delete" binding="removeNode" url="/taoOutcomeUi/Results/delete" context="resource" group="tree">
                         <icon id="icon-bin"/>
                     </action>
-                    <action name="Summary report" url="/taoOutcomeUi/SimpleReport/build" context="class" group="tree">
+                    <action id="results-report" name="Summary report" url="/taoOutcomeUi/SimpleReport/build" context="class" group="tree">
                         <icon id="icon-summary-report"/>
                     </action>
                 </actions>
