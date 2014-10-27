@@ -1,7 +1,7 @@
 {
 
-    "name": "oat-sa/extension-tao-outcomerdf",
-    "description" : "extension to store outcome in the ontology",
+    "name": "oat-sa/extension-tao-outcomeui",
+    "description" : "extension to display the outcomes",
     "type" : "tao-extension",
     "authors" : [
 		{
@@ -52,7 +52,7 @@
 	"GPL-2.0"
 	],
     "extra" : {
-    	"tao-extension-name" : "taoResults"
+    	"tao-extension-name" : "taoOutcomeUi"
     },
     "minimum-stability" : "dev",
     "require": {
