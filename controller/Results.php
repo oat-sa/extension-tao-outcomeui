@@ -188,13 +188,18 @@ class Results extends tao_actions_SaSModule {
                         "uri" => TAO_DELIVERY_RESULT,
                         "class_uri" => null
                     ),
-                    "children" => $childrenLimited,
-                    "count" => count($instances),
                     "data" => "Result",
-                    "state" => "open",
                     "type" => "class",
 
                 );
+                if(count($children) > 0){
+                    $returnValue["state"] = "open";
+                    $returnValue["children"] = "$childrenLimited";
+                    $returnValue["count"] = "count($instances)";
+                }
+                else{
+                    $returnValue["state"] = "close";
+                }
             }
             // subclass details
             else{
