@@ -745,7 +745,7 @@ class ResultsService extends tao_models_classes_ClassService {
         
         switch ($baseType) {
             case "file": {
-                    $value = ($this->getVariableCandidateResponse($variableUri));
+                    $value = base64_decode($this->getVariableCandidateResponse($variableUri));
                     common_Logger::i(var_export(strlen($value), true));
                     $decodedFile = Datatypes::decodeFile($value);
                     common_Logger::i("FileName:");
