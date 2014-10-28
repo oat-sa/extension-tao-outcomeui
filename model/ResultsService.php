@@ -685,17 +685,8 @@ class ResultsService extends tao_models_classes_ClassService {
 
         
         if (!is_null($result)) {
+            $returnValue = $this->getImplementation()->deleteResult($result->getUri());
 
-            $itemResults = $this->getItemResultsFromDeliveryResult($result);
-            $variables = $this->getVariables($result);
-            foreach ($itemResults as $itemResult) {
-                $itemResult->delete();
-            }
-            foreach ($variables as $variable) {
-                $variable->delete();
-            }
-
-            $returnValue = $result->delete();
         }
         
 

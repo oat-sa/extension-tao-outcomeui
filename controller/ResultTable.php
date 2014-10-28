@@ -322,7 +322,7 @@ class ResultTable extends tao_actions_Table {
             $returnValue = array();
 
             //sort by timestamp observation
-           uksort($observationsList, "taoResults_models_classes_ResultsService::sortTimeStamps" );
+           uksort($observationsList, "oat\\taoOutcomeUi\\model\\ResultsService::sortTimeStamps" );
            $filteredObservation = ($filterData=='lastSubmitted') ? array_pop($observationsList) : array_shift($observationsList);
             $returnValue[]= $filteredObservation[0];
 
