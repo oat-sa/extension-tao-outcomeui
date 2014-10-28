@@ -64,13 +64,12 @@ abstract class VariableColumn
      * @access protected
      * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  array array
-     * @return oat\taoOutcomeUi\model\table\VariableColumn
+     * @return VariableColumn
      */
     protected static function fromArray($array)
     {
         $returnValue = null;
 
-        
         
         $contextId = $array['contextId'];
         $contextLabel = $array['contextLabel'];
@@ -126,13 +125,7 @@ abstract class VariableColumn
      */
     public function getContextIdentifier()
     {
-        $returnValue = null;
-
-        
         return $this->contextIdentifier;
-        
-
-        return $returnValue;
     }
 
     /**
@@ -144,13 +137,7 @@ abstract class VariableColumn
      */
     public function getIdentifier()
     {
-        $returnValue = (string) '';
-
-        
         return $this->identifier;
-        
-
-        return (string) $returnValue;
     }
 
     /**
@@ -162,9 +149,6 @@ abstract class VariableColumn
      */
     public function toArray()
     {
-        $returnValue = array();
-
-        
         $returnValue = parent::toArray();
         //$returnValue['ca'] = "deprecated";
         $returnValue['contextId'] = $this->contextIdentifier;

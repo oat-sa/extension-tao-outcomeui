@@ -164,7 +164,8 @@ class ReportService extends StatisticsService
 	private function getChart($localGraphId, $datax, $setOfySeries, $title, $type="bar", $xAxisLabel = "", $yAxisLabel="", $r = "208",$g ="2",$b = "57"){
             // Dataset definition
         if (count($datax) == 0) {
-            throw common_exception_ClientException("Empty data set");
+
+            throw new \common_exception_NoContent("Empty data set");
         }
         $dataSet = new pData();
         foreach ($setOfySeries as $legend => $ysery) {

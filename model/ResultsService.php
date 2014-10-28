@@ -34,6 +34,7 @@ use \core_kernel_classes_Class;
 use \core_kernel_classes_DbWrapper;
 use \core_kernel_classes_Property;
 use \core_kernel_classes_Resource;
+use oat\taoOutcomeRds\model\RdsResultStorage;
 use \taoResultServer_models_classes_Variable;
 use \tao_helpers_Date;
 use \tao_models_classes_ClassService;
@@ -61,7 +62,7 @@ class ResultsService extends tao_models_classes_ClassService {
 
     public function getImplementation(){
         if($this->implementation == null){
-            $this->implementation = new \oat\taoOutcomeRds\model\RdsResultStorage();
+            $this->implementation = new RdsResultStorage();
         }
         return $this->implementation;
     }
@@ -149,7 +150,7 @@ class ResultsService extends tao_models_classes_ClassService {
     /**
      * 
      * @param core_kernel_classes_Resource $variable
-     * @return common_Object
+     * @return \common_Object
      */
     public function getItemResultFromVariable(core_kernel_classes_Resource $variable) {
         $relatedItemResult = new core_kernel_classes_Property(PROPERTY_RELATED_ITEM_RESULT);
@@ -160,7 +161,7 @@ class ResultsService extends tao_models_classes_ClassService {
     /**
      * 
      * @param core_kernel_classes_Resource $itemResult
-     * @return common_Object
+     * @return \common_Object
      */
     public function getItemFromItemResult($itemResult) {
         $items = $this->getImplementation()->getVariables($itemResult);
@@ -171,7 +172,7 @@ class ResultsService extends tao_models_classes_ClassService {
     /**
      * 
      * @param core_kernel_classes_Resource $variable
-     * @return common_Object
+     * @return \common_Object
      */
     public function getItemFromVariable(core_kernel_classes_Resource $variable) {
         return $this->getItemFromItemResult($this->getItemResultFromVariable($variable));
@@ -180,7 +181,7 @@ class ResultsService extends tao_models_classes_ClassService {
     /**
      * 
      * @param unknown $variableUri 
-     * @return common_Object
+     * @return \common_Object
      * 
      */
     public function getVariableCandidateResponse($variableUri) {
@@ -190,7 +191,7 @@ class ResultsService extends tao_models_classes_ClassService {
     /**
      * 
      * @param unknown $variableUri
-     * @return common_Object
+     * @return \common_Object
      */
     public function getVariableBaseType($variableUri) {
         return $this->getImplementation()->getVariableProperty($variableUri, 'baseType');
@@ -737,7 +738,7 @@ class ResultsService extends tao_models_classes_ClassService {
         if (core_kernel_classes_DbWrapper::singleton()->getPlatForm()->getName() == 'mysql') {            
             if (defined("PDO::MYSQL_ATTR_MAX_BUFFER_SIZE")) {
                 $maxBuffer = (is_int(ini_get('upload_max_filesize'))) ? (ini_get('upload_max_filesize')* 1.5) : 10485760 ;
-                core_kernel_classes_DbWrapper::singleton()->getSchemaManager()->setAttribute(PDO::MYSQL_ATTR_MAX_BUFFER_SIZE,$maxBuffer);
+                core_kernel_classes_DbWrapper::singleton()->getSchemaManager()->setAttribute(\PDO::MYSQL_ATTR_MAX_BUFFER_SIZE,$maxBuffer);
             }
         }
         

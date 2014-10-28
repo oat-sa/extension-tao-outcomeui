@@ -172,7 +172,7 @@ class VariableDataProvider
      *
      * @access public
      * @author Joel Bout, <joel.bout@tudor.lu>
-     * @return oat\taoOutcomeUi\model\table\VariableDataProvider
+     * @return VariableDataProvider
      */
     public static function singleton()
     {

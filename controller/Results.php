@@ -357,8 +357,4 @@ class Results extends tao_actions_SaSModule {
         
         echo $file["data"];
     }
-    
-    public function index() {
-        echo 'xxxx';
-    }
 }

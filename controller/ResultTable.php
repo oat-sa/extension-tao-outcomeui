@@ -59,7 +59,7 @@ class ResultTable extends tao_actions_Table {
 
     /**
      * get the main class
-     * @return core_kernel_classes_Classes
+     * @return \core_kernel_classes_Classes
      */
     public function index() {
     	$filter = $this->getRequestParameter('filter');

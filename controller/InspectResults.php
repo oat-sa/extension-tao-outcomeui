@@ -25,6 +25,7 @@ use \Exception;
 use \core_kernel_classes_Class;
 use \core_kernel_classes_Property;
 use \core_kernel_classes_Resource;
+use oat\taoOutcomeRds\model\RdsResultStorage;
 use \tao_actions_TaoModule;
 use \tao_helpers_Display;
 use \tao_helpers_Request;
@@ -70,7 +71,7 @@ class InspectResults extends tao_actions_TaoModule
     }
 
     private function getImplementation(){
-        return new \oat\taoOutcomeRds\model\RdsResultStorage();
+        return new RdsResultStorage();
     }
 
     /**
