@@ -42,10 +42,21 @@ use oat\taoOutcomeUi\helper\Datatypes;
 
 class ResultsService extends tao_models_classes_ClassService {
 
+    /**
+     * a local cache (string)$callId=> (core_kernel_classes_Resource) $itemResult
+     * 
+     * @var core_kernel_classes_Resource
+     */
+    private $cacheItemResult = array(); 
     
-    private $cacheItemResult = array(); // a local cache (string)$callId=> (core_kernel_classes_Resource) $itemResult
-    private $cacheDeliveryResult = array(); // a local cache (string)identifier=> (core_kernel_classes_Resource) $deliveryResult
+    /**
+     * a local cache (string)identifier=> (core_kernel_classes_Resource) $deliveryResult
+     * @var core_kernel_classes_Resource
+     */
+    private $cacheDeliveryResult = array(); 
+    
     private $implementation = null;
+    
     /**
      * (non-PHPdoc)
      * @see tao_models_classes_ClassService::getRootClass()
@@ -437,244 +448,6 @@ class ResultsService extends tao_models_classes_ClassService {
         $testTaker = $this->getImplementation()->getTestTaker($deliveryResult->getUri());
         return new core_kernel_classes_Resource($testTaker);
     }
-    /**
-     *
-     * @param string $deliveryResultIdentifier
-     * @return core_kernel_classes_resource
-     * @throws common_exception_Error
-     */
-    public function storeDeliveryResult($deliveryResultIdentifier = null) {
-
-        $deliveryResultClass = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
-        if (is_null($deliveryResultIdentifier)) {
-            $id = uniqid();
-            $deliveryResult = $deliveryResultClass->createInstanceWithProperties(array(
-                RDFS_LABEL => '(' . $id . ')',
-                PROPERTY_IDENTIFIER => $id
-            ));         
-            return $deliveryResult;
-        }
-        //an identifier is provided, look in the cache
-        if (isset($this->cacheDeliveryResult[$deliveryResultIdentifier])) {
-            return $this->cacheDeliveryResult[$deliveryResultIdentifier];
-        }
-        
-        $options = array(
-            'like' => false,
-            'recursive' => false
-        );
-        $deliveryResults = $deliveryResultClass->searchInstances(array(
-            PROPERTY_IDENTIFIER => $deliveryResultIdentifier
-        ), $options);
-        
-        if (count($deliveryResults) > 1) {
-            throw new common_exception_Error('More than 1 deliveryResult for the corresponding Id ' . $deliveryResultIdentifier);
-        } elseif (count($deliveryResults) == 1) {
-            $returnValue = array_shift($deliveryResults);
-            $this->cacheDeliveryResult[$deliveryResultIdentifier] = $returnValue;
-            common_Logger::d('found Delivery Result after search for ' . $deliveryResultIdentifier);
-        } else {
-            $returnValue = $deliveryResultClass->createInstanceWithProperties(array(
-                RDFS_LABEL => '(' . $deliveryResultIdentifier  . ')',
-                PROPERTY_IDENTIFIER => $deliveryResultIdentifier 
-            ));
-            $this->cacheDeliveryResult[$deliveryResultIdentifier] = $returnValue;
-
-        }
-        return $returnValue;
-    }
-
-    /**
-     * @param string testTakerIdentifier (uri recommended)
-     */
-    public function storeTestTaker(core_kernel_classes_Resource $deliveryResult, $testTakerIdentifier) {
-        $propResultOfSubject = new core_kernel_classes_Property(PROPERTY_RESULT_OF_SUBJECT);
-        $deliveryResult->editPropertyValues($propResultOfSubject, $testTakerIdentifier);
-        
-        try {
-            // if the delviery information is provided, update to a more meaningful delvieryResult Label
-            $testTaker = new core_kernel_classes_Resource($testTakerIdentifier);
-            $testTakerLabel = $testTaker->getLabel();
-            $deliveryResult->setLabel($testTakerLabel . "-" . str_replace("-" . $testTakerLabel, "", $deliveryResult->getLabel()));
-        } catch (common_Exception $e) {
-            // the test taker to be referrd in the delivery Result does not exist (or the label is not stated)
-        }
-    }
-    /**
-     * @param string deliveryIdentifier (uri recommended)
-     */
-    public function storeDelivery(core_kernel_classes_Resource $deliveryResult, $deliveryIdentifier) {
-        $propResultOfDelivery = new core_kernel_classes_Property(PROPERTY_RESULT_OF_DELIVERY);
-        $deliveryResult->editPropertyValues($propResultOfDelivery, $deliveryIdentifier);
-
-        try {
-            //if the delviery information is provided, update to a more meaningful delvieryResult Label
-            $delivery = new core_kernel_classes_Resource($deliveryIdentifier);
-            $deliveryLabel = $delivery->getLabel();
-            $deliveryResult->setLabel(
-                    str_replace("-" . $deliveryLabel, "", $deliveryResult->getLabel())
-                    . "-" . $deliveryLabel
-            );
-        } catch (Exception $e) {
-            //the test taker to be referrd in the delivery Result does not exist (or the label is not stated)
-
-        }
-    }
-    /**
-     * Submit a specific Item Variable, (ResponseVariable and OutcomeVariable shall be used respectively for collected data and score/interpretation computation)
-     * @param string test (uri recommended)
-     * @param string item (uri recommended)
-     * @param taoResultServer_models_classes_ItemVariable itemVariable
-     * @param string callId an id for the item instanciation
-     */
-    /* todo dependency due to object */
-    public function storeItemVariable(core_kernel_classes_Resource $deliveryResult, $test, $item, taoResultServer_models_classes_Variable $itemVariable, $callId) {
-        $start = microtime();
-        $itemResult = $this->getItemResult($deliveryResult, $callId, $test, $item);
-        $end = microtime(); 
-        common_Logger::i(' Time to retrieve container for his execution of item '.($end-$start));
-        common_Logger::i(' createInstanceWithProperties : '.$itemVariable->getIdentifier());
-        $storedVariable = $this->storeVariable($itemVariable, $itemResult->getUri());
-        $storageEnd = microtime();
-        common_Logger::i('     Time Needed for this variable'.($storageEnd-$end) );
-         
-            
-        return $storedVariable;
-    }
-    /**
-     * 
-     * @param unknown $itemVariable
-     * @param string uri of the related itemResult - optionnal
-     * @throws common_exception_Error
-     * @return core_kernel_classes_Resource
-     */
-    private function storeVariable($itemVariable, $relatedItemResult = null) {
-        switch (get_class($itemVariable)) {
-            case "taoResultServer_models_classes_OutcomeVariable": {
-                    $outComeVariableClass = new core_kernel_classes_Class(CLASS_OUTCOME_VARIABLE);
-                    $properties = array(
-                        PROPERTY_IDENTIFIER => $itemVariable->getIdentifier(),
-                        PROPERTY_VARIABLE_CARDINALITY => $itemVariable->getCardinality(),
-                        PROPERTY_VARIABLE_BASETYPE => $itemVariable->getBaseType(),
-                        PROPERTY_OUTCOME_VARIABLE_NORMALMAXIMUM => $itemVariable->getNormalMaximum(),
-                        PROPERTY_OUTCOME_VARIABLE_NORMALMINIMUM => $itemVariable->getNormalMinimum(),
-                        
-                        //the php obect is stored as such (serialized), 
-                        //the value itselfs is being base64encoded as a member fo that object
-                        RDF_VALUE => base64_encode($itemVariable->getValue()),
-                        PROPERTY_VARIABLE_EPOCH => (($itemVariable->isSetEpoch())) ? $itemVariable->getEpoch() : microtime()
-                    );
-                    if (isset($relatedItemResult)) {
-                        $properties[PROPERTY_RELATED_ITEM_RESULT]= $relatedItemResult;
-                    }
-                    $returnValue = $outComeVariableClass->createInstanceWithProperties($properties);
-
-                    break;
-                }
-            case "taoResultServer_models_classes_ResponseVariable": {
-                    $responseVariableClass = new core_kernel_classes_Class(CLASS_RESPONSE_VARIABLE);
-                    if (is_null($itemVariable->getCorrectResponse())) {
-                        $isCorrect = "";
-                    } else {
-                        if ($itemVariable->getCorrectResponse()) {
-                            $isCorrect = GENERIS_TRUE;
-                        } else {
-                            $isCorrect = GENERIS_FALSE;
-                        }
-                    }
-                    $properties = array(
-                        PROPERTY_IDENTIFIER => $itemVariable->getIdentifier(),
-                        PROPERTY_VARIABLE_CARDINALITY => $itemVariable->getCardinality(),
-                        PROPERTY_VARIABLE_BASETYPE => $itemVariable->getBaseType(),
-                        //put as rdf#boolean
-                        PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE => $isCorrect,
-                        //PROPERTY_RESPONSE_VARIABLE_CANDIDATERESPONSE=> $itemVariable->getCandidateResponse(),
-                        RDF_VALUE => base64_encode($itemVariable->getCandidateResponse()),
-                        PROPERTY_VARIABLE_EPOCH => (($itemVariable->isSetEpoch())) ? $itemVariable->getEpoch() : microtime()
-                    );
-                    if (isset($relatedItemResult)) {
-                        $properties[PROPERTY_RELATED_ITEM_RESULT]= $relatedItemResult;
-                    }
-                    $returnValue = $responseVariableClass->createInstanceWithProperties($properties);
-                    break;
-                }
-            case "taoResultServer_models_classes_TraceVariable": {
-                    $traceVariableClass = new core_kernel_classes_Class(CLASS_TRACE_VARIABLE);
-                    
-                    $properties = array(
-                        PROPERTY_IDENTIFIER => $itemVariable->getIdentifier(),
-                        PROPERTY_VARIABLE_CARDINALITY => $itemVariable->getCardinality(),
-                        PROPERTY_VARIABLE_BASETYPE => $itemVariable->getBaseType(),
-                        RDF_VALUE => base64_encode($itemVariable->getTrace()), //todo store a file
-                        PROPERTY_VARIABLE_EPOCH => (($itemVariable->isSetEpoch())) ? $itemVariable->getEpoch() : microtime()
-                    );
-                    if (isset($relatedItemResult)) {
-                        $properties[PROPERTY_RELATED_ITEM_RESULT]= $relatedItemResult;
-                    }
-                    $returnValue = $traceVariableClass->createInstanceWithProperties($properties);
-
-                    break;
-                }
-            default: {
-                    throw new common_exception_Error("The variable class is not supported");
-                    break;
-                }
-        }
-        return $returnValue;
-    }
-
-    /**
-     * 
-     * @param core_kernel_classes_Resource $deliveryResult
-     * @param unknown $test
-     * @param taoResultServer_models_classes_Variable $itemVariable
-     * @param unknown $callId
-     */
-    public function storeTestVariable(core_kernel_classes_Resource $deliveryResult, $test, taoResultServer_models_classes_Variable $itemVariable, $callId) {
-        $storedVariable = $this->storeVariable($itemVariable);
-        $storedVariable->setPropertyValue(new core_kernel_classes_Property(PROPERTY_RELATED_DELIVERY_RESULT), $deliveryResult->getUri());
-    }
-
-    /**
-     * 
-     * @param core_kernel_classes_Resource $deliveryResult
-     * @param unknown $callId
-     * @param unknown $test
-     * @param unknown $item
-     * @throws common_exception_Error
-     * @return Ambigous <mixed, core_kernel_classes_Resource>
-     */
-    public function getItemResult(core_kernel_classes_Resource $deliveryResult, $callId, $test, $item) {
-        
-
-        //check first from the local cache 
-        if (isset($this->cacheItemResult[$callId])) {
-            return $this->cacheItemResult[$callId];
-        }
-        
-        $itemResultsClass = new core_kernel_classes_Class(ITEM_RESULT);
-        $itemResults = $itemResultsClass->searchInstances(array(
-            PROPERTY_IDENTIFIER => $callId
-        ), array(
-            "like" => false
-            ));
-        if (count($itemResults) > 1) {
-            throw new common_exception_Error('More then 1 itemResult for the corresponding Id ' . $callId);
-        } elseif (count($itemResults) == 1) {
-            $returnValue = array_shift($itemResults);
-            common_Logger::d('found Item Result after search for ' . $callId);
-        } else {
-            $returnValue = $itemResultsClass->createInstanceWithProperties(array(
-                RDFS_LABEL => $callId,
-                PROPERTY_IDENTIFIER => $callId,
-                PROPERTY_RELATED_ITEM => $item,
-                PROPERTY_RELATED_TEST => $test,
-                PROPERTY_RELATED_DELIVERY_RESULT => $deliveryResult->getUri()
-            ));
-        }
-        $this->cacheItemResult[$callId]= $returnValue;
-        return $returnValue;
-    }
 
     /**
      * Short description of method deleteResult
@@ -827,4 +600,3 @@ class ResultsService extends tao_models_classes_ClassService {
         return $propValues;
     }
 }
-?>
