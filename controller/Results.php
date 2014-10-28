@@ -101,9 +101,9 @@ class Results extends tao_actions_SaSModule {
         if($this->hasRequestParameter('subclasses')){
             $options['subclasses'] = $this->getRequestParameter('subclasses');
         }
-
         $children = array();
         $returnValue = array();
+
         if($options['labelFilter'] != '*'){
             // get results
             foreach($this->getClassService()->getImplementation()->getAllTestTakerIds() as $key => $association){
@@ -115,8 +115,12 @@ class Results extends tao_actions_SaSModule {
                     $child["attributes"] = array("id" => tao_helpers_Uri::encode($result->getUri()), "class" => "node-instance");
                     $title = $testTaker->getLabel()."-(".$result->getUri().")- ".$delivery->getLabel();
 
-                    $child["data"] = tao_helpers_Display::textCutter($title, 16);
+                    $child["data"] = $title;
                     $child["type"] = "instance";
+                    $child["_data"] = array(
+                        "uri" => $result->getUri(),
+                        "class_uri" => TAO_DELIVERY_RESULT
+                    );
                     $children[] = $child;
                 }
             }
@@ -126,6 +130,10 @@ class Results extends tao_actions_SaSModule {
                     "attributes" => array(
                         "class" => "node-class",
                         "id" => tao_helpers_Uri::encode(TAO_DELIVERY_RESULT),
+                    ),
+                    "_data" => array(
+                        "uri" => TAO_DELIVERY_RESULT,
+                        "class_uri" => null
                     ),
                     "children" => $childrenLimited,
                     "count" => count($children),
@@ -160,8 +168,11 @@ class Results extends tao_actions_SaSModule {
                                 $child["attributes"] = array("id" => tao_helpers_Uri::encode($result->getUri()), "class" => "node-instance");
                                 $testTaker = new core_kernel_classes_Resource($association["testTakerIdentifier"]);
                                 $title = $testTaker->getLabel()."-(".$result->getUri().")- ".$delivery->getLabel();
-
-                                $child["data"] = tao_helpers_Display::textCutter($title, 16);
+                                $child["_data"] = array(
+                                    "uri" => $result->getUri(),
+                                    "class_uri" => TAO_DELIVERY_RESULT
+                                );
+                                $child["data"] = $title;
                                 $child["type"] = "instance";
                                 $instances[] = $child;
                             }
@@ -172,6 +183,10 @@ class Results extends tao_actions_SaSModule {
                     "attributes" => array(
                         "class" => "node-class",
                         "id" => tao_helpers_Uri::encode(TAO_DELIVERY_RESULT),
+                    ),
+                    "_data" => array(
+                        "uri" => TAO_DELIVERY_RESULT,
+                        "class_uri" => null
                     ),
                     "children" => $childrenLimited,
                     "count" => count($instances),
@@ -188,7 +203,10 @@ class Results extends tao_actions_SaSModule {
                     $child["attributes"] = array("id" => tao_helpers_Uri::encode($subclass->getUri()), "class" => "node-class");
                     $child["data"] = $subclass->getLabel();
                     $child["type"] = "class";
-
+                    $child["_data"] = array(
+                        "uri" => $subclass->getUri(),
+                        "class_uri" => $clazz->getUri()
+                    );
                     if($subclass->countInstances()){
                         $child["state"] = "closed";
                     }
@@ -205,8 +223,12 @@ class Results extends tao_actions_SaSModule {
                             $testTaker = new core_kernel_classes_Resource($this->getClassService()->getImplementation()->getTestTaker($instance->getUri()));
                             $title = $testTaker->getLabel()."-(".$instance->getUri().")- ".$delivery->getLabel();
 
-                            $child["data"] = tao_helpers_Display::textCutter($title, 16);
+                            $child["data"] = $title;
                             $child["type"] = "instance";
+                            $child["_data"] = array(
+                                "uri" => $instance->getUri(),
+                                "class_uri" => $clazz->getUri()
+                            );
                             $children[] = $child;
                     }
                 }
@@ -237,7 +259,7 @@ class Results extends tao_actions_SaSModule {
 		if($myForm->isSubmited()){
 			if($myForm->isValid()){
 				if($clazz instanceof core_kernel_classes_Resource){
-					$this->setSessionAttribute("showNodeUri", tao_helpers_Uri::encode($clazz->getUri()));
+					$this->setData("selectNode", tao_helpers_Uri::encode($clazz->getUri()));
 				}
 				$this->setData('message', __('Class saved'));
 				$this->setData('reload', true);

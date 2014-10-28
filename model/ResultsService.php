@@ -183,8 +183,8 @@ class ResultsService extends tao_models_classes_ClassService {
      * @return common_Object
      * 
      */
-    public function getVariableValue($variableUri) {
-        return $this->getImplementation()->getVariableProperty($variableUri, 'value');
+    public function getVariableCandidateResponse($variableUri) {
+        return $this->getImplementation()->getVariableProperty($variableUri, 'candidateResponse');
     }
 
     /**
@@ -744,7 +744,7 @@ class ResultsService extends tao_models_classes_ClassService {
         
         switch ($baseType) {
             case "file": {
-                    $value = (base64_decode($this->getVariableValue($variableUri)));
+                    $value = ($this->getVariableCandidateResponse($variableUri));
                     common_Logger::i(var_export(strlen($value), true));
                     $decodedFile = Datatypes::decodeFile($value);
                     common_Logger::i("FileName:");
@@ -759,7 +759,7 @@ class ResultsService extends tao_models_classes_ClassService {
                 }
             default: { //legacy files
                     $file = array(
-                        "data" => base64_decode($this->getVariableValue($variableUri)),
+                        "data" => $this->getVariableCandidateResponse($variableUri),
                         "mimetype" => "Content-type: text/xml",
                         "filename" => "trace.xml");
                 }
