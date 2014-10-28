@@ -233,7 +233,7 @@ class ResultTable extends tao_actions_Table {
         $searchOper = $this->getRequestParameter('searchOper');
         $searchString = $this->getRequestParameter('searchString');
         $start = $limit * $page - $limit;
-        $response = new stdClass();
+        $response = new \stdClass();
        	$clazz = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
         $results = array();
         $deliveryResults = $this->service->getImplementation()->getResultByColumn(array_keys($filter), $filter);

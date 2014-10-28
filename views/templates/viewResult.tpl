@@ -1,7 +1,7 @@
 <?php
 use oat\tao\helpers\Template;
 ?>
-<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoResults/views/css/result.css" />
+<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoOutcomeUi/views/css/result.css" />
 
 <div id="form-title" class="ui-widget-header ui-corner-top ui-state-default">
     <?=__('View result')?> - <?=get_data('deliveryResultLabel')?></div>

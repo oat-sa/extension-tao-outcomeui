@@ -116,7 +116,7 @@ $(function(){
 		$('#buildTableButton').click(function(e) {
 			e.preventDefault();
 			filterSelection = facetFilter.getFormatedFilterSelection();
-			uri = helpers._url('index', 'ResultTable', 'taoResults', {'filter': filterSelection});
+			uri = helpers._url('index', 'ResultTable', 'taoOutcomeUi', {'filter': filterSelection});
 
 			$section = section.create({
                 id      : 'buildTableTab',
