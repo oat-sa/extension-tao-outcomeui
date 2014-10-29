@@ -74,7 +74,56 @@ class ResultTable extends tao_actions_Table {
      * @return void - a csv string is being sent out by parent class -> data method into the buffer
      */
     public function getCsvFile(){
-         $this->data("csv");
+        $rows = array();
+
+        $filter =  $this->hasRequestParameter('filter') ? $this->getFilterState('filter') : array();
+       	$filterData =  $this->getRequestParameter('filterData');
+    	$columns = $this->hasRequestParameter('columns') ? $this->getColumns('columns') : array();
+    	
+    	//The list of delivery Results matching the current selection filters
+        $results = $this->service->getImplementation()->getResultByColumn(array_keys($filter), $filter);
+        $dpmap = array();
+        foreach ($columns as $column) {
+                $dataprovider = $column->getDataProvider();
+                $found = false;
+                foreach ($dpmap as $k => $dp) {
+                        if ($dp['instance'] == $dataprovider) {
+                                $found = true;
+                                $dpmap[$k]['columns'][] = $column;
+                        }
+                }
+                if (!$found) {
+                        $dpmap[] = array(
+                                'instance'	=> $dataprovider,
+                                'columns'	=> array(
+                                        $column
+                                )
+                        );
+                }
+        }
+
+        foreach ($dpmap as $arr) {
+            $arr['instance']->prepare($results, $arr['columns']);
+        }
+        
+        foreach($results as $result) {
+            $cellData = array();
+            foreach ($columns as $column) {
+                $cellData[]=self::filterCellData($column->getDataProvider()->getValue($result, $column), $filterData);
+            }
+            $rows[] = array(
+                    'id' => $result->getUri(),
+                    'cell' => $cellData
+            );
+        }
+
+        $encodedData = $this->dataToCsv($columns, $rows,';','"');
+
+        header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
+        setcookie("fileDownload","true", 0, "/");
+        header("Content-type: text/csv");
+        header('Content-Disposition: attachment; filename=Data.csv');
+        echo $encodedData;  
     }
 
     /**
@@ -89,25 +138,28 @@ class ResultTable extends tao_actions_Table {
         ));
     }
 
-
-
+    /** 
+     * Returns all columns with all responses pertaining to the current delivery results selection
+     */
     public function getResponseColumns() {
 	    $this->getVariableColumns(CLASS_RESPONSE_VARIABLE);
     }
-    /** Returns all columns with all grades pertaining to the current delivery results selection
+
+    /** 
+     * Returns all columns with all grades pertaining to the current delivery results selection
      */
      public function getGradeColumns() {
         $this->getVariableColumns(CLASS_OUTCOME_VARIABLE);
     }
+
      /**
      * Retrieve the different variables columns pertainign to the current selection of results
      * Implementation note : it nalyses all the data collected to identify the different response variables submitted by the items in the context of activities
      */
-    public function getVariableColumns($variableClassUri) {
+    protected function getVariableColumns($variableClassUri) {
 
 		$columns = array();
 		$filter = $this->getFilterState('filter');
-		$deliveryResultClass	= new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
 
 		//The list of delivery Results matching the current selection filters
         $results = $this->service->getImplementation()->getResultByColumn(array_keys($filter), $filter);
@@ -164,25 +216,23 @@ class ResultTable extends tao_actions_Table {
         //print_r($this->columnsToFlatArray($columns));
        fputcsv($handle, $this->columnsToFlatArray($columns), $delimiter, $enclosure);
        foreach ($rows as $line) {
-	   $seralizedData = array();
-	   foreach ($line["cell"] as $cellData){
+           $seralizedData = array();
+           foreach ($line["cell"] as $cellData){
 
-         if (!is_array($cellData)) {
-             $seralizedData[] = $cellData;
-         } else {
-             $seralizedData[] = array_pop($cellData);
-         }
-
-
-           //$seralizedData[] = $this->cellDataToString($cellData);
-	   }
+             if (!is_array($cellData)) {
+                 $seralizedData[] = $cellData;
+             } else {
+                 $seralizedData[] = array_pop($cellData);
+             }
+               //$seralizedData[] = $this->cellDataToString($cellData);
+           }
            fputcsv($handle, $seralizedData, $delimiter, $enclosure);
        }
        rewind($handle);
        //read the content of the csv
        $encodedData = "";
        while (!feof($handle)) {
-       $encodedData .= fread($handle, 8192);
+           $encodedData .= fread($handle, 8192);
        }
        fclose($handle);
        return $encodedData;
@@ -198,8 +248,7 @@ class ResultTable extends tao_actions_Table {
             $flatColumnsArray[] = $column->label;
         }
         return $flatColumnsArray;
-        }
-
+    }
 
 
      protected  function getColumns($identifier) {
@@ -215,97 +264,98 @@ class ResultTable extends tao_actions_Table {
     	 }
     	 return $columns;
     }
-     /**
+
+    /**
      * Data provider for the table, returns json encoded data according to the parameter
      * @author Bertrand Chevrier, <taosupport@tudor.lu>,
-     *
-     * @param type $format  json, csv
      */
-    public function data($format ="json") {
+    public function data() {
         $filter =  $this->hasRequestParameter('filter') ? $this->getFilterState('filter') : array();
        	$filterData =  $this->getRequestParameter('filterData');
+
     	$columns = $this->hasRequestParameter('columns') ? $this->getColumns('columns') : array();
     	$page = $this->getRequestParameter('page');
         $limit = $this->getRequestParameter('rows');
         $sidx = $this->getRequestParameter('sidx');
         $sord = $this->getRequestParameter('sord');
-        $searchField = $this->getRequestParameter('searchField');
-        $searchOper = $this->getRequestParameter('searchOper');
-        $searchString = $this->getRequestParameter('searchString');
+
+        //$searchField = $this->getRequestParameter('searchField');
+        //$searchOper = $this->getRequestParameter('searchOper');
+        //$searchString = $this->getRequestParameter('searchString');
+
         $start = $limit * $page - $limit;
+
+        $options = array (
+            'recursive'=>true, 
+            'like' => false, 
+            'offset' => $start, 
+            'limit' => $limit, 
+            'order' => $sidx, 
+            'orderdir' => $sord  
+        );
         $response = new \stdClass();
-       	$clazz = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
-        $results = array();
-        $deliveryResults = $this->service->getImplementation()->getResultByColumn(array_keys($filter), $filter);
+
+        $deliveryResults = $this->service->getImplementation()->getResultByColumn(array_keys($filter), $filter, $options);
+        $counti = count($this->service->getImplementation()->getResultByColumn(array_keys($filter), $filter));
+
         foreach($deliveryResults as $deliveryResult){
             $results[] = new core_kernel_classes_Resource($deliveryResult['deliveryResultIdentifier']);
         }
 
-        $counti	= count($results);
+
         $dpmap = array();
         foreach ($columns as $column) {
-                $dataprovider = $column->getDataProvider();
-                $found = false;
-                foreach ($dpmap as $k => $dp) {
-                        if ($dp['instance'] == $dataprovider) {
-                                $found = true;
-                                $dpmap[$k]['columns'][] = $column;
-                        }
+            $dataprovider = $column->getDataProvider();
+            $found = false;
+            foreach ($dpmap as $k => $dp) {
+                if ($dp['instance'] == $dataprovider) {
+                    $found = true;
+                    $dpmap[$k]['columns'][] = $column;
                 }
-                if (!$found) {
-                        $dpmap[] = array(
-                                'instance'	=> $dataprovider,
-                                'columns'	=> array(
-                                        $column
-                                )
-                        );
-                }
+            }
+            if (!$found) {
+                $dpmap[] = array(
+                    'instance'	=> $dataprovider,
+                    'columns'	=> array(
+                            $column
+                    )
+                );
+            }
         }
 
         foreach ($dpmap as $arr) {
-                $arr['instance']->prepare($results, $arr['columns']);
+            $arr['instance']->prepare($results, $arr['columns']);
+        }
 
-        }
         foreach($results as $result) {
-                $cellData = array();
-                foreach ($columns as $column) {
-                    if(count($column->getDataProvider()->cache) > 0){
-                        $cellData[]=self::filterCellData($column->getDataProvider()->getValue($result, $column), $filterData);
-                    }
-                    else{
-                        $cellData[] = self::filterCellData($this->service->getTestTaker($result)->getLabel(),$filterData);
-                    }
+            $data = array(
+                'id' => $result->getUri()
+            );
+            foreach ($columns as $column) {
+                $key = null;
+                if($column instanceof tao_models_classes_table_PropertyColumn){
+                    $key = $column->getProperty()->getUri(); 
+                } else  if ($column instanceof taoResults_models_classes_table_VariableColumn) {
+                    $key =  $column->getContextIdentifier() . '_' . $column->getIdentifier();
                 }
-                $response->rows[] = array(
-                        'id' => $result->getUri(),
-                        'cell' => $cellData
-                );
+                if(!is_null($key)){
+                    $data[$key] = self::filterCellData($column->getDataProvider()->getValue($result, $column), $filterData);
+                }
+            }
+            $response->data[] = $data;
         }
-        $response->page = $page;
+
+        $response->page = (int)$page;
         if ($limit!=0) {
-        $response->total = ceil($counti / $limit);//$total_pages;
-        }
-        else
-        {
-        $response->total = 1;
+            $response->total = ceil($counti / $limit);
+        } else {
+            $response->total = 1;
         }
         $response->records = count($results);
 
-        switch ($format) {
-            case "csv":$encodedData = $this->dataToCsv($columns, $response->rows,';','"');
-
-                header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
-                setcookie("fileDownload","true", 0, "/");
-                header("Content-type: text/csv");
-                header('Content-Disposition: attachment; filename=Data.csv');
-
-            break;
-
-            default: $encodedData = json_encode($response);
-            break;
-        }
-        echo $encodedData;           
+        $this->returnJSON($response);
     }
+
     private static function filterCellData($observationsList, $filterData){
         //if the cell content is not an array with multiple entries, do not filter
 
@@ -336,7 +386,5 @@ class ResultTable extends tao_actions_Table {
             }
         return $returnValue;
     }
-
-
 }
 ?>

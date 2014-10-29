@@ -43,10 +43,6 @@ use oat\taoOutcomeUi\model\ResultsService;
  */
 class InspectResults extends tao_actions_TaoModule
 {
-    /**
-     * @var array
-     */
-    private $resultGridOptions;
 
     /**
      * constructor: initialize the service and the default data
@@ -60,13 +56,6 @@ class InspectResults extends tao_actions_TaoModule
 
         //the service is initialized by default
         $this->service = ResultsService::singleton();
-        $this->resultGridOptions = array(
-            'columns' => array(
-                RDFS_LABEL => array('weight' => 2),
-                PROPERTY_RESULT_OF_DELIVERY => array('weight' => 2),
-                PROPERTY_RESULT_OF_SUBJECT => array('weight' => 2)
-            )
-        );
         $this->defaultData();
     }
 
@@ -165,23 +154,35 @@ class InspectResults extends tao_actions_TaoModule
         $rootClass = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
 
         //Properties to filter on
-        $properties = array();
-        $properties[] = new core_kernel_classes_Property(PROPERTY_RESULT_OF_DELIVERY);
-        $properties[] = new core_kernel_classes_Property(PROPERTY_RESULT_OF_SUBJECT);
-        //$properties[] = new core_kernel_classes_Property(RDF_TYPE);
-	
-        //Monitoring grid
-        $deliveryResultGrid = new DeliveryResultGrid(array(), $this->resultGridOptions);
-        $grid = $deliveryResultGrid->getGrid();
-        $model = $grid->getColumnsModel();
+        $properties = array(
+            new core_kernel_classes_Property(RDFS_LABEL),
+            new core_kernel_classes_Property(PROPERTY_RESULT_OF_DELIVERY),
+            new core_kernel_classes_Property(PROPERTY_RESULT_OF_SUBJECT),
+            new core_kernel_classes_Property(RDF_TYPE)
+        );
 
-        //Filtering data
-        $this->setData('clazz', $rootClass);
-        $this->setData('properties', $properties);
-
-        //Monitoring data
-        $this->setData('model', json_encode($model));
-        $this->setData('data', $deliveryResultGrid->toArray());
+        $model = array();
+        $filterNodes = array(); 
+        foreach($properties as $property){
+            $filterNodes[] = array(
+                'id'      =>  md5($property->getUri()),
+                'label'   =>  $property->getLabel(),
+                'url'     =>  _url("getFilteredInstancesPropertiesValues"),
+                'options' =>  array(
+                    'propertyUri'   => $property->getUri(),
+                    'classUri'      => $rootClass->getUri(),
+                    'filterItself'  => false
+                )
+            );
+            $model[] = array(
+                'id'       => $property->getUri(),
+                'label'    => $property->getLabel(),
+                'sortable' => true
+            );
+        }
+            
+        $this->setData('filterNodes', $filterNodes);
+        $this->setData('model',$model);
 
         $this->setView('resultList.tpl');
     }
@@ -195,45 +196,66 @@ class InspectResults extends tao_actions_TaoModule
 
     public function getResults()
     {
-        $returnValue = array();
+		$page = $this->getRequestParameter('page');
+		$limit = $this->getRequestParameter('rows');
+		$order = $this->getRequestParameter('sortby');
+		$sord = $this->getRequestParameter('sortorder');
+		$start = $limit * $page - $limit;
+
+        $gau = array(
+            'order' 	=> $order,
+            'orderdir'	=> strtoupper($sord),
+            'offset'    => $start,
+            'limit'		=> $limit,
+            'recursive' => true
+        );
+
         // Get filter parameter
         $filter = array();
         if($this->hasRequestParameter('filter')){
             $filter = $this->getFilterState('filter');
         }
-        //get the processes uris
-        $processesUri = $this->hasRequestParameter('processesUri') ? $this->getRequestParameter('processesUri') : null;
 
-        $rootClass = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
-        if (!is_null($filter)) {
-            $results = $rootClass->searchInstances($filter, array('recursive' => true));
-        } else if (!is_null($processesUri)) {
-            foreach ($processesUri as $processUri) {
-                $results[$processUri] = new core_kernel_classes_resource($processUri);
-            }
-        } else {
-            $results = $rootClass->getInstances();
-        }
+        //get the processes uris
+        //$processesUri = $this->hasRequestParameter('processesUri') ? $this->getRequestParameter('processesUri') : null;
+
+        //$rootClass = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
+        //if (!is_null($filter)) {
+            //$results = $rootClass->searchInstances($filter, $gau);
+            //$counti  = count($rootClass->searchInstances($filter));
+        //} else if (!is_null($processesUri)) {
+            //foreach ($processesUri as $processUri) {
+                //$results[$processUri] = new core_kernel_classes_resource($processUri);
+            //}
+        //} else {
+            //$results = $rootClass->searchInstances(array(), $gau);
+            //$counti =  count($rootClass->searchInstances(array()));
+        //}
 
         $data = array();
-        $results = $this->getImplementation()->getResultByColumn(array_keys($filter), $filter);
+        $results = $this->getImplementation()->getResultByColumn(array_keys($filter), $filter, $gau);
+        $counti = count($this->getImplementation()->getResultByColumn(array_keys($filter), $filter));
 
-
-        $testTakers = $this->getImplementation()->getAllTestTakerIds();
-        foreach($results as $value){
-            $deliveryResult = new core_kernel_classes_Resource($value['deliveryResultIdentifier']);
-            $types = $deliveryResult->getTypes();
-            $data[$value['deliveryResultIdentifier']] = array(
-                RDFS_LABEL  => $deliveryResult->getLabel(),
-                PROPERTY_RESULT_OF_DELIVERY => $value['deliveryIdentifier'],
-                PROPERTY_RESULT_OF_SUBJECT  => $value['testTakerIdentifier'],
-                RDF_TYPE    => array_shift($types)
-            );
+        foreach($results as $res){
+            $props = $res->getPropertiesValues(array(
+                PROPERTY_RESULT_OF_DELIVERY,
+                PROPERTY_RESULT_OF_SUBJECT,
+                RDF_TYPE
+            ));
+            $data[] = array(
+                 'id'                           => $res->getUri(),
+                 RDFS_LABEL                     => $res->getLabel(),
+                 PROPERTY_RESULT_OF_DELIVERY    => array_shift($props[PROPERTY_RESULT_OF_DELIVERY])->getLabel(),
+                 PROPERTY_RESULT_OF_SUBJECT     => array_shift($props[PROPERTY_RESULT_OF_SUBJECT])->getLabel(),
+                 RDF_TYPE                       => array_shift($props[RDF_TYPE])->getLabel()
+             );
         }
-
-        $resultsGrid = new DeliveryResultGrid($data, $this->resultGridOptions);
-        $data = $resultsGrid->toArray();
-        echo json_encode($data);
+        $this->returnJSON(array(
+            'data' => $data,
+            'page' => floor($start / $limit) + 1,
+		    'total' => ceil($counti / $limit),
+		    'records' => count($data)
+        ));
     }
 
     

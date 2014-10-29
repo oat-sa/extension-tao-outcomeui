@@ -3,28 +3,19 @@ use oat\tao\helpers\Template;
 ?>
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoOutcomeUi/views/css/result.css" />
 
-<div id="form-title" class="ui-widget-header ui-corner-top ui-state-default">
-    <?=__('View result')?> - <?=get_data('deliveryResultLabel')?></div>
-<div class="ui-widget-content ui-corner-bottom">
-    <script type="text/javascript">
-        requirejs.config({
-            config: {
-                'taoOutcomeUi/controller/viewResult': {
-                    uri: '<?=get_data("uri")?>',
-                    classUri: '<?=get_data("classUri")?>',
-                    filter: '<?=get_data("filter")?>'
-                }
-            }
-        });
-    </script>
-    <div id="content" class="tao-scope">
+<header class="section-header flex-container-full">
+    <h2><?=__('View result')?> - <?=get_data('deliveryResultLabel')?></h2>
+</header>
+<div class="main-container flex-container-full">
+
+    <div id="view-result">
         <div id="resultsViewTools">
-            <select id="filter" class="select2" data-has-search="false">
+            <select class="result-filter">
                 <option  value="all" ><?=__('All collected variables')?></option>
                 <option  value="firstSubmitted" ><?=__('First submitted variable only')?></option>
                 <option  value="lastSubmitted" ><?=__('Last submitted variable only')?></option>
             </select>
-            <button class="btn-info small" id="btnFilter"><?=__('Filter');?></button>
+            <button class="btn-info small result-filter-btn"><?=__('Filter');?></button>
         </div>
         <div id="resultsHeader">
             <div class="tile testtaker">
@@ -278,16 +269,29 @@ use oat\tao\helpers\Template;
             </div>
         </div>
     </div>
-    <div id="form-container" >
+<div id="form-container" >
 
-        <?php if(get_data('errorMessage')):?>
-        <fieldset class='ui-state-error'>
-            <legend><strong><?=__('Error')?></strong></legend>
-            <?=get_data('errorMessage')?>
-        </fieldset>
-        <?php endif?>
+    <?php if(get_data('errorMessage')):?>
+    <fieldset class='ui-state-error'>
+        <legend><strong><?=__('Error')?></strong></legend>
+        <?=get_data('errorMessage')?>
+    </fieldset>
+    <?php endif?>
 
-    </div>
-    <?php
-    Template::inc('footer.tpl', 'tao');
-    ?>
+</div>
+
+<script type="text/javascript">
+    requirejs.config({
+        config: {
+            'taoOutcomeUi/controller/viewResult': {
+                uri: '<?=get_data("uri")?>',
+                classUri: '<?=get_data("classUri")?>',
+                filter: '<?=get_data("filter")?>'
+            }
+        }
+    });
+</script>
+
+<?php
+Template::inc('footer.tpl', 'tao');
+?>

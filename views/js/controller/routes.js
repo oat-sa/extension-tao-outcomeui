@@ -27,6 +27,16 @@ define(function(){
             'actions': {
                 'viewResult' : 'controller/viewResult'
             }
+        },
+        'InspectResults': {
+            'actions': {
+                'index' : 'controller/inspectResults'
+            }
+        },
+        'ResultTable': {
+            'actions': {
+                'index' : 'controller/resultTable'
+            }       
         }
     };
 });

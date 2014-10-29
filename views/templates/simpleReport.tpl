@@ -2,48 +2,48 @@
 use oat\tao\helpers\Template;
 ?>
 <link rel="stylesheet" type="text/css" href="<?= Template::css('simpleReport.css') ?>" />
-<div class="ui-helper-reset" id="section_to_print" style="height:100%;" >
-	<div id="form-title" class="ui-widget-header ui-corner-top ui-state-default">
-		<?=get_data('reportTitle')?>
-	</div>
-	<div class="report ui-widget-content ui-corner-right">
-		    <table><!--TODO CSS the table-->
+
+<header class="section-header flex-container-full">
+    <h2><?=get_data('reportTitle')?></h2>
+</header>
+<div class="flex-container-full">
+	<div class="report">
+        <table><!--TODO CSS the table-->
 			<tr>
 			    <td>
-				<span id="printButton" class="ui-state-default ui-corner-all">
-					<a href="javascript:window.print()" ><?=__('Print Report')?></a>
-				</span>
-				<br />
-				<br />
-				<!--<?=__('Report generated from the following subset of results : ')?><strong><?=get_data('selectedFilter')?></strong><br/>-->
-				<?=__('Generated on: ')?><strong><?=get_data('date')?></strong><br /><br />
-				<?=__('Related Deliveries:')?><br />
-				<ul>
-				<?php foreach (get_data('deliveries') as $delivery) :?>
-				<li>	<?=$delivery?>
-				 <?php endforeach ?>
-				</ul>
-				<br /><?=__('Data collection statistics :')?>
-				<ul>
-				<li><?=__('# Collected Results')?>: <strong><?=get_data('nbExecutions')?></strong><br /><em>*The number of Tests delivery being executed and collected so far</em>
-				<li><?=__('# Distinct variable types')?>: <strong><?=get_data('numberVariables')?></strong><br /><em>*The number of different type of single score variables collected in this delivery definition</em>
-				<li><?=__('# Collected Score Variables')?>: <strong><?=get_data('#')?></strong><br /><em>*The number of Score variables collected so far</em>
-				<li><?=__('# Distinct Test Takers')?>: : <strong><?=get_data('numberOfDistinctTestTaker')?></strong><br />
+	
+                    <button class="btn-info" onclick="window.print()" ><?=__('Print Report')?></button>
+                    <br />
+                    <br />
+                    <!--<?=__('Report generated from the following subset of results : ')?><strong><?=get_data('selectedFilter')?></strong><br/>-->
+                    <?=__('Generated on: ')?><strong><?=get_data('date')?></strong><br /><br />
+                    <?=__('Related Deliveries:')?><br />
+                    <ul>
+                    <?php foreach (get_data('deliveries') as $delivery) :?>
+                    <li>	<?=$delivery?>
+                     <?php endforeach ?>
+                    </ul>
+                    <br /><?=__('Data collection statistics :')?>
+                    <ul>
+                    <li><?=__('# Collected Results')?>: <strong><?=get_data('nbExecutions')?></strong><br /><em>*The number of Tests delivery being executed and collected so far</em>
+                    <li><?=__('# Distinct variable types')?>: <strong><?=get_data('numberVariables')?></strong><br /><em>*The number of different type of single score variables collected in this delivery definition</em>
+                    <li><?=__('# Collected Score Variables')?>: <strong><?=get_data('#')?></strong><br /><em>*The number of Score variables collected so far</em>
+                    <li><?=__('# Distinct Test Takers')?>: : <strong><?=get_data('numberOfDistinctTestTaker')?></strong><br />
 
-				<!--<li><li><?=__('Total Standard Deviation')?>: <strong><?=get_data('std')?></strong><br /><em></em>-->
-				<!--<li>Remaining Tokens: <strong><?=get_data('tokensLeft')?></strong><br /><em>*The number of remaining Tests delivery executions (according to the number of attempts granted)</em>-->
-				</ul>
-				<br /><?=__('Scores and response rates statistics')?>
-				<table class="minimal">
-					<tr><td><?=__('VariableName')?></td><td><?=__('Average')?></td><td>#</td></tr></strong>
-				    <?php foreach (get_data('listOfVariables') as $variable) :?>
+                    <!--<li><li><?=__('Total Standard Deviation')?>: <strong><?=get_data('std')?></strong><br /><em></em>-->
+                    <!--<li>Remaining Tokens: <strong><?=get_data('tokensLeft')?></strong><br /><em>*The number of remaining Tests delivery executions (according to the number of attempts granted)</em>-->
+                    </ul>
+                    <br /><?=__('Scores and response rates statistics')?>
 
-				    <tr><td><?=$variable["label"]?></td><td><?=round($variable["infos"]["avg"],2)?></td><td><?=$variable["infos"]["#"]?></td></tr>
+                    <table class="minimal">
+                        <tr><td><?=__('VariableName')?></td><td><?=__('Average')?></td><td>#</td></tr></strong>
+                        <?php foreach (get_data('listOfVariables') as $variable) :?>
 
-				    <?php endforeach ?>
-				     <tr><td><b>Total Average Score</b></td><td><b><?=get_data('average')?></b></td><td></tr>
-				</table>
+                        <tr><td><?=$variable["label"]?></td><td><?=round($variable["infos"]["avg"],2)?></td><td><?=$variable["infos"]["#"]?></td></tr>
 
+                        <?php endforeach ?>
+                         <tr><td><b><?=__('Total Average Score')?></b></td><td><b><?=get_data('average')?></b></td><td></tr>
+                    </table>
 
 			    </td>
 			    <td rowspan="2">
@@ -57,7 +57,7 @@ use oat\tao\helpers\Template;
 				</td>
 
 			</tr>
-		    </table>
+        </table>
 		<!-- not very relevant yet without measurement boudaries<div style="border:1px;">
 			<img src="<?=get_data('deliveryBarChart');?>"/>
 		</div>!-->
@@ -70,34 +70,28 @@ use oat\tao\helpers\Template;
 		<?=__('Observed performances per distinc score variable types ')?>
 	</div>
     -->
-	<div class="ui-widget-content ui-corner-right">
+	<div>
 
 		<?php foreach (get_data('listOfVariables') as $variable) :?>
-		<div id="form-title" class="ui-widget-header ui-corner-top ui-state-default">
+		<h3>
 			<?=__('Results distribution')?> : <?php echo $variable["label"];?>
-		</div>
-
-
-		<ul>
-				<ul>
-				<li><?=__('Collected Results')?>: <strong><?=$variable["infos"]["#"]?></strong><br />
-				<li><?=__('Score average')?>: <strong><?php echo round($variable["infos"]["avg"],2); ?></strong>
-				</ul>
-
-
-			</ul>
-			<img src="<?php echo $variable["urlFrequencies"];?>"/>
-			<img src="<?php echo $variable["urlScores"];?>"/>
-
-
-
-
+        </h3>
+         <ul>
+             <ul>
+                 <li><?=__('Collected Results')?>: <strong><?=$variable["infos"]["#"]?></strong><br />
+                 <li><?=__('Score average')?>: <strong><?php echo round($variable["infos"]["avg"],2); ?></strong>
+             </ul>
+         </ul>
+         <div class="grid-row">
+            <div class="col-6"><img src="<?php echo $variable["urlFrequencies"];?>"/></div>
+            <div class="col-6"><img src="<?php echo $variable["urlScores"];?>"/></div>
+         </div>
 
 		<?php endforeach ?>
 
-	<span id="printButton" class="ui-state-default ui-corner-all">
-					<a href="javascript:window.print()" ><?=__('Print Report')?></a>
-				</span>
+        <div class="grid-row">
+            <button class="btn-info" onclick="window.print()" ><?=__('Print Report')?></button>
+        </div>
 	</div>
 </div>
 <?php
