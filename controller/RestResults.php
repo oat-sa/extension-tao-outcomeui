@@ -24,35 +24,41 @@ namespace oat\taoOutcomeUi\controller;
 use \tao_actions_CommonRestModule;
 use oat\taoOutcomeUi\model\CrudResultsService;
 
-class RestResults extends tao_actions_CommonRestModule {
+class RestResults extends tao_actions_CommonRestModule
+{
 
-	public function __construct(){
-		parent::__construct();
-		$this->service = CrudResultsService::singleton();
-	}
-	
-	/**
-	 * Optionnaly a specific rest controller may declare
-	 * aliases for parameters used for the rest communication
-	 */
-	protected function getParametersAliases(){
-	    return array_merge(parent::getParametersAliases(), array(
-		    
-	    ));
-	}
-	/**
-	 * Optionnal Requirements for parameters to be sent on every service
-	 *
-	 */
-	protected function getParametersRequirements() {
-	    return array(
-		/** you may use either the alias or the uri, if the parameter identifier
-		 *  is set it will become mandatory for the operation in $key
-		* Default Parameters Requirents are applied
-		* type by default is not required and the root class type is applied
-		*/
-	    );
-	}
-	
+    public function __construct()
+    {
+        parent::__construct();
+        $this->service = CrudResultsService::singleton();
+    }
+
+    /**
+     * Optionnaly a specific rest controller may declare
+     * aliases for parameters used for the rest communication
+     */
+    protected function getParametersAliases()
+    {
+        return array_merge(
+            parent::getParametersAliases(),
+            array()
+        );
+    }
+
+    /**
+     * Optionnal Requirements for parameters to be sent on every service
+     *
+     */
+    protected function getParametersRequirements()
+    {
+        return array(/** you may use either the alias or the uri, if the parameter identifier
+         *  is set it will become mandatory for the operation in $key
+         * Default Parameters Requirents are applied
+         * type by default is not required and the root class type is applied
+         */
+        );
+    }
+
 }
+
 ?>

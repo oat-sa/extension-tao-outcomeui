@@ -23,14 +23,16 @@ namespace oat\taoOutcomeUi\controller;
 
 ?>
 <?php
+
 /**
  * SaSCampaign Controller provide process services
- * 
+ *
  * @author Bertrand Chevrier, <taosupport@tudor.lu>
  * @package taoCampaign
- 
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  */
-class SaSResult extends Results {
+class SaSResult extends Results
+{
 }
+
 ?>
