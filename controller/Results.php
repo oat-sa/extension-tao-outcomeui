@@ -192,10 +192,10 @@ class Results extends tao_actions_SaSModule {
                     "type" => "class",
 
                 );
-                if(count($children) > 0){
+                if(count($instances) > 0){
                     $returnValue["state"] = "open";
-                    $returnValue["children"] = "$childrenLimited";
-                    $returnValue["count"] = "count($instances)";
+                    $returnValue["children"] = $childrenLimited;
+                    $returnValue["count"] = count($instances);
                 }
                 else{
                     $returnValue["state"] = "close";

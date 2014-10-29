@@ -168,14 +168,17 @@ define(['jquery', 'i18n', 'helpers', 'layout/section', 'generis.facetFilter', 'g
                     case document.resultOfSubjectConstant: {return  "<span class=highlight>"+data+"</span>";}
                     default:return data;
                     }
-                }
-                //Grade properties
-                else if ((column.type == "taoResults_models_classes_table_GradeColumn")){
+            }
+            //Grade properties
+            else if ((column.type == "oat\\taoOutcomeUi\\model\\table\\GradeColumn")){
                 return  this.layoutResponseArray(data);
-                }
-                //Actual responses properties
-                else if ((column.type == "taoResults_models_classes_table_ResponseColumn")){
+            }
+            //Actual responses properties
+            else if ((column.type == "oat\\taoOutcomeUi\\model\\table\\ResponseColumn")){
                 return this.layoutResponseArray(data);
+            }
+            else{
+                console.log(column.type);
             }
         },
 

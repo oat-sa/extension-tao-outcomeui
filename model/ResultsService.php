@@ -456,12 +456,11 @@ class ResultsService extends tao_models_classes_ClassService {
     public function deleteResult(core_kernel_classes_Resource $result) {
         $returnValue = (bool) false;
 
-        
         if (!is_null($result)) {
             $returnValue = $this->getImplementation()->deleteResult($result->getUri());
+            $returnValue = $returnValue && $result->delete(true);
 
         }
-        
 
         return (bool) $returnValue;
     }
