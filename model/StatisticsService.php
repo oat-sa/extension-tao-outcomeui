@@ -54,7 +54,7 @@ class StatisticsService
             "statistics" => array()
         );
         
-        $deliveryResults = $deliveryClass->getInstances(false);
+        $deliveryResults = $this->getImplementation()->getAllTestTakerIds();
         if (count($deliveryResults) == 0) {
             throw new common_Exception(__('The class you have selected contains no results to be analysed, please select a different class'));
         }
@@ -66,6 +66,7 @@ class StatisticsService
             "#" => 0
         );
         foreach ($deliveryResults as $deliveryResult) {
+            $deliveryResult = new \core_kernel_classes_Resource($deliveryResult["deliveryResultIdentifier"]);
             $testTaker = $this->getTestTaker($deliveryResult);
             if (get_class($testTaker) == 'core_kernel_classes_Literal') {
                 $testTakerIdentifier = $testTaker->__toString();
@@ -85,16 +86,16 @@ class StatisticsService
             }
             
             foreach ($scoreVariables as $variable) {
-                $variableData = $this->getVariableData($variable, true);
-                
+                $variableData = (array)(array_shift($variable));
                 $activityIdentifier = "";
                 $activityNaturalId = "";
                 
-                if (isset($variableData["item"]) and (get_class($variableData["item"]) == "core_kernel_classes_Resource")) {
-                    $activityIdentifier = $variableData["item"]->getUri();
-                    $activityNaturalId = $variableData["item"]->getLabel();
+                if (isset($variableData["item"])) {
+                    $item = new \core_kernel_classes_Resource($variableData["item"]);
+                    $activityIdentifier = $item->getUri();
+                    $activityNaturalId = $item->getLabel();
                 }
-                $variableIdentifier = $activityIdentifier . $variableData["identifier"];
+                $variableIdentifier = $activityIdentifier . $variableData["variable"]->getIdentifier();
                 if (! (isset($statisticsGroupedPerVariable[$variableIdentifier]))) {
                     $statisticsGroupedPerVariable[$variableIdentifier] = array(
                         "sum" => 0,
@@ -103,12 +104,12 @@ class StatisticsService
                 }
                 
                 // we should parametrize if we consider multiple executions of the same test taker or not, here all executions are considered
-                $statisticsGroupedPerVariable[$variableIdentifier]["data"][] = $variableData["value"];
-                $statisticsGroupedPerVariable[$variableIdentifier]["sum"] += $variableData["value"];
+                $statisticsGroupedPerVariable[$variableIdentifier]["data"][] = $variableData["variable"]->getValue();
+                $statisticsGroupedPerVariable[$variableIdentifier]["sum"] += $variableData["variable"]->getValue();
                 $statisticsGroupedPerVariable[$variableIdentifier]["#"] += 1;
-                $statisticsGroupedPerVariable[$variableIdentifier]["naturalid"] = $activityNaturalId . " (" . $variableData["identifier"] . ")";
-                $statisticsGrouped["data"][] = $variableData["value"];
-                $statisticsGrouped["sum"] += $variableData["value"];
+                $statisticsGroupedPerVariable[$variableIdentifier]["naturalid"] = $activityNaturalId . " (" . $variableData["variable"]->getIdentifier() . ")";
+                $statisticsGrouped["data"][] = $variableData["variable"]->getValue();
+                $statisticsGrouped["sum"] += $variableData["variable"]->getValue();
                 $statisticsGrouped["#"] += 1;
             }
         }
