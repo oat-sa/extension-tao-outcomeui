@@ -59,7 +59,8 @@ class InspectResults extends tao_actions_TaoModule
         $this->defaultData();
     }
 
-    private function getImplementation(){
+    private function getImplementation()
+    {
         return new RdsResultStorage();
     }
 
@@ -104,8 +105,8 @@ class InspectResults extends tao_actions_TaoModule
                 }
             }
 
-        }
-        else if($propertyUri == PROPERTY_RESULT_OF_SUBJECT){
+        } else {
+            if ($propertyUri == PROPERTY_RESULT_OF_SUBJECT) {
             $testTakersInArray = array();
             $testTakers = $this->getImplementation()->getAllTestTakerIds();
             foreach($testTakers as $testTaker){
@@ -196,11 +197,11 @@ class InspectResults extends tao_actions_TaoModule
 
     public function getResults()
     {
-		$page = $this->getRequestParameter('page');
-		$limit = $this->getRequestParameter('rows');
-		$order = $this->getRequestParameter('sortby');
-		$sord = $this->getRequestParameter('sortorder');
-		$start = $limit * $page - $limit;
+	$page = $this->getRequestParameter('page');
+	$limit = $this->getRequestParameter('rows');
+	$order = $this->getRequestParameter('sortby');
+	$sord = $this->getRequestParameter('sortorder');
+	$start = $limit * $page - $limit;
 
         $gau = array(
             'order' 	=> $order,
@@ -253,8 +254,8 @@ class InspectResults extends tao_actions_TaoModule
         $this->returnJSON(array(
             'data' => $data,
             'page' => floor($start / $limit) + 1,
-		    'total' => ceil($counti / $limit),
-		    'records' => count($data)
+            'total' => ceil($counti / $limit),
+            'records' => count($data)
         ));
     }
 

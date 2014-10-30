@@ -167,7 +167,7 @@ class ReportService extends StatisticsService
 
             throw new \common_exception_NoContent("Empty data set");
         }
-        $dataSet = new pData();
+        $dataSet = new \pData();
         foreach ($setOfySeries as $legend => $ysery) {
             $dataSet->AddPoint($ysery, $legend);
             $dataSet->SetSerieName($legend, $legend);
@@ -180,7 +180,7 @@ class ReportService extends StatisticsService
         
         $dataSet->SetAbsciseLabelSerie("xLabels");
         // Initialise the graph
-        $graph = new pChart(490, 260);
+        $graph = new \pChart(490, 260);
         $graph->createColorGradientPalette($r, $g, $b, $r, $g, $b, 5);
         // aa is way too slow here
         $graph->Antialias = false;
@@ -230,7 +230,7 @@ class ReportService extends StatisticsService
             throw common_exception_ClientException("Empty data set");
         }
         
-        $dataSet = new pData();
+        $dataSet = new \pData();
         $dataSet->AddPoint($xLabels, "Label");
         $dataSet->AddPoint($sery1, "Serie1");
         $dataSet->AddSerie("Serie1");
@@ -238,7 +238,7 @@ class ReportService extends StatisticsService
         $dataSet->SetSerieName($legend, "Serie1");
         
         // Initialise the graph
-        $graph = new pChart(500, 500);
+        $graph = new \pChart(500, 500);
         $graph->createColorGradientPalette($r, $g, $b, $r, $g, $b, 5);
         // aa is way too slow here
         $graph->Antialias = false;
