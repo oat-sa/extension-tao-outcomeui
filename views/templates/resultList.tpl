@@ -3,21 +3,17 @@ use oat\tao\helpers\Template;
 ?>
 <link rel="stylesheet" type="text/css" href="<?= Template::css('resultList.css') ?>" />
 
-<div class="grid-row">
+<div id="inspect-result" class="flex-container-full">
+
+	<div class="grid-row">
 	<div class="col-3">
-		<div class="ui-widget ui-state-default ui-widget-header ui-corner-top container-title">
-			<?=__('Results Selection Filters')?>
-		</div>
-		<div id="tabs-1">
-			<div id="facet-filter"></div>
-		</div>
+		<h3><?=__('Results Selection Filters')?></h3>
+        <div class="facet-filter"></div>
 	</div>
+
 	<div class="col-9">
-		<table id="inspect-results-grid"></table>
-		<div id="pagera1"></div>
-		<div align="right">
-			<button id="buildTableButton" class="btn-neutral" type="button"><?=__('Export Table')?></button>
-		</div>
+		<div class="inspect-results-grid"></div>
+        <button class="btn-info small export-table disabled"><span class="icon-export"></span><?=__('Export Table')?></button>
 	</div>
 </div>
 <script>

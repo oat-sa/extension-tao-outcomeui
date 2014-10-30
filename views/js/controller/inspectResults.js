@@ -14,11 +14,12 @@ define([
 
     /**
      * Build tthe facet filtering component
+     * @param {jQueryElement} $container - the  container 
      * @param {Object} filterNodes - the filter the component will contain
      * @param {Function} cb - called with the selected filters
      */
-    function buildFacetFilter(filterNodes, cb){
-		return new GenerisFacetFilterClass('#facet-filter', filterNodes, {
+    function buildFacetFilter($container, filterNodes, cb){
+		return new GenerisFacetFilterClass($('.facet-filter', $container).selector, filterNodes, {
 			template: 'accordion',
 			callback: {
 				'onFilter': function(facetFilter) {
@@ -30,18 +31,19 @@ define([
    
     /**
      * Load results into the datatable
+     * @param {jQueryElement} $container - the  container 
      * @param {Object} model - the data model for the table
      * @param {String} [filter = 'all'] - to filter results
      */
-    function loadResults(model, filter){
+    function loadResults($container, model, filter){
         var params = {
             filter : filter
         };
-        $('#inspect-results-grid')
+        $('.inspect-results-grid', $container)
             .empty()
             .data('ui.datatable', null)
             .on('load.datatable', function(){
-                $('#buildTableButton')
+                $('.export-table', $container)
                     .off('click')
                     .removeClass('disabled')
                     .on('click', function(e){
@@ -70,14 +72,15 @@ define([
          */
         start : function(){
             var conf = module.config();
+            var $container = $('#inspect-result');
 
             //set up the facet filter and load results on changes
-            var facetFilter = buildFacetFilter(conf.filterNodes, function (filters){
-                loadResults(conf.model, filters);
+            var facetFilter = buildFacetFilter($container, conf.filterNodes, function (filters){
+                loadResults($container, conf.model, filters);
             });
 
             //load results also at the beginning unfiltered
-            loadResults(conf.model);
+            loadResults($container, conf.model);
         }
     };
 

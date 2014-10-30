@@ -104,7 +104,7 @@ define([
                     .datatable({
                         url : helpers._url('data', 'ResultTable', 'taoOutcomeUi', {filterData : filter}),
                         querytype : 'POST',
-                        params : {columns : columns, filter: filter, '_search' : false},
+                        params : {columns : columns,  '_search' : false},
                         model :  model
                     });
             };

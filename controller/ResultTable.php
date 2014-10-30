@@ -33,6 +33,7 @@ use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
 use oat\taoOutcomeUi\model\table\VariableColumn;
+use oat\taoOutcomeRds\model\RdsResultStorage;
 
 /**
  * should be entirelyrefactored
@@ -265,7 +266,7 @@ class ResultTable extends tao_actions_Table {
     	 }
     	 return $columns;
     }
-
+    
     /**
      * Data provider for the table, returns json encoded data according to the parameter
      * @author Bertrand Chevrier, <taosupport@tudor.lu>,
@@ -279,11 +280,6 @@ class ResultTable extends tao_actions_Table {
         $limit = $this->getRequestParameter('rows');
         $sidx = $this->getRequestParameter('sidx');
         $sord = $this->getRequestParameter('sord');
-
-        //$searchField = $this->getRequestParameter('searchField');
-        //$searchOper = $this->getRequestParameter('searchOper');
-        //$searchString = $this->getRequestParameter('searchString');
-
         $start = $limit * $page - $limit;
 
         $options = array (
@@ -296,13 +292,13 @@ class ResultTable extends tao_actions_Table {
         );
         $response = new \stdClass();
 
+
         $deliveryResults = $this->service->getImplementation()->getResultByColumn(array_keys($filter), $filter, $options);
-        $counti = count($this->service->getImplementation()->getResultByColumn(array_keys($filter), $filter));
+        $counti = $this->service->getImplementation()->countResultByFilter(array_keys($filter), $filter);
 
         foreach($deliveryResults as $deliveryResult){
             $results[] = new core_kernel_classes_Resource($deliveryResult['deliveryResultIdentifier']);
         }
-
 
         $dpmap = array();
         foreach ($columns as $column) {
@@ -334,13 +330,23 @@ class ResultTable extends tao_actions_Table {
             );
             foreach ($columns as $column) {
                 $key = null;
-                if($column instanceof \tao_models_classes_table_PropertyColumn){
+                if($column instanceof tao_models_classes_table_PropertyColumn){
                     $key = $column->getProperty()->getUri(); 
                 } else  if ($column instanceof VariableColumn) {
                     $key =  $column->getContextIdentifier() . '_' . $column->getIdentifier();
                 }
                 if(!is_null($key)){
-                    $data[$key] = self::filterCellData($column->getDataProvider()->getValue($result, $column), $filterData);
+                    if (count($column->getDataProvider()->cache) > 0) {
+                        $data[$key] = self::filterCellData(
+                            $column->getDataProvider()->getValue($result, $column),
+                            $filterData
+                        );
+                    } else {
+                        $data[$key] = self::filterCellData($this->service->getTestTaker($result)->getLabel(), $filterData);
+                    }
+                }
+                else {
+                    \common_Logger::w('KEY IS NULL');
                 }
             }
             $response->data[] = $data;

@@ -29,6 +29,7 @@ use \tao_helpers_Display;
 use \tao_helpers_Request;
 use \tao_helpers_Uri;
 use oat\taoOutcomeUi\model\ResultsService;
+use oat\taoOutcomeUi\helper\ResultLabel;
 use Doctrine\DBAL\Schema\Index;
 
 /**
@@ -123,9 +124,9 @@ class Results extends tao_actions_SaSModule
                         "id" => tao_helpers_Uri::encode($result->getUri()),
                         "class" => "node-instance"
                     );
-                    $title = $testTaker->getLabel() . "-(" . $result->getUri() . ")- " . $delivery->getLabel();
+                    $resultLabel = new ResultLabel($result, $testTaker, $delivery);
 
-                    $child["data"] = $title;
+                    $child["data"] = (string)$resultLabel;
                     $child["type"] = "instance";
                     $child["_data"] = array(
                         "uri" => $result->getUri(),

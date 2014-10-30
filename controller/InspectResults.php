@@ -31,6 +31,7 @@ use \tao_helpers_Display;
 use \tao_helpers_Request;
 use \tao_helpers_Uri;
 use oat\taoOutcomeUi\helper\DeliveryResultGrid;
+use oat\taoOutcomeUi\helper\ResultLabel;
 use oat\taoOutcomeUi\model\ResultsService;
 
 /**
@@ -107,22 +108,23 @@ class InspectResults extends tao_actions_TaoModule
 
         } else {
             if ($propertyUri == PROPERTY_RESULT_OF_SUBJECT) {
-            $testTakersInArray = array();
-            $testTakers = $this->getImplementation()->getAllTestTakerIds();
-            foreach($testTakers as $testTaker){
-                if(!in_array($testTaker['testTakerIdentifier'], $testTakersInArray)){
-                    $deliveryResource = new core_kernel_classes_Resource($testTaker['testTakerIdentifier']);
+                $testTakersInArray = array();
+                $testTakers = $this->getImplementation()->getAllTestTakerIds();
+                foreach($testTakers as $testTaker){
+                    if(!in_array($testTaker['testTakerIdentifier'], $testTakersInArray)){
+                        $deliveryResource = new core_kernel_classes_Resource($testTaker['testTakerIdentifier']);
 
-                    $propertyValueFormated = array(
-                        'data' 	=> $deliveryResource->getLabel(),
-                        'type'	=> 'instance',
-                        'attributes' => array(
-                            'id' => tao_helpers_Uri::encode($testTaker['testTakerIdentifier']),
-                            'class' => 'node-instance'
-                        )
-                    );
-                    $testTakersInArray[] = $testTaker['testTakerIdentifier'];
-                    $propertyValuesFormated[] = $propertyValueFormated;
+                        $propertyValueFormated = array(
+                            'data' 	=> $deliveryResource->getLabel(),
+                            'type'	=> 'instance',
+                            'attributes' => array(
+                                'id' => tao_helpers_Uri::encode($testTaker['testTakerIdentifier']),
+                                'class' => 'node-instance'
+                            )
+                        );
+                        $testTakersInArray[] = $testTaker['testTakerIdentifier'];
+                        $propertyValuesFormated[] = $propertyValueFormated;
+                    }
                 }
             }
         }
@@ -143,12 +145,11 @@ class InspectResults extends tao_actions_TaoModule
 
 
 
-    /*
+    /**
      *  index action
      *
      * @author Joel Bout <joel@taotesting.com>
      */
-
     public function index()
     {
         //Class to filter on
@@ -165,16 +166,18 @@ class InspectResults extends tao_actions_TaoModule
         $model = array();
         $filterNodes = array(); 
         foreach($properties as $property){
-            $filterNodes[] = array(
-                'id'      =>  md5($property->getUri()),
-                'label'   =>  $property->getLabel(),
-                'url'     =>  _url("getFilteredInstancesPropertiesValues"),
-                'options' =>  array(
-                    'propertyUri'   => $property->getUri(),
-                    'classUri'      => $rootClass->getUri(),
-                    'filterItself'  => false
-                )
-            );
+            if($property->getUri() != RDF_TYPE && $property->getUri() != RDFS_LABEL){
+                $filterNodes[] = array(
+                    'id'      =>  md5($property->getUri()),
+                    'label'   =>  $property->getLabel(),
+                    'url'     =>  _url("getFilteredInstancesPropertiesValues"),
+                    'options' =>  array(
+                        'propertyUri'   => $property->getUri(),
+                        'classUri'      => $rootClass->getUri(),
+                        'filterItself'  => false
+                    )
+                );
+            }
             $model[] = array(
                 'id'       => $property->getUri(),
                 'label'    => $property->getLabel(),
@@ -197,11 +200,11 @@ class InspectResults extends tao_actions_TaoModule
 
     public function getResults()
     {
-	$page = $this->getRequestParameter('page');
-	$limit = $this->getRequestParameter('rows');
-	$order = $this->getRequestParameter('sortby');
-	$sord = $this->getRequestParameter('sortorder');
-	$start = $limit * $page - $limit;
+        $page = $this->getRequestParameter('page');
+        $limit = $this->getRequestParameter('rows');
+        $order = $this->getRequestParameter('sortby');
+        $sord = $this->getRequestParameter('sortorder');
+        $start = $limit * $page - $limit;
 
         $gau = array(
             'order' 	=> $order,
@@ -216,39 +219,26 @@ class InspectResults extends tao_actions_TaoModule
         if($this->hasRequestParameter('filter')){
             $filter = $this->getFilterState('filter');
         }
-
-        //get the processes uris
-        //$processesUri = $this->hasRequestParameter('processesUri') ? $this->getRequestParameter('processesUri') : null;
-
-        //$rootClass = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
-        //if (!is_null($filter)) {
-            //$results = $rootClass->searchInstances($filter, $gau);
-            //$counti  = count($rootClass->searchInstances($filter));
-        //} else if (!is_null($processesUri)) {
-            //foreach ($processesUri as $processUri) {
-                //$results[$processUri] = new core_kernel_classes_resource($processUri);
-            //}
-        //} else {
-            //$results = $rootClass->searchInstances(array(), $gau);
-            //$counti =  count($rootClass->searchInstances(array()));
-        //}
+        $columns = array_keys($filter);
 
         $data = array();
-        $results = $this->getImplementation()->getResultByColumn(array_keys($filter), $filter, $gau);
-        $counti = count($this->getImplementation()->getResultByColumn(array_keys($filter), $filter));
+        $results = $this->getImplementation()->getResultByColumn($columns, $filter, $gau);
+        $counti = $this->getImplementation()->countResultByFilter($columns, $filter);
 
         foreach($results as $res){
-            $props = $res->getPropertiesValues(array(
-                PROPERTY_RESULT_OF_DELIVERY,
-                PROPERTY_RESULT_OF_SUBJECT,
-                RDF_TYPE
-            ));
+            
+            $deliveryResult = new core_kernel_classes_Resource($res['deliveryResultIdentifier']);
+            $delivery = new core_kernel_classes_Resource($res['deliveryIdentifier']);
+            $testTaker = new core_kernel_classes_Resource($res['testTakerIdentifier']);
+            $label = new ResultLabel($deliveryResult, $testTaker, $delivery);
+            $types = $deliveryResult->getTypes();
+
             $data[] = array(
-                 'id'                           => $res->getUri(),
-                 RDFS_LABEL                     => $res->getLabel(),
-                 PROPERTY_RESULT_OF_DELIVERY    => array_shift($props[PROPERTY_RESULT_OF_DELIVERY])->getLabel(),
-                 PROPERTY_RESULT_OF_SUBJECT     => array_shift($props[PROPERTY_RESULT_OF_SUBJECT])->getLabel(),
-                 RDF_TYPE                       => array_shift($props[RDF_TYPE])->getLabel()
+                 'id'                           => $deliveryResult->getUri(),
+                 RDFS_LABEL                     => (string)$label,
+                 PROPERTY_RESULT_OF_DELIVERY    => $delivery->getLabel(),
+                 PROPERTY_RESULT_OF_SUBJECT     => $testTaker->getLabel(),
+                 RDF_TYPE                       => array_shift($types)->getLabel()
              );
         }
         $this->returnJSON(array(
