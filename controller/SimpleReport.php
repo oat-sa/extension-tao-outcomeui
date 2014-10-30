@@ -81,7 +81,7 @@ class SimpleReport extends tao_actions_TaoModule {
 	$this->reportService->setContextClass($selectedDeliveryClass);
 	//extract statistics using the statistics service and feed the report
 	    $startTime = microtime(true);
-	$this->reportService->setDataSet($this->service->extractDeliveryDataSet($selectedDeliveryClass));
+	    $this->reportService->setDataSet($this->service->extractDeliveryDataSet($selectedDeliveryClass));
 	    $dataTime = microtime(true);
 	$this->setData("dataExtractionTime",round($dataTime-$startTime,3));
 	//add the required graphics computation and textual information for this particular report using reportService

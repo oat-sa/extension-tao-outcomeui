@@ -13,7 +13,7 @@ define([
     'use strict';
 
     /**
-     * @exports taoResults/controller/resultTable
+     * @exports taoOutcomeUi/controller/resultTable
      */
     var resulTableController =  {
 
@@ -102,7 +102,7 @@ define([
                         }
                     })
                     .datatable({
-                        url : helpers._url('data', 'ResultTable', 'taoResults', {filterData : filter}),
+                        url : helpers._url('data', 'ResultTable', 'taoOutcomeUi', {filterData : filter}),
                         querytype : 'POST',
                         params : {columns : columns, filter: filter, '_search' : false},
                         model :  model
@@ -134,7 +134,7 @@ define([
             });
 
             //default table
-            buildGrid(helpers._url('getResultOfSubjectColumn', 'ResultTable', 'taoResults', {filter : filter }));
+            buildGrid(helpers._url('getResultOfSubjectColumn', 'ResultTable', 'taoOutcomeUi', {filter : filter }));
 
             //setup the filtering
             $filterField.select2({

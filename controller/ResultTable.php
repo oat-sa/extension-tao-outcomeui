@@ -32,6 +32,7 @@ use \tao_models_classes_table_PropertyColumn;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
+use oat\taoOutcomeUi\model\table\VariableColumn;
 
 /**
  * should be entirelyrefactored
@@ -333,9 +334,9 @@ class ResultTable extends tao_actions_Table {
             );
             foreach ($columns as $column) {
                 $key = null;
-                if($column instanceof tao_models_classes_table_PropertyColumn){
+                if($column instanceof \tao_models_classes_table_PropertyColumn){
                     $key = $column->getProperty()->getUri(); 
-                } else  if ($column instanceof taoResults_models_classes_table_VariableColumn) {
+                } else  if ($column instanceof VariableColumn) {
                     $key =  $column->getContextIdentifier() . '_' . $column->getIdentifier();
                 }
                 if(!is_null($key)){
