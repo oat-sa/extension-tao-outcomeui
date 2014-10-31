@@ -106,12 +106,11 @@ class ResultsService extends tao_models_classes_ClassService {
            }          
            //overhead for cache handling, the data is stored only when the underlying deliveryExecution is finished
            try {
-                $executionIdentifier = $deliveryResult->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_IDENTIFIER));
-                $status = $executionIdentifier->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_DELVIERYEXECUTION_STATUS));
+                $status = $deliveryResult->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_DELVIERYEXECUTION_STATUS));
                 if ($status->getUri()== INSTANCE_DELIVERYEXEC_FINISHED ) {
                     common_cache_FileCache::singleton()->put($variables, $serial);
                 }
-           
+
            }catch (common_Exception $e) {
                common_Logger::i("List of variables of results of ".$deliveryResult->getUri()." could not be reliable cached due to an unfinished execution");
            }
