@@ -1,17 +1,6 @@
 
-body {
-    color: #222;
-    font-size: 14px;
-
-}
-
 #content {	
     padding : 20px;
-}
-
-//reset table margins 
-table, tr, td {
-    margin : 0px;
 }
 
 

@@ -1,8 +1,6 @@
 <?php
 use oat\tao\helpers\Template;
 ?>
-<link rel="stylesheet" type="text/css" href="<?= Template::css('resultList.css') ?>" />
-
 <div id="inspect-result" class="flex-container-full">
 
 	<div class="grid-row">
