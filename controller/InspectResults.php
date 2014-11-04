@@ -153,7 +153,7 @@ class InspectResults extends tao_actions_TaoModule
     public function index()
     {
         //Class to filter on
-        $rootClass = new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
+        $rootClass = $this->getRootClass();
 
         //Properties to filter on
         $properties = array(
@@ -259,7 +259,7 @@ class InspectResults extends tao_actions_TaoModule
      */
     protected function getRootClass()
     {
-        return new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
+        return $this->service->getRootClass();
     }
    
 }
