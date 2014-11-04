@@ -91,7 +91,7 @@ class ResultsService extends tao_models_classes_ClassService {
         $variables = array();
         //this service is slow due to the way the data model design  
         //if the delvieryResult related execution is finished, the data is stored in cache. 
-        $serial = 'deliveryResultVariables';
+        $serial = 'deliveryResultVariables:'.$deliveryResult->getUri();
         if (common_cache_FileCache::singleton()->has($serial)) {
             $variables = common_cache_FileCache::singleton()->get($serial);
         } else {           
