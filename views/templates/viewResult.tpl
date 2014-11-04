@@ -227,40 +227,7 @@ use oat\tao\helpers\Template;
                           }
                           }
                           ?>
-                          <?php } ?>
-                          <?php if (isset($item['sortedVars'][CLASS_TRACE_VARIABLE])) {?>
-                <tr>
-                    <th colspan="6" class="italic">
-                    <i><?=__('Traces')?></i></th>
-                </tr>
-                <?php
 
-		foreach ($item['sortedVars'][CLASS_TRACE_VARIABLE] as $variableIdentifier  => $observations){
-		   $rowspan = 'rowspan="'.count($observations).'"';
-		    foreach ($observations as $observation) {
-                         $baseType = array_pop($observation["baseType"]);
-                         $cardinality = array_pop($observation["cardinality"]);
-                ?>
-
-		<tr>
-		<td ><?=$variableIdentifier?></td>
-		<td colspan="2" class="dataResult"><button class="traceDownload" value="<?=$observation["uri"]?>"><?=__('download')?></button></td>
-                <td> 
-                    <?php 
-                        echo $cardinality;
-                    ?>
-                </td>
-                <td> 
-                    <?php 
-                        echo $baseType;
-                    ?>
-                </td>
-		<td class="epoch"><?=array_pop($observation["epoch"])?></td>
-		</tr>
-	<?php
-                          }
-                          }
-                          ?>
                           <?php } ?>
                           </tbody>
                 </table>
