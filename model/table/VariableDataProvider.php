@@ -75,7 +75,7 @@ class VariableDataProvider
         $resultsService = ResultsService::singleton();      
 
         foreach($resources as $result){
-            $itemresults = $resultsService->getVariables($result, new core_kernel_classes_Class(TAO_RESULT_VARIABLE), false);
+            $itemresults = $resultsService->getVariables($result, false);
             $cellData = array();
             foreach ($itemresults as $itemResultUri=>$vars) {
                 //cache the item information pertaining to a given itemResult (stable over time)

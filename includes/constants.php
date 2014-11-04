@@ -34,9 +34,6 @@ $todefine = array(
     'PROPERTY_RESULT_OF_SUBJECT'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject',
     'PROPERTY_RESULT_OF_DELIVERY'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery',
 
-    //used in data provider
-    'TAO_RESULT_VARIABLE'			=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#Variable',
-
     //used in resultService / template
 	'PROPERTY_VARIABLE_EPOCH'	=>'http://www.tao.lu/Ontologies/TAOResult.rdf#variableEpoch',
     'PROPERTY_IDENTIFIER'=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#Identifier',
@@ -50,7 +47,5 @@ $todefine = array(
     'CLASS_OUTCOME_VARIABLE'=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#OutcomeVariable',
     'CLASS_RESPONSE_VARIABLE'=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable',
     'CLASS_TRACE_VARIABLE'=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#TraceVariable'
-
-
 );
 ?>

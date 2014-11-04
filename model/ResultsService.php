@@ -84,23 +84,19 @@ class ResultsService extends tao_models_classes_ClassService {
      * @access public
      * @author Joel Bout, <joel.bout@tudor.lu>
      * @param  Resource deliveryResult
-     * @param core_kernel_classes_Class to restrict to a specific class of variables
      * @param boolean flat a falt array is returned or a structured delvieryResult-ItemResult-Variable
      * @return array
      */
-    public function getVariables(core_kernel_classes_Resource $deliveryResult, $variableClass = null, $flat = true) {
+    public function getVariables(core_kernel_classes_Resource $deliveryResult, $flat = true) {
         $variables = array();
         //this service is slow due to the way the data model design  
         //if the delvieryResult related execution is finished, the data is stored in cache. 
         $serial = 'deliveryResultVariables';
-        if ($variableClass != null) {
-            $serial.=$variableClass->getUri();
-        }
         if (common_cache_FileCache::singleton()->has($serial)) {
             $variables = common_cache_FileCache::singleton()->get($serial);
         } else {           
            foreach ($this->getItemResultsFromDeliveryResult($deliveryResult) as $itemResult) {
-                $itemResultVariables = $this->getVariablesFromItemResult($itemResult, $variableClass);
+                $itemResultVariables = $this->getVariablesFromItemResult($itemResult);
                 $itemResultUri = $itemResult;
                 $variables[$itemResultUri] = $itemResultVariables;        
            }          
