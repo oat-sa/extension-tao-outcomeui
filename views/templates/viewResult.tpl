@@ -64,13 +64,13 @@ use oat\tao\helpers\Template;
                 </tr>
                 </thead>
                 <?php foreach (get_data("deliveryVariables") as $testVariable){
-                $baseType = $testVariable[PROPERTY_VARIABLE_BASETYPE];
-                $cardinality = $testVariable[PROPERTY_VARIABLE_CARDINALITY];
+                $baseType = $testVariable->getBaseType();
+                $cardinality = $testVariable->getCardinality();
                 ?>
                 <tbody>
                 <tr>
-                    <td><?=$testVariable[PROPERTY_IDENTIFIER]?></td>
-                    <td><?=$testVariable[RDF_VALUE]?></td>
+                    <td><?=$testVariable->getIdentifier()?></td>
+                    <td><?=$testVariable->getValue()?></td>
                     <td> 
                         <?php 
                         echo $cardinality;
@@ -124,8 +124,8 @@ use oat\tao\helpers\Template;
 		foreach ($item['sortedVars'][CLASS_RESPONSE_VARIABLE] as $variableIdentifier  => $observations){
 		    $rowspan = 'rowspan="'.count($observations).'"';
 		    foreach ($observations as $key=>$observation) {
-                        $baseType = $observation[PROPERTY_VARIABLE_BASETYPE];
-                        $cardinality = $observation[PROPERTY_VARIABLE_CARDINALITY];
+                        $baseType = $observation["baseType"];
+                        $cardinality = $observation["cardinality"];
         	?>
 		<tr>
 		<?php if ($key === key($observations)) {?>
@@ -139,21 +139,21 @@ use oat\tao\helpers\Template;
             else{
             ?>
 		    <?php
-                        if (isset($observation[RDF_VALUE]) and is_array($observation[RDF_VALUE])){
-                            $rdfValue = array_pop($observation[RDF_VALUE]);
-                            if (is_array($rdfValue)) {
-                                echo "<OL>";
-                                foreach ($rdfValue as $value) {
-                                    echo "<LI>";
-                                        echo tao_helpers_Display::htmlEscape(nl2br($value));
-                                    echo "</LI>";
-                    }
-                    echo "</OL>";
-                    } elseif (is_string($rdfValue)) {
-                    echo tao_helpers_Display::htmlEscape(nl2br($rdfValue));
-                    } else {
-                    echo tao_helpers_Display::htmlEscape($rdfValue);
-                    }
+                    if (isset($observation[RDF_VALUE])){
+                        $rdfValue = $observation[RDF_VALUE];
+                        if (is_array($rdfValue)) {
+                            echo "<OL>";
+                            foreach ($rdfValue as $value) {
+                                echo "<LI>";
+                                    echo tao_helpers_Display::htmlEscape(nl2br($value));
+                                echo "</LI>";
+                            }
+                            echo "</OL>";
+                        } elseif (is_string($rdfValue)) {
+                            echo tao_helpers_Display::htmlEscape(nl2br($rdfValue));
+                        } else {
+                            echo tao_helpers_Display::htmlEscape($rdfValue);
+                        }
                     }
             }
                     ?>
@@ -196,15 +196,15 @@ use oat\tao\helpers\Template;
 		foreach ($item['sortedVars'][CLASS_OUTCOME_VARIABLE] as $variableIdentifier  => $observations){
 		   $rowspan = 'rowspan="'.count($observations).'"';
 		    foreach ($observations as $key=>$observation) {
-                         $baseType = $observation[PROPERTY_VARIABLE_BASETYPE];
-                         $cardinality = $observation[PROPERTY_VARIABLE_CARDINALITY];
+                         $baseType = $observation["baseType"];
+                         $cardinality = $observation["cardinality"];
         	?>
 		<tr>
 		<?php if ($key === key($observations)) {?>
 		     <td <?=$rowspan?> class="variableIdentifierField"><?=$variableIdentifier?></td>
 		<?php }?>
 		<td colspan="2" class="dataResult">
-                    <?=tao_helpers_Display::htmlEscape(nl2br(array_pop($observation[RDF_VALUE])))?>
+                    <?=tao_helpers_Display::htmlEscape(nl2br($observation[RDF_VALUE]))?>
                     <?php
                         if ($baseType=="file") {
                         echo '<button class="download" value="'.$observation["uri"].'">'.__('download').'</button>';
@@ -238,8 +238,8 @@ use oat\tao\helpers\Template;
 		foreach ($item['sortedVars'][CLASS_TRACE_VARIABLE] as $variableIdentifier  => $observations){
 		   $rowspan = 'rowspan="'.count($observations).'"';
 		    foreach ($observations as $observation) {
-                         $baseType = array_pop($observation[PROPERTY_VARIABLE_BASETYPE]);
-                         $cardinality = array_pop($observation[PROPERTY_VARIABLE_CARDINALITY]);
+                         $baseType = array_pop($observation["baseType"]);
+                         $cardinality = array_pop($observation["cardinality"]);
                 ?>
 
 		<tr>

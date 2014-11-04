@@ -34,19 +34,10 @@ $todefine = array(
     'PROPERTY_RESULT_OF_SUBJECT'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject',
     'PROPERTY_RESULT_OF_DELIVERY'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery',
 
-    //used in resultService / template
-	'PROPERTY_VARIABLE_EPOCH'	=>'http://www.tao.lu/Ontologies/TAOResult.rdf#variableEpoch',
-    'PROPERTY_IDENTIFIER'=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#Identifier',
-    'PROPERTY_RELATED_ITEM_RESULT' =>  'http://www.tao.lu/Ontologies/TAOResult.rdf#relatedItemResult',
-    'PROPERTY_VARIABLE_CARDINALITY' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#cardinality',
-    'PROPERTY_VARIABLE_BASETYPE'  => 'http://www.tao.lu/Ontologies/TAOResult.rdf#baseType',
-    'PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE'  =>'http://www.tao.lu/Ontologies/TAOResult.rdf#correctResponse',
-    'PROPERTY_RESPONSE_VARIABLE_CANDIDATERESPONSE'  =>'http://www.tao.lu/Ontologies/TAOResult.rdf#candidateResponse',
-    'RESULT_ONTOLOGY' => 'http://www.tao.lu/Ontologies/TAOResult.rdf',
 
     //used to get the variable type
-    'CLASS_OUTCOME_VARIABLE'=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#OutcomeVariable',
-    'CLASS_RESPONSE_VARIABLE'=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable',
+    'CLASS_OUTCOME_VARIABLE'=> 'taoResultServer_models_classes_OutcomeVariable',
+    'CLASS_RESPONSE_VARIABLE'=> 'taoResultServer_models_classes_ResponseVariable',
     'CLASS_TRACE_VARIABLE'=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#TraceVariable'
 );
 ?>

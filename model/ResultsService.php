@@ -274,54 +274,29 @@ class ResultsService extends tao_models_classes_ClassService {
             }
             foreach ($this->getVariablesFromItemResult($itemResult) as $variable) {
                 //retrieve the type of the variable
-                $variableTemp = (array)$variable[0]->variable;
+                $variableTemp = $variable[0]->variable;
                 $variableDescription = array();
-                foreach($variableTemp as $key => $value){
-                    switch($key){
-                        case 'value':
-                            $variableDescription[RDF_VALUE] = $value;
-                            break;
-                        case 'uri':
-                            break;
-                        case 'identifier':
-                            $variableDescription[PROPERTY_IDENTIFIER] = $value;
-                            break;
-                        case 'epoch':
-                            $variableDescription[PROPERTY_VARIABLE_EPOCH] = $value;
-                            break;
-                        default:
-                            $variableDescription[RESULT_ONTOLOGY.'#'.$key] = $value;
-                            break;
-                    }
-                }
-                $type = get_class($variable[0]->variable);
-                if ($type == "taoResultServer_models_classes_OutcomeVariable") {
-                    $variableDescription[RDF_VALUE] = array(base64_decode($variableDescription[RDF_VALUE]));
-                    $type = CLASS_OUTCOME_VARIABLE;
-                }
-                else{
-                    $variableDescription[RDF_VALUE] = array(base64_decode($variableDescription[PROPERTY_RESPONSE_VARIABLE_CANDIDATERESPONSE]));
-                    $type = CLASS_RESPONSE_VARIABLE;
-                }
-                $variableIdentifier = $variableDescription[PROPERTY_IDENTIFIER];
-                $epoch = $variableDescription[PROPERTY_VARIABLE_EPOCH];
+                $type = get_class($variableTemp);
+
+                $variableDescription["cardinality"] = $variableTemp->getCardinality();
+                $variableDescription["baseType"] = $variableTemp->getBaseType();
+                $variableDescription[RDF_VALUE] = $variableTemp->getValue();
+
+                $variableIdentifier = $variableTemp->getIdentifier();
+                $epoch = $variableTemp->getEpoch();
+
                 $variableDescription["uri"] = $variable[0]->uri;
                 $variableDescription["epoch"] = array(tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE));
 
-                if (isset($variableDescription[PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE])) {
-                    $correctResponse = $variableDescription[PROPERTY_RESPONSE_VARIABLE_CORRECTRESPONSE];
-                }
-                else{
-                    $correctResponse = null;
-                }
-                if (!is_null($correctResponse)) {
-                    if($correctResponse >= 1){
+                if (method_exists($variableTemp, 'getCorrectResponse') && !is_null($variableTemp->getCorrectResponse())) {
+                    if($variableTemp->getCorrectResponse() >= 1){
                         $variableDescription["isCorrect"] = "correct";
                     }
                     else{
                         $variableDescription["isCorrect"] = "incorrect";
                     }
-                } else {
+                }
+                else{
                     $variableDescription["isCorrect"] = "unscored";
                 }
 
@@ -391,24 +366,7 @@ class ResultsService extends tao_models_classes_ClassService {
         $variablesData = array();
         foreach($variables as $variable){
             if($variable[0]->callIdTest != ""){
-                $variableDescription = array();
-                foreach((array)$variable[0]->variable as $key => $value){
-                    switch($key){
-                        case 'value':
-                            $variableDescription[RDF_VALUE] = base64_decode($value);
-                            break;
-                        case 'identifier':
-                            $variableDescription[PROPERTY_IDENTIFIER] = $value;
-                            break;
-                        case 'epoch':
-                            $variableDescription[PROPERTY_VARIABLE_EPOCH] = $value;
-                            break;
-                        default:
-                            $variableDescription[RESULT_ONTOLOGY.'#'.$key] = $value;
-                            break;
-                    }
-                }
-                $variablesData[] = $variableDescription;
+                $variablesData[] = $variable[0]->variable;
             }
         }
         return $variablesData;
@@ -505,51 +463,6 @@ class ResultsService extends tao_models_classes_ClassService {
         }
         return $file;
     }
-
-    /**
-     * Retrieves information about the variable, including or not the related item $getItem (slower)
-     * 
-     * @access public
-     * @author Patrick Plichart, <patrick.plichart@taotesting.com>
-     * @param  Resource variable
-     * @param  bool getItem retireve associated item reference
-     * @return array simple associative
-     */
-    public function getVariableData(core_kernel_classes_Resource $variable, $getItem = false) {
-        $returnValue = array();
-        $baseTypes = $variable->getPropertyValues(new core_kernel_classes_Property(PROPERTY_VARIABLE_BASETYPE));
-        $baseType = current($baseTypes);
-        if ($baseType != "file") {
-            $propValues = $variable->getPropertiesValues(array(
-                PROPERTY_IDENTIFIER,
-                PROPERTY_VARIABLE_EPOCH,
-                RDF_VALUE,
-                PROPERTY_VARIABLE_CARDINALITY,
-                PROPERTY_VARIABLE_BASETYPE
-            ));
-            $returnValue["value"] = (string) base64_decode(current($propValues[RDF_VALUE]));
-        } else {
-            $propValues = $variable->getPropertiesValues(array(
-                PROPERTY_IDENTIFIER,
-                PROPERTY_VARIABLE_EPOCH,
-                PROPERTY_VARIABLE_CARDINALITY,
-                PROPERTY_VARIABLE_BASETYPE
-            ));
-            $returnValue["value"] = "";
-        }
-        $returnValue["identifier"] = current($propValues[PROPERTY_IDENTIFIER])->__toString();
-        $class =  current($variable->getTypes());    
-        $returnValue["type"]= $class;
-        $returnValue["epoch"] = current($propValues[PROPERTY_VARIABLE_EPOCH])->__toString();
-        if (count($propValues[PROPERTY_VARIABLE_CARDINALITY]) > 0) {
-            $returnValue["cardinality"] = current($propValues[PROPERTY_VARIABLE_CARDINALITY])->__toString();
-        }
-        if (count($propValues[PROPERTY_VARIABLE_BASETYPE]) > 0) {
-            $returnValue["basetype"] = current($propValues[PROPERTY_VARIABLE_BASETYPE])->__toString();
-        }
-        return (array) $returnValue;
-    }
-    
 
     /**
      * To be reviewed as it implies a dependency towards taoSubjects

@@ -59,16 +59,6 @@ class SimpleReport extends tao_actions_TaoModule
         $this->reportService = ReportService::singleton();
     }
 
-    /**
-     * get the main class
-     *
-     * @author Patrick Plichart, <patrick.plichart@taotesting.com>
-     * @return core_kernel_classes_Class
-     */
-    protected function getRootClass()
-    {
-        return new core_kernel_classes_Class(RESULT_ONTOLOGY . "#" . "TAO_DELIVERY_RESULTS");
-    }
 
     /**
      * build the report using statistics service and feeding the report service

@@ -176,15 +176,7 @@ class ResultsTestCase extends UnitTestCase {
 	     
 	     
 	}
-	public function testGetVariableData(){
-	    
-	    $variableData = $this->resultsService->getVariableData($this->grade);
-	    $this->assertEqual(count($variableData),3);
-	    $this->assertEqual($variableData["value"],0.4);
-	    $this->assertEqual($variableData["variableIdentifier"], "GRADE"); 
-	    
-	}
-	
+
 	public function testGetRootClass(){
 	    $rootResultClass = $this->resultsService->getRootClass();
 	    $this->assertIsA($rootResultClass, "core_kernel_classes_Class");
