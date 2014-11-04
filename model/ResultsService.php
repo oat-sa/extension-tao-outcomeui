@@ -278,15 +278,13 @@ class ResultsService extends tao_models_classes_ClassService {
                 $variableDescription = array();
                 $type = get_class($variableTemp);
 
-                $variableDescription["cardinality"] = $variableTemp->getCardinality();
-                $variableDescription["baseType"] = $variableTemp->getBaseType();
-                $variableDescription[RDF_VALUE] = $variableTemp->getValue();
 
                 $variableIdentifier = $variableTemp->getIdentifier();
                 $epoch = $variableTemp->getEpoch();
 
                 $variableDescription["uri"] = $variable[0]->uri;
-                $variableDescription["epoch"] = array(tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE));
+                $variableTemp->setEpoch(tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE));
+                $variableDescription["var"] = $variableTemp;
 
                 if (method_exists($variableTemp, 'getCorrectResponse') && !is_null($variableTemp->getCorrectResponse())) {
                     if($variableTemp->getCorrectResponse() >= 1){
@@ -311,8 +309,6 @@ class ResultsService extends tao_models_classes_ClassService {
                 foreach ($variables as $variableIdentifier => $observation) {
 
                     uksort($variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier], "self::sortTimeStamps");
-
-                    //print_r($observation);
 
                     switch ($filter) {
                         case "lastSubmitted": {

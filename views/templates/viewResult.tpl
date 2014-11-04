@@ -124,8 +124,7 @@ use oat\tao\helpers\Template;
 		foreach ($item['sortedVars'][CLASS_RESPONSE_VARIABLE] as $variableIdentifier  => $observations){
 		    $rowspan = 'rowspan="'.count($observations).'"';
 		    foreach ($observations as $key=>$observation) {
-                        $baseType = $observation["baseType"];
-                        $cardinality = $observation["cardinality"];
+                    $variable = $observation["var"];
         	?>
 		<tr>
 		<?php if ($key === key($observations)) {?>
@@ -133,14 +132,13 @@ use oat\tao\helpers\Template;
 		<?php }?>
 		<td class="dataResult" colspan="2">
             <?php
-            if ($baseType=="file") {
+            if ($variable->getBaseType()=="file") {
                     echo '<button class="download" value="'.$observation["uri"].'">'.__('download').'</button>';
             }
             else{
             ?>
 		    <?php
-                    if (isset($observation[RDF_VALUE])){
-                        $rdfValue = $observation[RDF_VALUE];
+                        $rdfValue = $variable->getValue();
                         if (is_array($rdfValue)) {
                             echo "<OL>";
                             foreach ($rdfValue as $value) {
@@ -155,7 +153,6 @@ use oat\tao\helpers\Template;
                             echo tao_helpers_Display::htmlEscape($rdfValue);
                         }
                     }
-            }
                     ?>
 
                 <span class="    
@@ -170,16 +167,16 @@ use oat\tao\helpers\Template;
                           </td>
                           <td> 
                               <?php 
-                              echo $cardinality;
+                              echo $variable->getCardinality();
                               ?>
                           </td>
                           <td> 
                               <?php 
-                              echo $baseType;
+                              echo $variable->getBaseType();
                               ?>
                           </td>
 
-                          <td class="epoch"><?=array_pop($observation["epoch"])?></td>
+                          <td class="epoch"><?=$variable->getEpoch()?></td>
                           </tr>
                           <?php
                           }
@@ -196,32 +193,31 @@ use oat\tao\helpers\Template;
 		foreach ($item['sortedVars'][CLASS_OUTCOME_VARIABLE] as $variableIdentifier  => $observations){
 		   $rowspan = 'rowspan="'.count($observations).'"';
 		    foreach ($observations as $key=>$observation) {
-                         $baseType = $observation["baseType"];
-                         $cardinality = $observation["cardinality"];
+                    $variable = $observation["var"];
         	?>
 		<tr>
 		<?php if ($key === key($observations)) {?>
 		     <td <?=$rowspan?> class="variableIdentifierField"><?=$variableIdentifier?></td>
 		<?php }?>
 		<td colspan="2" class="dataResult">
-                    <?=tao_helpers_Display::htmlEscape(nl2br($observation[RDF_VALUE]))?>
+                    <?=tao_helpers_Display::htmlEscape(nl2br($variable->getValue()))?>
                     <?php
-                        if ($baseType=="file") {
+                        if ($variable->getBaseType()=="file") {
                         echo '<button class="download" value="'.$observation["uri"].'">'.__('download').'</button>';
                           }
                           ?>
                           </td>
                           <td> 
                               <?php 
-                              echo $cardinality;
+                              echo $variable->getCardinality();
                               ?>
                           </td>
                           <td> 
                               <?php 
-                              echo $baseType;
+                              echo $variable->getBaseType();
                               ?>
                           </td>
-                          <td class="epoch"><?=array_pop($observation["epoch"])?></td>
+                          <td class="epoch"><?=$variable->getEpoch()?></td>
                           </tr>
                           <?php
                           }
