@@ -155,17 +155,6 @@ class ResultsService extends tao_models_classes_ClassService {
 
     /**
      * 
-     * @param core_kernel_classes_Resource $variable
-     * @return \common_Object
-     */
-    public function getItemResultFromVariable(core_kernel_classes_Resource $variable) {
-        $relatedItemResult = new core_kernel_classes_Property(PROPERTY_RELATED_ITEM_RESULT);
-        $itemResult = $variable->getUniquePropertyValue($relatedItemResult);
-        return $itemResult;
-    }
-
-    /**
-     * 
      * @param core_kernel_classes_Resource $itemResult
      * @return \common_Object
      */
@@ -173,15 +162,6 @@ class ResultsService extends tao_models_classes_ClassService {
         $items = $this->getImplementation()->getVariables($itemResult);
         $item = new core_kernel_classes_Resource(array_shift($items)[0]->item);
         return $item;
-    }
-
-    /**
-     * 
-     * @param core_kernel_classes_Resource $variable
-     * @return \common_Object
-     */
-    public function getItemFromVariable(core_kernel_classes_Resource $variable) {
-        return $this->getItemFromItemResult($this->getItemResultFromVariable($variable));
     }
 
     /**
@@ -566,9 +546,6 @@ class ResultsService extends tao_models_classes_ClassService {
         }
         if (count($propValues[PROPERTY_VARIABLE_BASETYPE]) > 0) {
             $returnValue["basetype"] = current($propValues[PROPERTY_VARIABLE_BASETYPE])->__toString();
-        }
-        if ($getItem) {
-            $returnValue["item"] = $this->getItemFromVariable($variable);
         }
         return (array) $returnValue;
     }

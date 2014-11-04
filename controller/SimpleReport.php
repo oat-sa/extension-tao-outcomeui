@@ -27,6 +27,7 @@ use \core_kernel_classes_Class;
 use \tao_actions_TaoModule;
 use oat\taoOutcomeUi\model\ReportService;
 use oat\taoOutcomeUi\model\StatisticsService;
+use oat\tao\helpers\TaoOutcome;
 
 /**
  * SimpleReport Module
