@@ -417,7 +417,7 @@ class ResultsService extends tao_models_classes_ClassService {
      * @return array
      */
     public function getScoreVariables(core_kernel_classes_Resource $deliveryResult) {
-        return $this->getVariables($deliveryResult, new core_kernel_classes_Class(CLASS_OUTCOME_VARIABLE));
+        return $this->getVariables($deliveryResult);
     }
 
     public function getVariableFile($variableUri) {

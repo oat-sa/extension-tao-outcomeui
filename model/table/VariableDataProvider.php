@@ -103,12 +103,9 @@ class VariableDataProvider
 
                         common_cache_FileCache::singleton()->put($varData, 'variableDataCache'.$var->uri);
                     }
-                    if($varData["class"] == 'taoResultServer_models_classes_ResponseVariable'){
-                        $type = CLASS_RESPONSE_VARIABLE;
-                    }
-                    else{
-                        $type = CLASS_OUTCOME_VARIABLE;
-                    }
+
+                    $type = $varData["class"];
+
                     if (isset($varData["value"])) {
                         if(is_array($varData["value"])){
                             $varData["value"] = json_encode($varData["value"]);

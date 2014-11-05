@@ -29,11 +29,6 @@
  */
 $todefine = array(
 
-    //used to get information on result
-    'TAO_DELIVERY_RESULT'			=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult',
-    'PROPERTY_RESULT_OF_SUBJECT'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject',
-    'PROPERTY_RESULT_OF_DELIVERY'	=> 'http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery',
-
 
     //used to get the variable type
     'CLASS_OUTCOME_VARIABLE'=> 'taoResultServer_models_classes_OutcomeVariable',
