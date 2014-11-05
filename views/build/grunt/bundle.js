@@ -21,7 +21,7 @@ module.exports = function(grunt) {
             baseUrl : '../js',
             dir : 'output',
             mainConfigFile : './config/requirejs.build.js',
-            paths : { 'taoOutcomeUi' : root + '/taoOutcomeUi/views/js' },
+            paths : { 'taoOutcomeUi' : root + '/taoOutcomeUi/views/js', 'taoItems' : root + '/taoItems/views/js' },
             modules : [{
                 name: 'taoOutcomeUi/controller/routes',
                 include : ext.getExtensionsControllers(['taoOutcomeUi']),

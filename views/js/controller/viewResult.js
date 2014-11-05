@@ -7,8 +7,9 @@ define([
     'i18n', 
     'helpers', 
     'layout/section',
+    'taoItems/preview/preview',
     'jquery.fileDownload'
-], function (module, $,  __,  helpers, section) {
+], function (module, $,  __,  helpers, section, preview) {
     'use strict';    
     
     /**
@@ -50,6 +51,14 @@ define([
                     data: {'variableUri': variableUri}
                 });
             });
+
+            $('.preview', $container).on("click", function (e) {
+                e.preventDefault();
+                window.scrollTo(0,0);
+                preview.init(helpers._url('forwardMe', 'ItemPreview', 'taoItems', {uri : $(this).data('uri')}));
+                preview.show();
+            });
+
         }
     };
 
