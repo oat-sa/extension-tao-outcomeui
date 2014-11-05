@@ -100,14 +100,9 @@ use oat\tao\helpers\Template;
                             </b>
                         </th>
                         <th>
-                            <a href="<?=_url(
-                               'fullScreenPreview', 'Items', 'taoItems',
-                               array(
-                                    'uri' => tao_helpers_Uri::encode($itemUri),
-                                    'fullScreen' => true
-                                    )
-                                    )?>" target="preview">
-                                <?=__('Preview')?>
+                            <a href="<?=_url('index', 'ItemPreview', 'taoItems')?>" class="btn-info small" target="preview">
+                                <span class="icon-preview"></span>
+                                    <?=__('Preview')?>
                             </a>
                             
                         </th>
@@ -133,7 +128,7 @@ use oat\tao\helpers\Template;
 		<td class="dataResult" colspan="2">
             <?php
             if ($variable->getBaseType()=="file") {
-                    echo '<button class="download" value="'.$observation["uri"].'">'.__('download').'</button>';
+                    echo '<button class="download btn-info small" value="'.$observation["uri"].'"><span class="icon-download"></span> '.__('Download').'</button>';
             }
             else{
             ?>
