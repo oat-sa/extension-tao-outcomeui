@@ -87,6 +87,17 @@ class SimpleReport extends tao_actions_TaoModule
         $this->setView('simpleReport.tpl');
     }
 
+    /**
+    * get the main class
+    *
+    * @author Patrick Plichart, <patrick.plichart@taotesting.com>
+    * @return core_kernel_classes_Class
+    */
+    protected function getRootClass()
+    {
+        return new core_kernel_classes_Class('http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_DELIVERY_RESULTS');
+    }
+
 
 }
 

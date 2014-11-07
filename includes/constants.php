@@ -28,8 +28,6 @@
  *
  */
 $todefine = array(
-
-
     //used to get the variable type
     'CLASS_OUTCOME_VARIABLE'=> 'taoResultServer_models_classes_OutcomeVariable',
     'CLASS_RESPONSE_VARIABLE'=> 'taoResultServer_models_classes_ResponseVariable',
