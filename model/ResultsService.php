@@ -111,6 +111,7 @@ class ResultsService extends tao_models_classes_ClassService {
                common_Logger::i("List of variables of results of ".$deliveryResult->getUri()." could not be reliable cached due to an unfinished execution");
            }
            
+           
         }
          if ($flat) {
                 $returnValue = array();
