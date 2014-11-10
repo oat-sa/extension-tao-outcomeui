@@ -34,7 +34,7 @@ use \core_kernel_classes_Class;
 use \core_kernel_classes_DbWrapper;
 use \core_kernel_classes_Property;
 use \core_kernel_classes_Resource;
-use oat\taoOutcomeRds\model\RdsResultStorage;
+use oat\taoOutcomeRdf\model\DbResult;
 use \taoResultServer_models_classes_Variable;
 use \tao_helpers_Date;
 use \tao_models_classes_ClassService;
@@ -73,7 +73,7 @@ class ResultsService extends tao_models_classes_ClassService {
 
     public function getImplementation(){
         if($this->implementation == null){
-            $this->implementation = new RdsResultStorage();
+            $this->implementation = DbResult::singleton();
         }
         return $this->implementation;
     }
