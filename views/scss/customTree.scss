@@ -1,0 +1,14 @@
+@import "inc/bootstrap";
+
+.taotree {
+    &.taotree-result {
+        .node-class {
+
+            & > a > ins:before {
+                @extend %icon-delivery;
+                color: $colorWheel-06;
+                text-shadow: 1px 1px 0 #ac8b48;
+            }
+        }
+    }
+}

@@ -66,6 +66,67 @@ class Results extends tao_actions_SaSModule
         if (!tao_helpers_Request::isAjax()) {
             throw new common_exception_IsAjaxAction(__FUNCTION__);
         }
+        
+        $instances = array();
+        
+        if ($this->hasRequestParameter('classUri')) {
+            
+            $offset = $this->hasRequestParameter('offset') ? $this->getRequestParameter('offset') : 0;
+            $limit = $this->hasRequestParameter('limit') ? $this->getRequestParameter('limit') : 0;
+
+            // display delivery
+            $delivery = new core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
+            
+            $storage = $this->getClassService()->getImplementation();
+            
+            $columns = array('http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery');
+            $filter = array('http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery' => array($delivery->getUri()));
+            foreach ($storage->getResultByColumn($columns, $filter) as $dataArray) {
+                $result = new core_kernel_classes_Resource($dataArray['deliveryResultIdentifier']);
+                
+                $child = array();
+                $child["attributes"] = array(
+                    "id" => tao_helpers_Uri::encode($result->getUri()),
+                    "class" => "node-instance",
+                    'data-uri' => $result->getUri()
+                );
+                $testTaker = new core_kernel_classes_Resource($dataArray["testTakerIdentifier"]);
+                $title = $testTaker->getLabel() . " (" . $result->getUri() . ")";
+                $child["_data"] = array(
+                    "uri" => $result->getUri(),
+                );
+                $child["data"] = $title;
+                $child["type"] = "instance";
+                $instances[] = $child;
+            }
+            
+        } else {
+            
+            // root 
+            $deliveryService = \taoDelivery_models_classes_DeliveryAssemblyService::singleton();
+            foreach ($deliveryService->getAllAssemblies() as $assembly) {
+                $child["attributes"] = array(
+                    "id" => tao_helpers_Uri::encode($assembly->getUri()),
+                    "class" => "node-class",
+                    'data-uri' => $assembly->getUri()
+                );
+                $child["data"] = $assembly->getLabel();
+                $child["type"] = "class";
+                $child["state"] = "closed";
+            
+                $instances[] = $child;
+            }
+            
+        }
+        
+        $this->returnJson($instances);
+    }
+    
+    public function getOldOntologyData()
+    {
+        if (!tao_helpers_Request::isAjax()) {
+            throw new common_exception_IsAjaxAction(__FUNCTION__);
+        }
 
         $options = array(
             'subclasses' => true,
@@ -260,15 +321,17 @@ class Results extends tao_actions_SaSModule
                     );
                     foreach ($instances as $instance) {
                         $child = array();
-                        $delivery = new core_kernel_classes_Resource($this->getClassService()->getImplementation(
-                        )->getDelivery($instance->getUri()));
+                        $delivery = new core_kernel_classes_Resource(
+                            $this->getClassService()->getImplementation()->getDelivery($instance->getUri())
+                        );
                         $child["attributes"] = array(
                             "id" => tao_helpers_Uri::encode($instance->getUri()),
                             "class" => "node-instance",
                             'data-uri' => $instance->getUri()
                         );
-                        $testTaker = new core_kernel_classes_Resource($this->getClassService()->getImplementation(
-                        )->getTestTaker($instance->getUri()));
+                        $testTaker = new core_kernel_classes_Resource(
+                            $this->getClassService()->getImplementation()->getTestTaker($instance->getUri())
+                        );
                         $title = $testTaker->getLabel() . "-(" . $instance->getUri() . ")- " . $delivery->getLabel();
 
                         $child["data"] = $title;

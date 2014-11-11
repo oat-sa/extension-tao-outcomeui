@@ -1,6 +1,7 @@
 <?php
 use oat\tao\helpers\Template;
 ?>
+<link rel="stylesheet" href="<?= Template::css('customTree.css') ?>" />
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoOutcomeUi/views/css/result.css" />
 
 <header class="section-header flex-container-full">

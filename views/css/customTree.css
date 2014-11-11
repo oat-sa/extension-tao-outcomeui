@@ -1,0 +1,37 @@
+
+/*
+            // $darkBrown:          #6f6359
+            // $info:               #0e5d91
+            // $activeInteraction:  #c35a13
+            // $colorWheel-01:      #C3BA13
+            // $colorWheel-02:      #84A610
+            // $colorWheel-03:      #2B8E0E
+            // $colorWheel-04:      #0F9787
+            // $colorWheel-05:      #0E5D91
+            // $colorWheel-06:      #0D2689
+            // $colorWheel-07:      #400D83
+            // $colorWheel-08:      #960E7D
+            // $colorWheel-09:      #BA122B
+            // $colorWheel-10:      #C34713
+            // $colorWheel-11:      #C36F13
+            // $colorWheel-12:      #C39413
+
+            // Text-shadow on $darkBrown:           #584f47
+            // Text-shadow on $info:                #0b4a74
+            // Text-shadow on $activeInteraction:   #9c480f
+            // Text-shadow on $colorWheel-01:       #9c940f
+            // Text-shadow on $colorWheel-02:       #69840c
+            // Text-shadow on $colorWheel-03:       #22710b
+            // Text-shadow on $colorWheel-04:       #0c786c
+            // Text-shadow on $colorWheel-05:       #0b4a74
+            // Text-shadow on $colorWheel-06:       #0a1e6d
+            // Text-shadow on $colorWheel-07:       #330a68
+            // Text-shadow on $colorWheel-08:       #780b64
+            // Text-shadow on $colorWheel-09:       #940e22
+            // Text-shadow on $colorWheel-10:       #9c380f
+            // Text-shadow on $colorWheel-11:       #9c580f
+            // Text-shadow on $colorWheel-12:       #9c760f
+
+*/
+.taotree.taotree-result .node-class > a > ins:before { content: "\e642"; color: #0D2689; text-shadow: 1px 1px 0 #ac8b48; }
+

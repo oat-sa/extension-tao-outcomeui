@@ -12,7 +12,6 @@
                           dataUrl="/taoOutcomeUi/Results/getOntologyData"
                           selectClass="results-index"
                           selectInstance="results-view"
-                          moveInstance="results-move"
                           delete="results-delete"
                             />
                 </trees>
@@ -25,16 +24,8 @@
                             context="instance">
                         <icon id="icon-edit"/>
                     </action>
-                    <action id="results-class" name="New class" binding="subClass"
-                            url="/taoOutcomeUi/Results/addSubClass" context="class" group="content">
-                        <icon id="icon-folder-open"/>
-                    </action>
-                    <action id="results-move" name="Move" binding="moveNode" url="/taoOutcomeUi/Results/moveInstance"
-                            context="instance" group="none">
-                        <icon id="icon-move-item"/>
-                    </action>
                     <action id="results-delete" name="Delete" binding="removeNode" url="/taoOutcomeUi/Results/delete"
-                            context="resource" group="tree">
+                            context="instance" group="tree">
                         <icon id="icon-bin"/>
                     </action>
                     <action id="results-report" name="Summary report" url="/taoOutcomeUi/SimpleReport/build"
