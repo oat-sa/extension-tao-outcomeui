@@ -176,27 +176,30 @@ class Results extends tao_actions_SaSModule
                     foreach ($this->getClassService()->getImplementation()->getAllTestTakerIds(
                              ) as $key => $association) {
                         $result = new core_kernel_classes_Resource($association["deliveryResultIdentifier"]);
-                        if (in_array(CLASS_DELVIERYEXECUTION, array_keys($result->getTypes())) || in_array(
-                                TAO_DELIVERY_RESULT,
-                                array_keys($result->getTypes())
-                            )
+                        $types  = array_keys($result->getTypes());
+                        if (
+                                in_array(CLASS_DELVIERYEXECUTION, $types) ||
+                                in_array(TAO_DELIVERY_RESULT, $types)
                         ) {
-                            $child = array();
-                            $delivery = new core_kernel_classes_Resource($this->getClassService()->getImplementation(
-                            )->getDelivery($result->getUri()));
-                            $child["attributes"] = array(
-                                "id" => tao_helpers_Uri::encode($result->getUri()),
-                                "class" => "node-instance"
+
+                            $delivery = new core_kernel_classes_Resource(
+                                $this->getClassService()->getImplementation()->getDelivery($result->getUri())
                             );
                             $testTaker = new core_kernel_classes_Resource($association["testTakerIdentifier"]);
-                            $title = $testTaker->getLabel() . "-(" . $result->getUri() . ")- " . $delivery->getLabel();
-                            $child["_data"] = array(
-                                "uri" => $result->getUri(),
-                                "class_uri" => TAO_DELIVERY_RESULT
+
+                            $instances[] = array(
+                                'attributes' => array(
+                                    'id'    => tao_helpers_Uri::encode($result->getUri()),
+                                    'class' => 'node-instance'
+                                ),
+                                '_data' => array(
+                                    "uri" => $result->getUri(),
+                                    "class_uri" => TAO_DELIVERY_RESULT
+                                ),
+                                'data' => $testTaker->getLabel() . "-(" . $result->getUri() . ")- " . $delivery->getLabel(),
+                                'type' => 'instance'
                             );
-                            $child["data"] = $title;
-                            $child["type"] = "instance";
-                            $instances[] = $child;
+
                         }
                     }
                 }
