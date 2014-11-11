@@ -53,6 +53,7 @@ class Results extends tao_actions_SaSModule
         parent::__construct();
 
         $this->defaultData();
+        $this->service = self::getClassService();
     }
 
     protected function getClassService()
@@ -123,7 +124,8 @@ class Results extends tao_actions_SaSModule
                 ) {
                     $child["attributes"] = array(
                         "id" => tao_helpers_Uri::encode($result->getUri()),
-                        "class" => "node-instance"
+                        "class" => "node-instance",
+                        'data-uri' => $result->getUri()
                     );
                     $resultLabel = new ResultLabel($result, $testTaker, $delivery);
 
@@ -142,6 +144,7 @@ class Results extends tao_actions_SaSModule
                     "attributes" => array(
                         "class" => "node-class",
                         "id" => tao_helpers_Uri::encode($rootClass->getUri()),
+                        'data-uri' => $rootClass->getUri()
                     ),
                     "_data" => array(
                         "uri" => $rootClass->getUri(),
@@ -160,7 +163,8 @@ class Results extends tao_actions_SaSModule
                 foreach ($clazz->getSubClasses(false) as $subclass) {
                     $child["attributes"] = array(
                         "id" => tao_helpers_Uri::encode($subclass->getUri()),
-                        "class" => "node-class"
+                        "class" => "node-class",
+                        'data-uri' => $subclass->getUri()
                     );
                     $child["data"] = $subclass->getLabel();
                     $child["type"] = "class";
@@ -187,7 +191,8 @@ class Results extends tao_actions_SaSModule
                             )->getDelivery($result->getUri()));
                             $child["attributes"] = array(
                                 "id" => tao_helpers_Uri::encode($result->getUri()),
-                                "class" => "node-instance"
+                                "class" => "node-instance",
+                                'data-uri' => $result->getUri()
                             );
                             $testTaker = new core_kernel_classes_Resource($association["testTakerIdentifier"]);
                             $title = $testTaker->getLabel() . "-(" . $result->getUri() . ")- " . $delivery->getLabel();
@@ -209,6 +214,7 @@ class Results extends tao_actions_SaSModule
                     "attributes" => array(
                         "class" => "node-class",
                         "id" => tao_helpers_Uri::encode($rootClass->getUri()),
+                        'data-uri' => $rootClass->getUri()
                     ),
                     "_data" => array(
                         "uri" => $rootClass->getUri(),
@@ -231,7 +237,8 @@ class Results extends tao_actions_SaSModule
                 foreach ($clazz->getSubClasses(false) as $subclass) {
                     $child["attributes"] = array(
                         "id" => tao_helpers_Uri::encode($subclass->getUri()),
-                        "class" => "node-class"
+                        "class" => "node-class",
+                        'data-uri' => $subclass->getUri()
                     );
                     $child["data"] = $subclass->getLabel();
                     $child["type"] = "class";
@@ -257,7 +264,8 @@ class Results extends tao_actions_SaSModule
                         )->getDelivery($instance->getUri()));
                         $child["attributes"] = array(
                             "id" => tao_helpers_Uri::encode($instance->getUri()),
-                            "class" => "node-instance"
+                            "class" => "node-instance",
+                            'data-uri' => $instance->getUri()
                         );
                         $testTaker = new core_kernel_classes_Resource($this->getClassService()->getImplementation(
                         )->getTestTaker($instance->getUri()));
