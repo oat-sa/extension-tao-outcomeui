@@ -1,5 +1,7 @@
 <?php
 use oat\tao\helpers\Template;
+use qtism\common\enums\BaseType;
+use qtism\common\enums\Cardinality;
 ?>
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoOutcomeUi/views/css/result.css" />
 
@@ -63,25 +65,14 @@ use oat\tao\helpers\Template;
                     </th>
                 </tr>
                 </thead>
-                <?php foreach (get_data("deliveryVariables") as $testVariable){
-                $baseType = $testVariable[PROPERTY_VARIABLE_BASETYPE];
-                $cardinality = $testVariable[PROPERTY_VARIABLE_CARDINALITY];
-                ?>
+                <?php foreach (get_data("deliveryVariables") as $testVariable){ ?>
                 <tbody>
-                <tr>
-                    <td><?=$testVariable[PROPERTY_IDENTIFIER]?></td>
-                    <td><?=$testVariable[RDF_VALUE]?></td>
-                    <td> 
-                        <?php 
-                        echo $cardinality;
-                        ?>
-                    </td>
-                    <td> 
-                        <?php 
-                        echo $baseType;
-                        ?>
-                    </td>
-                </tr>
+                    <tr>
+                        <td><?=$testVariable->getIdentifier()?></td>
+                        <td><?=$testVariable->getValue()?></td>
+                        <td><?=Cardinality::getNameByConstant($testVariable->getCardinality())?></td>
+                        <td><?=BaseType::getNameByConstant($testVariable->getBaseType())?></td>
+                    </tr>
                 </tbody>
                 <?php
                 }

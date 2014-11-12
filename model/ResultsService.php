@@ -266,7 +266,7 @@ class ResultsService extends tao_models_classes_ClassService {
      * return all variables linked to the delviery result and that are not linked to a particular itemResult
      * 
      * @param core_kernel_classes_Resource $deliveryResult
-     * @return multitype:multitype:string
+     * @return array An array of OutcomeVariable
      */
     public function getVariableDataFromDeliveryResult(core_kernel_classes_Resource $deliveryResult) {
         return $this->getImplementation()->getDeliveryResultVariables($deliveryResult->getUri());
