@@ -190,7 +190,6 @@ class ResultsService extends tao_models_classes_ClassService {
      * @return type
      */
     public function getItemVariableDataStatsFromDeliveryResult(core_kernel_classes_Resource $deliveryResult, $filter = null) {
-        $itemResults = $this->getItemResultsFromDeliveryResult($deliveryResult);
         $numberOfResponseVariables = 0;
         $numberOfCorrectResponseVariables = 0;
         $numberOfInCorrectResponseVariables = 0;
