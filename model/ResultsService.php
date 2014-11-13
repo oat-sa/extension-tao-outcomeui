@@ -99,7 +99,7 @@ class ResultsService extends tao_models_classes_ClassService {
                 $itemResultVariables = $this->getVariablesFromItemResult($itemResult);
                 $itemResultUri = $itemResult;
                 $variables[$itemResultUri] = $itemResultVariables;        
-           }          
+           }
            //overhead for cache handling, the data is stored only when the underlying deliveryExecution is finished
            try {
                 $status = $deliveryResult->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_DELVIERYEXECUTION_STATUS));
@@ -188,56 +188,9 @@ class ResultsService extends tao_models_classes_ClassService {
      * @return type
      */
     public function getItemVariableDataStatsFromDeliveryResult(core_kernel_classes_Resource $deliveryResult, $filter = null) {
-        $numberOfResponseVariables = 0;
-        $numberOfCorrectResponseVariables = 0;
-        $numberOfInCorrectResponseVariables = 0;
-        $numberOfUnscoredResponseVariables = 0;
-        $numberOfOutcomeVariables = 0;
-        $variablesData = $this->getItemVariableDataFromDeliveryResult($deliveryResult, $filter);
-        foreach ($variablesData as $itemVariables) {
-            foreach($itemVariables['sortedVars'] as $key => $value){
-                if($key == CLASS_RESPONSE_VARIABLE){
-                    foreach($value as $variable){
-                        $numberOfResponseVariables++;
-                        switch($variable[0]['isCorrect']){
-                            case 'correct':
-                                $numberOfCorrectResponseVariables++;
-                                break;
-                            case 'incorrect':
-                                $numberOfInCorrectResponseVariables++;
-                                break;
-                            case 'unscored':
-                                $numberOfUnscoredResponseVariables++;
-                                break;
-                            default:
-                                common_Logger::w('The value '.$variable[0]['isCorrect'].' is not a valid value');
-                                break;
-                        }
-                    }
-                }
-                else{
-                    $numberOfOutcomeVariables++;
-                }
-
-            }
-        }
-        $stats = array(
-            "nbResponses" => $numberOfResponseVariables,
-            "nbCorrectResponses" => $numberOfCorrectResponseVariables,
-            "nbIncorrectResponses" => $numberOfInCorrectResponseVariables,
-            "nbUnscoredResponses" => $numberOfUnscoredResponseVariables,
-            "data" => $variablesData
-        );
-        return $stats;
-    }
-    /**
-     *  prepare a data set as an associative array, service intended to populate gui controller
-     *  
-     *  @param string $filter 'lastSubmitted', 'firstSubmitted'
-     */
-    public function getItemVariableDataFromDeliveryResult(core_kernel_classes_Resource $deliveryResult, $filter) {
         return $this->getImplementation()->getDeliveryItemVariables($deliveryResult->getUri(), $filter);
     }
+
     /**
      * 
      * @param unknown $a
@@ -284,7 +237,7 @@ class ResultsService extends tao_models_classes_ClassService {
 
     /**
      * Short description of method deleteResult
-     *
+     * 
      */
     public function deleteResult(core_kernel_classes_Resource $result) {
         $returnValue = (bool) false;

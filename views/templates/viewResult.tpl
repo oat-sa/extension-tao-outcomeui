@@ -78,7 +78,7 @@ use qtism\common\enums\Cardinality;
                 }
                 ?>
             </table>
-            <?php  foreach (get_data('variables') as $itemUri => $item){
+             <?php foreach (get_data('variables') as $itemUri => $item){
            ?>
            
             <table class="matrix">
@@ -115,8 +115,8 @@ use qtism\common\enums\Cardinality;
 		foreach ($item['sortedVars'][CLASS_RESPONSE_VARIABLE] as $variableIdentifier  => $observations){
 		    $rowspan = 'rowspan="'.count($observations).'"';
 		    foreach ($observations as $key=>$observation) {
-                        $baseType = $observation[PROPERTY_VARIABLE_BASETYPE];
-                        $cardinality = $observation[PROPERTY_VARIABLE_CARDINALITY];
+                $variable = $observation['variable'];
+                $baseType = $variable->getBaseType();
         	?>
 		<tr>
 		<?php if ($key === key($observations)) {?>
@@ -130,8 +130,8 @@ use qtism\common\enums\Cardinality;
             else{
             ?>
 		    <?php
-                        if (isset($observation[RDF_VALUE]) and is_array($observation[RDF_VALUE])){
-                            $rdfValue = array_pop($observation[RDF_VALUE]);
+                        if (isset($observation['outcome']) and is_array($observation['outcome'])){
+                            $rdfValue = array_pop($observation['outcome']);
                             if (is_array($rdfValue)) {
                                 echo "<OL>";
                                 foreach ($rdfValue as $value) {
@@ -159,18 +159,9 @@ use qtism\common\enums\Cardinality;
                           ?>
                           rgt" />
                           </td>
-                          <td> 
-                              <?php 
-                              echo $cardinality;
-                              ?>
-                          </td>
-                          <td> 
-                              <?php 
-                              echo $baseType;
-                              ?>
-                          </td>
-
-                          <td class="epoch"><?=array_pop($observation["epoch"])?></td>
+                          <td><?=$variable->getCardinality(); ?></td>
+                          <td><?=$baseType; ?></td>
+                          <td class="epoch"><?=$variable->getEpoch()?></td>
                           </tr>
                           <?php
                           }
@@ -187,32 +178,24 @@ use qtism\common\enums\Cardinality;
 		foreach ($item['sortedVars'][CLASS_OUTCOME_VARIABLE] as $variableIdentifier  => $observations){
 		   $rowspan = 'rowspan="'.count($observations).'"';
 		    foreach ($observations as $key=>$observation) {
-                         $baseType = $observation[PROPERTY_VARIABLE_BASETYPE];
-                         $cardinality = $observation[PROPERTY_VARIABLE_CARDINALITY];
+                $variable = $observation['variable'];
+                $baseType = $variable->getBaseType();
         	?>
 		<tr>
 		<?php if ($key === key($observations)) {?>
 		     <td <?=$rowspan?> class="variableIdentifierField"><?=$variableIdentifier?></td>
 		<?php }?>
 		<td colspan="2" class="dataResult">
-                    <?=tao_helpers_Display::htmlEscape(nl2br(array_pop($observation[RDF_VALUE])))?>
+                    <?=tao_helpers_Display::htmlEscape(nl2br(array_pop($observation['outcome'])))?>
                     <?php
                         if ($baseType=="file") {
                         echo '<button class="download" value="'.$observation["uri"].'">'.__('download').'</button>';
                           }
                           ?>
                           </td>
-                          <td> 
-                              <?php 
-                              echo $cardinality;
-                              ?>
-                          </td>
-                          <td> 
-                              <?php 
-                              echo $baseType;
-                              ?>
-                          </td>
-                          <td class="epoch"><?=array_pop($observation["epoch"])?></td>
+                          <td><?=$variable->getCardinality(); ?></td>
+                          <td><?=$baseType; ?></td>
+                          <td class="epoch"><?=$variable->getEpoch()?></td>
                           </tr>
                           <?php
                           }
@@ -228,26 +211,14 @@ use qtism\common\enums\Cardinality;
 
 		foreach ($item['sortedVars'][CLASS_TRACE_VARIABLE] as $variableIdentifier  => $observations){
 		   $rowspan = 'rowspan="'.count($observations).'"';
-		    foreach ($observations as $observation) {
-                         $baseType = array_pop($observation[PROPERTY_VARIABLE_BASETYPE]);
-                         $cardinality = array_pop($observation[PROPERTY_VARIABLE_CARDINALITY]);
-                ?>
-
-		<tr>
-		<td ><?=$variableIdentifier?></td>
-		<td colspan="2" class="dataResult"><button class="traceDownload" value="<?=$observation["uri"]?>"><?=__('download')?></button></td>
-                <td> 
-                    <?php 
-                        echo $cardinality;
-                    ?>
-                </td>
-                <td> 
-                    <?php 
-                        echo $baseType;
-                    ?>
-                </td>
-		<td class="epoch"><?=array_pop($observation["epoch"])?></td>
-		</tr>
+		    foreach ($observations as $observation) { ?>
+                <tr>
+                    <td><?=$variableIdentifier?></td>
+                    <td colspan="2" class="dataResult"><button class="traceDownload" value="<?=$observation["uri"]?>"><?=__('download')?></button></td>
+                    <td><?=$variable->getCardinality(); ?></td>
+                    <td><?=$variable->getBaseType(); ?></td>
+                    <td class="epoch"><?=$variable->getEpoch()?></td>
+                </tr>
 	<?php
                           }
                           }
