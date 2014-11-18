@@ -78,12 +78,15 @@ class ResultTable extends tao_actions_Table {
     public function getCsvFile(){
         $rows = array();
 
-        $filter =  $this->hasRequestParameter('filter') ? $this->getFilterState('filter') : array();
-       	$filterData =  $this->getRequestParameter('filterData');
+        $filter =  $this->hasRequestParameter('filter') ? $this->getRequestParameter('filter') : array();
+       	$filterData =  $this->hasRequestParameter('filterData')? $this->getRequestParameter('filterData') : array();
     	$columns = $this->hasRequestParameter('columns') ? $this->getColumns('columns') : array();
     	
     	//The list of delivery Results matching the current selection filters
-        $results = $this->service->getImplementation()->getResultByColumn(array_keys($filter), $filter);
+        $results = array();
+        foreach($this->service->getImplementation()->getResultByColumn(array_keys($filterData), $filterData) as $result){
+            $results[] = new core_kernel_classes_Resource($result['deliveryResultIdentifier']);
+        }
         $dpmap = array();
         foreach ($columns as $column) {
                 $dataprovider = $column->getDataProvider();
@@ -111,7 +114,11 @@ class ResultTable extends tao_actions_Table {
         foreach($results as $result) {
             $cellData = array();
             foreach ($columns as $column) {
-                $cellData[]=self::filterCellData($column->getDataProvider()->getValue($result, $column), $filterData);
+                if (count($column->getDataProvider()->cache) > 0) {
+                    $cellData[]=self::filterCellData($column->getDataProvider()->getValue($result, $column), $filterData);
+                } else {
+                    $cellData[]=self::filterCellData($this->service->getTestTaker($result)->getLabel(), $filterData);
+                }
             }
             $rows[] = array(
                     'id' => $result->getUri(),
@@ -125,7 +132,7 @@ class ResultTable extends tao_actions_Table {
         setcookie("fileDownload","true", 0, "/");
         header("Content-type: text/csv");
         header('Content-Disposition: attachment; filename=Data.csv');
-        echo $encodedData;  
+        echo $encodedData;
     }
 
     /**

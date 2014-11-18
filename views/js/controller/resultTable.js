@@ -26,7 +26,7 @@ define([
            var $container = $(".result-table");
            var $filterField = $('.result-filter', $container);
            var $tableContainer = $('.result-table-container', $container);
-           var filter = conf.filter || 'all';       
+           var filter = conf.filter || 'lastSubmitted';
  
             //keep columns through calls
             var columns = [];
@@ -89,7 +89,7 @@ define([
                             .removeClass('disabled')
                             .on('click', function(e){
                                 e.preventDefault();
-                                $.fileDownload(document.getActionCsvFileUrl, {
+                                $.fileDownload(helpers._url('getCsvFile', 'ResultTable', 'taoOutcomeUi'), {
                                     preparingMessageHtml: __("We are preparing your report, please wait..."),
                                     failMessageHtml: __("There was a problem generating your report, please try again."),
                                     httpMethod: 'POST',
