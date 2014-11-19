@@ -32,26 +32,6 @@ use oat\tao\helpers\Template;
                     <tr><td class="field"><?=__('Email:')?></td><td class="fieldValue userMail"><?=get_data('userEmail')?></td></tr>
                 </table>
             </div>
-            <div class="tile statistics">
-                <strong><span class="icon-result"/>
-                    <?=__('Responses Evaluation')?>
-                </strong>
-                <table class="mini">
-                    <tr>
-                        <td><span class="valid"><?=__('Correct')?>: </span></td>
-                        <td><?=get_data("nbCorrectResponses")?>/<?=get_data('nbResponses')?></td>
-                        <td><span class="icon-result-ok"/></td>
-                    </tr>
-                    <tr>
-                        <td><span class="invalid"><?=__('Incorrect')?>: </span></td><td><?=get_data("nbIncorrectResponses")?>/<?=get_data('nbResponses')?></td>
-                        <td><span class="icon-result-nok"/></td>
-                    </tr>
-                    <tr>
-                        <td><span class="uneval"><?=__('Not Evaluated')?>: </span></td><td><?=get_data("nbUnscoredResponses")?>/<?=get_data('nbResponses')?></td>
-                        <td><span class="icon-not-evaluated"/></td>
-                    </tr>
-                </table>
-            </div>
         </div>
         <div id="resultsBox">
             <table class="matrix">
