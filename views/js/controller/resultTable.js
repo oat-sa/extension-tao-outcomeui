@@ -53,7 +53,12 @@ define([
                                });
                             });
                         } else {
-                            columns = columns.concat(response.columns);
+                            if(response.first !== undefined && response.first === true){
+                                columns = response.columns.concat(columns);
+                            }
+                            else{
+                                columns = columns.concat(response.columns);
+                            }
                         }
                         _buildTable(done);
                     }
