@@ -115,9 +115,9 @@ class ResultTable extends tao_actions_Table {
             $cellData = array();
             foreach ($columns as $column) {
                 if (count($column->getDataProvider()->cache) > 0) {
-                    $cellData[]=self::filterCellData($column->getDataProvider()->getValue($result, $column), $filterData);
+                    $cellData[]=self::filterCellData($column->getDataProvider()->getValue($result, $column), $filter);
                 } else {
-                    $cellData[]=self::filterCellData($this->service->getTestTaker($result)->getLabel(), $filterData);
+                    $cellData[]=self::filterCellData($this->service->getTestTaker($result)->getLabel(), $filter);
                 }
             }
             $rows[] = array(
