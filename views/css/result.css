@@ -34,7 +34,13 @@
     font-style: italic;
 }
 .variableIdentifierField{
-    width: 20%;
+    width: 17%;
+}
+.cardinalityField{
+    width: 7%;
+}
+.basetypeField{
+    width: 7%;
 }
 table.mini tr td{
     padding-left:10px;

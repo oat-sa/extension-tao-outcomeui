@@ -141,12 +141,12 @@ use oat\tao\helpers\Template;
                           ?>
                           rgt" />
                           </td>
-                          <td> 
+                          <td class="cardinalityField">
                               <?php 
                               echo $variable->getCardinality();
                               ?>
                           </td>
-                          <td> 
+                          <td class="basetypeField">
                               <?php 
                               echo $variable->getBaseType();
                               ?>
@@ -183,12 +183,12 @@ use oat\tao\helpers\Template;
                           }
                           ?>
                           </td>
-                          <td> 
+                          <td class="cardinalityField">
                               <?php 
                               echo $variable->getCardinality();
                               ?>
                           </td>
-                          <td> 
+                          <td class="basetypeField">
                               <?php 
                               echo $variable->getBaseType();
                               ?>
