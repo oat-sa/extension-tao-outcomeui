@@ -160,7 +160,8 @@ class ResultsService extends tao_models_classes_ClassService {
      */
     public function getItemFromItemResult($itemResult) {
         $items = $this->getImplementation()->getVariables($itemResult);
-        $item = new core_kernel_classes_Resource(array_shift($items)[0]->item);
+        $tmpItems = array_shift($items);
+        $item = new core_kernel_classes_Resource($tmpItems[0]->item);
         return $item;
     }
 
