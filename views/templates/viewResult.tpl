@@ -108,7 +108,7 @@ use oat\tao\helpers\Template;
 		<?php }?>
 		<td class="dataResult" colspan="2">
             <?php
-            if ($variable->getBaseType()=="file") {
+            if ($variable->getBaseType() === "file" && $variable->getCandidateResponse() !== '') {
                     echo '<button class="download btn-info small" value="'.$observation["uri"].'"><span class="icon-download"></span> '.__('Download').'</button>';
             }
             else{
@@ -177,11 +177,6 @@ use oat\tao\helpers\Template;
 		<?php }?>
 		<td colspan="2" class="dataResult">
                     <?=tao_helpers_Display::htmlEscape(nl2br($variable->getValue()))?>
-                    <?php
-                        if ($variable->getBaseType()=="file") {
-                        echo '<button class="download btn-info small" value="'.$observation["uri"].'"><span class="icon-download"></span> "'.__('Download').'</button>';
-                          }
-                          ?>
                           </td>
                           <td class="cardinalityField">
                               <?php 
