@@ -201,8 +201,9 @@ class ResultsService extends tao_models_classes_ClassService {
             foreach($itemVariables['sortedVars'] as $key => $value){
                 if($key == CLASS_RESPONSE_VARIABLE){
                     foreach($value as $variable){
+                        $variable = array_shift($variable);
                         $numberOfResponseVariables++;
-                        switch($variable[0]['isCorrect']){
+                        switch($variable['isCorrect']){
                             case 'correct':
                                 $numberOfCorrectResponseVariables++;
                                 break;
@@ -213,7 +214,7 @@ class ResultsService extends tao_models_classes_ClassService {
                                 $numberOfUnscoredResponseVariables++;
                                 break;
                             default:
-                                common_Logger::w('The value '.$variable[0]['isCorrect'].' is not a valid value');
+                                common_Logger::w('The value '.$variable['isCorrect'].' is not a valid value');
                                 break;
                         }
                     }
