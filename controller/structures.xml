@@ -28,10 +28,6 @@
                             context="instance" group="tree">
                         <icon id="icon-bin"/>
                     </action>
-                    <action id="results-report" name="Summary report" url="/taoOutcomeUi/SimpleReport/build"
-                            context="class" group="tree">
-                        <icon id="icon-summary-report"/>
-                    </action>
                 </actions>
             </section>
             <section id="inspect_results" name="Inspect Results" url="/taoOutcomeUi/InspectResults/index"/>
