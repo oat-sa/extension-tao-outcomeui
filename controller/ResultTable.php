@@ -183,7 +183,7 @@ class ResultTable extends tao_actions_Table {
 		//retrieving The list of the variables identifiers per activities defintions as observed
 		$variableTypes = array();
 		foreach ($selectedVariables as $variable) {
-            if((get_class($variable[0]->variable) == 'taoResultServer_models_classes_OutcomeVariable' && $variableClassUri == CLASS_OUTCOME_VARIABLE)
+            if(!is_null($variable[0]->item) && (get_class($variable[0]->variable) == 'taoResultServer_models_classes_OutcomeVariable' && $variableClassUri == CLASS_OUTCOME_VARIABLE)
             || (get_class($variable[0]->variable) == 'taoResultServer_models_classes_ResponseVariable' && $variableClassUri == CLASS_RESPONSE_VARIABLE)){
                 //variableIdentifier
                 $variableIdentifier = $variable[0]->variable->identifier;

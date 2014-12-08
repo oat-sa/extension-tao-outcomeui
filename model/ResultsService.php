@@ -97,9 +97,8 @@ class ResultsService extends tao_models_classes_ClassService {
         } else {           
            foreach ($this->getItemResultsFromDeliveryResult($deliveryResult) as $itemResult) {
                 $itemResultVariables = $this->getVariablesFromItemResult($itemResult);
-                $itemResultUri = $itemResult;
-                $variables[$itemResultUri] = $itemResultVariables;        
-           }          
+                $variables[$itemResult] = $itemResultVariables;
+           }
            //overhead for cache handling, the data is stored only when the underlying deliveryExecution is finished
            try {
                 $status = $deliveryResult->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_DELVIERYEXECUTION_STATUS));
@@ -115,7 +114,13 @@ class ResultsService extends tao_models_classes_ClassService {
         }
          if ($flat) {
                 $returnValue = array();
-                foreach ($variables as $itemResultVariables) {
+                foreach ($variables as $key => $itemResultVariables) {
+                $newKeys = array();
+                $oldKeys = array_keys($itemResultVariables);
+                foreach($oldKeys as $oldKey){
+                    $newKeys[] = $key.'_'.$oldKey;
+                }
+                $itemResultVariables = array_combine($newKeys, array_values($itemResultVariables));
                 $returnValue = array_merge($itemResultVariables, $returnValue);
                 }
             } else {
@@ -159,9 +164,12 @@ class ResultsService extends tao_models_classes_ClassService {
      * @return \common_Object
      */
     public function getItemFromItemResult($itemResult) {
+        $item = null;
         $items = $this->getImplementation()->getVariables($itemResult);
         $tmpItems = array_shift($items);
-        $item = new core_kernel_classes_Resource($tmpItems[0]->item);
+        if(!is_null($tmpItems[0]->item)){
+            $item = new core_kernel_classes_Resource($tmpItems[0]->item);
+        }
         return $item;
     }
 
@@ -418,7 +426,7 @@ class ResultsService extends tao_models_classes_ClassService {
         
         switch ($baseType) {
             case "file": {
-                    $value = base64_decode($this->getVariableCandidateResponse($variableUri));
+                    $value = $this->getVariableCandidateResponse($variableUri);
                     common_Logger::i(var_export(strlen($value), true));
                     $decodedFile = Datatypes::decodeFile($value);
                     common_Logger::i("FileName:");

@@ -25,6 +25,7 @@ use \common_Logger;
 use \common_cache_FileCache;
 use \core_kernel_classes_Class;
 use \core_kernel_classes_Resource;
+use oat\taoOutcomeUi\helper\Datatypes;
 use \tao_helpers_Date;
 use \tao_helpers_Uri;
 use \tao_models_classes_table_Column;
@@ -84,24 +85,25 @@ class VariableDataProvider
                     $item = new core_kernel_classes_Resource($itemUri);
                 } else {
                     $item = $resultsService->getItemFromItemResult($itemResultUri);
-                    common_cache_FileCache::singleton()->put($item->getUri(), 'itemResultItemCache'.tao_helpers_Uri::encode($itemResultUri));
+                    if(!is_null($item)){
+                        common_cache_FileCache::singleton()->put($item->getUri(), 'itemResultItemCache'.tao_helpers_Uri::encode($itemResultUri));
+                    }
 
                 }
                 if (get_class($item) == "core_kernel_classes_Resource") {
                    $contextIdentifier = (string)$item->getUri();
-                   } else {
+                   } else if(!is_null($item)){
                    $contextIdentifier = (string)$item->__toString();
                    }
                 foreach ($vars as $var) {
                     $var = $var[0];
                     //cache the variable data
-                    if (common_cache_FileCache::singleton()->has('variableDataCache'.$var->uri)) {
-                        $varData = common_cache_FileCache::singleton()->get('variableDataCache'.$var->uri);
+                    $varData = (array)$var->variable;
+                    if (common_cache_FileCache::singleton()->has('variableDataCache'.$var->uri.'_'.$varData["identifier"])) {
+                        $varData = common_cache_FileCache::singleton()->get('variableDataCache'.$var->uri.'_'.$varData["identifier"]);
                     } else {
-                        $varData = (array)$var->variable;
                         $varData["class"] = $var->class;
-
-                        common_cache_FileCache::singleton()->put($varData, 'variableDataCache'.$var->uri);
+                        common_cache_FileCache::singleton()->put($varData, 'variableDataCache'.$var->uri.'_'.$varData["identifier"]);
                     }
 
                     $type = $varData["class"];
@@ -115,6 +117,10 @@ class VariableDataProvider
                         $varData["value"] = $varData["candidateResponse"];
                     }
                     $varData["value"] = base64_decode($varData["value"]);
+                    if($varData["baseType"] === 'file'){
+                        $decodedFile = Datatypes::decodeFile($varData['value']);
+                        $varData['value'] = $decodedFile['name'];
+                    }
                     $variableIdentifier = (string)$varData["identifier"];
                     foreach ($columns as $column) {
                         if (
