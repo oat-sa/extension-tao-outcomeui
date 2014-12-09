@@ -17,10 +17,12 @@ define([
      * @param {jQueryElement} $container - the  container 
      * @param {Object} model - the data model for the table
      * @param {String} implementation - The delivery result server implementation
+     * @param {String} classUri - The delivery result uri
      */
-    function loadResults($container, model, implementation){
+    function loadResults($container, model, implementation, classUri){
         var params = {
-            implementation : implementation
+            implementation : implementation,
+            classUri : classUri
         };
         $('.inspect-results-grid', $container)
             .empty()
@@ -62,7 +64,7 @@ define([
             var conf = module.config();
             var $container = $('#inspect-result');
             //load results also at the beginning unfiltered
-            loadResults($container, conf.model, conf.implementation);
+            loadResults($container, conf.model, conf.implementation, conf.uri);
         }
     };
 

@@ -66,8 +66,10 @@ class ResultTable extends tao_actions_Table {
     public function index() {
     	$filter = $this->getRequestParameter('filter');
     	$implementation = $this->getRequestParameter('implementation');
+    	$classUri = $this->getRequestParameter('classUri');
 		$this->setData('filter', $filter);
 		$this->setData('implementation', $implementation);
+		$this->setData('classUri', $classUri);
 		$this->setView('resultTable.tpl');
     }
 
@@ -289,6 +291,7 @@ class ResultTable extends tao_actions_Table {
     public function data() {
         $filter =  $this->hasRequestParameter('filter') ? $this->getFilterState('filter') : array();
        	$filterData =  $this->getRequestParameter('filterData');
+       	$deliveryUri =  \tao_helpers_Uri::decode($this->getRequestParameter('classUri'));
 
     	$columns = $this->hasRequestParameter('columns') ? $this->getColumns('columns') : array();
     	$page = $this->getRequestParameter('page');
@@ -312,8 +315,8 @@ class ResultTable extends tao_actions_Table {
             }
         }
 
-        $deliveryResults = $this->service->getImplementation()->getResultByColumn(array_keys($filter), $filter, $options);
-        $counti = $this->service->getImplementation()->countResultByFilter(array_keys($filter), $filter);
+        $deliveryResults = $this->service->getImplementation()->getResultByColumn(array($deliveryUri), $options);
+        $counti = $this->service->getImplementation()->countResultByFilter(array($deliveryUri), $filter);
         foreach($deliveryResults as $deliveryResult){
             $results[] = new core_kernel_classes_Resource($deliveryResult['deliveryResultIdentifier']);
         }

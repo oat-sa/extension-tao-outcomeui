@@ -51,7 +51,6 @@ class Results extends tao_actions_SaSModule
         parent::__construct();
 
         $this->defaultData();
-        $this->service = self::getClassService();
     }
 
     protected function getClassService()
@@ -59,6 +58,10 @@ class Results extends tao_actions_SaSModule
         return ResultsService::singleton();
     }
 
+    /**
+     * Get all delivery execution to feed the tree
+     * @throws \common_exception_IsAjaxAction
+     */
     public function getOntologyData()
     {
         if (!tao_helpers_Request::isAjax()) {
@@ -75,21 +78,10 @@ class Results extends tao_actions_SaSModule
             // display delivery
             $delivery = new core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
 
-            $deliveryResultServer = $delivery->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP));
+            $storage = $this->getAndSetCurrentImplementation($delivery);
 
-            $resultServerModel = $deliveryResultServer->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP));
 
-            $implementationClass = $resultServerModel->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
-
-            if (class_exists($implementationClass->literal)) {
-                $this->getClassService()->setImplementation($implementationClass->literal);
-            }
-
-            $storage = $this->getClassService()->getImplementation();
-            
-            $columns = array('http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery');
-            $filter = array('http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery' => array($delivery->getUri()));
-            foreach ($storage->getResultByColumn($columns, $filter) as $dataArray) {
+            foreach ($storage->getResultByColumn(array($delivery->getUri())) as $dataArray) {
                 $result = new core_kernel_classes_Resource($dataArray['deliveryResultIdentifier']);
                 
                 $child = array();
@@ -130,10 +122,11 @@ class Results extends tao_actions_SaSModule
         $this->returnJson($instances);
     }
 
-    /*
-     * controller actions
-     */
 
+    /**
+     * Action called on click on a delivery (class) construct and call the view to see the table of
+     * all delivery execution for a specific delivery
+     */
     public function index()
     {
         //Properties to filter on
@@ -145,11 +138,7 @@ class Results extends tao_actions_SaSModule
         // display delivery
         $delivery = new core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
 
-        $deliveryResultServer = $delivery->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP));
-
-        $resultServerModel = $deliveryResultServer->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP));
-
-        $implementationClass = $resultServerModel->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
+        $implementation = $this->getAndSetCurrentImplementation($delivery);
 
 
         $model = array();
@@ -161,12 +150,17 @@ class Results extends tao_actions_SaSModule
             );
         }
 
-        $this->setData('implementation',urlencode($implementationClass->literal));
+        $this->setData('implementation',urlencode(get_class($implementation)));
+        $this->setData('classUri',tao_helpers_Uri::encode($delivery->getUri()));
         $this->setData('model',$model);
 
         $this->setView('resultList.tpl');
     }
 
+
+    /**
+     * get all result delivery execution to display
+     */
     public function getResults()
     {
         $page = $this->getRequestParameter('page');
@@ -183,22 +177,16 @@ class Results extends tao_actions_SaSModule
             'recursive' => true
         );
 
-        // Get filter parameter
-        $filter = array();
-        if($this->hasRequestParameter('filter')){
-            $filter = $this->getFilterState('filter');
-        }
         if($this->hasRequestParameter('implementation')){
             if (class_exists(urldecode($this->getRequestParameter('implementation')))) {
                 $this->getClassService()->setImplementation(urldecode($this->getRequestParameter('implementation')));
             }
         }
 
-        $columns = array_keys($filter);
-
+        $delivery = array(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
         $data = array();
-        $results = $this->getClassService()->getImplementation()->getResultByColumn($columns, $filter, $gau);
-        $counti = $this->getClassService()->getImplementation()->countResultByFilter($columns, $filter);
+        $results = $this->getClassService()->getImplementation()->getResultByColumn($delivery, $gau);
+        $counti = $this->getClassService()->getImplementation()->countResultByFilter($delivery);
         foreach($results as $res){
 
             $deliveryResult = new core_kernel_classes_Resource($res['deliveryResultIdentifier']);
@@ -223,7 +211,8 @@ class Results extends tao_actions_SaSModule
 
     /**
      * Delete a result or a result class
-     * @return void
+     * @throws Exception
+     * @return string json {'deleted' : true}
      */
     public function delete()
     {
@@ -235,24 +224,14 @@ class Results extends tao_actions_SaSModule
     }
 
     /**
-     *
-     * @author Patrick Plichart <patrick@taotesting.com>
+     * Get info on the current Result and display it
      */
     public function viewResult()
     {
         $result = $this->getCurrentInstance();
         $deliveryExecution = $result->getOnePropertyValue(new \core_kernel_classes_Property(PROPERTY_DELVIERYEXECUTION_DELIVERY));
 
-        $deliveryResultServer = $deliveryExecution->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP));
-
-        $resultServerModel = $deliveryResultServer->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP));
-
-        /** @var $implementationClass \core_kernel_classes_Literal*/
-        $implementationClass = $resultServerModel->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
-
-        if (class_exists($implementationClass->literal)) {
-            $this->getClassService()->setImplementation($implementationClass->literal);
-        }
+        $implementation = $this->getAndSetCurrentImplementation($deliveryExecution);
 
         $testTaker = $this->getClassService()->getTestTakerData($result);
 
@@ -302,10 +281,13 @@ class Results extends tao_actions_SaSModule
         $this->setData('uri', $this->getRequestParameter("uri"));
         $this->setData('classUri', $this->getRequestParameter("classUri"));
         $this->setData('filter', $filter);
-        $this->setData('implementation', urlencode($implementationClass->literal));
+        $this->setData('implementation', urlencode(get_class($implementation)));
         $this->setView('viewResult.tpl');
     }
 
+    /**
+     * Get the data for the file in the response and allow user to download it
+     */
     public function getFile()
     {
 
@@ -331,5 +313,27 @@ class Results extends tao_actions_SaSModule
         }
 
         echo $file["data"];
+    }
+
+    /**
+     * Get the implementation behind a specific delivery execution and set it in the result service
+     *
+     * @param \core_kernel_classes_Resource $delivery
+     * @return \oat\taoResultServer\models\classes\ResultManagement
+     */
+    private function getAndSetCurrentImplementation($delivery){
+
+        $deliveryResultServer = $delivery->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP));
+
+        $resultServerModel = $deliveryResultServer->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP));
+
+        /** @var $implementationClass \core_kernel_classes_Literal*/
+        $implementationClass = $resultServerModel->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
+
+        if (class_exists($implementationClass->literal)) {
+            $this->getClassService()->setImplementation($implementationClass->literal);
+        }
+
+        return $this->getClassService()->getImplementation();
     }
 }

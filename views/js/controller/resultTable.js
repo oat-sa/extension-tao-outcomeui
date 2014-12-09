@@ -28,6 +28,7 @@ define([
            var $tableContainer = $('.result-table-container', $container);
            var filter = conf.filter || 'lastSubmitted';
            var implementation = conf.implementation || '';
+           var classUri = conf.classUri || '';
             //keep columns through calls
             var columns = [];
             var groups = {};
@@ -42,7 +43,7 @@ define([
                 $.ajax({
                     url : url,
                     dataType : 'json',
-                    data : {filter : filter, implementation : implementation },
+                    data : {filter : filter },
                     type :'GET'
                 }).done(function(response){
                     if(response && response.columns){
@@ -109,7 +110,7 @@ define([
                     .datatable({
                         url : helpers._url('data', 'ResultTable', 'taoOutcomeUi', {filterData : filter}),
                         querytype : 'POST',
-                        params : {columns : columns,  '_search' : false, implementation : implementation},
+                        params : {columns : columns,  '_search' : false, implementation : implementation, classUri : classUri},
                         model :  model
                     });
             };

@@ -15,7 +15,8 @@ use oat\tao\helpers\Template;
         config: {
             'taoOutcomeUi/controller/inspectResults': {
                 model : <?= json_encode(get_data("model")) ?>,
-                implementation : '<?= get_data("implementation") ?>'
+                implementation : '<?= get_data("implementation") ?>',
+                uri : '<?= get_data("classUri") ?>'
             }
         }
     });
