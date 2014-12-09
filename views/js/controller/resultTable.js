@@ -43,7 +43,7 @@ define([
                 $.ajax({
                     url : url,
                     dataType : 'json',
-                    data : {filter : filter },
+                    data : {filter : filter,  implementation : implementation, classUri : classUri},
                     type :'GET'
                 }).done(function(response){
                     if(response && response.columns){
@@ -99,7 +99,7 @@ define([
                                     preparingMessageHtml: __("We are preparing your report, please wait..."),
                                     failMessageHtml: __("There was a problem generating your report, please try again."),
                                     httpMethod: 'POST',
-                                    data: {'filter': filter, 'columns': columns, implementation : implementation}
+                                    data: {'filter': filter, 'columns': columns, implementation : implementation, classUri : classUri}
                                 });
                             });
 

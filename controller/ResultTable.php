@@ -85,10 +85,21 @@ class ResultTable extends tao_actions_Table {
         $filter =  $this->hasRequestParameter('filter') ? $this->getRequestParameter('filter') : array();
        	$filterData =  $this->hasRequestParameter('filterData')? $this->getRequestParameter('filterData') : array();
     	$columns = $this->hasRequestParameter('columns') ? $this->getColumns('columns') : array();
-    	
+
+        if($this->hasRequestParameter('implementation')){
+            if (class_exists(urldecode($this->getRequestParameter('implementation')))) {
+                $this->service->setImplementation(urldecode($this->getRequestParameter('implementation')));
+            }
+        }
+
+        $delivery = array();
+        if($this->hasRequestParameter('classUri')){
+            $delivery[] = \tao_helpers_Uri::decode($this->getRequestParameter('classUri'));
+        }
+
     	//The list of delivery Results matching the current selection filters
         $results = array();
-        foreach($this->service->getImplementation()->getResultByColumn(array_keys($filterData), $filterData) as $result){
+        foreach($this->service->getImplementation()->getResultByDelivery($delivery, $filter) as $result){
             $results[] = new core_kernel_classes_Resource($result['deliveryResultIdentifier']);
         }
         $dpmap = array();
@@ -180,8 +191,14 @@ class ResultTable extends tao_actions_Table {
                 $this->service->setImplementation(urldecode($this->getRequestParameter('implementation')));
             }
         }
+
+        $delivery = array();
+        if($this->hasRequestParameter('classUri')){
+            $delivery[] = \tao_helpers_Uri::decode($this->getRequestParameter('classUri'));
+        }
+
 		//The list of delivery Results matching the current selection filters
-        $results = $this->service->getImplementation()->getResultByColumn(array_keys($filter), $filter);
+        $results = $this->service->getImplementation()->getResultByDelivery($delivery, $filter);
 
 		//retrieveing all individual response variables referring to the  selected delivery results
 		$selectedVariables = array ();
