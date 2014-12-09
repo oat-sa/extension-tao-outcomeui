@@ -422,7 +422,7 @@ class ResultsService extends tao_models_classes_ClassService {
                 core_kernel_classes_DbWrapper::singleton()->getSchemaManager()->setAttribute(\PDO::MYSQL_ATTR_MAX_BUFFER_SIZE,$maxBuffer);
             }
         }
-        
+        common_Logger::w('basetype : '.$baseType);
         
         switch ($baseType) {
             case "file": {
