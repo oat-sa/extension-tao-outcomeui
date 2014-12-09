@@ -76,7 +76,17 @@ class Results extends tao_actions_SaSModule
 
             // display delivery
             $delivery = new core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
-            
+
+            $deliveryResultServer = $delivery->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP));
+
+            $resultServerModel = $deliveryResultServer->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP));
+
+            $implementationClass = $resultServerModel->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
+
+            if (class_exists($implementationClass->literal)) {
+                $this->getClassService()->setImplementation($implementationClass->literal);
+            }
+
             $storage = $this->getClassService()->getImplementation();
             
             $columns = array('http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery');
@@ -354,6 +364,93 @@ class Results extends tao_actions_SaSModule
      * controller actions
      */
 
+    public function index()
+    {
+        //Properties to filter on
+        $properties = array(
+            new \core_kernel_classes_Property(RDFS_LABEL),
+            new \core_kernel_classes_Property(RDF_TYPE)
+        );
+
+        // display delivery
+        $delivery = new core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
+
+        $deliveryResultServer = $delivery->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP));
+
+        $resultServerModel = $deliveryResultServer->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP));
+
+        $implementationClass = $resultServerModel->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
+
+
+        $model = array();
+        foreach($properties as $property){
+            $model[] = array(
+                'id'       => $property->getUri(),
+                'label'    => $property->getLabel(),
+                'sortable' => true
+            );
+        }
+
+        $this->setData('implementation',urlencode($implementationClass->literal));
+        $this->setData('model',$model);
+
+        $this->setView('resultList.tpl');
+    }
+
+    public function getResults()
+    {
+        $page = $this->getRequestParameter('page');
+        $limit = $this->getRequestParameter('rows');
+        $order = $this->getRequestParameter('sortby');
+        $sord = $this->getRequestParameter('sortorder');
+        $start = $limit * $page - $limit;
+
+        $gau = array(
+            'order' 	=> $order,
+            'orderdir'	=> strtoupper($sord),
+            'offset'    => $start,
+            'limit'		=> $limit,
+            'recursive' => true
+        );
+
+        // Get filter parameter
+        $filter = array();
+        if($this->hasRequestParameter('filter')){
+            $filter = $this->getFilterState('filter');
+        }
+        if($this->hasRequestParameter('implementation')){
+            if (class_exists(urldecode($this->getRequestParameter('implementation')))) {
+                $this->getClassService()->setImplementation(urldecode($this->getRequestParameter('implementation')));
+            }
+        }
+
+        $columns = array_keys($filter);
+
+        $data = array();
+        $results = $this->getClassService()->getImplementation()->getResultByColumn($columns, $filter, $gau);
+        $counti = $this->getClassService()->getImplementation()->countResultByFilter($columns, $filter);
+        foreach($results as $res){
+
+            $deliveryResult = new core_kernel_classes_Resource($res['deliveryResultIdentifier']);
+            $delivery = new core_kernel_classes_Resource($res['deliveryIdentifier']);
+            $testTaker = new core_kernel_classes_Resource($res['testTakerIdentifier']);
+            $label = new ResultLabel($deliveryResult, $testTaker, $delivery);
+            $types = $deliveryResult->getTypes();
+
+            $data[] = array(
+                'id'                           => $deliveryResult->getUri(),
+                RDFS_LABEL                     => (string)$label,
+                RDF_TYPE                       => array_shift($types)->getLabel()
+            );
+        }
+        $this->returnJSON(array(
+                'data' => $data,
+                'page' => floor($start / $limit) + 1,
+                'total' => ceil($counti / $limit),
+                'records' => count($data)
+            ));
+    }
+
     /**
      * Edit a result class
      * @return void
@@ -401,8 +498,17 @@ class Results extends tao_actions_SaSModule
     public function viewResult()
     {
         $result = $this->getCurrentInstance();
-        if ($this->hasRequestParameter('implementation')) {
-            $this->getClassService()->setImplementation($this->getRequestParameter('implementation'));
+        $deliveryExecution = $result->getOnePropertyValue(new \core_kernel_classes_Property(PROPERTY_DELVIERYEXECUTION_DELIVERY));
+
+        $deliveryResultServer = $deliveryExecution->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP));
+
+        $resultServerModel = $deliveryResultServer->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP));
+
+        /** @var $implementationClass \core_kernel_classes_Literal*/
+        $implementationClass = $resultServerModel->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
+
+        if (class_exists($implementationClass->literal)) {
+            $this->getClassService()->setImplementation($implementationClass->literal);
         }
 
         $testTaker = $this->getClassService()->getTestTakerData($result);

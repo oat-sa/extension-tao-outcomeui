@@ -25,11 +25,7 @@ define(function(){
     return {
         'Results': {
             'actions': {
-                'viewResult' : 'controller/viewResult'
-            }
-        },
-        'InspectResults': {
-            'actions': {
+                'viewResult' : 'controller/viewResult',
                 'index' : 'controller/inspectResults'
             }
         },

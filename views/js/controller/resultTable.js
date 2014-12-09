@@ -27,7 +27,7 @@ define([
            var $filterField = $('.result-filter', $container);
            var $tableContainer = $('.result-table-container', $container);
            var filter = conf.filter || 'lastSubmitted';
- 
+           var implementation = conf.implementation || '';
             //keep columns through calls
             var columns = [];
             var groups = {};
@@ -42,7 +42,7 @@ define([
                 $.ajax({
                     url : url,
                     dataType : 'json',
-                    data : {filter : filter },
+                    data : {filter : filter, implementation : implementation },
                     type :'GET'
                 }).done(function(response){
                     if(response && response.columns){
@@ -98,7 +98,7 @@ define([
                                     preparingMessageHtml: __("We are preparing your report, please wait..."),
                                     failMessageHtml: __("There was a problem generating your report, please try again."),
                                     httpMethod: 'POST',
-                                    data: {'filter': filter, 'columns': columns}
+                                    data: {'filter': filter, 'columns': columns, implementation : implementation}
                                 });
                             });
 
@@ -109,7 +109,7 @@ define([
                     .datatable({
                         url : helpers._url('data', 'ResultTable', 'taoOutcomeUi', {filterData : filter}),
                         querytype : 'POST',
-                        params : {columns : columns,  '_search' : false},
+                        params : {columns : columns,  '_search' : false, implementation : implementation},
                         model :  model
                     });
             };
@@ -139,7 +139,7 @@ define([
             });
 
             //default table
-            buildGrid(helpers._url('getResultOfSubjectColumn', 'ResultTable', 'taoOutcomeUi', {filter : filter }));
+            buildGrid(helpers._url('getResultOfSubjectColumn', 'ResultTable', 'taoOutcomeUi', {filter : filter, implementation : implementation }));
 
             //setup the filtering
             $filterField.select2({

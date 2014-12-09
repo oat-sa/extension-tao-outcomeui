@@ -7,37 +7,20 @@ define([
     'module',
     'helpers', 
     'layout/section', 
-    'generis.facetFilter', 
+    'uri',
     'ui/datatable'
-], function($, __, module, helpers, section, GenerisFacetFilterClass) {
+], function($, __, module, helpers, section, uri) {
     'use strict';
 
-    /**
-     * Build tthe facet filtering component
-     * @param {jQueryElement} $container - the  container 
-     * @param {Object} filterNodes - the filter the component will contain
-     * @param {Function} cb - called with the selected filters
-     */
-    function buildFacetFilter($container, filterNodes, cb){
-		return new GenerisFacetFilterClass($('.facet-filter', $container).selector, filterNodes, {
-			template: 'accordion',
-			callback: {
-				'onFilter': function(facetFilter) {
-					cb(facetFilter.getFormatedFilterSelection());
-				}
-			}
-		});
-    }
-   
     /**
      * Load results into the datatable
      * @param {jQueryElement} $container - the  container 
      * @param {Object} model - the data model for the table
-     * @param {String} [filter = 'all'] - to filter results
+     * @param {String} implementation - The delivery result server implementation
      */
-    function loadResults($container, model, filter){
+    function loadResults($container, model, implementation){
         var params = {
-            filter : filter
+            implementation : implementation
         };
         $('.inspect-results-grid', $container)
             .empty()
@@ -57,8 +40,13 @@ define([
                     });
             })
             .datatable({ 
-                url  : helpers._url('getResults', 'InspectResults', 'taoOutcomeUi', params),
-               model : model
+                url  : helpers._url('getResults', 'Results', 'taoOutcomeUi', params),
+                model : model,
+                actions : {
+                    'preview' : function openResource(id){
+                                    $('.tree').trigger('selectnode.taotree', [{id : uri.encode(id)}]);
+                                }
+    }
             });
     }
 
@@ -73,14 +61,8 @@ define([
         start : function(){
             var conf = module.config();
             var $container = $('#inspect-result');
-
-            //set up the facet filter and load results on changes
-            var facetFilter = buildFacetFilter($container, conf.filterNodes, function (filters){
-                loadResults($container, conf.model, filters);
-            });
-
             //load results also at the beginning unfiltered
-            loadResults($container, conf.model);
+            loadResults($container, conf.model, conf.implementation);
         }
     };
 

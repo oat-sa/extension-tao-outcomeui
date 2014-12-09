@@ -65,7 +65,9 @@ class ResultTable extends tao_actions_Table {
      */
     public function index() {
     	$filter = $this->getRequestParameter('filter');
+    	$implementation = $this->getRequestParameter('implementation');
 		$this->setData('filter', $filter);
+		$this->setData('implementation', $implementation);
 		$this->setView('resultTable.tpl');
     }
 
@@ -171,6 +173,11 @@ class ResultTable extends tao_actions_Table {
 		$columns = array();
 		$filter = $this->getFilterState('filter');
 
+        if($this->hasRequestParameter('implementation')){
+            if (class_exists(urldecode($this->getRequestParameter('implementation')))) {
+                $this->service->setImplementation(urldecode($this->getRequestParameter('implementation')));
+            }
+        }
 		//The list of delivery Results matching the current selection filters
         $results = $this->service->getImplementation()->getResultByColumn(array_keys($filter), $filter);
 
@@ -299,11 +306,14 @@ class ResultTable extends tao_actions_Table {
             'orderdir' => $sord  
         );
         $response = new \stdClass();
-
+        if($this->hasRequestParameter('implementation')){
+            if (class_exists(urldecode($this->getRequestParameter('implementation')))) {
+                $this->service->setImplementation(urldecode($this->getRequestParameter('implementation')));
+            }
+        }
 
         $deliveryResults = $this->service->getImplementation()->getResultByColumn(array_keys($filter), $filter, $options);
         $counti = $this->service->getImplementation()->countResultByFilter(array_keys($filter), $filter);
-
         foreach($deliveryResults as $deliveryResult){
             $results[] = new core_kernel_classes_Resource($deliveryResult['deliveryResultIdentifier']);
         }

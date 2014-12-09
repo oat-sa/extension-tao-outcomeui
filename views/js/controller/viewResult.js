@@ -22,9 +22,8 @@ define([
          */
         start : function(){
            var conf = module.config();
-           var $container = $('#view-result');              
+           var $container = $('#view-result');
            var $filterField = $('.result-filter', $container);              
-
             //set up filter field
             $filterField.select2({
                 minimumResultsForSearch : -1

@@ -43,7 +43,8 @@ use oat\tao\helpers\Template;
 requirejs.config({
     config : {
         'taoOutcomeUi/controller/resultTable' : {
-            'filter' : <?=json_encode(get_data('filter'))?>
+            'filter' : <?=json_encode(get_data('filter'))?>,
+            'implementation' : '<?=get_data("implementation")?>'
         }
     }
 });

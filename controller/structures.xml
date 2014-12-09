@@ -30,7 +30,6 @@
                     </action>
                 </actions>
             </section>
-            <section id="inspect_results" name="Inspect Results" url="/taoOutcomeUi/InspectResults/index"/>
         </sections>
     </structure>
 </structures>
