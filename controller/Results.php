@@ -302,6 +302,7 @@ class Results extends tao_actions_SaSModule
         $this->setData('uri', $this->getRequestParameter("uri"));
         $this->setData('classUri', $this->getRequestParameter("classUri"));
         $this->setData('filter', $filter);
+        $this->setData('implementation', urlencode($implementationClass->literal));
         $this->setView('viewResult.tpl');
     }
 
@@ -309,23 +310,13 @@ class Results extends tao_actions_SaSModule
     {
 
         $variableUri = $this->getRequestParameter("variableUri");
-        $variableUriCut = substr($variableUri,0,strpos($variableUri,'http://',1));
-        $result = new \core_kernel_classes_Resource($variableUriCut);
-        $deliveryExecution = $result->getOnePropertyValue(new \core_kernel_classes_Property(PROPERTY_DELVIERYEXECUTION_DELIVERY));
 
-        $deliveryResultServer = $deliveryExecution->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP));
 
-        $resultServerModel = $deliveryResultServer->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP));
-
-        /** @var $implementationClass \core_kernel_classes_Literal*/
-        $implementationClass = $resultServerModel->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
-
-        if (class_exists($implementationClass->literal)) {
-            $this->getClassService()->setImplementation($implementationClass->literal);
+        if (class_exists(urldecode($this->getRequestParameter('implementation')))) {
+            $this->getClassService()->setImplementation(urldecode($this->getRequestParameter('implementation')));
         }
 
 
-        \common_Logger::w('variable : '.$variableUri);
         $file = $this->getClassService()->getVariableFile($variableUri);
         $trace = $file["data"];
         header(

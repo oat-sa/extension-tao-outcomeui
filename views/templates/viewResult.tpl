@@ -220,7 +220,8 @@ use oat\tao\helpers\Template;
             'taoOutcomeUi/controller/viewResult': {
                 uri: '<?=get_data("uri")?>',
                 classUri: '<?=get_data("classUri")?>',
-                filter: '<?=get_data("filter")?>'
+                filter: '<?=get_data("filter")?>',
+                implementation: '<?=get_data("implementation")?>'
             }
         }
     });
