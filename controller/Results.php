@@ -81,7 +81,7 @@ class Results extends tao_actions_SaSModule
             $storage = $this->getAndSetCurrentImplementation($delivery);
 
 
-            foreach ($storage->getResultByColumn(array($delivery->getUri())) as $dataArray) {
+            foreach ($storage->getResultByDelivery(array($delivery->getUri())) as $dataArray) {
                 $result = new core_kernel_classes_Resource($dataArray['deliveryResultIdentifier']);
                 
                 $child = array();
@@ -185,8 +185,8 @@ class Results extends tao_actions_SaSModule
 
         $delivery = array(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
         $data = array();
-        $results = $this->getClassService()->getImplementation()->getResultByColumn($delivery, $gau);
-        $counti = $this->getClassService()->getImplementation()->countResultByFilter($delivery);
+        $results = $this->getClassService()->getImplementation()->getResultByDelivery($delivery, $gau);
+        $counti = $this->getClassService()->getImplementation()->countResultByDelivery($delivery);
         foreach($results as $res){
 
             $deliveryResult = new core_kernel_classes_Resource($res['deliveryResultIdentifier']);

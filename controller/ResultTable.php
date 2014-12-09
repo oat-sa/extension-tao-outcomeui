@@ -315,8 +315,8 @@ class ResultTable extends tao_actions_Table {
             }
         }
 
-        $deliveryResults = $this->service->getImplementation()->getResultByColumn(array($deliveryUri), $options);
-        $counti = $this->service->getImplementation()->countResultByFilter(array($deliveryUri), $filter);
+        $deliveryResults = $this->service->getImplementation()->getResultByDelivery(array($deliveryUri), $options);
+        $counti = $this->service->getImplementation()->countResultByDelivery(array($deliveryUri), $filter);
         foreach($deliveryResults as $deliveryResult){
             $results[] = new core_kernel_classes_Resource($deliveryResult['deliveryResultIdentifier']);
         }
