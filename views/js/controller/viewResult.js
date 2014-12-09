@@ -47,7 +47,7 @@ define([
                     failMessageHtml: __("There was a problem generating your report, please try again."),
                     httpMethod: "POST",
                     //This gives the current selection of filters (facet based query) and the list of columns selected from the client (the list of columns is not kept on the server side class.taoTable.php
-                    data: {'variableUri': variableUri}
+                    data: {'variableUri': variableUri, 'implementation' : conf.implementation}
                 });
             });
 
