@@ -69,8 +69,8 @@ class Results extends tao_actions_SaSModule
         }
         
         $instances = array();
-        
-        if ($this->hasRequestParameter('classUri')) {
+        $deliveryService = \taoDelivery_models_classes_DeliveryAssemblyService::singleton();
+        if ($this->hasRequestParameter('classUri') && $deliveryService->getRootClass()->getUri() !== $this->getRequestParameter('classUri')) {
             
             $offset = $this->hasRequestParameter('offset') ? $this->getRequestParameter('offset') : 0;
             $limit = $this->hasRequestParameter('limit') ? $this->getRequestParameter('limit') : 0;
@@ -103,7 +103,6 @@ class Results extends tao_actions_SaSModule
         } else {
             
             // root 
-            $deliveryService = \taoDelivery_models_classes_DeliveryAssemblyService::singleton();
             foreach ($deliveryService->getAllAssemblies() as $assembly) {
                 $child["attributes"] = array(
                     "id" => tao_helpers_Uri::encode($assembly->getUri()),
@@ -118,8 +117,17 @@ class Results extends tao_actions_SaSModule
             }
             
         }
-        
+
+        if(empty($instances) && !$this->hasRequestParameter('classUri')){
+            $instances["attributes"] = array(
+                "id" => $deliveryService->getRootClass()->getUri(),
+                "class" => "node-class",
+            );
+            $instances["data"] = $deliveryService->getRootClass()->getLabel();
+        }
+
         $this->returnJson($instances);
+
     }
 
 
@@ -135,26 +143,32 @@ class Results extends tao_actions_SaSModule
             new \core_kernel_classes_Property(RDF_TYPE)
         );
 
-        // display delivery
+        $deliveryService = \taoDelivery_models_classes_DeliveryAssemblyService::singleton();
         $delivery = new core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
+        if($delivery->getUri() !== $deliveryService->getRootClass()->getUri()){
+            // display delivery
+            $implementation = $this->getAndSetCurrentImplementation($delivery);
 
-        $implementation = $this->getAndSetCurrentImplementation($delivery);
 
+            $model = array();
+            foreach($properties as $property){
+                $model[] = array(
+                    'id'       => $property->getUri(),
+                    'label'    => $property->getLabel(),
+                    'sortable' => true
+                );
+            }
 
-        $model = array();
-        foreach($properties as $property){
-            $model[] = array(
-                'id'       => $property->getUri(),
-                'label'    => $property->getLabel(),
-                'sortable' => true
-            );
+            $this->setData('implementation',urlencode(get_class($implementation)));
+            $this->setData('classUri',tao_helpers_Uri::encode($delivery->getUri()));
+            $this->setData('model',$model);
+
+            $this->setView('resultList.tpl');
+
         }
-
-        $this->setData('implementation',urlencode(get_class($implementation)));
-        $this->setData('classUri',tao_helpers_Uri::encode($delivery->getUri()));
-        $this->setData('model',$model);
-
-        $this->setView('resultList.tpl');
+        else{
+            $this->setView('index.tpl');
+        }
     }
 
 
