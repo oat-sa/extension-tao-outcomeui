@@ -1,6 +1,7 @@
 <?php
 use oat\tao\helpers\Template;
 ?>
+<link rel="stylesheet" href="<?= Template::css('icon.css') ?>" />
 <div id="inspect-result" class="flex-container-full">
 
 	<div class="grid-row">

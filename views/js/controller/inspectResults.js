@@ -45,7 +45,7 @@ define([
                 url  : helpers._url('getResults', 'Results', 'taoOutcomeUi', params),
                 model : model,
                 actions : {
-                    'preview' : function openResource(id){
+                    'view' : function openResource(id){
                                     $('.tree').trigger('selectnode.taotree', [{id : uri.encode(id)}]);
                                 }
     }
