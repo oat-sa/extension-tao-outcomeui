@@ -6,10 +6,10 @@ define([
     'i18n', 
     'module',
     'helpers', 
-    'layout/section', 
+    'layout/actions/binder',
     'uri',
     'ui/datatable'
-], function($, __, module, helpers, section, uri) {
+], function($, __, module, helpers, binder, uri) {
     'use strict';
 
     /**
@@ -46,8 +46,9 @@ define([
                 model : model,
                 actions : {
                     'view' : function openResource(id){
-                                    $('.tree').trigger('selectnode.taotree', [{id : uri.encode(id)}]);
-                                }
+                                var action = {binding : "load", url: helpers._url('viewResult', 'Results', 'taoOutcomeUi')};
+                                binder.exec(action, {uri : uri.encode(id), classUri : classUri} || this._resourceContext);
+                            }
     }
             });
     }
