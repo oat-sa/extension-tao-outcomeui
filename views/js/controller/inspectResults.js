@@ -7,9 +7,10 @@ define([
     'module',
     'helpers', 
     'layout/actions/binder',
+    'layout/section',
     'uri',
     'ui/datatable'
-], function($, __, module, helpers, binder, uri) {
+], function($, __, module, helpers, binder, section, uri) {
     'use strict';
 
     /**
