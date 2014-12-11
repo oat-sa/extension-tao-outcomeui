@@ -1,7 +1,6 @@
 <?php
 use oat\tao\helpers\Template;
 ?>
-<link rel="stylesheet" href="<?= Template::css('customTree.css') ?>" />
 <div class="main-container">
 	<div class="ext-home-container ui-state-highlight">
 		<h1><img src="<?=BASE_WWW?>img/taoResults.png" /> <?=__('Results')?></h1>
