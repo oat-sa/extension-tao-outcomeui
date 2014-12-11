@@ -70,39 +70,8 @@ class Results extends tao_actions_SaSModule
         
         $instances = array();
         $deliveryService = \taoDelivery_models_classes_DeliveryAssemblyService::singleton();
-        if ($this->hasRequestParameter('classUri') && $deliveryService->getRootClass()->getUri() !== $this->getRequestParameter('classUri')) {
-            
-            $offset = $this->hasRequestParameter('offset') ? $this->getRequestParameter('offset') : 0;
-            $limit = $this->hasRequestParameter('limit') ? $this->getRequestParameter('limit') : 0;
-
-            // display delivery
-            $delivery = new core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
-
-            $storage = $this->getAndSetCurrentImplementation($delivery);
-
-
-            foreach ($storage->getResultByDelivery(array($delivery->getUri())) as $dataArray) {
-                $result = new core_kernel_classes_Resource($dataArray['deliveryResultIdentifier']);
-                
-                $child = array();
-                $child["attributes"] = array(
-                    "id" => tao_helpers_Uri::encode($result->getUri()),
-                    "class" => "node-instance",
-                    'data-uri' => $result->getUri()
-                );
-                $testTaker = new core_kernel_classes_Resource($dataArray["testTakerIdentifier"]);
-                $title = $testTaker->getLabel() . " (" . $result->getUri() . ")";
-                $child["_data"] = array(
-                    "uri" => $result->getUri(),
-                );
-                $child["data"] = $title;
-                $child["type"] = "instance";
-                $instances[] = $child;
-            }
-            
-        } else {
-            
-            // root 
+        if (!$this->hasRequestParameter('classUri') || $deliveryService->getRootClass()->getUri() === $this->getRequestParameter('classUri')) {
+            // root
             foreach ($deliveryService->getAllAssemblies() as $assembly) {
                 $child["attributes"] = array(
                     "id" => tao_helpers_Uri::encode($assembly->getUri()),
@@ -112,10 +81,9 @@ class Results extends tao_actions_SaSModule
                 $child["data"] = $assembly->getLabel();
                 $child["type"] = "class";
                 $child["state"] = "closed";
-            
+
                 $instances[] = $child;
             }
-            
         }
 
         if(empty($instances) && !$this->hasRequestParameter('classUri')){
