@@ -140,7 +140,6 @@ class Results extends tao_actions_SaSModule
         //Properties to filter on
         $properties = array(
             new \core_kernel_classes_Property(RDFS_LABEL),
-            new \core_kernel_classes_Property(RDF_TYPE)
         );
 
         $deliveryService = \taoDelivery_models_classes_DeliveryAssemblyService::singleton();
@@ -207,12 +206,10 @@ class Results extends tao_actions_SaSModule
             $delivery = new core_kernel_classes_Resource($res['deliveryIdentifier']);
             $testTaker = new core_kernel_classes_Resource($res['testTakerIdentifier']);
             $label = new ResultLabel($deliveryResult, $testTaker, $delivery);
-            $types = $deliveryResult->getTypes();
 
             $data[] = array(
                 'id'                           => $deliveryResult->getUri(),
                 RDFS_LABEL                     => (string)$label,
-                RDF_TYPE                       => array_shift($types)->getLabel()
             );
         }
         $this->returnJSON(array(
