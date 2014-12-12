@@ -105,6 +105,7 @@ define([
 
                         if(_.isFunction(done)){
                             done();
+                            done = '';
                         }
                     })
                     .datatable({
@@ -131,10 +132,9 @@ define([
                 var group   = $elt.data('group');
                 var action  = $elt.data('action');
                 var url     = $elt.data('url');
-
-                buildGrid(url, action, function(){ 
+                buildGrid(url, action, function(){
                     _.forEach(groups[group], function($btn){
-                       $btn.toggleClass('hidden'); 
+                       $btn.toggleClass('hidden');
                     });
                 });
             });
