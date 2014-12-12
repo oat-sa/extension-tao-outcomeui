@@ -99,7 +99,7 @@ class ResultTable extends tao_actions_Table {
 
     	//The list of delivery Results matching the current selection filters
         $results = array();
-        foreach($this->service->getImplementation()->getResultByDelivery($delivery, $filter) as $result){
+        foreach($this->service->getImplementation()->getResultByDelivery($delivery) as $result){
             $results[] = new core_kernel_classes_Resource($result['deliveryResultIdentifier']);
         }
         $dpmap = array();
