@@ -85,13 +85,13 @@ class Results extends tao_actions_SaSModule
                 $instances[] = $child;
             }
         }
-
+        
         if(empty($instances) && !$this->hasRequestParameter('classUri')){
             $instances["attributes"] = array(
                 "id" => $deliveryService->getRootClass()->getUri(),
                 "class" => "node-class",
             );
-            $instances["data"] = $deliveryService->getRootClass()->getLabel();
+            $instances["data"] = __('No Results');
         }
 
         $this->returnJson($instances);
