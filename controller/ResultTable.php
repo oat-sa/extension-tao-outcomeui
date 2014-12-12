@@ -380,7 +380,12 @@ class ResultTable extends tao_actions_Table {
                             $filterData
                         );
                     } else {
-                        $data[$key] = self::filterCellData($this->service->getTestTaker($result)->getLabel(), $filterData);
+                        $data[$key] = self::filterCellData(
+                            $this->service->getTestTaker($result)->getUniquePropertyValue(
+                                new \core_kernel_classes_Property('http://www.tao.lu/Ontologies/generis.rdf#login')
+                            )->literal,
+                            $filterData
+                        );
                     }
                 }
                 else {
