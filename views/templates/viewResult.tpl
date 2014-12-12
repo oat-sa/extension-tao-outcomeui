@@ -12,8 +12,8 @@ use oat\tao\helpers\Template;
         <div id="resultsViewTools">
             <select class="result-filter">
                 <option  value="all" ><?=__('All collected variables')?></option>
-                <option  value="firstSubmitted" ><?=__('First submitted variable only')?></option>
-                <option  value="lastSubmitted" ><?=__('Last submitted variable only')?></option>
+                <option  value="firstSubmitted" ><?=__('First submitted variables only')?></option>
+                <option  value="lastSubmitted" ><?=__('Last submitted variables only')?></option>
             </select>
             <button class="btn-info small result-filter-btn"><?=__('Filter');?></button>
         </div>

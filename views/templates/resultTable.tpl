@@ -27,9 +27,9 @@ use oat\tao\helpers\Template;
     <div class="grid-row">
         <div class="col-12">
             <select class="result-filter">
-                <option  value="all"><?=__('All collected values')?></option>
-                <option  value="firstSubmitted"><?=__('First submitted responses only')?></option>
-                <option  value="lastSubmitted"><?=__('Last submitted responses only')?></option>
+                <option  value="all"><?=__('All collected variables')?></option>
+                <option  value="firstSubmitted"><?=__('First submitted variables only')?></option>
+                <option  value="lastSubmitted"><?=__('Last submitted variables only')?></option>
             </select>
             <button class="btn-info small result-filter-btn"><?=__('Filter');?></button>
         </div>
