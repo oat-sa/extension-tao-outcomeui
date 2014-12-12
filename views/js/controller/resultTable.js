@@ -78,7 +78,7 @@ define([
                     model.push({
                         id : col.prop || (col.contextId + '_' + col.variableIdentifier),
                         label : col.label,
-                        sortable: true
+                        sortable: false
                     });
                 });
                 
