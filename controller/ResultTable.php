@@ -132,7 +132,9 @@ class ResultTable extends tao_actions_Table {
                 if (count($column->getDataProvider()->cache) > 0) {
                     $cellData[]=self::filterCellData($column->getDataProvider()->getValue($result, $column), $filter);
                 } else {
-                    $cellData[]=self::filterCellData($this->service->getTestTaker($result)->getLabel(), $filter);
+                    $cellData[]=self::filterCellData(
+                        (string)$this->service->getTestTaker($result)->getOnePropertyValue(new \core_kernel_classes_Property(PROPERTY_USER_LOGIN)),
+                        $filter);
                 }
             }
             $rows[] = array(
