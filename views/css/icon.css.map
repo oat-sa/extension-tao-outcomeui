@@ -1,6 +1,6 @@
 {
 "version": 3,
-"mappings": ";;;;AAmFA,iBAAe,GAAE,OAAO,EAAE,OAAO",
+"mappings": ";;;;AA0DA,mBAAU,GAAE,OAAO,EAAE,OAAO;;AAyB5B,iBAAe,GAAE,OAAO,EAAE,OAAO",
 "sources": ["../../../tao/views/scss/inc/_tao-icon-vars.scss"],
 "names": [],
 "file": "icon.css"

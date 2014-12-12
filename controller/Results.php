@@ -198,7 +198,14 @@ class Results extends tao_actions_SaSModule
         if (!tao_helpers_Request::isAjax()) {
             throw new Exception("wrong request mode");
         }
-        $deleted = $this->getClassService()->deleteResult($this->getRequestParameter('id'));
+        $deliveryExecutionUri = tao_helpers_Uri::decode($this->getRequestParameter('uri'));
+        $deliveryExecution = new \core_kernel_classes_Resource($deliveryExecutionUri);
+        $delivery = $deliveryExecution->getOnePropertyValue(new \core_kernel_classes_Property(PROPERTY_DELVIERYEXECUTION_DELIVERY));
+
+        $this->getAndSetCurrentImplementation($delivery);
+
+        $deleted = $this->getClassService()->deleteResult($deliveryExecutionUri);
+
         $this->returnJson(array('deleted' => $deleted));
     }
 

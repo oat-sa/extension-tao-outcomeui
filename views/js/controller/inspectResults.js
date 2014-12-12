@@ -9,8 +9,9 @@ define([
     'layout/actions/binder',
     'layout/section',
     'uri',
+    'ui/feedback',
     'ui/datatable'
-], function($, __, module, helpers, binder, section, uri) {
+], function($, __, module, helpers, binder, section, uri, feedback) {
     'use strict';
 
     /**
@@ -49,7 +50,43 @@ define([
                     'view' : function openResource(id){
                                 var action = {binding : "load", url: helpers._url('viewResult', 'Results', 'taoOutcomeUi')};
                                 binder.exec(action, {uri : uri.encode(id), classUri : classUri} || this._resourceContext);
-                            }
+                            },
+                    'delete' : function openResource(id){
+                        // prompt a confirmation lightbox and then delete the result
+                        var confirmBox = $('.preview-modal-feedback'),
+                            cancel = confirmBox.find('.cancel'),
+                            save = confirmBox.find('.save'),
+                            close = confirmBox.find('.modal-close');
+
+                        confirmBox.modal({ width: 500 });
+
+                        save.on('click', function () {
+                            $.ajax({
+                                url: helpers._url('delete', 'Results', 'taoOutcomeUi'),
+                                type: "POST",
+                                data: {
+                                    uri: uri.encode(id)
+                                },
+                                dataType: 'json',
+                                success: function(response){
+                                    if(response.deleted){
+                                        feedback().success(__('Result has been deleted'));
+                                        loadResults($container,model,implementation,classUri);
+                                    }
+                                    else{
+                                        feedback().error(__('Something went wrong ...'));
+                                    }
+                                }
+                            });
+                            confirmBox.modal('close');
+                        });
+
+                        cancel.on('click', function () {
+                            confirmBox.modal('close');
+                        });
+
+
+                    }
     }
             });
     }

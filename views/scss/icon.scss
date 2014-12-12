@@ -1,3 +1,4 @@
 @import "inc/bootstrap";
 
 .icon-view:before { @extend %icon-external; }
+.icon-delete:before { @extend %icon-bin; }
