@@ -51,7 +51,7 @@ define([
                                 var action = {binding : "load", url: helpers._url('viewResult', 'Results', 'taoOutcomeUi')};
                                 binder.exec(action, {uri : uri.encode(id), classUri : classUri} || this._resourceContext);
                             },
-                    'delete' : function openResource(id){
+                    'delete' : function deleteResource(id){
                         // prompt a confirmation lightbox and then delete the result
                         var confirmBox = $('.preview-modal-feedback'),
                             cancel = confirmBox.find('.cancel'),
@@ -60,7 +60,8 @@ define([
 
                         confirmBox.modal({ width: 500 });
 
-                        save.on('click', function () {
+                        save.off('click')
+                            .on('click', function () {
                             $.ajax({
                                 url: helpers._url('delete', 'Results', 'taoOutcomeUi'),
                                 type: "POST",
@@ -81,7 +82,8 @@ define([
                             confirmBox.modal('close');
                         });
 
-                        cancel.on('click', function () {
+                        cancel.off('click')
+                              .on('click', function () {
                             confirmBox.modal('close');
                         });
 
