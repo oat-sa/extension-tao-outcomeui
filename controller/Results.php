@@ -80,7 +80,6 @@ class Results extends tao_actions_SaSModule
                 );
                 $child["data"] = $assembly->getLabel();
                 $child["type"] = "class";
-                $child["state"] = "closed";
 
                 $instances[] = $child;
             }
