@@ -24,6 +24,7 @@ namespace oat\taoOutcomeUi\controller;
 use \Exception;
 use \common_exception_IsAjaxAction;
 use \core_kernel_classes_Resource;
+use oat\tao\model\accessControl\AclProxy;
 use \tao_actions_SaSModule;
 use \tao_helpers_Request;
 use \tao_helpers_Uri;
@@ -166,9 +167,10 @@ class Results extends tao_actions_SaSModule
         $delivery = array(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
         $data = array();
         $readOnly = array();
+        $user = \common_session_SessionManager::getSession()->getUser();
         $rights = array(
-            'view'=>!\tao_models_classes_accessControl_AclProxy::hasAccess('viewResult', 'Results', 'taoOutcomeUi'),
-            'delete'=>!\tao_models_classes_accessControl_AclProxy::hasAccess('delete', 'Results', 'taoOutcomeUi'));
+            'view'=>!AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'viewResult',array()),
+            'delete'=>!AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'delete',array()));
         $results = $this->getClassService()->getImplementation()->getResultByDelivery($delivery, $gau);
         $counti = $this->getClassService()->getImplementation()->countResultByDelivery($delivery);
         foreach($results as $res){
