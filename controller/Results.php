@@ -165,6 +165,10 @@ class Results extends tao_actions_SaSModule
 
         $delivery = array(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
         $data = array();
+        $readOnly = array();
+        $rights = array(
+            'view'=>!\tao_models_classes_accessControl_AclProxy::hasAccess('viewResult', 'Results', 'taoOutcomeUi'),
+            'delete'=>!\tao_models_classes_accessControl_AclProxy::hasAccess('delete', 'Results', 'taoOutcomeUi'));
         $results = $this->getClassService()->getImplementation()->getResultByDelivery($delivery, $gau);
         $counti = $this->getClassService()->getImplementation()->countResultByDelivery($delivery);
         foreach($results as $res){
@@ -178,12 +182,16 @@ class Results extends tao_actions_SaSModule
                 'id'                           => $deliveryResult->getUri(),
                 RDFS_LABEL                     => (string)$label,
             );
+
+            $readOnly[$deliveryResult->getUri()] = $rights;
         }
+
         $this->returnJSON(array(
                 'data' => $data,
                 'page' => floor($start / $limit) + 1,
                 'total' => ceil($counti / $limit),
-                'records' => count($data)
+                'records' => count($data),
+                'readonly' => $readOnly
             ));
     }
 
