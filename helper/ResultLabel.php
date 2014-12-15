@@ -25,7 +25,7 @@ use \core_kernel_classes_Resource;
 /**
  * Helps you to change the label of a a result.
  *  
- * @author Bertrand Chevrier <jerome@taotesting.com>
+ * @author Bertrand Chevrier <bertrand@taotesting.com>
  *
  */
 class ResultLabel {
@@ -35,7 +35,8 @@ class ResultLabel {
     private $delivery;
    
     /**
-     * Build the label
+     * Build the label.
+     * 
      * @param core_kernel_classes_Resource $result
      * @param core_kernel_classes_Resource $testTaker
      * @param core_kernel_classes_Resource $delivery
@@ -48,10 +49,13 @@ class ResultLabel {
 
     /**
      * Get the formated label
+     * 
      * @return string the formated label  
      */
     public function __toString()
-    { 
-        return $this->testTaker->getLabel() . "-(" . $this->result->getUri() . ")- " . $this->delivery->getLabel();
-    }
+    {
+        $testTakerLabel = $this->testTaker->getLabel();
+        $deliveryLabel = $this->delivery->getLabel();
+        return "${testTakerLabel} - ${deliveryLabel}";
+    } 
 }
