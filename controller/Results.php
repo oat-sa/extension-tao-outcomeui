@@ -79,7 +79,7 @@ class Results extends tao_actions_SaSModule
                     "class" => "node-class",
                     'data-uri' => $assembly->getUri()
                 );
-                $child["data"] = $assembly->getLabel();
+                $child["data"] = htmlentities($assembly->getLabel());
                 $child["type"] = "class";
 
                 $instances[] = $child;
