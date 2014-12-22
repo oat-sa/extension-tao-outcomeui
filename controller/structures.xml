@@ -10,7 +10,6 @@
                     <tree name="Results library"
                           className="Result"
                           dataUrl="/taoOutcomeUi/Results/getOntologyData"
-                          rootNode=""
                           selectClass="results-index"
                           selectInstance="results-view"
                           delete="results-delete"
