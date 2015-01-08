@@ -116,6 +116,12 @@ class Results extends tao_actions_SaSModule
             // display delivery
             $implementation = $this->getAndSetCurrentImplementation($delivery);
 
+            if(is_array($implementation) && isset($implementation['error'])){
+                $this->setData('type', 'error');
+                $this->setData('error', $implementation['error']);
+                $this->setView('index.tpl');
+                return;
+            }
 
             $model = array();
             foreach($properties as $property){
@@ -134,6 +140,8 @@ class Results extends tao_actions_SaSModule
 
         }
         else{
+            $this->setData('type', 'info');
+            $this->setData('error',__('No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here.'));
             $this->setView('index.tpl');
         }
     }
@@ -318,15 +326,38 @@ class Results extends tao_actions_SaSModule
      */
     private function getAndSetCurrentImplementation($delivery){
 
+        if(is_null($delivery)){
+            return array('error' => __('This delivery doesn\'t exists'));
+        }
         $deliveryResultServer = $delivery->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP));
 
-        $resultServerModel = $deliveryResultServer->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP));
+        if(is_null($deliveryResultServer)){
+            return array('error' => __('This delivery has no Result Server'));
+        }
+        $resultServerModel = $deliveryResultServer->getPropertyValues(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP));
 
-        /** @var $implementationClass \core_kernel_classes_Literal*/
-        $implementationClass = $resultServerModel->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
+        if(is_null($resultServerModel)){
+            return array('error' => __('This delivery has no readable Result Server'));
+        }
 
-        if (class_exists($implementationClass->literal)) {
-            $this->getClassService()->setImplementation($implementationClass->literal);
+        $hasImplementation = false;
+        foreach($resultServerModel as $model){
+            $model = new \core_kernel_classes_Class($model);
+
+            /** @var $implementationClass \core_kernel_classes_Literal*/
+            $implementationClass = $model->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
+
+
+            if (!is_null($implementationClass)
+                && class_exists($implementationClass->literal) && in_array('taoResultServer_models_classes_ReadableResultStorage',class_implements($implementationClass->literal))) {
+                $hasImplementation = true;
+                $this->getClassService()->setImplementation($implementationClass->literal);
+                continue;
+            }
+        }
+
+        if(!$hasImplementation){
+            return array('error' => __('This delivery has no readable Result Server'));
         }
 
         return $this->getClassService()->getImplementation();
