@@ -55,6 +55,10 @@ class ResultsService extends tao_models_classes_ClassService {
      */
     private $cacheDeliveryResult = array(); 
     
+    /**
+     * 
+     * @var \taoResultServer_models_classes_ReadableResultStorage
+     */
     private $implementation = null;
     
     /**
@@ -65,15 +69,18 @@ class ResultsService extends tao_models_classes_ClassService {
         return new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
     }
 
-    public function setImplementation($implementationClass){
-        if(class_exists($implementationClass)){
-            $this->implementation = new $implementationClass;
-        }
+    public function setImplementation(\taoResultServer_models_classes_ReadableResultStorage $implementation){
+        $this->implementation = $implementation;
     }
 
+    /**
+     * 
+     * @return taoResultServer_models_classes_ReadableResultStorage
+     */
     public function getImplementation(){
         if($this->implementation == null){
-            $this->implementation = new RdsResultStorage();
+            throw new \common_exception_Error('No result storage defined');
+//            $this->implementation = new RdsResultStorage();
         }
         return $this->implementation;
     }
@@ -466,5 +473,27 @@ class ResultsService extends tao_models_classes_ClassService {
             ));
         }
         return $propValues;
+    }
+    
+    /**
+     * 
+     * @param \core_kernel_classes_Resource $delivery
+     * @return taoResultServer_models_classes_ReadableResultStorage
+     */
+    public function getReadableImplementation(\core_kernel_classes_Resource $delivery) {
+    
+        $deliveryResultServer = $delivery->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP));
+    
+        $resultServerModel = $deliveryResultServer->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP));
+    
+        /** @var $implementationClass \core_kernel_classes_Literal*/
+        $implementationClass = $resultServerModel->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
+        
+        $className = $implementationClass->literal;
+        if (!class_exists($className)) {
+            throw new \common_exception_Error('readable resultinterface implementation '.$className.' not found');
+        }
+    
+        return new $className();
     }
 }
