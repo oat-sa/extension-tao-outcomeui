@@ -66,10 +66,8 @@ class ResultTable extends tao_actions_Table {
      */
     public function index() {
     	$filter = $this->getRequestParameter('filter');
-    	$implementation = $this->getRequestParameter('implementation');
     	$classUri = $this->getRequestParameter('classUri');
 		$this->setData('filter', $filter);
-		$this->setData('implementation', $implementation);
 		$this->setData('classUri', $classUri);
 		$this->setView('resultTable.tpl');
     }

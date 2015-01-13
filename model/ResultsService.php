@@ -481,19 +481,46 @@ class ResultsService extends tao_models_classes_ClassService {
      * @return taoResultServer_models_classes_ReadableResultStorage
      */
     public function getReadableImplementation(\core_kernel_classes_Resource $delivery) {
-    
-        $deliveryResultServer = $delivery->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP));
-    
-        $resultServerModel = $deliveryResultServer->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP));
-    
-        /** @var $implementationClass \core_kernel_classes_Literal*/
-        $implementationClass = $resultServerModel->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
-        
-        $className = $implementationClass->literal;
-        if (!class_exists($className)) {
-            throw new \common_exception_Error('readable resultinterface implementation '.$className.' not found');
+
+        if(is_null($delivery)){
+            throw new \common_exception_Error(__('This delivery doesn\'t exists'));
         }
-    
-        return new $className();
+
+        $deliveryResultServer = $delivery->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP));
+
+        if(is_null($deliveryResultServer)){
+            throw new \common_exception_Error(__('This delivery has no Result Server'));
+        }
+
+        $resultServerModel = $deliveryResultServer->getPropertyValues(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP));
+
+        if(is_null($resultServerModel)){
+            throw new \common_exception_Error(__('This delivery has no readable Result Server'));
+        }
+
+        foreach($resultServerModel as $model){
+            $model = new \core_kernel_classes_Class($model);
+            /** @var $implementationClass \core_kernel_classes_Literal*/
+            $implementationClass = $model->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
+            if (!is_null($implementationClass)
+                && class_exists($implementationClass->literal) && in_array('taoResultServer_models_classes_ReadableResultStorage',class_implements($implementationClass->literal))) {
+                $className = $implementationClass->literal;
+                if (!class_exists($className)) {
+                    throw new \common_exception_Error('readable resultinterface implementation '.$className.' not found');
+                }
+                return new $className();
+            }
+        }
+
+        throw new \common_exception_Error(__('This delivery has no readable Result Server'));
+
+
+
+
+
+
+
+
+
     }
 }
