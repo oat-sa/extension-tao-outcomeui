@@ -18,12 +18,10 @@ define([
      * Load results into the datatable
      * @param {jQueryElement} $container - the  container 
      * @param {Object} model - the data model for the table
-     * @param {String} implementation - The delivery result server implementation
      * @param {String} classUri - The delivery result uri
      */
-    function loadResults($container, model, implementation, classUri){
+    function loadResults($container, model, classUri){
         var params = {
-            implementation : implementation,
             classUri : classUri
         };
         $('.inspect-results-grid', $container)
@@ -72,10 +70,10 @@ define([
                                 success: function(response){
                                     if(response.deleted){
                                         feedback().success(__('Result has been deleted'));
-                                        loadResults($container,model,implementation,classUri);
+                                        loadResults($container,model,classUri);
                                     }
                                     else{
-                                        feedback().error(__('Something went wrong ...'));
+                                        feedback().error(__('Something went wrong ...')+'<br>'+response.error);
                                     }
                                 }
                             });
@@ -105,7 +103,7 @@ define([
             var conf = module.config();
             var $container = $('#inspect-result');
             //load results also at the beginning unfiltered
-            loadResults($container, conf.model, conf.implementation, conf.uri);
+            loadResults($container, conf.model, conf.uri);
         }
     };
 

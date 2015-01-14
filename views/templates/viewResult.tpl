@@ -220,7 +220,6 @@ use oat\tao\helpers\Template;
                 uri: '<?=get_data("uri")?>',
                 classUri: '<?=get_data("classUri")?>',
                 filter: '<?=get_data("filter")?>',
-                implementation: '<?=get_data("implementation")?>'
             }
         }
     });

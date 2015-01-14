@@ -34,6 +34,7 @@ use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeRds\model\RdsResultStorage;
+use tao_helpers_Uri;
 
 /**
  * should be entirelyrefactored
@@ -65,10 +66,8 @@ class ResultTable extends tao_actions_Table {
      */
     public function index() {
     	$filter = $this->getRequestParameter('filter');
-    	$implementation = $this->getRequestParameter('implementation');
     	$classUri = $this->getRequestParameter('classUri');
 		$this->setData('filter', $filter);
-		$this->setData('implementation', $implementation);
 		$this->setData('classUri', $classUri);
 		$this->setView('resultTable.tpl');
     }
@@ -86,12 +85,10 @@ class ResultTable extends tao_actions_Table {
        	$filterData =  $this->hasRequestParameter('filterData')? $this->getRequestParameter('filterData') : array();
     	$columns = $this->hasRequestParameter('columns') ? $this->getColumns('columns') : array();
 
-        if($this->hasRequestParameter('implementation')){
-            if (class_exists(urldecode($this->getRequestParameter('implementation')))) {
-                $this->service->setImplementation(urldecode($this->getRequestParameter('implementation')));
-            }
-        }
-
+        $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
+        $implementation = $this->service->getReadableImplementation($delivery);
+        $this->service->setImplementation($implementation);
+    	
         $delivery = array();
         if($this->hasRequestParameter('classUri')){
             $delivery[] = \tao_helpers_Uri::decode($this->getRequestParameter('classUri'));
@@ -188,11 +185,10 @@ class ResultTable extends tao_actions_Table {
 		$columns = array();
 		$filter = $this->getFilterState('filter');
 
-        if($this->hasRequestParameter('implementation')){
-            if (class_exists(urldecode($this->getRequestParameter('implementation')))) {
-                $this->service->setImplementation(urldecode($this->getRequestParameter('implementation')));
-            }
-        }
+        $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
+        $implementation = $this->service->getReadableImplementation($delivery);
+        $this->service->setImplementation($implementation);
+		
 
         $delivery = array();
         if($this->hasRequestParameter('classUri')){
@@ -328,13 +324,12 @@ class ResultTable extends tao_actions_Table {
             'orderdir' => $sord  
         );
         $response = new \stdClass();
-        if($this->hasRequestParameter('implementation')){
-            if (class_exists(urldecode($this->getRequestParameter('implementation')))) {
-                $this->service->setImplementation(urldecode($this->getRequestParameter('implementation')));
-            }
-        }
 
-        $deliveryResults = $this->service->getImplementation()->getResultByDelivery(array($deliveryUri), $options);
+        $delivery = new \core_kernel_classes_Resource($deliveryUri);
+        $implementation = $this->service->getReadableImplementation($delivery);
+        $this->service->setImplementation($implementation);
+        
+                $deliveryResults = $this->service->getImplementation()->getResultByDelivery(array($deliveryUri), $options);
         $counti = $this->service->getImplementation()->countResultByDelivery(array($deliveryUri), $filter);
         foreach($deliveryResults as $deliveryResult){
             $results[] = new core_kernel_classes_Resource($deliveryResult['deliveryResultIdentifier']);

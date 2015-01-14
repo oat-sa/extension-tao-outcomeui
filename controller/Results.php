@@ -113,27 +113,37 @@ class Results extends tao_actions_SaSModule
         $deliveryService = \taoDelivery_models_classes_DeliveryAssemblyService::singleton();
         $delivery = new core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
         if($delivery->getUri() !== $deliveryService->getRootClass()->getUri()){
-            // display delivery
-            $implementation = $this->getAndSetCurrentImplementation($delivery);
 
+            try{
+                // display delivery
+                $implementation = $this->getClassService()->getReadableImplementation($delivery);
 
-            $model = array();
-            foreach($properties as $property){
-                $model[] = array(
-                    'id'       => $property->getUri(),
-                    'label'    => $property->getLabel(),
-                    'sortable' => true
-                );
+                $this->getClassService()->setImplementation($implementation);
+
+                $model = array();
+                foreach($properties as $property){
+                    $model[] = array(
+                        'id'       => $property->getUri(),
+                        'label'    => $property->getLabel(),
+                        'sortable' => true
+                    );
+                }
+
+                $this->setData('classUri',tao_helpers_Uri::encode($delivery->getUri()));
+                $this->setData('model',$model);
+
+                $this->setView('resultList.tpl');
             }
-
-            $this->setData('implementation',urlencode(get_class($implementation)));
-            $this->setData('classUri',tao_helpers_Uri::encode($delivery->getUri()));
-            $this->setData('model',$model);
-
-            $this->setView('resultList.tpl');
+            catch(\common_exception_Error $e){
+                $this->setData('type', 'error');
+                $this->setData('error', $e->getMessage());
+                $this->setView('index.tpl');
+            }
 
         }
         else{
+            $this->setData('type', 'info');
+            $this->setData('error',__('No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here.'));
             $this->setView('index.tpl');
         }
     }
@@ -158,25 +168,25 @@ class Results extends tao_actions_SaSModule
             'recursive' => true
         );
 
-        if($this->hasRequestParameter('implementation')){
-            if (class_exists(urldecode($this->getRequestParameter('implementation')))) {
-                $this->getClassService()->setImplementation(urldecode($this->getRequestParameter('implementation')));
-            }
-        }
+        $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
 
-        $delivery = array(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
+        try{
+
+        $implementation = $this->getClassService()->getReadableImplementation($delivery);
+
+        $this->getClassService()->setImplementation($implementation);
+
         $data = array();
         $readOnly = array();
         $user = \common_session_SessionManager::getSession()->getUser();
         $rights = array(
             'view'=>!AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'viewResult',array()),
             'delete'=>!AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'delete',array()));
-        $results = $this->getClassService()->getImplementation()->getResultByDelivery($delivery, $gau);
-        $counti = $this->getClassService()->getImplementation()->countResultByDelivery($delivery);
+        $results = $this->getClassService()->getImplementation()->getResultByDelivery(array($delivery->getUri()), $gau);
+        $counti = $this->getClassService()->getImplementation()->countResultByDelivery(array($delivery->getUri()));
         foreach($results as $res){
 
             $deliveryResult = new core_kernel_classes_Resource($res['deliveryResultIdentifier']);
-            $delivery = new core_kernel_classes_Resource($res['deliveryIdentifier']);
             $testTaker = new core_kernel_classes_Resource($res['testTakerIdentifier']);
             $label = new ResultLabel($deliveryResult, $testTaker, $delivery);
 
@@ -195,6 +205,12 @@ class Results extends tao_actions_SaSModule
                 'records' => count($data),
                 'readonly' => $readOnly
             ));
+        }
+        catch(\common_exception_Error $e){
+            $this->returnJSON(array(
+                    'error' => $e->getMessage()
+                ));
+        }
     }
 
     /**
@@ -208,14 +224,19 @@ class Results extends tao_actions_SaSModule
             throw new Exception("wrong request mode");
         }
         $deliveryExecutionUri = tao_helpers_Uri::decode($this->getRequestParameter('uri'));
-        $deliveryExecution = new \core_kernel_classes_Resource($deliveryExecutionUri);
-        $delivery = $deliveryExecution->getOnePropertyValue(new \core_kernel_classes_Property(PROPERTY_DELVIERYEXECUTION_DELIVERY));
+        $de = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($deliveryExecutionUri);
 
-        $this->getAndSetCurrentImplementation($delivery);
+        try{
+            $implementation = $this->getClassService()->getReadableImplementation($de->getDelivery());
+            $this->getClassService()->setImplementation($implementation);
 
-        $deleted = $this->getClassService()->deleteResult($deliveryExecutionUri);
+            $deleted = $this->getClassService()->deleteResult($deliveryExecutionUri);
 
-        $this->returnJson(array('deleted' => $deleted));
+            $this->returnJson(array('deleted' => $deleted));
+        }
+        catch(\common_exception_Error $e){
+            $this->returnJson(array('error' => $e->getMessage()));
+        }
     }
 
     /**
@@ -224,60 +245,69 @@ class Results extends tao_actions_SaSModule
     public function viewResult()
     {
         $result = $this->getCurrentInstance();
-        $deliveryExecution = $result->getOnePropertyValue(new \core_kernel_classes_Property(PROPERTY_DELVIERYEXECUTION_DELIVERY));
+        $de = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($result->getUri());
 
-        $implementation = $this->getAndSetCurrentImplementation($deliveryExecution);
+        try{
+            $implementation = $this->getClassService()->getReadableImplementation($de->getDelivery());
+            $this->getClassService()->setImplementation($implementation);
 
-        $testTaker = $this->getClassService()->getTestTakerData($result);
 
-        if (
-            (is_object($testTaker) and (get_class($testTaker) == 'core_kernel_classes_Literal'))
-            or
-            (is_null($testTaker))
-        ) {
-            //the test taker is unknown
-            $this->setData('userLogin', $testTaker);
-            $this->setData('userLabel', $testTaker);
-            $this->setData('userFirstName', $testTaker);
-            $this->setData('userLastName', $testTaker);
-            $this->setData('userEmail', $testTaker);
-        } else {
-            $login = (count($testTaker[PROPERTY_USER_LOGIN]) > 0) ? current(
-                $testTaker[PROPERTY_USER_LOGIN]
-            )->literal : "";
-            $label = (count($testTaker[RDFS_LABEL]) > 0) ? current($testTaker[RDFS_LABEL])->literal : "";
-            $firstName = (count($testTaker[PROPERTY_USER_FIRSTNAME]) > 0) ? current(
-                $testTaker[PROPERTY_USER_FIRSTNAME]
-            )->literal : "";
-            $userLastName = (count($testTaker[PROPERTY_USER_LASTNAME]) > 0) ? current(
-                $testTaker[PROPERTY_USER_LASTNAME]
-            )->literal : "";
-            $userEmail = (count($testTaker[PROPERTY_USER_MAIL]) > 0) ? current(
-                $testTaker[PROPERTY_USER_MAIL]
-            )->literal : "";
+            $testTaker = $this->getClassService()->getTestTakerData($result);
 
-            $this->setData('userLogin', $login);
-            $this->setData('userLabel', $label);
-            $this->setData('userFirstName', $firstName);
-            $this->setData('userLastName', $userLastName);
-            $this->setData('userEmail', $userEmail);
+            if (
+                (is_object($testTaker) and (get_class($testTaker) == 'core_kernel_classes_Literal'))
+                or
+                (is_null($testTaker))
+            ) {
+                //the test taker is unknown
+                $this->setData('userLogin', $testTaker);
+                $this->setData('userLabel', $testTaker);
+                $this->setData('userFirstName', $testTaker);
+                $this->setData('userLastName', $testTaker);
+                $this->setData('userEmail', $testTaker);
+            } else {
+                $login = (count($testTaker[PROPERTY_USER_LOGIN]) > 0) ? current(
+                    $testTaker[PROPERTY_USER_LOGIN]
+                )->literal : "";
+                $label = (count($testTaker[RDFS_LABEL]) > 0) ? current($testTaker[RDFS_LABEL])->literal : "";
+                $firstName = (count($testTaker[PROPERTY_USER_FIRSTNAME]) > 0) ? current(
+                    $testTaker[PROPERTY_USER_FIRSTNAME]
+                )->literal : "";
+                $userLastName = (count($testTaker[PROPERTY_USER_LASTNAME]) > 0) ? current(
+                    $testTaker[PROPERTY_USER_LASTNAME]
+                )->literal : "";
+                $userEmail = (count($testTaker[PROPERTY_USER_MAIL]) > 0) ? current(
+                    $testTaker[PROPERTY_USER_MAIL]
+                )->literal : "";
+
+                $this->setData('userLogin', $login);
+                $this->setData('userLabel', $label);
+                $this->setData('userFirstName', $firstName);
+                $this->setData('userLastName', $userLastName);
+                $this->setData('userEmail', $userEmail);
+            }
+            $filter = ($this->hasRequestParameter("filter")) ? $this->getRequestParameter("filter") : "lastSubmitted";
+            $stats = $this->getClassService()->getItemVariableDataStatsFromDeliveryResult($result, $filter);
+            $this->setData('nbResponses', $stats["nbResponses"]);
+            $this->setData('nbCorrectResponses', $stats["nbCorrectResponses"]);
+            $this->setData('nbIncorrectResponses', $stats["nbIncorrectResponses"]);
+            $this->setData('nbUnscoredResponses', $stats["nbUnscoredResponses"]);
+            $this->setData('deliveryResultLabel', $result->getLabel());
+            $this->setData('variables', $stats["data"]);
+            //retireve variables not related to item executions
+            $deliveryVariables = $this->getClassService()->getVariableDataFromDeliveryResult($result);
+            $this->setData('deliveryVariables', $deliveryVariables);
+            $this->setData('uri', $this->getRequestParameter("uri"));
+            $this->setData('classUri', $this->getRequestParameter("classUri"));
+            $this->setData('filter', $filter);
+            $this->setView('viewResult.tpl');
         }
-        $filter = ($this->hasRequestParameter("filter")) ? $this->getRequestParameter("filter") : "lastSubmitted";
-        $stats = $this->getClassService()->getItemVariableDataStatsFromDeliveryResult($result, $filter);
-        $this->setData('nbResponses', $stats["nbResponses"]);
-        $this->setData('nbCorrectResponses', $stats["nbCorrectResponses"]);
-        $this->setData('nbIncorrectResponses', $stats["nbIncorrectResponses"]);
-        $this->setData('nbUnscoredResponses', $stats["nbUnscoredResponses"]);
-        $this->setData('deliveryResultLabel', $result->getLabel());
-        $this->setData('variables', $stats["data"]);
-        //retireve variables not related to item executions
-        $deliveryVariables = $this->getClassService()->getVariableDataFromDeliveryResult($result);
-        $this->setData('deliveryVariables', $deliveryVariables);
-        $this->setData('uri', $this->getRequestParameter("uri"));
-        $this->setData('classUri', $this->getRequestParameter("classUri"));
-        $this->setData('filter', $filter);
-        $this->setData('implementation', urlencode(get_class($implementation)));
-        $this->setView('viewResult.tpl');
+        catch(\common_exception_Error $e){
+            $this->setData('type', 'error');
+            $this->setData('error', $e->getMessage());
+            $this->setView('index.tpl');
+            return;
+        }
     }
 
     /**
@@ -289,46 +319,30 @@ class Results extends tao_actions_SaSModule
         $variableUri = $this->getRequestParameter("variableUri");
 
 
-        if (class_exists(urldecode($this->getRequestParameter('implementation')))) {
-            $this->getClassService()->setImplementation(urldecode($this->getRequestParameter('implementation')));
+        $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('deliveryUri')));
+        \common_Logger::w('delivery : '.print_r($delivery,true));
+        try{
+            $implementation = $this->getClassService()->getReadableImplementation($delivery);
+            $this->getClassService()->setImplementation($implementation);
+
+
+            $file = $this->getClassService()->getVariableFile($variableUri);
+            $trace = $file["data"];
+            header(
+                'Set-Cookie: fileDownload=true'
+            ); //used by jquery file download to find out the download has been triggered ...
+            setcookie("fileDownload", "true", 0, "/");
+            header("Content-type: " . $file["mimetype"]);
+            if (!isset($file["filename"]) || $file["filename"] == "") {
+                header('Content-Disposition: attachment; filename=download');
+            } else {
+                header('Content-Disposition: attachment; filename=' . $file["filename"]);
+            }
+
+            echo $file["data"];
         }
-
-
-        $file = $this->getClassService()->getVariableFile($variableUri);
-        $trace = $file["data"];
-        header(
-            'Set-Cookie: fileDownload=true'
-        ); //used by jquery file download to find out the download has been triggered ...
-        setcookie("fileDownload", "true", 0, "/");
-        header("Content-type: " . $file["mimetype"]);
-        if (!isset($file["filename"]) || $file["filename"] == "") {
-            header('Content-Disposition: attachment; filename=download');
-        } else {
-            header('Content-Disposition: attachment; filename=' . $file["filename"]);
+        catch(\common_exception_Error $e){
+            echo $e->getMessage();
         }
-
-        echo $file["data"];
-    }
-
-    /**
-     * Get the implementation behind a specific delivery execution and set it in the result service
-     *
-     * @param \core_kernel_classes_Resource $delivery
-     * @return \oat\taoResultServer\models\classes\ResultManagement
-     */
-    private function getAndSetCurrentImplementation($delivery){
-
-        $deliveryResultServer = $delivery->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP));
-
-        $resultServerModel = $deliveryResultServer->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP));
-
-        /** @var $implementationClass \core_kernel_classes_Literal*/
-        $implementationClass = $resultServerModel->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
-
-        if (class_exists($implementationClass->literal)) {
-            $this->getClassService()->setImplementation($implementationClass->literal);
-        }
-
-        return $this->getClassService()->getImplementation();
     }
 }

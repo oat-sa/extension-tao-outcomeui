@@ -44,7 +44,6 @@ requirejs.config({
     config : {
         'taoOutcomeUi/controller/resultTable' : {
             'filter' : <?=json_encode(get_data('filter'))?>,
-            'implementation' : '<?=get_data("implementation")?>',
             'classUri' : '<?=get_data("classUri")?>'
         }
     }
