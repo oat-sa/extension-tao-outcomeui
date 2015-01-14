@@ -173,7 +173,11 @@ class ResultsService extends tao_models_classes_ClassService {
     public function getItemFromItemResult($itemResult) {
         $item = null;
         $items = $this->getImplementation()->getVariables($itemResult);
+
+        //get the first variable (item are the same in all)
         $tmpItems = array_shift($items);
+
+        //get the first object
         if(!is_null($tmpItems[0]->item)){
             $item = new core_kernel_classes_Resource($tmpItems[0]->item);
         }
@@ -402,18 +406,6 @@ class ResultsService extends tao_models_classes_ClassService {
      */
      public function deleteResult($deliveryResultIdentifier) {
         return $this->getImplementation()->deleteResult($deliveryResultIdentifier);
-    }
-
-    /**
-     * Retrieves all score variables pertaining to the deliveryResult
-     *
-     * @access public
-     * @author Patrick Plichart, <patrick.plichart@taotesting.com>
-     * @param  Resource deliveryResult
-     * @return array
-     */
-    public function getScoreVariables(core_kernel_classes_Resource $deliveryResult) {
-        return $this->getVariables($deliveryResult);
     }
 
     public function getVariableFile($variableUri) {

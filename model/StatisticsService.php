@@ -77,7 +77,7 @@ class StatisticsService
             }
             
             $statisticsGrouped["distinctTestTaker"][$testTakerIdentifier] = $testTakerLabel;
-            $scoreVariables = $this->getScoreVariables($deliveryResult);
+            $scoreVariables = $this->getVariables($deliveryResult);
             try {
                 $relatedDelivery = $this->getDelivery($deliveryResult);
                 $deliveryDataSet["deliveries"][$relatedDelivery->getUri()] = $relatedDelivery->getLabel();
