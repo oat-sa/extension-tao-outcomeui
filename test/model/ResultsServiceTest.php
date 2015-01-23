@@ -14,10 +14,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2014 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ * Copyright (c) 2015 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
-namespace oat\taoQtiTest\test;
+namespace oat\taoOutcomeUi\test\model;
 
 use oat\tao\test\TaoPhpUnitTestRunner;
 use \common_ext_ExtensionsManager;
@@ -411,10 +411,8 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
             '#itemsResults1' => '#itemResultVariable',
             '#itemsResults2' => '#itemResultVariable2',
             '#itemsResults3' => '#itemResultVariable3'
-        )
-        )
-
-        ;
+        ));
+        
         $item = new \stdClass();
         $item->item = '#item';
         $item->uri = '#uri';
