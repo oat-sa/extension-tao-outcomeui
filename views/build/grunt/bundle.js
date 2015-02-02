@@ -7,11 +7,12 @@ module.exports = function(grunt) {
     var root        = grunt.option('root');
     var libs        = grunt.option('mainlibs');
     var ext         = require(root + '/tao/views/build/tasks/helpers/extensions')(grunt, root);
+    var out         = 'output/taoOutcomeUi';
 
     /**
      * Remove bundled and bundling files
      */
-    clean.taoresultsbundle = ['output',  root + '/taoOutcomeUi/views/js/controllers.min.js'];
+    clean.taoresultsbundle = [out,  root + '/taoOutcomeUi/views/js/controllers.min.js'];
     
     /**
      * Compile tao files into a bundle 
@@ -19,7 +20,7 @@ module.exports = function(grunt) {
     requirejs.taoresultsbundle = {
         options: {
             baseUrl : '../js',
-            dir : 'output',
+            dir : out,
             mainConfigFile : './config/requirejs.build.js',
             paths : { 'taoOutcomeUi' : root + '/taoOutcomeUi/views/js', 'taoItems' : root + '/taoItems/views/js' },
             modules : [{
@@ -35,8 +36,8 @@ module.exports = function(grunt) {
      */
     copy.taoresultsbundle = {
         files: [
-            { src: ['output/taoOutcomeUi/controller/routes.js'],  dest: root + '/taoOutcomeUi/views/js/controllers.min.js' },
-            { src: ['output/taoOutcomeUi/controller/routes.js.map'],  dest: root + '/taoOutcomeUi/views/js/controllers.min.js.map' }
+            { src: [out + '/taoOutcomeUi/controller/routes.js'],  dest: root + '/taoOutcomeUi/views/js/controllers.min.js' },
+            { src: [out + '/taoOutcomeUi/controller/routes.js.map'],  dest: root + '/taoOutcomeUi/views/js/controllers.min.js.map' }
         ]
     };
 
