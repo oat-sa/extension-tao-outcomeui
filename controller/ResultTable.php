@@ -207,18 +207,19 @@ class ResultTable extends tao_actions_Table {
 		//retrieving The list of the variables identifiers per activities defintions as observed
 		$variableTypes = array();
 		foreach ($selectedVariables as $variable) {
-            if(!is_null($variable[0]->item) && (get_class($variable[0]->variable) == 'taoResultServer_models_classes_OutcomeVariable' && $variableClassUri == CLASS_OUTCOME_VARIABLE)
+            if((!is_null($variable[0]->item) ||  !is_null($variable[0]->test))&& (get_class($variable[0]->variable) == 'taoResultServer_models_classes_OutcomeVariable' && $variableClassUri == CLASS_OUTCOME_VARIABLE)
             || (get_class($variable[0]->variable) == 'taoResultServer_models_classes_ResponseVariable' && $variableClassUri == CLASS_RESPONSE_VARIABLE)){
                 //variableIdentifier
                 $variableIdentifier = $variable[0]->variable->identifier;
-                $item = new core_kernel_classes_Resource($variable[0]->item);
-                if (get_class($item) == "core_kernel_classes_Resource") {
-                $contextIdentifierLabel = $item->getLabel();
-                $contextIdentifier = $item->getUri(); // use the callId/itemResult identifier
+                $uri = (!is_null($variable[0]->item))? $variable[0]->item : $variable[0]->test;
+                $object = new core_kernel_classes_Resource($uri);
+                if (get_class($object) == "core_kernel_classes_Resource") {
+                $contextIdentifierLabel = $object->getLabel();
+                $contextIdentifier = $object->getUri(); // use the callId/itemResult identifier
                 }
                 else {
-                    $contextIdentifierLabel = $item->__toString();
-                $contextIdentifier = $item->__toString();
+                    $contextIdentifierLabel = $object->__toString();
+                    $contextIdentifier = $object->__toString();
                 }
                 $variableTypes[$contextIdentifier.$variableIdentifier] = array("contextLabel" => $contextIdentifierLabel, "contextId" => $contextIdentifier, "variableIdentifier" => $variableIdentifier);
             }
