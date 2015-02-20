@@ -133,7 +133,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
      * 
      * @author Lionel Lecaque, lionel@taotesting.com
      */
-    public function testGetVariablesFromItemResult()
+    public function testGetVariablesFromObjectResult()
     {
         $prophet = new Prophet();
         $impProphecy = $prophet->prophesize('oat\taoOutcomeRds\model\RdsResultStorage');
@@ -142,7 +142,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $imp = $impProphecy->reveal();
         
         $this->service->setImplementation($imp);
-        $this->assertTrue($this->service->getVariablesFromItemResult('#foo'));
+        $this->assertTrue($this->service->getVariablesFromObjectResult('#foo'));
     }
     /**
      * 
@@ -360,10 +360,19 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $impProphecy->getRelatedItemCallIds('#fakeUri')->willReturn(array(
             '#itemsResults1' => '#itemResultVariable'
         ));
+
+        $impProphecy->getRelatedTestCallIds('#fakeUri')->willReturn(array(
+                '#testResults1' => '#testResultVariable'
+            ));
         
         $impProphecy->getVariables('#itemResultVariable')->willReturn(array(
             'itemResultVariable1' => 'foo'
         ));
+
+        $impProphecy->getVariables('#testResultVariable')->willReturn(array(
+                'testResultVariable1' => 'bar'
+            ));
+
         $imp = $impProphecy->reveal();
         
         $this->service->setImplementation($imp);
