@@ -82,18 +82,21 @@ class VariableDataProvider
                 //cache the item information pertaining to a given itemResult (stable over time)
                 if (common_cache_FileCache::singleton()->has('itemResultItemCache'.tao_helpers_Uri::encode($itemResultUri))) {
                     $itemUri = common_cache_FileCache::singleton()->get('itemResultItemCache'.tao_helpers_Uri::encode($itemResultUri));
-                    $item = new core_kernel_classes_Resource($itemUri);
+                    $object = new core_kernel_classes_Resource($itemUri);
                 } else {
-                    $item = $resultsService->getItemFromItemResult($itemResultUri);
-                    if(!is_null($item)){
-                        common_cache_FileCache::singleton()->put($item->getUri(), 'itemResultItemCache'.tao_helpers_Uri::encode($itemResultUri));
+                    $object = $resultsService->getItemFromItemResult($itemResultUri);
+                    if(is_null($object)){
+                        $object = $resultsService->getVariableFromTest($itemResultUri);
+                    }
+                    if(!is_null($object)){
+                        common_cache_FileCache::singleton()->put($object->getUri(), 'itemResultItemCache'.tao_helpers_Uri::encode($itemResultUri));
                     }
 
                 }
-                if (get_class($item) == "core_kernel_classes_Resource") {
-                   $contextIdentifier = (string)$item->getUri();
-                   } else if(!is_null($item)){
-                   $contextIdentifier = (string)$item->__toString();
+                if (get_class($object) == "core_kernel_classes_Resource") {
+                   $contextIdentifier = (string)$object->getUri();
+                   } else if(!is_null($object)){
+                   $contextIdentifier = (string)$object->__toString();
                    }
                 foreach ($vars as $var) {
                     $var = $var[0];
@@ -107,7 +110,6 @@ class VariableDataProvider
                     }
 
                     $type = $varData["class"];
-
                     if (isset($varData["value"])) {
                         if(is_array($varData["value"])){
                             $varData["value"] = json_encode($varData["value"]);
@@ -134,7 +136,7 @@ class VariableDataProvider
                             if ($epoch != "") {
                                 $readableTime = "@". tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE);
                             }
-                            $this->cache[$type][$result->getUri()][$contextIdentifier.$variableIdentifier][(string)$epoch] =  array($value, $readableTime);
+                            $this->cache[$type][$result->getUri()][$column->getContextIdentifier().$variableIdentifier][(string)$epoch] =  array($value, $readableTime);
 
                             }
                     }
@@ -160,6 +162,7 @@ class VariableDataProvider
         $returnValue = array();
 
         $vcUri = $column->getVariableClass()->getUri();
+
         if (isset($this->cache[$vcUri][$resource->getUri()][$column->getContextIdentifier().$column->getIdentifier()])) {
         	$returnValue = $this->cache[$vcUri][$resource->getUri()][$column->getContextIdentifier().$column->getIdentifier()];
 

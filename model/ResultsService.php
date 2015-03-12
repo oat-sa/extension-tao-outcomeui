@@ -103,8 +103,12 @@ class ResultsService extends tao_models_classes_ClassService {
             $variables = common_cache_FileCache::singleton()->get($serial);
         } else {           
            foreach ($this->getItemResultsFromDeliveryResult($deliveryResult) as $itemResult) {
-                $itemResultVariables = $this->getVariablesFromItemResult($itemResult);
+                $itemResultVariables = $this->getVariablesFromObjectResult($itemResult);
                 $variables[$itemResult] = $itemResultVariables;
+           }
+           foreach ($this->getTestsFromDeliveryResult($deliveryResult) as $testResult) {
+                $testResultVariables = $this->getVariablesFromObjectResult($testResult);
+                $variables[$testResult] = $testResultVariables;
            }
            //overhead for cache handling, the data is stored only when the underlying deliveryExecution is finished
            try {
@@ -142,7 +146,7 @@ class ResultsService extends tao_models_classes_ClassService {
      * @param  Resource Itemresult
      * @return array
      */
-    public function getVariablesFromItemResult($itemResult) {
+    public function getVariablesFromObjectResult($itemResult) {
         return $this->getImplementation()->getVariables($itemResult);
     }
 
@@ -166,6 +170,15 @@ class ResultsService extends tao_models_classes_ClassService {
     }
 
     /**
+     * Returns all label of itemResults related to the delvieryResults
+     * @param core_kernel_classes_Resource $deliveryResult
+     * @return array core_kernel_classes_Resource
+     * */
+    public function getTestsFromDeliveryResult(core_kernel_classes_Resource $deliveryResult) {
+        return $this->getImplementation()->getRelatedTestCallIds($deliveryResult->getUri());
+    }
+
+    /**
      * 
      * @param core_kernel_classes_Resource $itemResult
      * @return \common_Object
@@ -182,6 +195,25 @@ class ResultsService extends tao_models_classes_ClassService {
             $item = new core_kernel_classes_Resource($tmpItems[0]->item);
         }
         return $item;
+    }
+
+    /**
+     *
+     * @param core_kernel_classes_Resource $test
+     * @return \common_Object
+     */
+    public function getVariableFromTest($test) {
+        $returnTest = null;
+        $tests = $this->getImplementation()->getVariables($test);
+
+        //get the first variable (item are the same in all)
+        $tmpTests = array_shift($tests);
+
+        //get the first object
+        if(!is_null($tmpTests[0]->test)){
+            $returnTest = new core_kernel_classes_Resource($tmpTests[0]->test);
+        }
+        return $returnTest;
     }
 
     /**
@@ -292,7 +324,7 @@ class ResultsService extends tao_models_classes_ClassService {
                 $itemLabel = $undefinedStr;
                 $variablesByItem[$itemIdentifier]['itemModel'] = $undefinedStr;
             }
-            foreach ($this->getVariablesFromItemResult($itemResult) as $variable) {
+            foreach ($this->getVariablesFromObjectResult($itemResult) as $variable) {
                 //retrieve the type of the variable
                 $variableTemp = $variable[0]->variable;
                 $variableDescription = array();
