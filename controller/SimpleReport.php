@@ -36,7 +36,7 @@ use oat\tao\helpers\TaoOutcome;
  * @package taoOutcomeUi
  *
  */
-class SimpleReport extends tao_actions_TaoModule
+class SimpleReport extends \tao_actions_CommonModule
 {
 
     /*
@@ -86,19 +86,4 @@ class SimpleReport extends tao_actions_TaoModule
         //and select the corresponding view structure, could be (?) switched to something different
         $this->setView('simpleReport.tpl');
     }
-
-    /**
-    * get the main class
-    *
-    * @author Patrick Plichart, <patrick.plichart@taotesting.com>
-    * @return core_kernel_classes_Class
-    */
-    protected function getRootClass()
-    {
-        return new core_kernel_classes_Class('http://www.tao.lu/Ontologies/TAOResult.rdf#TAO_DELIVERY_RESULTS');
-    }
-
-
 }
-
-?>
