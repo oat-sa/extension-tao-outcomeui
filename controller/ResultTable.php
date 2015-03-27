@@ -46,7 +46,7 @@ use tao_helpers_Uri;
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  *
  */
-class ResultTable extends tao_actions_Table {
+class ResultTable extends \tao_actions_CommonModule {
 
     /**
      * constructor: initialize the service and the default data
