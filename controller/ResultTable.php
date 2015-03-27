@@ -26,7 +26,6 @@ use \common_Exception;
 use \core_kernel_classes_Class;
 use \core_kernel_classes_Property;
 use \core_kernel_classes_Resource;
-use \tao_actions_Table;
 use \tao_models_classes_table_Column;
 use \tao_models_classes_table_PropertyColumn;
 use oat\taoOutcomeUi\model\ResultsService;
@@ -46,7 +45,7 @@ use tao_helpers_Uri;
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  *
  */
-class ResultTable extends tao_actions_Table {
+class ResultTable extends \tao_actions_CommonModule {
 
     /**
      * constructor: initialize the service and the default data
