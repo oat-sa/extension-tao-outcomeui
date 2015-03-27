@@ -26,7 +26,6 @@ use \common_Exception;
 use \core_kernel_classes_Class;
 use \core_kernel_classes_Property;
 use \core_kernel_classes_Resource;
-use \tao_actions_Table;
 use \tao_models_classes_table_Column;
 use \tao_models_classes_table_PropertyColumn;
 use oat\taoOutcomeUi\model\ResultsService;
@@ -46,7 +45,7 @@ use tao_helpers_Uri;
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  *
  */
-class ResultTable extends tao_actions_Table {
+class ResultTable extends \tao_actions_CommonModule {
 
     /**
      * constructor: initialize the service and the default data
@@ -82,7 +81,6 @@ class ResultTable extends tao_actions_Table {
         $rows = array();
 
         $filter =  $this->hasRequestParameter('filter') ? $this->getRequestParameter('filter') : array();
-       	$filterData =  $this->hasRequestParameter('filterData')? $this->getRequestParameter('filterData') : array();
     	$columns = $this->hasRequestParameter('columns') ? $this->getColumns('columns') : array();
 
         $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
@@ -183,7 +181,7 @@ class ResultTable extends tao_actions_Table {
     protected function getVariableColumns($variableClassUri) {
 
 		$columns = array();
-		$filter = $this->getFilterState('filter');
+        $filter =  $this->hasRequestParameter('filter') ? $this->getRequestParameter('filter') : array();
 
         $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
         $implementation = $this->service->getReadableImplementation($delivery);
@@ -305,8 +303,7 @@ class ResultTable extends tao_actions_Table {
      * @author Bertrand Chevrier, <taosupport@tudor.lu>,
      */
     public function data() {
-        $filter =  $this->hasRequestParameter('filter') ? $this->getFilterState('filter') : array();
-       	$filterData =  $this->getRequestParameter('filterData');
+       	$filterData =  $this->hasRequestParameter('filter') ? $this->getRequestParameter('filter') : array();
        	$deliveryUri =  \tao_helpers_Uri::decode($this->getRequestParameter('classUri'));
 
     	$columns = $this->hasRequestParameter('columns') ? $this->getColumns('columns') : array();
@@ -331,7 +328,7 @@ class ResultTable extends tao_actions_Table {
         $this->service->setImplementation($implementation);
         
                 $deliveryResults = $this->service->getImplementation()->getResultByDelivery(array($deliveryUri), $options);
-        $counti = $this->service->getImplementation()->countResultByDelivery(array($deliveryUri), $filter);
+        $counti = $this->service->getImplementation()->countResultByDelivery(array($deliveryUri));
         foreach($deliveryResults as $deliveryResult){
             $results[] = new core_kernel_classes_Resource($deliveryResult['deliveryResultIdentifier']);
         }
