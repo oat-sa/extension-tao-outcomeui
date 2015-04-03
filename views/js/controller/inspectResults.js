@@ -10,8 +10,9 @@ define([
     'layout/section',
     'uri',
     'ui/feedback',
+    'util/encode',
     'ui/datatable'
-], function($, __, module, helpers, binder, section, uri, feedback) {
+], function($, __, module, helpers, binder, section, uri, feedback, encode) {
     'use strict';
 
     /**
@@ -73,7 +74,7 @@ define([
                                         loadResults($container,model,classUri);
                                     }
                                     else{
-                                        feedback().error(__('Something went wrong ...')+'<br>'+response.error);
+                                        feedback().error(__('Something went wrong ...')+'<br>'+encode.html(response.error), {encodeHtml: false});
                                     }
                                 }
                             });
