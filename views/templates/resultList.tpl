@@ -2,13 +2,15 @@
 use oat\tao\helpers\Template;
 ?>
 <link rel="stylesheet" href="<?= Template::css('icon.css') ?>" />
-<div id="inspect-result" class="flex-container-full">
+<div id="inspect-result" class="flex-container-full"
+    data-model="<?= tao_helpers_Display::encodeAttrValue(json_encode(get_data("model"))) ?>"
+    data-uri="<?= tao_helpers_Display::encodeAttrValue(get_data("uri")) ?>"
+>
 
 	<div class="grid-row">
-	<div class="col-12">
-		<div class="inspect-results-grid"></div>
-
-        <button class="btn-info small export-table disabled"><span class="icon-export"></span><?=__('Export Table')?></button>
+    	<div class="col-12">
+    		<div class="inspect-results-grid"></div>
+    	</div>
 	</div>
 </div>
 
@@ -22,18 +24,6 @@ use oat\tao\helpers\Template;
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
-    requirejs.config({
-        config: {
-            'taoOutcomeUi/controller/inspectResults': {
-                model : <?= json_encode(get_data("model")) ?>,
-                uri : '<?= get_data("classUri") ?>'
-            }
-        }
-    });
-</script>
-
 <?php
 Template::inc('footer.tpl', 'tao');
 ?>

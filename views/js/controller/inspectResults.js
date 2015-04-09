@@ -7,12 +7,11 @@ define([
     'module',
     'helpers', 
     'layout/actions/binder',
-    'layout/section',
     'uri',
     'ui/feedback',
     'util/encode',
     'ui/datatable'
-], function($, __, module, helpers, binder, section, uri, feedback, encode) {
+], function($, __, module, helpers, binder, uri, feedback, encode) {
     'use strict';
 
     /**
@@ -28,20 +27,6 @@ define([
         $('.inspect-results-grid', $container)
             .empty()
             .data('ui.datatable', null)
-            .on('load.datatable', function(){
-                $('.export-table', $container)
-                    .off('click')
-                    .removeClass('disabled')
-                    .on('click', function(e){
-                        e.preventDefault();
-                        section.create({
-                            id      : 'buildTableTab',
-                            name    : __('Export Delivery Results'),
-                            url     : helpers._url('index', 'ResultTable', 'taoOutcomeUi', params),
-                            contentBlock : true
-                        }).show();
-                    });
-            })
             .datatable({ 
                 url  : helpers._url('getResults', 'Results', 'taoOutcomeUi', params),
                 model : model,
@@ -101,10 +86,10 @@ define([
          * Controller entry point
          */
         start : function(){
-            var conf = module.config();
             var $container = $('#inspect-result');
+            
             //load results also at the beginning unfiltered
-            loadResults($container, conf.model, conf.uri);
+            loadResults($container, $container.data('model'), $container.data('uri'));
         }
     };
 
