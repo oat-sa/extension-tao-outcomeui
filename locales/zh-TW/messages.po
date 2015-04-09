@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TAO 3.0-RC05\n"
-"PO-Revision-Date: 2015-04-08T14:46:39\n"
+"PO-Revision-Date: 2015-04-09T09:17:52\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: zh-TW\n"
@@ -67,6 +67,7 @@ msgstr "從每個可變數收集的數據"
 msgid "Data collection statistics :"
 msgstr "數據收集的統計："
 
+#, tao-public
 msgid "Delete"
 msgstr "刪除"
 
@@ -112,6 +113,7 @@ msgstr "產生于："
 msgid "Grades"
 msgstr "等級"
 
+#, tao-public
 msgid "Index"
 msgstr "索引"
 
@@ -183,6 +185,7 @@ msgstr "結果"
 msgid "Results distribution"
 msgstr "結果分佈"
 
+#, tao-public
 msgid "Results library"
 msgstr "結果書庫"
 
@@ -252,6 +255,7 @@ msgstr "可變數名稱"
 msgid "View and format the collected results."
 msgstr "视图和格式收集的结果。"
 
+#, tao-public
 msgid "View result"
 msgstr "查看結果"
 
