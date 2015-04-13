@@ -4,7 +4,7 @@ use oat\tao\helpers\Template;
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoOutcomeUi/views/css/result.css" />
 
 <header class="section-header flex-container-full">
-    <h2><?=__('View result')?> - <?=get_data('deliveryResultLabel')?></h2>
+    <h2><?=__('View result')?> - <?= _dh(get_data('deliveryResultLabel')) ?></h2>
 </header>
 <div class="main-container flex-container-full">
 
@@ -20,15 +20,15 @@ use oat\tao\helpers\Template;
         <div id="resultsHeader">
             <div class="tile testtaker">
                 <strong>
-                    <span class="icon-test-taker"/>
+                    <span class="icon-test-taker"></span>
                     <?=__('Test Taker')?>
                 </strong>
                 <table class="mini">
-                    <tr><td class="field"><?=__('Login:')?></td><td class="fieldValue"><?=get_data('userLogin')?></td></tr>
-                    <tr><td class="field"><?=__('Label:')?></td><td class="fieldValue"><?=get_data('userLabel')?></td></tr>
-                    <tr><td class="field"><?=__('Last Name:')?></td><td class="fieldValue"><?=get_data('userLastName')?></td></tr>
-                    <tr><td class="field"><?=__('First Name:')?></td><td class="fieldValue"><?=get_data('userFirstName')?></td></tr>
-                    <tr><td class="field"><?=__('Email:')?></td><td class="fieldValue userMail"><?=get_data('userEmail')?></td></tr>
+                    <tr><td class="field"><?=__('Login:')?></td><td class="fieldValue"><?= _dh(get_data('userLogin'))?></td></tr>
+                    <tr><td class="field"><?=__('Label:')?></td><td class="fieldValue"><?= _dh(get_data('userLabel'))?></td></tr>
+                    <tr><td class="field"><?=__('Last Name:')?></td><td class="fieldValue"><?= _dh(get_data('userLastName'))?></td></tr>
+                    <tr><td class="field"><?=__('First Name:')?></td><td class="fieldValue"><?= _dh(get_data('userFirstName'))?></td></tr>
+                    <tr><td class="field"><?=__('Email:')?></td><td class="fieldValue userMail"><?= _dh(get_data('userEmail'))?></td></tr>
                 </table>
             </div>
         </div>
@@ -75,8 +75,8 @@ use oat\tao\helpers\Template;
                     <tr >
                         <th colspan="5" class="bold">
                             <b>
-                                <?=$item['label']?>
-                                (<?=$item['itemModel']?>)
+                                <?= _dh($item['label']) ?>
+                                (<?= _dh($item['itemModel']) ?>)
                             </b>
                         </th>
                         <th>
@@ -138,7 +138,7 @@ use oat\tao\helpers\Template;
                           default: { echo "icon-not-evaluated";break;}
                           }
                           ?>
-                          rgt" />
+                          rgt"></span>
                           </td>
                           <td class="cardinalityField">
                               <?php 
@@ -172,30 +172,28 @@ use oat\tao\helpers\Template;
         	?>
 		<tr>
 		<?php if ($key === key($observations)) {?>
-		     <td <?=$rowspan?> class="variableIdentifierField"><?=$variableIdentifier?></td>
+		    <td <?=$rowspan?> class="variableIdentifierField"><?=$variableIdentifier?></td>
 		<?php }?>
-		<td colspan="2" class="dataResult">
-                    <?=tao_helpers_Display::htmlEscape(nl2br($variable->getValue()))?>
-                          </td>
-                          <td class="cardinalityField">
-                              <?php 
-                              echo $variable->getCardinality();
-                              ?>
-                          </td>
-                          <td class="basetypeField">
-                              <?php 
-                              echo $variable->getBaseType();
-                              ?>
-                          </td>
-                          <td class="epoch"><?=$variable->getEpoch()?></td>
-                          </tr>
-                          <?php
-                          }
-                          }
-                          ?>
-
-                          <?php } ?>
-                          </tbody>
+            <td colspan="2" class="dataResult">
+                <?= tao_helpers_Display::htmlEscape($variable->getValue())?>
+            </td>
+            <td class="cardinalityField">
+              <?= $variable->getCardinality(); ?>
+            </td>
+            <td class="basetypeField">
+              <?= $variable->getBaseType(); ?>
+            </td>
+            <td class="epoch">
+              <?=$variable->getEpoch()?>
+            </td>
+            </tr>
+            <?php
+            }
+            }
+            ?>
+            
+            <?php } ?>
+            </tbody>
                 </table>
                 <br />
                 <?php } ?>
