@@ -1,4 +1,4 @@
-module.exports = function(grunt) { 
+module.exports = function(grunt) {
 
     var requirejs   = grunt.config('requirejs') || {};
     var clean       = grunt.config('clean') || {};
@@ -12,12 +12,12 @@ module.exports = function(grunt) {
     /**
      * Remove bundled and bundling files
      */
-    clean.taoresultsbundle = [out];
-    
+    clean.taooutcomeuibundle = [out];
+
     /**
-     * Compile tao files into a bundle 
+     * Compile tao files into a bundle
      */
-    requirejs.taoresultsbundle = {
+    requirejs.taooutcomeuibundle = {
         options: {
             baseUrl : '../js',
             dir : out,
@@ -34,7 +34,7 @@ module.exports = function(grunt) {
     /**
      * copy the bundles to the right place
      */
-    copy.taoresultsbundle = {
+    copy.taooutcomeuibundle = {
         files: [
             { src: [out + '/taoOutcomeUi/controller/routes.js'],  dest: root + '/taoOutcomeUi/views/js/controllers.min.js' },
             { src: [out + '/taoOutcomeUi/controller/routes.js.map'],  dest: root + '/taoOutcomeUi/views/js/controllers.min.js.map' }
@@ -46,5 +46,5 @@ module.exports = function(grunt) {
     grunt.config('copy', copy);
 
     // bundle task
-    grunt.registerTask('taoresultsbundle', ['clean:taoresultsbundle', 'requirejs:taoresultsbundle', 'copy:taoresultsbundle']);
+    grunt.registerTask('taooutcomeuibundle', ['clean:taooutcomeuibundle', 'requirejs:taooutcomeuibundle', 'copy:taooutcomeuibundle']);
 };
