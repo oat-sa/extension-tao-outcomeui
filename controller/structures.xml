@@ -16,9 +16,13 @@
                             />
                 </trees>
                 <actions>
-                    <action id="results-index" name="Index" url="/taoOutcomeUi/Results/index" group="none"
+                    <action id="results-index" name="Results" url="/taoOutcomeUi/Results/index" group="content"
                             context="class">
-                        <icon id="icon-edit"/>
+                        <icon id="icon-result-small"/>
+                    </action>
+                    <action id="results-export" name="Export Table" url="/taoOutcomeUi/ResultTable/index" group="content"
+                            context="class">
+                        <icon id="icon-table"/>
                     </action>
                     <action id="results-view" name="View result" url="/taoOutcomeUi/Results/viewResult" group="content"
                             context="instance">

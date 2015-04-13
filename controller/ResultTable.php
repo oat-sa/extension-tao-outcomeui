@@ -60,15 +60,22 @@ class ResultTable extends \tao_actions_CommonModule {
     }
 
     /**
-     * get the main class
-     * @return \core_kernel_classes_Classes
+     * Result Table entry page
      */
-    public function index() {
-    	$filter = $this->getRequestParameter('filter');
-    	$classUri = $this->getRequestParameter('classUri');
-		$this->setData('filter', $filter);
-		$this->setData('classUri', $classUri);
-		$this->setView('resultTable.tpl');
+    public function index()
+    {
+        $deliveryService = \taoDelivery_models_classes_DeliveryAssemblyService::singleton();
+        if($this->getRequestParameter('classUri') !== $deliveryService->getRootClass()->getUri()) {
+            $filter = $this->getRequestParameter('filter');
+            $classUri = $this->getRequestParameter('classUri');
+            $this->setData('filter', $filter);
+            $this->setData('classUri', $classUri);
+            $this->setView('resultTable.tpl');
+        } else {
+            $this->setData('type', 'info');
+            $this->setData('error',__('No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here.'));
+            $this->setView('index.tpl');
+        }
     }
 
     /**

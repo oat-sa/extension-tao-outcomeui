@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO 3.0-RC04\n"
-"PO-Revision-Date: 2015-03-06T15:51:41\n"
+"Project-Id-Version: TAO 3.0-RC05\n"
+"PO-Revision-Date: 2015-04-13T09:54:36\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: da-DK\n"
@@ -67,6 +67,7 @@ msgstr ""
 msgid "Data collection statistics :"
 msgstr ""
 
+#, tao-public
 msgid "Delete"
 msgstr ""
 
@@ -91,6 +92,7 @@ msgstr ""
 msgid "Export Delivery Results"
 msgstr ""
 
+#, tao-public
 msgid "Export Table"
 msgstr ""
 
@@ -110,9 +112,6 @@ msgid "Generated on: "
 msgstr ""
 
 msgid "Grades"
-msgstr ""
-
-msgid "Index"
 msgstr ""
 
 msgid "Label"
@@ -183,6 +182,7 @@ msgstr ""
 msgid "Results distribution"
 msgstr ""
 
+#, tao-public
 msgid "Results library"
 msgstr ""
 
@@ -250,6 +250,7 @@ msgstr ""
 msgid "View and format the collected results."
 msgstr ""
 
+#, tao-public
 msgid "View result"
 msgstr ""
 
