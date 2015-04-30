@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO 3.0-RC05\n"
-"PO-Revision-Date: 2015-04-13T09:54:38\n"
+"Project-Id-Version: TAO 3.0.0\n"
+"PO-Revision-Date: 2015-04-30T09:17:07\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: zh-TW\n"
@@ -35,7 +35,7 @@ msgid "Actual size"
 msgstr "實際尺寸"
 
 msgid "Add All grades"
-msgstr "加入所有的等級"
+msgstr "加入所有的分數"
 
 msgid "Add All responses"
 msgstr "加入所有的回應"
@@ -89,9 +89,6 @@ msgstr "錯誤"
 msgid "Export CSV File"
 msgstr "匯出 CSV 檔案"
 
-msgid "Export Delivery Results"
-msgstr "匯出輸送結果"
-
 #, tao-public
 msgid "Export Table"
 msgstr "匯出表格"
@@ -103,7 +100,7 @@ msgid "First Name:"
 msgstr "名："
 
 msgid "First submitted variables only"
-msgstr "第一個提交的可變數"
+msgstr "只要第一個提交的可變數"
 
 msgid "Frequency per Score"
 msgstr "每個分數的頻率"
@@ -112,7 +109,7 @@ msgid "Generated on: "
 msgstr "產生于："
 
 msgid "Grades"
-msgstr "等級"
+msgstr "分數"
 
 msgid "Label"
 msgstr "標籤"
@@ -124,7 +121,7 @@ msgid "Last Name:"
 msgstr "姓氏:"
 
 msgid "Last submitted variables only"
-msgstr "只有最後提交的未知數"
+msgstr "只要最後提交的變數"
 
 msgid "Login:"
 msgstr "登入:"
@@ -140,10 +137,10 @@ msgid "No Results"
 msgstr "沒有結果"
 
 msgid "No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here."
-msgstr "還沒有人考試。只要一個考生考完試以後，這裏就會顯示考生的考試結果。"
+msgstr "尚未有人考試。考生考完試後，這裏會顯示考試結果。"
 
 msgid "Observed performances per distinc score variable types "
-msgstr "觀察每個獨特得分未知數類型的表現"
+msgstr "每個獨特得分可變數類型的表現"
 
 msgid "Ok"
 msgstr "確定"
@@ -161,7 +158,7 @@ msgid "Related Deliveries:"
 msgstr "相關的遞交："
 
 msgid "Remove All grades"
-msgstr "移除所有等級"
+msgstr "移除所有分數"
 
 msgid "Remove All responses"
 msgstr "移除所有回應"
@@ -186,14 +183,14 @@ msgstr "結果分佈"
 msgid "Results library"
 msgstr "結果書庫"
 
-msgid "Score average"
-msgstr "得分平均"
-
 msgid "score average"
 msgstr "得分平均"
 
+msgid "Score average"
+msgstr "得分平均"
+
 msgid "Score average per Variable"
-msgstr "每一個可變數的平均得分"
+msgstr "每一個變數的平均得分"
 
 msgid "Score per Observation"
 msgstr "每一個觀察的平均得分"
@@ -207,10 +204,10 @@ msgstr "發生錯誤..."
 msgid "Summary Report"
 msgstr "摘要報告"
 
-msgid "Test Taker"
+msgid "Test taker"
 msgstr "考生"
 
-msgid "Test taker"
+msgid "Test Taker"
 msgstr "考生"
 
 msgid "Test Variables"
@@ -231,7 +228,7 @@ msgstr "此遞送並不存在\\"\n"
 "msgid "
 
 msgid "This delivery has no readable Result Server"
-msgstr ""
+msgstr "此遞送沒有可讀的結果服務器"
 
 msgid "This delivery has no Result Server"
 msgstr "此遞交沒有結果服務器"
