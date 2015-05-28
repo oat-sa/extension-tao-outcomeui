@@ -37,9 +37,6 @@ return array(
 	    'taoDelivery' => '*'
     ),
 	'install' => array(
-		'checks' => array(
-			array('type' => 'CheckFileSystemComponent', 'value' => array('id' => 'fs_taoResults_views_genpics', 'location' => 'taoOutcomeUi/views/genpics', 'rights' => 'rw'))
-		)
 	),
     'uninstall' => array(
 	),
