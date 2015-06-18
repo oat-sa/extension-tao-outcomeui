@@ -54,7 +54,9 @@ class Updater extends \common_ext_ExtensionUpdater {
             }
             $currentVersion = '2.6.1';
         }
-
+        if ($currentVersion == '2.6.1') {
+            $currentVersion = '2.6.2';
+        }
         return $currentVersion;
     }
 
