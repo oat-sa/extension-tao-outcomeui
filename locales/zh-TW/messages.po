@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO v3.1-dev\n"
-"PO-Revision-Date: 2015-06-18T16:17:45\n"
+"Project-Id-Version: TAO v3.1.0-sprint03\n"
+"PO-Revision-Date: 2015-07-21T16:45:33\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: zh-TW\n"
@@ -30,9 +30,6 @@ msgstr "# 不同的考生"
 
 msgid "# Distinct variable types"
 msgstr "# 不同的可變數類型"
-
-msgid "Actual size"
-msgstr "實際尺寸"
 
 msgid "Add All grades"
 msgstr "加入所有的分數"
@@ -73,9 +70,6 @@ msgstr "刪除"
 
 msgid "Delivery"
 msgstr "遞送"
-
-msgid "Desktop preview"
-msgstr "桌面預覽"
 
 msgid "Download"
 msgstr "下載"
@@ -129,9 +123,6 @@ msgstr "登入:"
 #, tao-public
 msgid "Manage Results"
 msgstr "管理結果"
-
-msgid "Mobile preview"
-msgstr "行動預覽"
 
 msgid "No Results"
 msgstr "沒有結果"
@@ -204,10 +195,10 @@ msgstr "發生錯誤..."
 msgid "Summary Report"
 msgstr "摘要報告"
 
-msgid "Test taker"
+msgid "Test Taker"
 msgstr "考生"
 
-msgid "Test Taker"
+msgid "Test taker"
 msgstr "考生"
 
 msgid "Test Variables"
