@@ -24,7 +24,7 @@
                             context="class">
                         <icon id="icon-table"/>
                     </action>
-                    <action id="results-export" name="Complete expired tests" binding="endExpiredTests" url="/taoQtiTest/TestCommand/endExpiredTests" group="content"
+                    <action id="results-expire" name="Complete expired tests" binding="endExpiredTests" url="/taoQtiTest/TestCommand/endExpiredTests" group="content"
                             context="class">
                         <icon id="icon-end-attempt"/>
                     </action>
