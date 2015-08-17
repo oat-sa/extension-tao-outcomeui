@@ -335,7 +335,7 @@ class ResultsService extends tao_models_classes_ClassService {
                 $epoch = $variableTemp->getEpoch();
 
                 $variableDescription["uri"] = $variable[0]->uri;
-                $variableTemp->setEpoch(tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE));
+                $variableTemp->setEpoch(tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch, true), tao_helpers_Date::FORMAT_ISO8601));
                 $variableDescription["var"] = $variableTemp;
 
                 if (method_exists($variableTemp, 'getCorrectResponse') && !is_null($variableTemp->getCorrectResponse())) {
