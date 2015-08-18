@@ -93,8 +93,8 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
     {
         $prophet = new Prophet();
         
-        $deliveryResultProphecy = $prophet->prophesize('core_kernel_classes_Resource');
-        $deliveryResultProphecy->getUri()->willReturn('#fakeUri');
+        $deliveryResultProphecy = $prophet->prophesize('taoDelivery_models_classes_execution_OntologyDeliveryExecution');
+        $deliveryResultProphecy->getIdentifier()->willReturn('#fakeUri');
         
         $deliveryResult = $deliveryResultProphecy->reveal();
         
@@ -114,8 +114,8 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
     {
         $prophet = new Prophet();
         
-        $deliveryResultProphecy = $prophet->prophesize('core_kernel_classes_Resource');
-        $deliveryResultProphecy->getUri()->willReturn('#fakeUri');
+        $deliveryResultProphecy = $prophet->prophesize('taoDelivery_models_classes_execution_OntologyDeliveryExecution');
+        $deliveryResultProphecy->getIdentifier()->willReturn('#fakeUri');
         $deliveryResult = $deliveryResultProphecy->reveal();
         
         $impProphecy = $prophet->prophesize('oat\taoOutcomeRds\model\RdsResultStorage');
@@ -138,11 +138,11 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $prophet = new Prophet();
         $impProphecy = $prophet->prophesize('oat\taoOutcomeRds\model\RdsResultStorage');
         
-        $impProphecy->getVariables('#foo')->willReturn(true);
+        $impProphecy->getVariables('#foo')->willReturn(array('#bar'));
         $imp = $impProphecy->reveal();
         
         $this->service->setImplementation($imp);
-        $this->assertTrue($this->service->getVariablesFromObjectResult('#foo'));
+        $this->assertContains('#bar',$this->service->getVariablesFromObjectResult('#foo'));
     }
     /**
      * 
@@ -194,9 +194,9 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         
         $this->service->setImplementation($imp);
         
-        $item = $this->service->getItemFromItemResult('#foo');
-        $this->assertInstanceOf('core_kernel_classes_Resource', $item);
-        $this->assertEquals('#item', $item->getUri());
+        $resultItem = $this->service->getItemFromItemResult('#foo');
+        $this->assertInstanceOf('core_kernel_classes_Resource', $resultItem);
+        $this->assertEquals('#item', $resultItem->getUri());
     }
     /**
      * 
@@ -219,8 +219,8 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         
         $this->service->setImplementation($imp);
         
-        $deliveryResultProphecy = $prophet->prophesize('core_kernel_classes_Resource');
-        $deliveryResultProphecy->getUri()->willReturn('#fakeUri');
+        $deliveryResultProphecy = $prophet->prophesize('taoDelivery_models_classes_execution_OntologyDeliveryExecution');
+        $deliveryResultProphecy->getIdentifier()->willReturn('#fakeUri');
         $deliveryResult = $deliveryResultProphecy->reveal();
         
         $varData = $this->service->getVariableDataFromDeliveryResult($deliveryResult);
@@ -242,8 +242,8 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         
         $this->service->setImplementation($imp);
         
-        $deliveryResultProphecy = $prophet->prophesize('core_kernel_classes_Resource');
-        $deliveryResultProphecy->getUri()->willReturn('#fakeUri');
+        $deliveryResultProphecy = $prophet->prophesize('taoDelivery_models_classes_execution_OntologyDeliveryExecution');
+        $deliveryResultProphecy->getIdentifier()->willReturn('#fakeUri');
         $deliveryResult = $deliveryResultProphecy->reveal();
         
         $item = $this->service->getTestTaker($deliveryResult);
@@ -376,9 +376,9 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $imp = $impProphecy->reveal();
         
         $this->service->setImplementation($imp);
-        $deliveryResultProphecy = $prophet->prophesize('core_kernel_classes_Resource');
-        $deliveryResultProphecy->getUri()->willReturn('#fakeUri');
-        $deliveryResultProphecy->getUniquePropertyValue(new \core_kernel_classes_Property(PROPERTY_DELVIERYEXECUTION_STATUS))->willReturn(new \core_kernel_classes_Resource(INSTANCE_DELIVERYEXEC_FINISHED));
+        $deliveryResultProphecy = $prophet->prophesize('taoDelivery_models_classes_execution_OntologyDeliveryExecution');
+        $deliveryResultProphecy->getIdentifier()->willReturn('#fakeUri');
+        $deliveryResultProphecy->getState()->willReturn(new \core_kernel_classes_Resource(INSTANCE_DELIVERYEXEC_FINISHED));
         
         $deliveryResult = $deliveryResultProphecy->reveal();
         
@@ -473,8 +473,8 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $imp = $impProphecy->reveal();
         
         $this->service->setImplementation($imp);
-        $deliveryResultProphecy = $prophet->prophesize('core_kernel_classes_Resource');
-        $deliveryResultProphecy->getUri()->willReturn('#fakeUri');
+        $deliveryResultProphecy = $prophet->prophesize('taoDelivery_models_classes_execution_OntologyDeliveryExecution');
+        $deliveryResultProphecy->getIdentifier()->willReturn('#fakeUri');
         $deliveryResult = $deliveryResultProphecy->reveal();
         
         $itemVar = $this->service->getItemVariableDataFromDeliveryResult($deliveryResult, 'lastSubmitted');
@@ -539,8 +539,8 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
     {
         $prophet = new Prophet();
         
-        $deliveryResultProphecy = $prophet->prophesize('core_kernel_classes_Resource');
-        $deliveryResultProphecy->getUri()->willReturn('#fakeUri');
+        $deliveryResultProphecy = $prophet->prophesize('taoDelivery_models_classes_execution_OntologyDeliveryExecution');
+        $deliveryResultProphecy->getIdentifier()->willReturn('#fakeUri');
         $deliveryResult = $deliveryResultProphecy->reveal();
         
         $itemVar = $this->service->getItemVariableDataStatsFromDeliveryResult($deliveryResult, 'lastSubmitted');
