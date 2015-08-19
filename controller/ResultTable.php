@@ -102,7 +102,7 @@ class ResultTable extends \tao_actions_CommonModule {
     	//The list of delivery Results matching the current selection filters
         $results = array();
         foreach($this->service->getImplementation()->getResultByDelivery($delivery) as $result){
-            $results[] = new core_kernel_classes_Resource($result['deliveryResultIdentifier']);
+            $results[] = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($result['deliveryResultIdentifier']);
         }
         $dpmap = array();
         foreach ($columns as $column) {
@@ -127,12 +127,13 @@ class ResultTable extends \tao_actions_CommonModule {
         foreach ($dpmap as $arr) {
             $arr['instance']->prepare($results, $arr['columns']);
         }
-        
+
+        /** @var \taoDelivery_models_classes_execution_DeliveryExecution $result */
         foreach($results as $result) {
             $cellData = array();
             foreach ($columns as $column) {
                 if (count($column->getDataProvider()->cache) > 0) {
-                    $cellData[]=self::filterCellData($column->getDataProvider()->getValue($result, $column), $filter);
+                    $cellData[]=self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result->getIdentifier()), $column), $filter);
                 } else {
                     $cellData[]=self::filterCellData(
                         (string)$this->service->getTestTaker($result)->getOnePropertyValue(new \core_kernel_classes_Property(PROPERTY_USER_LOGIN)),
@@ -140,7 +141,7 @@ class ResultTable extends \tao_actions_CommonModule {
                 }
             }
             $rows[] = array(
-                    'id' => $result->getUri(),
+                    'id' => $result->getIdentifier(),
                     'cell' => $cellData
             );
         }
@@ -206,7 +207,8 @@ class ResultTable extends \tao_actions_CommonModule {
 		//retrieveing all individual response variables referring to the  selected delivery results
 		$selectedVariables = array ();
 		foreach ($results as $result){
-            $variables = $this->service->getVariables(new core_kernel_classes_Resource($result['deliveryResultIdentifier']), new core_kernel_classes_Class($variableClassUri) );
+            $de = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($result["deliveryResultIdentifier"]);
+            $variables = $this->service->getVariables($de);
             $selectedVariables = array_merge($selectedVariables, $variables);
 		}
 		//retrieving The list of the variables identifiers per activities defintions as observed
@@ -336,8 +338,9 @@ class ResultTable extends \tao_actions_CommonModule {
         
                 $deliveryResults = $this->service->getImplementation()->getResultByDelivery(array($deliveryUri), $options);
         $counti = $this->service->getImplementation()->countResultByDelivery(array($deliveryUri));
+        $results = array();
         foreach($deliveryResults as $deliveryResult){
-            $results[] = new core_kernel_classes_Resource($deliveryResult['deliveryResultIdentifier']);
+            $results[] = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($deliveryResult['deliveryResultIdentifier']);
         }
 
         $dpmap = array();
@@ -364,9 +367,10 @@ class ResultTable extends \tao_actions_CommonModule {
             $arr['instance']->prepare($results, $arr['columns']);
         }
 
+        /** @var \taoDelivery_models_classes_execution_DeliveryExecution $result */
         foreach($results as $result) {
             $data = array(
-                'id' => $result->getUri()
+                'id' => $result->getIdentifier()
             );
             foreach ($columns as $column) {
                 $key = null;
@@ -378,7 +382,7 @@ class ResultTable extends \tao_actions_CommonModule {
                 if(!is_null($key)){
                     if (count($column->getDataProvider()->cache) > 0) {
                         $data[$key] = self::filterCellData(
-                            $column->getDataProvider()->getValue($result, $column),
+                            $column->getDataProvider()->getValue(new core_kernel_classes_Resource($result->getIdentifier()), $column),
                             $filterData
                         );
                     } else {
