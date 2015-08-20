@@ -112,23 +112,23 @@ class VariableDataProvider
                     }
 
                     $type = $varData["class"];
-                    if(isset($varData["value"])){
+                    if (isset($varData["value"])) {
                         if(is_array($varData["value"])){
                             $varData["value"] = json_encode($varData["value"]);
                         }
                     }
                     else{
                         $varData["value"] = $varData["candidateResponse"];
-                        $varData["value"] = base64_decode($varData["value"]);
-                        if($varData["baseType"] === 'file'){
-                            $decodedFile = Datatypes::decodeFile($varData['value']);
-                            $varData['value'] = $decodedFile['name'];
-                        }
+                    }
+                    $varData["value"] = base64_decode($varData["value"]);
+                    if($varData["baseType"] === 'file'){
+                        $decodedFile = Datatypes::decodeFile($varData['value']);
+                        $varData['value'] = $decodedFile['name'];
                     }
                     $variableIdentifier = (string)$varData["identifier"];
                     foreach ($columns as $column) {
                         if (
-                            $variableIdentifier == $column["identifier"]
+                            $variableIdentifier == $column->getIdentifier()
                             and
                             $contextIdentifier == $column->getContextIdentifier()
                             ) {
