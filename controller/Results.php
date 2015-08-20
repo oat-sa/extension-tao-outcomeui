@@ -54,6 +54,9 @@ class Results extends tao_actions_SaSModule
         $this->defaultData();
     }
 
+    /**
+     * @return ResultsService
+     */
     protected function getClassService()
     {
         return ResultsService::singleton();
@@ -252,7 +255,7 @@ class Results extends tao_actions_SaSModule
             $this->getClassService()->setImplementation($implementation);
 
 
-            $testTaker = $this->getClassService()->getTestTakerData($result);
+            $testTaker = $this->getClassService()->getTestTakerData($de);
 
             if (
                 (is_object($testTaker) and (get_class($testTaker) == 'core_kernel_classes_Literal'))
@@ -287,7 +290,7 @@ class Results extends tao_actions_SaSModule
                 $this->setData('userEmail', $userEmail);
             }
             $filter = ($this->hasRequestParameter("filter")) ? $this->getRequestParameter("filter") : "lastSubmitted";
-            $stats = $this->getClassService()->getItemVariableDataStatsFromDeliveryResult($result, $filter);
+            $stats = $this->getClassService()->getItemVariableDataStatsFromDeliveryResult($de, $filter);
             $this->setData('nbResponses', $stats["nbResponses"]);
             $this->setData('nbCorrectResponses', $stats["nbCorrectResponses"]);
             $this->setData('nbIncorrectResponses', $stats["nbIncorrectResponses"]);
@@ -295,7 +298,7 @@ class Results extends tao_actions_SaSModule
             $this->setData('deliveryResultLabel', $result->getLabel());
             $this->setData('variables', $stats["data"]);
             //retireve variables not related to item executions
-            $deliveryVariables = $this->getClassService()->getVariableDataFromDeliveryResult($result);
+            $deliveryVariables = $this->getClassService()->getVariableDataFromDeliveryResult($de);
             $this->setData('deliveryVariables', $deliveryVariables);
             $this->setData('uri', $this->getRequestParameter("uri"));
             $this->setData('classUri', $this->getRequestParameter("classUri"));

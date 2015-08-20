@@ -75,9 +75,10 @@ class VariableDataProvider
     {   
         $resultsService = ResultsService::singleton();      
 
+        /** @var \taoDelivery_models_classes_execution_DeliveryExecution $result */
         foreach($resources as $result){
             $itemresults = $resultsService->getVariables($result, false);
-            $cellData = array();
+
             foreach ($itemresults as $itemResultUri=>$vars) {
                 //cache the item information pertaining to a given itemResult (stable over time)
                 if (common_cache_FileCache::singleton()->has('itemResultItemCache'.tao_helpers_Uri::encode($itemResultUri))) {
@@ -101,6 +102,7 @@ class VariableDataProvider
                 foreach ($vars as $var) {
                     $var = $var[0];
                     //cache the variable data
+                    /** @var \taoResultServer_models_classes_Variable $varData */
                     $varData = (array)$var->variable;
                     if (common_cache_FileCache::singleton()->has('variableDataCache'.$var->uri.'_'.$varData["identifier"])) {
                         $varData = common_cache_FileCache::singleton()->get('variableDataCache'.$var->uri.'_'.$varData["identifier"]);
@@ -130,13 +132,14 @@ class VariableDataProvider
                             and
                             $contextIdentifier == $column->getContextIdentifier()
                             ) {
+
                             $value = (string)$varData["value"];
                             $epoch = $varData["epoch"];
                             $readableTime = "";
                             if ($epoch != "") {
                                 $readableTime = "@". tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE);
                             }
-                            $this->cache[$type][$result->getUri()][$column->getContextIdentifier().$variableIdentifier][(string)$epoch] =  array($value, $readableTime);
+                            $this->cache[$type][$result->getIdentifier()][$column->getContextIdentifier().$variableIdentifier][(string)$epoch] =  array($value, $readableTime);
 
                             }
                     }

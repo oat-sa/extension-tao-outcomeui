@@ -66,8 +66,8 @@ class StatisticsService
             "#" => 0
         );
         foreach ($deliveryResults as $deliveryResult) {
-            $deliveryResult = new \core_kernel_classes_Resource($deliveryResult["deliveryResultIdentifier"]);
-            $testTaker = $this->getTestTaker($deliveryResult);
+            $de = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($deliveryResult["deliveryResultIdentifier"]);
+            $testTaker = $this->getTestTaker($de);
             if (get_class($testTaker) == 'core_kernel_classes_Literal') {
                 $testTakerIdentifier = $testTaker->__toString();
                 $testTakerLabel = $testTaker->__toString();
@@ -77,9 +77,9 @@ class StatisticsService
             }
             
             $statisticsGrouped["distinctTestTaker"][$testTakerIdentifier] = $testTakerLabel;
-            $scoreVariables = $this->getVariables($deliveryResult);
+            $scoreVariables = $this->getVariables($de);
             try {
-                $relatedDelivery = $this->getDelivery($deliveryResult);
+                $relatedDelivery = $this->getDelivery($de);
                 $deliveryDataSet["deliveries"][$relatedDelivery->getUri()] = $relatedDelivery->getLabel();
             } catch (Exception $e) {
                 $deliveryDataSet["deliveries"]["undefined"] = "Unknown Delivery";

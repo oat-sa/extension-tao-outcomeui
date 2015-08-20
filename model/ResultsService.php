@@ -5,18 +5,18 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; under version 2
  * of the License (non-upgradable).
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- * 
+ *
  * Copyright (c) 2013 Open Assessment Technologies S.A.
- * 
+ *
  *
  * @access public
  * @author Joel Bout, <joel.bout@tudor.lu>
@@ -25,7 +25,6 @@
 
 namespace oat\taoOutcomeUi\model;
 
-use \Exception;
 use \common_Exception;
 use \common_Logger;
 use \common_cache_FileCache;
@@ -34,8 +33,7 @@ use \core_kernel_classes_Class;
 use \core_kernel_classes_DbWrapper;
 use \core_kernel_classes_Property;
 use \core_kernel_classes_Resource;
-use oat\taoOutcomeRds\model\RdsResultStorage;
-use \taoResultServer_models_classes_Variable;
+use oat\taoResultServer\models\classes\ResultManagement;
 use \tao_helpers_Date;
 use \tao_models_classes_ClassService;
 use oat\taoOutcomeUi\helper\Datatypes;
@@ -43,24 +41,11 @@ use oat\taoOutcomeUi\helper\Datatypes;
 class ResultsService extends tao_models_classes_ClassService {
 
     /**
-     * a local cache (string)$callId=> (core_kernel_classes_Resource) $itemResult
-     * 
-     * @var core_kernel_classes_Resource
-     */
-    private $cacheItemResult = array(); 
-    
-    /**
-     * a local cache (string)identifier=> (core_kernel_classes_Resource) $deliveryResult
-     * @var core_kernel_classes_Resource
-     */
-    private $cacheDeliveryResult = array(); 
-    
-    /**
-     * 
+     *
      * @var \taoResultServer_models_classes_ReadableResultStorage
      */
     private $implementation = null;
-    
+
     /**
      * (non-PHPdoc)
      * @see tao_models_classes_ClassService::getRootClass()
@@ -69,39 +54,39 @@ class ResultsService extends tao_models_classes_ClassService {
         return new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
     }
 
-    public function setImplementation(\taoResultServer_models_classes_ReadableResultStorage $implementation){
+    public function setImplementation(ResultManagement $implementation){
         $this->implementation = $implementation;
     }
 
     /**
-     * 
-     * @return taoResultServer_models_classes_ReadableResultStorage
+     * @return ResultManagement
+     * @throws common_exception_Error
      */
     public function getImplementation(){
         if($this->implementation == null){
             throw new \common_exception_Error('No result storage defined');
-//            $this->implementation = new RdsResultStorage();
         }
         return $this->implementation;
     }
 
     /**
-     * return all variable for taht deliveryResults (uri identifiers) 
+     * return all variable for that deliveryResults (uri identifiers)
      *
      * @access public
      * @author Joel Bout, <joel.bout@tudor.lu>
-     * @param  Resource deliveryResult
-     * @param boolean flat a falt array is returned or a structured delvieryResult-ItemResult-Variable
+     * @param  \taoDelivery_models_classes_execution_DeliveryExecution deliveryResult
+     * @param boolean $flat a flat array is returned or a structured delvieryResult-ItemResult-Variable
      * @return array
      */
-    public function getVariables(core_kernel_classes_Resource $deliveryResult, $flat = true) {
+    public function getVariables(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $flat = true) {
         $variables = array();
         //this service is slow due to the way the data model design  
-        //if the delvieryResult related execution is finished, the data is stored in cache. 
-        $serial = 'deliveryResultVariables:'.$deliveryResult->getUri();
+        //if the delvieryResult related execution is finished, the data is stored in cache.
+
+        $serial = 'deliveryResultVariables:'.$deliveryResult->getIdentifier();
         if (common_cache_FileCache::singleton()->has($serial)) {
             $variables = common_cache_FileCache::singleton()->get($serial);
-        } else {           
+        } else {
            foreach ($this->getItemResultsFromDeliveryResult($deliveryResult) as $itemResult) {
                 $itemResultVariables = $this->getVariablesFromObjectResult($itemResult);
                 $variables[$itemResult] = $itemResultVariables;
@@ -112,16 +97,16 @@ class ResultsService extends tao_models_classes_ClassService {
            }
            //overhead for cache handling, the data is stored only when the underlying deliveryExecution is finished
            try {
-                $status = $deliveryResult->getUniquePropertyValue(new core_kernel_classes_Property(PROPERTY_DELVIERYEXECUTION_STATUS));
+                $status = $deliveryResult->getState();
                 if ($status->getUri()== INSTANCE_DELIVERYEXEC_FINISHED ) {
                     common_cache_FileCache::singleton()->put($variables, $serial);
                 }
 
            }catch (common_Exception $e) {
-               common_Logger::i("List of variables of results of ".$deliveryResult->getUri()." could not be reliable cached due to an unfinished execution");
+               common_Logger::i("List of variables of results of ".$deliveryResult->getIdentifier()." could not be reliable cached due to an unfinished execution");
            }
-           
-           
+
+
         }
          if ($flat) {
                 $returnValue = array();
@@ -137,13 +122,13 @@ class ResultsService extends tao_models_classes_ClassService {
             } else {
                 $returnValue = $variables;
             }
-        
-        
+
+
         return (array) $returnValue;
     }
 
     /**
-     * @param  Resource Itemresult
+     * @param  string $itemResult
      * @return array
      */
     public function getVariablesFromObjectResult($itemResult) {
@@ -151,37 +136,37 @@ class ResultsService extends tao_models_classes_ClassService {
     }
 
     /**
-     * Return the corresponding delivery 
-     * @param core_kernel_classes_Resource $deliveryResult
+     * Return the corresponding delivery
+     * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
      * @return core_kernel_classes_Resource delviery
      * @author Patrick Plichart, <patrick@taotesting.com>
      */
-    public function getDelivery(core_kernel_classes_Resource $deliveryResult) {
-        return new core_kernel_classes_Resource($this->getImplementation()->getDelivery($deliveryResult->getUri()));
+    public function getDelivery(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult) {
+        return new core_kernel_classes_Resource($this->getImplementation()->getDelivery($deliveryResult->getIdentifier()));
     }
 
     /**
      * Returns all label of itemResults related to the delvieryResults
-     * @param core_kernel_classes_Resource $deliveryResult
-     * @return array core_kernel_classes_Resource
+     * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
+     * @return array string uri
      * */
-    public function getItemResultsFromDeliveryResult(core_kernel_classes_Resource $deliveryResult) {
-        return $this->getImplementation()->getRelatedItemCallIds($deliveryResult->getUri());
+    public function getItemResultsFromDeliveryResult(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult) {
+        return $this->getImplementation()->getRelatedItemCallIds($deliveryResult->getIdentifier());
     }
 
     /**
      * Returns all label of itemResults related to the delvieryResults
-     * @param core_kernel_classes_Resource $deliveryResult
-     * @return array core_kernel_classes_Resource
+     * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
+     * @return array string uri
      * */
-    public function getTestsFromDeliveryResult(core_kernel_classes_Resource $deliveryResult) {
-        return $this->getImplementation()->getRelatedTestCallIds($deliveryResult->getUri());
+    public function getTestsFromDeliveryResult(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult) {
+        return $this->getImplementation()->getRelatedTestCallIds($deliveryResult->getIdentifier());
     }
 
     /**
-     * 
-     * @param core_kernel_classes_Resource $itemResult
-     * @return \common_Object
+     *
+     * @param string $itemResult
+     * @return \core_kernel_classes_Resource
      */
     public function getItemFromItemResult($itemResult) {
         $item = null;
@@ -199,8 +184,8 @@ class ResultsService extends tao_models_classes_ClassService {
 
     /**
      *
-     * @param core_kernel_classes_Resource $test
-     * @return \common_Object
+     * @param string $test
+     * @return \core_kernel_classes_Resource
      */
     public function getVariableFromTest($test) {
         $returnTest = null;
@@ -217,19 +202,19 @@ class ResultsService extends tao_models_classes_ClassService {
     }
 
     /**
-     * 
-     * @param unknown $variableUri 
-     * @return \common_Object
-     * 
+     *
+     * @param string $variableUri
+     * @return string
+     *
      */
     public function getVariableCandidateResponse($variableUri) {
         return $this->getImplementation()->getVariableProperty($variableUri, 'candidateResponse');
     }
 
     /**
-     * 
-     * @param unknown $variableUri
-     * @return \common_Object
+     *
+     * @param string $variableUri
+     * @return string
      */
     public function getVariableBaseType($variableUri) {
         return $this->getImplementation()->getVariableProperty($variableUri, 'baseType');
@@ -237,11 +222,11 @@ class ResultsService extends tao_models_classes_ClassService {
 
     /**
      *
-     * @param core_kernel_classes_Resource $deliveryResult
+     * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
      * @param string $filter 'lastSubmitted', 'firstSubmitted'
-     * @return type
+     * @return array ["nbResponses" => x,"nbCorrectResponses" => y,"nbIncorrectResponses" => z,"nbUnscoredResponses" => a,"data" => $variableData]
      */
-    public function getItemVariableDataStatsFromDeliveryResult(core_kernel_classes_Resource $deliveryResult, $filter = null) {
+    public function getItemVariableDataStatsFromDeliveryResult(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $filter = null) {
         $numberOfResponseVariables = 0;
         $numberOfCorrectResponseVariables = 0;
         $numberOfInCorrectResponseVariables = 0;
@@ -287,10 +272,13 @@ class ResultsService extends tao_models_classes_ClassService {
     }
     /**
      *  prepare a data set as an associative array, service intended to populate gui controller
-     *  
-     *  @param string $filter 'lastSubmitted', 'firstSubmitted'
+     *
+     * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
+     * @param string $filter 'lastSubmitted', 'firstSubmitted'
+     *
+     * @return array
      */
-    public function getItemVariableDataFromDeliveryResult(core_kernel_classes_Resource $deliveryResult, $filter) {
+    public function getItemVariableDataFromDeliveryResult(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $filter) {
 
         $undefinedStr = __('unknown'); //some data may have not been submitted           
 
@@ -379,9 +367,9 @@ class ResultsService extends tao_models_classes_ClassService {
         return $variablesByItem;
     }
     /**
-     * 
-     * @param unknown $a
-     * @param unknown $b
+     *
+     * @param string $a epoch
+     * @param string $b epoch
      * @return number
      */
     public static function sortTimeStamps($a, $b) {
@@ -389,8 +377,7 @@ class ResultsService extends tao_models_classes_ClassService {
         $floata = ((float) $usec + (float) $sec);
         list($usec, $sec) = explode(" ", $b);
         $floatb = ((float) $usec + (float) $sec);
-        //common_Logger::i($a." ".$floata);
-        //common_Logger::i($b. " ".$floatb);
+
         //the callback is expecting an int returned, for the case where the difference is of less than a second
         //intval(round(floatval($b) - floatval($a),1, PHP_ROUND_HALF_EVEN));
         if ((floatval($floata) - floatval($floatb)) > 0) {
@@ -404,13 +391,13 @@ class ResultsService extends tao_models_classes_ClassService {
 
     /**
      * return all variables linked to the delviery result and that are not linked to a particular itemResult
-     * 
-     * @param core_kernel_classes_Resource $deliveryResult
-     * @return multitype:multitype:string
+     *
+     * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
+     * @return array
      */
-    public function getVariableDataFromDeliveryResult(core_kernel_classes_Resource $deliveryResult) {
+    public function getVariableDataFromDeliveryResult(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult) {
 
-        $variables = $this->getImplementation()->getVariables($deliveryResult->getUri());
+        $variables = $this->getImplementation()->getVariables($deliveryResult->getIdentifier());
         $variablesData = array();
         foreach($variables as $variable){
             if($variable[0]->callIdTest != ""){
@@ -423,16 +410,17 @@ class ResultsService extends tao_models_classes_ClassService {
     /**
      * returns the test taker related to the delivery
      *
-     * @author Patrick Plichart, <patrick.plichart@taotesting.com>
+     * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
+     * @return \core_kernel_classes_Resource
      */
-    public function getTestTaker(core_kernel_classes_Resource $deliveryResult) {
-        $testTaker = $this->getImplementation()->getTestTaker($deliveryResult->getUri());
+    public function getTestTaker(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult) {
+        $testTaker = $this->getImplementation()->getTestTaker($deliveryResult->getIdentifier());
         return new core_kernel_classes_Resource($testTaker);
     }
 
     /**
      * Delete a delivery result
-     * 
+     *
      * @param string $deliveryResultIdentifier
      * @return boolean
      */
@@ -440,14 +428,21 @@ class ResultsService extends tao_models_classes_ClassService {
         return $this->getImplementation()->deleteResult($deliveryResultIdentifier);
     }
 
+
+    /**
+     * Return the file data associate to a variable
+     * @param $variableUri
+     * @return array file data
+     * @throws \core_kernel_persistence_Exception
+     */
     public function getVariableFile($variableUri) {
         //distinguish QTI file from other "file" base type
         $baseType = $this->getVariableBaseType($variableUri);
-        
+
         // https://bugs.php.net/bug.php?id=52623 ; 
         // if the constant for max buffering, mysqlnd or similar driver
         // is being used without need to adapt buffer size as it is atutomatically adapted for all the data. 
-        if (core_kernel_classes_DbWrapper::singleton()->getPlatForm()->getName() == 'mysql') {            
+        if (core_kernel_classes_DbWrapper::singleton()->getPlatForm()->getName() == 'mysql') {
             if (defined("PDO::MYSQL_ATTR_MAX_BUFFER_SIZE")) {
                 $maxBuffer = (is_int(ini_get('upload_max_filesize'))) ? (ini_get('upload_max_filesize')* 1.5) : 10485760 ;
                 core_kernel_classes_DbWrapper::singleton()->getSchemaManager()->setAttribute(\PDO::MYSQL_ATTR_MAX_BUFFER_SIZE,$maxBuffer);
@@ -481,9 +476,10 @@ class ResultsService extends tao_models_classes_ClassService {
 
     /**
      * To be reviewed as it implies a dependency towards taoSubjects
-     * @param core_kernel_classes_Resource $deliveryResult
+     * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
+     * @return array test taker properties values
      */
-    public function getTestTakerData(core_kernel_classes_Resource $deliveryResult) {
+    public function getTestTakerData(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult) {
         $testTaker = $this->gettestTaker($deliveryResult);
         if (get_class($testTaker) == 'core_kernel_classes_Literal') {
             return $testTaker;
@@ -498,11 +494,13 @@ class ResultsService extends tao_models_classes_ClassService {
         }
         return $propValues;
     }
-    
+
     /**
-     * 
+     *
      * @param \core_kernel_classes_Resource $delivery
-     * @return taoResultServer_models_classes_ReadableResultStorage
+     * @return \taoResultServer_models_classes_ReadableResultStorage
+     * @throws \core_kernel_persistence_Exception
+     * @throws common_exception_Error
      */
     public function getReadableImplementation(\core_kernel_classes_Resource $delivery) {
 
@@ -537,14 +535,5 @@ class ResultsService extends tao_models_classes_ClassService {
         }
 
         throw new \common_exception_Error(__('This delivery has no readable Result Server'));
-
-
-
-
-
-
-
-
-
     }
 }
