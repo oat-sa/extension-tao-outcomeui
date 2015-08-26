@@ -320,10 +320,8 @@ class ResultsService extends tao_models_classes_ClassService {
 
 
                 $variableIdentifier = $variableTemp->getIdentifier();
-                $epoch = $variableTemp->getEpoch();
 
                 $variableDescription["uri"] = $variable[0]->uri;
-                $variableTemp->setEpoch(tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE));
                 $variableDescription["var"] = $variableTemp;
 
                 if (method_exists($variableTemp, 'getCorrectResponse') && !is_null($variableTemp->getCorrectResponse())) {
@@ -338,7 +336,7 @@ class ResultsService extends tao_models_classes_ClassService {
                     $variableDescription["isCorrect"] = "unscored";
                 }
 
-                $variablesByItem[$itemIdentifier]['sortedVars'][$type][$variableIdentifier][$epoch] = $variableDescription;
+                $variablesByItem[$itemIdentifier]['sortedVars'][$type][$variableIdentifier][$variableTemp->getEpoch()] = $variableDescription;
                 $variablesByItem[$itemIdentifier]['label'] = $itemLabel;
             }
         }
