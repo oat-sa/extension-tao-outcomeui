@@ -186,9 +186,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $item = new \stdClass();
         $item->item = '#item';
         $impProphecy->getVariables('#foo')->willReturn(array(
-            array(
-                $item
-            )
+            $item
         ));
         $imp = $impProphecy->reveal();
         
@@ -211,9 +209,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $var->callIdTest = 'callId';
         $var->variable = 'variable';
         $impProphecy->getVariables('#fakeUri')->willReturn(array(
-            array(
-                $var
-            )
+            $var
         ));
         $imp = $impProphecy->reveal();
         
@@ -454,19 +450,13 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $item3->variable = $var3;
         
         $impProphecy->getVariables('#itemResultVariable')->willReturn(array(
-            array(
-                $item
-            )
+            $item
         ));
         $impProphecy->getVariables('#itemResultVariable2')->willReturn(array(
-            array(
-                $item2
-            )
+            $item2
         ));
         $impProphecy->getVariables('#itemResultVariable3')->willReturn(array(
-            array(
-                $item3
-            )
+            $item3
         )
         );
         

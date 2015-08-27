@@ -176,8 +176,8 @@ class ResultsService extends tao_models_classes_ClassService {
         $tmpItems = array_shift($items);
 
         //get the first object
-        if(!is_null($tmpItems[0]->item)){
-            $item = new core_kernel_classes_Resource($tmpItems[0]->item);
+        if(!is_null($tmpItems->item)){
+            $item = new core_kernel_classes_Resource($tmpItems->item);
         }
         return $item;
     }
@@ -195,8 +195,8 @@ class ResultsService extends tao_models_classes_ClassService {
         $tmpTests = array_shift($tests);
 
         //get the first object
-        if(!is_null($tmpTests[0]->test)){
-            $returnTest = new core_kernel_classes_Resource($tmpTests[0]->test);
+        if(!is_null($tmpTests->test)){
+            $returnTest = new core_kernel_classes_Resource($tmpTests->test);
         }
         return $returnTest;
     }
@@ -314,14 +314,14 @@ class ResultsService extends tao_models_classes_ClassService {
             }
             foreach ($this->getVariablesFromObjectResult($itemResult) as $variable) {
                 //retrieve the type of the variable
-                $variableTemp = $variable[0]->variable;
+                $variableTemp = $variable->variable;
                 $variableDescription = array();
                 $type = get_class($variableTemp);
 
 
                 $variableIdentifier = $variableTemp->getIdentifier();
 
-                $variableDescription["uri"] = $variable[0]->uri;
+                $variableDescription["uri"] = $variable->uri;
                 $variableDescription["var"] = $variableTemp;
 
                 if (method_exists($variableTemp, 'getCorrectResponse') && !is_null($variableTemp->getCorrectResponse())) {
@@ -398,8 +398,8 @@ class ResultsService extends tao_models_classes_ClassService {
         $variables = $this->getImplementation()->getVariables($deliveryResult->getIdentifier());
         $variablesData = array();
         foreach($variables as $variable){
-            if($variable[0]->callIdTest != ""){
-                $variablesData[] = $variable[0]->variable;
+            if($variable->callIdTest != ""){
+                $variablesData[] = $variable->variable;
             }
         }
         return $variablesData;
