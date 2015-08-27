@@ -166,11 +166,15 @@ class ResultsService extends tao_models_classes_ClassService {
     /**
      *
      * @param string $itemResult
+     * @param array $items already retrieved variables
      * @return \core_kernel_classes_Resource
      */
-    public function getItemFromItemResult($itemResult) {
+    public function getItemFromItemResult($itemResult, $items = array()) {
         $item = null;
-        $items = $this->getImplementation()->getVariables($itemResult);
+
+        if(empty($items)){
+            $items = $this->getImplementation()->getVariables($itemResult);
+        }
 
         //get the first variable (item are the same in all)
         $tmpItems = array_shift($items);
@@ -285,9 +289,11 @@ class ResultsService extends tao_models_classes_ClassService {
         $itemResults = $this->getItemResultsFromDeliveryResult($deliveryResult);
         $variablesByItem = array();
         foreach ($itemResults as $itemResult) {
+            $variables = array();
             try {
                 common_Logger::d("Retrieving related Item for itemResult " . $itemResult . "");
-                $relatedItem = $this->getItemFromItemResult($itemResult);
+                $variables = $this->getVariablesFromObjectResult($itemResult);
+                $relatedItem = $this->getItemFromItemResult($itemResult, $variables);
             } catch (common_Exception $e) {
                 common_Logger::w("The itemResult " . $itemResult . " is not linked to a valid item. (deleted item ?)");
                 $relatedItem = null;
@@ -312,7 +318,7 @@ class ResultsService extends tao_models_classes_ClassService {
                 $itemLabel = $undefinedStr;
                 $variablesByItem[$itemIdentifier]['itemModel'] = $undefinedStr;
             }
-            foreach ($this->getVariablesFromObjectResult($itemResult) as $variable) {
+            foreach ($variables as $variable) {
                 //retrieve the type of the variable
                 $variableTemp = $variable[0]->variable;
                 $variableDescription = array();
