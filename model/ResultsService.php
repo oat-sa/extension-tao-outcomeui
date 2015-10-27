@@ -320,33 +320,37 @@ class ResultsService extends tao_models_classes_ClassService {
                 $variablesByItem[$itemIdentifier]['itemModel'] = $undefinedStr;
             }
             foreach ($itemVariables as $variable) {
-                //retrieve the type of the variable
-                $variableTemp = $variable[0]->variable;
-                $variableDescription = array();
-                $type = get_class($variableTemp);
+                foreach($variable as $var){
+                    //retrieve the type of the variable
+                    $variableTemp = $var->variable;
+                    $variableDescription = array();
+                    $type = get_class($variableTemp);
 
 
-                $variableIdentifier = $variableTemp->getIdentifier();
+                    $variableIdentifier = $variableTemp->getIdentifier();
 
-                $variableDescription["uri"] = $variable[0]->uri;
-                $variableDescription["var"] = $variableTemp;
+                    $variableDescription["uri"] = $var->uri;
+                    $variableDescription["var"] = $variableTemp;
 
-                if (method_exists($variableTemp, 'getCorrectResponse') && !is_null($variableTemp->getCorrectResponse())) {
-                    if($variableTemp->getCorrectResponse() >= 1){
-                        $variableDescription["isCorrect"] = "correct";
+                    if (method_exists($variableTemp, 'getCorrectResponse') && !is_null($variableTemp->getCorrectResponse())) {
+                        if($variableTemp->getCorrectResponse() >= 1){
+                            $variableDescription["isCorrect"] = "correct";
+                        }
+                        else{
+                            $variableDescription["isCorrect"] = "incorrect";
+                        }
                     }
                     else{
-                        $variableDescription["isCorrect"] = "incorrect";
+                        $variableDescription["isCorrect"] = "unscored";
                     }
-                }
-                else{
-                    $variableDescription["isCorrect"] = "unscored";
-                }
 
-                $variablesByItem[$itemIdentifier]['sortedVars'][$type][$variableIdentifier][$variableTemp->getEpoch()] = $variableDescription;
-                $variablesByItem[$itemIdentifier]['label'] = $itemLabel;
+                    $variablesByItem[$itemIdentifier]['sortedVars'][$type][$variableIdentifier][$variableTemp->getEpoch()] = $variableDescription;
+                    $variablesByItem[$itemIdentifier]['label'] = $itemLabel;
+                }
             }
+
         }
+
         //sort by epoch and filter
         foreach ($variablesByItem as $itemIdentifier => $itemVariables) {
 
