@@ -34,6 +34,7 @@ use oat\taoOutcomeUi\model\table\ResponseColumn;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeRds\model\RdsResultStorage;
 use tao_helpers_Uri;
+use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 
 /**
  * should be entirelyrefactored
@@ -64,7 +65,7 @@ class ResultTable extends \tao_actions_CommonModule {
      */
     public function index()
     {
-        $deliveryService = \taoDelivery_models_classes_DeliveryAssemblyService::singleton();
+        $deliveryService = DeliveryAssemblyService::singleton();
         if($this->getRequestParameter('classUri') !== $deliveryService->getRootClass()->getUri()) {
             $filter = $this->getRequestParameter('filter');
             $classUri = $this->getRequestParameter('classUri');
