@@ -37,6 +37,7 @@ use oat\taoResultServer\models\classes\ResultManagement;
 use \tao_helpers_Date;
 use \tao_models_classes_ClassService;
 use oat\taoOutcomeUi\helper\Datatypes;
+use oat\taoDelivery\model\execution\DeliveryExecution;
 
 class ResultsService extends tao_models_classes_ClassService {
 
@@ -98,7 +99,7 @@ class ResultsService extends tao_models_classes_ClassService {
            //overhead for cache handling, the data is stored only when the underlying deliveryExecution is finished
            try {
                 $status = $deliveryResult->getState();
-                if ($status->getUri()== INSTANCE_DELIVERYEXEC_FINISHED ) {
+                if ($status->getUri()== DeliveryExecution::STATE_FINISHIED ) {
                     common_cache_FileCache::singleton()->put($variables, $serial);
                 }
 
