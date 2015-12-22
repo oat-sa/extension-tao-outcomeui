@@ -151,7 +151,7 @@ use oat\tao\helpers\Template;
                               ?>
                           </td>
 
-                          <td class="epoch"><?=$variable->getEpoch()?></td>
+                          <td class="epoch"><?=tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($variable->getEpoch()), tao_helpers_Date::FORMAT_VERBOSE)?></td>
                           </tr>
                           <?php
                           }
@@ -184,7 +184,7 @@ use oat\tao\helpers\Template;
               <?= $variable->getBaseType(); ?>
             </td>
             <td class="epoch">
-              <?=$variable->getEpoch()?>
+              <?=tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($variable->getEpoch()), tao_helpers_Date::FORMAT_VERBOSE)?>
             </td>
             </tr>
             <?php

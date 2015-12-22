@@ -75,9 +75,10 @@ class VariableDataProvider
     {   
         $resultsService = ResultsService::singleton();      
 
+        /** @var \taoDelivery_models_classes_execution_DeliveryExecution $result */
         foreach($resources as $result){
             $itemresults = $resultsService->getVariables($result, false);
-            $cellData = array();
+
             foreach ($itemresults as $itemResultUri=>$vars) {
                 //cache the item information pertaining to a given itemResult (stable over time)
                 if (common_cache_FileCache::singleton()->has('itemResultItemCache'.tao_helpers_Uri::encode($itemResultUri))) {
@@ -101,42 +102,32 @@ class VariableDataProvider
                 foreach ($vars as $var) {
                     $var = $var[0];
                     //cache the variable data
-                    $varData = (array)$var->variable;
-                    if (common_cache_FileCache::singleton()->has('variableDataCache'.$var->uri.'_'.$varData["identifier"])) {
-                        $varData = common_cache_FileCache::singleton()->get('variableDataCache'.$var->uri.'_'.$varData["identifier"]);
+                    /** @var \taoResultServer_models_classes_Variable $varData */
+                    $varData = $var->variable;
+                    if (common_cache_FileCache::singleton()->has('variableDataCache'.$var->uri.'_'.$varData->getIdentifier())) {
+                        $varData = common_cache_FileCache::singleton()->get('variableDataCache'.$var->uri.'_'.$varData->getIdentifier());
                     } else {
-                        $varData["class"] = $var->class;
-                        common_cache_FileCache::singleton()->put($varData, 'variableDataCache'.$var->uri.'_'.$varData["identifier"]);
+                        common_cache_FileCache::singleton()->put($varData, 'variableDataCache'.$var->uri.'_'.$varData->getIdentifier());
                     }
 
-                    $type = $varData["class"];
-                    if (isset($varData["value"])) {
-                        if(is_array($varData["value"])){
-                            $varData["value"] = json_encode($varData["value"]);
-                        }
+                    if($varData->getBaseType() === 'file'){
+                        $decodedFile = Datatypes::decodeFile($varData->getValue());
+                        $varData->setValue($decodedFile['name']);
                     }
-                    else{
-                        $varData["value"] = $varData["candidateResponse"];
-                    }
-                    $varData["value"] = base64_decode($varData["value"]);
-                    if($varData["baseType"] === 'file'){
-                        $decodedFile = Datatypes::decodeFile($varData['value']);
-                        $varData['value'] = $decodedFile['name'];
-                    }
-                    $variableIdentifier = (string)$varData["identifier"];
+                    $variableIdentifier = (string)$varData->getIdentifier();
                     foreach ($columns as $column) {
                         if (
                             $variableIdentifier == $column->getIdentifier()
                             and
                             $contextIdentifier == $column->getContextIdentifier()
                             ) {
-                            $value = (string)$varData["value"];
-                            $epoch = $varData["epoch"];
+
+                            $epoch = $varData->getEpoch();
                             $readableTime = "";
                             if ($epoch != "") {
                                 $readableTime = "@". tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE);
                             }
-                            $this->cache[$type][$result->getUri()][$column->getContextIdentifier().$variableIdentifier][(string)$epoch] =  array($value, $readableTime);
+                            $this->cache[get_class($varData)][$result->getIdentifier()][$column->getContextIdentifier().$variableIdentifier][(string)$epoch] =  array($varData->getValue(), $readableTime);
 
                             }
                     }
