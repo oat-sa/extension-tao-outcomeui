@@ -4,9 +4,9 @@ msgstr ""
 "PO-Revision-Date: 2015-12-22T13:30:29\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
-"Language: zh-CN\n"
+"Language: uk-UA\n"
 "sourceLanguage: en-US\n"
-"targetLanguage: zh-CN\n"
+"targetLanguage: uk-UA\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Poedit-Basepath: ../../\n"
@@ -14,241 +14,241 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 
 msgid " seconds"
-msgstr "秒"
+msgstr ""
 
 msgid "# Collected Results"
-msgstr "#收集的结果"
+msgstr ""
 
 msgid "# Collected Score Variables"
-msgstr "#收集的分数可变数"
+msgstr ""
 
 msgid "# data collected"
-msgstr "#收集的数据"
+msgstr ""
 
 msgid "# Distinct Test Takers"
-msgstr "#不同的考生"
+msgstr ""
 
 msgid "# Distinct variable types"
-msgstr "#不同的可变数类型"
+msgstr ""
 
 msgid "%s tests has been finished."
 msgstr ""
 
 msgid "Add All grades"
-msgstr "添加所有的分数"
+msgstr ""
 
 msgid "Add All responses"
-msgstr "添加所有的回应"
+msgstr ""
 
 msgid "Add Test Taker"
-msgstr "添加考生"
+msgstr ""
 
 msgid "All collected variables"
-msgstr "所有收集的可变数"
+msgstr ""
 
 msgid "Anonymise"
-msgstr "匿名化"
+msgstr ""
 
 msgid "Average"
-msgstr "平均值"
+msgstr ""
 
 msgid "Cancel"
-msgstr "取消"
+msgstr ""
 
 msgid "Class"
-msgstr "类别"
+msgstr ""
 
 msgid "Collected Results"
-msgstr "收集的结果"
+msgstr ""
 
 #, tao-public
 msgid "Complete expired tests"
 msgstr ""
 
 msgid "Data Collection per Variable"
-msgstr "从每个可变数收集的数据"
+msgstr ""
 
 msgid "Data collection statistics :"
-msgstr "数据收集的统计："
+msgstr ""
 
 #, tao-public
 msgid "Delete"
-msgstr "删除"
+msgstr ""
 
 msgid "Delivery"
-msgstr "递送"
+msgstr ""
 
 msgid "Download"
-msgstr "下载"
+msgstr ""
 
 msgid "Email:"
-msgstr "电子邮件："
+msgstr ""
 
 msgid "Error"
-msgstr "错误"
+msgstr ""
 
 msgid "Export CSV File"
-msgstr "导出CSV文件"
+msgstr ""
 
 #, tao-public
 msgid "Export Table"
-msgstr "导出表格"
+msgstr ""
 
 msgid "Filter"
-msgstr "过滤条件"
+msgstr ""
 
 msgid "First Name:"
-msgstr "名："
+msgstr ""
 
 msgid "First submitted variables only"
-msgstr "只要第一个提交的可变数"
+msgstr ""
 
 msgid "Frequency per Score"
-msgstr "每个分数的频率"
+msgstr ""
 
 msgid "Generated on: "
-msgstr "产生于："
+msgstr ""
 
 msgid "Grades"
-msgstr "分数"
+msgstr ""
 
 msgid "Label"
-msgstr "标签"
+msgstr ""
 
 msgid "Label:"
-msgstr "标签："
+msgstr ""
 
 msgid "Last Name:"
-msgstr "姓氏:"
+msgstr ""
 
 msgid "Last submitted variables only"
-msgstr "只要最后提交的变数"
+msgstr ""
 
 msgid "Login:"
-msgstr "登入:"
+msgstr ""
 
 #, tao-public
 msgid "Manage Results"
-msgstr "管理结果"
+msgstr ""
 
 msgid "No Results"
-msgstr "没有结果"
+msgstr ""
 
 msgid "No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here."
-msgstr "尚未有人考试。 考生考完试后，这里会显示考试结果。"
+msgstr ""
 
 msgid "Observed performances per distinc score variable types "
-msgstr "每个独特得分可变数类型的表现"
+msgstr ""
 
 msgid "Ok"
-msgstr "确定"
+msgstr ""
 
 msgid "Please confirm deletion"
-msgstr "请确认删除"
+msgstr ""
 
 msgid "Preview"
-msgstr "预览"
+msgstr ""
 
 msgid "Print Report"
-msgstr "列印报告"
+msgstr ""
 
 msgid "Related Deliveries:"
-msgstr "相关的递交："
+msgstr ""
 
 msgid "Remove All grades"
-msgstr "移除所有分数"
+msgstr ""
 
 msgid "Remove All responses"
-msgstr "移除所有回应"
+msgstr ""
 
 msgid "Report generated from the following subset of results : "
-msgstr "从以下子集结果产生的报告"
+msgstr ""
 
 msgid "Responses"
-msgstr "回应"
+msgstr ""
 
 msgid "Result has been deleted"
-msgstr "结果已被删除"
+msgstr ""
 
 #, tao-public
 msgid "Results"
-msgstr "结果"
+msgstr ""
 
 msgid "Results distribution"
-msgstr "结果分布"
+msgstr ""
 
 #, tao-public
 msgid "Results library"
-msgstr "结果书库"
+msgstr ""
 
 msgid "score average"
-msgstr "得分平均"
+msgstr ""
 
 msgid "Score average"
-msgstr "得分平均"
+msgstr ""
 
 msgid "Score average per Variable"
-msgstr "每一个变数的平均得分"
+msgstr ""
 
 msgid "Score per Observation"
-msgstr "每一个观察的平均得分"
+msgstr ""
 
 msgid "Scores and response rates statistics"
-msgstr "得分和回应率统计"
+msgstr ""
 
 msgid "Something went wrong ..."
-msgstr "发生错误..."
+msgstr ""
 
 msgid "Summary Report"
-msgstr "摘要报告"
+msgstr ""
 
 msgid "Test taker"
-msgstr "考生"
+msgstr ""
 
 msgid "Test Taker"
-msgstr "考生"
+msgstr ""
 
 msgid "Test Variables"
-msgstr "考试可变数"
+msgstr ""
 
 msgid "The class you have selected contains no results to be analysed, please select a different class"
-msgstr "您选择的班级没有包含可以分析结果,请选择其他的班级"
+msgstr ""
 
 msgid "The number of observations is too low"
-msgstr "观察数量太少了"
+msgstr ""
 
 msgid "There was a problem generating your report, please try again."
-msgstr "在产生您的报告的时候发生了一个错误，请再试一次。"
+msgstr ""
 
 msgid "This delivery doesn\'t exists"
-msgstr "这个递送并不存在"
+msgstr ""
 
 msgid "This delivery has no readable Result Server"
-msgstr "这个递送没有可读的结果服务器"
+msgstr ""
 
 msgid "This delivery has no Result Server"
-msgstr "这个递交没有结果服务器"
+msgstr ""
 
 msgid "Total Average Score"
-msgstr "总平均分"
+msgstr ""
 
 msgid "Total Standard Deviation"
-msgstr "总标准偏差"
+msgstr ""
 
 msgid "unknown"
-msgstr "未知"
+msgstr ""
 
 msgid "VariableName"
-msgstr "可变数名称"
+msgstr ""
 
 #, tao-public
 msgid "View and format the collected results."
-msgstr "视图和格式收集的结果。"
+msgstr ""
 
 #, tao-public
 msgid "View result"
-msgstr "查看结果"
+msgstr ""
 
 msgid "We are preparing your report, please wait..."
-msgstr "我们正在准备你的报告，请稍等。"
+msgstr ""
 
