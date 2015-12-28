@@ -103,29 +103,18 @@ class VariableDataProvider
                     $var = $var[0];
                     //cache the variable data
                     /** @var \taoResultServer_models_classes_Variable $varData */
-                    $varData = (array)$var->variable;
-                    if (common_cache_FileCache::singleton()->has('variableDataCache'.$var->uri.'_'.$varData["identifier"])) {
-                        $varData = common_cache_FileCache::singleton()->get('variableDataCache'.$var->uri.'_'.$varData["identifier"]);
+                    $varData = $var->variable;
+                    if (common_cache_FileCache::singleton()->has('variableDataCache'.$var->uri.'_'.$varData->getIdentifier())) {
+                        $varData = common_cache_FileCache::singleton()->get('variableDataCache'.$var->uri.'_'.$varData->getIdentifier());
                     } else {
-                        $varData["class"] = $var->class;
-                        common_cache_FileCache::singleton()->put($varData, 'variableDataCache'.$var->uri.'_'.$varData["identifier"]);
+                        common_cache_FileCache::singleton()->put($varData, 'variableDataCache'.$var->uri.'_'.$varData->getIdentifier());
                     }
 
-                    $type = $varData["class"];
-                    if (isset($varData["value"])) {
-                        if(is_array($varData["value"])){
-                            $varData["value"] = json_encode($varData["value"]);
-                        }
+                    if($varData->getBaseType() === 'file'){
+                        $decodedFile = Datatypes::decodeFile($varData->getValue());
+                        $varData->setValue($decodedFile['name']);
                     }
-                    else{
-                        $varData["value"] = $varData["candidateResponse"];
-                    }
-                    $varData["value"] = base64_decode($varData["value"]);
-                    if($varData["baseType"] === 'file'){
-                        $decodedFile = Datatypes::decodeFile($varData['value']);
-                        $varData['value'] = $decodedFile['name'];
-                    }
-                    $variableIdentifier = (string)$varData["identifier"];
+                    $variableIdentifier = (string)$varData->getIdentifier();
                     foreach ($columns as $column) {
                         if (
                             $variableIdentifier == $column->getIdentifier()
@@ -133,13 +122,12 @@ class VariableDataProvider
                             $contextIdentifier == $column->getContextIdentifier()
                             ) {
 
-                            $value = (string)$varData["value"];
-                            $epoch = $varData["epoch"];
+                            $epoch = $varData->getEpoch();
                             $readableTime = "";
                             if ($epoch != "") {
                                 $readableTime = "@". tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE);
                             }
-                            $this->cache[$type][$result->getIdentifier()][$column->getContextIdentifier().$variableIdentifier][(string)$epoch] =  array($value, $readableTime);
+                            $this->cache[get_class($varData)][$result->getIdentifier()][$column->getContextIdentifier().$variableIdentifier][(string)$epoch] =  array($varData->getValue(), $readableTime);
 
                             }
                     }

@@ -37,6 +37,7 @@ use oat\taoResultServer\models\classes\ResultManagement;
 use \tao_helpers_Date;
 use \tao_models_classes_ClassService;
 use oat\taoOutcomeUi\helper\Datatypes;
+use oat\taoDelivery\model\execution\DeliveryExecution;
 
 class ResultsService extends tao_models_classes_ClassService {
 
@@ -98,7 +99,7 @@ class ResultsService extends tao_models_classes_ClassService {
            //overhead for cache handling, the data is stored only when the underlying deliveryExecution is finished
            try {
                 $status = $deliveryResult->getState();
-                if ($status->getUri()== INSTANCE_DELIVERYEXEC_FINISHED ) {
+                if ($status->getUri()== DeliveryExecution::STATE_FINISHIED ) {
                     common_cache_FileCache::singleton()->put($variables, $serial);
                 }
 
@@ -165,15 +166,20 @@ class ResultsService extends tao_models_classes_ClassService {
 
     /**
      *
-     * @param string $itemResult
+     * @param string $itemCallId
+     * @param array $itemVariables already retrieved variables
      * @return \core_kernel_classes_Resource
      */
-    public function getItemFromItemResult($itemResult) {
+    public function getItemFromItemResult($itemCallId, $itemVariables = array())
+    {
         $item = null;
-        $items = $this->getImplementation()->getVariables($itemResult);
+
+        if(empty($itemVariables)){
+            $itemVariables = $this->getImplementation()->getVariables($itemCallId);
+        }
 
         //get the first variable (item are the same in all)
-        $tmpItems = array_shift($items);
+        $tmpItems = array_shift($itemVariables);
 
         //get the first object
         if(!is_null($tmpItems[0]->item)){
@@ -278,18 +284,20 @@ class ResultsService extends tao_models_classes_ClassService {
      *
      * @return array
      */
-    public function getItemVariableDataFromDeliveryResult(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $filter) {
+    public function getItemVariableDataFromDeliveryResult(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $filter)
+    {
 
         $undefinedStr = __('unknown'); //some data may have not been submitted           
 
-        $itemResults = $this->getItemResultsFromDeliveryResult($deliveryResult);
+        $itemCallIds = $this->getItemResultsFromDeliveryResult($deliveryResult);
         $variablesByItem = array();
-        foreach ($itemResults as $itemResult) {
+        foreach ($itemCallIds as $itemCallId) {
+            $itemVariables = $this->getVariablesFromObjectResult($itemCallId);
             try {
-                common_Logger::d("Retrieving related Item for itemResult " . $itemResult . "");
-                $relatedItem = $this->getItemFromItemResult($itemResult);
+                common_Logger::d("Retrieving related Item for item call " . $itemCallId . "");
+                $relatedItem = $this->getItemFromItemResult($itemCallId, $itemVariables);
             } catch (common_Exception $e) {
-                common_Logger::w("The itemResult " . $itemResult . " is not linked to a valid item. (deleted item ?)");
+                common_Logger::w("The item call '" . $itemCallId . "' is not linked to a valid item. (deleted item ?)");
                 $relatedItem = null;
             }
             if (get_class($relatedItem) == "core_kernel_classes_Literal") {
@@ -305,14 +313,14 @@ class ResultsService extends tao_models_classes_ClassService {
                     $itemModel = $relatedItem->getUniquePropertyValue(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
                     $variablesByItem[$itemIdentifier]['itemModel'] = $itemModel->getLabel();
                 } catch (common_Exception $e) { //a resource but unknown
-                    $variablesByItem[$itemIdentifier]['itemModel'] = 'unknown';
+                    $variablesByItem[$itemIdentifier]['itemModel'] = $undefinedStr;
                 }
             } else {
                 $itemIdentifier = $undefinedStr;
                 $itemLabel = $undefinedStr;
                 $variablesByItem[$itemIdentifier]['itemModel'] = $undefinedStr;
             }
-            foreach ($this->getVariablesFromObjectResult($itemResult) as $variable) {
+            foreach ($itemVariables as $variable) {
                 //retrieve the type of the variable
                 $variableTemp = $variable[0]->variable;
                 $variableDescription = array();
@@ -320,10 +328,8 @@ class ResultsService extends tao_models_classes_ClassService {
 
 
                 $variableIdentifier = $variableTemp->getIdentifier();
-                $epoch = $variableTemp->getEpoch();
 
                 $variableDescription["uri"] = $variable[0]->uri;
-                $variableTemp->setEpoch(tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE));
                 $variableDescription["var"] = $variableTemp;
 
                 if (method_exists($variableTemp, 'getCorrectResponse') && !is_null($variableTemp->getCorrectResponse())) {
@@ -338,7 +344,7 @@ class ResultsService extends tao_models_classes_ClassService {
                     $variableDescription["isCorrect"] = "unscored";
                 }
 
-                $variablesByItem[$itemIdentifier]['sortedVars'][$type][$variableIdentifier][$epoch] = $variableDescription;
+                $variablesByItem[$itemIdentifier]['sortedVars'][$type][$variableIdentifier][$variableTemp->getEpoch()] = $variableDescription;
                 $variablesByItem[$itemIdentifier]['label'] = $itemLabel;
             }
         }

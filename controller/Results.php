@@ -30,6 +30,7 @@ use \tao_helpers_Request;
 use \tao_helpers_Uri;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\helper\ResultLabel;
+use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 
 /**
  * Results Controller provide actions performed from url resolution
@@ -73,7 +74,7 @@ class Results extends tao_actions_SaSModule
         }
         
         $instances = array();
-        $deliveryService = \taoDelivery_models_classes_DeliveryAssemblyService::singleton();
+        $deliveryService = DeliveryAssemblyService::singleton();
         if (!$this->hasRequestParameter('classUri') || $deliveryService->getRootClass()->getUri() === $this->getRequestParameter('classUri')) {
             // root
             foreach ($deliveryService->getAllAssemblies() as $assembly) {
@@ -113,7 +114,7 @@ class Results extends tao_actions_SaSModule
             new \core_kernel_classes_Property(RDFS_LABEL),
         );
 
-        $deliveryService = \taoDelivery_models_classes_DeliveryAssemblyService::singleton();
+        $deliveryService = DeliveryAssemblyService::singleton();
         $delivery = new core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
         if($delivery->getUri() !== $deliveryService->getRootClass()->getUri()){
 

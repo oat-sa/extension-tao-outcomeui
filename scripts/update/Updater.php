@@ -27,19 +27,20 @@ use oat\generis\model\data\ModelManager;
  * 
  * @author Joel Bout <joel@taotesting.com>
  */
-class Updater extends \common_ext_ExtensionUpdater {
+class Updater extends \common_ext_ExtensionUpdater
+{
     
     /**
      * 
      * @param string $currentVersion
      * @return string $versionUpdatedTo
      */
-    public function update($initialVersion) {
+    public function update($initialVersion)
+    {
 
-        $currentVersion = $initialVersion;
 
         // move ResultsManagerRole to model 1
-        if ($currentVersion == '2.6') {
+        if ($this->isVersion('2.6')) {
             $rdf = ModelManager::getModel()->getRdfInterface();
             $toChange = array();
             foreach ($rdf as $triple) {
@@ -52,12 +53,12 @@ class Updater extends \common_ext_ExtensionUpdater {
                 $triple->modelid = 1;
                 $rdf->add($triple);
             }
-            $currentVersion = '2.6.1';
+            $$this->setVersion('2.6.1');
         }
-        if ($currentVersion == '2.6.1' || $currentVersion == '2.6.2' || $currentVersion == '2.6.3' || $currentVersion == '2.6.4') {
-            $currentVersion = '2.6.5';
+        
+        if ($this->isBetween('2.6.1', '2.7')){
+            $this->setVersion('2.7');
         }
-        return $currentVersion;
+        return null;
     }
-
 }

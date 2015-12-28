@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO 3.1.0-sprint03\n"
-"PO-Revision-Date: 2015-08-11T17:22:05\n"
+"Project-Id-Version: TAO 3.1.0-sprint15\n"
+"PO-Revision-Date: 2015-12-23T13:23:25\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: zh-TW\n"
@@ -31,6 +31,9 @@ msgstr "# 不同的考生"
 msgid "# Distinct variable types"
 msgstr "# 不同的可變數類型"
 
+msgid "%s tests has been finished."
+msgstr ""
+
 msgid "Add All grades"
 msgstr "加入所有的分數"
 
@@ -57,6 +60,10 @@ msgstr "類別"
 
 msgid "Collected Results"
 msgstr "收集的結果"
+
+#, tao-public
+msgid "Complete expired tests"
+msgstr ""
 
 msgid "Data Collection per Variable"
 msgstr "從每個可變數收集的數據"
@@ -195,10 +202,10 @@ msgstr "發生錯誤..."
 msgid "Summary Report"
 msgstr "摘要報告"
 
-msgid "Test Taker"
+msgid "Test taker"
 msgstr "考生"
 
-msgid "Test taker"
+msgid "Test Taker"
 msgstr "考生"
 
 msgid "Test Variables"

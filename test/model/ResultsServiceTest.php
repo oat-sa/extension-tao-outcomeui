@@ -24,6 +24,7 @@ use \common_ext_ExtensionsManager;
 use common_cache_FileCache;
 use oat\taoOutcomeUi\model\ResultsService;
 use Prophecy\Prophet;
+use oat\taoDelivery\model\execution\DeliveryExecution;
 
 /**
  * This test case focuses on testing ResultsService.
@@ -378,7 +379,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $this->service->setImplementation($imp);
         $deliveryResultProphecy = $prophet->prophesize('taoDelivery_models_classes_execution_DeliveryExecution');
         $deliveryResultProphecy->getIdentifier()->willReturn('#fakeUri');
-        $deliveryResultProphecy->getState()->willReturn(new \core_kernel_classes_Resource(INSTANCE_DELIVERYEXEC_FINISHED));
+        $deliveryResultProphecy->getState()->willReturn(new \core_kernel_classes_Resource(DeliveryExecution::STATE_FINISHIED));
         
         $deliveryResult = $deliveryResultProphecy->reveal();
         
