@@ -34,7 +34,7 @@ return array(
 	'requires' => array(
 	    'taoResultServer'  => '2.6',
         'taoItems' => '*',
-	    'taoDelivery' => '*'
+	    'taoDeliveryRdf' => '>=1.0.0'
     ),
 	'install' => array(
 	),
