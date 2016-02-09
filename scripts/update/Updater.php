@@ -56,9 +56,8 @@ class Updater extends \common_ext_ExtensionUpdater
             $$this->setVersion('2.6.1');
         }
         
-        if ($this->isBetween('2.6.1', '2.7')){
-            $this->setVersion('2.7');
-        }
+        $this->skip('2.6.1', '2.7.1');
+
         return null;
     }
 }
