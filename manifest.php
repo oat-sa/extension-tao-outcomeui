@@ -20,7 +20,6 @@
  * 
  */
 $extpath = dirname(__FILE__) . DIRECTORY_SEPARATOR;
-$taopath = dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR . 'tao' . DIRECTORY_SEPARATOR;
 
 return array(
     'name' => 'taoOutcomeUi',
@@ -46,9 +45,6 @@ return array(
         '/taoOutcomeUi' => 'oat\\taoOutcomeUi\\controller'
 	),
     'constants' => array(
-        // actions directory
-        "DIR_ACTIONS" => $extpath . "actions" . DIRECTORY_SEPARATOR,
-        
         // views directory
         "DIR_VIEWS" => $extpath . "views" . DIRECTORY_SEPARATOR,
         
@@ -66,12 +62,7 @@ return array(
         
         // BASE WWW the web resources path
         'BASE_WWW' => ROOT_URL . 'taoOutcomeUi/views/',
-        
-        // the path were the event logs are saved
-        'EVENT_LOG_PATH' => ROOT_PATH . 'taoOutcomeUi/data',
-        
-        // TAO extension Paths
-        'TAOBASE_WWW' => ROOT_URL . 'tao/views/'),
+    ),
     'extra' => array(
         'structures' => dirname(__FILE__) . DIRECTORY_SEPARATOR . 'controller' . DIRECTORY_SEPARATOR . 'structures.xml'
     )
