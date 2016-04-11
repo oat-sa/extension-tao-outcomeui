@@ -19,64 +19,51 @@
  *               2009-2012 (update and modification) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV);
  * 
  */
-
-$extpath = dirname(__FILE__).DIRECTORY_SEPARATOR;
-$taopath = dirname(dirname(__FILE__)).DIRECTORY_SEPARATOR.'tao'.DIRECTORY_SEPARATOR;
+$extpath = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 
 return array(
-	'name' => 'taoOutcomeUi',
+    'name' => 'taoOutcomeUi',
     'label' => 'Result visualisation',
-	'description' => 'TAO Results extension',
+    'description' => 'TAO Results extension',
     'license' => 'GPL-2.0',
-    'version' => '2.7.3',
-	'author' => 'Open Assessment Technologies, CRP Henri Tudor',
-    //taoItems is only needed for the item model property retrieval
-	'requires' => array(
-	    'taoResultServer'  => '2.6',
+    'version' => '2.7.4',
+    'author' => 'Open Assessment Technologies, CRP Henri Tudor',
+    // taoItems is only needed for the item model property retrieval
+    'requires' => array(
+        'taoResultServer' => '>=2.6.0',
         'taoItems' => '*',
-	    'taoDeliveryRdf' => '>=1.0.0'
+        'taoDeliveryRdf' => '>=1.0.0'
     ),
-	'install' => array(
-	),
-    'uninstall' => array(
-	),
+    'install' => array(),
+    'uninstall' => array(),
     'update' => 'oat\\taoOutcomeUi\\scripts\\update\\Updater',
-	'managementRole' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole',
+    'managementRole' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole',
     'acl' => array(
-        array('grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', array('ext'=>'taoOutcomeUi'))
+        array('grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', array('ext' => 'taoOutcomeUi'))
     ),
     'routes' => array(
         '/taoOutcomeUi' => 'oat\\taoOutcomeUi\\controller'
-    ),
-	'constants' => array(
-	 	# actions directory
-	 	"DIR_ACTIONS"			=> $extpath."actions".DIRECTORY_SEPARATOR,
-	
-		# views directory
-		"DIR_VIEWS"				=> $extpath."views".DIRECTORY_SEPARATOR,
-	
-		# default module name
-		'DEFAULT_MODULE_NAME'	=> 'Results',
-	
-		#default action name
-		'DEFAULT_ACTION_NAME'	=> 'index',
-	
-		#BASE PATH: the root path in the file system (usually the document root)
-		'BASE_PATH'				=> $extpath,
-	
-		#BASE URL (usually the domain root)
-		'BASE_URL'				=> ROOT_URL	.'taoOutcomeUi/',
-	
-		#BASE WWW the web resources path
-		'BASE_WWW'				=> ROOT_URL .'taoOutcomeUi/views/',
-
-		#the path were the event logs are saved
-		'EVENT_LOG_PATH'		=> ROOT_PATH.'taoOutcomeUi/data',
-
-	 	#TAO extension Paths
-		'TAOBASE_WWW'			=> ROOT_URL	.'tao/views/',
 	),
+    'constants' => array(
+        // views directory
+        "DIR_VIEWS" => $extpath . "views" . DIRECTORY_SEPARATOR,
+        
+        // default module name
+        'DEFAULT_MODULE_NAME' => 'Results',
+        
+        // default action name
+        'DEFAULT_ACTION_NAME' => 'index',
+        
+        // BASE PATH: the root path in the file system (usually the document root)
+        'BASE_PATH' => $extpath,
+        
+        // BASE URL (usually the domain root)
+        'BASE_URL' => ROOT_URL . 'taoOutcomeUi/',
+        
+        // BASE WWW the web resources path
+        'BASE_WWW' => ROOT_URL . 'taoOutcomeUi/views/',
+    ),
     'extra' => array(
-        'structures' => dirname(__FILE__).DIRECTORY_SEPARATOR.'controller'.DIRECTORY_SEPARATOR.'structures.xml',
+        'structures' => dirname(__FILE__) . DIRECTORY_SEPARATOR . 'controller' . DIRECTORY_SEPARATOR . 'structures.xml'
     )
 );
