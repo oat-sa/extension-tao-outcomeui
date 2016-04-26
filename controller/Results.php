@@ -112,6 +112,7 @@ class Results extends tao_actions_SaSModule
         //Properties to filter on
         $properties = array(
             new \core_kernel_classes_Property(RDFS_LABEL),
+            new \core_kernel_classes_Property(PROPERTY_DELVIERYEXECUTION_START),
         );
 
         $deliveryService = DeliveryAssemblyService::singleton();
@@ -129,9 +130,10 @@ class Results extends tao_actions_SaSModule
                     $model[] = array(
                         'id'       => $property->getUri(),
                         'label'    => $property->getLabel(),
-                        'sortable' => true
+                        'sortable' => false
                     );
                 }
+
 
                 $this->setData('classUri',tao_helpers_Uri::encode($delivery->getUri()));
                 $this->setData('model',$model);
@@ -190,16 +192,17 @@ class Results extends tao_actions_SaSModule
         $counti = $this->getClassService()->getImplementation()->countResultByDelivery(array($delivery->getUri()));
         foreach($results as $res){
 
-            $deliveryResult = new core_kernel_classes_Resource($res['deliveryResultIdentifier']);
+            $deliveryExecution = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($res['deliveryResultIdentifier']);
             $testTaker = new core_kernel_classes_Resource($res['testTakerIdentifier']);
-            $label = new ResultLabel($deliveryResult, $testTaker, $delivery);
+            $label = new ResultLabel($testTaker, $delivery);
 
             $data[] = array(
-                'id'                           => $deliveryResult->getUri(),
-                RDFS_LABEL                     => (string)$label,
+                'id'                                => $deliveryExecution->getIdentifier(),
+                RDFS_LABEL                          => (string)$label,
+                PROPERTY_DELVIERYEXECUTION_START    => \tao_helpers_Date::displayeDate($deliveryExecution->getStartTime()),
             );
 
-            $readOnly[$deliveryResult->getUri()] = $rights;
+            $readOnly[$deliveryExecution->getIdentifier()] = $rights;
         }
 
         $this->returnJSON(array(
