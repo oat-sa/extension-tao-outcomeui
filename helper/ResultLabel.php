@@ -37,12 +37,10 @@ class ResultLabel {
     /**
      * Build the label.
      * 
-     * @param core_kernel_classes_Resource $result
      * @param core_kernel_classes_Resource $testTaker
      * @param core_kernel_classes_Resource $delivery
      */ 
-    public function __construct (core_kernel_classes_Resource $result, core_kernel_classes_Resource $testTaker, core_kernel_classes_Resource $delivery){
-        $this->result = $result;
+    public function __construct (core_kernel_classes_Resource $testTaker, core_kernel_classes_Resource $delivery){
         $this->testTaker = $testTaker;
         $this->delivery = $delivery;
     }
