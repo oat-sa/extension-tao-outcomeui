@@ -30,7 +30,6 @@ use \core_kernel_classes_Resource;
  */
 class ResultLabel {
 
-    private $result;
     private $testTaker;
     private $delivery;
    

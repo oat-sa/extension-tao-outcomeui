@@ -29,7 +29,6 @@ use \tao_actions_SaSModule;
 use \tao_helpers_Request;
 use \tao_helpers_Uri;
 use oat\taoOutcomeUi\model\ResultsService;
-use oat\taoOutcomeUi\helper\ResultLabel;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 
 /**
@@ -136,6 +135,7 @@ class Results extends tao_actions_SaSModule
 
 
                 $this->setData('classUri',tao_helpers_Uri::encode($delivery->getUri()));
+                $this->setData('title',$delivery->getLabel());
                 $this->setData('model',$model);
 
                 $this->setView('resultList.tpl');
@@ -194,11 +194,10 @@ class Results extends tao_actions_SaSModule
 
             $deliveryExecution = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($res['deliveryResultIdentifier']);
             $testTaker = new core_kernel_classes_Resource($res['testTakerIdentifier']);
-            $label = new ResultLabel($testTaker, $delivery);
 
             $data[] = array(
                 'id'                                => $deliveryExecution->getIdentifier(),
-                RDFS_LABEL                          => (string)$label,
+                RDFS_LABEL                          => $testTaker->getLabel(),
                 PROPERTY_DELVIERYEXECUTION_START    => \tao_helpers_Date::displayeDate($deliveryExecution->getStartTime()),
             );
 
