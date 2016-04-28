@@ -67,7 +67,7 @@ use oat\tao\helpers\Template;
                 }
                 ?>
             </table>
-            <?php  foreach (get_data('variables') as $itemUri => $item){
+            <?php  foreach (get_data('variables') as $item){
            ?>
            
             <table class="matrix">
@@ -80,7 +80,7 @@ use oat\tao\helpers\Template;
                             </b>
                         </th>
                         <th>
-                            <a href="#" data-uri="<?=$itemUri?>" class="btn-info small preview" target="preview">
+                            <a href="#" data-uri="<?=$item['uri']?>" class="btn-info small preview" target="preview">
                                 <span class="icon-preview"></span>
                                     <?=__('Preview')?>
                             </a>
