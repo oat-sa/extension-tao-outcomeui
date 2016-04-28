@@ -108,10 +108,17 @@ class Results extends tao_actions_SaSModule
      */
     public function index()
     {
-        //Properties to filter on
-        $properties = array(
-            new \core_kernel_classes_Property(RDFS_LABEL),
-            new \core_kernel_classes_Property(PROPERTY_DELVIERYEXECUTION_START),
+        $model = array(
+            array(
+                'id'       => 'ttaker',
+                'label'    => __('Test Taker'),
+                'sortable' => false
+            ),
+            array(
+                'id'       => 'time',
+                'label'    => __('Start Time'),
+                'sortable' => false
+            )
         );
 
         $deliveryService = DeliveryAssemblyService::singleton();
@@ -123,15 +130,6 @@ class Results extends tao_actions_SaSModule
                 $implementation = $this->getClassService()->getReadableImplementation($delivery);
 
                 $this->getClassService()->setImplementation($implementation);
-
-                $model = array();
-                foreach($properties as $property){
-                    $model[] = array(
-                        'id'       => $property->getUri(),
-                        'label'    => $property->getLabel(),
-                        'sortable' => false
-                    );
-                }
 
 
                 $this->setData('classUri',tao_helpers_Uri::encode($delivery->getUri()));
@@ -196,9 +194,9 @@ class Results extends tao_actions_SaSModule
             $testTaker = new core_kernel_classes_Resource($res['testTakerIdentifier']);
 
             $data[] = array(
-                'id'                                => $deliveryExecution->getIdentifier(),
-                RDFS_LABEL                          => $testTaker->getLabel(),
-                PROPERTY_DELVIERYEXECUTION_START    => \tao_helpers_Date::displayeDate($deliveryExecution->getStartTime()),
+                'id'        => $deliveryExecution->getIdentifier(),
+                'ttaker'    => $testTaker->getLabel(),
+                'time'      => \tao_helpers_Date::displayeDate($deliveryExecution->getStartTime()),
             );
 
             $readOnly[$deliveryExecution->getIdentifier()] = $rights;
