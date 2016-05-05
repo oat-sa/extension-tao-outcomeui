@@ -44,6 +44,8 @@ use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 class Results extends tao_actions_SaSModule
 {
 
+    private $deliveryService;
+    
     /**
      * constructor: initialize the service and the default data
      * @return Results
@@ -51,8 +53,15 @@ class Results extends tao_actions_SaSModule
     public function __construct()
     {
         parent::__construct();
-
+        
+        $this->service = ResultsService::singleton();
+        $this->deliveryService = DeliveryAssemblyService::singleton();
         $this->defaultData();
+    }
+    
+    public function getRootClass()
+    {
+        return $this->deliveryService->getRootClass();
     }
 
     /**
@@ -60,24 +69,93 @@ class Results extends tao_actions_SaSModule
      */
     protected function getClassService()
     {
-        return ResultsService::singleton();
+        return $this->service;
+    }
+
+    public function getOntologyData()
+    {
+        if (!tao_helpers_Request::isAjax()) {
+            throw new common_exception_IsAjaxAction(__FUNCTION__);
+        }
+
+        $options = array(
+            'subclasses' => true,
+            'instances' => true,
+            'highlightUri' => '',
+            'chunk' => false,
+            'offset' => 0,
+            'limit' => 0
+        );
+
+        if ($this->hasRequestParameter('loadNode')) {
+            $options['uniqueNode'] = $this->getRequestParameter('loadNode');
+        }
+
+        if ($this->hasRequestParameter("selected")) {
+            $options['browse'] = array($this->getRequestParameter("selected"));
+        }
+
+        if ($this->hasRequestParameter('hideInstances')) {
+            if((bool) $this->getRequestParameter('hideInstances')) {
+                $options['instances'] = false;
+            }
+        }
+        if ($this->hasRequestParameter('classUri')) {
+            $clazz = $this->getCurrentClass();
+            $options['chunk'] = !$clazz->equals($this->getRootClass());
+        } else {
+            $clazz = $this->getRootClass();
+        }
+
+        if ($this->hasRequestParameter('offset')) {
+            $options['offset'] = $this->getRequestParameter('offset');
+        }
+
+        if ($this->hasRequestParameter('limit')) {
+            $options['limit'] = $this->getRequestParameter('limit');
+        }
+
+        //generate the tree from the given parameters
+        $tree = $this->getClassService()->toTree($clazz, $options);
+
+        $tree = $this->addPermissions($tree);
+
+        function sortTree(&$tree) {
+            usort($tree, function($a, $b) {
+                if (isset($a['data']) && isset($b['data'])) {
+                    if ($a['type'] != $b['type']) {
+                        return ($a['type'] == 'class') ? -1 : 1;
+                    } else {
+                        return strcasecmp($a['data'], $b['data']);
+                    }
+                }
+            });
+        }
+
+        if (isset($tree['children'])) {
+            sortTree($tree['children']);
+        } elseif(array_values($tree) === $tree) {//is indexed array
+            sortTree($tree);
+        }
+
+        //expose the tree
+        $this->returnJson($tree);
     }
 
     /**
      * Get all delivery execution to feed the tree
      * @throws \common_exception_IsAjaxAction
      */
-    public function getOntologyData()
+    public function getOntologyData1()
     {
         if (!tao_helpers_Request::isAjax()) {
             throw new common_exception_IsAjaxAction(__FUNCTION__);
         }
         
         $instances = array();
-        $deliveryService = DeliveryAssemblyService::singleton();
-        if (!$this->hasRequestParameter('classUri') || $deliveryService->getRootClass()->getUri() === $this->getRequestParameter('classUri')) {
+        if (!$this->hasRequestParameter('classUri') || $this->deliveryService->getRootClass()->getUri() === $this->getRequestParameter('classUri')) {
             // root
-            foreach ($deliveryService->getAllAssemblies() as $assembly) {
+            foreach ($this->deliveryService->getAllAssemblies() as $assembly) {
                 $child["attributes"] = array(
                     "id" => tao_helpers_Uri::encode($assembly->getUri()),
                     "class" => "node-class",
@@ -92,16 +170,115 @@ class Results extends tao_actions_SaSModule
         
         if(empty($instances) && !$this->hasRequestParameter('classUri')){
             $instances["attributes"] = array(
-                "id" => $deliveryService->getRootClass()->getUri(),
+                "id" => $this->deliveryService->getRootClass()->getUri(),
                 "class" => "node-class",
             );
             $instances["data"] = __('No Results');
         }
 
         $this->returnJson($instances);
-
     }
+    
+    public function getOntologyData2()
+    {
+        if (!tao_helpers_Request::isAjax()) {
+            throw new common_exception_IsAjaxAction(__FUNCTION__);
+        }
 
+        $deliveryClazz = $this->deliveryService->getRootClass();
+        
+        $options = array(
+            'subclasses' => true,
+            'instances' => true,
+            'highlightUri' => '',
+            'chunk' => false,
+            'offset' => 0,
+            'limit' => 0
+        );
+
+        if ($this->hasRequestParameter('loadNode')) {
+            $options['uniqueNode'] = $this->getRequestParameter('loadNode');
+        }
+
+        if ($this->hasRequestParameter("selected")) {
+            $options['browse'] = array($this->getRequestParameter("selected"));
+        }
+
+        if ($this->hasRequestParameter('hideInstances')) {
+            if((bool) $this->getRequestParameter('hideInstances')) {
+                $options['instances'] = false;
+            }
+        }
+        if ($this->hasRequestParameter('classUri')) {
+            $clazz = $this->getCurrentClass();
+            $options['chunk'] = 0;//!$clazz->equals($deliveryClazz);
+        } else {
+            $clazz = $deliveryClazz;
+        }
+
+        if ($this->hasRequestParameter('offset')) {
+            $options['offset'] = $this->getRequestParameter('offset');
+        }
+
+        if ($this->hasRequestParameter('limit')) {
+            $options['limit'] = $this->getRequestParameter('limit');
+        }
+
+        //generate the tree from the given parameters
+        $tree = $this->getClassService()->toTree($clazz, $options);
+
+        $tree = $this->addPermissions($tree);
+        
+        function sortTree(&$tree) {
+            usort($tree, function($a, $b) {
+                if (isset($a['data']) && isset($b['data'])) {
+                    if ($a['type'] != $b['type']) {
+                        return ($a['type'] == 'class') ? -1 : 1;
+                    } else {
+                        return strcasecmp($a['data'], $b['data']);
+                    }
+                }
+            });
+        }
+        
+        function takeFolder(&$tree) {
+            
+            //unset($tree['type'], $tree['attributes']["data-uri"], $tree['attributes']["class"], $tree['attributes']["data-classUri"]);
+            
+            unset($tree['type'], $tree['attributes']["class"], $tree['attributes']["data-classUri"]);
+            
+            if (isset($tree['children'])) {
+                array_walk($tree['children'], function(&$val) {
+                    if ($val['type'] == 'class') {
+                        takeFolder($val);
+                    } else {
+                        $val['type'] = 'class';
+                        $val['attributes']['class'] = 'node-class';
+                    }
+                    unset($val['permissions']);
+                });
+            } else {
+                
+                //delete empty folders?
+            //    unset($tree);
+            }
+        }
+        
+        if (isset($tree['children'])) {
+            sortTree($tree['children']);
+            takeFolder($tree);
+        } elseif(array_values($tree) === $tree) {//is indexed array
+            sortTree($tree);
+            $tree['type'] = 'class';
+            $tree['attributes']['class'] = 'node-class';
+        }
+        
+        //unset($tree['permissions']);
+        
+        //expose the tree
+        $this->returnJson($tree);
+    }
+    
 
     /**
      * Action called on click on a delivery (class) construct and call the view to see the table of
@@ -115,7 +292,7 @@ class Results extends tao_actions_SaSModule
         );
 
         $deliveryService = DeliveryAssemblyService::singleton();
-        $delivery = new core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
+        $delivery = new core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
         if($delivery->getUri() !== $deliveryService->getRootClass()->getUri()){
 
             try{
@@ -133,7 +310,7 @@ class Results extends tao_actions_SaSModule
                     );
                 }
 
-                $this->setData('classUri',tao_helpers_Uri::encode($delivery->getUri()));
+                $this->setData('uri',tao_helpers_Uri::encode($delivery->getUri()));
                 $this->setData('model',$model);
 
                 $this->setView('resultList.tpl');
@@ -248,10 +425,12 @@ class Results extends tao_actions_SaSModule
      */
     public function viewResult()
     {
+        
         $result = $this->getCurrentInstance();
         $de = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($result->getUri());
 
         try{
+            
             $implementation = $this->getClassService()->getReadableImplementation($de->getDelivery());
             $this->getClassService()->setImplementation($implementation);
 

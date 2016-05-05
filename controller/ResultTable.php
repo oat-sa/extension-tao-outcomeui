@@ -68,7 +68,7 @@ class ResultTable extends \tao_actions_CommonModule {
         $deliveryService = DeliveryAssemblyService::singleton();
         if($this->getRequestParameter('classUri') !== $deliveryService->getRootClass()->getUri()) {
             $filter = $this->getRequestParameter('filter');
-            $classUri = $this->getRequestParameter('classUri');
+            $classUri = $this->getRequestParameter('uri');
             $this->setData('filter', $filter);
             $this->setData('classUri', $classUri);
             $this->setView('resultTable.tpl');
