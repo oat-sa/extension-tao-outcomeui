@@ -28,11 +28,11 @@
                         <icon id="icon-end-attempt"/>
                     </action>
                     <action id="results-view" name="View result" url="/taoOutcomeUi/Results/viewResult" group="content"
-                            context="instance">
+                            context="tree">
                         <icon id="icon-edit"/>
                     </action>
                     <action id="results-delete" name="Delete" binding="removeNode" url="/taoOutcomeUi/Results/delete"
-                            context="instance" group="tree">
+                            context="tree" group="tree">
                         <icon id="icon-bin"/>
                     </action>
                 </actions>
