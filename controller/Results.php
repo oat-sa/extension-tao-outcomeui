@@ -29,7 +29,6 @@ use \tao_actions_SaSModule;
 use \tao_helpers_Request;
 use \tao_helpers_Uri;
 use oat\taoOutcomeUi\model\ResultsService;
-use oat\taoOutcomeUi\helper\ResultLabel;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 
 /**
@@ -109,9 +108,17 @@ class Results extends tao_actions_SaSModule
      */
     public function index()
     {
-        //Properties to filter on
-        $properties = array(
-            new \core_kernel_classes_Property(RDFS_LABEL),
+        $model = array(
+            array(
+                'id'       => 'ttaker',
+                'label'    => __('Test Taker'),
+                'sortable' => false
+            ),
+            array(
+                'id'       => 'time',
+                'label'    => __('Start Time'),
+                'sortable' => false
+            )
         );
 
         $deliveryService = DeliveryAssemblyService::singleton();
@@ -124,16 +131,9 @@ class Results extends tao_actions_SaSModule
 
                 $this->getClassService()->setImplementation($implementation);
 
-                $model = array();
-                foreach($properties as $property){
-                    $model[] = array(
-                        'id'       => $property->getUri(),
-                        'label'    => $property->getLabel(),
-                        'sortable' => true
-                    );
-                }
 
                 $this->setData('classUri',tao_helpers_Uri::encode($delivery->getUri()));
+                $this->setData('title',$delivery->getLabel());
                 $this->setData('model',$model);
 
                 $this->setView('resultList.tpl');
@@ -190,16 +190,16 @@ class Results extends tao_actions_SaSModule
         $counti = $this->getClassService()->getImplementation()->countResultByDelivery(array($delivery->getUri()));
         foreach($results as $res){
 
-            $deliveryResult = new core_kernel_classes_Resource($res['deliveryResultIdentifier']);
+            $deliveryExecution = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($res['deliveryResultIdentifier']);
             $testTaker = new core_kernel_classes_Resource($res['testTakerIdentifier']);
-            $label = new ResultLabel($deliveryResult, $testTaker, $delivery);
 
             $data[] = array(
-                'id'                           => $deliveryResult->getUri(),
-                RDFS_LABEL                     => (string)$label,
+                'id'        => $deliveryExecution->getIdentifier(),
+                'ttaker'    => $testTaker->getLabel(),
+                'time'      => \tao_helpers_Date::displayeDate($deliveryExecution->getStartTime()),
             );
 
-            $readOnly[$deliveryResult->getUri()] = $rights;
+            $readOnly[$deliveryExecution->getIdentifier()] = $rights;
         }
 
         $this->returnJSON(array(
