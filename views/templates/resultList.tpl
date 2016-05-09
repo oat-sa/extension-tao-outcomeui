@@ -2,6 +2,13 @@
 use oat\tao\helpers\Template;
 ?>
 <link rel="stylesheet" href="<?= Template::css('icon.css') ?>" />
+
+<div class="results-headings flex-container-full">
+    <header>
+        <h2><?=get_data("title")?></h2>
+    </header>
+</div>
+
 <div id="inspect-result" class="flex-container-full"
     data-model="<?= tao_helpers_Display::encodeAttrValue(json_encode(get_data("model"))) ?>"
     data-uri="<?= tao_helpers_Display::encodeAttrValue(get_data("uri")) ?>"
