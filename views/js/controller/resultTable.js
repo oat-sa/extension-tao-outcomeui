@@ -27,7 +27,7 @@ define([
            var $filterField = $('.result-filter', $container);
            var $tableContainer = $('.result-table-container', $container);
            var filter = conf.filter || 'lastSubmitted';
-           var classUri = conf.classUri || '';
+           var uri = conf.uri || '';
             //keep columns through calls
             var columns = [];
             var groups = {};
@@ -42,7 +42,7 @@ define([
                 $.ajax({
                     url : url,
                     dataType : 'json',
-                    data : {filter : filter, classUri : classUri},
+                    data : {filter : filter, uri : uri},
                     type :'GET'
                 }).done(function(response){
                     if(response && response.columns){
@@ -98,7 +98,7 @@ define([
                                     preparingMessageHtml: __("We are preparing your report, please wait..."),
                                     failMessageHtml: __("There was a problem generating your report, please try again."),
                                     httpMethod: 'POST',
-                                    data: {'filter': filter, 'columns': columns, classUri : classUri}
+                                    data: {'filter': filter, 'columns': columns, uri : uri}
                                 });
                             });
 
@@ -110,7 +110,7 @@ define([
                     .datatable({
                         url : helpers._url('data', 'ResultTable', 'taoOutcomeUi', {filterData : filter}),
                         querytype : 'POST',
-                        params : {columns : columns,  '_search' : false, classUri : classUri},
+                        params : {columns : columns,  '_search' : false, uri: uri},
                         model :  model
                     });
             };

@@ -43,6 +43,8 @@ use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 class Results extends tao_actions_SaSModule
 {
 
+    private $deliveryService;
+
     /**
      * constructor: initialize the service and the default data
      * @return Results
@@ -51,6 +53,8 @@ class Results extends tao_actions_SaSModule
     {
         parent::__construct();
 
+        $this->service = ResultsService::singleton();
+        $this->deliveryService = DeliveryAssemblyService::singleton();
         $this->defaultData();
     }
 
@@ -59,12 +63,12 @@ class Results extends tao_actions_SaSModule
      */
     protected function getClassService()
     {
-        return ResultsService::singleton();
+        return $this->service;
     }
 
     /**
-     * Get all delivery execution to feed the tree
-     * @throws \common_exception_IsAjaxAction
+     * Ontology data for deliveries (not results, so use deliveryService->getRootClass)
+     * @throws common_exception_IsAjaxAction
      */
     public function getOntologyData()
     {
@@ -72,35 +76,70 @@ class Results extends tao_actions_SaSModule
             throw new common_exception_IsAjaxAction(__FUNCTION__);
         }
         
-        $instances = array();
-        $deliveryService = DeliveryAssemblyService::singleton();
-        if (!$this->hasRequestParameter('classUri') || $deliveryService->getRootClass()->getUri() === $this->getRequestParameter('classUri')) {
-            // root
-            foreach ($deliveryService->getAllAssemblies() as $assembly) {
-                $child["attributes"] = array(
-                    "id" => tao_helpers_Uri::encode($assembly->getUri()),
-                    "class" => "node-class",
-                    'data-uri' => $assembly->getUri()
+        $options = array(
+            'subclasses' => true,
+            'instances' => true,
+            'highlightUri' => '',
+            'chunk' => false,
+            'offset' => 0,
+            'limit' => 0
                 );
-                $child["data"] = htmlentities($assembly->getLabel());
-                $child["type"] = "class";
 
-                $instances[] = $child;
+        if ($this->hasRequestParameter('loadNode')) {
+            $options['uniqueNode'] = $this->getRequestParameter('loadNode');
             }
+
+        if ($this->hasRequestParameter("selected")) {
+            $options['browse'] = array($this->getRequestParameter("selected"));
         }
         
-        if(empty($instances) && !$this->hasRequestParameter('classUri')){
-            $instances["attributes"] = array(
-                "id" => $deliveryService->getRootClass()->getUri(),
-                "class" => "node-class",
-            );
-            $instances["data"] = __('No Results');
+        if ($this->hasRequestParameter('hideInstances')) {
+            if((bool) $this->getRequestParameter('hideInstances')) {
+                $options['instances'] = false;
+            }
+        }
+        if ($this->hasRequestParameter('classUri')) {
+            $clazz = $this->getCurrentClass();
+            $options['chunk'] = !$clazz->equals($this->deliveryService->getRootClass());
+        } else {
+            $clazz = $this->deliveryService->getRootClass();
         }
 
-        $this->returnJson($instances);
+        if ($this->hasRequestParameter('offset')) {
+            $options['offset'] = $this->getRequestParameter('offset');
+        }
 
+        if ($this->hasRequestParameter('limit')) {
+            $options['limit'] = $this->getRequestParameter('limit');
     }
 
+        //generate the tree from the given parameters
+        $tree = $this->getClassService()->toTree($clazz, $options);
+
+        $tree = $this->addPermissions($tree);
+
+        function sortTree(&$tree) {
+            usort($tree, function($a, $b) {
+                if (isset($a['data']) && isset($b['data'])) {
+                    if ($a['type'] != $b['type']) {
+                        return ($a['type'] == 'class') ? -1 : 1;
+                    } else {
+                        return strcasecmp($a['data'], $b['data']);
+                    }
+                }
+                return 0;
+            });
+        }
+
+        if (isset($tree['children'])) {
+            sortTree($tree['children']);
+        } elseif(array_values($tree) === $tree) {//is indexed array
+            sortTree($tree);
+        }
+
+        //expose the tree
+        $this->returnJson($tree);
+    }
 
     /**
      * Action called on click on a delivery (class) construct and call the view to see the table of
@@ -122,7 +161,7 @@ class Results extends tao_actions_SaSModule
         );
 
         $deliveryService = DeliveryAssemblyService::singleton();
-        $delivery = new core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
+        $delivery = new core_kernel_classes_Resource($this->getRequestParameter('id'));
         if($delivery->getUri() !== $deliveryService->getRootClass()->getUri()){
 
             try{
@@ -132,7 +171,7 @@ class Results extends tao_actions_SaSModule
                 $this->getClassService()->setImplementation($implementation);
 
 
-                $this->setData('classUri',tao_helpers_Uri::encode($delivery->getUri()));
+                $this->setData('uri',tao_helpers_Uri::encode($delivery->getUri()));
                 $this->setData('title',$delivery->getLabel());
                 $this->setData('model',$model);
 
@@ -248,10 +287,12 @@ class Results extends tao_actions_SaSModule
      */
     public function viewResult()
     {
+        
         $result = $this->getCurrentInstance();
         $de = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($result->getUri());
 
         try{
+            
             $implementation = $this->getClassService()->getReadableImplementation($de->getDelivery());
             $this->getClassService()->setImplementation($implementation);
 

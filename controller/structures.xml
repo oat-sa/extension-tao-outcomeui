@@ -10,30 +10,29 @@
                     <tree name="Results library"
                           className="Result"
                           dataUrl="/taoOutcomeUi/Results/getOntologyData"
-                          selectClass="results-index"
-                          selectInstance="results-view"
+                          selectInstance="results-index"
                           delete="results-delete"
                             />
                 </trees>
                 <actions>
                     <action id="results-index" name="Results" url="/taoOutcomeUi/Results/index" group="content"
-                            context="class">
+                            context="instance">
                         <icon id="icon-result-small"/>
                     </action>
                     <action id="results-export" name="Export Table" url="/taoOutcomeUi/ResultTable/index" group="content"
-                            context="class">
+                            context="instance">
                         <icon id="icon-table"/>
                     </action>
                     <action id="results-expire" name="Complete expired tests" binding="endExpiredTests" url="/taoQtiTest/TestCommand/endExpiredTests" group="content"
-                            context="class">
+                            context="instance">
                         <icon id="icon-end-attempt"/>
                     </action>
                     <action id="results-view" name="View result" url="/taoOutcomeUi/Results/viewResult" group="content"
-                            context="instance">
+                            context="tree">
                         <icon id="icon-edit"/>
                     </action>
                     <action id="results-delete" name="Delete" binding="removeNode" url="/taoOutcomeUi/Results/delete"
-                            context="instance" group="tree">
+                            context="tree" group="tree">
                         <icon id="icon-bin"/>
                     </action>
                 </actions>
