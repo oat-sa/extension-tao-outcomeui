@@ -332,7 +332,7 @@ class ResultsService extends tao_models_classes_ClassService {
 
         $itemCallIds = $this->getItemResultsFromDeliveryResult($deliveryResult);
         $variablesByItem = array();
-        $savedItems = array();
+//        $savedItems = array();
         foreach ($itemCallIds as $itemCallId) {
             $tmpitem = array();
             $firstEpoch = null;
@@ -375,20 +375,20 @@ class ResultsService extends tao_models_classes_ClassService {
                     if($type !== 'taoResultServer_models_classes_TraceVariable'){
                         $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
                         $tmpitem[$type][$variableIdentifier] = $variableDescription;
-                        $savedItems[$firstEpoch] = $item['uri'];
+//                        $savedItems[$firstEpoch] = $item['uri'];
                         $firstEpoch = $epoch;
                         $saved = true;
                     }
 
-                    if($filter === "lastSubmitted" && (($index = array_search($item['uri'], $savedItems)) !== false && $index < $firstEpoch)){
-                        unset($savedItems[$index]);
-                        unset($variablesByItem[$index]);
-                    }
-
-                    if($filter === "firstSubmitted" && (($index = array_search($item['uri'], $savedItems)) !== false && $index > $firstEpoch)){
-                        unset($savedItems[$index]);
-                        unset($variablesByItem[$index]);
-                    }
+//                    if($filter === "lastSubmitted" && (($index = array_search($item['uri'], $savedItems)) !== false && $index < $firstEpoch)){
+//                        unset($savedItems[$index]);
+//                        unset($variablesByItem[$index]);
+//                    }
+//
+//                    if($filter === "firstSubmitted" && (($index = array_search($item['uri'], $savedItems)) !== false && $index > $firstEpoch)){
+//                        unset($savedItems[$index]);
+//                        unset($variablesByItem[$index]);
+//                    }
 
                 }
 
@@ -398,12 +398,6 @@ class ResultsService extends tao_models_classes_ClassService {
             }
         }
 
-        if($filter !== 'all'){
-            $duplicates = array_diff($savedItems, array_unique($savedItems));
-            foreach($duplicates as $epoch => $item){
-
-            }
-        }
         ksort($variablesByItem);
         return $variablesByItem;
     }
