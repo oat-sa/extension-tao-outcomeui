@@ -332,9 +332,10 @@ class ResultsService extends tao_models_classes_ClassService {
 
         $itemCallIds = $this->getItemResultsFromDeliveryResult($deliveryResult);
         $variablesByItem = array();
-//        $savedItems = array();
+        $savedItems = array();
         foreach ($itemCallIds as $itemCallId) {
             $tmpitem = array();
+            $save = true;
             $firstEpoch = null;
             $itemVariables = $this->getVariablesFromObjectResult($itemCallId);
             $item = $this->getItemInfos($itemCallId, $itemVariables);
@@ -372,28 +373,28 @@ class ResultsService extends tao_models_classes_ClassService {
                     $tmpitem[$type][$variableIdentifier] = $variableDescription;
                 } else{
 
-                    if($type !== 'taoResultServer_models_classes_TraceVariable'){
+                    $save = !isset($savedItems[$item['uri']])
+                        || ($filter === 'all'
+                        || ($filter === "lastSubmitted" && $savedItems[$item['uri']] < $firstEpoch)
+                        || ($filter === "firstSubmitted" && $savedItems[$item['uri']] > $firstEpoch));
+                    if($save && $type !== 'taoResultServer_models_classes_TraceVariable'
+                        ){
+                        if($filter === "lastSubmitted" && isset($savedItems[$item['uri']])){
+                            unset($variablesByItem[$savedItems[$item['uri']]]);
+                        }
                         $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
                         $tmpitem[$type][$variableIdentifier] = $variableDescription;
-//                        $savedItems[$firstEpoch] = $item['uri'];
+                        $savedItems[$item['uri']] = $firstEpoch;
                         $firstEpoch = $epoch;
                         $saved = true;
                     }
-
-//                    if($filter === "lastSubmitted" && (($index = array_search($item['uri'], $savedItems)) !== false && $index < $firstEpoch)){
-//                        unset($savedItems[$index]);
-//                        unset($variablesByItem[$index]);
-//                    }
-//
-//                    if($filter === "firstSubmitted" && (($index = array_search($item['uri'], $savedItems)) !== false && $index > $firstEpoch)){
-//                        unset($savedItems[$index]);
-//                        unset($variablesByItem[$index]);
-//                    }
-
                 }
 
             }
-            if(!$saved){
+            if($save && !$saved){
+                if($filter === "lastSubmitted" && isset($savedItems[$item['uri']])){
+                    unset($variablesByItem[$savedItems[$item['uri']]]);
+                }
                 $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
             }
         }
