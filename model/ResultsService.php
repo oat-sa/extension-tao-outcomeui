@@ -374,9 +374,9 @@ class ResultsService extends tao_models_classes_ClassService {
                 } else{
 
                     $save = !isset($savedItems[$item['uri']])
-                        || ($filter === 'all'
+                        || ($filter === 'all')
                         || ($filter === "lastSubmitted" && $savedItems[$item['uri']] < $firstEpoch)
-                        || ($filter === "firstSubmitted" && $savedItems[$item['uri']] > $firstEpoch));
+                        || ($filter === "firstSubmitted" && $savedItems[$item['uri']] > $firstEpoch);
                     if($save && $type !== 'taoResultServer_models_classes_TraceVariable'
                         ){
                         if($filter === "lastSubmitted" && isset($savedItems[$item['uri']])){
