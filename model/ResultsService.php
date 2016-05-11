@@ -226,11 +226,206 @@ class ResultsService extends tao_models_classes_ClassService {
         return $this->getImplementation()->getVariableProperty($variableUri, 'baseType');
     }
 
+
     /**
      *
      * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
      * @param string $filter 'lastSubmitted', 'firstSubmitted'
      * @return array ["nbResponses" => x,"nbCorrectResponses" => y,"nbIncorrectResponses" => z,"nbUnscoredResponses" => a,"data" => $variableData]
+     */
+    public function calculateResponseStatistics($variablesData) {
+        $numberOfResponseVariables = 0;
+        $numberOfCorrectResponseVariables = 0;
+        $numberOfInCorrectResponseVariables = 0;
+        $numberOfUnscoredResponseVariables = 0;
+        $numberOfOutcomeVariables = 0;
+        foreach ($variablesData as $epoch => $itemVariables) {
+            foreach($itemVariables as $key => $value){
+                if($key == CLASS_RESPONSE_VARIABLE){
+                    foreach($value as $variable){
+                        $numberOfResponseVariables++;
+                        switch($variable['isCorrect']){
+                            case 'correct':
+                                $numberOfCorrectResponseVariables++;
+                                break;
+                            case 'incorrect':
+                                $numberOfInCorrectResponseVariables++;
+                                break;
+                            case 'unscored':
+                                $numberOfUnscoredResponseVariables++;
+                                break;
+                            default:
+                                common_Logger::w('The value '.$variable['isCorrect'].' is not a valid value');
+                                break;
+                        }
+                    }
+                }
+                else{
+                    $numberOfOutcomeVariables++;
+                }
+
+            }
+        }
+        $stats = array(
+            "nbResponses" => $numberOfResponseVariables,
+            "nbCorrectResponses" => $numberOfCorrectResponseVariables,
+            "nbIncorrectResponses" => $numberOfInCorrectResponseVariables,
+            "nbUnscoredResponses" => $numberOfUnscoredResponseVariables,
+        );
+        return $stats;
+    }
+
+    /**
+     * @param $itemCallId
+     * @param $itemVariables
+     * @return array item information ['uri' => xxx, 'label' => yyy, 'itemModel' => zzz]
+     */
+    private function getItemInfos($itemCallId, $itemVariables){
+        $undefinedStr = __('unknown'); //some data may have not been submitted
+
+        try {
+            common_Logger::d("Retrieving related Item for item call " . $itemCallId . "");
+            $relatedItem = $this->getItemFromItemResult($itemCallId, $itemVariables);
+        } catch (common_Exception $e) {
+            common_Logger::w("The item call '" . $itemCallId . "' is not linked to a valid item. (deleted item ?)");
+            $relatedItem = null;
+        }
+        if (get_class($relatedItem) == "core_kernel_classes_Literal") {
+            $itemIdentifier = $relatedItem->__toString();
+            $itemLabel = $relatedItem->__toString();
+            $itemModel = $undefinedStr;
+        } elseif (get_class($relatedItem) == "core_kernel_classes_Resource") {
+            $itemIdentifier = $relatedItem->getUri();
+            $itemLabel = $relatedItem->getLabel();
+
+            try {
+                common_Logger::d("Retrieving related Item model for item " . $relatedItem->getUri() . "");
+                $itemModel = $relatedItem->getUniquePropertyValue(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
+                $itemModel = $itemModel->getLabel();
+            } catch (common_Exception $e) { //a resource but unknown
+                $itemModel = $undefinedStr;
+            }
+        } else {
+            $itemIdentifier = $undefinedStr;
+            $itemLabel = $undefinedStr;
+            $itemModel = $undefinedStr;
+        }
+        $item['itemModel'] = $itemModel;
+        $item['label'] = $itemLabel;
+        $item['uri'] = $itemIdentifier;
+
+        return $item;
+    }
+
+    /**
+     *  prepare a data set as an associative array, service intended to populate gui controller
+     *
+     * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
+     * @param string $filter 'lastSubmitted', 'firstSubmitted', 'all'
+     *
+     * @return array
+        [
+            'epoch1' => [
+                'itemModel' => QTI,
+                'label' => Example_0_Introduction,
+                'uri' => http://tao.local/mytao.rdf#i1462952280695832,
+                'taoResultServer_models_classes_Variable class name' => [
+                    'Variable identifier 1' => [
+                        'uri' => 1,
+                        'var' => taoResultServer_models_classes_Variable object,
+                        'isCorrect' => correct
+                    ],
+                    'Variable identifier 2' => [
+                        'uri' => 2,
+                        'var' => taoResultServer_models_classes_Variable object,
+                        'isCorrect' => unscored
+                    ]
+                ]
+            ]
+        ]
+     */
+    public function getStructuredVariables(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $filter)
+    {
+        $itemCallIds = $this->getItemResultsFromDeliveryResult($deliveryResult);
+        $variablesByItem = array();
+        $savedItems = array();
+        foreach ($itemCallIds as $itemCallId) {
+            $tmpitem = array();
+            $save = true;
+            $firstEpoch = null;
+            $itemVariables = $this->getVariablesFromObjectResult($itemCallId);
+            $item = $this->getItemInfos($itemCallId, $itemVariables);
+
+            foreach ($itemVariables as $variable) {
+                $saved = false;
+                /** @var \taoResultServer_models_classes_Variable $variableTemp */
+                $variableTemp = $variable[0]->variable;
+                $variableDescription = array();
+                //retrieve the type of the variable
+                $type = get_class($variableTemp);
+                $epoch = explode(' ',$variableTemp->getEpoch());
+                $epoch = $epoch[1];
+                if(is_null($firstEpoch)){
+                    $firstEpoch = $epoch;
+                }
+
+                $variableIdentifier = $variableTemp->getIdentifier();
+                $variableDescription["uri"] = $variable[0]->uri;
+                $variableDescription["var"] = $variableTemp;
+
+                if (method_exists($variableTemp, 'getCorrectResponse') && !is_null($variableTemp->getCorrectResponse())) {
+                    if($variableTemp->getCorrectResponse() >= 1){
+                        $variableDescription["isCorrect"] = "correct";
+                    }
+                    else{
+                        $variableDescription["isCorrect"] = "incorrect";
+                    }
+                }
+                else{
+                    $variableDescription["isCorrect"] = "unscored";
+                }
+
+                if(is_null($firstEpoch) || $epoch === $firstEpoch){
+                    $tmpitem[$type][$variableIdentifier] = $variableDescription;
+                } else{
+
+                    $save = !isset($savedItems[$item['uri']])
+                        || ($filter === 'all')
+                        || ($filter === "lastSubmitted" && $savedItems[$item['uri']] < $firstEpoch)
+                        || ($filter === "firstSubmitted" && $savedItems[$item['uri']] > $firstEpoch);
+                    if($save && $type !== 'taoResultServer_models_classes_TraceVariable'
+                        ){
+                        if($filter === "lastSubmitted" && isset($savedItems[$item['uri']])){
+                            unset($variablesByItem[$savedItems[$item['uri']]]);
+                        }
+                        $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
+                        $tmpitem[$type][$variableIdentifier] = $variableDescription;
+                        $savedItems[$item['uri']] = $firstEpoch;
+                        $firstEpoch = $epoch;
+                        $saved = true;
+                    }
+                }
+
+            }
+            if($save && !$saved){
+                if($filter === "lastSubmitted" && isset($savedItems[$item['uri']])){
+                    unset($variablesByItem[$savedItems[$item['uri']]]);
+                }
+                $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
+            }
+        }
+
+        ksort($variablesByItem);
+        return $variablesByItem;
+    }
+
+
+    /**
+     *
+     * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
+     * @param string $filter 'lastSubmitted', 'firstSubmitted'
+     * @return array ["nbResponses" => x,"nbCorrectResponses" => y,"nbIncorrectResponses" => z,"nbUnscoredResponses" => a,"data" => $variableData]
+     * @deprecated
      */
     public function getItemVariableDataStatsFromDeliveryResult(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $filter = null) {
         $numberOfResponseVariables = 0;
@@ -283,6 +478,7 @@ class ResultsService extends tao_models_classes_ClassService {
      * @param string $filter 'lastSubmitted', 'firstSubmitted'
      *
      * @return array
+     * @deprecated
      */
     public function getItemVariableDataFromDeliveryResult(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $filter)
     {
@@ -293,33 +489,11 @@ class ResultsService extends tao_models_classes_ClassService {
         $variablesByItem = array();
         foreach ($itemCallIds as $itemCallId) {
             $itemVariables = $this->getVariablesFromObjectResult($itemCallId);
-            try {
-                common_Logger::d("Retrieving related Item for item call " . $itemCallId . "");
-                $relatedItem = $this->getItemFromItemResult($itemCallId, $itemVariables);
-            } catch (common_Exception $e) {
-                common_Logger::w("The item call '" . $itemCallId . "' is not linked to a valid item. (deleted item ?)");
-                $relatedItem = null;
-            }
-            if (get_class($relatedItem) == "core_kernel_classes_Literal") {
-                $itemIdentifier = $relatedItem->__toString();
-                $itemLabel = $relatedItem->__toString();
-                $itemModel = $undefinedStr;
-            } elseif (get_class($relatedItem) == "core_kernel_classes_Resource") {
-                $itemIdentifier = $relatedItem->getUri();
-                $itemLabel = $relatedItem->getLabel();
 
-                try {
-                    common_Logger::d("Retrieving related Item model for item " . $relatedItem->getUri() . "");
-                    $itemModel = $relatedItem->getUniquePropertyValue(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
-                    $variablesByItem[$itemIdentifier]['itemModel'] = $itemModel->getLabel();
-                } catch (common_Exception $e) { //a resource but unknown
-                    $variablesByItem[$itemIdentifier]['itemModel'] = $undefinedStr;
-                }
-            } else {
-                $itemIdentifier = $undefinedStr;
-                $itemLabel = $undefinedStr;
-                $variablesByItem[$itemIdentifier]['itemModel'] = $undefinedStr;
-            }
+            $item = $this->getItemInfos($itemCallId, $itemVariables);
+            $itemIdentifier = $item['uri'];
+            $itemLabel = $item['label'];
+            $variablesByItem[$itemIdentifier]['itemModel'] = $item['itemModel'];
             foreach ($itemVariables as $variable) {
                 //retrieve the type of the variable
                 $variableTemp = $variable[0]->variable;

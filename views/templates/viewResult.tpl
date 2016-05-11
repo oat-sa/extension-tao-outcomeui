@@ -33,9 +33,10 @@ use oat\tao\helpers\Template;
             </div>
         </div>
         <div id="resultsBox">
+            <!-- Test Variable Table -->
             <table class="matrix">
                 <thead>
-                <tr >
+                <tr>
                     <th class="headerRow" colspan="4">
                         <span class="itemName">
                             <?=__('Test Variables')?> (<?=count(get_data("deliveryVariables"))?>)
@@ -44,159 +45,131 @@ use oat\tao\helpers\Template;
                 </tr>
                 </thead>
                 <?php foreach (get_data("deliveryVariables") as $testVariable){
-                $baseType = $testVariable->getBaseType();
-                $cardinality = $testVariable->getCardinality();
+                    $baseType = $testVariable->getBaseType();
+                    $cardinality = $testVariable->getCardinality();
                 ?>
-                <tbody>
-                <tr>
-                    <td><?=$testVariable->getIdentifier()?></td>
-                    <td><?=$testVariable->getValue()?></td>
-                    <td> 
-                        <?php 
-                        echo $cardinality;
-                        ?>
-                    </td>
-                    <td> 
-                        <?php 
-                        echo $baseType;
-                        ?>
-                    </td>
-                </tr>
-                </tbody>
+                    <tbody>
+                    <tr>
+                        <td><?=$testVariable->getIdentifier()?></td>
+                        <td><?=$testVariable->getValue()?></td>
+                        <td><?=$cardinality;?></td>
+                        <td><?=$baseType;?></td>
+                    </tr>
+                    </tbody>
                 <?php
                 }
                 ?>
             </table>
-            <?php  foreach (get_data('variables') as $itemUri => $item){
-           ?>
+            <!-- End of Test Variable Table -->
+
+            <!-- Item Result Tables -->
+            <?php  foreach (get_data('variables') as $item){ ?>
            
             <table class="matrix">
                 <thead>
-                    <tr >
-                        <th colspan="5" class="bold">
-                            <b>
-                                <?= _dh($item['label']) ?>
-                                (<?= _dh($item['itemModel']) ?>)
-                            </b>
-                        </th>
-                        <th>
-                            <a href="#" data-uri="<?=$itemUri?>" class="btn-info small preview" target="preview">
-                                <span class="icon-preview"></span>
-                                    <?=__('Preview')?>
-                            </a>
-                            
-                        </th>
-                    </tr>
+                <tr>
+                    <th colspan="5" class="bold">
+                        <b><?= _dh($item['label']) ?> (<?= _dh($item['itemModel']) ?>)</b>
+                    </th>
+                    <th>
+                        <a href="#" data-uri="<?=$item['uri']?>" class="btn-info small preview" target="preview">
+                            <span class="icon-preview"></span><?=__('Preview')?>
+                        </a>
+                    </th>
+                </tr>
                 </thead>
                 <tbody>
-                    <?php if (isset($item['sortedVars'][CLASS_RESPONSE_VARIABLE])) {?>
-                    <tr>
-                        <th colspan="6" class="italic">
-                            <i><?=__('Responses')?> (<?=count($item['sortedVars'][CLASS_RESPONSE_VARIABLE]) ?>)</i>
-                        </th>
-                    </tr>
-                <?php
-		foreach ($item['sortedVars'][CLASS_RESPONSE_VARIABLE] as $variableIdentifier  => $observations){
-		    $rowspan = 'rowspan="'.count($observations).'"';
-		    foreach ($observations as $key=>$observation) {
-                    $variable = $observation["var"];
-        	?>
-		<tr>
-		<?php if ($key === key($observations)) {?>
-		     <td <?=$rowspan?> class="variableIdentifierField"><?=$variableIdentifier?></td>
-		<?php }?>
-		<td class="dataResult" colspan="2">
-            <?php
-            if ($variable->getBaseType() === "file" && $variable->getCandidateResponse() !== '') {
-                    echo '<button class="download btn-info small" value="'.$observation["uri"].'"><span class="icon-download"></span> '.__('Download').'</button>';
-            }
-            else{
-            ?>
-		    <?php
-                        $rdfValue = $variable->getValue();
-                        if (is_array($rdfValue)) {
-                            echo "<OL>";
-                            foreach ($rdfValue as $value) {
-                                echo "<LI>";
-                                    echo tao_helpers_Display::htmlEscape(nl2br($value));
-                                echo "</LI>";
+                    <?php if (isset($item[CLASS_RESPONSE_VARIABLE])) { ?>
+                        <!-- Response Variable section row -->
+                        <tr>
+                            <th colspan="6" class="italic">
+                                <i><?=__('Responses')?> (<?=count($item[CLASS_RESPONSE_VARIABLE]) ?>)</i>
+                            </th>
+                        </tr>
+                        <!-- Response Variable list -->
+                        <?php foreach ($item[CLASS_RESPONSE_VARIABLE] as $variableIdentifier  => $observation){
+                            $variable = $observation["var"];
+                        ?>
+                        <tr>
+                            <td class="variableIdentifierField"><?=$variableIdentifier?></td>
+                            <!-- Variable value cell -->
+                            <td class="dataResult" colspan="2">
+                        <?php
+                        if ($variable->getBaseType() === "file" && $variable->getCandidateResponse() !== '') {
+                            echo '<button class="download btn-info small" value="'.$observation["uri"].'"><span class="icon-download"></span> '.__('Download').'</button>';
+                        }
+                        else{
+                            $rdfValue = $variable->getValue();
+                            if (is_array($rdfValue)) { ?>
+                                <OL>
+                            <?php foreach ($rdfValue as $value) { ?>
+                                    <LI>
+                                        <?=tao_helpers_Display::htmlEscape(nl2br($value))?>
+                                    </LI>
+                            <?php } ?>
+                                </OL>
+                            <?php
+                            } elseif (is_string($rdfValue)) {
+                                echo tao_helpers_Display::htmlEscape(nl2br($rdfValue));
+                            } else {
+                                echo tao_helpers_Display::htmlEscape($rdfValue);
                             }
-                            echo "</OL>";
-                        } elseif (is_string($rdfValue)) {
-                            echo tao_helpers_Display::htmlEscape(nl2br($rdfValue));
-                        } else {
-                            echo tao_helpers_Display::htmlEscape($rdfValue);
+                        }
+                        ?>
+
+                        <span class="rgt
+                              <?php
+                              switch ($observation['isCorrect']){
+                                  case "correct":{ ?>icon-result-ok <?php break;}
+                                  case "incorrect":{ ?>icon-result-nok<?php break;}
+                                  default: { ?>icon-not-evaluated<?php break;}
+                              }
+                              ?>
+                        "></span>
+                        </td>
+                        <!-- End of Variable value cell -->
+                        <td class="cardinalityField"><?=$variable->getCardinality()?></td>
+                        <td class="basetypeField"><?=$variable->getBaseType()?></td>
+                        <td class="epoch"><?=tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($variable->getEpoch()), tao_helpers_Date::FORMAT_VERBOSE)?></td>
+                    </tr>
+                    <?php
                         }
                     }
                     ?>
+                    <!-- End of Response Variable List -->
 
-                <span class="    
-                      <?php
-                      switch ($observation['isCorrect']){
-                          case "correct":{ echo "icon-result-ok";break;}
-                          case "incorrect":{ echo "icon-result-nok"; break;}
-                          default: { echo "icon-not-evaluated";break;}
-                          }
-                          ?>
-                          rgt"></span>
-                          </td>
-                          <td class="cardinalityField">
-                              <?php 
-                              echo $variable->getCardinality();
-                              ?>
-                          </td>
-                          <td class="basetypeField">
-                              <?php 
-                              echo $variable->getBaseType();
-                              ?>
-                          </td>
-
-                          <td class="epoch"><?=tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($variable->getEpoch()), tao_helpers_Date::FORMAT_VERBOSE)?></td>
-                          </tr>
-                          <?php
-                          }
-                          }
-                          ?>
-                          <?php } ?>
-                          <?php if (isset($item['sortedVars'][CLASS_OUTCOME_VARIABLE])) {?>
-                <tr>
-                    <th colspan="6" class="italic">
-                        <i><?=__('Grades')?>  (<?=count($item['sortedVars'][CLASS_OUTCOME_VARIABLE]) ?>)</i>
-                    </th>
-                </tr>
-                <?php
-		foreach ($item['sortedVars'][CLASS_OUTCOME_VARIABLE] as $variableIdentifier  => $observations){
-		   $rowspan = 'rowspan="'.count($observations).'"';
-		    foreach ($observations as $key=>$observation) {
-                    $variable = $observation["var"];
-        	?>
-		<tr>
-		<?php if ($key === key($observations)) {?>
-		    <td <?=$rowspan?> class="variableIdentifierField"><?=$variableIdentifier?></td>
-		<?php }?>
-            <td colspan="2" class="dataResult">
-                <?= tao_helpers_Display::htmlEscape($variable->getValue())?>
-            </td>
-            <td class="cardinalityField">
-              <?= $variable->getCardinality(); ?>
-            </td>
-            <td class="basetypeField">
-              <?= $variable->getBaseType(); ?>
-            </td>
-            <td class="epoch">
-              <?=tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($variable->getEpoch()), tao_helpers_Date::FORMAT_VERBOSE)?>
-            </td>
-            </tr>
-            <?php
-            }
-            }
-            ?>
-            
+                    <?php if (isset($item[CLASS_OUTCOME_VARIABLE])) { ?>
+                        <!-- Outcome Variable section row-->
+                        <tr>
+                            <th colspan="6" class="italic">
+                            <i><?=__('Grades')?>  (<?=count($item[CLASS_OUTCOME_VARIABLE]) ?>)</i>
+                            </th>
+                        </tr>
+                        <!-- Outcome Variable section list-->
+                        <?php
+		                foreach ($item[CLASS_OUTCOME_VARIABLE] as $variableIdentifier  => $observation){
+                            $variable = $observation["var"];
+        	            ?>
+		                    <tr>
+		                        <td class="variableIdentifierField"><?=$variableIdentifier?></td>
+                                <td colspan="2" class="dataResult">
+                                    <?= tao_helpers_Display::htmlEscape($variable->getValue())?>
+                                </td>
+                                <td class="cardinalityField"><?=$variable->getCardinality();?></td>
+                                <td class="basetypeField"><?= $variable->getBaseType();?></td>
+                                <td class="epoch">
+                                    <?=tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($variable->getEpoch()), tao_helpers_Date::FORMAT_VERBOSE)?>
+                                </td>
+                            </tr>
+                        <?php
+                        }
+                    }
+                    ?>
+                </tbody>
+            </table>
+            <br/>
             <?php } ?>
-            </tbody>
-                </table>
-                <br />
-                <?php } ?>
+            <!-- End of Item Result Tables-->
             </div>
         </div>
     </div>
