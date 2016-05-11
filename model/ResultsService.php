@@ -323,13 +323,31 @@ class ResultsService extends tao_models_classes_ClassService {
      *  prepare a data set as an associative array, service intended to populate gui controller
      *
      * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
-     * @param string $filter 'lastSubmitted', 'firstSubmitted'
+     * @param string $filter 'lastSubmitted', 'firstSubmitted', 'all'
      *
      * @return array
+        [
+            'epoch1' => [
+                'itemModel' => QTI,
+                'label' => Example_0_Introduction,
+                'uri' => http://tao.local/mytao.rdf#i1462952280695832,
+                'taoResultServer_models_classes_Variable class name' => [
+                    'Variable identifier 1' => [
+                        'uri' => 1,
+                        'var' => taoResultServer_models_classes_Variable object,
+                        'isCorrect' => correct
+                    ],
+                    'Variable identifier 2' => [
+                        'uri' => 2,
+                        'var' => taoResultServer_models_classes_Variable object,
+                        'isCorrect' => unscored
+                    ]
+                ]
+            ]
+        ]
      */
     public function getItemDataFromDeliveryResult(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $filter)
     {
-
         $itemCallIds = $this->getItemResultsFromDeliveryResult($deliveryResult);
         $variablesByItem = array();
         $savedItems = array();
