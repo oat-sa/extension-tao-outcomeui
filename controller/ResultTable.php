@@ -68,9 +68,9 @@ class ResultTable extends \tao_actions_CommonModule {
         $deliveryService = DeliveryAssemblyService::singleton();
         if($this->getRequestParameter('classUri') !== $deliveryService->getRootClass()->getUri()) {
             $filter = $this->getRequestParameter('filter');
-            $classUri = $this->getRequestParameter('classUri');
+            $uri = $this->getRequestParameter('uri');
             $this->setData('filter', $filter);
-            $this->setData('classUri', $classUri);
+            $this->setData('uri', $uri);
             $this->setView('resultTable.tpl');
         } else {
             $this->setData('type', 'info');
@@ -91,13 +91,13 @@ class ResultTable extends \tao_actions_CommonModule {
         $filter =  $this->hasRequestParameter('filter') ? $this->getRequestParameter('filter') : array();
     	$columns = $this->hasRequestParameter('columns') ? $this->getColumns('columns') : array();
 
-        $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
+        $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
         $implementation = $this->service->getReadableImplementation($delivery);
         $this->service->setImplementation($implementation);
     	
         $delivery = array();
-        if($this->hasRequestParameter('classUri')){
-            $delivery[] = \tao_helpers_Uri::decode($this->getRequestParameter('classUri'));
+        if($this->hasRequestParameter('uri')){
+            $delivery[] = \tao_helpers_Uri::decode($this->getRequestParameter('uri'));
         }
 
     	//The list of delivery Results matching the current selection filters
@@ -192,14 +192,14 @@ class ResultTable extends \tao_actions_CommonModule {
 		$columns = array();
         $filter =  $this->hasRequestParameter('filter') ? $this->getRequestParameter('filter') : array();
 
-        $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
+        $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
         $implementation = $this->service->getReadableImplementation($delivery);
         $this->service->setImplementation($implementation);
 		
 
         $delivery = array();
-        if($this->hasRequestParameter('classUri')){
-            $delivery[] = \tao_helpers_Uri::decode($this->getRequestParameter('classUri'));
+        if($this->hasRequestParameter('uri')){
+            $delivery[] = \tao_helpers_Uri::decode($this->getRequestParameter('uri'));
         }
 
 		//The list of delivery Results matching the current selection filters
@@ -314,7 +314,7 @@ class ResultTable extends \tao_actions_CommonModule {
      */
     public function data() {
        	$filterData =  $this->hasRequestParameter('filter') ? $this->getRequestParameter('filter') : array();
-       	$deliveryUri =  \tao_helpers_Uri::decode($this->getRequestParameter('classUri'));
+       	$deliveryUri =  \tao_helpers_Uri::decode($this->getRequestParameter('uri'));
 
     	$columns = $this->hasRequestParameter('columns') ? $this->getColumns('columns') : array();
     	$page = $this->getRequestParameter('page');
