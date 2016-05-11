@@ -233,13 +233,12 @@ class ResultsService extends tao_models_classes_ClassService {
      * @param string $filter 'lastSubmitted', 'firstSubmitted'
      * @return array ["nbResponses" => x,"nbCorrectResponses" => y,"nbIncorrectResponses" => z,"nbUnscoredResponses" => a,"data" => $variableData]
      */
-    public function getItemStatFromDeliveryResult(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $filter = null) {
+    public function calculateResponseStatistics($variablesData) {
         $numberOfResponseVariables = 0;
         $numberOfCorrectResponseVariables = 0;
         $numberOfInCorrectResponseVariables = 0;
         $numberOfUnscoredResponseVariables = 0;
         $numberOfOutcomeVariables = 0;
-        $variablesData = $this->getItemDataFromDeliveryResult($deliveryResult, $filter);
         foreach ($variablesData as $epoch => $itemVariables) {
             foreach($itemVariables as $key => $value){
                 if($key == CLASS_RESPONSE_VARIABLE){
@@ -272,7 +271,6 @@ class ResultsService extends tao_models_classes_ClassService {
             "nbCorrectResponses" => $numberOfCorrectResponseVariables,
             "nbIncorrectResponses" => $numberOfInCorrectResponseVariables,
             "nbUnscoredResponses" => $numberOfUnscoredResponseVariables,
-            "data" => $variablesData
         );
         return $stats;
     }
@@ -346,7 +344,7 @@ class ResultsService extends tao_models_classes_ClassService {
             ]
         ]
      */
-    public function getItemDataFromDeliveryResult(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $filter)
+    public function getStructuredVariables(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $filter)
     {
         $itemCallIds = $this->getItemResultsFromDeliveryResult($deliveryResult);
         $variablesByItem = array();
