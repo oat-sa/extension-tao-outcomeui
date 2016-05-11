@@ -332,13 +332,14 @@ class Results extends tao_actions_SaSModule
                 $this->setData('userEmail', $userEmail);
             }
             $filter = ($this->hasRequestParameter("filter")) ? $this->getRequestParameter("filter") : "lastSubmitted";
-            $stats = $this->getClassService()->getItemVariableDataStatsFromDeliveryResult($de, $filter);
+            $stats = $this->getClassService()->getItemStatFromDeliveryResult($de, $filter);
             $this->setData('nbResponses', $stats["nbResponses"]);
             $this->setData('nbCorrectResponses', $stats["nbCorrectResponses"]);
             $this->setData('nbIncorrectResponses', $stats["nbIncorrectResponses"]);
             $this->setData('nbUnscoredResponses', $stats["nbUnscoredResponses"]);
             $this->setData('deliveryResultLabel', $result->getLabel());
-            $this->setData('variables', $stats["data"]);
+            $this->setData('variables', $stats['data']);
+
             //retireve variables not related to item executions
             $deliveryVariables = $this->getClassService()->getVariableDataFromDeliveryResult($de);
             $this->setData('deliveryVariables', $deliveryVariables);
