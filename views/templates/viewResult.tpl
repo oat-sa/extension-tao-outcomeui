@@ -15,6 +15,12 @@ use oat\tao\helpers\Template;
                 <option  value="firstSubmitted" ><?=__('First submitted variables only')?></option>
                 <option  value="lastSubmitted" ><?=__('Last submitted variables only')?></option>
             </select>
+            <select class="class-filter">
+                <option  value="all" ><?=__('All variable types')?></option>
+                <option  value="<?=CLASS_TRACE_VARIABLE?>" ><?=__('Trace variables only')?></option>
+                <option  value="<?=CLASS_RESPONSE_VARIABLE?>" ><?=__('Response variables only')?></option>
+                <option  value="<?=CLASS_OUTCOME_VARIABLE?>" ><?=__('Outcome variables only')?></option>
+            </select>
             <button class="btn-info small result-filter-btn"><?=__('Filter');?></button>
         </div>
         <div id="resultsHeader">
@@ -165,6 +171,37 @@ use oat\tao\helpers\Template;
                         }
                     }
                     ?>
+                    <!-- End of Outcome Variable List -->
+
+                    <?php if (isset($item[CLASS_TRACE_VARIABLE])) { ?>
+                    <!-- Trace Variable section row-->
+                    <tr>
+                        <th colspan="6" class="italic">
+                            <i><?=__('Traces')?>  (<?=count($item[CLASS_TRACE_VARIABLE]) ?>)</i>
+                        </th>
+                    </tr>
+                    <!-- Trace Variable section list-->
+                    <?php
+		                foreach ($item[CLASS_TRACE_VARIABLE] as $variableIdentifier  => $observation){
+                    $variable = $observation["var"];
+                    ?>
+                    <tr>
+                        <td class="variableIdentifierField"><?=$variableIdentifier?></td>
+                        <td colspan="2" class="dataResult">
+                            <?= tao_helpers_Display::htmlEscape($variable->getValue())?>
+                        </td>
+                        <td class="cardinalityField"><?=$variable->getCardinality();?></td>
+                        <td class="basetypeField"><?= $variable->getBaseType();?></td>
+                        <td class="epoch">
+                            <?=tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($variable->getEpoch()), tao_helpers_Date::FORMAT_VERBOSE)?>
+                        </td>
+                    </tr>
+                    <?php
+                        }
+                    }
+                    ?>
+                    <!-- End of Trace Variable List -->
+
                 </tbody>
             </table>
             <br/>
@@ -191,6 +228,7 @@ use oat\tao\helpers\Template;
                 uri: '<?=get_data("uri")?>',
                 classUri: '<?=get_data("classUri")?>',
                 filter: '<?=get_data("filter")?>',
+                classFilter: '<?=get_data("classFilter")?>',
             }
         }
     });

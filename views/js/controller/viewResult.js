@@ -23,18 +23,24 @@ define([
         start : function(){
            var conf = module.config();
            var $container = $('#view-result');
-           var $filterField = $('.result-filter', $container);              
+           var $resultFilterField = $('.result-filter', $container);
+           var $classFilterField = $('.class-filter', $container);
             //set up filter field
-            $filterField.select2({
+            $resultFilterField.select2({
                 minimumResultsForSearch : -1
             }).select2('val', conf.filter || 'all');
+
+            $classFilterField.select2({
+                minimumResultsForSearch : -1
+            }).select2('val', conf.classFilter || 'all');
 
             $('.result-filter-btn', $container).click(function(e) {
                 section.loadContentBlock(
                     helpers._url('viewResult', 'Results', 'taoOutcomeUi'), {
                     uri: conf.uri,
                     classUri:  conf.classUri,
-                    filter: $filterField.select2('val')
+                    filter: $resultFilterField.select2('val'),
+                    classFilter: $classFilterField.select2('val')
                 });
             });
 
