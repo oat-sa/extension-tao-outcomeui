@@ -130,10 +130,23 @@ class ResultsService extends tao_models_classes_ClassService {
 
     /**
      * @param  string $itemResult
+     * @param string $wantedType
      * @return array
      */
-    public function getVariablesFromObjectResult($itemResult) {
-        return $this->getImplementation()->getVariables($itemResult);
+    public function getVariablesFromObjectResult($itemResult, $wantedType = 'all') {
+        $returnedVariables = array();
+        $variables = $this->getImplementation()->getVariables($itemResult);
+
+        if($wantedType !== 'all'){
+            foreach($variables as $variable){
+                if(get_class($variable[0]->variable) === $wantedType){
+                    $returnedVariables[] = $variable;
+                }
+            }
+        } else {
+            $returnedVariables = $variables;
+        }
+        return $returnedVariables;
     }
 
     /**
@@ -317,12 +330,13 @@ class ResultsService extends tao_models_classes_ClassService {
         return $item;
     }
 
+
     /**
      *  prepare a data set as an associative array, service intended to populate gui controller
      *
      * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
      * @param string $filter 'lastSubmitted', 'firstSubmitted', 'all'
-     *
+     * @param string $wantedType 'taoResultServer_models_classes_ResponseVariable', 'taoResultServer_models_classes_OutcomeVariable', 'taoResultServer_models_classes_TraceVariable', 'all'
      * @return array
         [
             'epoch1' => [
@@ -344,78 +358,107 @@ class ResultsService extends tao_models_classes_ClassService {
             ]
         ]
      */
-    public function getStructuredVariables(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $filter)
+    public function getStructuredVariables(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $filter, $wantedType = 'all')
     {
         $itemCallIds = $this->getItemResultsFromDeliveryResult($deliveryResult);
         $variablesByItem = array();
         $savedItems = array();
+        $itemVariables = array();
+        $tmpitem = array();
         foreach ($itemCallIds as $itemCallId) {
-            $tmpitem = array();
-            $save = true;
             $firstEpoch = null;
-            $itemVariables = $this->getVariablesFromObjectResult($itemCallId);
-            $item = $this->getItemInfos($itemCallId, $itemVariables);
+            $itemVariables = array_merge($itemVariables, $this->getVariablesFromObjectResult($itemCallId, $wantedType));
+        }
 
-            foreach ($itemVariables as $variable) {
-                $saved = false;
-                /** @var \taoResultServer_models_classes_Variable $variableTemp */
-                $variableTemp = $variable[0]->variable;
-                $variableDescription = array();
-                //retrieve the type of the variable
-                $type = get_class($variableTemp);
-                $epoch = explode(' ',$variableTemp->getEpoch());
-                $epoch = $epoch[1];
-                if(is_null($firstEpoch)){
-                    $firstEpoch = $epoch;
-                }
+        usort($itemVariables, function($a, $b){
+            $variableA = $a[0]->variable;
+            $variableB = $b[0]->variable;
+            list($usec, $sec) = explode(" ", $variableA->getEpoch());
+            $floata = ((float) $usec + (float) $sec);
+            list($usec, $sec) = explode(" ", $variableB->getEpoch());
+            $floatb = ((float) $usec + (float) $sec);
 
-                $variableIdentifier = $variableTemp->getIdentifier();
-                $variableDescription["uri"] = $variable[0]->uri;
-                $variableDescription["var"] = $variableTemp;
+            if ((floatval($floata) - floatval($floatb)) > 0) {
+                return 1;
+            } elseif ((floatval($floata) - floatval($floatb)) < 0) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
 
-                if (method_exists($variableTemp, 'getCorrectResponse') && !is_null($variableTemp->getCorrectResponse())) {
-                    if($variableTemp->getCorrectResponse() >= 1){
-                        $variableDescription["isCorrect"] = "correct";
-                    }
-                    else{
-                        $variableDescription["isCorrect"] = "incorrect";
-                    }
+        $lastItemCallId = null;
+
+        foreach($itemVariables as $variable){
+            $currentItemCallId = $variable[0]->callIdItem;
+
+            /** @var \taoResultServer_models_classes_Variable $variableTemp */
+            $variableTemp = $variable[0]->variable;
+            $variableDescription = array();
+            //retrieve the type of the variable
+            $type = get_class($variableTemp);
+
+            if(is_null($lastItemCallId)){
+                $lastItemCallId = $currentItemCallId;
+                $firstEpoch = $variableTemp->getEpoch();
+                $item = $this->getItemInfos($currentItemCallId, array($variable));
+            }
+
+            $variableIdentifier = $variableTemp->getIdentifier();
+            $variableDescription["uri"] = $variable[0]->uri;
+            $variableDescription["var"] = $variableTemp;
+
+            if (method_exists($variableTemp, 'getCorrectResponse') && !is_null($variableTemp->getCorrectResponse())) {
+                if($variableTemp->getCorrectResponse() >= 1){
+                    $variableDescription["isCorrect"] = "correct";
                 }
                 else{
-                    $variableDescription["isCorrect"] = "unscored";
+                    $variableDescription["isCorrect"] = "incorrect";
                 }
-
-                if(is_null($firstEpoch) || $epoch === $firstEpoch){
-                    $tmpitem[$type][$variableIdentifier] = $variableDescription;
-                } else{
-
-                    $save = !isset($savedItems[$item['uri']])
-                        || ($filter === 'all')
-                        || ($filter === "lastSubmitted" && $savedItems[$item['uri']] < $firstEpoch)
-                        || ($filter === "firstSubmitted" && $savedItems[$item['uri']] > $firstEpoch);
-                    if($save && $type !== 'taoResultServer_models_classes_TraceVariable'
-                        ){
-                        if($filter === "lastSubmitted" && isset($savedItems[$item['uri']])){
-                            unset($variablesByItem[$savedItems[$item['uri']]]);
-                        }
-                        $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
-                        $tmpitem[$type][$variableIdentifier] = $variableDescription;
-                        $savedItems[$item['uri']] = $firstEpoch;
-                        $firstEpoch = $epoch;
-                        $saved = true;
-                    }
-                }
-
             }
-            if($save && !$saved){
-                if($filter === "lastSubmitted" && isset($savedItems[$item['uri']])){
-                    unset($variablesByItem[$savedItems[$item['uri']]]);
+            else{
+                $variableDescription["isCorrect"] = "unscored";
+            }
+
+
+            if($currentItemCallId !== $lastItemCallId){
+                //no yet saved
+                //already saved and filter not first
+                if(!isset($savedItems[$item['uri']]) || $filter !== "firstSubmitted"){
+                    if($filter === "lastSubmitted"
+                        && isset($savedItems[$item['uri']])
+                    ){
+                        if(!empty($tmpitem) &&  ($wantedType === 'all' || isset($tmpitem[$wantedType]))){
+                            unset($variablesByItem[$savedItems[$item['uri']]]);
+                            $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
+                        }
+                    } else {
+                        $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
+                    }
+                    $savedItems[$item['uri']] = $firstEpoch;
                 }
+                $tmpitem = array();
+                $firstEpoch = $variableTemp->getEpoch();
+                $item = $this->getItemInfos($currentItemCallId, array($variable));
+                $lastItemCallId = $currentItemCallId;
+            }
+
+            $tmpitem[$type][$variableIdentifier] = $variableDescription;
+        }
+
+        if(!isset($savedItems[$item['uri']]) || $filter !== "firstSubmitted"){
+            if($filter === "lastSubmitted"
+                && isset($savedItems[$item['uri']])
+            ){
+                if(!empty($tmpitem) && ($wantedType === 'all' || isset($tmpitem[$wantedType]))){
+                    unset($variablesByItem[$savedItems[$item['uri']]]);
+                    $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
+                }
+            } else {
                 $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
             }
         }
 
-        ksort($variablesByItem);
         return $variablesByItem;
     }
 
