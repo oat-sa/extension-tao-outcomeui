@@ -332,7 +332,8 @@ class Results extends tao_actions_SaSModule
                 $this->setData('userEmail', $userEmail);
             }
             $filter = ($this->hasRequestParameter("filter")) ? $this->getRequestParameter("filter") : "lastSubmitted";
-            $variables = $this->getClassService()->getStructuredVariables($de, $filter);
+            $classFilter = ($this->hasRequestParameter("classFilter")) ? $this->getRequestParameter("classFilter") : 'all';
+            $variables = $this->getClassService()->getStructuredVariables($de, $filter, $classFilter);
             $this->setData('variables', $variables);
             
             $stats = $this->getClassService()->calculateResponseStatistics($variables);
@@ -348,6 +349,7 @@ class Results extends tao_actions_SaSModule
             $this->setData('uri', $this->getRequestParameter("uri"));
             $this->setData('classUri', $this->getRequestParameter("classUri"));
             $this->setData('filter', $filter);
+            $this->setData('classFilter', $classFilter);
             $this->setView('viewResult.tpl');
         }
         catch(\common_exception_Error $e){
