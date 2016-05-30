@@ -557,5 +557,56 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         
         $this->assertArrayHasKey('data',$itemVar);        
     }
+
+
+    public function testCalculateResponseStatistics()
+    {
+        $itemVar1 = array(
+            'taoResultServer_models_classes_ResponseVariable' => array('variableIdentifier' => array('isCorrect' => 'correct'))
+        );
+        $itemVar2 = array(
+            'taoResultServer_models_classes_ResponseVariable' => array('variableIdentifier' => array('isCorrect' => 'incorrect'))
+        );
+        $itemVar3 = array(
+            'taoResultServer_models_classes_ResponseVariable' => array('variableIdentifier' => array('isCorrect' => 'incorrect'))
+        );
+        $itemVar4 = array(
+            'taoResultServer_models_classes_ResponseVariable' => array('variableIdentifier' => array('isCorrect' => 'unscored'))
+        );
+        $itemVar5 = array(
+            'taoResultServer_models_classes_ResponseVariable' => array('variableIdentifier' => array('isCorrect' => 'incorrect'))
+        );
+        $itemVar6 = array(
+            'notAValidVariableType' => array('variableIdentifier' => array('isCorrect' => 'correct'))
+        );
+        $itemVar7 = array(
+            'taoResultServer_models_classes_ResponseVariable' => array('variableIdentifier' => array('isCorrect' => 'undefinedValue'))
+        );
+        $itemVar8 = array(
+            'taoResultServer_models_classes_ResponseVariable' => array('variableIdentifier' => array('isCorrect' => 'correct'))
+        );
+        $variables = array(
+            'epoch1' => $itemVar1,
+            'epoch2' => $itemVar2,
+            'epoch3' => $itemVar3,
+            'epoch4' => $itemVar4,
+            'epoch5' => $itemVar5,
+            'epoch6' => $itemVar6,
+            'epoch7' => $itemVar7,
+            'epoch8' => $itemVar8
+        );
+        $responseStats = $this->service->calculateResponseStatistics($variables);
+
+
+        $this->assertCount(4, $responseStats);
+        $this->assertArrayHasKey('nbResponses', $responseStats);
+        $this->assertEquals(7, $responseStats['nbResponses']);
+        $this->assertArrayHasKey('nbCorrectResponses', $responseStats);
+        $this->assertEquals(2, $responseStats['nbCorrectResponses']);
+        $this->assertArrayHasKey('nbIncorrectResponses', $responseStats);
+        $this->assertEquals(3, $responseStats['nbIncorrectResponses']);
+        $this->assertArrayHasKey('nbUnscoredResponses', $responseStats);
+        $this->assertEquals(1,$responseStats['nbUnscoredResponses']);
+    }
     
 }

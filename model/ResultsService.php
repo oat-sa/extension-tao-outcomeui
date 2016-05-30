@@ -251,7 +251,6 @@ class ResultsService extends tao_models_classes_ClassService {
         $numberOfCorrectResponseVariables = 0;
         $numberOfInCorrectResponseVariables = 0;
         $numberOfUnscoredResponseVariables = 0;
-        $numberOfOutcomeVariables = 0;
         foreach ($variablesData as $epoch => $itemVariables) {
             foreach($itemVariables as $key => $value){
                 if($key == CLASS_RESPONSE_VARIABLE){
@@ -273,10 +272,6 @@ class ResultsService extends tao_models_classes_ClassService {
                         }
                     }
                 }
-                else{
-                    $numberOfOutcomeVariables++;
-                }
-
             }
         }
         $stats = array(
