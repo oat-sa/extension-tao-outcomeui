@@ -24,23 +24,30 @@ define([
            var conf = module.config();
            var $container = $('#view-result');
            var $resultFilterField = $('.result-filter', $container);
-           var $classFilterField = $('.class-filter', $container);
+           var $classFilterField = $('[name="class-filter"]', $container);
+           var classFilter = JSON.parse(conf.classFilter) || [];
             //set up filter field
             $resultFilterField.select2({
                 minimumResultsForSearch : -1
             }).select2('val', conf.filter || 'all');
 
-            $classFilterField.select2({
-                minimumResultsForSearch : -1
-            }).select2('val', conf.classFilter || 'all');
+            for(var i in classFilter){
+                $('[value="'+classFilter[i]+'"]').prop('checked', 'checked');
+            }
 
             $('.result-filter-btn', $container).click(function(e) {
+                classFilter = [''];
+                $classFilterField.each(function(){
+                    if($(this).prop('checked')){
+                        classFilter.push($(this).val());
+                    }
+                });
                 section.loadContentBlock(
                     helpers._url('viewResult', 'Results', 'taoOutcomeUi'), {
                     uri: conf.uri,
                     classUri:  conf.classUri,
                     filter: $resultFilterField.select2('val'),
-                    classFilter: $classFilterField.select2('val')
+                    classFilter: classFilter
                 });
             });
 

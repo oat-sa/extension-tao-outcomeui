@@ -10,18 +10,29 @@ use oat\tao\helpers\Template;
 
     <div id="view-result">
         <div id="resultsViewTools">
-            <select class="result-filter">
-                <option  value="all" ><?=__('All collected variables')?></option>
-                <option  value="firstSubmitted" ><?=__('First submitted variables only')?></option>
-                <option  value="lastSubmitted" ><?=__('Last submitted variables only')?></option>
-            </select>
-            <select class="class-filter">
-                <option  value="all" ><?=__('All variable types')?></option>
-                <option  value="<?=CLASS_TRACE_VARIABLE?>" ><?=__('Trace variables only')?></option>
-                <option  value="<?=CLASS_RESPONSE_VARIABLE?>" ><?=__('Response variables only')?></option>
-                <option  value="<?=CLASS_OUTCOME_VARIABLE?>" ><?=__('Outcome variables only')?></option>
-            </select>
+            <div class="tile">
+                <select class="result-filter">
+                    <option  value="all" ><?=__('All collected variables')?></option>
+                    <option  value="firstSubmitted" ><?=__('First submitted variables only')?></option>
+                    <option  value="lastSubmitted" ><?=__('Last submitted variables only')?></option>
+                </select>
+                <label>
+                    <input type="checkbox" name="class-filter" value="<?=CLASS_TRACE_VARIABLE?>">
+                    <span class="icon-checkbox cross"></span>
+                    Trace
+                </label>
+                <label>
+                    <input type="checkbox" name="class-filter" value="<?=CLASS_RESPONSE_VARIABLE?>">
+                    <span class="icon-checkbox cross"></span>
+                    Response
+                </label>
+                <label>
+                    <input type="checkbox" name="class-filter" value="<?=CLASS_OUTCOME_VARIABLE?>">
+                    <span class="icon-checkbox cross"></span>
+                    Outcome
+                </label>
             <button class="btn-info small result-filter-btn"><?=__('Filter');?></button>
+            </div>
         </div>
         <div id="resultsHeader">
             <div class="tile testtaker">
@@ -228,7 +239,7 @@ use oat\tao\helpers\Template;
                 uri: '<?=get_data("uri")?>',
                 classUri: '<?=get_data("classUri")?>',
                 filter: '<?=get_data("filter")?>',
-                classFilter: '<?=get_data("classFilter")?>',
+                classFilter: '<?=json_encode(get_data("classFilter"))?>',
             }
         }
     });

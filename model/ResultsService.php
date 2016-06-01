@@ -130,21 +130,18 @@ class ResultsService extends tao_models_classes_ClassService {
 
     /**
      * @param  string $itemResult
-     * @param string $wantedType
+     * @param array $wantedTypes
      * @return array
      */
-    public function getVariablesFromObjectResult($itemResult, $wantedType = 'all') {
+    public function getVariablesFromObjectResult($itemResult, $wantedTypes = array(CLASS_RESPONSE_VARIABLE, CLASS_OUTCOME_VARIABLE, CLASS_TRACE_VARIABLE)) {
         $returnedVariables = array();
         $variables = $this->getImplementation()->getVariables($itemResult);
-
-        if($wantedType !== 'all'){
+        if(!empty($wantedTypes)){
             foreach($variables as $variable){
-                if(get_class($variable[0]->variable) === $wantedType){
+                if(in_array(get_class($variable[0]->variable),$wantedTypes)){
                     $returnedVariables[] = $variable;
                 }
             }
-        } else {
-            $returnedVariables = $variables;
         }
         return $returnedVariables;
     }
@@ -298,11 +295,11 @@ class ResultsService extends tao_models_classes_ClassService {
             common_Logger::w("The item call '" . $itemCallId . "' is not linked to a valid item. (deleted item ?)");
             $relatedItem = null;
         }
-        if (get_class($relatedItem) == "core_kernel_classes_Literal") {
+        if ($relatedItem instanceof \core_kernel_classes_Literal) {
             $itemIdentifier = $relatedItem->__toString();
             $itemLabel = $relatedItem->__toString();
             $itemModel = $undefinedStr;
-        } elseif (get_class($relatedItem) == "core_kernel_classes_Resource") {
+        } elseif ($relatedItem instanceof core_kernel_classes_Resource) {
             $itemIdentifier = $relatedItem->getUri();
             $itemLabel = $relatedItem->getLabel();
 
@@ -331,7 +328,7 @@ class ResultsService extends tao_models_classes_ClassService {
      *
      * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
      * @param string $filter 'lastSubmitted', 'firstSubmitted', 'all'
-     * @param string $wantedType 'taoResultServer_models_classes_ResponseVariable', 'taoResultServer_models_classes_OutcomeVariable', 'taoResultServer_models_classes_TraceVariable', 'all'
+     * @param array $wantedTypes ['taoResultServer_models_classes_ResponseVariable', 'taoResultServer_models_classes_OutcomeVariable', 'taoResultServer_models_classes_TraceVariable']
      * @return array
         [
             'epoch1' => [
@@ -353,16 +350,18 @@ class ResultsService extends tao_models_classes_ClassService {
             ]
         ]
      */
-    public function getStructuredVariables(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $filter, $wantedType = 'all')
+    public function getStructuredVariables(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $filter, $wantedTypes = array())
     {
         $itemCallIds = $this->getItemResultsFromDeliveryResult($deliveryResult);
         $variablesByItem = array();
         $savedItems = array();
         $itemVariables = array();
         $tmpitem = array();
+        $item = array();
+
         foreach ($itemCallIds as $itemCallId) {
             $firstEpoch = null;
-            $itemVariables = array_merge($itemVariables, $this->getVariablesFromObjectResult($itemCallId, $wantedType));
+            $itemVariables = array_merge($itemVariables, $this->getVariablesFromObjectResult($itemCallId, $wantedTypes));
         }
 
         usort($itemVariables, function($a, $b){
@@ -420,12 +419,17 @@ class ResultsService extends tao_models_classes_ClassService {
                 //no yet saved
                 //already saved and filter not first
                 if(!isset($savedItems[$item['uri']]) || $filter !== "firstSubmitted"){
-                    if($filter === "lastSubmitted"
-                        && isset($savedItems[$item['uri']])
-                    ){
-                        if(!empty($tmpitem) &&  ($wantedType === 'all' || isset($tmpitem[$wantedType]))){
-                            unset($variablesByItem[$savedItems[$item['uri']]]);
-                            $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
+                    //last submitted and already something saved
+                    if($filter === "lastSubmitted" && isset($savedItems[$item['uri']])){
+                        //$tmpitem not empty and contains at least one wanted type
+                        if(!empty($tmpitem)){
+                            foreach($wantedTypes as $type){
+                                if(isset($tmpitem[$type])){
+                                    unset($variablesByItem[$savedItems[$item['uri']]]);
+                                    $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
+                                    continue;
+                                }
+                            }
                         }
                     } else {
                         $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
@@ -441,13 +445,18 @@ class ResultsService extends tao_models_classes_ClassService {
             $tmpitem[$type][$variableIdentifier] = $variableDescription;
         }
 
-        if(!isset($savedItems[$item['uri']]) || $filter !== "firstSubmitted"){
-            if($filter === "lastSubmitted"
-                && isset($savedItems[$item['uri']])
-            ){
-                if(!empty($tmpitem) && ($wantedType === 'all' || isset($tmpitem[$wantedType]))){
-                    unset($variablesByItem[$savedItems[$item['uri']]]);
-                    $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
+        if(!empty($item) && (!isset($savedItems[$item['uri']]) || $filter !== "firstSubmitted")){
+            //last submitted and already something saved
+            if($filter === "lastSubmitted" && isset($savedItems[$item['uri']])){
+                //$tmpitem not empty and contains at least one wanted type
+                if(!empty($tmpitem)){
+                    foreach($wantedTypes as $type){
+                        if(isset($tmpitem[$type])){
+                            unset($variablesByItem[$savedItems[$item['uri']]]);
+                            $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
+                            break;
+                        }
+                    }
                 }
             } else {
                 $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);

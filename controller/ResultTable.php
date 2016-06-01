@@ -337,7 +337,7 @@ class ResultTable extends \tao_actions_CommonModule {
         $implementation = $this->service->getReadableImplementation($delivery);
         $this->service->setImplementation($implementation);
         
-                $deliveryResults = $this->service->getImplementation()->getResultByDelivery(array($deliveryUri), $options);
+        $deliveryResults = $this->service->getImplementation()->getResultByDelivery(array($deliveryUri), $options);
         $counti = $this->service->getImplementation()->countResultByDelivery(array($deliveryUri));
         $results = array();
         foreach($deliveryResults as $deliveryResult){
