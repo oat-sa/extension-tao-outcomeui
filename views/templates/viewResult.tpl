@@ -241,8 +241,8 @@ use oat\tao\helpers\Template;
             'taoOutcomeUi/controller/viewResult': {
                 uri: '<?=get_data("uri")?>',
                 classUri: '<?=get_data("classUri")?>',
-                filter: '<?=get_data("filter")?>',
-                classFilter: '<?=json_encode(get_data("classFilter"))?>',
+                filterSubmission: '<?=get_data("filterSubmission")?>',
+                filterTypes: '<?=json_encode(get_data("filterTypes"))?>',
             }
         }
     });
