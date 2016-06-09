@@ -17,19 +17,19 @@ use oat\tao\helpers\Template;
                     <option  value="lastSubmitted" ><?=__('Last submitted variables only')?></option>
                 </select>
                 <label>
-                    <input type="checkbox" name="class-filter" value="<?=\taoResultServer_models_classes_TraceVariable::class?>">
-                    <span class="icon-checkbox cross"></span>
-                    Trace
-                </label>
-                <label>
                     <input type="checkbox" name="class-filter" value="<?=\taoResultServer_models_classes_ResponseVariable::class?>">
                     <span class="icon-checkbox cross"></span>
-                    Response
+                    <?=__('Responses')?>
                 </label>
                 <label>
                     <input type="checkbox" name="class-filter" value="<?=\taoResultServer_models_classes_OutcomeVariable::class?>">
                     <span class="icon-checkbox cross"></span>
-                    Outcome
+                    <?=__('Grades')?>
+                </label>
+                <label>
+                    <input type="checkbox" name="class-filter" value="<?=\taoResultServer_models_classes_TraceVariable::class?>">
+                    <span class="icon-checkbox cross"></span>
+                    <?=__('Traces')?>
                 </label>
             <button class="btn-info small result-filter-btn"><?=__('Filter');?></button>
             </div>
