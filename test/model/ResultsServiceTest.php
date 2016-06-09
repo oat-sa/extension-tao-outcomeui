@@ -211,12 +211,28 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $prophet = new Prophet();
         $impProphecy = $prophet->prophesize('oat\taoOutcomeRds\model\RdsResultStorage');
 
+        $first = microtime();
+
         $var = new \stdClass();
         $var->callIdTest = 'callId';
-        $var->variable = 'variable';
+        $responseVariable = new \taoResultServer_models_classes_ResponseVariable();
+        $responseVariable->setIdentifier('myID');
+        $second = microtime();
+        $responseVariable->setEpoch($second);
+        $var->variable = $responseVariable;
+
+        $var2 = new \stdClass();
+        $var2->callIdTest = 'callId';
+        $outcomeVariable = new \taoResultServer_models_classes_OutcomeVariable();
+        $outcomeVariable->setIdentifier('mySecondID');
+        $outcomeVariable->setEpoch($first);
+        $var2->variable = $outcomeVariable;
         $impProphecy->getVariables('#fakeUri')->willReturn(array(
             array(
                 $var
+            ),
+            array(
+                $var2
             )
         ));
         $imp = $impProphecy->reveal();
@@ -227,9 +243,16 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $deliveryResultProphecy->getIdentifier()->willReturn('#fakeUri');
         $deliveryResult = $deliveryResultProphecy->reveal();
 
-        $varData = $this->service->getVariableDataFromDeliveryResult($deliveryResult);
-        $this->assertArraySubset(array(
-            'variable'
+        $varDataAll = $this->service->getVariableDataFromDeliveryResult($deliveryResult);
+        $this->assertEquals(array(
+            $outcomeVariable,
+            $responseVariable
+        ), $varDataAll);
+        $varDataEmpty = $this->service->getVariableDataFromDeliveryResult($deliveryResult, array(\taoResultServer_models_classes_TraceVariable::class));
+        $this->assertEmpty($varDataEmpty);
+        $varData = $this->service->getVariableDataFromDeliveryResult($deliveryResult, array(\taoResultServer_models_classes_ResponseVariable::class));
+        $this->assertEquals(array(
+            $responseVariable
         ), $varData);
     }
     /**
