@@ -344,7 +344,7 @@ class Results extends tao_actions_SaSModule
             $this->setData('deliveryResultLabel', $result->getLabel());
 
             //retireve variables not related to item executions
-            $deliveryVariables = $this->getClassService()->getVariableDataFromDeliveryResult($de);
+            $deliveryVariables = $this->getClassService()->getVariableDataFromDeliveryResult($de, $classFilter);
             $this->setData('deliveryVariables', $deliveryVariables);
             $this->setData('uri', $this->getRequestParameter("uri"));
             $this->setData('classUri', $this->getRequestParameter("classUri"));

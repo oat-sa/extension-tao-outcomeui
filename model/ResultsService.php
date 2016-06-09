@@ -620,23 +620,22 @@ class ResultsService extends tao_models_classes_ClassService {
      * return all variables linked to the delviery result and that are not linked to a particular itemResult
      *
      * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
+     * @param array $wantedTypes
      * @return array
      */
-    public function getVariableDataFromDeliveryResult(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult) {
+    public function getVariableDataFromDeliveryResult(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $wantedTypes = array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class)) {
 
         $variables = $this->getImplementation()->getVariables($deliveryResult->getIdentifier());
         $variablesData = array();
         foreach($variables as $variable){
-            if($variable[0]->callIdTest != ""){
+            if($variable[0]->callIdTest != "" && in_array(get_class($variable[0]->variable), $wantedTypes)){
                 $variablesData[] = $variable[0]->variable;
             }
         }
         usort($variablesData, function($a, $b){
-            $variableA = $a[0]->variable;
-            $variableB = $b[0]->variable;
-            list($usec, $sec) = explode(" ", $variableA->getEpoch());
+            list($usec, $sec) = explode(" ", $a->getEpoch());
             $floata = ((float) $usec + (float) $sec);
-            list($usec, $sec) = explode(" ", $variableB->getEpoch());
+            list($usec, $sec) = explode(" ", $b->getEpoch());
             $floatb = ((float) $usec + (float) $sec);
 
             if ((floatval($floata) - floatval($floatb)) > 0) {

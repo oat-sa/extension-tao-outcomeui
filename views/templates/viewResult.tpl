@@ -51,6 +51,7 @@ use oat\tao\helpers\Template;
         </div>
         <div id="resultsBox">
             <!-- Test Variable Table -->
+            <?php if(!empty(get_data("deliveryVariables"))):?>
             <table class="matrix">
                 <thead>
                 <tr>
@@ -78,6 +79,7 @@ use oat\tao\helpers\Template;
                 }
                 ?>
             </table>
+            <?php endif;?>
             <!-- End of Test Variable Table -->
 
             <!-- Item Result Tables -->
