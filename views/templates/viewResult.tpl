@@ -17,19 +17,19 @@ use oat\tao\helpers\Template;
                     <option  value="lastSubmitted" ><?=__('Last submitted variables only')?></option>
                 </select>
                 <label>
-                    <input type="checkbox" name="class-filter" value="<?=\taoResultServer_models_classes_TraceVariable::class?>">
-                    <span class="icon-checkbox cross"></span>
-                    Trace
-                </label>
-                <label>
                     <input type="checkbox" name="class-filter" value="<?=\taoResultServer_models_classes_ResponseVariable::class?>">
                     <span class="icon-checkbox cross"></span>
-                    Response
+                    <?=__('Responses')?>
                 </label>
                 <label>
                     <input type="checkbox" name="class-filter" value="<?=\taoResultServer_models_classes_OutcomeVariable::class?>">
                     <span class="icon-checkbox cross"></span>
-                    Outcome
+                    <?=__('Grades')?>
+                </label>
+                <label>
+                    <input type="checkbox" name="class-filter" value="<?=\taoResultServer_models_classes_TraceVariable::class?>">
+                    <span class="icon-checkbox cross"></span>
+                    <?=__('Traces')?>
                 </label>
             <button class="btn-info small result-filter-btn"><?=__('Filter');?></button>
             </div>
@@ -51,10 +51,11 @@ use oat\tao\helpers\Template;
         </div>
         <div id="resultsBox">
             <!-- Test Variable Table -->
+            <?php if(!empty(get_data("deliveryVariables"))):?>
             <table class="matrix">
                 <thead>
                 <tr>
-                    <th class="headerRow" colspan="4">
+                    <th class="headerRow" colspan="5">
                         <span class="itemName">
                             <?=__('Test Variables')?> (<?=count(get_data("deliveryVariables"))?>)
                         </span>
@@ -71,12 +72,14 @@ use oat\tao\helpers\Template;
                         <td><?=$testVariable->getValue()?></td>
                         <td><?=$cardinality;?></td>
                         <td><?=$baseType;?></td>
+                        <td class="epoch"><?=tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($testVariable->getEpoch()), tao_helpers_Date::FORMAT_VERBOSE)?></td>
                     </tr>
                     </tbody>
                 <?php
                 }
                 ?>
             </table>
+            <?php endif;?>
             <!-- End of Test Variable Table -->
 
             <!-- Item Result Tables -->
@@ -238,8 +241,8 @@ use oat\tao\helpers\Template;
             'taoOutcomeUi/controller/viewResult': {
                 uri: '<?=get_data("uri")?>',
                 classUri: '<?=get_data("classUri")?>',
-                filter: '<?=get_data("filter")?>',
-                classFilter: '<?=json_encode(get_data("classFilter"))?>',
+                filterSubmission: '<?=get_data("filterSubmission")?>',
+                filterTypes: '<?=json_encode(get_data("filterTypes"))?>',
             }
         }
     });

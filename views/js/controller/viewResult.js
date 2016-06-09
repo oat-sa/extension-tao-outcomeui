@@ -25,11 +25,11 @@ define([
            var $container = $('#view-result');
            var $resultFilterField = $('.result-filter', $container);
            var $classFilterField = $('[name="class-filter"]', $container);
-           var classFilter = JSON.parse(conf.classFilter) || [];
+           var classFilter = JSON.parse(conf.filterTypes) || [];
             //set up filter field
             $resultFilterField.select2({
                 minimumResultsForSearch : -1
-            }).select2('val', conf.filter || 'all');
+            }).select2('val', conf.filterSubmission || 'all');
 
             for(var i in classFilter){
                 $('[value="'+classFilter[i]+'"]').prop('checked', 'checked');
@@ -46,8 +46,8 @@ define([
                     helpers._url('viewResult', 'Results', 'taoOutcomeUi'), {
                     uri: conf.uri,
                     classUri:  conf.classUri,
-                    filter: $resultFilterField.select2('val'),
-                    classFilter: classFilter
+                    filterSubmission: $resultFilterField.select2('val'),
+                    filterTypes: classFilter
                 });
             });
 
