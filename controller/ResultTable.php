@@ -234,11 +234,15 @@ class ResultTable extends \tao_actions_CommonModule {
             }
         }
 		foreach ($variableTypes as $variable){
-
 		    switch ($variableClassUri){
-                case \taoResultServer_models_classes_ResponseVariable::class:{ $columns[] = new ResponseColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);break;}
-                case \taoResultServer_models_classes_OutcomeVariable::class: { $columns[] = new GradeColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);break;}
-                default:{$columns[] = new ResponseColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);}
+                case \taoResultServer_models_classes_OutcomeVariable::class :
+                    $columns[] = new GradeColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);
+                    break;
+		        case \taoResultServer_models_classes_ResponseVariable::class :
+                    $columns[] = new ResponseColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);
+                    break;
+	            default:
+                    $columns[] = new ResponseColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);
 			}
 		}
 		$arr = array();

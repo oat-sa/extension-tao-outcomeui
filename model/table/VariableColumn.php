@@ -34,19 +34,28 @@ use \tao_models_classes_table_Column;
 abstract class VariableColumn
     extends tao_models_classes_table_Column
 {
-    // --- ASSOCIATIONS ---
-
-
     // --- ATTRIBUTES ---
-
     /**
-     * Short description of attribute identifier
+     * Identifier of the variable
      *
-     * @access public
      * @var string
      */
     public $identifier = '';
-    
+
+    /**
+     * The identifier of the context usually correpsonds to the item URI
+     *
+     * @var string
+     */
+    public $contextIdentifier = '';
+
+    /**
+     * The label of the context usually coresponds to the item label
+     *
+     * @var string
+     */
+    public $contextLabel = '';
+
     /**
      * shared data providider to cache the variables
      * 
