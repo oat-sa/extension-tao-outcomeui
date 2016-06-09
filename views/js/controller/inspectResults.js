@@ -89,18 +89,6 @@ define([
             var $container = $('#inspect-result');
             //load results also at the beginning unfiltered
             loadResults($container, $container.data('model'), $container.data('uri'));
-            
-            binder.register('endExpiredTests', function () {
-                var url = this.url;
-                $.ajax({
-                    type : 'GET',
-                    url : url,
-                    dataType : 'json',
-                    success : function (data) {
-                        feedback().info(__('%s tests has been finished.', data.length.toString()));
-                    }
-                });
-            });
         }
     };
 
