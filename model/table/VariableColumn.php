@@ -40,31 +40,27 @@ abstract class VariableColumn
     // --- ATTRIBUTES ---
 
     /**
-     * Short description of attribute classActivity
-     *
-     * @access public
-     * @var Resource
-     */
-    public $classActivity = null;
-
-    /**
      * Short description of attribute identifier
      *
      * @access public
      * @var string
      */
     public $identifier = '';
+    
+    /**
+     * shared data providider to cache the variables
+     * 
+     * @var VariableDataProvider
+     */
+    public $dataProvider = null;
 
    
     // --- OPERATIONS ---
 
     /**
-     * Short description of method fromArray
-     *
-     * @access protected
-     * @author Joel Bout, <joel.bout@tudor.lu>
-     * @param  array array
-     * @return VariableColumn
+     * 
+     * @param array $array
+     * @return \oat\taoOutcomeUi\model\table\VariableColumn
      */
     protected static function fromArray($array)
     {
@@ -81,13 +77,10 @@ abstract class VariableColumn
     }
 
     /**
-     * Short description of method __construct
-     *
-     * @access public
-     * @author Joel Bout, <joel.bout@tudor.lu>
-     * @param  Resource classActivity
-     * @param  string identifier
-     * @return mixed
+     * 
+     * @param string $contextIdentifier
+     * @param string $contextLabel
+     * @param string $identifier
      */
     public function __construct( $contextIdentifier,$contextLabel, $identifier)
     {
@@ -98,6 +91,11 @@ abstract class VariableColumn
         
     }
 
+    public function setDataProvider(VariableDataProvider $provider)
+    {
+        $this->dataProvider = $provider;
+    }
+    
     /**
      * Short description of method getDataProvider
      *
@@ -107,13 +105,7 @@ abstract class VariableColumn
      */
     public function getDataProvider()
     {
-        $returnValue = null;
-
-        
-        $returnValue = VariableDataProvider::singleton();
-        
-
-        return $returnValue;
+        return $this->dataProvider;
     }
 
     /**
@@ -158,7 +150,12 @@ abstract class VariableColumn
 
         return (array) $returnValue;
     }
+    
+    /**
+     * Returns the variable type of the column 
+     * 
+     * @return string
+     */
+    public abstract function getVariableType(); 
 
-} /* end of abstract class oat\taoOutcomeUi\model\table\VariableColumn */
-
-?>
+}

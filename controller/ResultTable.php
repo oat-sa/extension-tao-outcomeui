@@ -35,6 +35,7 @@ use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeRds\model\RdsResultStorage;
 use tao_helpers_Uri;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
+use oat\taoOutcomeUi\model\table\VariableDataProvider;
 
 /**
  * should be entirelyrefactored
@@ -294,20 +295,30 @@ class ResultTable extends \tao_actions_CommonModule {
     }
 
 
-     protected  function getColumns($identifier) {
-    	 if (!$this->hasRequestParameter($identifier)) {
-    	 	throw new common_Exception('Missing parameter "'.$identifier.'" for getColumns()');
-    	 }
-    	 $columns = array();
-    	 foreach ($this->getRequestParameter($identifier) as $array) {
-    	 	$column = tao_models_classes_table_Column::buildColumnFromArray($array);
-    	 	if (!is_null($column)) {
-    	 		$columns[] = $column;
-    	 	}
-    	 }
-    	 return $columns;
+    protected  function getColumns($identifier)
+    {
+        if (!$this->hasRequestParameter($identifier)) {
+            throw new common_Exception('Missing parameter "'.$identifier.'" for getColumns()');
+        }
+        
+        $dataProvider = new VariableDataProvider();
+        $columns = array();
+        foreach ($this->getRequestParameter($identifier) as $array) {
+            if (isset($data['type']) && !is_subclass_of($data['type'], tao_models_classes_table_Column::class)) {
+                throw new \common_exception_Error('Non column specified as column type');
+            }
+                
+            $column = tao_models_classes_table_Column::buildColumnFromArray($array);
+            if (!is_null($column)) {
+                if ($column instanceof VariableColumn) {
+                    $column->setDataProvider($dataProvider);
+                }
+            	$columns[] = $column;
+            }
+        }
+        return $columns;
     }
-    
+
     /**
      * Data provider for the table, returns json encoded data according to the parameter
      * @author Bertrand Chevrier, <taosupport@tudor.lu>,
