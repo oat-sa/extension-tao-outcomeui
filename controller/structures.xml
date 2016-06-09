@@ -23,10 +23,6 @@
                             context="instance">
                         <icon id="icon-table"/>
                     </action>
-                    <action id="results-expire" name="Complete expired tests" binding="endExpiredTests" url="/taoQtiTest/TestCommand/endExpiredTests" group="content"
-                            context="instance">
-                        <icon id="icon-end-attempt"/>
-                    </action>
                     <action id="results-view" name="View result" url="/taoOutcomeUi/Results/viewResult" group="content"
                             context="tree">
                         <icon id="icon-edit"/>
