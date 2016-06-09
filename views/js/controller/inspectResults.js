@@ -10,6 +10,7 @@ define([
     'uri',
     'ui/feedback',
     'util/encode',
+    'jquery.fileDownload',
     'ui/datatable'
 ], function($, __, module, helpers, binder, uri, feedback, encode) {
     'use strict';
@@ -99,6 +100,13 @@ define([
                     success : function (data) {
                         feedback().info(__('%s tests has been finished.', data.length.toString()));
                     }
+                });
+            });
+
+            binder.register('download_csv', function (item) {
+                $.fileDownload(this.url, {
+                    httpMethod: 'GET',
+                    data: {uri : item.uri}
                 });
             });
         }

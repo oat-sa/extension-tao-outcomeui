@@ -35,6 +35,7 @@ use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeRds\model\RdsResultStorage;
 use tao_helpers_Uri;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
+use oat\tao\model\export\implementation\CsvExporter;
 
 /**
  * should be entirelyrefactored
@@ -80,72 +81,60 @@ class ResultTable extends \tao_actions_CommonModule {
     }
 
     /**
+     * Download csv file with all results of all delivery executions of given delivery.
+     */
+    public function getCsvFileByDelivery()
+    {
+        $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
+        $columns = [];
+        $cols = array_merge(
+             $this->getTestTakerColumn(),
+             $this->getVariableColumns(CLASS_OUTCOME_VARIABLE),
+             $this->getVariableColumns(CLASS_RESPONSE_VARIABLE)
+        );
+
+        foreach ($cols as $col) {
+            $column = tao_models_classes_table_Column::buildColumnFromArray($col);
+            if (!is_null($column)) {
+                $columns[] = $column;
+            }
+        }
+        $columns[0]->label = __("Test taker");
+        $rows = $this->getResultsByDelivery($delivery, $columns, 'lastSubmitted');
+        $columnNames = array_reduce($columns, function ($carry, $item) {
+            $carry[] = $item->label;
+            return $carry;
+        });
+        $result = [];
+        foreach ($rows as $row) {
+            $rowResult = [];
+            foreach ($row['cell'] as $rowKey => $rowVal) {
+                $rowResult[$columnNames[$rowKey]] = $rowVal[0];
+            }
+            $result[] = $rowResult;
+        }
+
+        //If there are no executions yet, the file is exported but contains only the header
+        if (empty($result)) {
+            $result = [array_fill_keys($columnNames, '')];
+        }
+        
+        $exporter = new CsvExporter($result);
+        $exporter->export(true, true, ";");
+    }
+
+    /**
      * Relies on two optionnal parameters,
      * - filters (facet based query) ($this->hasRequestParameter('filter'))
      * - the list of columns currently selected on the frontend side ($this->hasRequestParameter('columns'))
      * @return void - a csv string is being sent out by parent class -> data method into the buffer
      */
     public function getCsvFile(){
-        $rows = array();
-
         $filter =  $this->hasRequestParameter('filter') ? $this->getRequestParameter('filter') : array();
     	$columns = $this->hasRequestParameter('columns') ? $this->getColumns('columns') : array();
 
         $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
-        $implementation = $this->service->getReadableImplementation($delivery);
-        $this->service->setImplementation($implementation);
-    	
-        $delivery = array();
-        if($this->hasRequestParameter('uri')){
-            $delivery[] = \tao_helpers_Uri::decode($this->getRequestParameter('uri'));
-        }
-
-    	//The list of delivery Results matching the current selection filters
-        $results = array();
-        foreach($this->service->getImplementation()->getResultByDelivery($delivery) as $result){
-            $results[] = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($result['deliveryResultIdentifier']);
-        }
-        $dpmap = array();
-        foreach ($columns as $column) {
-                $dataprovider = $column->getDataProvider();
-                $found = false;
-                foreach ($dpmap as $k => $dp) {
-                        if ($dp['instance'] == $dataprovider) {
-                                $found = true;
-                                $dpmap[$k]['columns'][] = $column;
-                        }
-                }
-                if (!$found) {
-                        $dpmap[] = array(
-                                'instance'	=> $dataprovider,
-                                'columns'	=> array(
-                                        $column
-                                )
-                        );
-                }
-        }
-
-        foreach ($dpmap as $arr) {
-            $arr['instance']->prepare($results, $arr['columns']);
-        }
-
-        /** @var \taoDelivery_models_classes_execution_DeliveryExecution $result */
-        foreach($results as $result) {
-            $cellData = array();
-            foreach ($columns as $column) {
-                if (count($column->getDataProvider()->cache) > 0) {
-                    $cellData[]=self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result->getIdentifier()), $column), $filter);
-                } else {
-                    $cellData[]=self::filterCellData(
-                        (string)$this->service->getTestTaker($result)->getOnePropertyValue(new \core_kernel_classes_Property(PROPERTY_USER_LOGIN)),
-                        $filter);
-                }
-            }
-            $rows[] = array(
-                    'id' => $result->getIdentifier(),
-                    'cell' => $cellData
-            );
-        }
+        $rows = $this->getResultsByDelivery($delivery, $columns, $filter);
 
         $encodedData = $this->dataToCsv($columns, $rows,';','"');
 
@@ -159,28 +148,109 @@ class ResultTable extends \tao_actions_CommonModule {
     /**
      * Returns the default column selection that contains the Result of Subject property (This has been removed from the other commodity function adding grades and responses)
      */
-    public function getResultOfSubjectColumn(){
-
-		$testtaker = new tao_models_classes_table_PropertyColumn(new core_kernel_classes_Property(PROPERTY_RESULT_OF_SUBJECT));
-		$arr[] = $testtaker->toArray();
+    public function getResultOfSubjectColumn()
+    {
         echo json_encode(array(
-                'columns' => $arr,
+                'columns' => $this->getTestTakerColumn(),
                 'first'   => true
         ));
     }
 
-    /** 
+    /**
      * Returns all columns with all responses pertaining to the current delivery results selection
      */
     public function getResponseColumns() {
-	    $this->getVariableColumns(CLASS_RESPONSE_VARIABLE);
+        echo json_encode(array(
+            'columns' => $this->getVariableColumns(CLASS_RESPONSE_VARIABLE)
+        ));
     }
 
     /** 
      * Returns all columns with all grades pertaining to the current delivery results selection
      */
      public function getGradeColumns() {
-        $this->getVariableColumns(CLASS_OUTCOME_VARIABLE);
+         echo json_encode(array(
+             'columns' => $this->getVariableColumns(CLASS_OUTCOME_VARIABLE)
+         ));
+    }
+
+    /**
+     * @param core_kernel_classes_Resource $delivery
+     * @param $columns - columns to be exported
+     * @param $filter 'lastSubmitted' or 'firstSubmitted'
+     * @return array
+     * @throws \common_exception_Error
+     * @throws \core_kernel_persistence_Exception
+     */
+    private function getResultsByDelivery(\core_kernel_classes_Resource $delivery, $columns, $filter)
+    {
+        $rows = array();
+
+        $implementation = $this->service->getReadableImplementation($delivery);
+        $this->service->setImplementation($implementation);
+
+        $delivery = array();
+        if($this->hasRequestParameter('uri')){
+            $delivery[] = \tao_helpers_Uri::decode($this->getRequestParameter('uri'));
+        }
+
+        //The list of delivery Results matching the current selection filters
+        $results = array();
+        foreach($this->service->getImplementation()->getResultByDelivery($delivery) as $result){
+            $results[] = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($result['deliveryResultIdentifier']);
+        }
+        $dpmap = array();
+        foreach ($columns as $column) {
+            $dataprovider = $column->getDataProvider();
+            $found = false;
+            foreach ($dpmap as $k => $dp) {
+                if ($dp['instance'] == $dataprovider) {
+                    $found = true;
+                    $dpmap[$k]['columns'][] = $column;
+                }
+            }
+            if (!$found) {
+                $dpmap[] = array(
+                    'instance'	=> $dataprovider,
+                    'columns'	=> array(
+                        $column
+                    )
+                );
+            }
+        }
+
+        foreach ($dpmap as $arr) {
+            $arr['instance']->prepare($results, $arr['columns']);
+        }
+
+        /** @var \taoDelivery_models_classes_execution_DeliveryExecution $result */
+        foreach($results as $result) {
+            $cellData = array();
+            foreach ($columns as $column) {
+                if (count($column->getDataProvider()->cache) > 0) {
+                    $cellData[]=self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result->getIdentifier()), $column), $filter);
+                } else {
+                    $cellData[]=[self::filterCellData(
+                        (string)$this->service->getTestTaker($result)->getOnePropertyValue(new \core_kernel_classes_Property(PROPERTY_USER_LOGIN)),
+                        $filter)];
+                }
+            }
+            $rows[] = array(
+                'id' => $result->getIdentifier(),
+                'cell' => $cellData
+            );
+        }
+        return $rows;
+    }
+
+    /**
+     * @return array
+     */
+    private function getTestTakerColumn()
+    {
+        $testtaker = new tao_models_classes_table_PropertyColumn(new core_kernel_classes_Property(PROPERTY_RESULT_OF_SUBJECT));
+        $arr[] = $testtaker->toArray();
+        return $arr;
     }
 
      /**
@@ -244,9 +314,7 @@ class ResultTable extends \tao_actions_CommonModule {
 		foreach ($columns as $column) {
 			$arr[] = $column->toArray();
 		}
-    	echo json_encode(array(
-    		'columns' => $arr
-    	));
+    	return $arr;
     }
 
     /**
