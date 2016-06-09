@@ -54,7 +54,7 @@ use oat\tao\helpers\Template;
             <table class="matrix">
                 <thead>
                 <tr>
-                    <th class="headerRow" colspan="4">
+                    <th class="headerRow" colspan="5">
                         <span class="itemName">
                             <?=__('Test Variables')?> (<?=count(get_data("deliveryVariables"))?>)
                         </span>
@@ -71,6 +71,7 @@ use oat\tao\helpers\Template;
                         <td><?=$testVariable->getValue()?></td>
                         <td><?=$cardinality;?></td>
                         <td><?=$baseType;?></td>
+                        <td class="epoch"><?=tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($testVariable->getEpoch()), tao_helpers_Date::FORMAT_VERBOSE)?></td>
                     </tr>
                     </tbody>
                 <?php

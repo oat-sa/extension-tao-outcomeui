@@ -631,6 +631,22 @@ class ResultsService extends tao_models_classes_ClassService {
                 $variablesData[] = $variable[0]->variable;
             }
         }
+        usort($variablesData, function($a, $b){
+            $variableA = $a[0]->variable;
+            $variableB = $b[0]->variable;
+            list($usec, $sec) = explode(" ", $variableA->getEpoch());
+            $floata = ((float) $usec + (float) $sec);
+            list($usec, $sec) = explode(" ", $variableB->getEpoch());
+            $floatb = ((float) $usec + (float) $sec);
+
+            if ((floatval($floata) - floatval($floatb)) > 0) {
+                return 1;
+            } elseif ((floatval($floata) - floatval($floatb)) < 0) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
         return $variablesData;
     }
 
