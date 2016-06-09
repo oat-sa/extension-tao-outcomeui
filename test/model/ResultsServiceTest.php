@@ -863,9 +863,9 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $deProphecy->getIdentifier()->willReturn('DeliveryExecutionIdentifier');
 
 
-        $allVariables = $serviceMock->getStructuredVariables($deProphecy->reveal(), 'all', array(CLASS_OUTCOME_VARIABLE, CLASS_TRACE_VARIABLE, CLASS_RESPONSE_VARIABLE));
+        $allVariables = $serviceMock->getStructuredVariables($deProphecy->reveal(), 'all', array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class));
 
-        $lastVariables = $serviceMock->getStructuredVariables($deProphecy->reveal(), 'lastSubmitted', array(CLASS_TRACE_VARIABLE));
+        $lastVariables = $serviceMock->getStructuredVariables($deProphecy->reveal(), 'lastSubmitted', array(\taoResultServer_models_classes_TraceVariable::class));
 
         $this->assertInternalType('array', $allVariables);
 

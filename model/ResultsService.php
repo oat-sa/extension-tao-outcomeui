@@ -133,7 +133,7 @@ class ResultsService extends tao_models_classes_ClassService {
      * @param array $wantedTypes
      * @return array
      */
-    public function getVariablesFromObjectResult($itemResult, $wantedTypes = array(CLASS_RESPONSE_VARIABLE, CLASS_OUTCOME_VARIABLE, CLASS_TRACE_VARIABLE)) {
+    public function getVariablesFromObjectResult($itemResult, $wantedTypes = array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class)) {
         $returnedVariables = array();
         $variables = $this->getImplementation()->getVariables($itemResult);
         if(!empty($wantedTypes)){
@@ -250,7 +250,7 @@ class ResultsService extends tao_models_classes_ClassService {
         $numberOfUnscoredResponseVariables = 0;
         foreach ($variablesData as $epoch => $itemVariables) {
             foreach($itemVariables as $key => $value){
-                if($key == CLASS_RESPONSE_VARIABLE){
+                if($key == \taoResultServer_models_classes_ResponseVariable::class){
                     foreach($value as $variable){
                         $numberOfResponseVariables++;
                         switch($variable['isCorrect']){
@@ -483,7 +483,7 @@ class ResultsService extends tao_models_classes_ClassService {
         $variablesData = $this->getItemVariableDataFromDeliveryResult($deliveryResult, $filter);
         foreach ($variablesData as $itemVariables) {
             foreach($itemVariables['sortedVars'] as $key => $value){
-                if($key == CLASS_RESPONSE_VARIABLE){
+                if($key == \taoResultServer_models_classes_ResponseVariable::class){
                     foreach($value as $variable){
                         $variable = array_shift($variable);
                         $numberOfResponseVariables++;

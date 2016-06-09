@@ -332,7 +332,7 @@ class Results extends tao_actions_SaSModule
                 $this->setData('userEmail', $userEmail);
             }
             $filter = ($this->hasRequestParameter("filter")) ? $this->getRequestParameter("filter") : "lastSubmitted";
-            $classFilter = ($this->hasRequestParameter("classFilter")) ? $this->getRequestParameter("classFilter") : array(CLASS_RESPONSE_VARIABLE, CLASS_OUTCOME_VARIABLE, CLASS_TRACE_VARIABLE);
+            $classFilter = ($this->hasRequestParameter("classFilter")) ? $this->getRequestParameter("classFilter") : array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class);
             $variables = $this->getClassService()->getStructuredVariables($de, $filter, $classFilter);
             $this->setData('variables', $variables);
             

@@ -52,7 +52,7 @@ class ResponseColumn
         $returnValue = null;
 
         
-        $returnValue = new core_kernel_classes_Class(CLASS_RESPONSE_VARIABLE);
+        $returnValue = new core_kernel_classes_Class(\taoResultServer_models_classes_ResponseVariable::class);
         
 
         return $returnValue;

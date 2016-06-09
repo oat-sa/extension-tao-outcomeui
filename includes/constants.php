@@ -25,12 +25,11 @@
  *
  * @author CRP Henri Tudor - TAO Team - {@link http://www.tao.lu}
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
- *
+ * @deprecated
  */
 $todefine = array(
     //used to get the variable type
     'CLASS_OUTCOME_VARIABLE'=> 'taoResultServer_models_classes_OutcomeVariable',
     'CLASS_RESPONSE_VARIABLE'=> 'taoResultServer_models_classes_ResponseVariable',
-    'CLASS_TRACE_VARIABLE'=> 'taoResultServer_models_classes_TraceVariable',
 );
 ?>

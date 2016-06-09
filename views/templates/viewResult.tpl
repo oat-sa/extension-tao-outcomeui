@@ -17,17 +17,17 @@ use oat\tao\helpers\Template;
                     <option  value="lastSubmitted" ><?=__('Last submitted variables only')?></option>
                 </select>
                 <label>
-                    <input type="checkbox" name="class-filter" value="<?=CLASS_TRACE_VARIABLE?>">
+                    <input type="checkbox" name="class-filter" value="<?=\taoResultServer_models_classes_TraceVariable::class?>">
                     <span class="icon-checkbox cross"></span>
                     Trace
                 </label>
                 <label>
-                    <input type="checkbox" name="class-filter" value="<?=CLASS_RESPONSE_VARIABLE?>">
+                    <input type="checkbox" name="class-filter" value="<?=\taoResultServer_models_classes_ResponseVariable::class?>">
                     <span class="icon-checkbox cross"></span>
                     Response
                 </label>
                 <label>
-                    <input type="checkbox" name="class-filter" value="<?=CLASS_OUTCOME_VARIABLE?>">
+                    <input type="checkbox" name="class-filter" value="<?=\taoResultServer_models_classes_OutcomeVariable::class?>">
                     <span class="icon-checkbox cross"></span>
                     Outcome
                 </label>
@@ -96,15 +96,15 @@ use oat\tao\helpers\Template;
                 </tr>
                 </thead>
                 <tbody>
-                    <?php if (isset($item[CLASS_RESPONSE_VARIABLE])) { ?>
+                    <?php if (isset($item[\taoResultServer_models_classes_ResponseVariable::class])) { ?>
                         <!-- Response Variable section row -->
                         <tr>
                             <th colspan="6" class="italic">
-                                <i><?=__('Responses')?> (<?=count($item[CLASS_RESPONSE_VARIABLE]) ?>)</i>
+                                <i><?=__('Responses')?> (<?=count($item[\taoResultServer_models_classes_ResponseVariable::class]) ?>)</i>
                             </th>
                         </tr>
                         <!-- Response Variable list -->
-                        <?php foreach ($item[CLASS_RESPONSE_VARIABLE] as $variableIdentifier  => $observation){
+                        <?php foreach ($item[\taoResultServer_models_classes_ResponseVariable::class] as $variableIdentifier  => $observation){
                             $variable = $observation["var"];
                         ?>
                         <tr>
@@ -155,16 +155,16 @@ use oat\tao\helpers\Template;
                     ?>
                     <!-- End of Response Variable List -->
 
-                    <?php if (isset($item[CLASS_OUTCOME_VARIABLE])) { ?>
+                    <?php if (isset($item[\taoResultServer_models_classes_OutcomeVariable::class])) { ?>
                         <!-- Outcome Variable section row-->
                         <tr>
                             <th colspan="6" class="italic">
-                            <i><?=__('Grades')?>  (<?=count($item[CLASS_OUTCOME_VARIABLE]) ?>)</i>
+                            <i><?=__('Grades')?>  (<?=count($item[\taoResultServer_models_classes_OutcomeVariable::class]) ?>)</i>
                             </th>
                         </tr>
                         <!-- Outcome Variable section list-->
                         <?php
-		                foreach ($item[CLASS_OUTCOME_VARIABLE] as $variableIdentifier  => $observation){
+		                foreach ($item[\taoResultServer_models_classes_OutcomeVariable::class] as $variableIdentifier  => $observation){
                             $variable = $observation["var"];
         	            ?>
 		                    <tr>
@@ -184,16 +184,16 @@ use oat\tao\helpers\Template;
                     ?>
                     <!-- End of Outcome Variable List -->
 
-                    <?php if (isset($item[CLASS_TRACE_VARIABLE])) { ?>
+                    <?php if (isset($item[\taoResultServer_models_classes_TraceVariable::class])) { ?>
                     <!-- Trace Variable section row-->
                     <tr>
                         <th colspan="6" class="italic">
-                            <i><?=__('Traces')?>  (<?=count($item[CLASS_TRACE_VARIABLE]) ?>)</i>
+                            <i><?=__('Traces')?>  (<?=count($item[\taoResultServer_models_classes_TraceVariable::class]) ?>)</i>
                         </th>
                     </tr>
                     <!-- Trace Variable section list-->
                     <?php
-		                foreach ($item[CLASS_TRACE_VARIABLE] as $variableIdentifier  => $observation){
+		                foreach ($item[\taoResultServer_models_classes_TraceVariable::class] as $variableIdentifier  => $observation){
                     $variable = $observation["var"];
                     ?>
                     <tr>

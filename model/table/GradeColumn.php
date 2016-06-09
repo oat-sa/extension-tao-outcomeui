@@ -52,7 +52,7 @@ class GradeColumn
         $returnValue = null;
 
         
-        $returnValue = new core_kernel_classes_Class(CLASS_OUTCOME_VARIABLE);
+        $returnValue = new core_kernel_classes_Class(\taoResultServer_models_classes_OutcomeVariable::class);
         
 
         return $returnValue;
