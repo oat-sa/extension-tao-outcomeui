@@ -229,7 +229,7 @@ class Results extends tao_actions_SaSModule
         $counti = $this->getClassService()->getImplementation()->countResultByDelivery(array($delivery->getUri()));
         foreach($results as $res){
 
-            $deliveryExecution = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($res['deliveryResultIdentifier']);
+            $deliveryExecution = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($res['deliveryExecutionIdentifier']);
             $testTaker = new core_kernel_classes_Resource($res['testTakerIdentifier']);
 
             $data[] = array(
