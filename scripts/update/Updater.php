@@ -57,5 +57,6 @@ class Updater extends \common_ext_ExtensionUpdater
         }
         
         $this->skip('2.6.1', '2.11.0');
+        $this->skip('2.11.0', '2.12.0');
     }
 }
