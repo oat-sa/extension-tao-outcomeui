@@ -35,6 +35,7 @@ use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeRds\model\RdsResultStorage;
 use tao_helpers_Uri;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
+use oat\taoOutcomeUi\model\table\VariableDataProvider;
 
 /**
  * should be entirelyrefactored
@@ -173,14 +174,14 @@ class ResultTable extends \tao_actions_CommonModule {
      * Returns all columns with all responses pertaining to the current delivery results selection
      */
     public function getResponseColumns() {
-	    $this->getVariableColumns(CLASS_RESPONSE_VARIABLE);
+	    $this->getVariableColumns(\taoResultServer_models_classes_ResponseVariable::class);
     }
 
     /** 
      * Returns all columns with all grades pertaining to the current delivery results selection
      */
      public function getGradeColumns() {
-        $this->getVariableColumns(CLASS_OUTCOME_VARIABLE);
+        $this->getVariableColumns(\taoResultServer_models_classes_OutcomeVariable::class);
     }
 
      /**
@@ -215,8 +216,8 @@ class ResultTable extends \tao_actions_CommonModule {
 		//retrieving The list of the variables identifiers per activities defintions as observed
 		$variableTypes = array();
 		foreach ($selectedVariables as $variable) {
-            if((!is_null($variable[0]->item) ||  !is_null($variable[0]->test))&& (get_class($variable[0]->variable) == 'taoResultServer_models_classes_OutcomeVariable' && $variableClassUri == CLASS_OUTCOME_VARIABLE)
-            || (get_class($variable[0]->variable) == 'taoResultServer_models_classes_ResponseVariable' && $variableClassUri == CLASS_RESPONSE_VARIABLE)){
+            if((!is_null($variable[0]->item) ||  !is_null($variable[0]->test))&& (get_class($variable[0]->variable) == \taoResultServer_models_classes_OutcomeVariable::class && $variableClassUri == \taoResultServer_models_classes_OutcomeVariable::class)
+            || (get_class($variable[0]->variable) == \taoResultServer_models_classes_ResponseVariable::class && $variableClassUri == \taoResultServer_models_classes_ResponseVariable::class)){
                 //variableIdentifier
                 $variableIdentifier = $variable[0]->variable->identifier;
                 $uri = (!is_null($variable[0]->item))? $variable[0]->item : $variable[0]->test;
@@ -233,11 +234,15 @@ class ResultTable extends \tao_actions_CommonModule {
             }
         }
 		foreach ($variableTypes as $variable){
-
 		    switch ($variableClassUri){
-                case CLASS_RESPONSE_VARIABLE:{ $columns[] = new ResponseColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);break;}
-                case CLASS_OUTCOME_VARIABLE: { $columns[] = new GradeColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);break;}
-                default:{$columns[] = new ResponseColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);}
+                case \taoResultServer_models_classes_OutcomeVariable::class :
+                    $columns[] = new GradeColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);
+                    break;
+		        case \taoResultServer_models_classes_ResponseVariable::class :
+                    $columns[] = new ResponseColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);
+                    break;
+	            default:
+                    $columns[] = new ResponseColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);
 			}
 		}
 		$arr = array();
@@ -294,20 +299,30 @@ class ResultTable extends \tao_actions_CommonModule {
     }
 
 
-     protected  function getColumns($identifier) {
-    	 if (!$this->hasRequestParameter($identifier)) {
-    	 	throw new common_Exception('Missing parameter "'.$identifier.'" for getColumns()');
-    	 }
-    	 $columns = array();
-    	 foreach ($this->getRequestParameter($identifier) as $array) {
-    	 	$column = tao_models_classes_table_Column::buildColumnFromArray($array);
-    	 	if (!is_null($column)) {
-    	 		$columns[] = $column;
-    	 	}
-    	 }
-    	 return $columns;
+    protected  function getColumns($identifier)
+    {
+        if (!$this->hasRequestParameter($identifier)) {
+            throw new common_Exception('Missing parameter "'.$identifier.'" for getColumns()');
+        }
+        
+        $dataProvider = new VariableDataProvider();
+        $columns = array();
+        foreach ($this->getRequestParameter($identifier) as $array) {
+            if (isset($data['type']) && !is_subclass_of($data['type'], tao_models_classes_table_Column::class)) {
+                throw new \common_exception_Error('Non column specified as column type');
+            }
+                
+            $column = tao_models_classes_table_Column::buildColumnFromArray($array);
+            if (!is_null($column)) {
+                if ($column instanceof VariableColumn) {
+                    $column->setDataProvider($dataProvider);
+                }
+            	$columns[] = $column;
+            }
+        }
+        return $columns;
     }
-    
+
     /**
      * Data provider for the table, returns json encoded data according to the parameter
      * @author Bertrand Chevrier, <taosupport@tudor.lu>,
@@ -337,7 +352,7 @@ class ResultTable extends \tao_actions_CommonModule {
         $implementation = $this->service->getReadableImplementation($delivery);
         $this->service->setImplementation($implementation);
         
-                $deliveryResults = $this->service->getImplementation()->getResultByDelivery(array($deliveryUri), $options);
+        $deliveryResults = $this->service->getImplementation()->getResultByDelivery(array($deliveryUri), $options);
         $counti = $this->service->getImplementation()->countResultByDelivery(array($deliveryUri));
         $results = array();
         foreach($deliveryResults as $deliveryResult){

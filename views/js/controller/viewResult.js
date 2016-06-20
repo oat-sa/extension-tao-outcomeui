@@ -23,18 +23,31 @@ define([
         start : function(){
            var conf = module.config();
            var $container = $('#view-result');
-           var $filterField = $('.result-filter', $container);              
+           var $resultFilterField = $('.result-filter', $container);
+           var $classFilterField = $('[name="class-filter"]', $container);
+           var classFilter = JSON.parse(conf.filterTypes) || [];
             //set up filter field
-            $filterField.select2({
+            $resultFilterField.select2({
                 minimumResultsForSearch : -1
-            }).select2('val', conf.filter || 'all');
+            }).select2('val', conf.filterSubmission || 'all');
+
+            for(var i in classFilter){
+                $('[value="'+classFilter[i]+'"]').prop('checked', 'checked');
+            }
 
             $('.result-filter-btn', $container).click(function(e) {
+                classFilter = [''];
+                $classFilterField.each(function(){
+                    if($(this).prop('checked')){
+                        classFilter.push($(this).val());
+                    }
+                });
                 section.loadContentBlock(
                     helpers._url('viewResult', 'Results', 'taoOutcomeUi'), {
                     uri: conf.uri,
                     classUri:  conf.classUri,
-                    filter: $filterField.select2('val')
+                    filterSubmission: $resultFilterField.select2('val'),
+                    filterTypes: classFilter
                 });
             });
 
