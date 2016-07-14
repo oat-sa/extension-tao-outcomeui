@@ -24,7 +24,7 @@ namespace oat\taoOutcomeUi\model\table;
 use \core_kernel_classes_Class;
 
 /**
- * Short description of class oat\taoOutcomeUi\model\table\GradeColumn
+ * Represents a grade column
  *
  * @access public
  * @author Joel Bout, <joel.bout@tudor.lu>
@@ -33,31 +33,13 @@ use \core_kernel_classes_Class;
 class GradeColumn
     extends VariableColumn
 {
-    // --- ASSOCIATIONS ---
-
-
-    // --- ATTRIBUTES ---
-
-    // --- OPERATIONS ---
-
     /**
-     * Short description of method getVariableClass
-     *
-     * @access public
-     * @author Joel Bout, <joel.bout@tudor.lu>
-     * @return core_kernel_classes_Class
+     * (non-PHPdoc)
+     * @see \oat\taoOutcomeUi\model\table\VariableColumn::getVariableType()
      */
-    public function getVariableClass()
+    public function getVariableType()
     {
-        $returnValue = null;
-
-        
-        $returnValue = new core_kernel_classes_Class(CLASS_OUTCOME_VARIABLE);
-        
-
-        return $returnValue;
+        return \taoResultServer_models_classes_OutcomeVariable::class;
     }
-
-} /* end of class oat\taoOutcomeUi\model\table\GradeColumn */
-
-?>
+    
+}

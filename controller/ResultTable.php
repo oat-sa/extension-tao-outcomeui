@@ -32,6 +32,7 @@ use oat\taoOutcomeUi\model\table\VariableColumn;
 use tao_helpers_Uri;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\tao\model\export\implementation\CsvExporter;
+use oat\taoOutcomeUi\model\table\VariableDataProvider;
 
 /**
  * should be entirelyrefactored
@@ -160,7 +161,7 @@ class ResultTable extends \tao_actions_CommonModule {
         $filterData =  $this->hasRequestParameter('filter') ? $this->getRequestParameter('filter') : array();
         $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
         echo json_encode(array(
-            'columns' => $this->service->getVariableColumns($delivery, CLASS_RESPONSE_VARIABLE, $filterData)
+            'columns' => $this->service->getVariableColumns($delivery, \taoResultServer_models_classes_ResponseVariable::class, $filterData)
         ));
     }
 
@@ -171,7 +172,7 @@ class ResultTable extends \tao_actions_CommonModule {
          $filterData =  $this->hasRequestParameter('filter') ? $this->getRequestParameter('filter') : array();
          $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
          echo json_encode(array(
-             'columns' => $this->service->getVariableColumns($delivery, CLASS_OUTCOME_VARIABLE, $filterData)
+             'columns' => $this->service->getVariableColumns($delivery, \taoResultServer_models_classes_OutcomeVariable::class, $filterData)
          ));
     }
 
@@ -230,20 +231,30 @@ class ResultTable extends \tao_actions_CommonModule {
     }
 
 
-     protected  function getColumns($identifier) {
-    	 if (!$this->hasRequestParameter($identifier)) {
-    	 	throw new common_Exception('Missing parameter "'.$identifier.'" for getColumns()');
-    	 }
-    	 $columns = array();
-    	 foreach ($this->getRequestParameter($identifier) as $array) {
-    	 	$column = tao_models_classes_table_Column::buildColumnFromArray($array);
-    	 	if (!is_null($column)) {
-    	 		$columns[] = $column;
-    	 	}
-    	 }
-    	 return $columns;
+    protected  function getColumns($identifier)
+    {
+        if (!$this->hasRequestParameter($identifier)) {
+            throw new common_Exception('Missing parameter "'.$identifier.'" for getColumns()');
+        }
+
+        $dataProvider = new VariableDataProvider();
+        $columns = array();
+        foreach ($this->getRequestParameter($identifier) as $array) {
+            if (isset($data['type']) && !is_subclass_of($data['type'], tao_models_classes_table_Column::class)) {
+                throw new \common_exception_Error('Non column specified as column type');
+            }
+
+            $column = tao_models_classes_table_Column::buildColumnFromArray($array);
+            if (!is_null($column)) {
+                if ($column instanceof VariableColumn) {
+                    $column->setDataProvider($dataProvider);
+                }
+            	$columns[] = $column;
+            }
+        }
+        return $columns;
     }
-    
+
     /**
      * Data provider for the table, returns json encoded data according to the parameter
      * @author Bertrand Chevrier, <taosupport@tudor.lu>,
@@ -273,7 +284,7 @@ class ResultTable extends \tao_actions_CommonModule {
         $implementation = $this->service->getReadableImplementation($delivery);
         $this->service->setImplementation($implementation);
         
-                $deliveryResults = $this->service->getImplementation()->getResultByDelivery(array($deliveryUri), $options);
+        $deliveryResults = $this->service->getImplementation()->getResultByDelivery(array($deliveryUri), $options);
         $counti = $this->service->getImplementation()->countResultByDelivery(array($deliveryUri));
         $results = array();
         foreach($deliveryResults as $deliveryResult){

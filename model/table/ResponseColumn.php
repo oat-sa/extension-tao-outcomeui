@@ -33,31 +33,13 @@ use \core_kernel_classes_Class;
 class ResponseColumn
     extends VariableColumn
 {
-    // --- ASSOCIATIONS ---
-
-
-    // --- ATTRIBUTES ---
-
-    // --- OPERATIONS ---
-
     /**
-     * Short description of method getVariableClass
-     *
-     * @access public
-     * @author Joel Bout, <joel.bout@tudor.lu>
-     * @return core_kernel_classes_Class
+     * (non-PHPdoc)
+     * @see \oat\taoOutcomeUi\model\table\VariableColumn::getVariableType()
      */
-    public function getVariableClass()
+    public function getVariableType()
     {
-        $returnValue = null;
-
-        
-        $returnValue = new core_kernel_classes_Class(CLASS_RESPONSE_VARIABLE);
-        
-
-        return $returnValue;
+        return \taoResultServer_models_classes_ResponseVariable::class;
     }
 
-} /* end of class oat\taoOutcomeUi\model\table\ResponseColumn */
-
-?>
+}

@@ -10,12 +10,29 @@ use oat\tao\helpers\Template;
 
     <div id="view-result">
         <div id="resultsViewTools">
-            <select class="result-filter">
-                <option  value="all" ><?=__('All collected variables')?></option>
-                <option  value="firstSubmitted" ><?=__('First submitted variables only')?></option>
-                <option  value="lastSubmitted" ><?=__('Last submitted variables only')?></option>
-            </select>
+            <div class="tile">
+                <select class="result-filter">
+                    <option  value="all" ><?=__('All collected variables')?></option>
+                    <option  value="firstSubmitted" ><?=__('First submitted variables only')?></option>
+                    <option  value="lastSubmitted" ><?=__('Last submitted variables only')?></option>
+                </select>
+                <label>
+                    <input type="checkbox" name="class-filter" value="<?=\taoResultServer_models_classes_ResponseVariable::class?>">
+                    <span class="icon-checkbox cross"></span>
+                    <?=__('Responses')?>
+                </label>
+                <label>
+                    <input type="checkbox" name="class-filter" value="<?=\taoResultServer_models_classes_OutcomeVariable::class?>">
+                    <span class="icon-checkbox cross"></span>
+                    <?=__('Grades')?>
+                </label>
+                <label>
+                    <input type="checkbox" name="class-filter" value="<?=\taoResultServer_models_classes_TraceVariable::class?>">
+                    <span class="icon-checkbox cross"></span>
+                    <?=__('Traces')?>
+                </label>
             <button class="btn-info small result-filter-btn"><?=__('Filter');?></button>
+            </div>
         </div>
         <div id="resultsHeader">
             <div class="tile testtaker">
@@ -34,10 +51,11 @@ use oat\tao\helpers\Template;
         </div>
         <div id="resultsBox">
             <!-- Test Variable Table -->
+            <?php if(!empty(get_data("deliveryVariables"))):?>
             <table class="matrix">
                 <thead>
                 <tr>
-                    <th class="headerRow" colspan="4">
+                    <th class="headerRow" colspan="5">
                         <span class="itemName">
                             <?=__('Test Variables')?> (<?=count(get_data("deliveryVariables"))?>)
                         </span>
@@ -54,12 +72,14 @@ use oat\tao\helpers\Template;
                         <td><?=$testVariable->getValue()?></td>
                         <td><?=$cardinality;?></td>
                         <td><?=$baseType;?></td>
+                        <td class="epoch"><?=tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($testVariable->getEpoch()), tao_helpers_Date::FORMAT_VERBOSE)?></td>
                     </tr>
                     </tbody>
                 <?php
                 }
                 ?>
             </table>
+            <?php endif;?>
             <!-- End of Test Variable Table -->
 
             <!-- Item Result Tables -->
@@ -79,15 +99,15 @@ use oat\tao\helpers\Template;
                 </tr>
                 </thead>
                 <tbody>
-                    <?php if (isset($item[CLASS_RESPONSE_VARIABLE])) { ?>
+                    <?php if (isset($item[\taoResultServer_models_classes_ResponseVariable::class])) { ?>
                         <!-- Response Variable section row -->
                         <tr>
                             <th colspan="6" class="italic">
-                                <i><?=__('Responses')?> (<?=count($item[CLASS_RESPONSE_VARIABLE]) ?>)</i>
+                                <i><?=__('Responses')?> (<?=count($item[\taoResultServer_models_classes_ResponseVariable::class]) ?>)</i>
                             </th>
                         </tr>
                         <!-- Response Variable list -->
-                        <?php foreach ($item[CLASS_RESPONSE_VARIABLE] as $variableIdentifier  => $observation){
+                        <?php foreach ($item[\taoResultServer_models_classes_ResponseVariable::class] as $variableIdentifier  => $observation){
                             $variable = $observation["var"];
                         ?>
                         <tr>
@@ -138,16 +158,16 @@ use oat\tao\helpers\Template;
                     ?>
                     <!-- End of Response Variable List -->
 
-                    <?php if (isset($item[CLASS_OUTCOME_VARIABLE])) { ?>
+                    <?php if (isset($item[\taoResultServer_models_classes_OutcomeVariable::class])) { ?>
                         <!-- Outcome Variable section row-->
                         <tr>
                             <th colspan="6" class="italic">
-                            <i><?=__('Grades')?>  (<?=count($item[CLASS_OUTCOME_VARIABLE]) ?>)</i>
+                            <i><?=__('Grades')?>  (<?=count($item[\taoResultServer_models_classes_OutcomeVariable::class]) ?>)</i>
                             </th>
                         </tr>
                         <!-- Outcome Variable section list-->
                         <?php
-		                foreach ($item[CLASS_OUTCOME_VARIABLE] as $variableIdentifier  => $observation){
+		                foreach ($item[\taoResultServer_models_classes_OutcomeVariable::class] as $variableIdentifier  => $observation){
                             $variable = $observation["var"];
         	            ?>
 		                    <tr>
@@ -165,6 +185,37 @@ use oat\tao\helpers\Template;
                         }
                     }
                     ?>
+                    <!-- End of Outcome Variable List -->
+
+                    <?php if (isset($item[\taoResultServer_models_classes_TraceVariable::class])) { ?>
+                    <!-- Trace Variable section row-->
+                    <tr>
+                        <th colspan="6" class="italic">
+                            <i><?=__('Traces')?>  (<?=count($item[\taoResultServer_models_classes_TraceVariable::class]) ?>)</i>
+                        </th>
+                    </tr>
+                    <!-- Trace Variable section list-->
+                    <?php
+		                foreach ($item[\taoResultServer_models_classes_TraceVariable::class] as $variableIdentifier  => $observation){
+                    $variable = $observation["var"];
+                    ?>
+                    <tr>
+                        <td class="variableIdentifierField"><?=$variableIdentifier?></td>
+                        <td colspan="2" class="dataResult">
+                            <?= tao_helpers_Display::htmlEscape($variable->getValue())?>
+                        </td>
+                        <td class="cardinalityField"><?=$variable->getCardinality();?></td>
+                        <td class="basetypeField"><?= $variable->getBaseType();?></td>
+                        <td class="epoch">
+                            <?=tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($variable->getEpoch()), tao_helpers_Date::FORMAT_VERBOSE)?>
+                        </td>
+                    </tr>
+                    <?php
+                        }
+                    }
+                    ?>
+                    <!-- End of Trace Variable List -->
+
                 </tbody>
             </table>
             <br/>
@@ -190,7 +241,8 @@ use oat\tao\helpers\Template;
             'taoOutcomeUi/controller/viewResult': {
                 uri: '<?=get_data("uri")?>',
                 classUri: '<?=get_data("classUri")?>',
-                filter: '<?=get_data("filter")?>',
+                filterSubmission: '<?=get_data("filterSubmission")?>',
+                filterTypes: '<?=json_encode(get_data("filterTypes"))?>',
             }
         }
     });
