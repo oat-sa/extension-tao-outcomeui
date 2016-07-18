@@ -232,10 +232,16 @@ class Results extends tao_actions_SaSModule
             $deliveryExecution = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($res['deliveryResultIdentifier']);
             $testTaker = new core_kernel_classes_Resource($res['testTakerIdentifier']);
 
+            try{
+                $startTime = \tao_helpers_Date::displayeDate($deliveryExecution->getStartTime());
+            } catch(\core_kernel_classes_EmptyProperty $e){
+                $startTime = '';
+            }
+
             $data[] = array(
                 'id'        => $deliveryExecution->getIdentifier(),
                 'ttaker'    => $testTaker->getLabel(),
-                'time'      => \tao_helpers_Date::displayeDate($deliveryExecution->getStartTime()),
+                'time'      => $startTime,
             );
 
             $readOnly[$deliveryExecution->getIdentifier()] = $rights;
