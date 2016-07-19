@@ -234,7 +234,8 @@ class Results extends tao_actions_SaSModule
 
             try{
                 $startTime = \tao_helpers_Date::displayeDate($deliveryExecution->getStartTime());
-            } catch(\core_kernel_classes_EmptyProperty $e){
+            } catch(\common_exception_NotFound $e){
+                \common_Logger::i($e->getMessage());
                 $startTime = '';
             }
 
