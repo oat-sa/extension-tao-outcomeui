@@ -295,16 +295,17 @@ class Results extends tao_actions_SaSModule
     public function viewResult()
     {
         
-        $result = $this->getCurrentInstance();
-        $de = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($result->getUri());
+        $resultId = $this->getRequestParameter('id');
+        $delivery = new \core_kernel_classes_Resource(\tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
 
         try{
             
-            $implementation = $this->getClassService()->getReadableImplementation($de->getDelivery());
+            $implementation = $this->getClassService()->getReadableImplementation($delivery);
             $this->getClassService()->setImplementation($implementation);
 
 
-            $testTaker = $this->getClassService()->getTestTakerData($de);
+            $testTaker = $implementation->getTestTaker($resultId);
+            $testTaker = $this->getClassService()->getTestTakerData($resultId);
 
             if (
                 (is_object($testTaker) and (get_class($testTaker) == 'core_kernel_classes_Literal'))
@@ -340,7 +341,7 @@ class Results extends tao_actions_SaSModule
             }
             $filterSubmission = ($this->hasRequestParameter("filterSubmission")) ? $this->getRequestParameter("filterSubmission") : "lastSubmitted";
             $filterTypes = ($this->hasRequestParameter("filterTypes")) ? $this->getRequestParameter("filterTypes") : array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class);
-            $variables = $this->getClassService()->getStructuredVariables($de, $filterSubmission, $filterTypes);
+            $variables = $this->getClassService()->getStructuredVariables($resultId, $filterSubmission, $filterTypes);
             $this->setData('variables', $variables);
             
             $stats = $this->getClassService()->calculateResponseStatistics($variables);
@@ -348,10 +349,9 @@ class Results extends tao_actions_SaSModule
             $this->setData('nbCorrectResponses', $stats["nbCorrectResponses"]);
             $this->setData('nbIncorrectResponses', $stats["nbIncorrectResponses"]);
             $this->setData('nbUnscoredResponses', $stats["nbUnscoredResponses"]);
-            $this->setData('deliveryResultLabel', $result->getLabel());
 
             //retireve variables not related to item executions
-            $deliveryVariables = $this->getClassService()->getVariableDataFromDeliveryResult($de, $filterTypes);
+            $deliveryVariables = $this->getClassService()->getVariableDataFromDeliveryResult($resultId, $filterTypes);
             $this->setData('deliveryVariables', $deliveryVariables);
             $this->setData('uri', $this->getRequestParameter("uri"));
             $this->setData('classUri', $this->getRequestParameter("classUri"));

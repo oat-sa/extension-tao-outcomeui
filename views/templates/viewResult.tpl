@@ -4,7 +4,6 @@ use oat\tao\helpers\Template;
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoOutcomeUi/views/css/result.css" />
 
 <header class="section-header flex-container-full">
-    <h2><?=__('View result')?> - <?= _dh(get_data('deliveryResultLabel')) ?></h2>
 </header>
 <div class="main-container flex-container-full">
 
