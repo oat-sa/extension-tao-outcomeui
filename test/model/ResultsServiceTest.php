@@ -217,7 +217,8 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $outcomeVariable->setIdentifier('mySecondID');
         $outcomeVariable->setEpoch($first);
         $var2->variable = $outcomeVariable;
-        $impProphecy->getVariables('#fakeUri')->willReturn(array(
+        $impProphecy->getRelatedTestCallIds("#fakeUri")->willReturn(array("#fakeTestUri"));
+        $impProphecy->getVariables('#fakeTestUri')->willReturn(array(
             array(
                 $var
             ),
