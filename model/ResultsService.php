@@ -617,12 +617,12 @@ class ResultsService extends tao_models_classes_ClassService {
      * @return array
      */
     public function getVariableDataFromDeliveryResult($resultIdentifier, $wantedTypes = array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class)) {
-
-        $variables = $this->getImplementation()->getVariables($resultIdentifier);
         $variablesData = array();
-        foreach($variables as $variable){
-            if($variable[0]->callIdTest != "" && in_array(get_class($variable[0]->variable), $wantedTypes)){
-                $variablesData[] = $variable[0]->variable;
+        foreach ($this->getTestsFromDeliveryResult($resultIdentifier) as $testResult) {
+            foreach ($this->getVariablesFromObjectResult($testResult) as $variable) {
+                if($variable[0]->callIdTest != "" && in_array(get_class($variable[0]->variable), $wantedTypes)){
+                    $variablesData[] = $variable[0]->variable;
+                }
             }
         }
         usort($variablesData, function($a, $b){
