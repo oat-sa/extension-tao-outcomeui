@@ -296,7 +296,7 @@ class Results extends tao_actions_SaSModule
     {
         
         $resultId = $this->getRequestParameter('id');
-        $delivery = new \core_kernel_classes_Resource(\tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
+        $delivery = new \core_kernel_classes_Resource($this->getRequestParameter('classUri'));
 
         try{
             
@@ -353,7 +353,7 @@ class Results extends tao_actions_SaSModule
             //retireve variables not related to item executions
             $deliveryVariables = $this->getClassService()->getVariableDataFromDeliveryResult($resultId, $filterTypes);
             $this->setData('deliveryVariables', $deliveryVariables);
-            $this->setData('uri', $this->getRequestParameter("uri"));
+            $this->setData('id', $this->getRequestParameter("id"));
             $this->setData('classUri', $this->getRequestParameter("classUri"));
             $this->setData('filterSubmission', $filterSubmission);
             $this->setData('filterTypes', $filterTypes);

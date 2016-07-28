@@ -33,7 +33,7 @@ define([
                 actions : {
                     'view' : function openResource(id){
                         var action = {binding : "load", url: helpers._url('viewResult', 'Results', 'taoOutcomeUi')};
-                        binder.exec(action, {id: id, classUri : classUri} || this._resourceContext);
+                        binder.exec(action, {id: id, classUri : uri.decode(classUri)} || this._resourceContext);
                     },
                     'delete' : function deleteResource(id){
                         // prompt a confirmation lightbox and then delete the result

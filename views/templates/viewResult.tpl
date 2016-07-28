@@ -238,7 +238,7 @@ use oat\tao\helpers\Template;
     requirejs.config({
         config: {
             'taoOutcomeUi/controller/viewResult': {
-                uri: '<?=get_data("uri")?>',
+                id: '<?=get_data("id")?>',
                 classUri: '<?=get_data("classUri")?>',
                 filterSubmission: '<?=get_data("filterSubmission")?>',
                 filterTypes: '<?=json_encode(get_data("filterTypes"))?>',
