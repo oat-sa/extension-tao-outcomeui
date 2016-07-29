@@ -119,7 +119,7 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
                             if ($epoch != "") {
                                 $readableTime = "@" . tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE);
                             }
-                            $this->cache[get_class($varData)][$result->getIdentifier()][$column->getContextIdentifier() . $variableIdentifier][(string) $epoch] = array(
+                            $this->cache[get_class($varData)][$result][$column->getContextIdentifier() . $variableIdentifier][(string) $epoch] = array(
                                 $varData->getValue(),
                                 $readableTime);
                         }
