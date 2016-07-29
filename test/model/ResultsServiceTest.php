@@ -21,7 +21,6 @@ namespace oat\taoOutcomeUi\test\model;
 
 use oat\tao\test\TaoPhpUnitTestRunner;
 use \common_ext_ExtensionsManager;
-use common_cache_FileCache;
 use oat\taoOutcomeUi\model\ResultsService;
 use Prophecy\Prophet;
 use oat\taoDelivery\model\execution\DeliveryExecution;
@@ -363,7 +362,6 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
 
     public function testGetVariables()
     {
-        common_cache_FileCache::singleton()->purge();
         $prophet = new Prophet();
 
         $impProphecy = $prophet->prophesize('oat\taoOutcomeRds\model\RdsResultStorage');
@@ -390,26 +388,13 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
 
         $this->service->setImplementation($imp);
 
-        $this->assertFalse(common_cache_FileCache::singleton()->has('deliveryResultVariables:#fakeUri'));
-
         $var = ($this->service->getVariables('#fakeUri'));
         $this->assertContains(array($variable1), $var);
-
-        // use cache
-        $this->assertTrue(common_cache_FileCache::singleton()->has('deliveryResultVariables:#fakeUri'));
-
-        $var = ($this->service->getVariables('#fakeUri'));
-        $this->assertContains(array($variable1), $var);
-
-        $this->assertTrue(common_cache_FileCache::singleton()->has('deliveryResultVariables:#fakeUri'));
-        // purge cache
-        common_cache_FileCache::singleton()->purge();
 
         $var = $this->service->getVariables('#fakeUri', false);
         $this->assertArrayHasKey('#itemResultVariable', $var);
         $this->assertEquals(array(array($variable1)), $var['#itemResultVariable']);
 
-        common_cache_FileCache::singleton()->purge();
     }
 
     /**
