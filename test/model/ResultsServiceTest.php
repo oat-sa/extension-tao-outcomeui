@@ -21,7 +21,6 @@ namespace oat\taoOutcomeUi\test\model;
 
 use oat\tao\test\TaoPhpUnitTestRunner;
 use \common_ext_ExtensionsManager;
-use common_cache_FileCache;
 use oat\taoOutcomeUi\model\ResultsService;
 use Prophecy\Prophet;
 use oat\taoDelivery\model\execution\DeliveryExecution;
@@ -94,18 +93,13 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
     {
         $prophet = new Prophet();
 
-        $deliveryResultProphecy = $prophet->prophesize('taoDelivery_models_classes_execution_DeliveryExecution');
-        $deliveryResultProphecy->getIdentifier()->willReturn('#fakeUri');
-
-        $deliveryResult = $deliveryResultProphecy->reveal();
-
         $impProphecy = $prophet->prophesize('oat\taoOutcomeRds\model\RdsResultStorage');
 
         $impProphecy->getRelatedItemCallIds('#fakeUri')->willReturn('#fakeDelivery');
         $imp = $impProphecy->reveal();
         $this->service->setImplementation($imp);
 
-        $this->assertEquals('#fakeDelivery', $this->service->getItemResultsFromDeliveryResult($deliveryResult));
+        $this->assertEquals('#fakeDelivery', $this->service->getItemResultsFromDeliveryResult('#fakeUri'));
     }
     /**
      *
@@ -115,18 +109,13 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
     {
         $prophet = new Prophet();
 
-        $deliveryResultProphecy = $prophet->prophesize('taoDelivery_models_classes_execution_DeliveryExecution');
-        $deliveryResultProphecy->getIdentifier()->willReturn('#fakeUri');
-        $deliveryResult = $deliveryResultProphecy->reveal();
-
         $impProphecy = $prophet->prophesize('oat\taoOutcomeRds\model\RdsResultStorage');
-
         $impProphecy->getDelivery('#fakeUri')->willReturn('#fakeDelivery');
         $imp = $impProphecy->reveal();
 
         $this->service->setImplementation($imp);
 
-        $delivery = $this->service->getDelivery($deliveryResult);
+        $delivery = $this->service->getDelivery('#fakeUri');
         $this->assertInstanceOf('core_kernel_classes_Resource', $delivery);
         $this->assertEquals('#fakeDelivery', $delivery->getUri());
     }
@@ -227,7 +216,8 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $outcomeVariable->setIdentifier('mySecondID');
         $outcomeVariable->setEpoch($first);
         $var2->variable = $outcomeVariable;
-        $impProphecy->getVariables('#fakeUri')->willReturn(array(
+        $impProphecy->getRelatedTestCallIds("#fakeUri")->willReturn(array("#fakeTestUri"));
+        $impProphecy->getVariables('#fakeTestUri')->willReturn(array(
             array(
                 $var
             ),
@@ -239,18 +229,14 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
 
         $this->service->setImplementation($imp);
 
-        $deliveryResultProphecy = $prophet->prophesize('taoDelivery_models_classes_execution_DeliveryExecution');
-        $deliveryResultProphecy->getIdentifier()->willReturn('#fakeUri');
-        $deliveryResult = $deliveryResultProphecy->reveal();
-
-        $varDataAll = $this->service->getVariableDataFromDeliveryResult($deliveryResult);
+        $varDataAll = $this->service->getVariableDataFromDeliveryResult('#fakeUri');
         $this->assertEquals(array(
             $outcomeVariable,
             $responseVariable
         ), $varDataAll);
-        $varDataEmpty = $this->service->getVariableDataFromDeliveryResult($deliveryResult, array(\taoResultServer_models_classes_TraceVariable::class));
+        $varDataEmpty = $this->service->getVariableDataFromDeliveryResult('#fakeUri', array(\taoResultServer_models_classes_TraceVariable::class));
         $this->assertEmpty($varDataEmpty);
-        $varData = $this->service->getVariableDataFromDeliveryResult($deliveryResult, array(\taoResultServer_models_classes_ResponseVariable::class));
+        $varData = $this->service->getVariableDataFromDeliveryResult('#fakeUri', array(\taoResultServer_models_classes_ResponseVariable::class));
         $this->assertEquals(array(
             $responseVariable
         ), $varData);
@@ -269,11 +255,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
 
         $this->service->setImplementation($imp);
 
-        $deliveryResultProphecy = $prophet->prophesize('taoDelivery_models_classes_execution_DeliveryExecution');
-        $deliveryResultProphecy->getIdentifier()->willReturn('#fakeUri');
-        $deliveryResult = $deliveryResultProphecy->reveal();
-
-        $item = $this->service->getTestTaker($deliveryResult);
+        $item = $this->service->getTestTaker('#fakeUri');
         $this->assertInstanceOf('core_kernel_classes_Resource', $item);
         $this->assertEquals('#testTaker', $item->getUri());
     }
@@ -380,7 +362,6 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
 
     public function testGetVariables()
     {
-        common_cache_FileCache::singleton()->purge();
         $prophet = new Prophet();
 
         $impProphecy = $prophet->prophesize('oat\taoOutcomeRds\model\RdsResultStorage');
@@ -406,32 +387,14 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $imp = $impProphecy->reveal();
 
         $this->service->setImplementation($imp);
-        $deliveryResultProphecy = $prophet->prophesize('taoDelivery_models_classes_execution_DeliveryExecution');
-        $deliveryResultProphecy->getIdentifier()->willReturn('#fakeUri');
-        $deliveryResultProphecy->getState()->willReturn(new \core_kernel_classes_Resource(DeliveryExecution::STATE_FINISHIED));
 
-        $deliveryResult = $deliveryResultProphecy->reveal();
-
-        $this->assertFalse(common_cache_FileCache::singleton()->has('deliveryResultVariables:#fakeUri'));
-
-        $var = ($this->service->getVariables($deliveryResult));
+        $var = ($this->service->getVariables('#fakeUri'));
         $this->assertContains(array($variable1), $var);
 
-        // use cache
-        $this->assertTrue(common_cache_FileCache::singleton()->has('deliveryResultVariables:#fakeUri'));
-
-        $var = ($this->service->getVariables($deliveryResult));
-        $this->assertContains(array($variable1), $var);
-
-        $this->assertTrue(common_cache_FileCache::singleton()->has('deliveryResultVariables:#fakeUri'));
-        // purge cache
-        common_cache_FileCache::singleton()->purge();
-
-        $var = $this->service->getVariables($deliveryResult, false);
+        $var = $this->service->getVariables('#fakeUri', false);
         $this->assertArrayHasKey('#itemResultVariable', $var);
         $this->assertEquals(array(array($variable1)), $var['#itemResultVariable']);
 
-        common_cache_FileCache::singleton()->purge();
     }
 
     /**
@@ -498,13 +461,9 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         );
 
         $imp = $impProphecy->reveal();
-
         $this->service->setImplementation($imp);
-        $deliveryResultProphecy = $prophet->prophesize('taoDelivery_models_classes_execution_DeliveryExecution');
-        $deliveryResultProphecy->getIdentifier()->willReturn('#fakeUri');
-        $deliveryResult = $deliveryResultProphecy->reveal();
 
-        $itemVar = $this->service->getItemVariableDataFromDeliveryResult($deliveryResult, 'lastSubmitted');
+        $itemVar = $this->service->getItemVariableDataFromDeliveryResult('#fakeUri', 'lastSubmitted');
 
         $this->assertArrayHasKey('#item', $itemVar);
         $this->assertArrayHasKey('itemModel', $itemVar['#item']);
@@ -564,13 +523,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
      */
     public function testGetItemVariableDataStatsFromDeliveryResult()
     {
-        $prophet = new Prophet();
-
-        $deliveryResultProphecy = $prophet->prophesize('taoDelivery_models_classes_execution_DeliveryExecution');
-        $deliveryResultProphecy->getIdentifier()->willReturn('#fakeUri');
-        $deliveryResult = $deliveryResultProphecy->reveal();
-
-        $itemVar = $this->service->getItemVariableDataStatsFromDeliveryResult($deliveryResult, 'lastSubmitted');
+        $itemVar = $this->service->getItemVariableDataStatsFromDeliveryResult('#fakeUri', 'lastSubmitted');
 
         $this->assertArrayHasKey('nbResponses', $itemVar);
         $this->assertEquals(2, $itemVar['nbResponses']);
@@ -881,14 +834,9 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $impProphecy->getVariables($callId3)->willReturn($variables3);
         $serviceMock->setImplementation($impProphecy->reveal());
 
+        $allVariables = $serviceMock->getStructuredVariables('DeliveryExecutionIdentifier', 'all', array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class));
 
-        $deProphecy = $prophet->prophesize('\taoDelivery_models_classes_execution_DeliveryExecution');
-        $deProphecy->getIdentifier()->willReturn('DeliveryExecutionIdentifier');
-
-
-        $allVariables = $serviceMock->getStructuredVariables($deProphecy->reveal(), 'all', array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class));
-
-        $lastVariables = $serviceMock->getStructuredVariables($deProphecy->reveal(), 'lastSubmitted', array(\taoResultServer_models_classes_TraceVariable::class));
+        $lastVariables = $serviceMock->getStructuredVariables('DeliveryExecutionIdentifier', 'lastSubmitted', array(\taoResultServer_models_classes_TraceVariable::class));
 
         $this->assertInternalType('array', $allVariables);
 

@@ -44,7 +44,7 @@ define([
                 });
                 section.loadContentBlock(
                     helpers._url('viewResult', 'Results', 'taoOutcomeUi'), {
-                    uri: conf.uri,
+                    id: conf.id,
                     classUri:  conf.classUri,
                     filterSubmission: $resultFilterField.select2('val'),
                     filterTypes: classFilter

@@ -4,7 +4,6 @@ use oat\tao\helpers\Template;
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoOutcomeUi/views/css/result.css" />
 
 <header class="section-header flex-container-full">
-    <h2><?=__('View result')?> - <?= _dh(get_data('deliveryResultLabel')) ?></h2>
 </header>
 <div class="main-container flex-container-full">
 
@@ -239,7 +238,7 @@ use oat\tao\helpers\Template;
     requirejs.config({
         config: {
             'taoOutcomeUi/controller/viewResult': {
-                uri: '<?=get_data("uri")?>',
+                id: '<?=get_data("id")?>',
                 classUri: '<?=get_data("classUri")?>',
                 filterSubmission: '<?=get_data("filterSubmission")?>',
                 filterTypes: '<?=json_encode(get_data("filterTypes"))?>',

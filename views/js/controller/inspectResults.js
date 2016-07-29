@@ -32,9 +32,9 @@ define([
                 model : model,
                 actions : {
                     'view' : function openResource(id){
-                                var action = {binding : "load", url: helpers._url('viewResult', 'Results', 'taoOutcomeUi')};
-                                binder.exec(action, {uri : uri.encode(id), classUri : classUri} || this._resourceContext);
-                            },
+                        var action = {binding : "load", url: helpers._url('viewResult', 'Results', 'taoOutcomeUi')};
+                        binder.exec(action, {id: id, classUri : uri.decode(classUri)} || this._resourceContext);
+                    },
                     'delete' : function deleteResource(id){
                         // prompt a confirmation lightbox and then delete the result
                         var confirmBox = $('.preview-modal-feedback'),
