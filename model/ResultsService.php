@@ -85,9 +85,9 @@ class ResultsService extends tao_models_classes_ClassService {
         //if the delvieryResult related execution is finished, the data is stored in cache.
 
         $serial = 'deliveryResultVariables:'.$resultIdentifier;
-        if (common_cache_FileCache::singleton()->has($serial)) {
-            $variables = common_cache_FileCache::singleton()->get($serial);
-        } else {
+        //if (common_cache_FileCache::singleton()->has($serial)) {
+        //    $variables = common_cache_FileCache::singleton()->get($serial);
+        //} else {
             foreach ($this->getItemResultsFromDeliveryResult($resultIdentifier) as $itemResult) {
                 $itemResultVariables = $this->getVariablesFromObjectResult($itemResult);
                 $variables[$itemResult] = $itemResultVariables;
@@ -96,12 +96,11 @@ class ResultsService extends tao_models_classes_ClassService {
                 $testResultVariables = $this->getVariablesFromObjectResult($testResult);
                 $variables[$testResult] = $testResultVariables;
             }
-            // impossible to determine state DeliveryExecution::STATE_FINISHIED 
-            if (false) {
-                common_cache_FileCache::singleton()->put($variables, $serial);
-            }
-
-        }
+        // impossible to determine state DeliveryExecution::STATE_FINISHIED 
+        //    if (false) {
+        //        common_cache_FileCache::singleton()->put($variables, $serial);
+        //    }
+        //}
         if ($flat) {
             $returnValue = array();
             foreach ($variables as $key => $itemResultVariables) {

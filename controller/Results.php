@@ -303,8 +303,6 @@ class Results extends tao_actions_SaSModule
             $implementation = $this->getClassService()->getReadableImplementation($delivery);
             $this->getClassService()->setImplementation($implementation);
 
-
-            $testTaker = $implementation->getTestTaker($resultId);
             $testTaker = $this->getClassService()->getTestTakerData($resultId);
 
             if (
