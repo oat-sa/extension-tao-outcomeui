@@ -104,7 +104,7 @@ class ResultTable extends \tao_actions_CommonModule {
     	//The list of delivery Results matching the current selection filters
         $results = array();
         foreach($this->service->getImplementation()->getResultByDelivery($delivery) as $result){
-            $results[] = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($result['deliveryResultIdentifier']);
+            $results[] = $result['deliveryResultIdentifier'];
         }
         $dpmap = array();
         foreach ($columns as $column) {
@@ -135,7 +135,7 @@ class ResultTable extends \tao_actions_CommonModule {
             $cellData = array();
             foreach ($columns as $column) {
                 if (count($column->getDataProvider()->cache) > 0) {
-                    $cellData[]=self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result->getIdentifier()), $column), $filter);
+                    $cellData[]=self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column), $filter);
                 } else {
                     $cellData[]=self::filterCellData(
                         (string)$this->service->getTestTaker($result)->getOnePropertyValue(new \core_kernel_classes_Property(PROPERTY_USER_LOGIN)),
@@ -143,7 +143,7 @@ class ResultTable extends \tao_actions_CommonModule {
                 }
             }
             $rows[] = array(
-                    'id' => $result->getIdentifier(),
+                    'id' => $result,
                     'cell' => $cellData
             );
         }
@@ -209,8 +209,7 @@ class ResultTable extends \tao_actions_CommonModule {
 		//retrieveing all individual response variables referring to the  selected delivery results
 		$selectedVariables = array ();
 		foreach ($results as $result){
-            $de = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($result["deliveryResultIdentifier"]);
-            $variables = $this->service->getVariables($de);
+            $variables = $this->service->getVariables($result["deliveryResultIdentifier"]);
             $selectedVariables = array_merge($selectedVariables, $variables);
 		}
 		//retrieving The list of the variables identifiers per activities defintions as observed
@@ -356,7 +355,7 @@ class ResultTable extends \tao_actions_CommonModule {
         $counti = $this->service->getImplementation()->countResultByDelivery(array($deliveryUri));
         $results = array();
         foreach($deliveryResults as $deliveryResult){
-            $results[] = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($deliveryResult['deliveryResultIdentifier']);
+            $results[] = $deliveryResult['deliveryResultIdentifier'];
         }
 
         $dpmap = array();
@@ -386,7 +385,7 @@ class ResultTable extends \tao_actions_CommonModule {
         /** @var \taoDelivery_models_classes_execution_DeliveryExecution $result */
         foreach($results as $result) {
             $data = array(
-                'id' => $result->getIdentifier()
+                'id' => $result
             );
             foreach ($columns as $column) {
                 $key = null;
@@ -398,7 +397,7 @@ class ResultTable extends \tao_actions_CommonModule {
                 if(!is_null($key)){
                     if (count($column->getDataProvider()->cache) > 0) {
                         $data[$key] = self::filterCellData(
-                            $column->getDataProvider()->getValue(new core_kernel_classes_Resource($result->getIdentifier()), $column),
+                            $column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column),
                             $filterData
                         );
                     } else {
