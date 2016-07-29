@@ -25,6 +25,7 @@ use \Exception;
 use \common_exception_IsAjaxAction;
 use \core_kernel_classes_Resource;
 use oat\tao\model\accessControl\AclProxy;
+use oat\taoResultServer\models\classes\QtiResultsService;
 use \tao_actions_SaSModule;
 use \tao_helpers_Request;
 use \tao_helpers_Uri;
@@ -364,6 +365,49 @@ class Results extends tao_actions_SaSModule
             $this->setData('error', $e->getMessage());
             $this->setView('index.tpl');
             return;
+        }
+    }
+
+    /**
+     * Download delivery execution XML
+     *
+     * @author Gyula Szucs, <gyula@taotesting.com>
+     * @throws \common_exception_MissingParameter
+     * @throws \common_exception_NotFound
+     * @throws \common_exception_ValidationFailed
+     */
+    public function downloadXML()
+    {
+        try {
+            if (!$this->hasRequestParameter('deliveryExecution')) {
+                throw new \common_exception_MissingParameter('deliveryExecution is missing from the request.', $this->getRequestURI());
+            }
+
+            if (empty($this->getRequestParameter('deliveryExecution'))) {
+                throw new \common_exception_ValidationFailed('deliveryExecution cannot be empty');
+            }
+
+            $qtiResultService = QtiResultsService::singleton();
+            $qtiResultService->setServiceLocator($this->getServiceManager());
+
+            $deliveryExecution = $qtiResultService->getDeliveryExecutionById(
+                $this->getRequestParameter('deliveryExecution')
+            );
+
+            if (empty($deliveryExecution)) {
+                throw new \common_exception_NotFound('Delivery execution not found.');
+            }
+
+            $xml = $qtiResultService->getDeliveryExecutionXml($deliveryExecution);
+
+            header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
+            setcookie("fileDownload", "true", 0, "/");
+            header('Content-Disposition: attachment; filename="delivery_execution_' . date('YmdHis') . '.xml"');
+            header('Content-Type: application/xml');
+
+            echo $xml;
+        } catch(\common_exception_Error $e){
+            $this->returnJson(array('error' => $e->getMessage()));
         }
     }
 
