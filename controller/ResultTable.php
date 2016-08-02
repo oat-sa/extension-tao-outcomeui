@@ -288,7 +288,7 @@ class ResultTable extends \tao_actions_CommonModule {
         $counti = $this->service->getImplementation()->countResultByDelivery(array($deliveryUri));
         $results = array();
         foreach($deliveryResults as $deliveryResult){
-            $results[] = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($deliveryResult['deliveryResultIdentifier']);
+            $results[] = $deliveryResult['deliveryResultIdentifier'];
         }
 
         $dpmap = array();
@@ -318,7 +318,7 @@ class ResultTable extends \tao_actions_CommonModule {
         /** @var \taoDelivery_models_classes_execution_DeliveryExecution $result */
         foreach($results as $result) {
             $data = array(
-                'id' => $result->getIdentifier()
+                'id' => $result
             );
             foreach ($columns as $column) {
                 $key = null;

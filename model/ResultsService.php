@@ -77,43 +77,35 @@ class ResultsService extends tao_models_classes_ClassService {
      *
      * @access public
      * @author Joel Bout, <joel.bout@tudor.lu>
-     * @param  \taoDelivery_models_classes_execution_DeliveryExecution deliveryResult
+     * @param  string $resultIdentifier
      * @param boolean $flat a flat array is returned or a structured delvieryResult-ItemResult-Variable
      * @return array
      */
-    public function getVariables(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $flat = true) {
+    public function getVariables($resultIdentifier, $flat = true) {
         $variables = array();
         //this service is slow due to the way the data model design  
         //if the delvieryResult related execution is finished, the data is stored in cache.
 
-        $serial = 'deliveryResultVariables:'.$deliveryResult->getIdentifier();
-        if (common_cache_FileCache::singleton()->has($serial)) {
-            $variables = common_cache_FileCache::singleton()->get($serial);
-        } else {
-           foreach ($this->getItemResultsFromDeliveryResult($deliveryResult) as $itemResult) {
+        $serial = 'deliveryResultVariables:'.$resultIdentifier;
+        //if (common_cache_FileCache::singleton()->has($serial)) {
+        //    $variables = common_cache_FileCache::singleton()->get($serial);
+        //} else {
+            foreach ($this->getItemResultsFromDeliveryResult($resultIdentifier) as $itemResult) {
                 $itemResultVariables = $this->getVariablesFromObjectResult($itemResult);
                 $variables[$itemResult] = $itemResultVariables;
-           }
-           foreach ($this->getTestsFromDeliveryResult($deliveryResult) as $testResult) {
+            }
+            foreach ($this->getTestsFromDeliveryResult($resultIdentifier) as $testResult) {
                 $testResultVariables = $this->getVariablesFromObjectResult($testResult);
                 $variables[$testResult] = $testResultVariables;
-           }
-           //overhead for cache handling, the data is stored only when the underlying deliveryExecution is finished
-           try {
-                $status = $deliveryResult->getState();
-                if ($status->getUri()== DeliveryExecution::STATE_FINISHIED ) {
-                    common_cache_FileCache::singleton()->put($variables, $serial);
-                }
-
-           }catch (common_Exception $e) {
-               common_Logger::i("List of variables of results of ".$deliveryResult->getIdentifier()." could not be reliable cached due to an unfinished execution");
-           }
-
-
-        }
-         if ($flat) {
-                $returnValue = array();
-                foreach ($variables as $key => $itemResultVariables) {
+            }
+        // impossible to determine state DeliveryExecution::STATE_FINISHIED 
+        //    if (false) {
+        //        common_cache_FileCache::singleton()->put($variables, $serial);
+        //    }
+        //}
+        if ($flat) {
+            $returnValue = array();
+            foreach ($variables as $key => $itemResultVariables) {
                 $newKeys = array();
                 $oldKeys = array_keys($itemResultVariables);
                 foreach($oldKeys as $oldKey){
@@ -121,11 +113,11 @@ class ResultsService extends tao_models_classes_ClassService {
                 }
                 $itemResultVariables = array_combine($newKeys, array_values($itemResultVariables));
                 $returnValue = array_merge($itemResultVariables, $returnValue);
-                }
-            } else {
-                $returnValue = $variables;
             }
-
+        } else {
+            $returnValue = $variables;
+        }
+        
 
         return (array) $returnValue;
     }
@@ -150,30 +142,30 @@ class ResultsService extends tao_models_classes_ClassService {
 
     /**
      * Return the corresponding delivery
-     * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
+     * @param string $resultIdentifier
      * @return core_kernel_classes_Resource delviery
      * @author Patrick Plichart, <patrick@taotesting.com>
      */
-    public function getDelivery(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult) {
-        return new core_kernel_classes_Resource($this->getImplementation()->getDelivery($deliveryResult->getIdentifier()));
+    public function getDelivery($resultIdentifier) {
+        return new core_kernel_classes_Resource($this->getImplementation()->getDelivery($resultIdentifier));
     }
 
     /**
      * Returns all label of itemResults related to the delvieryResults
-     * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
+     * @param string $resultIdentifier
      * @return array string uri
      * */
-    public function getItemResultsFromDeliveryResult(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult) {
-        return $this->getImplementation()->getRelatedItemCallIds($deliveryResult->getIdentifier());
+    public function getItemResultsFromDeliveryResult($resultIdentifier) {
+        return $this->getImplementation()->getRelatedItemCallIds($resultIdentifier);
     }
 
     /**
      * Returns all label of itemResults related to the delvieryResults
-     * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
+     * @param string $resultIdentifier
      * @return array string uri
      * */
-    public function getTestsFromDeliveryResult(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult) {
-        return $this->getImplementation()->getRelatedTestCallIds($deliveryResult->getIdentifier());
+    public function getTestsFromDeliveryResult($resultIdentifier) {
+        return $this->getImplementation()->getRelatedTestCallIds($resultIdentifier);
     }
 
     /**
@@ -241,7 +233,7 @@ class ResultsService extends tao_models_classes_ClassService {
 
     /**
      *
-     * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
+     * @param array $$variablesData
      * @param string $filter 'lastSubmitted', 'firstSubmitted'
      * @return array ["nbResponses" => x,"nbCorrectResponses" => y,"nbIncorrectResponses" => z,"nbUnscoredResponses" => a,"data" => $variableData]
      */
@@ -328,7 +320,7 @@ class ResultsService extends tao_models_classes_ClassService {
     /**
      *  prepare a data set as an associative array, service intended to populate gui controller
      *
-     * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
+     * @param string $resultIdentifier
      * @param string $filter 'lastSubmitted', 'firstSubmitted', 'all'
      * @param array $wantedTypes ['taoResultServer_models_classes_ResponseVariable', 'taoResultServer_models_classes_OutcomeVariable', 'taoResultServer_models_classes_TraceVariable']
      * @return array
@@ -352,9 +344,9 @@ class ResultsService extends tao_models_classes_ClassService {
             ]
         ]
      */
-    public function getStructuredVariables(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $filter, $wantedTypes = array())
+    public function getStructuredVariables($resultIdentifier, $filter, $wantedTypes = array())
     {
-        $itemCallIds = $this->getItemResultsFromDeliveryResult($deliveryResult);
+        $itemCallIds = $this->getItemResultsFromDeliveryResult($resultIdentifier);
         $variablesByItem = array();
         $savedItems = array();
         $itemVariables = array();
@@ -471,18 +463,18 @@ class ResultsService extends tao_models_classes_ClassService {
 
     /**
      *
-     * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
+     * @param $resultIdentifier
      * @param string $filter 'lastSubmitted', 'firstSubmitted'
      * @return array ["nbResponses" => x,"nbCorrectResponses" => y,"nbIncorrectResponses" => z,"nbUnscoredResponses" => a,"data" => $variableData]
      * @deprecated
      */
-    public function getItemVariableDataStatsFromDeliveryResult(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $filter = null) {
+    public function getItemVariableDataStatsFromDeliveryResult($resultIdentifier, $filter = null) {
         $numberOfResponseVariables = 0;
         $numberOfCorrectResponseVariables = 0;
         $numberOfInCorrectResponseVariables = 0;
         $numberOfUnscoredResponseVariables = 0;
         $numberOfOutcomeVariables = 0;
-        $variablesData = $this->getItemVariableDataFromDeliveryResult($deliveryResult, $filter);
+        $variablesData = $this->getItemVariableDataFromDeliveryResult($resultIdentifier, $filter);
         foreach ($variablesData as $itemVariables) {
             foreach($itemVariables['sortedVars'] as $key => $value){
                 if($key == \taoResultServer_models_classes_ResponseVariable::class){
@@ -523,18 +515,18 @@ class ResultsService extends tao_models_classes_ClassService {
     /**
      *  prepare a data set as an associative array, service intended to populate gui controller
      *
-     * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
+     * @param string $resultIdentifier
      * @param string $filter 'lastSubmitted', 'firstSubmitted'
      *
      * @return array
      * @deprecated
      */
-    public function getItemVariableDataFromDeliveryResult(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $filter)
+    public function getItemVariableDataFromDeliveryResult($resultIdentifier, $filter)
     {
 
         $undefinedStr = __('unknown'); //some data may have not been submitted           
 
-        $itemCallIds = $this->getItemResultsFromDeliveryResult($deliveryResult);
+        $itemCallIds = $this->getItemResultsFromDeliveryResult($resultIdentifier);
         $variablesByItem = array();
         foreach ($itemCallIds as $itemCallId) {
             $itemVariables = $this->getVariablesFromObjectResult($itemCallId);
@@ -621,17 +613,17 @@ class ResultsService extends tao_models_classes_ClassService {
     /**
      * return all variables linked to the delviery result and that are not linked to a particular itemResult
      *
-     * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
+     * @param string $resultIdentifier
      * @param array $wantedTypes
      * @return array
      */
-    public function getVariableDataFromDeliveryResult(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult, $wantedTypes = array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class)) {
-
-        $variables = $this->getImplementation()->getVariables($deliveryResult->getIdentifier());
+    public function getVariableDataFromDeliveryResult($resultIdentifier, $wantedTypes = array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class)) {
         $variablesData = array();
-        foreach($variables as $variable){
-            if($variable[0]->callIdTest != "" && in_array(get_class($variable[0]->variable), $wantedTypes)){
-                $variablesData[] = $variable[0]->variable;
+        foreach ($this->getTestsFromDeliveryResult($resultIdentifier) as $testResult) {
+            foreach ($this->getVariablesFromObjectResult($testResult) as $variable) {
+                if($variable[0]->callIdTest != "" && in_array(get_class($variable[0]->variable), $wantedTypes)){
+                    $variablesData[] = $variable[0]->variable;
+                }
             }
         }
         usort($variablesData, function($a, $b){
@@ -654,22 +646,22 @@ class ResultsService extends tao_models_classes_ClassService {
     /**
      * returns the test taker related to the delivery
      *
-     * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
+     * @param string $resultIdentifier
      * @return \core_kernel_classes_Resource
      */
-    public function getTestTaker(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult) {
-        $testTaker = $this->getImplementation()->getTestTaker($deliveryResult->getIdentifier());
+    public function getTestTaker($resultIdentifier) {
+        $testTaker = $this->getImplementation()->getTestTaker($resultIdentifier);
         return new core_kernel_classes_Resource($testTaker);
     }
 
     /**
      * Delete a delivery result
      *
-     * @param string $deliveryResultIdentifier
+     * @param string $resultIdentifier
      * @return boolean
      */
-     public function deleteResult($deliveryResultIdentifier) {
-        return $this->getImplementation()->deleteResult($deliveryResultIdentifier);
+     public function deleteResult($resultIdentifier) {
+        return $this->getImplementation()->deleteResult($resultIdentifier);
     }
 
 
@@ -720,11 +712,11 @@ class ResultsService extends tao_models_classes_ClassService {
 
     /**
      * To be reviewed as it implies a dependency towards taoSubjects
-     * @param \taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult
+     * @param string $resultIdentifier
      * @return array test taker properties values
      */
-    public function getTestTakerData(\taoDelivery_models_classes_execution_DeliveryExecution $deliveryResult) {
-        $testTaker = $this->gettestTaker($deliveryResult);
+    public function getTestTakerData($resultIdentifier) {
+        $testTaker = $this->gettestTaker($resultIdentifier);
         if (get_class($testTaker) == 'core_kernel_classes_Literal') {
             return $testTaker;
         } else {
