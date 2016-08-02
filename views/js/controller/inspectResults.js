@@ -10,6 +10,7 @@ define([
     'uri',
     'ui/feedback',
     'util/encode',
+    'jquery.fileDownload',
     'ui/datatable'
 ], function($, __, module, helpers, binder, uri, feedback, encode) {
     'use strict';
@@ -89,6 +90,13 @@ define([
             var $container = $('#inspect-result');
             //load results also at the beginning unfiltered
             loadResults($container, $container.data('model'), $container.data('uri'));
+
+            binder.register('download_csv', function (item) {
+                $.fileDownload(this.url, {
+                    httpMethod: 'GET',
+                    data: {uri : item.uri}
+                });
+            });
         }
     };
 
