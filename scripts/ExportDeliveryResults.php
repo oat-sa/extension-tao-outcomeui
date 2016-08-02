@@ -23,6 +23,8 @@ namespace oat\taoOutcomeUi\scripts;
 
 use common_report_Report as Report;
 use oat\oatbox\action\Action;
+use oat\taoOutcomeUi\model\table\VariableColumn;
+use oat\taoOutcomeUi\model\table\VariableDataProvider;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use oat\tao\model\export\implementation\CsvExporter;
@@ -134,9 +136,13 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface
             $resultsService->getVariableColumns($delivery, CLASS_RESPONSE_VARIABLE, $filter)
         );
 
+        $dataProvider = new VariableDataProvider();
         foreach ($cols as $col) {
             $column = \tao_models_classes_table_Column::buildColumnFromArray($col);
             if (!is_null($column)) {
+                if($column instanceof VariableColumn){
+                    $column->setDataProvider($dataProvider);
+                }
                 $columns[] = $column;
             }
         }
