@@ -91,9 +91,13 @@ class ResultTable extends \tao_actions_CommonModule {
              $this->service->getVariableColumns($delivery, CLASS_RESPONSE_VARIABLE, $filter)
         );
 
+        $dataProvider = new VariableDataProvider();
         foreach ($cols as $col) {
             $column = tao_models_classes_table_Column::buildColumnFromArray($col);
             if (!is_null($column)) {
+                if($column instanceof VariableColumn){
+                    $column->setDataProvider($dataProvider);
+                }
                 $columns[] = $column;
             }
         }
