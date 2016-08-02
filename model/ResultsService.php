@@ -789,7 +789,7 @@ class ResultsService extends tao_models_classes_ClassService {
         $results = array();
         $this->setImplementation($this->getReadableImplementation($delivery));
         foreach($this->getImplementation()->getResultByDelivery([$delivery->getUri()]) as $result){
-            $results[] = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($result['deliveryResultIdentifier']);
+            $results[] = $result['deliveryResultIdentifier'];
         }
         $dpmap = array();
         foreach ($columns as $column) {
@@ -820,7 +820,7 @@ class ResultsService extends tao_models_classes_ClassService {
             $cellData = array();
             foreach ($columns as $column) {
                 if (count($column->getDataProvider()->cache) > 0) {
-                    $cellData[]=self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result->getIdentifier()), $column), $filter);
+                    $cellData[]=self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column), $filter);
                 } else {
                     $cellData[]=[self::filterCellData(
                         (string)$this->getTestTaker($result)->getOnePropertyValue(new \core_kernel_classes_Property(PROPERTY_USER_LOGIN)),
@@ -828,7 +828,7 @@ class ResultsService extends tao_models_classes_ClassService {
                 }
             }
             $rows[] = array(
-                'id' => $result->getIdentifier(),
+                'id' => $result,
                 'cell' => $cellData
             );
         }
@@ -850,8 +850,7 @@ class ResultsService extends tao_models_classes_ClassService {
         //retrieveing all individual response variables referring to the  selected delivery results
         $selectedVariables = array ();
         foreach ($results as $result){
-            $de = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($result["deliveryResultIdentifier"]);
-            $variables = $this->getVariables($de);
+            $variables = $this->getVariables($result["deliveryResultIdentifier"]);
             $selectedVariables = array_merge($selectedVariables, $variables);
         }
         //retrieving The list of the variables identifiers per activities defintions as observed
