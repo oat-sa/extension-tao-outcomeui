@@ -33,6 +33,7 @@ use tao_helpers_Uri;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\tao\model\export\implementation\CsvExporter;
 use oat\taoOutcomeUi\model\table\VariableDataProvider;
+use oat\taoResultServer\models\classes\ResultServerService;
 
 /**
  * should be entirelyrefactored
@@ -284,12 +285,11 @@ class ResultTable extends \tao_actions_CommonModule {
         );
         $response = new \stdClass();
 
-        $delivery = new \core_kernel_classes_Resource($deliveryUri);
-        $implementation = $this->service->getReadableImplementation($delivery);
-        $this->service->setImplementation($implementation);
+        $storage = $this->getServiceManager()->get(ResultServerService::SERVICE_ID)->getResultStorage($deliveryUri);
+        $this->service->setImplementation($storage);
         
-        $deliveryResults = $this->service->getImplementation()->getResultByDelivery(array($deliveryUri), $options);
-        $counti = $this->service->getImplementation()->countResultByDelivery(array($deliveryUri));
+        $deliveryResults = $storage->getResultByDelivery(array($deliveryUri), $options);
+        $counti = $storage->countResultByDelivery(array($deliveryUri));
         $results = array();
         foreach($deliveryResults as $deliveryResult){
             $results[] = $deliveryResult['deliveryResultIdentifier'];
@@ -334,7 +334,7 @@ class ResultTable extends \tao_actions_CommonModule {
                 if(!is_null($key)){
                     if (count($column->getDataProvider()->cache) > 0) {
                         $data[$key] = ResultsService::filterCellData(
-                            $column->getDataProvider()->getValue(new core_kernel_classes_Resource($result->getIdentifier()), $column),
+                            $column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column),
                             $filterData
                         );
                     } else {
