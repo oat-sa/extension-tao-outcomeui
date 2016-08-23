@@ -31,6 +31,7 @@ use \tao_helpers_Request;
 use \tao_helpers_Uri;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
+use oat\taoResultServer\models\classes\ResultServerService;
 
 /**
  * Results Controller provide actions performed from url resolution
@@ -167,7 +168,7 @@ class Results extends tao_actions_SaSModule
 
             try{
                 // display delivery
-                $implementation = $this->getClassService()->getReadableImplementation($delivery);
+                $implementation = $this->getResultStorage($delivery);
 
                 $this->getClassService()->setImplementation($implementation);
 
@@ -216,7 +217,7 @@ class Results extends tao_actions_SaSModule
 
         try{
 
-        $implementation = $this->getClassService()->getReadableImplementation($delivery);
+        $implementation = $this->getResultStorage($delivery);
 
         $this->getClassService()->setImplementation($implementation);
 
@@ -278,7 +279,7 @@ class Results extends tao_actions_SaSModule
         $de = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($deliveryExecutionUri);
 
         try{
-            $implementation = $this->getClassService()->getReadableImplementation($de->getDelivery());
+            $implementation = $this->getResultStorage($de->getDelivery());
             $this->getClassService()->setImplementation($implementation);
 
             $deleted = $this->getClassService()->deleteResult($deliveryExecutionUri);
@@ -301,7 +302,7 @@ class Results extends tao_actions_SaSModule
 
         try{
             
-            $implementation = $this->getClassService()->getReadableImplementation($delivery);
+            $implementation = $this->getResultStorage($delivery);
             $this->getClassService()->setImplementation($implementation);
 
             $testTaker = $this->getClassService()->getTestTakerData($resultId);
@@ -421,7 +422,7 @@ class Results extends tao_actions_SaSModule
         $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('deliveryUri')));
         \common_Logger::w('delivery : '.print_r($delivery,true));
         try{
-            $implementation = $this->getClassService()->getReadableImplementation($delivery);
+            $implementation = $this->getResultStorage($delivery);
             $this->getClassService()->setImplementation($implementation);
 
 
@@ -443,5 +444,17 @@ class Results extends tao_actions_SaSModule
         catch(\common_exception_Error $e){
             echo $e->getMessage();
         }
+    }
+
+    /**
+     * Returns the currently configured result storage
+     *
+     * @param \core_kernel_classes_Resource $delivery
+     * @return \taoResultServer_models_classes_ReadableResultStorage
+     */
+    protected function getResultStorage($delivery)
+    {
+        $resultService = $this->getServiceManager()->get(ResultServerService::SERVICE_ID);
+        return $resultService->getResultStorage($delivery->getUri());
     }
 }
