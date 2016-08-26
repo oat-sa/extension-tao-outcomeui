@@ -10,8 +10,8 @@ define([
     'uri',
     'ui/feedback',
     'util/encode',
-    'jquery.fileDownload',
-    'ui/datatable'
+    'ui/datatable',
+    'jquery.fileDownload'
 ], function($, __, module, helpers, binder, uri, feedback, encode) {
     'use strict';
 
@@ -71,10 +71,16 @@ define([
                               .on('click', function () {
                             confirmBox.modal('close');
                         });
-
-
+                    },
+                    'download' : function downloadResource(id){
+                        $.fileDownload(helpers._url('downloadXML', 'Results', 'taoOutcomeUi'), {
+                            preparingMessageHtml: __("We are preparing your report, please wait..."),
+                            failMessageHtml: __("There was a problem generating your report, please try again."),
+                            httpMethod: 'GET',
+                            data: { 'deliveryExecution': id }
+                        });
                     }
-    }
+                }
             });
     }
 

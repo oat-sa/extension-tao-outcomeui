@@ -40,6 +40,7 @@ use \tao_helpers_Date;
 use \tao_models_classes_ClassService;
 use oat\taoOutcomeUi\helper\Datatypes;
 use oat\taoDelivery\model\execution\DeliveryExecution;
+use oat\taoResultServer\models\classes\ResultServerService;
 
 class ResultsService extends tao_models_classes_ClassService {
 
@@ -739,38 +740,7 @@ class ResultsService extends tao_models_classes_ClassService {
      * @throws common_exception_Error
      */
     public function getReadableImplementation(\core_kernel_classes_Resource $delivery) {
-
-        if(is_null($delivery)){
-            throw new \common_exception_Error(__('This delivery doesn\'t exists'));
-        }
-
-        $deliveryResultServer = $delivery->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP));
-
-        if(is_null($deliveryResultServer)){
-            throw new \common_exception_Error(__('This delivery has no Result Server'));
-        }
-
-        $resultServerModel = $deliveryResultServer->getPropertyValues(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP));
-
-        if(is_null($resultServerModel)){
-            throw new \common_exception_Error(__('This delivery has no readable Result Server'));
-        }
-
-        foreach($resultServerModel as $model){
-            $model = new \core_kernel_classes_Class($model);
-            /** @var $implementationClass \core_kernel_classes_Literal*/
-            $implementationClass = $model->getOnePropertyValue(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_IMPL_PROP));
-            if (!is_null($implementationClass)
-                && class_exists($implementationClass->literal) && in_array('taoResultServer_models_classes_ReadableResultStorage',class_implements($implementationClass->literal))) {
-                $className = $implementationClass->literal;
-                if (!class_exists($className)) {
-                    throw new \common_exception_Error('readable resultinterface implementation '.$className.' not found');
-                }
-                return new $className();
-            }
-        }
-
-        throw new \common_exception_Error(__('This delivery has no readable Result Server'));
+        return $this->getServiceManager()->get(ResultServerService::SERVICE_ID)->getResultStorage($delivery);
     }
 
     /**
