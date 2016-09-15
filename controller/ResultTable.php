@@ -61,6 +61,7 @@ class ResultTable extends \tao_actions_CommonModule {
 
     /**
      * Result Table entry page
+     * @throws \tao_models_classes_MissingRequestParameterException
      */
     public function index()
     {
@@ -68,6 +69,9 @@ class ResultTable extends \tao_actions_CommonModule {
         if($this->getRequestParameter('classUri') !== $deliveryService->getRootClass()->getUri()) {
             $filter = $this->getRequestParameter('filter');
             $uri = $this->getRequestParameter('uri');
+            if (!\common_Utils::isUri(tao_helpers_Uri::decode($uri))) {
+                throw new \tao_models_classes_MissingRequestParameterException('uri');
+            }
             $this->setData('filter', $filter);
             $this->setData('uri', $uri);
             $this->setView('resultTable.tpl');
@@ -268,7 +272,7 @@ class ResultTable extends \tao_actions_CommonModule {
        	$filterData =  $this->hasRequestParameter('filter') ? $this->getRequestParameter('filter') : array();
        	$deliveryUri =  \tao_helpers_Uri::decode($this->getRequestParameter('uri'));
 
-    	$columns = $this->hasRequestParameter('columns') ? $this->getColumns('columns') : array();
+        $columns = $this->hasRequestParameter('columns') ? $this->getColumns('columns') : array();
     	$page = $this->getRequestParameter('page');
         $limit = $this->getRequestParameter('rows');
         $sidx = $this->getRequestParameter('sidx');
@@ -362,4 +366,3 @@ class ResultTable extends \tao_actions_CommonModule {
         $this->returnJSON($response);
     }
 }
-?>
