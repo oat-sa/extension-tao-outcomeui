@@ -243,14 +243,14 @@ class Results extends tao_actions_SaSModule
 
             $data[] = array(
                 'id'        => $deliveryExecution->getIdentifier(),
-                'ttaker'    => $testTaker->getLabel(),
+                'ttaker' => _dh($testTaker->getLabel()),
                 'time'      => $startTime,
             );
 
             $readOnly[$deliveryExecution->getIdentifier()] = $rights;
         }
 
-        $this->returnJSON(array(
+            $this->returnJson(array(
                 'data' => $data,
                 'page' => floor($start / $limit) + 1,
                 'total' => ceil($counti / $limit),
@@ -259,7 +259,7 @@ class Results extends tao_actions_SaSModule
             ));
         }
         catch(\common_exception_Error $e){
-            $this->returnJSON(array(
+            $this->returnJson(array(
                     'error' => $e->getMessage()
                 ));
         }
