@@ -25,11 +25,13 @@ use \Exception;
 use \common_exception_IsAjaxAction;
 use \core_kernel_classes_Resource;
 use oat\tao\model\accessControl\AclProxy;
+use oat\taoResultServer\models\classes\QtiResultsService;
 use \tao_actions_SaSModule;
 use \tao_helpers_Request;
 use \tao_helpers_Uri;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
+use oat\taoResultServer\models\classes\ResultServerService;
 
 /**
  * Results Controller provide actions performed from url resolution
@@ -166,7 +168,7 @@ class Results extends tao_actions_SaSModule
 
             try{
                 // display delivery
-                $implementation = $this->getClassService()->getReadableImplementation($delivery);
+                $implementation = $this->getResultStorage($delivery);
 
                 $this->getClassService()->setImplementation($implementation);
 
@@ -215,7 +217,7 @@ class Results extends tao_actions_SaSModule
 
         try{
 
-        $implementation = $this->getClassService()->getReadableImplementation($delivery);
+        $implementation = $this->getResultStorage($delivery);
 
         $this->getClassService()->setImplementation($implementation);
 
@@ -232,16 +234,23 @@ class Results extends tao_actions_SaSModule
             $deliveryExecution = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($res['deliveryExecutionIdentifier']);
             $testTaker = new core_kernel_classes_Resource($res['testTakerIdentifier']);
 
+            try{
+                $startTime = \tao_helpers_Date::displayeDate($deliveryExecution->getStartTime());
+            } catch(\common_exception_NotFound $e){
+                \common_Logger::w($e->getMessage());
+                $startTime = '';
+            }
+
             $data[] = array(
                 'id'        => $deliveryExecution->getIdentifier(),
-                'ttaker'    => $testTaker->getLabel(),
-                'time'      => \tao_helpers_Date::displayeDate($deliveryExecution->getStartTime()),
+                'ttaker' => _dh($testTaker->getLabel()),
+                'time'      => $startTime,
             );
 
             $readOnly[$deliveryExecution->getIdentifier()] = $rights;
         }
 
-        $this->returnJSON(array(
+            $this->returnJson(array(
                 'data' => $data,
                 'page' => floor($start / $limit) + 1,
                 'total' => ceil($counti / $limit),
@@ -250,7 +259,7 @@ class Results extends tao_actions_SaSModule
             ));
         }
         catch(\common_exception_Error $e){
-            $this->returnJSON(array(
+            $this->returnJson(array(
                     'error' => $e->getMessage()
                 ));
         }
@@ -270,7 +279,7 @@ class Results extends tao_actions_SaSModule
         $de = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($deliveryExecutionUri);
 
         try{
-            $implementation = $this->getClassService()->getReadableImplementation($de->getDelivery());
+            $implementation = $this->getResultStorage($de->getDelivery());
             $this->getClassService()->setImplementation($implementation);
 
             $deleted = $this->getClassService()->deleteResult($deliveryExecutionUri);
@@ -288,16 +297,15 @@ class Results extends tao_actions_SaSModule
     public function viewResult()
     {
         
-        $result = $this->getCurrentInstance();
-        $de = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($result->getUri());
+        $resultId = $this->getRequestParameter('id');
+        $delivery = new \core_kernel_classes_Resource($this->getRequestParameter('classUri'));
 
         try{
             
-            $implementation = $this->getClassService()->getReadableImplementation($de->getDelivery());
+            $implementation = $this->getResultStorage($delivery);
             $this->getClassService()->setImplementation($implementation);
 
-
-            $testTaker = $this->getClassService()->getTestTakerData($de);
+            $testTaker = $this->getClassService()->getTestTakerData($resultId);
 
             if (
                 (is_object($testTaker) and (get_class($testTaker) == 'core_kernel_classes_Literal'))
@@ -333,7 +341,7 @@ class Results extends tao_actions_SaSModule
             }
             $filterSubmission = ($this->hasRequestParameter("filterSubmission")) ? $this->getRequestParameter("filterSubmission") : "lastSubmitted";
             $filterTypes = ($this->hasRequestParameter("filterTypes")) ? $this->getRequestParameter("filterTypes") : array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class);
-            $variables = $this->getClassService()->getStructuredVariables($de, $filterSubmission, $filterTypes);
+            $variables = $this->getClassService()->getStructuredVariables($resultId, $filterSubmission, $filterTypes);
             $this->setData('variables', $variables);
             
             $stats = $this->getClassService()->calculateResponseStatistics($variables);
@@ -341,12 +349,11 @@ class Results extends tao_actions_SaSModule
             $this->setData('nbCorrectResponses', $stats["nbCorrectResponses"]);
             $this->setData('nbIncorrectResponses', $stats["nbIncorrectResponses"]);
             $this->setData('nbUnscoredResponses', $stats["nbUnscoredResponses"]);
-            $this->setData('deliveryResultLabel', $result->getLabel());
 
             //retireve variables not related to item executions
-            $deliveryVariables = $this->getClassService()->getVariableDataFromDeliveryResult($de, $filterTypes);
+            $deliveryVariables = $this->getClassService()->getVariableDataFromDeliveryResult($resultId, $filterTypes);
             $this->setData('deliveryVariables', $deliveryVariables);
-            $this->setData('uri', $this->getRequestParameter("uri"));
+            $this->setData('id', $this->getRequestParameter("id"));
             $this->setData('classUri', $this->getRequestParameter("classUri"));
             $this->setData('filterSubmission', $filterSubmission);
             $this->setData('filterTypes', $filterTypes);
@@ -357,6 +364,49 @@ class Results extends tao_actions_SaSModule
             $this->setData('error', $e->getMessage());
             $this->setView('index.tpl');
             return;
+        }
+    }
+
+    /**
+     * Download delivery execution XML
+     *
+     * @author Gyula Szucs, <gyula@taotesting.com>
+     * @throws \common_exception_MissingParameter
+     * @throws \common_exception_NotFound
+     * @throws \common_exception_ValidationFailed
+     */
+    public function downloadXML()
+    {
+        try {
+            if (!$this->hasRequestParameter('deliveryExecution')) {
+                throw new \common_exception_MissingParameter('deliveryExecution is missing from the request.', $this->getRequestURI());
+            }
+
+            if (empty($this->getRequestParameter('deliveryExecution'))) {
+                throw new \common_exception_ValidationFailed('deliveryExecution cannot be empty');
+            }
+
+            $qtiResultService = QtiResultsService::singleton();
+            $qtiResultService->setServiceLocator($this->getServiceManager());
+
+            $deliveryExecution = $qtiResultService->getDeliveryExecutionById(
+                $this->getRequestParameter('deliveryExecution')
+            );
+
+            if (empty($deliveryExecution)) {
+                throw new \common_exception_NotFound('Delivery execution not found.');
+            }
+
+            $xml = $qtiResultService->getDeliveryExecutionXml($deliveryExecution);
+
+            header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
+            setcookie("fileDownload", "true", 0, "/");
+            header('Content-Disposition: attachment; filename="delivery_execution_' . date('YmdHis') . '.xml"');
+            header('Content-Type: application/xml');
+
+            echo $xml;
+        } catch(\common_exception_Error $e){
+            $this->returnJson(array('error' => $e->getMessage()));
         }
     }
 
@@ -372,7 +422,7 @@ class Results extends tao_actions_SaSModule
         $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('deliveryUri')));
         \common_Logger::w('delivery : '.print_r($delivery,true));
         try{
-            $implementation = $this->getClassService()->getReadableImplementation($delivery);
+            $implementation = $this->getResultStorage($delivery);
             $this->getClassService()->setImplementation($implementation);
 
 
@@ -394,5 +444,17 @@ class Results extends tao_actions_SaSModule
         catch(\common_exception_Error $e){
             echo $e->getMessage();
         }
+    }
+
+    /**
+     * Returns the currently configured result storage
+     *
+     * @param \core_kernel_classes_Resource $delivery
+     * @return \taoResultServer_models_classes_ReadableResultStorage
+     */
+    protected function getResultStorage($delivery)
+    {
+        $resultService = $this->getServiceManager()->get(ResultServerService::SERVICE_ID);
+        return $resultService->getResultStorage($delivery->getUri());
     }
 }

@@ -1,14 +1,17 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TAO v3.0\n"
-"PO-Revision-Date: 2014-10-21T07:53:05\n"
-"Last-Translator: TAO Translation Team <translation@tao.lu>\n"
-"MIME-Version: 1.0\n"
+"PO-Revision-Date: 2016-08-01 13:34+0000\n"
+"Last-Translator: eschollmann <erik.schollmann@wbs-it.de>\n"
 "Language: de-DE\n"
-"sourceLanguage: en-US\n"
-"targetLanguage: de-DE\n"
+"MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Pootle 2.5.1-rc1\n"
+"sourceLanguage: en-US\n"
+"targetLanguage: de-DE\n"
+"X-POOTLE-MTIME: 1470058490.000000\n"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
@@ -23,102 +26,102 @@ msgstr "Result"
 # http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "Test taker of result"
-msgstr "Test taker of result"
+msgstr "Testteilnehmer des Ergebnisses"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfSubject
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "Test taker of result"
-msgstr "Test taker of result"
+msgstr "Testteilnehmer des Ergebnisses  "
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#ItemResult
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "Item Result"
-msgstr "Item Result"
+msgstr "Item Ergebnis"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#ItemResult
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "Item Result"
-msgstr "Result"
+msgstr "Item Ergebnis"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#RelatedTest
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "Related Item"
-msgstr "Related Item"
+msgstr "Verwandtes Item"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#RelatedTest
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "Related Item"
-msgstr "Related Item"
+msgstr "Verwandtes Item"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "Delivery of result"
-msgstr "Delivery of result"
+msgstr "Bereitstellung des Ergebnisses"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#resultOfDelivery
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "Delivery of result"
-msgstr "Delivery of result"
+msgstr "Bereitstellung des Ergebnisses"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#Identifier
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "Result Identifier"
-msgstr "Result Identifier"
+msgstr "Ergebnisidentifizierer"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#Identifier
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "Result Identifier"
-msgstr "An identifier related to the instanciation of a delivery a test an item or a variable . If the item is used twice, different ids are setup"
+msgstr "Ergebnisidentifizierer"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#Variable
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "Result Variable"
-msgstr "Result Variable"
+msgstr "Ergebnisvariable"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#Variable
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "Result Variable"
-msgstr "Variable of a DeliveryResult"
+msgstr "Ergebnisvariable  "
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#relatedItemResult
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "Related Item result"
-msgstr "Related Item result"
+msgstr "Verwandtes Item Ergebnis"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#relatedItemResult
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "Related Item result"
-msgstr "Related Item result"
+msgstr "Verwandtes Item Ergebnis"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "Response Variable"
-msgstr "Response Variable"
+msgstr "Antwortvariable"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#ResponseVariable
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "Response Variable"
-msgstr "Response to an interaction"
+msgstr "Antwortvariable"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#correctResponse
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "The correct expected response"
-msgstr "The correct expected response"
+msgstr "Die korrekte erwartete Antwort"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#correctResponse
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "The correct expected response"
-msgstr "Related Item result"
+msgstr "Die korrekte erwartete Antwort"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#candidateResponse
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "The candidate response"
-msgstr "The candidate response"
+msgstr "Die Kandidatenantwort"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#candidateResponse
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "The candidate response"
-msgstr "The candidate response"
+msgstr "Die Kandidatenantwort"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#OutcomeVariable
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
@@ -143,50 +146,49 @@ msgstr "Trace Variable"
 # http://www.tao.lu/Ontologies/TAOResult.rdf#variableEpoch
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "The epoch when the variable got stored"
-msgstr "The epoch when the variable got stored"
+msgstr "Der Zeitraum als die Variable gespeichert wurde"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#variableEpoch
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "The epoch when the variable got stored"
-msgstr "The epoch when the variable got stored"
+msgstr "Der Zeitraum als die Variable gespeichert wurde"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#variableComment
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "Variable Comment"
-msgstr "Variable Comment"
+msgstr "Variablen Kommentar"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#variableComment
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "Variable Comment"
-msgstr "Variable Comment"
+msgstr "Variablen Kommentar"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "Results Manager"
-msgstr "Results Manager"
+msgstr "Ergebnisverwaltung"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "Results Manager"
-msgstr "The Results Manager Role"
+msgstr "Ergebnisverwaltung"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#taoResultServerModel
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "taoResults storage (database)"
-msgstr "taoResults storage (database)"
+msgstr "taoResults Speicher (Datenbank)"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#taoResultServerModel
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "taoResults storage (database)"
-msgstr "TAO Result Server 2.5 (DB storage)"
+msgstr "TAO Ergebnisserver 2.5 (Datenbank)"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#taoResultServer
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "TAO Result Server 2.5 (DB storage)"
-msgstr "TAO Result Server 2.5 (DB storage)"
+msgstr "TAO Ergebnisserver 2.5 (DB Speicher)"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#taoResultServer
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "TAO Result Server 2.5 (DB storage)"
-msgstr "TAO Result Server 2.5 (using DB storage)"
-
+msgstr "TAO Ergebnisserver 2.5 (DB Speicher)"

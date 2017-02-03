@@ -10,7 +10,8 @@ define([
     'uri',
     'ui/feedback',
     'util/encode',
-    'ui/datatable'
+    'ui/datatable',
+    'jquery.fileDownload'
 ], function($, __, module, helpers, binder, uri, feedback, encode) {
     'use strict';
 
@@ -32,9 +33,9 @@ define([
                 model : model,
                 actions : {
                     'view' : function openResource(id){
-                                var action = {binding : "load", url: helpers._url('viewResult', 'Results', 'taoOutcomeUi')};
-                                binder.exec(action, {uri : uri.encode(id), classUri : classUri} || this._resourceContext);
-                            },
+                        var action = {binding : "load", url: helpers._url('viewResult', 'Results', 'taoOutcomeUi')};
+                        binder.exec(action, {id: id, classUri : uri.decode(classUri)} || this._resourceContext);
+                    },
                     'delete' : function deleteResource(id){
                         // prompt a confirmation lightbox and then delete the result
                         var confirmBox = $('.preview-modal-feedback'),
@@ -70,10 +71,16 @@ define([
                               .on('click', function () {
                             confirmBox.modal('close');
                         });
-
-
+                    },
+                    'download' : function downloadResource(id){
+                        $.fileDownload(helpers._url('downloadXML', 'Results', 'taoOutcomeUi'), {
+                            preparingMessageHtml: __("We are preparing your report, please wait..."),
+                            failMessageHtml: __("There was a problem generating your report, please try again."),
+                            httpMethod: 'GET',
+                            data: { 'deliveryExecution': id }
+                        });
                     }
-    }
+                }
             });
     }
 
@@ -89,6 +96,13 @@ define([
             var $container = $('#inspect-result');
             //load results also at the beginning unfiltered
             loadResults($container, $container.data('model'), $container.data('uri'));
+
+            binder.register('download_csv', function (item) {
+                $.fileDownload(this.url, {
+                    httpMethod: 'GET',
+                    data: {uri : item.uri}
+                });
+            });
         }
     };
 
