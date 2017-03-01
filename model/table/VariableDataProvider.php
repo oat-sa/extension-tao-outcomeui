@@ -102,8 +102,9 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
                     $varData = $var->variable;
                     if (common_cache_FileCache::singleton()->has('variableDataCache' . $var->uri . '_' . $varData->getIdentifier())) {
                         $varData = common_cache_FileCache::singleton()->get('variableDataCache' . $var->uri . '_' . $varData->getIdentifier());
+                        $varData = \taoResultServer_models_classes_Variable::fromArray($varData);
                     } else {
-                        common_cache_FileCache::singleton()->put($varData, 'variableDataCache' . $var->uri . '_' . $varData->getIdentifier());
+                        common_cache_FileCache::singleton()->put($varData->__toArray(), 'variableDataCache' . $var->uri . '_' . $varData->getIdentifier());
                     }
                     
                     if ($varData->getBaseType() === 'file') {
