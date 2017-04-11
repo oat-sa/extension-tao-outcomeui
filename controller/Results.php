@@ -416,11 +416,9 @@ class Results extends tao_actions_SaSModule
     public function getFile()
     {
 
-        $variableUri = $this->getRequestParameter("variableUri");
-
+        $variableUri = $_POST["variableUri"];
 
         $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('deliveryUri')));
-        \common_Logger::w('delivery : '.print_r($delivery,true));
         try{
             $implementation = $this->getResultStorage($delivery);
             $this->getClassService()->setImplementation($implementation);
