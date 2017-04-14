@@ -785,7 +785,7 @@ class ResultsService extends tao_models_classes_ClassService {
             $arr['instance']->prepare($results, $arr['columns']);
         }
 
-        /** @var \taoDelivery_models_classes_execution_DeliveryExecution $result */
+        /** @var DeliveryExecution $result */
         foreach($results as $result) {
             $cellData = array();
             foreach ($columns as $column) {

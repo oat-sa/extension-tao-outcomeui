@@ -34,6 +34,7 @@ use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\tao\model\export\implementation\CsvExporter;
 use oat\taoOutcomeUi\model\table\VariableDataProvider;
 use oat\taoResultServer\models\classes\ResultServerService;
+use oat\taoDelivery\model\execution\DeliveryExecution;
 
 /**
  * should be entirelyrefactored
@@ -323,7 +324,7 @@ class ResultTable extends \tao_actions_CommonModule {
             $arr['instance']->prepare($results, $arr['columns']);
         }
 
-        /** @var \taoDelivery_models_classes_execution_DeliveryExecution $result */
+        /** @var DeliveryExecution $result */
         foreach($results as $result) {
             $data = array(
                 'id' => $result

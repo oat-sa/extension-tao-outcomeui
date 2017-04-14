@@ -25,6 +25,7 @@ use \tao_helpers_Uri;
 use \tao_models_classes_table_Column;
 use \tao_models_classes_table_DataProvider;
 use oat\taoOutcomeUi\model\ResultsService;
+use oat\taoDelivery\model\execution\DeliveryExecution;
 
 /**
  * Short description of class
@@ -68,7 +69,7 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
         $resultsService = ResultsService::singleton();
         
         /**
-         * @var \taoDelivery_models_classes_execution_DeliveryExecution $result
+         * @var DeliveryExecution $result
          */
         foreach ($resources as $result) {
             $itemresults = $resultsService->getVariables($result, false);
