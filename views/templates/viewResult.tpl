@@ -115,7 +115,7 @@ use oat\tao\helpers\Template;
                             <td class="dataResult" colspan="2">
                         <?php
                         if ($variable->getBaseType() === "file" && $variable->getCandidateResponse() !== '') {
-                            echo '<button class="download btn-info small" value="'.$observation["uri"].'"><span class="icon-download"></span> '.__('Download').'</button>';
+                            echo '<button class="download btn-info small" value="'.htmlspecialchars($observation["uri"]).'"><span class="icon-download"></span> '.__('Download').'</button>';
                         }
                         else{
                             $rdfValue = $variable->getValue();
