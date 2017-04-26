@@ -26,7 +26,7 @@ return array(
     'label' => 'Result visualisation',
     'description' => 'TAO Results extension',
     'license' => 'GPL-2.0',
-    'version' => '3.2.3',
+    'version' => '4.0.0',
     'author' => 'Open Assessment Technologies, CRP Henri Tudor',
     // taoItems is only needed for the item model property retrieval
     'requires' => array(
@@ -59,9 +59,6 @@ return array(
         
         // BASE URL (usually the domain root)
         'BASE_URL' => ROOT_URL . 'taoOutcomeUi/',
-        
-        // BASE WWW the web resources path
-        'BASE_WWW' => ROOT_URL . 'taoOutcomeUi/views/',
     ),
     'extra' => array(
         'structures' => dirname(__FILE__) . DIRECTORY_SEPARATOR . 'controller' . DIRECTORY_SEPARATOR . 'structures.xml'
