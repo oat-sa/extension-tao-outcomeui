@@ -22,12 +22,29 @@ namespace oat\taoOutcomeUi\helper;
 
 use \taoResultServer_models_classes_ResponseVariable as ResponseVariable;
 
+/**
+ * The ResponseVariableFormatter enables you to format the output of the ResultsService into an associative compatible with the client code
+ * Class ResponseVariableFormatter
+ * @package oat\taoOutcomeUi\helper
+ */
 class ResponseVariableFormatter {
 
+    /**
+     * Special trim for identifier in response variables
+     * @param $identifierString
+     * @return string
+     */
     static private function trimIdentifier($identifierString){
         return trim($identifierString, " \t\n\r\0\x0B'\"");
     }
 
+    /**
+     * Format a string into the appropriate format according to the base type
+     * @param $baseType
+     * @param $stringValue
+     * @return array|bool|float|int|string
+     * @throws \common_Exception
+     */
     static private function formatStringValue($baseType, $stringValue){
 
         switch(strtolower($baseType)){
@@ -60,6 +77,14 @@ class ResponseVariableFormatter {
         }
     }
 
+    /**
+     * Format a standard ResponseVariable into a associative array, directly usable on the client side.
+     * The common usage is to use this to format the output of oat\taoOutcomeUi\model\ResultsService::getStructuredVariables();
+     *
+     * @param ResponseVariable $var
+     * @return array
+     * @throws \common_Exception
+     */
     static public function formatVariableToPci(ResponseVariable $var) {
         $value = base64_decode($var->getValue());
         switch($var->getCardinality()){
