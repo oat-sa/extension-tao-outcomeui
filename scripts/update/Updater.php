@@ -37,8 +37,6 @@ class Updater extends \common_ext_ExtensionUpdater
      */
     public function update($initialVersion)
     {
-
-
         // move ResultsManagerRole to model 1
         if ($this->isVersion('2.6')) {
             $rdf = ModelManager::getModel()->getRdfInterface();
@@ -56,6 +54,6 @@ class Updater extends \common_ext_ExtensionUpdater
             $$this->setVersion('2.6.1');
         }
 
-        $this->skip('2.6.1', '4.0.0');
+        $this->skip('2.6.1', '4.1.0');
     }
 }
