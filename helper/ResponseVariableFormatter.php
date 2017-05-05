@@ -78,15 +78,14 @@ class ResponseVariableFormatter {
     }
 
     /**
-     * Format a standard ResponseVariable into a associative array, directly usable on the client side.
-     * The common usage is to use this to format the output of oat\taoOutcomeUi\model\ResultsService::getStructuredVariables();
+     * Format a ResponseVariable into a associative array, directly usable on the client side.
      *
      * @param ResponseVariable $var
      * @return array
      * @throws \common_Exception
      */
     static public function formatVariableToPci(ResponseVariable $var) {
-        $value = base64_decode($var->getValue());
+        $value = $var->getValue();
         switch($var->getCardinality()){
             case 'single':
                 if(strlen($value) === 0){
@@ -113,6 +112,40 @@ class ResponseVariableFormatter {
                 break;
             default:
                 throw new \common_Exception('unknown response cardinality');
+        }
+        return $formatted;
+    }
+
+    /**
+     * Format the output of oat\taoOutcomeUi\model\ResultsService::getStructuredVariables() into a client usable array
+     *
+     * @param array $testResultVariables - the array output from oat\taoOutcomeUi\model\ResultsService::getStructuredVariables();
+     * @param array $itemFilter = [] - the array of item uri to be included in the formatted output, all item if empty.
+     * @return array
+     * @throws \common_Exception
+     */
+    static public function formatStructuredVariablesToPci($testResultVariables, $itemFilter = []){
+        $formatted = [];
+        foreach($testResultVariables as $itemResult){
+
+            if(!isset($itemResult['uri'])){
+                continue;
+            }
+
+            $itemUri = $itemResult['uri'];
+            if(!empty($itemFilter) && !in_array($itemUri, $itemFilter)){
+                continue;
+            }
+
+            $itemResults = [];
+            foreach($itemResult['taoResultServer_models_classes_ResponseVariable'] as $var){
+                $responseVariable = $var['var'];
+                /**
+                 * @var $responseVariable \taoResultServer_models_classes_ResponseVariable
+                 */
+                $itemResults[$responseVariable->getIdentifier()] = self::formatVariableToPci($responseVariable);
+            }
+            $formatted[$itemUri] = $itemResults;
         }
         return $formatted;
     }

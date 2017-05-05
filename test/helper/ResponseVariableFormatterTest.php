@@ -52,7 +52,7 @@ class ResponseVariableFormatterTest extends TaoPhpUnitTestRunner
         $var = new ResponseVariable();
         $var->setBaseType('identifier');
         $var->setCardinality('single');
-        $var->setValue(base64_encode('ABC'));
+        $var->setValue('ABC');
 
         $expected = ['base' => ['identifier' => 'ABC']];
 
@@ -64,7 +64,7 @@ class ResponseVariableFormatterTest extends TaoPhpUnitTestRunner
         $var = new ResponseVariable();
         $var->setBaseType('pair');
         $var->setCardinality('single');
-        $var->setValue(base64_encode(' choice_2 choice_3 '));
+        $var->setValue(' choice_2 choice_3 ');
 
         $expected = ['base' => ['pair' => ['choice_2', 'choice_3']]];
 
@@ -76,7 +76,7 @@ class ResponseVariableFormatterTest extends TaoPhpUnitTestRunner
         $var = new ResponseVariable();
         $var->setBaseType('integer');
         $var->setCardinality('single');
-        $var->setValue(base64_encode('0'));
+        $var->setValue('0');
 
         $expected = ['base' => ['integer' => 0]];
 
@@ -88,7 +88,7 @@ class ResponseVariableFormatterTest extends TaoPhpUnitTestRunner
         $var = new ResponseVariable();
         $var->setBaseType('float');
         $var->setCardinality('single');
-        $var->setValue(base64_encode('3.14'));
+        $var->setValue('3.14');
 
         $expected = ['base' => ['float' => 3.14]];
 
@@ -100,7 +100,7 @@ class ResponseVariableFormatterTest extends TaoPhpUnitTestRunner
         $var = new ResponseVariable();
         $var->setBaseType('boolean');
         $var->setCardinality('single');
-        $var->setValue(base64_encode('true'));
+        $var->setValue('true');
 
         $expected = ['base' => ['boolean' => true]];
 
@@ -112,7 +112,7 @@ class ResponseVariableFormatterTest extends TaoPhpUnitTestRunner
         $var = new ResponseVariable();
         $var->setBaseType('point');
         $var->setCardinality('single');
-        $var->setValue(base64_encode('10 90'));
+        $var->setValue('10 90');
 
         $expected = ['base' => ['point' => [10, 90]]];
 
@@ -125,7 +125,7 @@ class ResponseVariableFormatterTest extends TaoPhpUnitTestRunner
         $var->setBaseType('string');
         $var->setCardinality('single');
         $value = " Pablo Ruiz y Picasso, also known as Pablo Picasso (Spanish: [ˈpaβlo piˈkaso]; 25 October 1881 – 8 April 1973), was a Spanish painter, sculptor, printmaker, ceramicist, stage designer, poet and playwright who spent most of his adult life in France. As one of the greatest and most influential artists of the 20th<br /> ";
-        $var->setValue(base64_encode($value));
+        $var->setValue($value);
 
         $expected = ['base' => ['string' => $value]];
 
@@ -137,7 +137,7 @@ class ResponseVariableFormatterTest extends TaoPhpUnitTestRunner
         $var = new ResponseVariable();
         $var->setBaseType('identifier');
         $var->setCardinality('multiple');
-        $var->setValue(base64_encode("['hotspot_5'; 'hotspot_4'; 'hotspot_7'; 'hotspot_1']"));
+        $var->setValue("['hotspot_5'; 'hotspot_4'; 'hotspot_7'; 'hotspot_1']");
 
         $expected = ['list' => ['identifier' => ['hotspot_5', 'hotspot_4', 'hotspot_7', 'hotspot_1']]];
 
@@ -149,7 +149,7 @@ class ResponseVariableFormatterTest extends TaoPhpUnitTestRunner
         $var = new ResponseVariable();
         $var->setBaseType('identifier');
         $var->setCardinality('ordered');
-        $var->setValue(base64_encode(" <'choice_1'; 'choice_3'; 'choice_2'> "));
+        $var->setValue(" <'choice_1'; 'choice_3'; 'choice_2'> ");
 
         $expected = ['list' => ['identifier' => ['choice_1', 'choice_3', 'choice_2']]];
 
@@ -161,7 +161,7 @@ class ResponseVariableFormatterTest extends TaoPhpUnitTestRunner
         $var = new ResponseVariable();
         $var->setBaseType('pair');
         $var->setCardinality('multiple');
-        $var->setValue(base64_encode('[choice_1 choice_3; choice_2 choice_4; choice_1 choice_5; choice_2 choice_6]'));
+        $var->setValue('[choice_1 choice_3; choice_2 choice_4; choice_1 choice_5; choice_2 choice_6]');
 
         $expected = ['list' => ['pair' => [['choice_1', 'choice_3'], ['choice_2', 'choice_4'], ['choice_1', 'choice_5'], ['choice_2', 'choice_6']]]];
 
