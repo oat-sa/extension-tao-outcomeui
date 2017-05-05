@@ -2,16 +2,16 @@
  * @author Bertrand Chevrier <bertrand@taotesting.com>
  */
 define([
-    'module', 
-    'jquery', 
-    'i18n', 
-    'helpers', 
+    'module',
+    'jquery',
+    'i18n',
+    'util/url',
     'layout/section',
     'taoItems/preview/preview',
     'jquery.fileDownload'
-], function (module, $,  __,  helpers, section, preview) {
-    'use strict';    
-    
+], function (module, $,  __,  urlHelper, section, preview) {
+    'use strict';
+
     /**
      * @exports taoOutcomeUi/controller/viewResult
      */
@@ -43,7 +43,7 @@ define([
                     }
                 });
                 section.loadContentBlock(
-                    helpers._url('viewResult', 'Results', 'taoOutcomeUi'), {
+                    urlHelper.route('viewResult', 'Results', 'taoOutcomeUi'), {
                     id: conf.id,
                     classUri:  conf.classUri,
                     filterSubmission: $resultFilterField.select2('val'),
@@ -55,7 +55,7 @@ define([
             //bind the download buttons
             $('.download', $container).on("click", function (e) {
                 var variableUri = $(this).val();
-                $.fileDownload(helpers._url('getFile', 'Results', 'taoOutcomeUi'), {
+                $.fileDownload(urlHelper.route('getFile', 'Results', 'taoOutcomeUi'), {
                     preparingMessageHtml: __("We are preparing your report, please wait..."),
                     failMessageHtml: __("There was a problem generating your report, please try again."),
                     httpMethod: "POST",
@@ -65,9 +65,12 @@ define([
             });
 
             $('.preview', $container).on("click", function (e) {
+                var $this = $(this);
+                var uri = $this.data('uri');
+                var state = $this.data('state');
                 e.preventDefault();
                 window.scrollTo(0,0);
-                preview.init(helpers._url('forwardMe', 'ItemPreview', 'taoItems', {uri : $(this).data('uri')}));
+                preview.init(urlHelper.route('forwardMe', 'ItemPreview', 'taoItems', {uri : uri}), state);
                 preview.show();
             });
 
