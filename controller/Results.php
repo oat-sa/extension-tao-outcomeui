@@ -470,7 +470,7 @@ class Results extends tao_actions_SaSModule
         $resultService = $this->getClassService();
         $displayedVariables = $resultService->getStructuredVariables($resultId, $filterSubmission, $filterTypes);
         $resultVariables = $resultService->getStructuredVariables($resultId, $filterSubmission, [\taoResultServer_models_classes_ResponseVariable::class]);
-        $responses = ResponseVariableFormatter::formatStructuredVariablesToPci($resultVariables);
+        $responses = ResponseVariableFormatter::formatStructuredVariablesToItemState($resultVariables);
         $excludedVariables = array_flip(['numAttempts', 'duration']);
         
         foreach($displayedVariables as &$item) {
