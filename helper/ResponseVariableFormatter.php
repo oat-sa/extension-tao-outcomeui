@@ -73,7 +73,7 @@ class ResponseVariableFormatter {
                 }
                 return [intval($pair[0]), intval($pair[1])];
             default:
-                throw new \common_Exception('unknown basetype');
+                throw new \common_exception_NotImplemented('unknown basetype');
         }
     }
 
@@ -91,7 +91,12 @@ class ResponseVariableFormatter {
                 if(strlen($value) === 0){
                     $formatted = ['base' => null];
                 }else{
-                    $formatted = ['base' => [$var->getBaseType() => self::formatStringValue($var->getBaseType(), $value)]];
+                    try {
+                        $formatted = ['base' => [$var->getBaseType() => self::formatStringValue($var->getBaseType(), $value)]];
+                    } catch (\common_exception_NotImplemented $e) {
+                        // simply ignore unsupported data/type
+                        $formatted = ['base' => null];
+                    }
                 }
                 break;
             case 'ordered':
@@ -105,7 +110,12 @@ class ResponseVariableFormatter {
                         if(empty(trim($valueString))){
                             continue;
                         }
-                        $list[] = self::formatStringValue($var->getBaseType(), $valueString);
+
+                        try {
+                            $list[] = self::formatStringValue($var->getBaseType(), $valueString);
+                        } catch (\common_exception_NotImplemented $e) {
+                            // simply ignore unsupported data/type
+                        }
                     }
                     $formatted = ['list' => [$var->getBaseType() => $list]];
                 }
@@ -124,7 +134,7 @@ class ResponseVariableFormatter {
      * @return array
      * @throws \common_Exception
      */
-    static public function formatStructuredVariablesToPci($testResultVariables, $itemFilter = []){
+    static public function formatStructuredVariablesToItemState($testResultVariables, $itemFilter = []){
         $formatted = [];
         foreach($testResultVariables as $itemResult){
 
@@ -143,7 +153,9 @@ class ResponseVariableFormatter {
                 /**
                  * @var $responseVariable \taoResultServer_models_classes_ResponseVariable
                  */
-                $itemResults[$responseVariable->getIdentifier()] = self::formatVariableToPci($responseVariable);
+                $itemResults[$responseVariable->getIdentifier()] = [
+                    'response' => self::formatVariableToPci($responseVariable)
+                ];
             }
             $formatted[$itemUri] = $itemResults;
         }

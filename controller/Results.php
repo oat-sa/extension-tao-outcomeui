@@ -25,6 +25,7 @@ use \Exception;
 use \common_exception_IsAjaxAction;
 use \core_kernel_classes_Resource;
 use oat\tao\model\accessControl\AclProxy;
+use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
 use oat\taoResultServer\models\classes\QtiResultsService;
 use \tao_actions_SaSModule;
 use \tao_helpers_Request;
@@ -341,7 +342,7 @@ class Results extends tao_actions_SaSModule
             }
             $filterSubmission = ($this->hasRequestParameter("filterSubmission")) ? $this->getRequestParameter("filterSubmission") : "lastSubmitted";
             $filterTypes = ($this->hasRequestParameter("filterTypes")) ? $this->getRequestParameter("filterTypes") : array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class);
-            $variables = $this->getClassService()->getStructuredVariables($resultId, $filterSubmission, $filterTypes);
+            $variables = $this->getResultVariables($resultId, $filterSubmission, $filterTypes);
             $this->setData('variables', $variables);
             
             $stats = $this->getClassService()->calculateResponseStatistics($variables);
@@ -454,5 +455,36 @@ class Results extends tao_actions_SaSModule
     {
         $resultService = $this->getServiceManager()->get(ResultServerService::SERVICE_ID);
         return $resultService->getResultStorage($delivery->getUri());
+    }
+
+    /**
+     * Extracts the result variables, with respect to the user's filter, and inject item states to allow preview with results
+     *
+     * @param string $resultId
+     * @param string $filterSubmission
+     * @param array $filterTypes
+     * @return array
+     */
+    protected function getResultVariables($resultId, $filterSubmission, $filterTypes = array())
+    {
+        $resultService = $this->getClassService();
+        $displayedVariables = $resultService->getStructuredVariables($resultId, $filterSubmission, $filterTypes);
+        $resultVariables = $resultService->getStructuredVariables($resultId, $filterSubmission, [\taoResultServer_models_classes_ResponseVariable::class]);
+        $responses = ResponseVariableFormatter::formatStructuredVariablesToItemState($resultVariables);
+        $excludedVariables = array_flip(['numAttempts', 'duration']);
+        
+        foreach($displayedVariables as &$item) {
+            if(!isset($item['uri'])){
+                continue;
+            }
+            $itemUri = $item['uri'];
+            if (isset($responses[$itemUri])) {
+                $item['state'] = json_encode(array_diff_key($responses[$itemUri], $excludedVariables));   
+            } else {
+                $item['state'] = null;
+            }
+        }
+        
+        return $displayedVariables;
     }
 }

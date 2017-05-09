@@ -24,12 +24,12 @@ namespace oat\taoOutcomeUi\scripts\update;
 use oat\generis\model\data\ModelManager;
 
 /**
- * 
+ *
  * @author Joel Bout <joel@taotesting.com>
  */
 class Updater extends \common_ext_ExtensionUpdater
 {
-    
+
     /**
      *
      * @param string $initialVersion
@@ -54,6 +54,6 @@ class Updater extends \common_ext_ExtensionUpdater
             $$this->setVersion('2.6.1');
         }
 
-        $this->skip('2.6.1', '4.1.0');
+        $this->skip('2.6.1', '4.2.0');
     }
 }
