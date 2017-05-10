@@ -22,6 +22,7 @@
 namespace oat\taoOutcomeUi\scripts\update;
 
 use oat\generis\model\data\ModelManager;
+use oat\taoOutcomeUi\scripts\install\RegisterTestPluginService;
 
 /**
  *
@@ -51,9 +52,15 @@ class Updater extends \common_ext_ExtensionUpdater
                 $triple->modelid = 1;
                 $rdf->add($triple);
             }
-            $$this->setVersion('2.6.1');
+            $this->setVersion('2.6.1');
         }
 
         $this->skip('2.6.1', '4.2.0');
+
+        if ($this->isVersion('4.2.0')) {
+            $this->runExtensionScript(RegisterTestPluginService::class);
+
+            $this->setVersion('4.3.0');
+        }
     }
 }

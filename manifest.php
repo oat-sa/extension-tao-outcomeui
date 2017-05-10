@@ -20,6 +20,9 @@
  *               2012-2017 (update and modification) Open Assessment Technologies SA;
  *
  */
+
+use oat\taoOutcomeUi\scripts\install\RegisterTestPluginService;
+
 $extpath = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 
 return array(
@@ -27,15 +30,18 @@ return array(
     'label' => 'Result visualisation',
     'description' => 'TAO Results extension',
     'license' => 'GPL-2.0',
-    'version' => '4.2.0',
+    'version' => '4.3.0',
     'author' => 'Open Assessment Technologies, CRP Henri Tudor',
     // taoItems is only needed for the item model property retrieval
     'requires' => array(
         'taoResultServer' => '>=2.11.0',
         'taoItems' => '>=2.15.0',
-        'taoDeliveryRdf' => '>=1.0.0'
+        'taoDeliveryRdf' => '>=1.0.0',
+        'tao' => '9.5.0'
     ),
-    'install' => array(),
+    'install' => array(
+        RegisterTestPluginService::class
+    ),
     'uninstall' => array(),
     'update' => 'oat\\taoOutcomeUi\\scripts\\update\\Updater',
     'managementRole' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole',
