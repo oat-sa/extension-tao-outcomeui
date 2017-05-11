@@ -25,7 +25,9 @@ use \Exception;
 use \common_exception_IsAjaxAction;
 use \core_kernel_classes_Resource;
 use oat\tao\model\accessControl\AclProxy;
+use oat\tao\model\plugins\PluginModule;
 use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
+use oat\taoOutcomeUi\model\plugins\ResultsPluginService;
 use oat\taoResultServer\models\classes\QtiResultsService;
 use \tao_actions_SaSModule;
 use \tao_helpers_Request;
@@ -78,7 +80,7 @@ class Results extends tao_actions_SaSModule
         if (!tao_helpers_Request::isAjax()) {
             throw new common_exception_IsAjaxAction(__FUNCTION__);
         }
-        
+
         $options = array(
             'subclasses' => true,
             'instances' => true,
@@ -95,7 +97,7 @@ class Results extends tao_actions_SaSModule
         if ($this->hasRequestParameter("selected")) {
             $options['browse'] = array($this->getRequestParameter("selected"));
         }
-        
+
         if ($this->hasRequestParameter('hideInstances')) {
             if((bool) $this->getRequestParameter('hideInstances')) {
                 $options['instances'] = false;
@@ -176,7 +178,10 @@ class Results extends tao_actions_SaSModule
 
                 $this->setData('uri',tao_helpers_Uri::encode($delivery->getUri()));
                 $this->setData('title',$delivery->getLabel());
-                $this->setData('model',$model);
+                $this->setData('config', [
+                    'dataModel' => $model,
+                    'plugins' => $this->getResultsListPlugin()
+                ]);
 
                 $this->setView('resultList.tpl');
             }
@@ -297,12 +302,12 @@ class Results extends tao_actions_SaSModule
      */
     public function viewResult()
     {
-        
+
         $resultId = $this->getRequestParameter('id');
         $delivery = new \core_kernel_classes_Resource($this->getRequestParameter('classUri'));
 
         try{
-            
+
             $implementation = $this->getResultStorage($delivery);
             $this->getClassService()->setImplementation($implementation);
 
@@ -344,7 +349,7 @@ class Results extends tao_actions_SaSModule
             $filterTypes = ($this->hasRequestParameter("filterTypes")) ? $this->getRequestParameter("filterTypes") : array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class);
             $variables = $this->getResultVariables($resultId, $filterSubmission, $filterTypes);
             $this->setData('variables', $variables);
-            
+
             $stats = $this->getClassService()->calculateResponseStatistics($variables);
             $this->setData('nbResponses', $stats["nbResponses"]);
             $this->setData('nbCorrectResponses', $stats["nbCorrectResponses"]);
@@ -472,19 +477,36 @@ class Results extends tao_actions_SaSModule
         $resultVariables = $resultService->getStructuredVariables($resultId, $filterSubmission, [\taoResultServer_models_classes_ResponseVariable::class]);
         $responses = ResponseVariableFormatter::formatStructuredVariablesToItemState($resultVariables);
         $excludedVariables = array_flip(['numAttempts', 'duration']);
-        
+
         foreach($displayedVariables as &$item) {
             if(!isset($item['uri'])){
                 continue;
             }
             $itemUri = $item['uri'];
             if (isset($responses[$itemUri])) {
-                $item['state'] = json_encode(array_diff_key($responses[$itemUri], $excludedVariables));   
+                $item['state'] = json_encode(array_diff_key($responses[$itemUri], $excludedVariables));
             } else {
                 $item['state'] = null;
             }
         }
-        
+
         return $displayedVariables;
+    }
+
+    /**
+     * Get the list of active plugins for the list of results
+     * @return PluginModule[] the list of plugins
+     */
+    public function getResultsListPlugin()
+    {
+        $serviceManager = $this->getServiceManager();
+
+        $pluginService = $serviceManager->get(ResultsPluginService::SERVICE_ID);
+        $allPlugins = $pluginService->getAllPlugins();
+
+        // return the list of active plugins
+        return array_filter($allPlugins, function ($plugin) {
+            return !is_null($plugin) && $plugin->isActive();
+        });
     }
 }

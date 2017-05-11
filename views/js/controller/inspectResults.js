@@ -51,32 +51,28 @@ define([
          * Controller entry point
          */
         start: function () {
-            var config = module.config();
+            var config = module.config() || {};
             var $container = $('#inspect-result');
             var classUri = $container.data('uri');
             var listConfig = {
                 dataUrl: urlHelper.route('getResults', 'Results', 'taoOutcomeUi', {
                     classUri: classUri
                 }),
-                model: $container.data('model'),
+                model: config.dataModel,
                 classUri: classUri
             };
 
             loadingBar.start();
 
-            if (config) {
-                if (config.plugins) {
-                    _.forEach(config.plugins, function (plugin) {
-                        if (plugin && plugin.module) {
-                            if (plugin.exclude) {
-                                pluginLoader.remove(plugin.module);
-                            } else {
-                                pluginLoader.add(plugin.module, plugin.category, plugin.position);
-                            }
-                        }
-                    });
+            _.forEach(config.plugins, function (plugin) {
+                if (plugin && plugin.module) {
+                    if (plugin.exclude) {
+                        pluginLoader.remove(plugin.module);
+                    } else {
+                        pluginLoader.add(plugin);
+                    }
                 }
-            }
+            });
 
             pluginLoader.load()
                 .then(function () {

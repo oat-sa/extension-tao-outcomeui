@@ -37,7 +37,7 @@ return array(
         'taoResultServer' => '>=2.11.0',
         'taoItems' => '>=2.15.0',
         'taoDeliveryRdf' => '>=1.0.0',
-        'tao' => '9.5.0'
+        'tao' => '10.1.0'
     ),
     'install' => array(
         RegisterTestPluginService::class
