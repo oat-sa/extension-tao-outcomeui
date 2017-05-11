@@ -18,14 +18,14 @@
  */
 namespace oat\taoOutcomeUi\model\plugins;
 
-use oat\tao\model\plugins\PluginService;
+use oat\tao\model\plugins\AbstractPluginService;
 
 /**
  * Manage plugins for the list of results
  *
  * @author Jean-Sébastien Conan <jean-sebastien@taotesting.com>
  */
-class ResultsPluginService extends PluginService
+class ResultsPluginService extends AbstractPluginService
 {
     const SERVICE_ID = 'taoOutcomeUi/ResultsListPlugins';
 
