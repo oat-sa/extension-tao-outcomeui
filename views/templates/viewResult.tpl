@@ -83,7 +83,7 @@ use oat\tao\helpers\Template;
 
             <!-- Item Result Tables -->
             <?php  foreach (get_data('variables') as $item){ ?>
-           
+
             <table class="matrix">
                 <thead>
                 <tr>
@@ -91,7 +91,7 @@ use oat\tao\helpers\Template;
                         <b><?= _dh($item['label']) ?> (<?= _dh($item['itemModel']) ?>)</b>
                     </th>
                     <th>
-                        <a href="#" data-uri="<?=$item['uri']?>" class="btn-info small preview" target="preview">
+                        <a href="#" data-uri="<?=$item['uri']?>"  data-state="<?=htmlspecialchars($item['state'])?>" class="btn-info small preview" target="preview">
                             <span class="icon-preview"></span><?=__('Preview')?>
                         </a>
                     </th>

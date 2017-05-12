@@ -25,6 +25,7 @@
 
 namespace oat\taoOutcomeUi\model;
 
+use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
 use \common_Exception;
