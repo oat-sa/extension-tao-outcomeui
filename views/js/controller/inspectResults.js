@@ -4,6 +4,7 @@
  */
 define([
     'jquery',
+    'lodash',
     'module',
     'core/logger',
     'util/url',
@@ -13,7 +14,7 @@ define([
     'taoOutcomeUi/component/results/areaBroker',
     'taoOutcomeUi/component/results/loader',
     'taoOutcomeUi/component/results'
-], function ($, module, loggerFactory, urlHelper, binder, loadingBar, feedback, areaBrokerFactory, pluginLoader, resultsListFactory) {
+], function ($, _, module, loggerFactory, urlHelper, binder, loadingBar, feedback, areaBrokerFactory, pluginLoader, resultsListFactory) {
     'use strict';
 
     var logger = loggerFactory('controller/inspectResults');
