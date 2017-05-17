@@ -8,7 +8,7 @@
     <script type="text/javascript" src="js/lib/require.js"></script>
     <script type="text/javascript" src="js/lib/qunit/qunit.js"></script>
     <script type="text/javascript" src="js/lib/qunit/qunit-parameterize.js"></script>
-    <script type="text/javascript" src="js/lib/blanket/blanket.min.js" data-cover-flag="branchTracking" data-cover-only="component/results.js"></script>
+    <script type="text/javascript" src="js/lib/blanket/blanket.min.js" data-cover-flag="branchTracking" data-cover-only="component/results/list.js"></script>
 
     <script  type="text/javascript">
 
@@ -19,7 +19,7 @@
         require(['/tao/ClientConfig/config'], function(){
 
             //load the test
-            require(['taoOutcomeUi/test/component/results/test'], function(){
+            require(['taoOutcomeUi/test/component/results/list/test'], function(){
 
                 //Tests loaded, run tests
                 QUnit.start();

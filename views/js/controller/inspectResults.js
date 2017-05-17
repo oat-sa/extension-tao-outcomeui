@@ -13,7 +13,7 @@ define([
     'ui/feedback',
     'taoOutcomeUi/component/results/areaBroker',
     'taoOutcomeUi/component/results/loader',
-    'taoOutcomeUi/component/results'
+    'taoOutcomeUi/component/results/list'
 ], function ($, _, module, loggerFactory, urlHelper, binder, loadingBar, feedback, areaBrokerFactory, pluginLoader, resultsListFactory) {
     'use strict';
 

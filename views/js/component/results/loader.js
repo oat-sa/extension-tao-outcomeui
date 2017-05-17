@@ -20,9 +20,9 @@
  */
 define([
     'core/pluginLoader',
-    'taoOutcomeUi/component/results/plugins/action/view',
-    'taoOutcomeUi/component/results/plugins/action/delete',
-    'taoOutcomeUi/component/results/plugins/action/download'
+    'taoOutcomeUi/plugins/results/action/view',
+    'taoOutcomeUi/plugins/results/action/delete',
+    'taoOutcomeUi/plugins/results/action/download'
 ], function (pluginLoader, actionView, actionDelete, actionDownload) {
     'use strict';
 

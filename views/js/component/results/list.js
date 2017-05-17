@@ -42,7 +42,7 @@ define([
         var resultsList;
         var plugins = {};
         var actions = [];
-        var classUri, model;
+        var classUri;
 
         /**
          * Calls a method from each plugins
@@ -202,7 +202,7 @@ define([
                     descriptor = {
                         id: name,
                         label: name
-                    }
+                    };
                 }
 
                 if (_.isFunction(action)) {

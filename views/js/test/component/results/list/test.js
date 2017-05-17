@@ -21,10 +21,11 @@
 define([
     'jquery',
     'core/promise',
-    'taoOutcomeUi/component/results'
+    'taoOutcomeUi/component/results/list'
 ], function ($, Promise, resultsListFactory) {
     'use strict';
 
+    var dataUrl = '../../taoOutcomeUi/views/js/test/component/results/list/data.json';
     var resultsListApi = [
         {title: 'init'},
         {title: 'render'},
@@ -270,7 +271,7 @@ define([
     QUnit.asyncTest('resultsList.render', function(assert) {
         var config = {
             classUri: 'http://tao.dev/class#123',
-            dataUrl: '../../taoOutcomeUi/views/js/test/component/results/data.json',
+            dataUrl: dataUrl,
             model: [{
                 id: 'name',
                 label: 'Name'
@@ -332,7 +333,7 @@ define([
     QUnit.asyncTest('resultsList.render#error', function(assert) {
         var config = {
             classUri: 'http://tao.dev/class#123',
-            dataUrl: '../../taoOutcomeUi/views/js/test/component/results/data.json',
+            dataUrl: dataUrl,
             model: [{
                 id: 'name',
                 label: 'Name'
@@ -385,7 +386,7 @@ define([
     QUnit.asyncTest('resultsList.refresh', function(assert) {
         var config = {
             classUri: 'http://tao.dev/class#123',
-            dataUrl: '../../taoOutcomeUi/views/js/test/component/results/data.json',
+            dataUrl: dataUrl,
             model: [{
                 id: 'name',
                 label: 'Name'
@@ -438,7 +439,7 @@ define([
     QUnit.asyncTest('resultsList.destroy', function(assert) {
         var config = {
             classUri: 'http://tao.dev/class#123',
-            dataUrl: '../../taoOutcomeUi/views/js/test/component/results/data.json',
+            dataUrl: dataUrl,
             model: [{
                 id: 'name',
                 label: 'Name'
@@ -497,7 +498,7 @@ define([
     QUnit.asyncTest('resultsList.destroy#error', function(assert) {
         var config = {
             classUri: 'http://tao.dev/class#123',
-            dataUrl: '../../taoOutcomeUi/views/js/test/component/results/data.json',
+            dataUrl: dataUrl,
             model: [{
                 id: 'name',
                 label: 'Name'
