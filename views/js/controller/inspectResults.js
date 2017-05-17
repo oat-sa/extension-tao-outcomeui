@@ -12,9 +12,9 @@ define([
     'layout/loading-bar',
     'ui/feedback',
     'taoOutcomeUi/component/results/areaBroker',
-    'taoOutcomeUi/component/results/loader',
+    'taoOutcomeUi/component/results/pluginsLoader',
     'taoOutcomeUi/component/results/list'
-], function ($, _, module, loggerFactory, urlHelper, binder, loadingBar, feedback, areaBrokerFactory, pluginLoader, resultsListFactory) {
+], function ($, _, module, loggerFactory, urlHelper, binder, loadingBar, feedback, resultsAreaBroker, resultsPluginsLoader, resultsListFactory) {
     'use strict';
 
     var logger = loggerFactory('controller/inspectResults');
@@ -24,7 +24,7 @@ define([
      * @returns {areaBroker} already mapped
      */
     function loadAreaBroker($container) {
-        return areaBrokerFactory($container, {
+        return resultsAreaBroker($container, {
             'list': $('.inspect-results-grid', $container)
         });
     }
@@ -68,16 +68,16 @@ define([
             _.forEach(config.plugins, function (plugin) {
                 if (plugin && plugin.module) {
                     if (plugin.exclude) {
-                        pluginLoader.remove(plugin.module);
+                        resultsPluginsLoader.remove(plugin.module);
                     } else {
-                        pluginLoader.add(plugin);
+                        resultsPluginsLoader.add(plugin);
                     }
                 }
             });
 
-            pluginLoader.load()
+            resultsPluginsLoader.load()
                 .then(function () {
-                    resultsListFactory(listConfig, loadAreaBroker($container), pluginLoader.getPlugins())
+                    resultsListFactory(listConfig, loadAreaBroker($container), resultsPluginsLoader.getPlugins())
                         .on('error', reportError)
                         .on('success', function (message) {
                             feedback().success(message);
