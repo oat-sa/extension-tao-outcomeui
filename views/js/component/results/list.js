@@ -19,12 +19,15 @@
  * @author Jean-Sébastien Conan <jean-sebastien@taotesting.com>
  */
 define([
+    'jquery',
     'lodash',
     'uri',
-    'core/eventifier',
     'core/promise',
+    'ui/component',
+    'taoOutcomeUi/component/results/areaBroker',
+    'tpl!taoOutcomeUi/component/results/list',
     'ui/datatable'
-], function (_, uri, eventifier, Promise) {
+], function ($, _, uri, Promise, component, resultsAreaBroker, listTpl) {
     'use strict';
 
     /**
@@ -34,12 +37,12 @@ define([
      * @param {String} config.classUri
      * @param {String} config.dataUrl
      * @param {Object} config.model
-     * @param {Object} areaBroker
      * @param {Array} pluginFactories
      * @returns {resultsList}
      */
-    function resultsListFactory(config, areaBroker, pluginFactories) {
+    function resultsListFactory(config, pluginFactories) {
         var resultsList;
+        var areaBroker;
         var plugins = {};
         var actions = [];
         var classUri;
@@ -74,9 +77,6 @@ define([
         if (!_.isPlainObject(config.model) && !_.isArray(config.model)) {
             throw new TypeError('The data model is required');
         }
-        if (!areaBroker || !_.isFunction(areaBroker.getListArea)) {
-            throw new TypeError('The areaBroker is required');
-        }
 
         classUri = uri.decode(config.classUri);
 
@@ -84,74 +84,7 @@ define([
          *
          * @typedef {resultsList}
          */
-        resultsList = eventifier({
-
-            /**
-             * Initializes the component
-             * @returns {resultsList} chains
-             * @fires resultsList#init - once initialized
-             * @fires resultsList#error - if something went wrong
-             */
-            init: function init() {
-                var self = this;
-
-                //instantiate the plugins first
-                _.forEach(pluginFactories, function (pluginFactory) {
-                    var plugin = pluginFactory(self, areaBroker);
-                    plugins[plugin.getName()] = plugin;
-                });
-
-                //initialize all the plugins
-                pluginRun('init')
-                    .then(function () {
-
-                        /**
-                         * @event resultsList#init the initialization is done
-                         * @param {Object} item - the loaded item
-                         */
-                        self.trigger('init', self.item);
-                    })
-                    .catch(function (err) {
-                        self.trigger('error', err);
-                    });
-
-                return this;
-            },
-
-            /**
-             * Renders the component
-             *
-             * @returns {resultsList} chains
-             * @fires resultsList#render - once everything is in place
-             * @fires resultsList#load - each time the list is refreshed
-             * @fires resultsList#error - if something went wrong
-             */
-            render: function render() {
-                var self = this;
-
-                areaBroker.getListArea()
-                    .empty()
-                    .data('ui.datatable', null)
-                    .off('.datatable')
-                    .on('load.datatable', function() {
-                        self.trigger('load');
-                    })
-                    .datatable({
-                        url  : config.dataUrl,
-                        model : config.model,
-                        actions : actions
-                    });
-
-                pluginRun('render')
-                    .then(function () {
-                        self.trigger('render');
-                    })
-                    .catch(function (err) {
-                        self.trigger('error', err);
-                    });
-
-                return this;
-            },
+        resultsList = component({
 
             /**
              * Refreshes the list
@@ -163,32 +96,10 @@ define([
             },
 
             /**
-             * Cleans up everything and destroys the component
-             * @returns {resultsList} chains
-             * @fires resultsList#destroy - once everything has been destroyed
-             * @fires resultsList#error - if something went wrong
-             */
-            destroy: function destroy() {
-                var self = this;
-
-                pluginRun('destroy')
-                    .then(function () {
-                        areaBroker.getListArea().empty();
-
-                        self.trigger('destroy');
-                    })
-                    .catch(function (err) {
-                        self.trigger('error', err);
-                    });
-                return this;
-            },
-
-            /**
              * Add a line action
              * @param {String|Object} name
              * @param {Function|Object} [action]
              * @returns {resultsList} chains
-             * @fires resultsList#addaction - notify the action add
              */
             addAction: function addAction(name, action) {
                 var descriptor;
@@ -214,8 +125,6 @@ define([
 
                 actions.push(descriptor);
 
-                this.trigger('addaction', descriptor);
-
                 return this;
             },
 
@@ -224,7 +133,7 @@ define([
              * @returns {Object}
              */
             getConfig: function getConfig() {
-                return config;
+                return this.config;
             },
 
             /**
@@ -244,7 +153,58 @@ define([
             }
         });
 
-        return resultsList;
+        return resultsList
+            .before('render', function onRender() {
+                var self = this;
+
+                areaBroker = resultsAreaBroker(this.$component, {
+                    'list': $('.list', this.$component)
+                });
+
+                _.forEach(pluginFactories, function (pluginFactory) {
+                    var plugin = pluginFactory(self, areaBroker);
+                    plugins[plugin.getName()] = plugin;
+                });
+
+                return pluginRun('init')
+                    .then(function() {
+                        return pluginRun('render');
+                    })
+                    .then(function () {
+                        areaBroker.getListArea()
+                            .empty()
+                            .on('query.datatable', function () {
+                                self.setState('loading', true)
+                                    .trigger('loading');
+                            })
+                            .on('load.datatable', function () {
+                                self.setState('loading', false)
+                                    .trigger('loaded');
+                            })
+                            .datatable({
+                                url: self.config.dataUrl,
+                                model: self.config.model,
+                                actions: actions
+                            });
+                    })
+                    .catch(function (err) {
+                        self.trigger('error', err);
+                        return Promise.reject(err);
+                    });
+            })
+            .before('destroy', function onDestroy() {
+                var self = this;
+
+                return pluginRun('destroy')
+                    .then(function () {
+                        areaBroker.getListArea().empty();
+                    })
+                    .catch(function (err) {
+                        self.trigger('error', err);
+                    });
+            })
+            .setTemplate(listTpl)
+            .init(config);
     }
 
     return resultsListFactory;
