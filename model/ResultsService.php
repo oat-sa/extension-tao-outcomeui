@@ -51,6 +51,11 @@ class ResultsService extends tao_models_classes_ClassService {
      */
     private $implementation = null;
 
+    /** @var array  */
+    private $itemInfos = [];
+
+    private $variablesFromDelivery = [];
+
     /**
      * (non-PHPdoc)
      * @see tao_models_classes_ClassService::getRootClass()
@@ -138,6 +143,30 @@ class ResultsService extends tao_models_classes_ClassService {
                     $returnedVariables[] = $variable;
                 }
             }
+        } else {
+            $returnedVariables = $variables;
+        }
+        return $returnedVariables;
+    }
+
+    /**
+     * @param  string $deliveryId
+     * @param array $wantedTypes
+     * @return array
+     */
+    public function getVariablesFromDelivery($deliveryId, $wantedTypes = [\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class]) {
+        $returnedVariables = array();
+        if (empty($this->variablesFromDelivery[$deliveryId])) {
+            $this->variablesFromDelivery[$deliveryId] = $this->getImplementation()->getDeliveryVariables($deliveryId);
+        }
+        if(!empty($wantedTypes)){
+            foreach($this->variablesFromDelivery[$deliveryId] as $variable){
+                if(in_array(get_class($variable[0]->variable),$wantedTypes)){
+                    $returnedVariables[] = $variable;
+                }
+            }
+        } else {
+            $returnedVariables = $this->variablesFromDelivery[$deliveryId];
         }
         return $returnedVariables;
     }
@@ -291,12 +320,21 @@ class ResultsService extends tao_models_classes_ClassService {
             common_Logger::w("The item call '" . $itemCallId . "' is not linked to a valid item. (deleted item ?)");
             $relatedItem = null;
         }
+
         if ($relatedItem instanceof \core_kernel_classes_Literal) {
             $itemIdentifier = $relatedItem->__toString();
+        } elseif ($relatedItem instanceof core_kernel_classes_Resource){
+            $itemIdentifier = $relatedItem->getUri();
+        }
+
+        if (isset($this->itemInfos[$itemIdentifier])){
+            return $this->itemInfos[$itemIdentifier];
+        }
+
+        if ($relatedItem instanceof \core_kernel_classes_Literal) {
             $itemLabel = $relatedItem->__toString();
             $itemModel = $undefinedStr;
         } elseif ($relatedItem instanceof core_kernel_classes_Resource) {
-            $itemIdentifier = $relatedItem->getUri();
             $itemLabel = $relatedItem->getLabel();
 
             try {
@@ -315,6 +353,7 @@ class ResultsService extends tao_models_classes_ClassService {
         $item['label'] = $itemLabel;
         $item['uri'] = $itemIdentifier;
 
+        $this->itemInfos[$itemIdentifier] = $item;
         return $item;
     }
 
@@ -348,17 +387,12 @@ class ResultsService extends tao_models_classes_ClassService {
      */
     public function getStructuredVariables($resultIdentifier, $filter, $wantedTypes = array())
     {
-        $itemCallIds = $this->getItemResultsFromDeliveryResult($resultIdentifier);
         $variablesByItem = array();
         $savedItems = array();
-        $itemVariables = array();
         $tmpitem = array();
         $item = array();
 
-        foreach ($itemCallIds as $itemCallId) {
-            $firstEpoch = null;
-            $itemVariables = array_merge($itemVariables, $this->getVariablesFromObjectResult($itemCallId, $wantedTypes));
-        }
+        $itemVariables = $this->getVariablesFromDelivery($resultIdentifier, $wantedTypes);
 
         usort($itemVariables, function($a, $b){
             $variableA = $a[0]->variable;
@@ -380,6 +414,9 @@ class ResultsService extends tao_models_classes_ClassService {
         $lastItemCallId = null;
 
         foreach($itemVariables as $variable){
+            if (empty($variable[0]->item)) {
+                continue;
+            }
             $currentItemCallId = $variable[0]->callIdItem;
 
             /** @var \taoResultServer_models_classes_Variable $variableTemp */
