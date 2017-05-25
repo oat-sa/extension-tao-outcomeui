@@ -562,14 +562,15 @@ class ResultsService extends tao_models_classes_ClassService {
      */
     public function getItemVariableDataFromDeliveryResult($resultIdentifier, $filter)
     {
-
-        $undefinedStr = __('unknown'); //some data may have not been submitted           
-
-        $itemCallIds = $this->getItemResultsFromDeliveryResult($resultIdentifier);
+        $deliveryItemVariables = [];
+        $deliveryVars = $this->getVariablesFromDelivery($resultIdentifier, [\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class]);
+        foreach ($deliveryVars as $deliveryVar) {
+            if (!empty($deliveryVar[0]->item)) {
+                $deliveryItemVariables[$deliveryVar[0]->callIdItem][] = $deliveryVar;
+            }
+        }
         $variablesByItem = array();
-        foreach ($itemCallIds as $itemCallId) {
-            $itemVariables = $this->getVariablesFromObjectResult($itemCallId);
-
+        foreach ($deliveryItemVariables as $itemCallId => $itemVariables) {
             $item = $this->getItemInfos($itemCallId, $itemVariables);
             $itemIdentifier = $item['uri'];
             $itemLabel = $item['label'];
@@ -658,13 +659,16 @@ class ResultsService extends tao_models_classes_ClassService {
      */
     public function getVariableDataFromDeliveryResult($resultIdentifier, $wantedTypes = array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class)) {
         $variablesData = array();
-        foreach ($this->getTestsFromDeliveryResult($resultIdentifier) as $testResult) {
-            foreach ($this->getVariablesFromObjectResult($testResult) as $variable) {
-                if($variable[0]->callIdTest != "" && in_array(get_class($variable[0]->variable), $wantedTypes)){
-                    $variablesData[] = $variable[0]->variable;
-                }
-            }
+        $variables = $this->getVariablesFromDelivery($resultIdentifier, $wantedTypes);
+
+        $variables = array_filter($variables, function ($var) {
+            return empty($var[0]->item);
+        });
+
+        foreach ($variables as $var) {
+            $variablesData[] = $var[0]->variable;
         }
+
         usort($variablesData, function($a, $b){
             list($usec, $sec) = explode(" ", $a->getEpoch());
             $floata = ((float) $usec + (float) $sec);
