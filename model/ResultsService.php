@@ -56,6 +56,9 @@ class ResultsService extends tao_models_classes_ClassService {
 
     private $variablesFromDelivery = [];
 
+
+    private $itemModelLabels = [];
+
     /**
      * (non-PHPdoc)
      * @see tao_models_classes_ClassService::getRootClass()
@@ -333,23 +336,14 @@ class ResultsService extends tao_models_classes_ClassService {
 
         if ($relatedItem instanceof \core_kernel_classes_Literal) {
             $itemLabel = $relatedItem->__toString();
-            $itemModel = $undefinedStr;
         } elseif ($relatedItem instanceof core_kernel_classes_Resource) {
             $itemLabel = $relatedItem->getLabel();
-
-            try {
-                common_Logger::d("Retrieving related Item model for item " . $relatedItem->getUri() . "");
-                $itemModel = $relatedItem->getUniquePropertyValue(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
-                $itemModel = $itemModel->getLabel();
-            } catch (common_Exception $e) { //a resource but unknown
-                $itemModel = $undefinedStr;
-            }
         } else {
             $itemIdentifier = $undefinedStr;
             $itemLabel = $undefinedStr;
-            $itemModel = $undefinedStr;
         }
-        $item['itemModel'] = $itemModel;
+
+        $item['itemModel'] = $this->getItemModel($relatedItem);
         $item['label'] = $itemLabel;
         $item['uri'] = $itemIdentifier;
 
@@ -357,6 +351,23 @@ class ResultsService extends tao_models_classes_ClassService {
         return $item;
     }
 
+    protected function getItemModel($item)
+    {
+        $itemModel = __('unknown');
+        if ($item instanceof core_kernel_classes_Resource) {
+            common_Logger::d("Retrieving related Item model for item " . $item->getUri() . "");
+            try {
+                $itemModel = $item->getUniquePropertyValue(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
+                if (!isset($this->itemModelLabels[$itemModel->getUri()])) {
+                    $this->itemModelLabels[$itemModel->getUri()] = $itemModel->getLabel();
+                }
+                $itemModel = $this->itemModelLabels[$itemModel->getUri()];
+            } catch (common_Exception $e) { //a resource but unknown
+                //do nothing
+            }
+        }
+        return $itemModel;
+    }
 
     /**
      *  prepare a data set as an associative array, service intended to populate gui controller
