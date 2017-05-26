@@ -55,12 +55,12 @@ class Updater extends \common_ext_ExtensionUpdater
             $this->setVersion('2.6.1');
         }
 
-        $this->skip('2.6.1', '4.2.0');
+        $this->skip('2.6.1', '4.3.0');
 
-        if ($this->isVersion('4.2.0')) {
+        if ($this->isVersion('4.3.0')) {
             $this->runExtensionScript(RegisterTestPluginService::class);
 
-            $this->setVersion('4.3.0');
+            $this->setVersion('4.4.0');
         }
     }
 }
