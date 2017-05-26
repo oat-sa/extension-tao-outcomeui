@@ -51,6 +51,14 @@ class ResultsService extends tao_models_classes_ClassService {
      */
     private $implementation = null;
 
+    /** @var array  */
+    private $itemInfos = [];
+
+    private $variablesFromDelivery = [];
+
+
+    private $itemModelLabels = [];
+
     /**
      * (non-PHPdoc)
      * @see tao_models_classes_ClassService::getRootClass()
@@ -138,6 +146,30 @@ class ResultsService extends tao_models_classes_ClassService {
                     $returnedVariables[] = $variable;
                 }
             }
+        } else {
+            $returnedVariables = $variables;
+        }
+        return $returnedVariables;
+    }
+
+    /**
+     * @param  string $deliveryId
+     * @param array $wantedTypes
+     * @return array
+     */
+    public function getVariablesFromDelivery($deliveryId, $wantedTypes = [\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class]) {
+        $returnedVariables = array();
+        if (empty($this->variablesFromDelivery[$deliveryId])) {
+            $this->variablesFromDelivery[$deliveryId] = $this->getImplementation()->getDeliveryVariables($deliveryId);
+        }
+        if(!empty($wantedTypes)){
+            foreach($this->variablesFromDelivery[$deliveryId] as $variable){
+                if(in_array(get_class($variable[0]->variable),$wantedTypes)){
+                    $returnedVariables[] = $variable;
+                }
+            }
+        } else {
+            $returnedVariables = $this->variablesFromDelivery[$deliveryId];
         }
         return $returnedVariables;
     }
@@ -291,33 +323,51 @@ class ResultsService extends tao_models_classes_ClassService {
             common_Logger::w("The item call '" . $itemCallId . "' is not linked to a valid item. (deleted item ?)");
             $relatedItem = null;
         }
+
         if ($relatedItem instanceof \core_kernel_classes_Literal) {
             $itemIdentifier = $relatedItem->__toString();
-            $itemLabel = $relatedItem->__toString();
-            $itemModel = $undefinedStr;
-        } elseif ($relatedItem instanceof core_kernel_classes_Resource) {
+        } elseif ($relatedItem instanceof core_kernel_classes_Resource){
             $itemIdentifier = $relatedItem->getUri();
-            $itemLabel = $relatedItem->getLabel();
+        }
 
-            try {
-                common_Logger::d("Retrieving related Item model for item " . $relatedItem->getUri() . "");
-                $itemModel = $relatedItem->getUniquePropertyValue(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
-                $itemModel = $itemModel->getLabel();
-            } catch (common_Exception $e) { //a resource but unknown
-                $itemModel = $undefinedStr;
-            }
+        if (isset($this->itemInfos[$itemIdentifier])){
+            return $this->itemInfos[$itemIdentifier];
+        }
+
+        if ($relatedItem instanceof \core_kernel_classes_Literal) {
+            $itemLabel = $relatedItem->__toString();
+        } elseif ($relatedItem instanceof core_kernel_classes_Resource) {
+            $itemLabel = $relatedItem->getLabel();
         } else {
             $itemIdentifier = $undefinedStr;
             $itemLabel = $undefinedStr;
-            $itemModel = $undefinedStr;
         }
-        $item['itemModel'] = $itemModel;
+
+        $item['itemModel'] = $this->getItemModel($relatedItem);
         $item['label'] = $itemLabel;
         $item['uri'] = $itemIdentifier;
 
+        $this->itemInfos[$itemIdentifier] = $item;
         return $item;
     }
 
+    protected function getItemModel($item)
+    {
+        $itemModel = __('unknown');
+        if ($item instanceof core_kernel_classes_Resource) {
+            common_Logger::d("Retrieving related Item model for item " . $item->getUri() . "");
+            try {
+                $itemModel = $item->getUniquePropertyValue(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
+                if (!isset($this->itemModelLabels[$itemModel->getUri()])) {
+                    $this->itemModelLabels[$itemModel->getUri()] = $itemModel->getLabel();
+                }
+                $itemModel = $this->itemModelLabels[$itemModel->getUri()];
+            } catch (common_Exception $e) { //a resource but unknown
+                //do nothing
+            }
+        }
+        return $itemModel;
+    }
 
     /**
      *  prepare a data set as an associative array, service intended to populate gui controller
@@ -348,17 +398,12 @@ class ResultsService extends tao_models_classes_ClassService {
      */
     public function getStructuredVariables($resultIdentifier, $filter, $wantedTypes = array())
     {
-        $itemCallIds = $this->getItemResultsFromDeliveryResult($resultIdentifier);
         $variablesByItem = array();
         $savedItems = array();
-        $itemVariables = array();
         $tmpitem = array();
         $item = array();
 
-        foreach ($itemCallIds as $itemCallId) {
-            $firstEpoch = null;
-            $itemVariables = array_merge($itemVariables, $this->getVariablesFromObjectResult($itemCallId, $wantedTypes));
-        }
+        $itemVariables = $this->getVariablesFromDelivery($resultIdentifier, $wantedTypes);
 
         usort($itemVariables, function($a, $b){
             $variableA = $a[0]->variable;
@@ -380,6 +425,9 @@ class ResultsService extends tao_models_classes_ClassService {
         $lastItemCallId = null;
 
         foreach($itemVariables as $variable){
+            if (empty($variable[0]->item)) {
+                continue;
+            }
             $currentItemCallId = $variable[0]->callIdItem;
 
             /** @var \taoResultServer_models_classes_Variable $variableTemp */
@@ -525,14 +573,15 @@ class ResultsService extends tao_models_classes_ClassService {
      */
     public function getItemVariableDataFromDeliveryResult($resultIdentifier, $filter)
     {
-
-        $undefinedStr = __('unknown'); //some data may have not been submitted           
-
-        $itemCallIds = $this->getItemResultsFromDeliveryResult($resultIdentifier);
+        $deliveryItemVariables = [];
+        $deliveryVars = $this->getVariablesFromDelivery($resultIdentifier, [\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class]);
+        foreach ($deliveryVars as $deliveryVar) {
+            if (!empty($deliveryVar[0]->item)) {
+                $deliveryItemVariables[$deliveryVar[0]->callIdItem][] = $deliveryVar;
+            }
+        }
         $variablesByItem = array();
-        foreach ($itemCallIds as $itemCallId) {
-            $itemVariables = $this->getVariablesFromObjectResult($itemCallId);
-
+        foreach ($deliveryItemVariables as $itemCallId => $itemVariables) {
             $item = $this->getItemInfos($itemCallId, $itemVariables);
             $itemIdentifier = $item['uri'];
             $itemLabel = $item['label'];
@@ -621,13 +670,16 @@ class ResultsService extends tao_models_classes_ClassService {
      */
     public function getVariableDataFromDeliveryResult($resultIdentifier, $wantedTypes = array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class)) {
         $variablesData = array();
-        foreach ($this->getTestsFromDeliveryResult($resultIdentifier) as $testResult) {
-            foreach ($this->getVariablesFromObjectResult($testResult) as $variable) {
-                if($variable[0]->callIdTest != "" && in_array(get_class($variable[0]->variable), $wantedTypes)){
-                    $variablesData[] = $variable[0]->variable;
-                }
-            }
+        $variables = $this->getVariablesFromDelivery($resultIdentifier, $wantedTypes);
+
+        $variables = array_filter($variables, function ($var) {
+            return empty($var[0]->item);
+        });
+
+        foreach ($variables as $var) {
+            $variablesData[] = $var[0]->variable;
         }
+
         usort($variablesData, function($a, $b){
             list($usec, $sec) = explode(" ", $a->getEpoch());
             $floata = ((float) $usec + (float) $sec);
