@@ -51,9 +51,9 @@ class Updater extends \common_ext_ExtensionUpdater
                 $triple->modelid = 1;
                 $rdf->add($triple);
             }
-            $$this->setVersion('2.6.1');
+            $this->setVersion('2.6.1');
         }
 
-        $this->skip('2.6.1', '4.2.0');
+        $this->skip('2.6.1', '4.3.0');
     }
 }
