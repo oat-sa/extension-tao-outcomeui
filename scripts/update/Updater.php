@@ -62,5 +62,11 @@ class Updater extends \common_ext_ExtensionUpdater
 
             $this->setVersion('4.4.0');
         }
+
+        if ($this->isVersion('4.4.0')) {
+            $this->runExtensionScript(RegisterTestPluginService::class);
+
+            $this->setVersion('4.4.1');
+        }
     }
 }

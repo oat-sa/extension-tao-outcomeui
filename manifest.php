@@ -30,7 +30,7 @@ return array(
     'label' => 'Result visualisation',
     'description' => 'TAO Results extension',
     'license' => 'GPL-2.0',
-    'version' => '4.4.0',
+    'version' => '4.4.1',
     'author' => 'Open Assessment Technologies, CRP Henri Tudor',
     // taoItems is only needed for the item model property retrieval
     'requires' => array(
@@ -40,7 +40,9 @@ return array(
         'tao' => '>=10.1.0'
     ),
     'install' => array(
-        RegisterTestPluginService::class
+        'php' => array(
+            RegisterTestPluginService::class
+        )
     ),
     'uninstall' => array(),
     'update' => 'oat\\taoOutcomeUi\\scripts\\update\\Updater',
