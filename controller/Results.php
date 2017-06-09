@@ -25,7 +25,9 @@ use \Exception;
 use \common_exception_IsAjaxAction;
 use \core_kernel_classes_Resource;
 use oat\tao\model\accessControl\AclProxy;
+use oat\tao\model\plugins\PluginModule;
 use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
+use oat\taoOutcomeUi\model\plugins\ResultsPluginService;
 use oat\taoResultServer\models\classes\QtiResultsService;
 use \tao_actions_SaSModule;
 use \tao_helpers_Request;
@@ -78,7 +80,7 @@ class Results extends tao_actions_SaSModule
         if (!tao_helpers_Request::isAjax()) {
             throw new common_exception_IsAjaxAction(__FUNCTION__);
         }
-        
+
         $options = array(
             'subclasses' => true,
             'instances' => true,
@@ -86,18 +88,18 @@ class Results extends tao_actions_SaSModule
             'chunk' => false,
             'offset' => 0,
             'limit' => 0
-                );
+        );
 
         if ($this->hasRequestParameter('loadNode')) {
             $options['uniqueNode'] = $this->getRequestParameter('loadNode');
-            }
+        }
 
         if ($this->hasRequestParameter("selected")) {
             $options['browse'] = array($this->getRequestParameter("selected"));
         }
-        
+
         if ($this->hasRequestParameter('hideInstances')) {
-            if((bool) $this->getRequestParameter('hideInstances')) {
+            if ((bool)$this->getRequestParameter('hideInstances')) {
                 $options['instances'] = false;
             }
         }
@@ -114,15 +116,16 @@ class Results extends tao_actions_SaSModule
 
         if ($this->hasRequestParameter('limit')) {
             $options['limit'] = $this->getRequestParameter('limit');
-    }
+        }
 
         //generate the tree from the given parameters
         $tree = $this->getClassService()->toTree($clazz, $options);
 
         $tree = $this->addPermissions($tree);
 
-        function sortTree(&$tree) {
-            usort($tree, function($a, $b) {
+        function sortTree(&$tree)
+        {
+            usort($tree, function ($a, $b) {
                 if (isset($a['data']) && isset($b['data'])) {
                     if ($a['type'] != $b['type']) {
                         return ($a['type'] == 'class') ? -1 : 1;
@@ -136,7 +139,7 @@ class Results extends tao_actions_SaSModule
 
         if (isset($tree['children'])) {
             sortTree($tree['children']);
-        } elseif(array_values($tree) === $tree) {//is indexed array
+        } elseif (array_values($tree) === $tree) {//is indexed array
             sortTree($tree);
         }
 
@@ -152,44 +155,42 @@ class Results extends tao_actions_SaSModule
     {
         $model = array(
             array(
-                'id'       => 'ttaker',
-                'label'    => __('Test Taker'),
+                'id' => 'ttaker',
+                'label' => __('Test Taker'),
                 'sortable' => false
             ),
             array(
-                'id'       => 'time',
-                'label'    => __('Start Time'),
+                'id' => 'time',
+                'label' => __('Start Time'),
                 'sortable' => false
             )
         );
 
         $deliveryService = DeliveryAssemblyService::singleton();
         $delivery = new core_kernel_classes_Resource($this->getRequestParameter('id'));
-        if($delivery->getUri() !== $deliveryService->getRootClass()->getUri()){
+        if ($delivery->getUri() !== $deliveryService->getRootClass()->getUri()) {
 
-            try{
+            try {
                 // display delivery
-                $implementation = $this->getResultStorage($delivery);
+                $this->getResultStorage($delivery);
 
-                $this->getClassService()->setImplementation($implementation);
-
-
-                $this->setData('uri',tao_helpers_Uri::encode($delivery->getUri()));
-                $this->setData('title',$delivery->getLabel());
-                $this->setData('model',$model);
+                $this->setData('uri', tao_helpers_Uri::encode($delivery->getUri()));
+                $this->setData('title', $delivery->getLabel());
+                $this->setData('config', [
+                    'dataModel' => $model,
+                    'plugins' => $this->getResultsListPlugin()
+                ]);
 
                 $this->setView('resultList.tpl');
-            }
-            catch(\common_exception_Error $e){
+            } catch (\common_exception_Error $e) {
                 $this->setData('type', 'error');
                 $this->setData('error', $e->getMessage());
                 $this->setView('index.tpl');
             }
 
-        }
-        else{
+        } else {
             $this->setData('type', 'info');
-            $this->setData('error',__('No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here.'));
+            $this->setData('error', __('No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here.'));
             $this->setView('index.tpl');
         }
     }
@@ -203,66 +204,62 @@ class Results extends tao_actions_SaSModule
         $page = $this->getRequestParameter('page');
         $limit = $this->getRequestParameter('rows');
         $order = $this->getRequestParameter('sortby');
-        $sord = $this->getRequestParameter('sortorder');
+        $sort = $this->getRequestParameter('sortorder');
         $start = $limit * $page - $limit;
 
         $gau = array(
-            'order' 	=> $order,
-            'orderdir'	=> strtoupper($sord),
-            'offset'    => $start,
-            'limit'		=> $limit,
+            'order' => $order,
+            'orderdir' => strtoupper($sort),
+            'offset' => $start,
+            'limit' => $limit,
             'recursive' => true
         );
 
         $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
 
-        try{
+        try {
+            $this->getResultStorage($delivery);
 
-        $implementation = $this->getResultStorage($delivery);
+            $data = array();
+            $readOnly = array();
+            $user = \common_session_SessionManager::getSession()->getUser();
+            $rights = array(
+                'view' => !AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'viewResult', array()),
+                'delete' => !AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'delete', array()));
+            $results = $this->getClassService()->getImplementation()->getResultByDelivery(array($delivery->getUri()), $gau);
+            $count = $this->getClassService()->getImplementation()->countResultByDelivery(array($delivery->getUri()));
+            foreach ($results as $res) {
 
-        $this->getClassService()->setImplementation($implementation);
+                $deliveryExecution = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($res['deliveryResultIdentifier']);
+                $testTaker = new core_kernel_classes_Resource($res['testTakerIdentifier']);
 
-        $data = array();
-        $readOnly = array();
-        $user = \common_session_SessionManager::getSession()->getUser();
-        $rights = array(
-            'view'=>!AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'viewResult',array()),
-            'delete'=>!AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'delete',array()));
-        $results = $this->getClassService()->getImplementation()->getResultByDelivery(array($delivery->getUri()), $gau);
-        $counti = $this->getClassService()->getImplementation()->countResultByDelivery(array($delivery->getUri()));
-        foreach($results as $res){
+                try {
+                    $startTime = \tao_helpers_Date::displayeDate($deliveryExecution->getStartTime());
+                } catch (\common_exception_NotFound $e) {
+                    \common_Logger::w($e->getMessage());
+                    $startTime = '';
+                }
 
-            $deliveryExecution = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($res['deliveryResultIdentifier']);
-            $testTaker = new core_kernel_classes_Resource($res['testTakerIdentifier']);
+                $data[] = array(
+                    'id' => $deliveryExecution->getIdentifier(),
+                    'ttaker' => _dh($testTaker->getLabel()),
+                    'time' => $startTime,
+                );
 
-            try{
-                $startTime = \tao_helpers_Date::displayeDate($deliveryExecution->getStartTime());
-            } catch(\common_exception_NotFound $e){
-                \common_Logger::w($e->getMessage());
-                $startTime = '';
+                $readOnly[$deliveryExecution->getIdentifier()] = $rights;
             }
-
-            $data[] = array(
-                'id'        => $deliveryExecution->getIdentifier(),
-                'ttaker' => _dh($testTaker->getLabel()),
-                'time'      => $startTime,
-            );
-
-            $readOnly[$deliveryExecution->getIdentifier()] = $rights;
-        }
 
             $this->returnJson(array(
                 'data' => $data,
                 'page' => floor($start / $limit) + 1,
-                'total' => ceil($counti / $limit),
+                'total' => ceil($count / $limit),
                 'records' => count($data),
                 'readonly' => $readOnly
             ));
-        }
-        catch(\common_exception_Error $e){
+        } catch (\common_exception_Error $e) {
             $this->returnJson(array(
-                    'error' => $e->getMessage()
-                ));
+                'error' => $e->getMessage()
+            ));
         }
     }
 
@@ -279,15 +276,13 @@ class Results extends tao_actions_SaSModule
         $deliveryExecutionUri = tao_helpers_Uri::decode($this->getRequestParameter('uri'));
         $de = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($deliveryExecutionUri);
 
-        try{
-            $implementation = $this->getResultStorage($de->getDelivery());
-            $this->getClassService()->setImplementation($implementation);
+        try {
+            $this->getResultStorage($de->getDelivery());
 
             $deleted = $this->getClassService()->deleteResult($deliveryExecutionUri);
 
             $this->returnJson(array('deleted' => $deleted));
-        }
-        catch(\common_exception_Error $e){
+        } catch (\common_exception_Error $e) {
             $this->returnJson(array('error' => $e->getMessage()));
         }
     }
@@ -297,14 +292,12 @@ class Results extends tao_actions_SaSModule
      */
     public function viewResult()
     {
-        
+
         $resultId = $this->getRequestParameter('id');
         $delivery = new \core_kernel_classes_Resource($this->getRequestParameter('classUri'));
 
-        try{
-            
-            $implementation = $this->getResultStorage($delivery);
-            $this->getClassService()->setImplementation($implementation);
+        try {
+            $this->getResultStorage($delivery);
 
             $testTaker = $this->getClassService()->getTestTakerData($resultId);
 
@@ -341,10 +334,10 @@ class Results extends tao_actions_SaSModule
                 $this->setData('userEmail', $userEmail);
             }
             $filterSubmission = ($this->hasRequestParameter("filterSubmission")) ? $this->getRequestParameter("filterSubmission") : "lastSubmitted";
-            $filterTypes = ($this->hasRequestParameter("filterTypes")) ? $this->getRequestParameter("filterTypes") : array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class);
+            $filterTypes = ($this->hasRequestParameter("filterTypes")) ? $this->getRequestParameter("filterTypes") : array(\taoResultServer_models_classes_ResponseVariable::class, \taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class);
             $variables = $this->getResultVariables($resultId, $filterSubmission, $filterTypes);
             $this->setData('variables', $variables);
-            
+
             $stats = $this->getClassService()->calculateResponseStatistics($variables);
             $this->setData('nbResponses', $stats["nbResponses"]);
             $this->setData('nbCorrectResponses', $stats["nbCorrectResponses"]);
@@ -359,12 +352,10 @@ class Results extends tao_actions_SaSModule
             $this->setData('filterSubmission', $filterSubmission);
             $this->setData('filterTypes', $filterTypes);
             $this->setView('viewResult.tpl');
-        }
-        catch(\common_exception_Error $e){
+        } catch (\common_exception_Error $e) {
             $this->setData('type', 'error');
             $this->setData('error', $e->getMessage());
             $this->setView('index.tpl');
-            return;
         }
     }
 
@@ -406,7 +397,7 @@ class Results extends tao_actions_SaSModule
             header('Content-Type: application/xml');
 
             echo $xml;
-        } catch(\common_exception_Error $e){
+        } catch (\common_exception_Error $e) {
             $this->returnJson(array('error' => $e->getMessage()));
         }
     }
@@ -420,13 +411,10 @@ class Results extends tao_actions_SaSModule
         $variableUri = $_POST["variableUri"];
 
         $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('deliveryUri')));
-        try{
-            $implementation = $this->getResultStorage($delivery);
-            $this->getClassService()->setImplementation($implementation);
-
+        try {
+            $this->getResultStorage($delivery);
 
             $file = $this->getClassService()->getVariableFile($variableUri);
-            $trace = $file["data"];
             header(
                 'Set-Cookie: fileDownload=true'
             ); //used by jquery file download to find out the download has been triggered ...
@@ -439,8 +427,7 @@ class Results extends tao_actions_SaSModule
             }
 
             echo $file["data"];
-        }
-        catch(\common_exception_Error $e){
+        } catch (\common_exception_Error $e) {
             echo $e->getMessage();
         }
     }
@@ -453,8 +440,10 @@ class Results extends tao_actions_SaSModule
      */
     protected function getResultStorage($delivery)
     {
-        $resultService = $this->getServiceManager()->get(ResultServerService::SERVICE_ID);
-        return $resultService->getResultStorage($delivery->getUri());
+        $resultServerService = $this->getServiceManager()->get(ResultServerService::SERVICE_ID);
+        $resultStorage = $resultServerService->getResultStorage($delivery->getUri());
+        $this->getClassService()->setImplementation($resultStorage);
+        return $resultStorage;
     }
 
     /**
@@ -472,19 +461,36 @@ class Results extends tao_actions_SaSModule
         $resultVariables = $resultService->getStructuredVariables($resultId, $filterSubmission, [\taoResultServer_models_classes_ResponseVariable::class]);
         $responses = ResponseVariableFormatter::formatStructuredVariablesToItemState($resultVariables);
         $excludedVariables = array_flip(['numAttempts', 'duration']);
-        
-        foreach($displayedVariables as &$item) {
-            if(!isset($item['uri'])){
+
+        foreach ($displayedVariables as &$item) {
+            if (!isset($item['uri'])) {
                 continue;
             }
             $itemUri = $item['uri'];
             if (isset($responses[$itemUri])) {
-                $item['state'] = json_encode(array_diff_key($responses[$itemUri], $excludedVariables));   
+                $item['state'] = json_encode(array_diff_key($responses[$itemUri], $excludedVariables));
             } else {
                 $item['state'] = null;
             }
         }
-        
+
         return $displayedVariables;
+    }
+
+    /**
+     * Get the list of active plugins for the list of results
+     * @return PluginModule[] the list of plugins
+     */
+    public function getResultsListPlugin()
+    {
+        $serviceManager = $this->getServiceManager();
+
+        $pluginService = $serviceManager->get(ResultsPluginService::SERVICE_ID);
+        $allPlugins = $pluginService->getAllPlugins();
+
+        // return the list of active plugins
+        return array_filter($allPlugins, function ($plugin) {
+            return !is_null($plugin) && $plugin->isActive();
+        });
     }
 }
