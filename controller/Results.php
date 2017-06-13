@@ -24,9 +24,11 @@ namespace oat\taoOutcomeUi\controller;
 use \Exception;
 use \common_exception_IsAjaxAction;
 use \core_kernel_classes_Resource;
+use oat\oatbox\event\EventManager;
 use oat\tao\model\accessControl\AclProxy;
 use oat\tao\model\plugins\PluginModule;
 use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
+use oat\taoOutcomeUi\model\event\ResultsListPluginEvent;
 use oat\taoOutcomeUi\model\plugins\ResultsPluginService;
 use oat\taoResultServer\models\classes\QtiResultsService;
 use \tao_actions_SaSModule;
@@ -485,11 +487,14 @@ class Results extends tao_actions_SaSModule
     {
         $serviceManager = $this->getServiceManager();
 
+        /* @var ResultsPluginService $pluginService */
         $pluginService = $serviceManager->get(ResultsPluginService::SERVICE_ID);
-        $allPlugins = $pluginService->getAllPlugins();
+
+        $event = new ResultsListPluginEvent($pluginService->getAllPlugins());
+        $serviceManager->get(EventManager::SERVICE_ID)->trigger($event);
 
         // return the list of active plugins
-        return array_filter($allPlugins, function ($plugin) {
+        return array_filter($event->getPlugins(), function ($plugin) {
             return !is_null($plugin) && $plugin->isActive();
         });
     }
