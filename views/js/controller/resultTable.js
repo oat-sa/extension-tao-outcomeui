@@ -98,7 +98,7 @@ define([
                                     preparingMessageHtml: __("We are preparing your report, please wait..."),
                                     failMessageHtml: __("There was a problem generating your report, please try again."),
                                     httpMethod: 'POST',
-                                    data: {'filter': filter, 'columns': columns, uri : uri}
+                                    data: {'filter': filter, 'columns': JSON.stringify(columns), uri: uri}
                                 });
                             });
 
@@ -110,7 +110,7 @@ define([
                     .datatable({
                         url : helpers._url('data', 'ResultTable', 'taoOutcomeUi', {filterData : filter}),
                         querytype : 'POST',
-                        params : {columns : columns,  '_search' : false, uri: uri},
+                        params: {columns: JSON.stringify(columns), '_search': false, uri: uri},
                         model :  model
                     });
             };
