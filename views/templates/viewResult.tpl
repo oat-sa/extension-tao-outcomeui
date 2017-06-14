@@ -83,7 +83,7 @@ use oat\tao\helpers\Template;
 
             <!-- Item Result Tables -->
             <?php  foreach (get_data('variables') as $item){ ?>
-           
+
             <table class="matrix">
                 <thead>
                 <tr>
@@ -91,7 +91,7 @@ use oat\tao\helpers\Template;
                         <b><?= _dh($item['label']) ?> (<?= _dh($item['itemModel']) ?>)</b>
                     </th>
                     <th>
-                        <a href="#" data-uri="<?=$item['uri']?>" class="btn-info small preview" target="preview">
+                        <a href="#" data-uri="<?=$item['uri']?>"  data-state="<?=htmlspecialchars($item['state'])?>" class="btn-info small preview" target="preview">
                             <span class="icon-preview"></span><?=__('Preview')?>
                         </a>
                     </th>
@@ -115,7 +115,7 @@ use oat\tao\helpers\Template;
                             <td class="dataResult" colspan="2">
                         <?php
                         if ($variable->getBaseType() === "file" && $variable->getCandidateResponse() !== '') {
-                            echo '<button class="download btn-info small" value="'.$observation["uri"].'"><span class="icon-download"></span> '.__('Download').'</button>';
+                            echo '<button class="download btn-info small" value="'.htmlspecialchars($observation["uri"]).'"><span class="icon-download"></span> '.__('Download').'</button>';
                         }
                         else{
                             $rdfValue = $variable->getValue();

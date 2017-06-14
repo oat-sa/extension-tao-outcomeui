@@ -1,0 +1,17 @@
+{
+    "data": [
+        {
+            "id": "http:\/\/tao.dev\/tao.rdf#i14938999025623262",
+            "name": "billy.laporte"
+        },{
+            "id": "http:\/\/tao.dev\/tao.rdf#i14939903494283287",
+            "name": "alicia.ryker"
+        },{
+            "id": "http:\/\/tao.dev\/tao.rdf#i14938997442679261",
+            "name": "marco.botton"
+        }
+    ],
+    "page": 1,
+    "total": 3,
+    "records": 3
+}
