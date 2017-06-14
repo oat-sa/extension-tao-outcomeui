@@ -69,6 +69,6 @@ class Updater extends \common_ext_ExtensionUpdater
             $this->setVersion('4.4.1');
         }
 
-        $this->skip('4.4.1', '4.4.2');
+        $this->skip('4.4.1', '4.5.1');
     }
 }
