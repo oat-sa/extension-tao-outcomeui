@@ -249,7 +249,8 @@ class ResultTable extends \tao_actions_CommonModule {
 
         $dataProvider = new VariableDataProvider();
         $columns = array();
-        foreach ($this->getRequestParameter($identifier) as $array) {
+        $variables = json_decode($this->getRequest()->getRawParameters()[$identifier], true);
+        foreach ($variables as $array) {
             if (isset($data['type']) && !is_subclass_of($data['type'], tao_models_classes_table_Column::class)) {
                 throw new \common_exception_Error('Non column specified as column type');
             }
