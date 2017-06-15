@@ -174,7 +174,7 @@ class Results extends tao_actions_SaSModule
                 // display delivery
                 $this->getResultStorage($delivery);
 
-                $this->setData('uri', tao_helpers_Uri::encode($delivery->getUri()));
+                $this->setData('uri', $delivery->getUri());
                 $this->setData('title', $delivery->getLabel());
                 $this->setData('config', [
                     'dataModel' => $model,
@@ -370,26 +370,15 @@ class Results extends tao_actions_SaSModule
     public function downloadXML()
     {
         try {
-            if (!$this->hasRequestParameter('deliveryExecution')) {
-                throw new \common_exception_MissingParameter('deliveryExecution is missing from the request.', $this->getRequestURI());
+            if (!$this->hasRequestParameter('id') || empty($this->getRequestParameter('id'))) {
+                throw new \common_exception_MissingParameter('Result id is missing from the request.', $this->getRequestURI());
+            }
+            if (!$this->hasRequestParameter('delivery') || empty($this->getRequestParameter('delivery'))) {
+                throw new \common_exception_MissingParameter('Delivery id is missing from the request.', $this->getRequestURI());
             }
 
-            if (empty($this->getRequestParameter('deliveryExecution'))) {
-                throw new \common_exception_ValidationFailed('deliveryExecution cannot be empty');
-            }
-
-            $qtiResultService = QtiResultsService::singleton();
-            $qtiResultService->setServiceLocator($this->getServiceManager());
-
-            $deliveryExecution = $qtiResultService->getDeliveryExecutionById(
-                $this->getRequestParameter('deliveryExecution')
-            );
-
-            if (empty($deliveryExecution)) {
-                throw new \common_exception_NotFound('Delivery execution not found.');
-            }
-
-            $xml = $qtiResultService->getDeliveryExecutionXml($deliveryExecution);
+            $qtiResultService = $this->getServiceManager()->get(QtiResultsService::SERVICE_ID);
+            $xml = $qtiResultService->getQtiResultXml($this->getRequestParameter('delivery'), $this->getRequestParameter('id'));
 
             header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
             setcookie("fileDownload", "true", 0, "/");
@@ -397,8 +386,8 @@ class Results extends tao_actions_SaSModule
             header('Content-Type: application/xml');
 
             echo $xml;
-        } catch (\common_exception_Error $e) {
-            $this->returnJson(array('error' => $e->getMessage()));
+        } catch (\common_exception_UserReadableException $e) {
+            $this->returnJson(array('error' => $e->getUserMessage()));
         }
     }
 
