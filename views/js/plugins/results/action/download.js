@@ -20,11 +20,12 @@
  */
 define([
     'jquery',
+    'lodash',
     'i18n',
     'core/plugin',
     'util/url',
     'jquery.fileDownload'
-], function ($, __, pluginFactory, urlHelper) {
+], function ($, _, __, pluginFactory, urlHelper) {
     'use strict';
 
     /**
@@ -47,7 +48,7 @@ define([
                         failMessageHtml: __("There was a problem generating your report, please try again."),
                         httpMethod: 'GET',
                         data: {
-                            id: id,
+                            id: _.isString(id) ? id : JSON.stringify(id),
                             delivery: resultsList.getClassUri()
                         }
                     });

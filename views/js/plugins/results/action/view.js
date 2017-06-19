@@ -19,11 +19,12 @@
  * @author Jean-Sébastien Conan <jean-sebastien@taotesting.com>
  */
 define([
+    'lodash',
     'i18n',
     'layout/actions/binder',
     'core/plugin',
     'util/url'
-], function (__, binder, pluginFactory, urlHelper) {
+], function (_, __, binder, pluginFactory, urlHelper) {
     'use strict';
 
     /**
@@ -45,8 +46,9 @@ define([
                 label: __('View'),
                 icon: 'view',
                 action: function viewResults(id) {
+
                     var context = {
-                        id: id,
+                        id: _.isString(id) ? id : JSON.stringify(id),
                         classUri: resultsList.getClassUri()
                     };
 
