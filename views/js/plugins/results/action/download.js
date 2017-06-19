@@ -48,7 +48,8 @@ define([
                         failMessageHtml: __("There was a problem generating your report, please try again."),
                         httpMethod: 'GET',
                         data: {
-                            deliveryExecution: _.isString(id) ? id : JSON.stringify(id)
+                            id: _.isString(id) ? id : JSON.stringify(id),
+                            delivery: resultsList.getClassUri()
                         }
                     });
                 }
