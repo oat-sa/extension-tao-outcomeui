@@ -30,6 +30,7 @@ use oat\tao\model\plugins\PluginModule;
 use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
 use oat\taoOutcomeUi\model\event\ResultsListPluginEvent;
 use oat\taoOutcomeUi\model\plugins\ResultsPluginService;
+use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 use oat\taoResultServer\models\classes\QtiResultsService;
 use \tao_actions_SaSModule;
 use \tao_helpers_Request;
@@ -60,7 +61,7 @@ class Results extends tao_actions_SaSModule
     {
         parent::__construct();
 
-        $this->service = ResultsService::singleton();
+        $this->service = $this->getServiceManager()->get(ResultServiceWrapper::SERVICE_ID)->getService();
         $this->deliveryService = DeliveryAssemblyService::singleton();
         $this->defaultData();
     }
@@ -244,7 +245,7 @@ class Results extends tao_actions_SaSModule
 
                 $data[] = array(
                     'id' => $deliveryExecution->getIdentifier(),
-                    'ttaker' => _dh($testTaker->getLabel()),
+                    'ttaker' => empty($testTaker->getLabel())? $res['testTakerIdentifier'] : _dh($testTaker->getLabel()),
                     'time' => $startTime,
                 );
 
