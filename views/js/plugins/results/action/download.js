@@ -46,7 +46,10 @@ define([
                         preparingMessageHtml: __("We are preparing your report, please wait..."),
                         failMessageHtml: __("There was a problem generating your report, please try again."),
                         httpMethod: 'GET',
-                        data: { 'deliveryExecution': id }
+                        data: {
+                            id: id,
+                            delivery: resultsList.getClassUri()
+                        }
                     });
                 }
             });
