@@ -24,10 +24,13 @@ namespace oat\taoOutcomeUi\controller;
 use \Exception;
 use \common_exception_IsAjaxAction;
 use \core_kernel_classes_Resource;
+use oat\oatbox\event\EventManager;
 use oat\tao\model\accessControl\AclProxy;
 use oat\tao\model\plugins\PluginModule;
 use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
+use oat\taoOutcomeUi\model\event\ResultsListPluginEvent;
 use oat\taoOutcomeUi\model\plugins\ResultsPluginService;
+use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 use oat\taoResultServer\models\classes\QtiResultsService;
 use \tao_actions_SaSModule;
 use \tao_helpers_Request;
@@ -58,7 +61,7 @@ class Results extends tao_actions_SaSModule
     {
         parent::__construct();
 
-        $this->service = ResultsService::singleton();
+        $this->service = $this->getServiceManager()->get(ResultServiceWrapper::SERVICE_ID)->getService();
         $this->deliveryService = DeliveryAssemblyService::singleton();
         $this->defaultData();
     }
@@ -174,7 +177,7 @@ class Results extends tao_actions_SaSModule
                 // display delivery
                 $this->getResultStorage($delivery);
 
-                $this->setData('uri', tao_helpers_Uri::encode($delivery->getUri()));
+                $this->setData('uri', $delivery->getUri());
                 $this->setData('title', $delivery->getLabel());
                 $this->setData('config', [
                     'dataModel' => $model,
@@ -242,7 +245,7 @@ class Results extends tao_actions_SaSModule
 
                 $data[] = array(
                     'id' => $deliveryExecution->getIdentifier(),
-                    'ttaker' => _dh($testTaker->getLabel()),
+                    'ttaker' => empty($testTaker->getLabel())? $res['testTakerIdentifier'] : _dh($testTaker->getLabel()),
                     'time' => $startTime,
                 );
 
@@ -370,26 +373,15 @@ class Results extends tao_actions_SaSModule
     public function downloadXML()
     {
         try {
-            if (!$this->hasRequestParameter('deliveryExecution')) {
-                throw new \common_exception_MissingParameter('deliveryExecution is missing from the request.', $this->getRequestURI());
+            if (!$this->hasRequestParameter('id') || empty($this->getRequestParameter('id'))) {
+                throw new \common_exception_MissingParameter('Result id is missing from the request.', $this->getRequestURI());
+            }
+            if (!$this->hasRequestParameter('delivery') || empty($this->getRequestParameter('delivery'))) {
+                throw new \common_exception_MissingParameter('Delivery id is missing from the request.', $this->getRequestURI());
             }
 
-            if (empty($this->getRequestParameter('deliveryExecution'))) {
-                throw new \common_exception_ValidationFailed('deliveryExecution cannot be empty');
-            }
-
-            $qtiResultService = QtiResultsService::singleton();
-            $qtiResultService->setServiceLocator($this->getServiceManager());
-
-            $deliveryExecution = $qtiResultService->getDeliveryExecutionById(
-                $this->getRequestParameter('deliveryExecution')
-            );
-
-            if (empty($deliveryExecution)) {
-                throw new \common_exception_NotFound('Delivery execution not found.');
-            }
-
-            $xml = $qtiResultService->getDeliveryExecutionXml($deliveryExecution);
+            $qtiResultService = $this->getServiceManager()->get(QtiResultsService::SERVICE_ID);
+            $xml = $qtiResultService->getQtiResultXml($this->getRequestParameter('delivery'), $this->getRequestParameter('id'));
 
             header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
             setcookie("fileDownload", "true", 0, "/");
@@ -397,8 +389,8 @@ class Results extends tao_actions_SaSModule
             header('Content-Type: application/xml');
 
             echo $xml;
-        } catch (\common_exception_Error $e) {
-            $this->returnJson(array('error' => $e->getMessage()));
+        } catch (\common_exception_UserReadableException $e) {
+            $this->returnJson(array('error' => $e->getUserMessage()));
         }
     }
 
@@ -485,11 +477,14 @@ class Results extends tao_actions_SaSModule
     {
         $serviceManager = $this->getServiceManager();
 
+        /* @var ResultsPluginService $pluginService */
         $pluginService = $serviceManager->get(ResultsPluginService::SERVICE_ID);
-        $allPlugins = $pluginService->getAllPlugins();
+
+        $event = new ResultsListPluginEvent($pluginService->getAllPlugins());
+        $serviceManager->get(EventManager::SERVICE_ID)->trigger($event);
 
         // return the list of active plugins
-        return array_filter($allPlugins, function ($plugin) {
+        return array_filter($event->getPlugins(), function ($plugin) {
             return !is_null($plugin) && $plugin->isActive();
         });
     }
