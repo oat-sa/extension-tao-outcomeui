@@ -73,11 +73,11 @@ class Updater extends \common_ext_ExtensionUpdater
 
         $this->skip('4.4.1', '4.5.2');
 
-        if ($this->isVersion('4.5.2')) {
+        if ($this->isVersion('4.5.2') || $this->isVersion('4.6.0')) {
 
             $service = new ResultServiceWrapper(['class' => ResultsService::class]);
             $this->getServiceManager()->register(ResultServiceWrapper::SERVICE_ID , $service);
-            $this->setVersion('4.6.0');
+            $this->setVersion('4.6.1');
         }
     }
 }
