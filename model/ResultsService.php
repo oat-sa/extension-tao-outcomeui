@@ -888,12 +888,11 @@ class ResultsService extends tao_models_classes_ClassService {
             $returnValue[]= $filteredObservation[0];
 
         } else {
-            $cellData = "";
+            $cellData = '';
             foreach ($observationsList as $observation) {
-                $cellData.= $observation[0].$observation[1].'
-                       ';
+                $cellData.= $observation[0].$observation[1].PHP_EOL;
             }
-            $returnValue = $cellData;
+            $returnValue = [$cellData];
         }
         return $returnValue;
     }
