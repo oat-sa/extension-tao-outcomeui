@@ -7,9 +7,7 @@ module.exports = function(grunt) {
 
     //override load path
     sass.taooutcomeui = {
-        options : {
-            loadPath : ['../scss/']
-        },
+        options : {},
         files : {}        
     };
 
