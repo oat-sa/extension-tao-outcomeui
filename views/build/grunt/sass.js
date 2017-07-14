@@ -8,9 +8,7 @@ module.exports = function (grunt) {
 
     // Override include paths
     sass.taooutcomeui = {
-        options : {
-            includePaths: [ '../scss/' ]
-        },
+        options : {},
         files : {}
     };
 
