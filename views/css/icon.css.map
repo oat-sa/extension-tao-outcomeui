@@ -1,7 +1,14 @@
 {
-"version": 3,
-"mappings": "AAEA,iBAAkB,CCmBhB,WAAW,CAAE,gBAAgB,CAC7B,KAAK,CAAE,IAAI,CACX,UAAU,CAAE,MAAM,CAClB,WAAW,CAAE,MAAM,CACnB,YAAY,CAAE,MAAM,CACpB,cAAc,CAAE,IAAI,CACpB,WAAW,CAAE,CAAC,CAGd,sBAAsB,CAAE,WAAW,CACnC,uBAAuB,CAAE,SAAS,CA8Db,OAAO,CAAE,OAAO,CDxFvC,mBAAoB,CCgBlB,WAAW,CAAE,gBAAgB,CAC7B,KAAK,CAAE,IAAI,CACX,UAAU,CAAE,MAAM,CAClB,WAAW,CAAE,MAAM,CACnB,YAAY,CAAE,MAAM,CACpB,cAAc,CAAE,IAAI,CACpB,WAAW,CAAE,CAAC,CAGd,sBAAsB,CAAE,WAAW,CACnC,uBAAuB,CAAE,SAAS,CAqClB,OAAO,CAAE,OAAO",
-"sources": ["../scss/icon.scss","../../../tao/views/scss/inc/fonts/_tao-icon-vars.scss"],
-"names": [],
-"file": "icon.css"
+	"version": 3,
+	"file": "icon.css",
+	"sources": [
+		"../scss/icon.scss",
+		"../../../tao/views/scss/inc/_bootstrap.scss",
+		"../../../tao/views/scss/inc/_variables.scss",
+		"../../../tao/views/scss/inc/_functions.scss",
+		"../../../tao/views/scss/inc/_colors.scss",
+		"../../../tao/views/scss/inc/fonts/_tao-icon-vars.scss"
+	],
+	"names": [],
+	"mappings": "AAEA,AAAA,UAAU,AAAA,OAAO,AAAC,CKmBhB,WAAW,CAAE,gBAAgB,CAC7B,KAAK,CAAE,IAAI,CACX,UAAU,CAAE,MAAM,CAClB,WAAW,CAAE,MAAM,CACnB,YAAY,CAAE,MAAM,CACpB,cAAc,CAAE,IAAI,CACpB,WAAW,CAAE,CAAC,CAGd,sBAAsB,CAAE,WAAW,CACnC,uBAAuB,CAAE,SAAS,CA8Db,OAAO,CAAE,OAAO,CLzFd,AACzB,AAAA,YAAY,AAAA,OAAO,AAAC,CKgBlB,WAAW,CAAE,gBAAgB,CAC7B,KAAK,CAAE,IAAI,CACX,UAAU,CAAE,MAAM,CAClB,WAAW,CAAE,MAAM,CACnB,YAAY,CAAE,MAAM,CACpB,cAAc,CAAE,IAAI,CACpB,WAAW,CAAE,CAAC,CAGd,sBAAsB,CAAE,WAAW,CACnC,uBAAuB,CAAE,SAAS,CAqClB,OAAO,CAAE,OAAO,CL7Dd"
 }
