@@ -6,9 +6,11 @@ module.exports = function (grunt) {
     var notify  = grunt.config('notify') || {};
     var root    = grunt.option('root') + '/taoOutcomeUi/views/';
 
-    //override load path
+    // Override include paths
     sass.taooutcomeui = {
-        options : {},
+        options : {
+            includePaths: [ '../scss/' ]
+        },
         files : {}
     };
 
