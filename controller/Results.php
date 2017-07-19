@@ -297,7 +297,7 @@ class Results extends tao_actions_SaSModule
     public function viewResult()
     {
 
-        $resultId = $this->getRequestParameter('id');
+        $resultId = $_POST['id'];
         $delivery = new \core_kernel_classes_Resource($this->getRequestParameter('classUri'));
 
         try {
@@ -382,7 +382,7 @@ class Results extends tao_actions_SaSModule
             }
 
             $qtiResultService = $this->getServiceManager()->get(QtiResultsService::SERVICE_ID);
-            $xml = $qtiResultService->getQtiResultXml($this->getRequestParameter('delivery'), $this->getRequestParameter('id'));
+            $xml = $qtiResultService->getQtiResultXml($this->getRequestParameter('delivery'), $_POST['id']);
 
             header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
             setcookie("fileDownload", "true", 0, "/");
