@@ -1,20 +1,20 @@
-module.exports = function(grunt) { 
+module.exports = function (grunt) {
+    'use strict';
 
     var sass    = grunt.config('sass') || {};
     var watch   = grunt.config('watch') || {};
     var notify  = grunt.config('notify') || {};
     var root    = grunt.option('root') + '/taoOutcomeUi/views/';
 
-    //override load path
+    // Override include paths
     sass.taooutcomeui = {
-        options : {
-            loadPath : ['../scss/']
-        },
-        files : {}        
+        options : {},
+        files : {}
     };
 
     //files goes heres
     sass.taooutcomeui.files[root + 'css/icon.css'] = root + 'scss/icon.scss';
+    sass.taooutcomeui.files[root + 'css/result.css'] = root + 'scss/result.scss';
 
 
     watch.taooutcomeuisass = {
@@ -27,7 +27,7 @@ module.exports = function(grunt) {
 
     notify.taooutcomeuisass = {
         options: {
-            title: 'Grunt SASS', 
+            title: 'Grunt SASS',
             message: 'SASS files compiled to CSS'
         }
     };
@@ -35,7 +35,7 @@ module.exports = function(grunt) {
     grunt.config('sass', sass);
     grunt.config('watch', watch);
     grunt.config('notify', notify);
-    
+
     //register an alias for main build
     grunt.registerTask('taooutcomeuisass', ['sass:taooutcomeui']);
 };
