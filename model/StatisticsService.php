@@ -24,6 +24,7 @@ namespace oat\taoOutcomeUi\model;
 
 use \Exception;
 use \common_Exception;
+use oat\taoDelivery\model\execution\ServiceProxy;
 
 /**
  * TAO - taoResults/models/classes/class.StatisticsService.php
@@ -33,18 +34,17 @@ use \common_Exception;
  * @author Patrick Plichart, <patrick.plichart@taotesting.com>
  * @package taoOutcomeUi
  */
-class StatisticsService
-
-     extends ResultsService
+class StatisticsService extends ResultsService
 {
-	/**
-	* returns  a data set containing results data using and using an associative array
-	* with basic statistics related to a delivery class. 
-	* 
-	* @author Patrick Plichart, <patrick.plichart@taotesting.com>
-	* @param core_kernel_classes_Class deliveryClass the current class selection
-	* @return array an assocaitive array containing global statistics and per variable statistics
-	*/
+    /**
+     * returns  a data set containing results data using and using an associative array
+     * with basic statistics related to a delivery class.
+     *
+     * @author Patrick Plichart, <patrick.plichart@taotesting.com>
+     * @param $deliveryClass
+     * @return array an associative array containing global statistics and per variable statistics
+     * @throws common_Exception
+     */
 	public function extractDeliveryDataSet($deliveryClass){
         $deliveryDataSet = array(
             "nbExecutions" => 0, // Number of collected executions of the delivery
@@ -66,7 +66,7 @@ class StatisticsService
             "#" => 0
         );
         foreach ($deliveryResults as $deliveryResult) {
-            $de = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($deliveryResult["deliveryResultIdentifier"]);
+            $de = ServiceProxy::singleton()->getDeliveryExecution($deliveryResult["deliveryResultIdentifier"]);
             $testTaker = $this->getTestTaker($de);
             if (get_class($testTaker) == 'core_kernel_classes_Literal') {
                 $testTakerIdentifier = $testTaker->__toString();
@@ -172,5 +172,3 @@ class StatisticsService
 
 
 } 
-
-?>

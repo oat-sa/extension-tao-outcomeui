@@ -27,6 +27,7 @@ use \core_kernel_classes_Resource;
 use oat\oatbox\event\EventManager;
 use oat\tao\model\accessControl\AclProxy;
 use oat\tao\model\plugins\PluginModule;
+use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
 use oat\taoOutcomeUi\model\event\ResultsListPluginEvent;
 use oat\taoOutcomeUi\model\plugins\ResultsPluginService;
@@ -233,7 +234,7 @@ class Results extends tao_actions_SaSModule
             $count = $this->getClassService()->getImplementation()->countResultByDelivery(array($delivery->getUri()));
             foreach ($results as $res) {
 
-                $deliveryExecution = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($res['deliveryResultIdentifier']);
+                $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($res['deliveryResultIdentifier']);
                 $testTaker = new core_kernel_classes_Resource($res['testTakerIdentifier']);
 
                 try {
@@ -277,7 +278,7 @@ class Results extends tao_actions_SaSModule
             throw new Exception("wrong request mode");
         }
         $deliveryExecutionUri = tao_helpers_Uri::decode($this->getRequestParameter('uri'));
-        $de = \taoDelivery_models_classes_execution_ServiceProxy::singleton()->getDeliveryExecution($deliveryExecutionUri);
+        $de = ServiceProxy::singleton()->getDeliveryExecution($deliveryExecutionUri);
 
         try {
             $this->getResultStorage($de->getDelivery());
@@ -295,8 +296,7 @@ class Results extends tao_actions_SaSModule
      */
     public function viewResult()
     {
-
-        $resultId = $this->getRequestParameter('id');
+        $resultId = $this->getRawParameter('id');
         $delivery = new \core_kernel_classes_Resource($this->getRequestParameter('classUri'));
 
         try {
@@ -350,7 +350,7 @@ class Results extends tao_actions_SaSModule
             //retireve variables not related to item executions
             $deliveryVariables = $this->getClassService()->getVariableDataFromDeliveryResult($resultId, $filterTypes);
             $this->setData('deliveryVariables', $deliveryVariables);
-            $this->setData('id', $this->getRequestParameter("id"));
+            $this->setData('id', $this->getRawParameter("id"));
             $this->setData('classUri', $this->getRequestParameter("classUri"));
             $this->setData('filterSubmission', $filterSubmission);
             $this->setData('filterTypes', $filterTypes);
@@ -381,7 +381,7 @@ class Results extends tao_actions_SaSModule
             }
 
             $qtiResultService = $this->getServiceManager()->get(QtiResultsService::SERVICE_ID);
-            $xml = $qtiResultService->getQtiResultXml($this->getRequestParameter('delivery'), $this->getRequestParameter('id'));
+            $xml = $qtiResultService->getQtiResultXml($this->getRequestParameter('delivery'), $this->getRawParameter('id'));
 
             header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
             setcookie("fileDownload", "true", 0, "/");
