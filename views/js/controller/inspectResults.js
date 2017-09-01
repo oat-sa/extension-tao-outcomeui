@@ -64,22 +64,25 @@ define([
                 }
             });
 
-            resultsPluginsLoader.load()
-                .then(function () {
-                    resultsListFactory(listConfig, resultsPluginsLoader.getPlugins())
-                        .on('error', reportError)
-                        .on('success', function (message) {
-                            feedback().success(message);
-                        })
-                        .before('loading', function() {
-                            loadingBar.start();
-                        })
-                        .after('loaded', function () {
-                            loadingBar.stop();
-                        })
-                        .render($('.inspect-results-grid', $container));
-                })
-                .catch(reportError);
+            if ($container.length) {
+                resultsPluginsLoader.load()
+                    .then(function () {
+                        resultsListFactory(listConfig, resultsPluginsLoader.getPlugins())
+                            .on('error', reportError)
+                            .on('success', function (message) {
+                                feedback().success(message);
+                            })
+                            .before('loading', function() {
+                                loadingBar.start();
+                            })
+                            .after('loaded', function () {
+                                loadingBar.stop();
+                            })
+                            .render($('.inspect-results-grid', $container));
+                    })
+                    .catch(reportError);
+            }
+
 
             binder.register('download_csv', function (item) {
                 $.fileDownload(this.url, {
