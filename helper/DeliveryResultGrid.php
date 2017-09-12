@@ -24,6 +24,7 @@
 
 namespace oat\taoOutcomeUi\helper;
 
+use oat\taoResultServer\models\classes\ResultService;
 use \tao_helpers_grid_Cell_ResourceLabelAdapter;
 use \tao_helpers_grid_GridContainer;
 
@@ -70,8 +71,8 @@ class DeliveryResultGrid
 		
 		$processProperties = array(
 			RDFS_LABEL					=> __('Label'),
-			PROPERTY_RESULT_OF_DELIVERY	=> __('Delivery'),
-			PROPERTY_RESULT_OF_SUBJECT	=> __('Test taker'),
+            ResultService::PROPERTY_DELIVERY	=> __('Delivery'),
+            ResultService::PROPERTY_SUBJECT	=> __('Test taker'),
             RDF_TYPE                	=> __('Class')
 		);
 		

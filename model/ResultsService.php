@@ -25,7 +25,6 @@
 
 namespace oat\taoOutcomeUi\model;
 
-use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
 use \common_Exception;
@@ -37,7 +36,7 @@ use \core_kernel_classes_DbWrapper;
 use \core_kernel_classes_Property;
 use \core_kernel_classes_Resource;
 use oat\taoResultServer\models\classes\ResultManagement;
-use \tao_helpers_Date;
+use oat\taoResultServer\models\classes\ResultService;
 use \tao_models_classes_ClassService;
 use oat\taoOutcomeUi\helper\Datatypes;
 use oat\taoDelivery\model\execution\DeliveryExecution;
@@ -56,7 +55,7 @@ class ResultsService extends tao_models_classes_ClassService {
      * @see tao_models_classes_ClassService::getRootClass()
      */
     public function getRootClass() {
-        return new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
+        return new core_kernel_classes_Class(ResultService::DELIVERY_RESULT);
     }
 
     public function setImplementation(ResultManagement $implementation){

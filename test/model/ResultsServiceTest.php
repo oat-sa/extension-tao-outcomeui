@@ -22,6 +22,7 @@ namespace oat\taoOutcomeUi\test\model;
 use oat\tao\test\TaoPhpUnitTestRunner;
 use \common_ext_ExtensionsManager;
 use oat\taoOutcomeUi\model\ResultsService;
+use oat\taoResultServer\models\classes\ResultServerService;
 use Prophecy\Prophet;
 use oat\taoDelivery\model\execution\DeliveryExecution;
 
@@ -324,7 +325,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $prophet = new Prophet();
 
         $resultProphecy = $prophet->prophesize('core_kernel_classes_Resource');
-        $resultProphecy->getPropertyValues(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP))->willReturn(array(
+        $resultProphecy->getPropertyValues(new \core_kernel_classes_Property(ResultServerService::MODEL_PROP))->willReturn(array(
             '#fakeUri'
         ));
         $resultServer = $resultProphecy->reveal();
@@ -346,7 +347,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $prophet = new Prophet();
 
         $resultProphecy = $prophet->prophesize('core_kernel_classes_Resource');
-        $resultProphecy->getPropertyValues(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP))->willReturn(array(
+        $resultProphecy->getPropertyValues(new \core_kernel_classes_Property(ResultServerService::MODEL_PROP))->willReturn(array(
             'http://www.tao.lu/Ontologies/taoOutcomeRds.rdf#RdsResultStorageModel'
         ));
         $resultServer = $resultProphecy->reveal();
