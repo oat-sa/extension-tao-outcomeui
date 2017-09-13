@@ -21,10 +21,10 @@ namespace oat\taoOutcomeUi\test\model;
 
 use oat\tao\test\TaoPhpUnitTestRunner;
 use \common_ext_ExtensionsManager;
+use oat\taoDeliveryRdf\model\DeliveryContainerService;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoResultServer\models\classes\ResultServerService;
 use Prophecy\Prophet;
-use oat\taoDelivery\model\execution\DeliveryExecution;
 
 /**
  * This test case focuses on testing ResultsService.
@@ -308,7 +308,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
 
         $deliveryProphecy = $prophet->prophesize('core_kernel_classes_Resource');
 
-        $deliveryProphecy->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP))->willReturn($resultServer);
+        $deliveryProphecy->getOnePropertyValue(new \core_kernel_classes_Property(DeliveryContainerService::RESULT_SERVER_PROP))->willReturn($resultServer);
 
         $delivery = $deliveryProphecy->reveal();
         $this->service->getReadableImplementation($delivery);
@@ -332,7 +332,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
 
         $deliveryProphecy = $prophet->prophesize('core_kernel_classes_Resource');
 
-        $deliveryProphecy->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP))->willReturn($resultServer);
+        $deliveryProphecy->getOnePropertyValue(new \core_kernel_classes_Property(DeliveryContainerService::RESULT_SERVER_PROP))->willReturn($resultServer);
 
         $delivery = $deliveryProphecy->reveal();
         $this->service->getReadableImplementation($delivery);
@@ -354,7 +354,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
 
         $deliveryProphecy = $prophet->prophesize('core_kernel_classes_Resource');
 
-        $deliveryProphecy->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP))->willReturn($resultServer);
+        $deliveryProphecy->getOnePropertyValue(new \core_kernel_classes_Property(DeliveryContainerService::RESULT_SERVER_PROP))->willReturn($resultServer);
 
         $delivery = $deliveryProphecy->reveal();
 
