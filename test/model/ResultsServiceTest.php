@@ -25,6 +25,7 @@ use oat\taoDeliveryRdf\model\DeliveryContainerService;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoResultServer\models\classes\ResultServerService;
 use Prophecy\Prophet;
+use taoItems_models_classes_ItemsService;
 
 /**
  * This test case focuses on testing ResultsService.
@@ -554,7 +555,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $relatedItem1Prophecy = $prophet->prophesize('\core_kernel_classes_Resource');
         $relatedItem1Prophecy->getLabel()->willReturn('MyRelatedItem1');
         $relatedItem1Prophecy->getUri()->willReturn('MyRelatedItemUri1');
-        $relatedItem1Prophecy->getUniquePropertyValue(new \core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY))->willReturn($itemModel1Prophecy->reveal());
+        $relatedItem1Prophecy->getUniquePropertyValue(new \core_kernel_classes_Property(taoItems_models_classes_ItemsService::PROPERTY_ITEM_MODEL))->willReturn($itemModel1Prophecy->reveal());
 
         $itemModel2Prophecy = $prophet->prophesize('\core_kernel_classes_Resource');
         $itemModel2Prophecy->getLabel()->willReturn('MySecondItemModel');
@@ -562,7 +563,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $relatedItem2Prophecy = $prophet->prophesize('\core_kernel_classes_Resource');
         $relatedItem2Prophecy->getLabel()->willReturn('MyRelatedItem2');
         $relatedItem2Prophecy->getUri()->willReturn('MyRelatedItemUri2');
-        $relatedItem2Prophecy->getUniquePropertyValue(new \core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY))->willReturn($itemModel2Prophecy->reveal());
+        $relatedItem2Prophecy->getUniquePropertyValue(new \core_kernel_classes_Property(taoItems_models_classes_ItemsService::PROPERTY_ITEM_MODEL))->willReturn($itemModel2Prophecy->reveal());
 
         $itemModel3Prophecy = $prophet->prophesize('\core_kernel_classes_Resource');
         $itemModel3Prophecy->getLabel()->willReturn('MyThirdItemModel');
@@ -570,7 +571,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $relatedItem3Prophecy = $prophet->prophesize('\core_kernel_classes_Resource');
         $relatedItem3Prophecy->getLabel()->willReturn('MyRelatedItem3');
         $relatedItem3Prophecy->getUri()->willReturn('MyRelatedItemUri3');
-        $relatedItem3Prophecy->getUniquePropertyValue(new \core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY))->willReturn($itemModel3Prophecy->reveal());
+        $relatedItem3Prophecy->getUniquePropertyValue(new \core_kernel_classes_Property(taoItems_models_classes_ItemsService::PROPERTY_ITEM_MODEL))->willReturn($itemModel3Prophecy->reveal());
 
 
         //Variables for Item 1
