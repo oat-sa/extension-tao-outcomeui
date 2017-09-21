@@ -192,7 +192,7 @@ class ResultTable extends \tao_actions_CommonModule {
      */
     private function getTestTakerColumn()
     {
-        $testtaker = new tao_models_classes_table_PropertyColumn(new core_kernel_classes_Property(ResultService::PROPERTY_SUBJECT));
+        $testtaker = new tao_models_classes_table_PropertyColumn(new core_kernel_classes_Property(ResultService::SUBJECT_CLASS_URI));
         $arr[] = $testtaker->toArray();
         return $arr;
     }

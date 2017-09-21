@@ -56,7 +56,7 @@ class ResultsService extends tao_models_classes_ClassService {
      * @see tao_models_classes_ClassService::getRootClass()
      */
     public function getRootClass() {
-        return new core_kernel_classes_Class(ResultService::PROPERTY_DELIVERY_RESULT);
+        return new core_kernel_classes_Class(ResultService::DELIVERY_RESULT_CLASS_URI);
     }
 
     public function setImplementation(ResultManagement $implementation){

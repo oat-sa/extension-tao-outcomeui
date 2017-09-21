@@ -129,7 +129,7 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface
 
         $columns = [];
 
-        $testtaker = new \tao_models_classes_table_PropertyColumn(new \core_kernel_classes_Property(ResultService::PROPERTY_SUBJECT));
+        $testtaker = new \tao_models_classes_table_PropertyColumn(new \core_kernel_classes_Property(ResultService::SUBJECT_CLASS_URI));
         $testTakerColumn[] = $testtaker->toArray();
         $cols = array_merge(
             $testTakerColumn,
