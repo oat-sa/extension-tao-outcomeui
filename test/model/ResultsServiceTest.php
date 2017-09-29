@@ -309,7 +309,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
 
         $deliveryProphecy = $prophet->prophesize('core_kernel_classes_Resource');
 
-        $deliveryProphecy->getOnePropertyValue(new \core_kernel_classes_Property(DeliveryContainerService::RESULT_SERVER_PROP))->willReturn($resultServer);
+        $deliveryProphecy->getOnePropertyValue(new \core_kernel_classes_Property(DeliveryContainerService::PROPERTY_RESULT_SERVER))->willReturn($resultServer);
 
         $delivery = $deliveryProphecy->reveal();
         $this->service->getReadableImplementation($delivery);
@@ -326,14 +326,14 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $prophet = new Prophet();
 
         $resultProphecy = $prophet->prophesize('core_kernel_classes_Resource');
-        $resultProphecy->getPropertyValues(new \core_kernel_classes_Property(ResultServerService::PROPERTY_MODEL_PROP))->willReturn(array(
+        $resultProphecy->getPropertyValues(new \core_kernel_classes_Property(ResultServerService::PROPERTY_HAS_MODEL))->willReturn(array(
             '#fakeUri'
         ));
         $resultServer = $resultProphecy->reveal();
 
         $deliveryProphecy = $prophet->prophesize('core_kernel_classes_Resource');
 
-        $deliveryProphecy->getOnePropertyValue(new \core_kernel_classes_Property(DeliveryContainerService::RESULT_SERVER_PROP))->willReturn($resultServer);
+        $deliveryProphecy->getOnePropertyValue(new \core_kernel_classes_Property(DeliveryContainerService::PROPERTY_RESULT_SERVER))->willReturn($resultServer);
 
         $delivery = $deliveryProphecy->reveal();
         $this->service->getReadableImplementation($delivery);
@@ -348,14 +348,14 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $prophet = new Prophet();
 
         $resultProphecy = $prophet->prophesize('core_kernel_classes_Resource');
-        $resultProphecy->getPropertyValues(new \core_kernel_classes_Property(ResultServerService::PROPERTY_MODEL_PROP))->willReturn(array(
+        $resultProphecy->getPropertyValues(new \core_kernel_classes_Property(ResultServerService::PROPERTY_HAS_MODEL))->willReturn(array(
             'http://www.tao.lu/Ontologies/taoOutcomeRds.rdf#RdsResultStorageModel'
         ));
         $resultServer = $resultProphecy->reveal();
 
         $deliveryProphecy = $prophet->prophesize('core_kernel_classes_Resource');
 
-        $deliveryProphecy->getOnePropertyValue(new \core_kernel_classes_Property(DeliveryContainerService::RESULT_SERVER_PROP))->willReturn($resultServer);
+        $deliveryProphecy->getOnePropertyValue(new \core_kernel_classes_Property(DeliveryContainerService::PROPERTY_RESULT_SERVER))->willReturn($resultServer);
 
         $delivery = $deliveryProphecy->reveal();
 
