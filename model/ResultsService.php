@@ -25,6 +25,11 @@
 
 namespace oat\taoOutcomeUi\model;
 
+use oat\oatbox\filesystem\Directory;
+use oat\oatbox\filesystem\FileSystemService;
+use oat\oatbox\task\implementation\SyncQueue;
+use oat\oatbox\task\Queue;
+use oat\oatbox\task\Task;
 use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
@@ -36,6 +41,8 @@ use \core_kernel_classes_Class;
 use \core_kernel_classes_DbWrapper;
 use \core_kernel_classes_Property;
 use \core_kernel_classes_Resource;
+use oat\taoOutcomeUi\scripts\ExportDeliveryResults;
+use oat\taoOutcomeUi\scripts\task\ExportDeliveryResultsTask;
 use oat\taoResultServer\models\classes\ResultManagement;
 use \tao_helpers_Date;
 use \tao_models_classes_ClassService;
@@ -132,6 +139,7 @@ class ResultsService extends tao_models_classes_ClassService {
     public function getVariablesFromObjectResult($itemResult, $wantedTypes = array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class)) {
         $returnedVariables = array();
         $variables = $this->getImplementation()->getVariables($itemResult);
+
         if(!empty($wantedTypes)){
             foreach($variables as $variable){
                 if(in_array(get_class($variable[0]->variable),$wantedTypes)){
@@ -895,6 +903,72 @@ class ResultsService extends tao_models_classes_ClassService {
             $returnValue = [$cellData];
         }
         return $returnValue;
+    }
+
+    /**
+     * Export the delivery results through a task
+     *
+     * @param core_kernel_classes_Resource $delivery
+     * @return \oat\oatbox\filesystem\File
+     * @throws common_Exception
+     */
+    public function getCsvByDelivery(core_kernel_classes_Resource $delivery)
+    {
+        if (!$delivery->exists()) {
+            throw new common_Exception('The delivery to export does not exist.');
+        }
+
+        /** @var Task $result */
+        $result = $this->getTaskQueue()->createTask(ExportDeliveryResultsTask::class, [$delivery->getUri()]);
+
+        if ($this->isSynchronous()) {
+
+            $taskErrorReports = $result->getReport()->getErrors();
+            if (!empty($taskErrorReports)) {
+                throw new common_Exception('Task export has failed.');
+            }
+
+            $taskSuccessReports = $result->getReport()->getSuccesses();
+            $taskReport = reset($taskSuccessReports);
+            $taskData = $taskReport->getData();
+            if (isset($taskData[ExportDeliveryResultsTask::EXPORT_FILE_KEY])) {
+                return $this->getQueueStorage()->getFile($taskData[ExportDeliveryResultsTask::EXPORT_FILE_KEY]);
+            }
+
+            throw new common_Exception('Export result task does not have an exported file');
+        } else {
+
+        }
+    }
+
+    /**
+     * Get the Queue service to manage tasks
+     *
+     * @return Queue
+     */
+    protected function getTaskQueue()
+    {
+        return $this->getServiceLocator()->get(Queue::SERVICE_ID);
+    }
+
+    /**
+     * Get the directory of Queue storage
+     *
+     * @return Directory
+     */
+    public function getQueueStorage()
+    {
+        return $this->getServiceLocator()->get(FileSystemService::SERVICE_ID)->getDirectory(Queue::FILE_SYSTEM_ID);
+    }
+
+    /**
+     * Check if task will be executed immediately by the queue
+     *
+     * @return bool
+     */
+    protected function isSynchronous()
+    {
+        return $this->getTaskQueue() instanceof SyncQueue;
     }
 
 }

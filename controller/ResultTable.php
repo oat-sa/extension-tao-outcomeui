@@ -25,6 +25,7 @@ namespace oat\taoOutcomeUi\controller;
 use \common_Exception;
 use \core_kernel_classes_Property;
 use \core_kernel_classes_Resource;
+use oat\generis\model\OntologyAwareTrait;
 use \tao_models_classes_table_Column;
 use \tao_models_classes_table_PropertyColumn;
 use oat\taoOutcomeUi\model\ResultsService;
@@ -46,7 +47,9 @@ use oat\taoDelivery\model\execution\DeliveryExecution;
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  *
  */
-class ResultTable extends \tao_actions_CommonModule {
+class ResultTable extends \tao_actions_CommonModule
+{
+    use OntologyAwareTrait;
 
     /**
      * constructor: initialize the service and the default data
@@ -85,50 +88,30 @@ class ResultTable extends \tao_actions_CommonModule {
 
     /**
      * Download csv file with all results of all delivery executions of given delivery.
+     *
+     * @throws \common_exception_MissingParameter
+     * @throws common_Exception
      */
     public function getCsvFileByDelivery()
     {
-        $filter = 'lastSubmitted';
-        $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
-        $columns = [];
-        $cols = array_merge(
-             $this->getTestTakerColumn(),
-             $this->service->getVariableColumns($delivery, CLASS_OUTCOME_VARIABLE, $filter),
-             $this->service->getVariableColumns($delivery, CLASS_RESPONSE_VARIABLE, $filter)
-        );
-
-        $dataProvider = new VariableDataProvider();
-        foreach ($cols as $col) {
-            $column = tao_models_classes_table_Column::buildColumnFromArray($col);
-            if (!is_null($column)) {
-                if($column instanceof VariableColumn){
-                    $column->setDataProvider($dataProvider);
-                }
-                $columns[] = $column;
-            }
-        }
-        $columns[0]->label = __("Test taker");
-        $rows = $this->service->getResultsByDelivery($delivery, $columns, $filter);
-        $columnNames = array_reduce($columns, function ($carry, $item) {
-            $carry[] = $item->label;
-            return $carry;
-        });
-        $result = [];
-        foreach ($rows as $row) {
-            $rowResult = [];
-            foreach ($row['cell'] as $rowKey => $rowVal) {
-                $rowResult[$columnNames[$rowKey]] = $rowVal[0];
-            }
-            $result[] = $rowResult;
+        if (!$this->hasRequestParameter('uri')) {
+            throw new \common_exception_MissingParameter('uri', __FUNCTION__);
         }
 
-        //If there are no executions yet, the file is exported but contains only the header
-        if (empty($result)) {
-            $result = [array_fill_keys($columnNames, '')];
-        }
+        $delivery = $this->getResource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
+        $file = $this->getResultsService()->getCsvByDelivery($delivery);
+        \common_Logger::i($file->read());
+        \common_Logger::i($file->getPrefix());
+        \common_Logger::i($file->getSize());
 
-        $exporter = new CsvExporter($result);
-        $exporter->export(true, true, ";");
+        header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
+        setcookie("fileDownload","true", 0, "/");
+        header("Content-type: text/csv");
+        header('Content-Disposition: attachment; filename=Data.csv');
+        //header('Content-Disposition: attachment; fileName="' . $file->getBasename() .'"');
+        header("Content-Length: " . $file->getSize());
+
+        echo $file->read();
     }
 
     /**
@@ -366,5 +349,15 @@ class ResultTable extends \tao_actions_CommonModule {
         $response->records = count($results);
 
         $this->returnJSON($response);
+    }
+
+    /**
+     * Get the results service
+     *
+     * @return ResultsService
+     */
+    protected function getResultsService()
+    {
+        return ResultsService::singleton();
     }
 }
