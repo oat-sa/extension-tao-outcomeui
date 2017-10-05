@@ -906,39 +906,59 @@ class ResultsService extends tao_models_classes_ClassService {
     }
 
     /**
-     * Export the delivery results through a task
+     * Use the sync queue to create a task executed immediately
+     * The created task contains a report with export file
      *
      * @param core_kernel_classes_Resource $delivery
      * @return \oat\oatbox\filesystem\File
      * @throws common_Exception
      */
-    public function getCsvByDelivery(core_kernel_classes_Resource $delivery)
+    public function exportDeliveryResults(core_kernel_classes_Resource $delivery)
     {
+        if (!$this->hasSynchronousExport()) {
+            throw new common_Exception('Unable to get an export file, taskqueue is not synchronous.');
+        }
+
         if (!$delivery->exists()) {
             throw new common_Exception('The delivery to export does not exist.');
         }
 
-        /** @var Task $result */
-        $result = $this->getTaskQueue()->createTask(ExportDeliveryResultsTask::class, [$delivery->getUri()]);
-
-        if ($this->isSynchronous()) {
-
-            $taskErrorReports = $result->getReport()->getErrors();
-            if (!empty($taskErrorReports)) {
-                throw new common_Exception('Task export has failed.');
-            }
-
-            $taskSuccessReports = $result->getReport()->getSuccesses();
-            $taskReport = reset($taskSuccessReports);
-            $taskData = $taskReport->getData();
-            if (isset($taskData[ExportDeliveryResultsTask::EXPORT_FILE_KEY])) {
-                return $this->getQueueStorage()->getFile($taskData[ExportDeliveryResultsTask::EXPORT_FILE_KEY]);
-            }
-
-            throw new common_Exception('Export result task does not have an exported file');
-        } else {
-
+        /** @var Task $task */
+        $task = $this->createExportTask($delivery);
+        $taskErrorReports = $task->getReport()->getErrors();
+        if (!empty($taskErrorReports)) {
+            throw new common_Exception('Task export has failed.');
         }
+
+        $taskSuccessReports = $task->getReport()->getSuccesses();
+        $taskReport = reset($taskSuccessReports);
+        $taskData = $taskReport->getData();
+        if (isset($taskData[ExportDeliveryResultsTask::EXPORT_FILE_KEY])) {
+            return $this->getQueueStorage()->getFile($taskData[ExportDeliveryResultsTask::EXPORT_FILE_KEY]);
+        }
+
+        throw new common_Exception('Export result task does not have an exported file');
+    }
+
+    /**
+     * Create a task to export result by delivery
+     *
+     * @param core_kernel_classes_Resource $delivery
+     * @return Task
+     */
+    protected function createExportTask(core_kernel_classes_Resource $delivery)
+    {
+        return $this->getTaskQueue()->createTask(ExportDeliveryResultsTask::class, [$delivery->getUri()]);
+    }
+
+    /**
+     * Check if taskqueue is the sync one
+     *
+     * @return bool
+     */
+    public function hasSynchronousExport()
+    {
+        return $this->getTaskQueue() instanceof SyncQueue;
     }
 
     /**
@@ -959,16 +979,6 @@ class ResultsService extends tao_models_classes_ClassService {
     public function getQueueStorage()
     {
         return $this->getServiceLocator()->get(FileSystemService::SERVICE_ID)->getDirectory(Queue::FILE_SYSTEM_ID);
-    }
-
-    /**
-     * Check if task will be executed immediately by the queue
-     *
-     * @return bool
-     */
-    protected function isSynchronous()
-    {
-        return $this->getTaskQueue() instanceof SyncQueue;
     }
 
 }

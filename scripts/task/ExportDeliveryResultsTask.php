@@ -24,7 +24,6 @@ use common_report_Report as Report;
 use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\action\Action;
 use oat\oatbox\filesystem\Directory;
-use oat\oatbox\filesystem\File;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeUi\model\table\VariableDataProvider;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
@@ -41,21 +40,8 @@ class ExportDeliveryResultsTask implements Action, ServiceLocatorAwareInterface
     use ServiceLocatorAwareTrait;
     use OntologyAwareTrait;
 
-    const EXPORT_FILE_KEY = 'exportFile';
+    const EXPORT_FILE_KEY = 'exportedFile';
 
-    /**
-     * The file to export results
-     *
-     * @var File
-     */
-    protected $file;
-
-    /**
-     * The PHP resource of export file
-     *
-     * @var resource
-     */
-    protected $resource;
     /**
      * The delivery to extract results
      *
@@ -63,11 +49,25 @@ class ExportDeliveryResultsTask implements Action, ServiceLocatorAwareInterface
      */
     protected $delivery;
 
+    /**
+     * The PHP resource of export file
+     *
+     * @var resource
+     */
+    protected $resource;
+
+    /**
+     * The path to working tmp file
+     *
+     * @var string
+     */
+    protected $tmpFile;
+
     public function __construct()
     {
         //Load extension to define necessary constants.
         // \common_ext_ExtensionsManager::singleton()->getExtensionById('taoOutcomeUi');
-        \common_ext_ExtensionsManager::singleton()->getExtensionById('taoDeliveryRdf');
+        //\common_ext_ExtensionsManager::singleton()->getExtensionById('taoDeliveryRdf');
     }
 
     /**
@@ -84,7 +84,7 @@ class ExportDeliveryResultsTask implements Action, ServiceLocatorAwareInterface
 
         try {
             $this->exportData();
-            fclose($this->resource);
+            $file = $this->createTaskFile();
         } catch (\common_Exception $e) {
             return new Report(Report::TYPE_ERROR, $e->getMessage());
         }
@@ -93,7 +93,7 @@ class ExportDeliveryResultsTask implements Action, ServiceLocatorAwareInterface
             Report::TYPE_SUCCESS,
             'Results successfully exported',
             [
-                self::EXPORT_FILE_KEY => $this->file->getPrefix()
+                self::EXPORT_FILE_KEY => $file->getPrefix()
             ]
         );
     }
@@ -162,15 +162,18 @@ class ExportDeliveryResultsTask implements Action, ServiceLocatorAwareInterface
 
 
         if (!empty($rows)) {
-            foreach ($rows as $row) {
+            foreach ($rows as $key => $row) {
                 $rowResult = [];
                 foreach ($row['cell'] as $rowKey => $rowVal) {
                     $rowResult[$columnNames[$rowKey]] = $rowVal[0];
                 }
-                $this->exportToCsv($rowResult);
+                if ($key == 0) {
+                    $this->initFile(array_keys($rowResult));
+                }
+                $this->exportCsvToFile($rowResult);
             }
         } else {
-            $this->exportToCsv([array_fill_keys($columnNames, '')]);
+            $this->exportCsvToFile([array_fill_keys($columnNames, '')]);
         }
     }
 
@@ -180,10 +183,9 @@ class ExportDeliveryResultsTask implements Action, ServiceLocatorAwareInterface
      * @param $data
      * @throws \common_Exception
      */
-    protected function exportToCsv($data)
+    protected function exportCsvToFile($data)
     {
-        $resource = $this->getFileResource(array_keys($data));
-        fputcsv($resource, $data, $this->getCsvControl('delimiter'), $this->getCsvControl('enclosure'));
+        fputcsv($this->resource, $data, $this->getCsvControl('delimiter'), $this->getCsvControl('enclosure'));
     }
 
     /**
@@ -191,41 +193,36 @@ class ExportDeliveryResultsTask implements Action, ServiceLocatorAwareInterface
      * If file is not instantiated, delete if exists and write headers
      *
      * @param array $headers
-     * @return File
      * @throws \common_Exception
      */
-    protected function getFile(array $headers)
+    protected function initFile(array $headers)
     {
-        if (!$this->file) {
-            /** @var Directory $queueStorage */
-            $queueStorage = $this->getResultsService()->getQueueStorage();
-            $this->file = $queueStorage->getFile(
-                'delivery_results_export_' . \tao_helpers_Uri::getUniqueId($this->delivery->getUri()) . '_' . (new \DateTime())->format('Y-m-d_H-i') . '.csv'
-            );
-
-            $buffer = fopen('php://temp', 'w');
-            fputcsv($buffer, $headers, $this->getCsvControl('delimiter'), $this->getCsvControl('enclosure'));
-            rewind($buffer);
-            $this->file->put($buffer);
-            fclose($buffer);
-        }
-
-        return $this->file;
+        $this->tmpFile = \tao_helpers_File::createTempDir() . uniqid('delivery_result_export') . '.csv';
+        $this->resource = fopen($this->tmpFile, 'w+');
+        $this->exportCsvToFile($headers);
     }
 
     /**
-     * Get the PHP resource of the export file
+     * Copy the tmpFile to task file located into the TaskQueue storage
      *
-     * @param array $headers
-     * @return false|resource
+     * @return \oat\oatbox\filesystem\File
      * @throws \common_Exception
      */
-    protected function getFileResource(array $headers)
+    protected function createTaskFile()
     {
-        if (!$this->resource) {
-            $this->resource = $this->getFile($headers)->readStream();
-        }
-        return $this->resource;
+        /** @var Directory $queueStorage */
+        $queueStorage = $this->getResultsService()->getQueueStorage();
+        $file = $queueStorage->getFile(
+            'delivery_results_export_' . \tao_helpers_Uri::getUniqueId($this->delivery->getUri()) . '_' . (new \DateTime())->format('Y-m-d_H-i') . '.csv'
+        );
+
+        rewind($this->resource);
+        $file->put($this->resource);
+        fclose($this->resource);
+        unlink($this->tmpFile);
+        rmdir(dirname($this->tmpFile));
+
+        return $file;
     }
 
     /**

@@ -97,21 +97,18 @@ class ResultTable extends \tao_actions_CommonModule
         if (!$this->hasRequestParameter('uri')) {
             throw new \common_exception_MissingParameter('uri', __FUNCTION__);
         }
-
         $delivery = $this->getResource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
-        $file = $this->getResultsService()->getCsvByDelivery($delivery);
-        \common_Logger::i($file->read());
-        \common_Logger::i($file->getPrefix());
-        \common_Logger::i($file->getSize());
 
-        header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
-        setcookie("fileDownload","true", 0, "/");
-        header("Content-type: text/csv");
-        header('Content-Disposition: attachment; filename=Data.csv');
-        //header('Content-Disposition: attachment; fileName="' . $file->getBasename() .'"');
-        header("Content-Length: " . $file->getSize());
+        if ($this->getResultsService()->hasSynchronousExport()) {
+            $file = $this->getResultsService()->exportDeliveryResults($delivery);
+            header("Content-type: text/csv");
+            header('Content-Disposition: attachment; fileName="' . $file->getBasename() .'"');
+            header("Content-Length: " . $file->getSize());
+            echo $file->read();
+        } else {
+            throw new \common_exception_NotImplemented();
+        }
 
-        echo $file->read();
     }
 
     /**
