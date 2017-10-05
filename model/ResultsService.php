@@ -915,7 +915,7 @@ class ResultsService extends tao_models_classes_ClassService {
      */
     public function exportDeliveryResults(core_kernel_classes_Resource $delivery)
     {
-        if (!$this->hasSynchronousExport()) {
+        if (!$this->isSynchronousExport()) {
             throw new common_Exception('Unable to get an export file, taskqueue is not synchronous.');
         }
 
@@ -956,7 +956,7 @@ class ResultsService extends tao_models_classes_ClassService {
      *
      * @return bool
      */
-    public function hasSynchronousExport()
+    public function isSynchronousExport()
     {
         return $this->getTaskQueue() instanceof SyncQueue;
     }

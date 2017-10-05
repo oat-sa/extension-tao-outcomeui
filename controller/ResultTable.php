@@ -99,7 +99,7 @@ class ResultTable extends \tao_actions_CommonModule
         }
         $delivery = $this->getResource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
 
-        if ($this->getResultsService()->hasSynchronousExport()) {
+        if ($this->getResultsService()->isSynchronousExport()) {
             $file = $this->getResultsService()->exportDeliveryResults($delivery);
             header("Content-type: text/csv");
             header('Content-Disposition: attachment; fileName="' . $file->getBasename() .'"');
