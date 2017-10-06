@@ -104,7 +104,7 @@ class ResultTable extends \tao_actions_CommonModule
             header("Content-type: text/csv");
             header('Content-Disposition: attachment; fileName="' . $file->getBasename() .'"');
             header("Content-Length: " . $file->getSize());
-            echo $file->read();
+            \tao_helpers_Http::returnStream($file->readPsrStream());
         } else {
             $this->setData('uri', tao_helpers_Uri::encode($delivery->getUri()));
             $this->setData('label', $delivery->getLabel());
