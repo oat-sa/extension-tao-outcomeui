@@ -120,7 +120,7 @@ class ResultTable extends \tao_actions_CommonModule
     /**
      * Create a task to export delivery results
      * A json message is returned with a feedback message
-     * 
+     *
      * @throws \common_exception_MethodNotAllowed
      * @throws \common_exception_MissingParameter
      */
