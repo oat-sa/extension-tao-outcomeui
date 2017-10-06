@@ -15,10 +15,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * Copyright (c) 2009-2012 (original work) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV);
- *
+ *               2012-2017 Open Assessment Technologies SA;
  *
  */
-
 
 namespace oat\taoOutcomeUi\controller;
 
@@ -32,10 +31,11 @@ use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use tao_helpers_Uri;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
-use oat\tao\model\export\implementation\CsvExporter;
 use oat\taoOutcomeUi\model\table\VariableDataProvider;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoDelivery\model\execution\DeliveryExecution;
+use common_report_Report as Report;
+
 
 /**
  * should be entirelyrefactored
@@ -106,9 +106,37 @@ class ResultTable extends \tao_actions_CommonModule
             header("Content-Length: " . $file->getSize());
             echo $file->read();
         } else {
-            throw new \common_exception_NotImplemented();
+            \common_Logger::i(ResultsService::DELIVERY_EXPORT_QUEUE_CONTEXT);
+            $this->setData('uri', tao_helpers_Uri::encode($delivery->getUri()));
+            $this->setData('label', $delivery->getLabel());
+            $this->setData('context', ResultsService::DELIVERY_EXPORT_QUEUE_CONTEXT);
+            $this->setData(
+                'create-task-callback-url',
+                _url('createCsvFileByDeliveryTask',  \Context::getInstance()->getModuleName(), \Context::getInstance()->getExtensionName())
+            );
+            $this->setView('export-taskqueue.tpl');
         }
+    }
 
+    /**
+     * @throws \common_exception_MethodNotAllowed
+     * @throws \common_exception_MissingParameter
+     */
+    public function createCsvFileByDeliveryTask()
+    {
+        if (!$this->isRequestPost()) {
+            throw new \common_exception_MethodNotAllowed();
+        }
+        if (!$this->hasRequestParameter('uri')) {
+            throw new \common_exception_MissingParameter('uri', __FUNCTION__);
+        }
+        $delivery = $this->getResource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
+        $task = $this->getResultsService()->createExportTask($delivery);
+
+        $this->returnJson(array(
+            'success' => true,
+            'message' => __('Results export for delivery "%s" successfully scheduled under Task "%s"', $delivery->getLabel(), $task->getLabel())
+        ));
     }
 
     /**
