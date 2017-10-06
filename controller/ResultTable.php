@@ -106,7 +106,6 @@ class ResultTable extends \tao_actions_CommonModule
             header("Content-Length: " . $file->getSize());
             echo $file->read();
         } else {
-            \common_Logger::i(ResultsService::DELIVERY_EXPORT_QUEUE_CONTEXT);
             $this->setData('uri', tao_helpers_Uri::encode($delivery->getUri()));
             $this->setData('label', $delivery->getLabel());
             $this->setData('context', ResultsService::DELIVERY_EXPORT_QUEUE_CONTEXT);
@@ -119,6 +118,9 @@ class ResultTable extends \tao_actions_CommonModule
     }
 
     /**
+     * Create a task to export delivery results
+     * A json message is returned with a feedback message
+     * 
      * @throws \common_exception_MethodNotAllowed
      * @throws \common_exception_MissingParameter
      */
