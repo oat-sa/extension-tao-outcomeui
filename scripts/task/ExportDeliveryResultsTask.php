@@ -39,9 +39,7 @@ class ExportDeliveryResultsTask implements Action, ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait;
     use OntologyAwareTrait;
-
-    const EXPORT_FILE_KEY = 'exportedFile';
-
+    
     /**
      * The delivery to extract results
      *
@@ -63,19 +61,14 @@ class ExportDeliveryResultsTask implements Action, ServiceLocatorAwareInterface
      */
     protected $tmpFile;
 
-    public function __construct()
-    {
-        //Load extension to define necessary constants.
-        // \common_ext_ExtensionsManager::singleton()->getExtensionById('taoOutcomeUi');
-        //\common_ext_ExtensionsManager::singleton()->getExtensionById('taoDeliveryRdf');
-    }
-
     /**
      * @param $params
      * @return Report
      */
     public function __invoke($params)
     {
+        $this->loadExtensions();
+
         try {
             $this->parseParams($params);
         } catch (ResolutionException $e) {
@@ -91,10 +84,8 @@ class ExportDeliveryResultsTask implements Action, ServiceLocatorAwareInterface
 
         return new Report(
             Report::TYPE_SUCCESS,
-            'Results successfully exported',
-            [
-                self::EXPORT_FILE_KEY => $file->getPrefix()
-            ]
+            __('Results successfully exported for delivery "%s"', $this->delivery->getLabel()),
+            $file->getPrefix()
         );
     }
 
@@ -260,5 +251,13 @@ class ExportDeliveryResultsTask implements Action, ServiceLocatorAwareInterface
     protected function getResultsService()
     {
         return ResultsService::singleton();
+    }
+
+    /**
+     * Load the required TAO extensions (for constants)
+     */
+    protected function loadExtensions()
+    {
+        $this->getServiceLocator()->get(\common_ext_ExtensionsManager::SERVICE_ID)->getExtensionById('taoOutcomeUi');
     }
 }
