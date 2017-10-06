@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,7 +14,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2013 Open Assessment Technologies S.A.
+ * Copyright (c) 2013-2017 Open Assessment Technologies S.A.
  *
  *
  * @access public
@@ -954,7 +953,6 @@ class ResultsService extends tao_models_classes_ClassService
             self::DELIVERY_EXPORT_QUEUE_CONTEXT
         );
         
-        return $this->getTaskQueue()->createTask(ExportDeliveryResultsTask::class, [$delivery->getUri()]);
     }
 
     /**
