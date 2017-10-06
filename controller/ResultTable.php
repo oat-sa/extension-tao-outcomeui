@@ -104,11 +104,10 @@ class ResultTable extends \tao_actions_CommonModule
             header("Content-type: text/csv");
             header('Content-Disposition: attachment; fileName="' . $file->getBasename() .'"');
             header("Content-Length: " . $file->getSize());
-            echo $file->read();
+            \tao_helpers_Http::returnStream($file->readPsrStream());
         } else {
             throw new \common_exception_NotImplemented('Results export is available only for SyncQueue');
         }
-
     }
 
     /**
