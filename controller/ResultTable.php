@@ -106,7 +106,7 @@ class ResultTable extends \tao_actions_CommonModule
             header("Content-Length: " . $file->getSize());
             echo $file->read();
         } else {
-            throw new \common_exception_NotImplemented();
+            throw new \common_exception_NotImplemented('Results export is available only for SyncQueue');
         }
 
     }
