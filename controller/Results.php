@@ -24,6 +24,8 @@ namespace oat\taoOutcomeUi\controller;
 use \Exception;
 use \common_exception_IsAjaxAction;
 use \core_kernel_classes_Resource;
+use oat\generis\model\GenerisRdf;
+use oat\generis\model\OntologyRdfs;
 use oat\oatbox\event\EventManager;
 use oat\tao\model\accessControl\AclProxy;
 use oat\tao\model\plugins\PluginModule;
@@ -316,18 +318,18 @@ class Results extends tao_actions_SaSModule
                 $this->setData('userLastName', $testTaker);
                 $this->setData('userEmail', $testTaker);
             } else {
-                $login = (count($testTaker[PROPERTY_USER_LOGIN]) > 0) ? current(
-                    $testTaker[PROPERTY_USER_LOGIN]
+                $login = (count($testTaker[GenerisRdf::PROPERTY_USER_LOGIN]) > 0) ? current(
+                    $testTaker[GenerisRdf::PROPERTY_USER_LOGIN]
                 )->literal : "";
-                $label = (count($testTaker[RDFS_LABEL]) > 0) ? current($testTaker[RDFS_LABEL])->literal : "";
-                $firstName = (count($testTaker[PROPERTY_USER_FIRSTNAME]) > 0) ? current(
-                    $testTaker[PROPERTY_USER_FIRSTNAME]
+                $label = (count($testTaker[OntologyRdfs::RDFS_LABEL]) > 0) ? current($testTaker[OntologyRdfs::RDFS_LABEL])->literal : "";
+                $firstName = (count($testTaker[GenerisRdf::PROPERTY_USER_FIRSTNAME]) > 0) ? current(
+                    $testTaker[GenerisRdf::PROPERTY_USER_FIRSTNAME]
                 )->literal : "";
-                $userLastName = (count($testTaker[PROPERTY_USER_LASTNAME]) > 0) ? current(
-                    $testTaker[PROPERTY_USER_LASTNAME]
+                $userLastName = (count($testTaker[GenerisRdf::PROPERTY_USER_LASTNAME]) > 0) ? current(
+                    $testTaker[GenerisRdf::PROPERTY_USER_LASTNAME]
                 )->literal : "";
-                $userEmail = (count($testTaker[PROPERTY_USER_MAIL]) > 0) ? current(
-                    $testTaker[PROPERTY_USER_MAIL]
+                $userEmail = (count($testTaker[GenerisRdf::PROPERTY_USER_MAIL]) > 0) ? current(
+                    $testTaker[GenerisRdf::PROPERTY_USER_MAIL]
                 )->literal : "";
 
                 $this->setData('userLogin', $login);

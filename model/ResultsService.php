@@ -25,6 +25,8 @@
 
 namespace oat\taoOutcomeUi\model;
 
+use oat\generis\model\GenerisRdf;
+use oat\generis\model\OntologyRdfs;
 use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
@@ -723,11 +725,11 @@ class ResultsService extends tao_models_classes_ClassService {
             return $testTaker;
         } else {
             $propValues = $testTaker->getPropertiesValues(array(
-                RDFS_LABEL,
-                PROPERTY_USER_LOGIN,
-                PROPERTY_USER_FIRSTNAME,
-                PROPERTY_USER_LASTNAME,
-                PROPERTY_USER_MAIL,
+                OntologyRdfs::RDFS_LABEL,
+                GenerisRdf::PROPERTY_USER_LOGIN,
+                GenerisRdf::PROPERTY_USER_FIRSTNAME,
+                GenerisRdf::PROPERTY_USER_LASTNAME,
+                GenerisRdf::PROPERTY_USER_MAIL,
             ));
         }
         return $propValues;
@@ -794,7 +796,7 @@ class ResultsService extends tao_models_classes_ClassService {
                     $cellData[]=self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column), $filter);
                 } else {
                     $cellData[]=[self::filterCellData(
-                        (string)$this->getTestTaker($result)->getOnePropertyValue(new \core_kernel_classes_Property(PROPERTY_USER_LOGIN)),
+                        (string)$this->getTestTaker($result)->getOnePropertyValue(new \core_kernel_classes_Property(GenerisRdf::PROPERTY_USER_LOGIN)),
                         $filter)];
                 }
             }

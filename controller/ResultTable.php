@@ -25,6 +25,7 @@ namespace oat\taoOutcomeUi\controller;
 use \common_Exception;
 use \core_kernel_classes_Property;
 use \core_kernel_classes_Resource;
+use oat\generis\model\GenerisRdf;
 use \tao_models_classes_table_Column;
 use \tao_models_classes_table_PropertyColumn;
 use oat\taoOutcomeUi\model\ResultsService;
@@ -345,7 +346,7 @@ class ResultTable extends \tao_actions_CommonModule {
                         );
                     } else {
                         $data[$key] = ResultsService::filterCellData(
-                            (string)$this->service->getTestTaker($result)->getOnePropertyValue(new \core_kernel_classes_Property(PROPERTY_USER_LOGIN)),
+                            (string)$this->service->getTestTaker($result)->getOnePropertyValue(new \core_kernel_classes_Property(GenerisRdf::PROPERTY_USER_LOGIN)),
                             $filterData
                         );
                     }
