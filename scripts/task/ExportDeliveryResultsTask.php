@@ -24,6 +24,7 @@ use common_report_Report as Report;
 use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\action\Action;
 use oat\oatbox\filesystem\Directory;
+use oat\taoOutcomeUi\model\export\ResultExportService;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeUi\model\table\VariableDataProvider;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
@@ -202,7 +203,7 @@ class ExportDeliveryResultsTask implements Action, ServiceLocatorAwareInterface
     protected function createTaskFile()
     {
         /** @var Directory $queueStorage */
-        $queueStorage = $this->getResultsService()->getQueueStorage();
+        $queueStorage = $this->getResultExportService()->getQueueStorage();
         $file = $queueStorage->getFile(
             'delivery_results_export_' . \tao_helpers_Uri::getUniqueId($this->delivery->getUri()) . '_' . (new \DateTime())->format('Y-m-d_H-i') . '.csv'
         );
@@ -251,6 +252,16 @@ class ExportDeliveryResultsTask implements Action, ServiceLocatorAwareInterface
     protected function getResultsService()
     {
         return ResultsService::singleton();
+    }
+
+    /**
+     * Get the results export service
+     *
+     * @return ResultExportService
+     */
+    protected function getResultExportService()
+    {
+        return (new ResultExportService())->setServiceLocator($this->getServiceLocator());
     }
 
     /**

@@ -24,11 +24,6 @@
 
 namespace oat\taoOutcomeUi\model;
 
-use oat\oatbox\filesystem\Directory;
-use oat\oatbox\filesystem\FileSystemService;
-use oat\oatbox\task\implementation\SyncQueue;
-use oat\oatbox\task\Queue;
-use oat\oatbox\task\Task;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
 use \common_Exception;
@@ -38,7 +33,6 @@ use \core_kernel_classes_Class;
 use \core_kernel_classes_DbWrapper;
 use \core_kernel_classes_Property;
 use \core_kernel_classes_Resource;
-use oat\taoOutcomeUi\scripts\task\ExportDeliveryResultsTask;
 use oat\taoResultServer\models\classes\ResultManagement;
 use \tao_models_classes_ClassService;
 use oat\taoOutcomeUi\helper\Datatypes;
@@ -47,8 +41,6 @@ use oat\taoResultServer\models\classes\ResultServerService;
 
 class ResultsService extends tao_models_classes_ClassService
 {
-    const DELIVERY_EXPORT_QUEUE_CONTEXT = 'taoOutcomeUi/results-export-by-delivery';
-
     /**
      *
      * @var \taoResultServer_models_classes_ReadableResultStorage
@@ -900,88 +892,6 @@ class ResultsService extends tao_models_classes_ClassService
             $returnValue = [$cellData];
         }
         return $returnValue;
-    }
-
-    /**
-     * Use the sync queue to create a task executed immediately
-     * The created task contains a report with export file
-     *
-     * @param core_kernel_classes_Resource $delivery
-     * @return \oat\oatbox\filesystem\File
-     * @throws common_Exception
-     */
-    public function exportDeliveryResults(core_kernel_classes_Resource $delivery)
-    {
-        if (!$this->isSynchronousExport()) {
-            throw new common_Exception('Unable to get an export file, taskqueue is not synchronous.');
-        }
-
-        if (!$delivery->exists()) {
-            throw new common_Exception('The delivery to export does not exist.');
-        }
-
-        /** @var Task $task */
-        $task = $this->createExportTask($delivery);
-        $taskErrorReports = $task->getReport()->getErrors();
-        if (!empty($taskErrorReports)) {
-            throw new common_Exception('Task export has failed.');
-        }
-
-        $taskSuccessReports = $task->getReport()->getSuccesses();
-        $taskReport = reset($taskSuccessReports);
-        $taskFile = $this->getQueueStorage()->getFile($taskReport->getData());
-        if ($taskFile->exists()) {
-            return $taskFile;
-        }
-
-        throw new common_Exception('Export result task does not have an exported file');
-    }
-
-    /**
-     * Create a task to export result by delivery
-     *
-     * @param core_kernel_classes_Resource $delivery
-     * @return Task
-     */
-    public function createExportTask(core_kernel_classes_Resource $delivery)
-    {
-        return $this->getTaskQueue()->createTask(
-            ExportDeliveryResultsTask::class,
-            [$delivery->getUri()],
-            false,
-            __('CSV results export for delivery "%s"', $delivery->getLabel()),
-            self::DELIVERY_EXPORT_QUEUE_CONTEXT
-        );
-    }
-
-    /**
-     * Check if taskqueue is the sync one
-     *
-     * @return bool
-     */
-    public function isSynchronousExport()
-    {
-        return $this->getTaskQueue() instanceof SyncQueue;
-    }
-
-    /**
-     * Get the Queue service to manage tasks
-     *
-     * @return Queue
-     */
-    protected function getTaskQueue()
-    {
-        return $this->getServiceLocator()->get(Queue::SERVICE_ID);
-    }
-
-    /**
-     * Get the directory of Queue storage
-     *
-     * @return Directory
-     */
-    public function getQueueStorage()
-    {
-        return $this->getServiceLocator()->get(FileSystemService::SERVICE_ID)->getDirectory(Queue::FILE_SYSTEM_ID);
     }
 
 }

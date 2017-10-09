@@ -25,6 +25,7 @@ use \common_Exception;
 use \core_kernel_classes_Property;
 use \core_kernel_classes_Resource;
 use oat\generis\model\OntologyAwareTrait;
+use oat\taoOutcomeUi\model\export\ResultExportService;
 use \tao_models_classes_table_Column;
 use \tao_models_classes_table_PropertyColumn;
 use oat\taoOutcomeUi\model\ResultsService;
@@ -99,8 +100,8 @@ class ResultTable extends \tao_actions_CommonModule
         }
         $delivery = $this->getResource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
 
-        if ($this->getResultsService()->isSynchronousExport()) {
-            $file = $this->getResultsService()->exportDeliveryResults($delivery);
+        if ($this->getResultExportService()->isSynchronousExport()) {
+            $file = $this->getResultExportService()->exportDeliveryResults($delivery);
             header("Content-type: text/csv");
             header('Content-Disposition: attachment; fileName="' . $file->getBasename() .'"');
             header("Content-Length: " . $file->getSize());
@@ -108,7 +109,7 @@ class ResultTable extends \tao_actions_CommonModule
         } else {
             $this->setData('uri', tao_helpers_Uri::encode($delivery->getUri()));
             $this->setData('label', $delivery->getLabel());
-            $this->setData('context', ResultsService::DELIVERY_EXPORT_QUEUE_CONTEXT);
+            $this->setData('context', ResultExportService::DELIVERY_EXPORT_QUEUE_CONTEXT);
             $this->setData(
                 'create-task-callback-url',
                 _url('createCsvFileByDeliveryTask',  \Context::getInstance()->getModuleName(), \Context::getInstance()->getExtensionName())
@@ -133,7 +134,7 @@ class ResultTable extends \tao_actions_CommonModule
             throw new \common_exception_MissingParameter('uri', __FUNCTION__);
         }
         $delivery = $this->getResource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
-        $task = $this->getResultsService()->createExportTask($delivery);
+        $task = $this->getResultExportService()->createExportTask($delivery);
 
         $this->returnJson(array(
             'success' => true,
@@ -379,12 +380,13 @@ class ResultTable extends \tao_actions_CommonModule
     }
 
     /**
-     * Get the results service
+     * Get the results export service
      *
-     * @return ResultsService
+     * @return ResultExportService
      */
-    protected function getResultsService()
+    protected function getResultExportService()
     {
-        return ResultsService::singleton();
+        return $this->getServiceManager()->propagate(new ResultExportService());
     }
+
 }
