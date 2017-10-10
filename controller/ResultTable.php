@@ -101,9 +101,11 @@ class ResultTable extends \tao_actions_CommonModule
         $delivery = $this->getResource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
 
         if ($this->getResultExportService()->isSynchronousExport()) {
-            $this->setData('uri', $delivery->getUri());
-            $this->setData('url', _url('downloadCsvByDelivery'));
-            $this->setView('index.tpl');
+            $this->forward('index', 'Results', \Context::getInstance()->getExtensionName(), [
+                'id' => $delivery->getUri(),
+                'export-callback-url' => _url('downloadCsvByDelivery')
+            ]);
+            exit;
         } else {
             $this->setData('uri', tao_helpers_Uri::encode($delivery->getUri()));
             $this->setData('label', $delivery->getLabel());

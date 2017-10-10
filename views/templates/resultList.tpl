@@ -27,4 +27,20 @@ Template::inc('footer.tpl', 'tao');
             'taoOutcomeUi/controller/inspectResults' : <?= json_encode(get_data('config')) ?>
         }
     });
+
+    require([
+            'jquery',
+            'jquery.fileDownload'
+        ],
+        function($) {
+            if ('<?=get_data("export-callback-url")?>' && '<?=get_data("uri")?>') {
+				console.log('<?=get_data("export-callback-url")?>');
+				console.log('<?=get_data("uri")?>');
+                $.fileDownload('<?=get_data("export-callback-url")?>', {
+                    httpMethod: 'GET',
+                    data: {uri: '<?=get_data("uri")?>'}
+                });
+            }
+        });
+
 </script>
