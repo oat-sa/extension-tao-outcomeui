@@ -186,7 +186,6 @@ class Results extends tao_actions_SaSModule
                 ]);
 
                 if ($this->hasRequestParameter('export-callback-url')) {
-                    \common_Logger::i(__METHOD__);
                     $this->setData('export-callback-url', $this->getRequestParameter('export-callback-url'));
                 }
 
