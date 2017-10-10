@@ -9,3 +9,18 @@ use oat\tao\helpers\Template;
 <?php
 Template::inc('footer.tpl', 'tao');
 ?>
+
+<script>
+    require([
+            'jquery',
+            'jquery.fileDownload'
+        ],
+        function($) {
+            if (typeof '<?=get_data("url")?>' !== 'undefined' && typeof '<?=get_data("uri")?>' !== 'undefined') {
+                $.fileDownload('<?=get_data("url")?>', {
+                    httpMethod: 'GET',
+                    data: {uri: '<?=get_data("uri")?>'}
+                });
+            }
+        });
+</script>

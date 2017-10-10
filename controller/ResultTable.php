@@ -103,7 +103,7 @@ class ResultTable extends \tao_actions_CommonModule
         if ($this->getResultExportService()->isSynchronousExport()) {
             $this->setData('uri', $delivery->getUri());
             $this->setData('url', _url('downloadCsvByDelivery'));
-            $this->setView('export-sync.tpl');
+            $this->setView('index.tpl');
         } else {
             $this->setData('uri', tao_helpers_Uri::encode($delivery->getUri()));
             $this->setData('label', $delivery->getLabel());
