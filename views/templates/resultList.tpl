@@ -34,8 +34,6 @@ Template::inc('footer.tpl', 'tao');
         ],
         function($) {
             if ('<?=get_data("export-callback-url")?>' && '<?=get_data("uri")?>') {
-				console.log('<?=get_data("export-callback-url")?>');
-				console.log('<?=get_data("uri")?>');
                 $.fileDownload('<?=get_data("export-callback-url")?>', {
                     httpMethod: 'GET',
                     data: {uri: '<?=get_data("uri")?>'}
