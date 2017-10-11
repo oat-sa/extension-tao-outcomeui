@@ -101,11 +101,11 @@ class ResultTable extends \tao_actions_CommonModule
         $delivery = $this->getResource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
 
         if ($this->getResultExportService()->isSynchronousExport()) {
-            $file = $this->getResultExportService()->exportDeliveryResults($delivery);
-            header("Content-type: text/csv");
-            header('Content-Disposition: attachment; fileName="' . $file->getBasename() .'"');
-            header("Content-Length: " . $file->getSize());
-            \tao_helpers_Http::returnStream($file->readPsrStream());
+            $this->forward('index', 'Results', \Context::getInstance()->getExtensionName(), [
+                'id' => $delivery->getUri(),
+                'export-callback-url' => _url('downloadCsvByDelivery')
+            ]);
+            exit;
         } else {
             $this->setData('uri', tao_helpers_Uri::encode($delivery->getUri()));
             $this->setData('label', $delivery->getLabel());
@@ -114,7 +114,7 @@ class ResultTable extends \tao_actions_CommonModule
                 'create-task-callback-url',
                 _url('createCsvFileByDeliveryTask',  \Context::getInstance()->getModuleName(), \Context::getInstance()->getExtensionName())
             );
-            $this->setView('export-taskqueue.tpl');
+            $this->setView('export-async.tpl');
         }
     }
 
@@ -141,6 +141,27 @@ class ResultTable extends \tao_actions_CommonModule
             'message' => __('Results export for delivery "%s" successfully scheduled under Task "%s"', $delivery->getLabel(), $task->getLabel())
         ));
     }
+
+    /**
+     * Export Delivery results as direct download
+     *
+     * @throws \common_exception_MissingParameter
+     * @throws common_Exception
+     */
+    public function downloadCsvByDelivery()
+    {
+        if (!$this->hasRequestParameter('uri')) {
+            throw new \common_exception_MissingParameter('uri', __FUNCTION__);
+        }
+        $delivery = $this->getResource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
+        $file = $this->getResultExportService()->exportDeliveryResults($delivery);
+
+        header("Content-type: text/csv");
+        header('Content-Disposition: attachment; fileName="' . $file->getBasename() .'"');
+        header("Content-Length: " . $file->getSize());
+        \tao_helpers_Http::returnStream($file->readPsrStream());
+    }
+
 
     /**
      * Relies on two optionnal parameters,
