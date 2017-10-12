@@ -34,10 +34,12 @@ use \core_kernel_classes_DbWrapper;
 use \core_kernel_classes_Property;
 use \core_kernel_classes_Resource;
 use oat\taoResultServer\models\classes\ResultManagement;
+use oat\taoResultServer\models\classes\ResultService;
 use \tao_models_classes_ClassService;
 use oat\taoOutcomeUi\helper\Datatypes;
 use oat\taoDelivery\model\execution\DeliveryExecution;
 use oat\taoResultServer\models\classes\ResultServerService;
+use taoItems_models_classes_ItemsService;
 
 class ResultsService extends tao_models_classes_ClassService
 {
@@ -52,7 +54,7 @@ class ResultsService extends tao_models_classes_ClassService
      * @see tao_models_classes_ClassService::getRootClass()
      */
     public function getRootClass() {
-        return new core_kernel_classes_Class(TAO_DELIVERY_RESULT);
+        return new core_kernel_classes_Class(ResultService::DELIVERY_RESULT_CLASS_URI);
     }
 
     public function setImplementation(ResultManagement $implementation){
@@ -298,7 +300,7 @@ class ResultsService extends tao_models_classes_ClassService
 
             try {
                 common_Logger::d("Retrieving related Item model for item " . $relatedItem->getUri() . "");
-                $itemModel = $relatedItem->getUniquePropertyValue(new core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY));
+                $itemModel = $relatedItem->getUniquePropertyValue(new core_kernel_classes_Property(taoItems_models_classes_ItemsService::PROPERTY_ITEM_MODEL));
                 $itemModel = $itemModel->getLabel();
             } catch (common_Exception $e) { //a resource but unknown
                 $itemModel = $undefinedStr;
