@@ -1,5 +1,4 @@
 <?php
-
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -15,7 +14,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2013 Open Assessment Technologies S.A.
+ * Copyright (c) 2013-2017 Open Assessment Technologies S.A.
  *
  *
  * @access public
@@ -42,8 +41,8 @@ use oat\taoDelivery\model\execution\DeliveryExecution;
 use oat\taoResultServer\models\classes\ResultServerService;
 use taoItems_models_classes_ItemsService;
 
-class ResultsService extends tao_models_classes_ClassService {
-
+class ResultsService extends tao_models_classes_ClassService
+{
     /**
      *
      * @var \taoResultServer_models_classes_ReadableResultStorage
@@ -131,6 +130,7 @@ class ResultsService extends tao_models_classes_ClassService {
     public function getVariablesFromObjectResult($itemResult, $wantedTypes = array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class)) {
         $returnedVariables = array();
         $variables = $this->getImplementation()->getVariables($itemResult);
+
         if(!empty($wantedTypes)){
             foreach($variables as $variable){
                 if(in_array(get_class($variable[0]->variable),$wantedTypes)){

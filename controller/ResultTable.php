@@ -15,10 +15,9 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * Copyright (c) 2009-2012 (original work) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV);
- *
+ *               2012-2017 Open Assessment Technologies SA;
  *
  */
-
 
 namespace oat\taoOutcomeUi\controller;
 
@@ -26,16 +25,19 @@ use \common_Exception;
 use \core_kernel_classes_Property;
 use \core_kernel_classes_Resource;
 use oat\taoResultServer\models\classes\ResultService;
+use oat\generis\model\OntologyAwareTrait;
+use oat\taoOutcomeUi\model\export\ResultExportService;
 use \tao_models_classes_table_Column;
 use \tao_models_classes_table_PropertyColumn;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use tao_helpers_Uri;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
-use oat\tao\model\export\implementation\CsvExporter;
 use oat\taoOutcomeUi\model\table\VariableDataProvider;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoDelivery\model\execution\DeliveryExecution;
+use common_report_Report as Report;
+
 
 /**
  * should be entirelyrefactored
@@ -47,7 +49,9 @@ use oat\taoDelivery\model\execution\DeliveryExecution;
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  *
  */
-class ResultTable extends \tao_actions_CommonModule {
+class ResultTable extends \tao_actions_CommonModule
+{
+    use OntologyAwareTrait;
 
     /**
      * constructor: initialize the service and the default data
@@ -86,51 +90,79 @@ class ResultTable extends \tao_actions_CommonModule {
 
     /**
      * Download csv file with all results of all delivery executions of given delivery.
+     *
+     * @throws \common_exception_MissingParameter
+     * @throws common_Exception
      */
     public function getCsvFileByDelivery()
     {
-        $filter = 'lastSubmitted';
-        $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
-        $columns = [];
-        $cols = array_merge(
-             $this->getTestTakerColumn(),
-             $this->service->getVariableColumns($delivery, CLASS_OUTCOME_VARIABLE, $filter),
-             $this->service->getVariableColumns($delivery, CLASS_RESPONSE_VARIABLE, $filter)
-        );
-
-        $dataProvider = new VariableDataProvider();
-        foreach ($cols as $col) {
-            $column = tao_models_classes_table_Column::buildColumnFromArray($col);
-            if (!is_null($column)) {
-                if($column instanceof VariableColumn){
-                    $column->setDataProvider($dataProvider);
-                }
-                $columns[] = $column;
-            }
+        if (!$this->hasRequestParameter('uri')) {
+            throw new \common_exception_MissingParameter('uri', __FUNCTION__);
         }
-        $columns[0]->label = __("Test taker");
-        $rows = $this->service->getResultsByDelivery($delivery, $columns, $filter);
-        $columnNames = array_reduce($columns, function ($carry, $item) {
-            $carry[] = $item->label;
-            return $carry;
-        });
-        $result = [];
-        foreach ($rows as $row) {
-            $rowResult = [];
-            foreach ($row['cell'] as $rowKey => $rowVal) {
-                $rowResult[$columnNames[$rowKey]] = $rowVal[0];
-            }
-            $result[] = $rowResult;
-        }
+        $delivery = $this->getResource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
 
-        //If there are no executions yet, the file is exported but contains only the header
-        if (empty($result)) {
-            $result = [array_fill_keys($columnNames, '')];
+        if ($this->getResultExportService()->isSynchronousExport()) {
+            $this->forward('index', 'Results', \Context::getInstance()->getExtensionName(), [
+                'id' => $delivery->getUri(),
+                'export-callback-url' => _url('downloadCsvByDelivery')
+            ]);
+            exit;
+        } else {
+            $this->setData('uri', tao_helpers_Uri::encode($delivery->getUri()));
+            $this->setData('label', $delivery->getLabel());
+            $this->setData('context', ResultExportService::DELIVERY_EXPORT_QUEUE_CONTEXT);
+            $this->setData(
+                'create-task-callback-url',
+                _url('createCsvFileByDeliveryTask',  \Context::getInstance()->getModuleName(), \Context::getInstance()->getExtensionName())
+            );
+            $this->setView('export-async.tpl');
         }
-
-        $exporter = new CsvExporter($result);
-        $exporter->export(true, true, ";");
     }
+
+    /**
+     * Create a task to export delivery results
+     * A json message is returned with a feedback message
+     *
+     * @throws \common_exception_MethodNotAllowed
+     * @throws \common_exception_MissingParameter
+     */
+    public function createCsvFileByDeliveryTask()
+    {
+        if (!$this->isRequestPost()) {
+            throw new \common_exception_MethodNotAllowed();
+        }
+        if (!$this->hasRequestParameter('uri')) {
+            throw new \common_exception_MissingParameter('uri', __FUNCTION__);
+        }
+        $delivery = $this->getResource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
+        $task = $this->getResultExportService()->createExportTask($delivery);
+
+        $this->returnJson(array(
+            'success' => true,
+            'message' => __('Results export for delivery "%s" successfully scheduled under Task "%s"', $delivery->getLabel(), $task->getLabel())
+        ));
+    }
+
+    /**
+     * Export Delivery results as direct download
+     *
+     * @throws \common_exception_MissingParameter
+     * @throws common_Exception
+     */
+    public function downloadCsvByDelivery()
+    {
+        if (!$this->hasRequestParameter('uri')) {
+            throw new \common_exception_MissingParameter('uri', __FUNCTION__);
+        }
+        $delivery = $this->getResource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
+        $file = $this->getResultExportService()->exportDeliveryResults($delivery);
+
+        header("Content-type: text/csv");
+        header('Content-Disposition: attachment; fileName="' . $file->getBasename() .'"');
+        header("Content-Length: " . $file->getSize());
+        \tao_helpers_Http::returnStream($file->readPsrStream());
+    }
+
 
     /**
      * Relies on two optionnal parameters,
@@ -368,4 +400,15 @@ class ResultTable extends \tao_actions_CommonModule {
 
         $this->returnJSON($response);
     }
+
+    /**
+     * Get the results export service
+     *
+     * @return ResultExportService
+     */
+    protected function getResultExportService()
+    {
+        return $this->getServiceManager()->propagate(new ResultExportService());
+    }
+
 }
