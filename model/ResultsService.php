@@ -29,7 +29,6 @@ use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
 use \common_Exception;
 use \common_Logger;
-use \common_cache_FileCache;
 use \common_exception_Error;
 use \core_kernel_classes_Class;
 use \core_kernel_classes_DbWrapper;
