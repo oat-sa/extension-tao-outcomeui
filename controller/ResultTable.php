@@ -24,6 +24,7 @@ namespace oat\taoOutcomeUi\controller;
 use \common_Exception;
 use \core_kernel_classes_Property;
 use \core_kernel_classes_Resource;
+use oat\taoResultServer\models\classes\ResultService;
 use oat\generis\model\OntologyAwareTrait;
 use oat\taoOutcomeUi\model\export\ResultExportService;
 use \tao_models_classes_table_Column;
@@ -223,7 +224,7 @@ class ResultTable extends \tao_actions_CommonModule
      */
     private function getTestTakerColumn()
     {
-        $testtaker = new tao_models_classes_table_PropertyColumn(new core_kernel_classes_Property(PROPERTY_RESULT_OF_SUBJECT));
+        $testtaker = new tao_models_classes_table_PropertyColumn(new core_kernel_classes_Property(ResultService::SUBJECT_CLASS_URI));
         $arr[] = $testtaker->toArray();
         return $arr;
     }

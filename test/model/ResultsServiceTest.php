@@ -21,9 +21,11 @@ namespace oat\taoOutcomeUi\test\model;
 
 use oat\tao\test\TaoPhpUnitTestRunner;
 use \common_ext_ExtensionsManager;
+use oat\taoDeliveryRdf\model\DeliveryContainerService;
 use oat\taoOutcomeUi\model\ResultsService;
+use oat\taoResultServer\models\classes\ResultServerService;
 use Prophecy\Prophet;
-use oat\taoDelivery\model\execution\DeliveryExecution;
+use taoItems_models_classes_ItemsService;
 
 /**
  * This test case focuses on testing ResultsService.
@@ -307,7 +309,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
 
         $deliveryProphecy = $prophet->prophesize('core_kernel_classes_Resource');
 
-        $deliveryProphecy->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP))->willReturn($resultServer);
+        $deliveryProphecy->getOnePropertyValue(new \core_kernel_classes_Property(DeliveryContainerService::PROPERTY_RESULT_SERVER))->willReturn($resultServer);
 
         $delivery = $deliveryProphecy->reveal();
         $this->service->getReadableImplementation($delivery);
@@ -324,14 +326,14 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $prophet = new Prophet();
 
         $resultProphecy = $prophet->prophesize('core_kernel_classes_Resource');
-        $resultProphecy->getPropertyValues(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP))->willReturn(array(
+        $resultProphecy->getPropertyValues(new \core_kernel_classes_Property(ResultServerService::PROPERTY_HAS_MODEL))->willReturn(array(
             '#fakeUri'
         ));
         $resultServer = $resultProphecy->reveal();
 
         $deliveryProphecy = $prophet->prophesize('core_kernel_classes_Resource');
 
-        $deliveryProphecy->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP))->willReturn($resultServer);
+        $deliveryProphecy->getOnePropertyValue(new \core_kernel_classes_Property(DeliveryContainerService::PROPERTY_RESULT_SERVER))->willReturn($resultServer);
 
         $delivery = $deliveryProphecy->reveal();
         $this->service->getReadableImplementation($delivery);
@@ -346,14 +348,14 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $prophet = new Prophet();
 
         $resultProphecy = $prophet->prophesize('core_kernel_classes_Resource');
-        $resultProphecy->getPropertyValues(new \core_kernel_classes_Property(TAO_RESULTSERVER_MODEL_PROP))->willReturn(array(
+        $resultProphecy->getPropertyValues(new \core_kernel_classes_Property(ResultServerService::PROPERTY_HAS_MODEL))->willReturn(array(
             'http://www.tao.lu/Ontologies/taoOutcomeRds.rdf#RdsResultStorageModel'
         ));
         $resultServer = $resultProphecy->reveal();
 
         $deliveryProphecy = $prophet->prophesize('core_kernel_classes_Resource');
 
-        $deliveryProphecy->getOnePropertyValue(new \core_kernel_classes_Property(TAO_DELIVERY_RESULTSERVER_PROP))->willReturn($resultServer);
+        $deliveryProphecy->getOnePropertyValue(new \core_kernel_classes_Property(DeliveryContainerService::PROPERTY_RESULT_SERVER))->willReturn($resultServer);
 
         $delivery = $deliveryProphecy->reveal();
 
@@ -553,7 +555,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $relatedItem1Prophecy = $prophet->prophesize('\core_kernel_classes_Resource');
         $relatedItem1Prophecy->getLabel()->willReturn('MyRelatedItem1');
         $relatedItem1Prophecy->getUri()->willReturn('MyRelatedItemUri1');
-        $relatedItem1Prophecy->getUniquePropertyValue(new \core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY))->willReturn($itemModel1Prophecy->reveal());
+        $relatedItem1Prophecy->getUniquePropertyValue(new \core_kernel_classes_Property(taoItems_models_classes_ItemsService::PROPERTY_ITEM_MODEL))->willReturn($itemModel1Prophecy->reveal());
 
         $itemModel2Prophecy = $prophet->prophesize('\core_kernel_classes_Resource');
         $itemModel2Prophecy->getLabel()->willReturn('MySecondItemModel');
@@ -561,7 +563,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $relatedItem2Prophecy = $prophet->prophesize('\core_kernel_classes_Resource');
         $relatedItem2Prophecy->getLabel()->willReturn('MyRelatedItem2');
         $relatedItem2Prophecy->getUri()->willReturn('MyRelatedItemUri2');
-        $relatedItem2Prophecy->getUniquePropertyValue(new \core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY))->willReturn($itemModel2Prophecy->reveal());
+        $relatedItem2Prophecy->getUniquePropertyValue(new \core_kernel_classes_Property(taoItems_models_classes_ItemsService::PROPERTY_ITEM_MODEL))->willReturn($itemModel2Prophecy->reveal());
 
         $itemModel3Prophecy = $prophet->prophesize('\core_kernel_classes_Resource');
         $itemModel3Prophecy->getLabel()->willReturn('MyThirdItemModel');
@@ -569,7 +571,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $relatedItem3Prophecy = $prophet->prophesize('\core_kernel_classes_Resource');
         $relatedItem3Prophecy->getLabel()->willReturn('MyRelatedItem3');
         $relatedItem3Prophecy->getUri()->willReturn('MyRelatedItemUri3');
-        $relatedItem3Prophecy->getUniquePropertyValue(new \core_kernel_classes_Property(TAO_ITEM_MODEL_PROPERTY))->willReturn($itemModel3Prophecy->reveal());
+        $relatedItem3Prophecy->getUniquePropertyValue(new \core_kernel_classes_Property(taoItems_models_classes_ItemsService::PROPERTY_ITEM_MODEL))->willReturn($itemModel3Prophecy->reveal());
 
 
         //Variables for Item 1
