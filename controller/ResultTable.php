@@ -179,10 +179,17 @@ class ResultTable extends \tao_actions_CommonModule
 
         $encodedData = $this->dataToCsv($columns, $rows,';','"');
 
+        $fileName = strtolower(\tao_helpers_Display::textCleaner($delivery->getLabel(), '*'))
+            .'_'
+            .\tao_helpers_Uri::getUniqueId($delivery->getUri())
+            .'_'
+            .date('YmdHis')
+            .'.csv';
+
         header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
         setcookie("fileDownload","true", 0, "/");
         header("Content-type: text/csv");
-        header('Content-Disposition: attachment; filename=Data.csv');
+        header('Content-Disposition: attachment; filename='. $fileName);
         echo $encodedData;
     }
 
@@ -284,7 +291,7 @@ class ResultTable extends \tao_actions_CommonModule
         $columns = array();
         $variables = json_decode($this->getRequest()->getRawParameters()[$identifier], true);
         foreach ($variables as $array) {
-            if (isset($data['type']) && !is_subclass_of($data['type'], tao_models_classes_table_Column::class)) {
+            if (isset($array['type']) && !is_subclass_of($array['type'], tao_models_classes_table_Column::class)) {
                 throw new \common_exception_Error('Non column specified as column type');
             }
 

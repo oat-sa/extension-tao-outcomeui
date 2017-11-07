@@ -204,9 +204,15 @@ class ExportDeliveryResultsTask implements Action, ServiceLocatorAwareInterface
     {
         /** @var Directory $queueStorage */
         $queueStorage = $this->getResultExportService()->getQueueStorage();
-        $file = $queueStorage->getFile(
-            'delivery_results_export_' . \tao_helpers_Uri::getUniqueId($this->delivery->getUri()) . '_' . (new \DateTime())->format('Y-m-d_H-i') . '.csv'
-        );
+
+        $fileName = strtolower(\tao_helpers_Display::textCleaner($this->delivery->getLabel(), '*'))
+            .'_'
+            .\tao_helpers_Uri::getUniqueId($this->delivery->getUri())
+            .'_'
+            .date('YmdHis')
+            .'.csv';
+
+        $file = $queueStorage->getFile($fileName);
 
         rewind($this->resource);
         $file->put($this->resource);

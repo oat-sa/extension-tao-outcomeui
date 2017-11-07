@@ -112,7 +112,7 @@ class ResultsService extends tao_models_classes_ClassService
                     $newKeys[] = $key.'_'.$oldKey;
                 }
                 $itemResultVariables = array_combine($newKeys, array_values($itemResultVariables));
-                $returnValue = array_merge($itemResultVariables, $returnValue);
+                $returnValue = array_merge($returnValue, $itemResultVariables);
             }
         } else {
             $returnValue = $variables;
