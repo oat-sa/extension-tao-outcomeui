@@ -24,7 +24,9 @@ use common_report_Report as Report;
 use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\action\Action;
 use oat\oatbox\filesystem\Directory;
+use oat\taoDelivery\model\fields\DeliveryFieldsService;
 use oat\taoOutcomeUi\model\export\ResultExportService;
+use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeUi\model\table\VariableDataProvider;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
@@ -113,6 +115,49 @@ class ExportDeliveryResultsTask implements Action, ServiceLocatorAwareInterface
     }
 
     /**
+     * @return array
+     */
+    private function getTestTakerColumns()
+    {
+        $columns = [];
+        $testTakerProps = [RDFS_LABEL, PROPERTY_USER_LOGIN, PROPERTY_USER_FIRSTNAME, PROPERTY_USER_LASTNAME, PROPERTY_USER_MAIL, PROPERTY_USER_UILG];
+
+        // add custom properties, it contains the group property as well
+        $customProps = $this->getClass(TAO_CLASS_SUBJECT)->getProperties();
+
+        $testTakerProps = array_merge($testTakerProps, $customProps);
+
+        foreach ($testTakerProps as $property){
+            $loginCol = new ContextTypePropertyColumn(ContextTypePropertyColumn::CONTEXT_TYPE_TEST_TAKER, $this->getProperty($property));
+            $columns[] = $loginCol->toArray();
+        }
+
+        return $columns;
+    }
+
+    /**
+     * @return array
+     */
+    private function getDeliveryColumns()
+    {
+        $columns = [];
+
+        $deliveryProps = [RDFS_LABEL, DeliveryFieldsService::PROPERTY_CUSTOM_LABEL, TAO_DELIVERY_MAXEXEC_PROP, TAO_DELIVERY_START_PROP, TAO_DELIVERY_END_PROP, TAO_DELIVERY_RESULTSERVER_PROP, DELIVERY_DISPLAY_ORDER_PROP, TAO_DELIVERY_ACCESS_SETTINGS_PROP];
+
+        // add custom properties, it contains the group property as well
+        $customProps = $this->getClass($this->delivery->getOnePropertyValue($this->getProperty(RDF_TYPE)))->getProperties();
+
+        $deliveryProps = array_merge($deliveryProps, $customProps);
+
+        foreach ($deliveryProps as $property){
+            $loginCol = new ContextTypePropertyColumn(ContextTypePropertyColumn::CONTEXT_TYPE_DELIVERY, $this->getProperty($property));
+            $columns[] = $loginCol->toArray();
+        }
+
+        return $columns;
+    }
+
+    /**
      * Fetch the delivery results data from result service.
      * Format it and sort it by columns.
      * Write the output to the export file
@@ -128,9 +173,9 @@ class ExportDeliveryResultsTask implements Action, ServiceLocatorAwareInterface
 
         $columns = [];
 
-        $testTakerColumn[] = (new \tao_models_classes_table_PropertyColumn($this->getProperty(PROPERTY_RESULT_OF_SUBJECT)))->toArray();
         $cols = array_merge(
-            $testTakerColumn,
+            $this->getTestTakerColumns(),
+            $this->getDeliveryColumns(),
             $resultsService->getVariableColumns($this->delivery, \taoResultServer_models_classes_OutcomeVariable::class, $filter),
             $resultsService->getVariableColumns($this->delivery, \taoResultServer_models_classes_ResponseVariable::class, $filter)
         );
@@ -145,13 +190,17 @@ class ExportDeliveryResultsTask implements Action, ServiceLocatorAwareInterface
                 $columns[] = $column;
             }
         }
-        $columns[0]->label = __("Test taker");
         $rows = $resultsService->getResultsByDelivery($this->delivery, $columns, $filter);
         $columnNames = array_reduce($columns, function ($carry, $item) {
-            $carry[] = $item->label;
+
+            if ($item instanceof ContextTypePropertyColumn && $item->getProperty()->getUri() == RDFS_LABEL) {
+                $carry[] = $item->isTestTakerType() ? __('Test Taker') : __('Delivery');
+            } else {
+                $carry[] = $item->getLabel();
+            }
+
             return $carry;
         });
-
 
         if (!empty($rows)) {
             foreach ($rows as $key => $row) {
