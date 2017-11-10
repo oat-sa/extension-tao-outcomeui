@@ -20,6 +20,7 @@ use \common_cache_FileCache;
 use \core_kernel_classes_Class;
 use \core_kernel_classes_Resource;
 use oat\taoOutcomeUi\helper\Datatypes;
+use qtism\common\datatypes\QtiDuration;
 use \tao_helpers_Date;
 use \tao_helpers_Uri;
 use \tao_models_classes_table_Column;
@@ -120,9 +121,19 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
                             if ($epoch != "") {
                                 $readableTime = "@" . tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE);
                             }
+
+                            $value = $varData->getValue();
+
+                            // display the duration in seconds with microseconds
+                            if ($column->getIdentifier() === 'duration') {
+                                $qtiDuration = new QtiDuration($value);
+                                $value = $qtiDuration->getSeconds() .'.'. $qtiDuration->getMicroseconds();
+                            }
+
                             $this->cache[get_class($varData)][$result][$column->getContextIdentifier() . $variableIdentifier][(string) $epoch] = array(
-                                $varData->getValue(),
-                                $readableTime);
+                                $value,
+                                $readableTime
+                            );
                         }
                     }
                 }
