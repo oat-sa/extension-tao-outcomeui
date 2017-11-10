@@ -24,6 +24,7 @@
 
 namespace oat\taoOutcomeUi\model;
 
+use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
 use \common_Exception;
@@ -112,7 +113,7 @@ class ResultsService extends tao_models_classes_ClassService
                     $newKeys[] = $key.'_'.$oldKey;
                 }
                 $itemResultVariables = array_combine($newKeys, array_values($itemResultVariables));
-                $returnValue = array_merge($itemResultVariables, $returnValue);
+                $returnValue = array_merge($returnValue, $itemResultVariables);
             }
         } else {
             $returnValue = $variables;
@@ -788,13 +789,40 @@ class ResultsService extends tao_models_classes_ClassService
         /** @var DeliveryExecution $result */
         foreach($results as $result) {
             $cellData = array();
+
+            /** @var ContextTypePropertyColumn $column */
             foreach ($columns as $column) {
                 if (count($column->getDataProvider()->cache) > 0) {
-                    $cellData[]=self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column), $filter);
+                    // grade or response column values
+                    $cellData[] = self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column), $filter);
                 } else {
-                    $cellData[]=[self::filterCellData(
-                        (string)$this->getTestTaker($result)->getOnePropertyValue(new \core_kernel_classes_Property(PROPERTY_USER_LOGIN)),
-                        $filter)];
+                    // test taker or delivery property values
+                    $resource = $column->isTestTakerType()
+                        ? $this->getTestTaker($result)
+                        : $this->getDelivery($result);
+
+                    $values = $resource->getPropertyValues($column->getProperty());
+
+                    $values = array_map(function ($value) use ($column) {
+                        if (\common_Utils::isUri($value)) {
+                            $value = (new core_kernel_classes_Resource($value))->getLabel();
+                        } else {
+                            $value = (string) $value;
+                        }
+
+                        if (in_array($column->getProperty()->getUri(), [TAO_DELIVERY_START_PROP, TAO_DELIVERY_END_PROP])) {
+                            $value = \tao_helpers_Date::displayeDate($value, \tao_helpers_Date::FORMAT_VERBOSE);
+                        }
+
+                        return $value;
+                    }, $values);
+
+                    // if it's a guest test taker (it has no property values at all), let's display the uri as label
+                    if ($column->isTestTakerType() && empty($values) && $column->getProperty()->getUri() == RDFS_LABEL) {
+                        $values[] = $resource->getUri();
+                    }
+
+                    $cellData[] = [self::filterCellData(implode(' ', $values), $filter)];
                 }
             }
             $rows[] = array(
