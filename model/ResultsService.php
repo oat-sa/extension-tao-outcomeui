@@ -917,7 +917,7 @@ class ResultsService extends tao_models_classes_ClassService
         } else {
             $cellData = '';
             foreach ($observationsList as $observation) {
-                $cellData.= $observation[0].$observation[1].PHP_EOL;
+                $cellData.= $observation[0];
             }
             $returnValue = [$cellData];
         }
