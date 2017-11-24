@@ -1,6 +1,7 @@
 <?php
 use oat\tao\helpers\Template;
 ?>
+<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoOutcomeUi/views/css/result.css" />
 <div class="result-table flex-container-full">
     <div class="grid-row clearfix">
         <div class="col-12">

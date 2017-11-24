@@ -233,7 +233,7 @@ class ResultTable extends \tao_actions_CommonModule
     {
         $columns = [];
 
-        $deliveryProps = [RDFS_LABEL, DeliveryFieldsService::PROPERTY_CUSTOM_LABEL, TAO_DELIVERY_MAXEXEC_PROP, TAO_DELIVERY_START_PROP, TAO_DELIVERY_END_PROP, TAO_DELIVERY_RESULTSERVER_PROP, DELIVERY_DISPLAY_ORDER_PROP, TAO_DELIVERY_ACCESS_SETTINGS_PROP];
+        $deliveryProps = [RDFS_LABEL, DeliveryFieldsService::PROPERTY_CUSTOM_LABEL, TAO_DELIVERY_MAXEXEC_PROP, TAO_DELIVERY_START_PROP, TAO_DELIVERY_END_PROP, DELIVERY_DISPLAY_ORDER_PROP, TAO_DELIVERY_ACCESS_SETTINGS_PROP];
 
         $delivery = $this->getResource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
 
