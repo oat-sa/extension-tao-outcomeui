@@ -15,7 +15,7 @@
                             />
                 </trees>
                 <actions>
-                    <action id="results-csv-export" name="Export CSV" url="/taoOutcomeUi/ResultTable/getCsvFileByDelivery" group="tree" context="instance">
+                    <action id="results-csv-export" name="Export CSV" url="/taoOutcomeUi/ResultTable/export" group="tree" context="instance">
                         <icon id="icon-download"/>
                     </action>
                     <action id="results-index" name="Results" url="/taoOutcomeUi/Results/index" group="content"

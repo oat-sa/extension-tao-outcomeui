@@ -125,7 +125,7 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface
     {
         $delivery = new \core_kernel_classes_Resource($this->params[0]);
         $resultsService = ResultsService::singleton();
-        $filter = 'lastSubmitted';
+        $filter = ResultsService::VARIABLES_FILTER_LAST_SUBMITTED;
 
         $columns = [];
 
@@ -133,8 +133,8 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface
         $testTakerColumn[] = $testtaker->toArray();
         $cols = array_merge(
             $testTakerColumn,
-            $resultsService->getVariableColumns($delivery, CLASS_OUTCOME_VARIABLE, $filter),
-            $resultsService->getVariableColumns($delivery, CLASS_RESPONSE_VARIABLE, $filter)
+            $resultsService->getVariableColumns($delivery, CLASS_OUTCOME_VARIABLE),
+            $resultsService->getVariableColumns($delivery, CLASS_RESPONSE_VARIABLE)
         );
 
         $dataProvider = new VariableDataProvider();

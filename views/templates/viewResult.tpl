@@ -1,5 +1,6 @@
 <?php
 use oat\tao\helpers\Template;
+use oat\taoOutcomeUi\model\ResultsService;
 ?>
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoOutcomeUi/views/css/result.css" />
 
@@ -12,8 +13,8 @@ use oat\tao\helpers\Template;
             <div class="tile">
                 <select class="result-filter">
                     <option  value="all" ><?=__('All collected variables')?></option>
-                    <option  value="firstSubmitted" ><?=__('First submitted variables only')?></option>
-                    <option  value="lastSubmitted" ><?=__('Last submitted variables only')?></option>
+                    <option  value="<?= ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED ?>" ><?=__('First submitted variables only')?></option>
+                    <option  value="<?= ResultsService::VARIABLES_FILTER_LAST_SUBMITTED ?>" ><?=__('Last submitted variables only')?></option>
                 </select>
                 <label>
                     <input type="checkbox" name="class-filter" value="<?=\taoResultServer_models_classes_ResponseVariable::class?>">

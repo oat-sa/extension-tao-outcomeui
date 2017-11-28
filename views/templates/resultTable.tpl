@@ -1,13 +1,14 @@
 <?php
 use oat\tao\helpers\Template;
+use oat\taoOutcomeUi\model\ResultsService;
 ?>
 <div class="result-table flex-container-full">
     <div class="grid-row clearfix">
         <div class="col-12">
-            <button class="btn-info small hidden" data-group="testtaker" data-action="add" data-url="<?=_url('getResultOfSubjectColumn')?>">
+            <button class="btn-info small hidden" data-group="testtaker" data-action="add" data-url="<?=_url('getTestTakerColumns')?>">
                 <span class="icon-add"></span><?=__('Add Test Taker')?>
             </button>
-            <button class="btn-error small" data-group="testtaker" data-action="remove" data-url="<?=_url('getResultOfSubjectColumn')?>" >
+            <button class="btn-error small" data-group="testtaker" data-action="remove" data-url="<?=_url('getTestTakerColumns')?>" >
                 <span class="icon-bin"></span><?=__('Anonymise')?>
             </button>
             <button class="btn-info small" data-group="delivery" data-action="add" data-url="<?=_url('getDeliveryColumns')?>">
@@ -34,8 +35,8 @@ use oat\tao\helpers\Template;
         <div class="col-12">
             <select class="result-filter">
                 <option  value="all"><?=__('All collected variables')?></option>
-                <option  value="firstSubmitted"><?=__('First submitted variables only')?></option>
-                <option  value="lastSubmitted"><?=__('Last submitted variables only')?></option>
+                <option  value="<?= ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED ?>"><?=__('First submitted variables only')?></option>
+                <option  value="<?= ResultsService::VARIABLES_FILTER_LAST_SUBMITTED ?>"><?=__('Last submitted variables only')?></option>
             </select>
             <button class="btn-info small result-filter-btn"><?=__('Filter');?></button>
         </div>

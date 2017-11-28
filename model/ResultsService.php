@@ -34,6 +34,7 @@ use \core_kernel_classes_Class;
 use \core_kernel_classes_DbWrapper;
 use \core_kernel_classes_Property;
 use \core_kernel_classes_Resource;
+use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoResultServer\models\classes\ResultManagement;
 use oat\taoResultServer\models\classes\ResultService;
 use \tao_models_classes_ClassService;
@@ -44,6 +45,9 @@ use taoItems_models_classes_ItemsService;
 
 class ResultsService extends tao_models_classes_ClassService
 {
+    const VARIABLES_FILTER_LAST_SUBMITTED = 'lastSubmitted';
+    const VARIABLES_FILTER_FIRST_SUBMITTED = 'firstSubmitted';
+
     /**
      *
      * @var \taoResultServer_models_classes_ReadableResultStorage
@@ -235,8 +239,7 @@ class ResultsService extends tao_models_classes_ClassService
 
     /**
      *
-     * @param array $$variablesData
-     * @param string $filter 'lastSubmitted', 'firstSubmitted'
+     * @param array $variablesData
      * @return array ["nbResponses" => x,"nbCorrectResponses" => y,"nbIncorrectResponses" => z,"nbUnscoredResponses" => a,"data" => $variableData]
      */
     public function calculateResponseStatistics($variablesData) {
@@ -414,9 +417,9 @@ class ResultsService extends tao_models_classes_ClassService
             if($currentItemCallId !== $lastItemCallId){
                 //no yet saved
                 //already saved and filter not first
-                if(!isset($savedItems[$item['uri']]) || $filter !== "firstSubmitted"){
+                if(!isset($savedItems[$item['uri']]) || $filter !== self::VARIABLES_FILTER_FIRST_SUBMITTED){
                     //last submitted and already something saved
-                    if($filter === "lastSubmitted" && isset($savedItems[$item['uri']])){
+                    if($filter === self::VARIABLES_FILTER_LAST_SUBMITTED && isset($savedItems[$item['uri']])){
                         //$tmpitem not empty and contains at least one wanted type
                         if(!empty($tmpitem)){
                             foreach($wantedTypes as $type){
@@ -441,9 +444,9 @@ class ResultsService extends tao_models_classes_ClassService
             $tmpitem[$type][$variableIdentifier] = $variableDescription;
         }
 
-        if(!empty($item) && (!isset($savedItems[$item['uri']]) || $filter !== "firstSubmitted")){
+        if(!empty($item) && (!isset($savedItems[$item['uri']]) || $filter !== self::VARIABLES_FILTER_FIRST_SUBMITTED)){
             //last submitted and already something saved
-            if($filter === "lastSubmitted" && isset($savedItems[$item['uri']])){
+            if($filter === self::VARIABLES_FILTER_LAST_SUBMITTED && isset($savedItems[$item['uri']])){
                 //$tmpitem not empty and contains at least one wanted type
                 if(!empty($tmpitem)){
                     foreach($wantedTypes as $type){
@@ -525,9 +528,6 @@ class ResultsService extends tao_models_classes_ClassService
      */
     public function getItemVariableDataFromDeliveryResult($resultIdentifier, $filter)
     {
-
-        $undefinedStr = __('unknown'); //some data may have not been submitted           
-
         $itemCallIds = $this->getItemResultsFromDeliveryResult($resultIdentifier);
         $variablesByItem = array();
         foreach ($itemCallIds as $itemCallId) {
@@ -574,11 +574,11 @@ class ResultsService extends tao_models_classes_ClassService
                     uksort($variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier], "self::sortTimeStamps");
 
                     switch ($filter) {
-                        case "lastSubmitted": {
+                        case self::VARIABLES_FILTER_LAST_SUBMITTED: {
                                 $variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier] = array(array_pop($variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier]));
                                 break;
                             }
-                        case "firstSubmitted": {
+                        case self::VARIABLES_FILTER_FIRST_SUBMITTED: {
                                 $variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier] = array(array_shift($variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier]));
                                 break;
                             }
@@ -745,21 +745,46 @@ class ResultsService extends tao_models_classes_ClassService
     }
 
     /**
-     * @param core_kernel_classes_Resource $delivery
-     * @param $columns - columns to be exported
-     * @param $filter 'lastSubmitted' or 'firstSubmitted'
+     * Get the array of column names indexed by their unique column id.
+     *
+     * @param \tao_models_classes_table_Column[] $columns
      * @return array
-     * @throws \common_exception_Error
-     * @throws \core_kernel_persistence_Exception
      */
-    public function getResultsByDelivery(\core_kernel_classes_Resource $delivery, $columns, $filter)
+    public function getColumnNames(array $columns)
+    {
+        return array_reduce($columns, function ($carry, \tao_models_classes_table_Column $column) {
+            /** @var ContextTypePropertyColumn|VariableColumn $column */
+            $carry[$this->getColumnId($column)] = $column->getLabel();
+            return $carry;
+        });
+    }
+
+    /**
+     * @param \tao_models_classes_table_Column|ContextTypePropertyColumn|VariableColumn $column
+     * @return string
+     */
+    private function getColumnId(\tao_models_classes_table_Column $column)
+    {
+        return $column instanceof ContextTypePropertyColumn
+            ? $column->getProperty()->getUri() .'_'. $column->getContextType()
+            : $column->getContextIdentifier() .'_'. $column->getIdentifier();
+    }
+
+    /**
+     * @param core_kernel_classes_Resource $delivery
+     * @param                              $columns - columns to be exported
+     * @param                              $filter  'lastSubmitted' or 'firstSubmitted'
+     * @param array                        $storageOptions
+     * @return array
+     */
+    public function getResultsByDelivery(\core_kernel_classes_Resource $delivery, $columns, $filter, array $storageOptions = [])
     {
         $rows = array();
 
         //The list of delivery Results matching the current selection filters
         $results = array();
         $this->setImplementation($this->getReadableImplementation($delivery));
-        foreach($this->getImplementation()->getResultByDelivery([$delivery->getUri()]) as $result){
+        foreach($this->getImplementation()->getResultByDelivery([$delivery->getUri()], $storageOptions) as $result){
             $results[] = $result['deliveryResultIdentifier'];
         }
         $dpmap = array();
@@ -790,11 +815,13 @@ class ResultsService extends tao_models_classes_ClassService
         foreach($results as $result) {
             $cellData = array();
 
-            /** @var ContextTypePropertyColumn $column */
+            /** @var ContextTypePropertyColumn|VariableColumn $column */
             foreach ($columns as $column) {
+                $cellKey = $this->getColumnId($column);
+
                 if (count($column->getDataProvider()->cache) > 0) {
                     // grade or response column values
-                    $cellData[] = self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column), $filter);
+                    $cellData[$cellKey] = self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column), $filter);
                 } else {
                     // test taker or delivery property values
                     $resource = $column->isTestTakerType()
@@ -822,7 +849,7 @@ class ResultsService extends tao_models_classes_ClassService
                         $values[] = $resource->getUri();
                     }
 
-                    $cellData[] = [self::filterCellData(implode(' ', $values), $filter)];
+                    $cellData[$cellKey] = [self::filterCellData(implode(' ', $values), $filter)];
                 }
             }
             $rows[] = array(
@@ -837,7 +864,7 @@ class ResultsService extends tao_models_classes_ClassService
      * Retrieve the different variables columns pertainign to the current selection of results
      * Implementation note : it nalyses all the data collected to identify the different response variables submitted by the items in the context of activities
      */
-    public function getVariableColumns($delivery, $variableClassUri, $filter)
+    public function getVariableColumns($delivery, $variableClassUri)
     {
         $columns = array();
 
@@ -903,7 +930,7 @@ class ResultsService extends tao_models_classes_ClassService
         }
         //takes only the alst or the first observation
         if (
-            ($filterData=="lastSubmitted" or $filterData=="firstSubmitted")
+            ($filterData == self::VARIABLES_FILTER_LAST_SUBMITTED or $filterData == self::VARIABLES_FILTER_FIRST_SUBMITTED)
             and
             (is_array($observationsList))
         ){
@@ -911,7 +938,7 @@ class ResultsService extends tao_models_classes_ClassService
 
             //sort by timestamp observation
             uksort($observationsList, "oat\\taoOutcomeUi\\model\\ResultsService::sortTimeStamps");
-            $filteredObservation = ($filterData=='lastSubmitted') ? array_pop($observationsList) : array_shift($observationsList);
+            $filteredObservation = ($filterData == self::VARIABLES_FILTER_LAST_SUBMITTED) ? array_pop($observationsList) : array_shift($observationsList);
             $returnValue[]= $filteredObservation[0];
 
         } else {

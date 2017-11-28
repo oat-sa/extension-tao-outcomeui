@@ -75,7 +75,7 @@ define([
                 //set up model from columns 
                 _.forEach(columns, function(col){
                     model.push({
-                        id : col.prop || (col.contextId + '_' + col.variableIdentifier),
+                        id : col.prop ? (col.prop + '_' + col.contextType) : (col.contextId + '_' + col.variableIdentifier),
                         label : col.label,
                         sortable: false
                     });
@@ -94,11 +94,15 @@ define([
                             .removeClass('disabled')
                             .on('click', function(e){
                                 e.preventDefault();
-                                $.fileDownload(helpers._url('getCsvFile', 'ResultTable', 'taoOutcomeUi'), {
-                                    preparingMessageHtml: __("We are preparing your report, please wait..."),
-                                    failMessageHtml: __("There was a problem generating your report, please try again."),
-                                    httpMethod: 'POST',
-                                    data: {'filter': filter, 'columns': JSON.stringify(columns), uri: uri}
+                                $.ajax({
+                                    url : helpers._url('export', 'ResultTable', 'taoOutcomeUi'),
+                                    dataType : 'json',
+                                    data : {
+                                        filter: filter,
+                                        columns: JSON.stringify(columns),
+                                        uri: uri
+                                    },
+                                    type :'POST'
                                 });
                             });
 
@@ -108,7 +112,7 @@ define([
                         }
                     })
                     .datatable({
-                        url : helpers._url('data', 'ResultTable', 'taoOutcomeUi', {filterData : filter}),
+                        url : helpers._url('feedDataTable', 'ResultTable', 'taoOutcomeUi', {filter : filter}),
                         querytype : 'POST',
                         params: {columns: JSON.stringify(columns), '_search': false, uri: uri},
                         model :  model
@@ -139,7 +143,7 @@ define([
             });
 
             //default table
-            buildGrid(helpers._url('getResultOfSubjectColumn', 'ResultTable', 'taoOutcomeUi', {filter : filter}));
+            buildGrid(helpers._url('getTestTakerColumns', 'ResultTable', 'taoOutcomeUi', {filter : filter}));
 
             //setup the filtering
             $filterField.select2({
