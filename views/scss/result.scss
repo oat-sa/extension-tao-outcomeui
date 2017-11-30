@@ -1,5 +1,6 @@
+@import "inc/bootstrap";
 
-#content {	
+#content {
     padding : 20px;
 }
 
@@ -77,7 +78,7 @@ table.mini tr td{
     width: 24px;
     height: 24px;
     background-position: 0px 0px;
-    
+
 }
 .incorrect{
     float:right;
@@ -118,3 +119,15 @@ tr td {
      background-color:#D00239 ;
     color:#fff;
 }
+
+.result-table-container {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+
+    .datatable-wrapper {
+        display: table-cell;
+    }
+}
+
+
