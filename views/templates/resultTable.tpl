@@ -43,9 +43,7 @@ use oat\taoOutcomeUi\model\ResultsService;
         </div>
     </div>
     <div class="result-table-container"></div>
-    <div class="grid-row">
-        <button class="result-export btn-info disabled small"><span class="icon-export"></span><?=__('Export CSV File')?></button>
- 	</div>
+    <div class="grid-row action-bar"></div>
 </div>
 <script>
 requirejs.config({
