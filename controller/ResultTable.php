@@ -22,9 +22,11 @@
 namespace oat\taoOutcomeUi\controller;
 
 use \common_Exception;
-use oat\taoOutcomeUi\model\export\DeliveryResultsExporter;
+use oat\taoOutcomeUi\model\export\ColumnsProvider;
 use oat\generis\model\OntologyAwareTrait;
+use oat\taoOutcomeUi\model\export\ResultsExporter;
 use oat\taoOutcomeUi\model\ResultsService;
+use oat\taoOutcomeUi\model\table\ResultsPayload;
 use oat\taoTaskQueue\model\TaskLogActionTrait;
 use tao_helpers_Uri;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
@@ -82,11 +84,15 @@ class ResultTable extends \tao_actions_CommonModule
             throw new common_Exception('Parameter "'. self::PARAMETER_COLUMNS .'" missing');
         }
 
-        $this->returnJSON($this->getExporterService()->getDataTablePayload());
+        $this->returnJSON((new ResultsPayload($this->getExporterService()->getExporter()))->getPayload());
     }
 
     /**
-     * Do the export, more precisely, creating the export task.
+     * Exports results by a single delivery.
+     *
+     * Only creating the export task.
+     *
+     * @throws \Exception
      */
     public function export()
     {
@@ -94,9 +100,7 @@ class ResultTable extends \tao_actions_CommonModule
             throw new \Exception('Only ajax call allowed.');
         }
 
-        $task = $this->getExporterService()->createExportTask();
-
-        return $this->returnTaskJson($task);
+        return $this->returnTaskJson($this->getExporterService()->createExportTask());
     }
 
     /**
@@ -111,7 +115,7 @@ class ResultTable extends \tao_actions_CommonModule
         }
 
         return $this->returnJson([
-            'columns' => $this->getExporterService()->getTestTakerColumns(),
+            'columns' => $this->getColumnsProvider()->getTestTakerColumns(),
             'first'   => true
         ]);
     }
@@ -128,7 +132,7 @@ class ResultTable extends \tao_actions_CommonModule
         }
 
         return $this->returnJson([
-            'columns' => $this->getExporterService()->getDeliveryColumns()
+            'columns' => $this->getColumnsProvider()->getDeliveryColumns()
         ]);
     }
 
@@ -144,7 +148,7 @@ class ResultTable extends \tao_actions_CommonModule
         }
 
         return $this->returnJson([
-            'columns' => $this->getExporterService()->getGradeColumns()
+            'columns' => $this->getColumnsProvider()->getGradeColumns()
         ]);
     }
 
@@ -160,28 +164,37 @@ class ResultTable extends \tao_actions_CommonModule
         }
 
         return $this->returnJson([
-            'columns' => $this->getExporterService()->getResponseColumns()
+            'columns' => $this->getColumnsProvider()->getResponseColumns()
         ]);
     }
 
     /**
-     * @return DeliveryResultsExporter
+     * @return ColumnsProvider
+     */
+    private function getColumnsProvider()
+    {
+        return new ColumnsProvider($this->getDeliveryUri(), ResultsService::singleton());
+    }
+
+    /**
+     * @return ResultsExporter
+     * @throws common_Exception
      */
     private function getExporterService()
     {
-        $exporter = (new DeliveryResultsExporter($this->getDeliveryUri(), ResultsService::singleton()));
+        /** @var ResultsExporter $exporter */
+        $exporter = $this->getServiceManager()
+            ->propagate(new ResultsExporter($this->getDeliveryUri(), ResultsService::singleton()));
 
         if ($this->hasRequestParameter(self::PARAMETER_COLUMNS)) {
-            $exporter->setColumnsToExport($this->getRequest()->getRawParameters()[self::PARAMETER_COLUMNS]);
+            $exporter->setColumnsToExport($this->getRawParameter(self::PARAMETER_COLUMNS));
         }
 
-        if ($this->hasRequestParameter(self::PARAMETER_FILTER) && $this->getRequestParameter(self::PARAMETER_FILTER) == ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED) {
-            $exporter->useFirstSubmittedVariables();
-        } else {
-            $exporter->useLastSubmittedVariables();
+        if ($this->hasRequestParameter(self::PARAMETER_FILTER)) {
+            $exporter->setVariableToExport($this->getRequestParameter(self::PARAMETER_FILTER));
         }
 
-        return $this->getServiceManager()->propagate($exporter);
+        return $exporter;
     }
 
     /**

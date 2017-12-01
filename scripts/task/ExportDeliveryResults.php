@@ -23,7 +23,7 @@ namespace oat\taoOutcomeUi\scripts\task;
 use common_report_Report as Report;
 use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\action\Action;
-use oat\taoOutcomeUi\model\export\DeliveryResultsExporter;
+use oat\taoOutcomeUi\model\export\ResultsExporter;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoTaskQueue\model\Task\WorkerContextAwareInterface;
 use oat\taoTaskQueue\model\Task\WorkerContextAwareTrait;
@@ -31,15 +31,18 @@ use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 
 /**
- * DeliveryResultsExporter action, can be called either during a http request or from cli.
+ * ExportDeliveryResults action, can be called either during a http request or from cli.
  *
  * Usage examples for CLI:
  *
+ * If "--dir" is omitted, the file will be saved in the task queue storage.
+ *
  * ```
- * sudo -u www-data php index.php 'oat\taoOutcomeUi\scripts\task\ExportDeliveryResults' <deliveryId>
- * sudo -u www-data php index.php 'oat\taoOutcomeUi\scripts\task\ExportDeliveryResults' <deliveryId> --columns=tt,delivery,grades,responses
- * sudo -u www-data php index.php 'oat\taoOutcomeUi\scripts\task\ExportDeliveryResults' <deliveryId> --columns=all
- * sudo -u www-data php index.php 'oat\taoOutcomeUi\scripts\task\ExportDeliveryResults' <deliveryId> --columns=tt,delivery,grades,responses --submittedVersion=lastSubmitted
+ * sudo -u www-data php index.php 'oat\taoOutcomeUi\scripts\task\ExportDeliveryResults' <deliveryOrClassId>
+ * sudo -u www-data php index.php 'oat\taoOutcomeUi\scripts\task\ExportDeliveryResults' <deliveryOrClassId> --dir=/home/user/exports
+ * sudo -u www-data php index.php 'oat\taoOutcomeUi\scripts\task\ExportDeliveryResults' <deliveryOrClassId> --columns=tt,delivery,grades,responses
+ * sudo -u www-data php index.php 'oat\taoOutcomeUi\scripts\task\ExportDeliveryResults' <deliveryOrClassId> --columns=all
+ * sudo -u www-data php index.php 'oat\taoOutcomeUi\scripts\task\ExportDeliveryResults' <deliveryOrClassId> --columns=tt,delivery,grades,responses --submittedVersion=lastSubmitted
  * ```
  * @author Gyula Szucs <gyula@taotesting.com>
  */
@@ -59,16 +62,13 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
     const COLUMNS_CLI_VALUE_RESPONSES = 'responses';
 
     /**
-     * @var DeliveryResultsExporter
-     */
-    private $exporterService;
-
-    /**
      * @var \core_kernel_classes_Resource
      */
-    private $delivery;
+    private $resourceToExport;
+    private $exporterService;
     private $columns = [];
     private $submittedVersion;
+    private $destination;
 
     /**
      * @param array $params
@@ -81,33 +81,31 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
         try {
             $this->parseParams($params);
 
-            $this->getExporterService()->setColumnsToExport($this->columns);
-
-            if ($this->submittedVersion == ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED) {
-                $this->getExporterService()->useFirstSubmittedVariables();
-            } else {
-                $this->getExporterService()->useLastSubmittedVariables();
+            if ($this->submittedVersion) {
+                $this->getExporterService()->setVariableToExport($this->submittedVersion);
             }
 
-            $file = $this->getExporterService()->export();
+            $fileName = $this->getExporterService()
+                ->setColumnsToExport($this->columns)
+                ->export($this->destination);
 
             $msg = $this->isWorkerContext()
-                ? __('Results of "%s" successfully exported', $this->delivery->getLabel())
-                : __('Results of "%s" successfully exported into "%s"', $this->delivery->getLabel(), $file->getPrefix());
+                ? __('Results of "%s" successfully exported', $this->resourceToExport->getLabel())
+                : __('Results of "%s" successfully exported into "%s"', $this->resourceToExport->getLabel(), $fileName);
 
-            return Report::createSuccess($msg, $file->getPrefix());
+            return Report::createSuccess($msg, $fileName);
         } catch (\Exception $e) {
             return Report::createFailure($e->getMessage());
         }
     }
 
     /**
-     * @return DeliveryResultsExporter
+     * @return ResultsExporter
      */
     private function getExporterService()
     {
         if (is_null($this->exporterService)) {
-            $this->exporterService = new DeliveryResultsExporter($this->delivery, ResultsService::singleton());
+            $this->exporterService = new ResultsExporter($this->resourceToExport, ResultsService::singleton());
             $this->exporterService->setServiceLocator($this->getServiceLocator());
         }
 
@@ -135,16 +133,12 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
      */
     private function parseParams($params)
     {
-        // Delivery Uri
+        // Delivery or Class Uri
         if (!isset($params[0])) {
-            throw new \InvalidArgumentException('Delivery uri missing. Please provide it as the first argument.');
+            throw new \InvalidArgumentException('Delivery or class uri missing. Please provide it as the first argument.');
         }
 
-        $this->delivery = $this->getResource($params[0]);
-
-        if (!$this->delivery->exists()) {
-            throw new \RuntimeException('Delivery does not exist.');
-        }
+        $this->resourceToExport = $this->getResource($params[0]);
 
         if ($this->isWorkerContext()) {
             // Columns to be exported, if defined
@@ -159,7 +153,7 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
         } else {
             // if the task is called from CLI
 
-            // remove first param, it is always the delivery uri, no need to re-check
+            // remove first param, it is always the resource uri, no need to re-check
             unset($params[0]);
 
             // check params. running the command from CLI we have different params structure
@@ -177,7 +171,7 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
                         }
 
                         if (in_array(self::COLUMNS_CLI_VALUE_ALL, $columns)) {
-                            // do nothing because DeliveryResultsExporter will use all columns by default if no columns specified
+                            // do nothing because SingleDeliveryResultsExporter will use all columns by default if no columns specified
                             continue;
                         }
 
@@ -208,6 +202,17 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
                         }
 
                         $this->submittedVersion = $value;
+                        break;
+
+                    case '--dir':
+                        if (!is_dir($value)) {
+                            throw new \InvalidArgumentException('Invalid directory "'. $value .'" provided.');
+                        }
+
+                        if (!is_writable($value)) {
+                            throw new \InvalidArgumentException('Directory "'. $value .'" not writable.');
+                        }
+                        $this->destination = $value;
                         break;
                 }
             }
