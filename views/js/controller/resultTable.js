@@ -50,7 +50,7 @@ define([
             //keep columns through calls
             var columns = [];
             var groups = {};
-            var $actionBar = $container.find('.action-bar');
+            var $actionBar = $container.find('.actions');
 
             /**
              * Load columns to rebuild the datatable dynamically
@@ -108,6 +108,7 @@ define([
                     .off('load.datatable')
                     .on('load.datatable', function(){
 
+                        //integrate the task creation button
                         taskCreationButtonFactory({
                             type : 'info',
                             icon : 'export',

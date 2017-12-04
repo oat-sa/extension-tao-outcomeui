@@ -43,7 +43,7 @@ use oat\taoOutcomeUi\model\ResultsService;
         </div>
     </div>
     <div class="result-table-container"></div>
-    <div class="grid-row action-bar"></div>
+    <div class="grid-row actions"></div>
 </div>
 <script>
 requirejs.config({
