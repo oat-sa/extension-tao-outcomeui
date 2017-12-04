@@ -22,9 +22,12 @@
 namespace oat\taoOutcomeUi\scripts\update;
 
 use oat\generis\model\data\ModelManager;
+use oat\oatbox\service\ConfigurableService;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 use oat\taoOutcomeUi\scripts\install\RegisterTestPluginService;
+use oat\taoOutcomeUi\scripts\task\ExportDeliveryResults;
+use oat\taoTaskQueue\model\TaskLogInterface;
 
 /**
  *
@@ -80,7 +83,19 @@ class Updater extends \common_ext_ExtensionUpdater
             $this->setVersion('4.6.1');
         }
 
-        $this->skip('4.6.1', '4.13.0');
+        $this->skip('4.6.1', '4.12.2');
 
+        if ($this->isVersion('4.12.2')) {
+            /** @var TaskLogInterface|ConfigurableService $taskLogService */
+            $taskLogService = $this->getServiceManager()->get(TaskLogInterface::SERVICE_ID);
+
+            $taskLogService->linkTaskToCategory(ExportDeliveryResults::class, TaskLogInterface::CATEGORY_EXPORT);
+
+            $this->getServiceManager()->register(TaskLogInterface::SERVICE_ID, $taskLogService);
+
+            $this->setVersion('5.0.0');
+        }
+
+        $this->skip('5.0.0', '5.1.0');
     }
 }

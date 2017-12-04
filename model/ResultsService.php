@@ -861,6 +861,15 @@ class ResultsService extends tao_models_classes_ClassService
     }
 
     /**
+     * @param array $deliveryUris
+     * @return int
+     */
+    public function countResultByDelivery(array $deliveryUris)
+    {
+        return $this->getImplementation()->countResultByDelivery($deliveryUris);
+    }
+
+    /**
      * Retrieve the different variables columns pertainign to the current selection of results
      * Implementation note : it nalyses all the data collected to identify the different response variables submitted by the items in the context of activities
      */

@@ -22,41 +22,42 @@
  */
 
 use oat\taoOutcomeUi\scripts\install\RegisterTestPluginService;
+use oat\taoOutcomeUi\scripts\install\SetUpQueueTasks;
 
 $extpath = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 
-return array(
-    'name' => 'taoOutcomeUi',
-    'label' => 'Result visualisation',
-    'description' => 'TAO Results extension',
-    'license' => 'GPL-2.0',
-    'version' => '4.13.0',
-    'author' => 'Open Assessment Technologies, CRP Henri Tudor',
-    // taoItems is only needed for the item model property retrieval
-    'requires' => array(
+return [
+    'name'           => 'taoOutcomeUi',
+    'label'          => 'Result visualisation',
+    'description'    => 'TAO Results extension',
+    'license'        => 'GPL-2.0',
+    'version'        => '5.1.0',
+    'author'         => 'Open Assessment Technologies, CRP Henri Tudor',
+    'requires'       => [
         'taoResultServer' => '>=4.1.0',
-        'taoItems' => '>=5.2.0',
-        'taoDeliveryRdf' => '>=3.6.0',
-        'tao' => '>=12.1.0',
-        'taoTaskQueue' => '>=0.9.0'
-    ),
-    'install' => array(
-        'php' => array(
-            RegisterTestPluginService::class
-        )
-    ),
-    'uninstall' => array(),
-    'update' => 'oat\\taoOutcomeUi\\scripts\\update\\Updater',
+        'taoItems'        => '>=5.2.0', // taoItems is only needed for the item model property retrieval
+        'taoDeliveryRdf'  => '>=3.6.0',
+        'tao'             => '>=12.1.0',
+        'taoTaskQueue'    => '>=0.9.0'
+    ],
+    'install'        => [
+        'php' => [
+            RegisterTestPluginService::class,
+            SetUpQueueTasks::class
+        ]
+    ],
+    'uninstall'      => [],
+    'update'         => 'oat\\taoOutcomeUi\\scripts\\update\\Updater',
     'managementRole' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole',
-    'acl' => array(
-        array('grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', array('ext' => 'taoOutcomeUi'))
-    ),
-    'routes' => array(
+    'acl'            => [
+        ['grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', ['ext' => 'taoOutcomeUi']]
+    ],
+    'routes'         => [
         '/taoOutcomeUi' => 'oat\\taoOutcomeUi\\controller'
-	),
-    'constants' => array(
+    ],
+    'constants'      => [
         // views directory
-        "DIR_VIEWS" => $extpath . "views" . DIRECTORY_SEPARATOR,
+        "DIR_VIEWS"           => $extpath . "views" . DIRECTORY_SEPARATOR,
 
         // default module name
         'DEFAULT_MODULE_NAME' => 'Results',
@@ -65,12 +66,12 @@ return array(
         'DEFAULT_ACTION_NAME' => 'index',
 
         // BASE PATH: the root path in the file system (usually the document root)
-        'BASE_PATH' => $extpath,
+        'BASE_PATH'           => $extpath,
 
         // BASE URL (usually the domain root)
-        'BASE_URL' => ROOT_URL . 'taoOutcomeUi/',
-    ),
-    'extra' => array(
+        'BASE_URL'            => ROOT_URL . 'taoOutcomeUi/',
+    ],
+    'extra'          => [
         'structures' => dirname(__FILE__) . DIRECTORY_SEPARATOR . 'controller' . DIRECTORY_SEPARATOR . 'structures.xml'
-    )
-);
+    ]
+];

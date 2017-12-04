@@ -30,9 +30,11 @@ use oat\tao\model\plugins\PluginModule;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
 use oat\taoOutcomeUi\model\event\ResultsListPluginEvent;
+use oat\taoOutcomeUi\model\export\ResultsExporter;
 use oat\taoOutcomeUi\model\plugins\ResultsPluginService;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 use oat\taoResultServer\models\classes\QtiResultsService;
+use oat\taoTaskQueue\model\TaskLogActionTrait;
 use \tao_actions_SaSModule;
 use \tao_helpers_Request;
 use \tao_helpers_Uri;
@@ -51,6 +53,10 @@ use oat\taoResultServer\models\classes\ResultServerService;
  */
 class Results extends tao_actions_SaSModule
 {
+    use TaskLogActionTrait;
+
+    const PARAMETER_DELIVERY_URI = 'uri';
+    const PARAMETER_DELIVERY_CLASS_URI = 'classUri';
 
     private $deliveryService;
 
@@ -157,6 +163,11 @@ class Results extends tao_actions_SaSModule
      */
     public function index()
     {
+        // if delivery class has been selected, return nothing
+        if (!$this->hasRequestParameter(self::PARAMETER_DELIVERY_URI)) {
+            return;
+        }
+
         $model = array(
             array(
                 'id' => 'ttaker',
@@ -491,5 +502,34 @@ class Results extends tao_actions_SaSModule
         return array_filter($event->getPlugins(), function ($plugin) {
             return !is_null($plugin) && $plugin->isActive();
         });
+    }
+
+    /**
+     * Exports results by either a class or a single delivery.
+     *
+     * Only creating the export task.
+     *
+     * @throws Exception
+     * @throws \common_Exception
+     */
+    public function export()
+    {
+        if (!\tao_helpers_Request::isAjax()) {
+            throw new \Exception('Only ajax call allowed.');
+        }
+
+        if (!$this->hasRequestParameter(self::PARAMETER_DELIVERY_CLASS_URI) && !$this->hasRequestParameter(self::PARAMETER_DELIVERY_URI)) {
+            throw new \common_Exception('Parameter "'. self::PARAMETER_DELIVERY_CLASS_URI .'" or "'. self::PARAMETER_DELIVERY_URI .'" missing');
+        }
+
+        $resourceUri = $this->hasRequestParameter(self::PARAMETER_DELIVERY_URI)
+            ? \tao_helpers_Uri::decode($this->getRequestParameter(self::PARAMETER_DELIVERY_URI))
+            : \tao_helpers_Uri::decode($this->getRequestParameter(self::PARAMETER_DELIVERY_CLASS_URI));
+
+        /** @var ResultsExporter $exporter */
+        $exporter = $this->getServiceManager()
+            ->propagate(new ResultsExporter($resourceUri, ResultsService::singleton()));
+
+        return $this->returnTaskJson($exporter->createExportTask());
     }
 }
