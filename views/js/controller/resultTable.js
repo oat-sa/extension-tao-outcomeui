@@ -25,10 +25,11 @@ define([
     'i18n',
     'helpers',
     'module',
+    'ui/feedback',
     'taoTaskQueue/model/taskQueue',
     'taoTaskQueue/component/taskCreationButton/taskCreationButton',
     'ui/datatable'
-], function($, _, __, helpers, module, taskQueue, taskCreationButtonFactory) {
+], function($, _, __, helpers, module, feedback, taskQueue, taskCreationButtonFactory) {
     'use strict';
 
     /**
@@ -51,6 +52,7 @@ define([
             var columns = [];
             var groups = {};
             var $actionBar = $container.find('.actions');
+            var taskCreationButton;
 
             /**
              * Load columns to rebuild the datatable dynamically
@@ -108,8 +110,12 @@ define([
                     .off('load.datatable')
                     .on('load.datatable', function(){
 
-                        //integrate the task creation button
-                        taskCreationButtonFactory({
+                        if(taskCreationButton){
+                            taskCreationButton.restoreButton();
+                        }
+
+                        //instanciate the task creation button
+                        taskCreationButton = taskCreationButtonFactory({
                             type : 'info',
                             icon : 'export',
                             title : __('Export CSV File'),
@@ -124,6 +130,11 @@ define([
                                     uri: uri
                                 };
                             }
+                        }).on('finished', function(){
+                            //reset the button to prepare for the next action
+                            this.terminate().reset();
+                        }).on('error', function(err){
+                            feedback().error(err);
                         }).render($actionBar);
 
                         if(_.isFunction(done)){
