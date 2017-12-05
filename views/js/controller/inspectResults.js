@@ -5,15 +5,18 @@
 define([
     'jquery',
     'lodash',
+    'i18n',
     'module',
     'core/logger',
     'util/url',
     'layout/actions/binder',
     'layout/loading-bar',
     'ui/feedback',
+    'taoTaskQueue/model/taskQueue',
     'taoOutcomeUi/component/results/pluginsLoader',
-    'taoOutcomeUi/component/results/list'
-], function ($, _, module, loggerFactory, urlHelper, binder, loadingBar, feedback, resultsPluginsLoader, resultsListFactory) {
+    'taoOutcomeUi/component/results/list',
+    'taoTaskQueue/component/treeTaskButton/treeTaskButton'
+], function ($, _, __, module, loggerFactory, urlHelper, binder, loadingBar, feedback, taskQueue, resultsPluginsLoader, resultsListFactory, treeTaskButtonFactory) {
     'use strict';
 
     var logger = loggerFactory('controller/inspectResults');
@@ -51,6 +54,7 @@ define([
                 model: config.dataModel,
                 classUri: classUri
             };
+            var exportButton;
 
             loadingBar.start();
 
@@ -85,12 +89,20 @@ define([
                 loadingBar.stop();
             }
 
+            exportButton = treeTaskButtonFactory({
+                replace : true,
+                icon : 'export',
+                label : __('Export CSV'),
+                taskQueue : taskQueue
+            }).render($('#results-csv-export'));
 
-            binder.register('download_csv', function (item) {
-                $.fileDownload(this.url, {
-                    httpMethod: 'GET',
-                    data: {uri: item.uri}
-                });
+            binder.register('export_csv', function remove(actionContext){
+                var data = _.pick(actionContext, ['uri', 'classUri', 'id']);
+                var uniqueValue = data.uri || data.classUri || '';
+                exportButton.setConfig({
+                    requestUrl : this.url,
+                    data : {uri : uniqueValue}
+                }).start();
             });
         }
     };
