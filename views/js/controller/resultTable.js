@@ -23,13 +23,13 @@ define([
     'jquery',
     'lodash',
     'i18n',
-    'helpers',
     'module',
+    'util/url',
     'ui/feedback',
     'taoTaskQueue/model/taskQueue',
-    'taoTaskQueue/component/taskCreationButton/taskCreationButton',
+    'taoTaskQueue/component/button/standardButton',
     'ui/datatable'
-], function($, _, __, helpers, module, feedback, taskQueue, taskCreationButtonFactory) {
+], function($, _, __, module, urlUtil, feedback, taskQueue, standardTaskButtonFactory) {
     'use strict';
 
     /**
@@ -52,7 +52,6 @@ define([
             var columns = [];
             var groups = {};
             var $actionBar = $container.find('.actions');
-            var taskCreationButton;
 
             /**
              * Load columns to rebuild the datatable dynamically
@@ -109,41 +108,13 @@ define([
                     .data('ui.datatable', null)
                     .off('load.datatable')
                     .on('load.datatable', function(){
-
-                        if(taskCreationButton){
-                            taskCreationButton.restoreButton();
-                        }
-
-                        //instanciate the task creation button
-                        taskCreationButton = taskCreationButtonFactory({
-                            type : 'info',
-                            icon : 'export',
-                            title : __('Export CSV File'),
-                            label : __('Export CSV File'),
-                            taskQueue : taskQueue,
-                            sourceElement : $container.find('.result-table-container'),
-                            requestUrl : helpers._url('export', 'ResultTable', 'taoOutcomeUi'),
-                            getRequestData : function getRequestData(){
-                                return {
-                                    filter: filter,
-                                    columns: JSON.stringify(columns),
-                                    uri: uri
-                                };
-                            }
-                        }).on('finished', function(){
-                            //reset the button to prepare for the next action
-                            this.terminate().reset();
-                        }).on('error', function(err){
-                            feedback().error(err);
-                        }).render($actionBar);
-
                         if(_.isFunction(done)){
                             done();
                             done = '';
                         }
                     })
                     .datatable({
-                        url : helpers._url('feedDataTable', 'ResultTable', 'taoOutcomeUi', {filter : filter}),
+                        url : urlUtil.route('feedDataTable', 'ResultTable', 'taoOutcomeUi', {filter : filter}),
                         querytype : 'POST',
                         params: {columns: JSON.stringify(columns), '_search': false, uri: uri},
                         model :  model
@@ -174,7 +145,7 @@ define([
             });
 
             //default table
-            buildGrid(helpers._url('getTestTakerColumns', 'ResultTable', 'taoOutcomeUi', {filter : filter}));
+            buildGrid(urlUtil.route('getTestTakerColumns', 'ResultTable', 'taoOutcomeUi', {filter : filter}));
 
             //setup the filtering
             $filterField.select2({
@@ -186,6 +157,25 @@ define([
                 //rebuild the current table
                 _buildTable();
             });
+
+            //instantiate the task creation button
+            standardTaskButtonFactory({
+                type : 'info',
+                icon : 'export',
+                title : __('Export CSV File'),
+                label : __('Export CSV File'),
+                taskQueue : taskQueue,
+                taskCreationtUrl : urlUtil.route('export', 'ResultTable', 'taoOutcomeUi'),
+                taskCreationData : function getTaskRequestData(){
+                    return {
+                        filter: filter,
+                        columns: JSON.stringify(columns),
+                        uri: uri
+                    };
+                }
+            }).on('error', function(err){
+                feedback().error(err);
+            }).render($actionBar);
         }
     };
     return resulTableController;

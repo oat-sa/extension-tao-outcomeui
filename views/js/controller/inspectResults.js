@@ -15,7 +15,7 @@ define([
     'taoTaskQueue/model/taskQueue',
     'taoOutcomeUi/component/results/pluginsLoader',
     'taoOutcomeUi/component/results/list',
-    'taoTaskQueue/component/treeTaskButton/treeTaskButton'
+    'taoTaskQueue/component/button/treeButton'
 ], function ($, _, __, module, loggerFactory, urlHelper, binder, loadingBar, feedback, taskQueue, resultsPluginsLoader, resultsListFactory, treeTaskButtonFactory) {
     'use strict';
 
@@ -54,7 +54,7 @@ define([
                 model: config.dataModel,
                 classUri: classUri
             };
-            var exportButton;
+            var taskButton;
 
             loadingBar.start();
 
@@ -89,7 +89,7 @@ define([
                 loadingBar.stop();
             }
 
-            exportButton = treeTaskButtonFactory({
+            taskButton = treeTaskButtonFactory({
                 replace : true,
                 icon : 'export',
                 label : __('Export CSV'),
@@ -99,9 +99,9 @@ define([
             binder.register('export_csv', function remove(actionContext){
                 var data = _.pick(actionContext, ['uri', 'classUri', 'id']);
                 var uniqueValue = data.uri || data.classUri || '';
-                exportButton.setConfig({
-                    requestUrl : this.url,
-                    data : {uri : uniqueValue}
+                taskButton.setTaskConfig({
+                    taskCreationtUrl : this.url,
+                    taskCreationData : {uri : uniqueValue}
                 }).start();
             });
         }
