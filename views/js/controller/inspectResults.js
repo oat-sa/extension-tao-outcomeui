@@ -100,7 +100,7 @@ define([
                 var data = _.pick(actionContext, ['uri', 'classUri', 'id']);
                 var uniqueValue = data.uri || data.classUri || '';
                 taskButton.setTaskConfig({
-                    taskCreationtUrl : this.url,
+                    taskCreationUrl : this.url,
                     taskCreationData : {uri : uniqueValue}
                 }).start();
             });

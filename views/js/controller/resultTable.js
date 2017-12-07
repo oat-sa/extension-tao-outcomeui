@@ -165,7 +165,7 @@ define([
                 title : __('Export CSV File'),
                 label : __('Export CSV File'),
                 taskQueue : taskQueue,
-                taskCreationtUrl : urlUtil.route('export', 'ResultTable', 'taoOutcomeUi'),
+                taskCreationUrl : urlUtil.route('export', 'ResultTable', 'taoOutcomeUi'),
                 taskCreationData : function getTaskRequestData(){
                     return {
                         filter: filter,
