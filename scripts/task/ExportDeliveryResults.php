@@ -89,9 +89,11 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
                 ->setColumnsToExport($this->columns)
                 ->export($this->destination);
 
-            $msg = $this->isWorkerContext()
-                ? __('Results of "%s" successfully exported', $this->resourceToExport->getLabel())
-                : __('Results of "%s" successfully exported into "%s"', $this->resourceToExport->getLabel(), $fileName);
+            $msg = $fileName
+                ? $this->isWorkerContext()
+                    ? __('Results of "%s" successfully exported', $this->resourceToExport->getLabel())
+                    : __('Results of "%s" successfully exported into "%s"', $this->resourceToExport->getLabel(), $fileName)
+                : __('Nothing to export for "%s"', $this->resourceToExport->getLabel());
 
             return Report::createSuccess($msg, $fileName);
         } catch (\Exception $e) {
