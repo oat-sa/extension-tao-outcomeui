@@ -166,28 +166,26 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
     /**
      * @param null|string $destination
      * @return string
+     * @throws \common_Exception
      */
     public function export($destination = null)
     {
         $this->exportIntoFolder($this->deliveryClass, $this->tmpDir);
 
-        if (!\tao_helpers_File::isDirEmpty($this->tmpDir)) {
+        $tmpZipPath = \tao_helpers_File::createZip($this->tmpDir, true);
 
-            $tmpZipPath = \tao_helpers_File::createZip($this->tmpDir);
+        if (file_exists($tmpZipPath)) {
+            $finaleName = is_null($destination)
+                ? $this->saveToStorage($tmpZipPath)
+                : $this->saveToLocal($tmpZipPath, $destination);
 
-            if (file_exists($tmpZipPath)) {
-                $finaleName = is_null($destination)
-                    ? $this->saveToStorage($tmpZipPath)
-                    : $this->saveToLocal($tmpZipPath, $destination);
-
-                // delete temp files and dir
-                unlink($tmpZipPath);
-                if (\helpers_File::emptyDirectory($this->tmpDir)) {
-                    rmdir($this->tmpDir);
-                }
-
-                return $finaleName;
+            // delete temp files and dir
+            unlink($tmpZipPath);
+            if (\helpers_File::emptyDirectory($this->tmpDir)) {
+                rmdir($this->tmpDir);
             }
+
+            return $finaleName;
         }
 
         return '';
@@ -210,6 +208,7 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
     /**
      * @param string $tmpZipPath
      * @return string
+     * @throws \common_Exception
      */
     private function saveToStorage($tmpZipPath)
     {

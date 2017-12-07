@@ -223,8 +223,9 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
 
     /**
      * @param CsvExporter $exporter
-     * @param string $destination
+     * @param string      $destination
      * @return string
+     * @throws \common_exception_InvalidArgumentType
      */
     private function saveToLocal($exporter, $destination)
     {
@@ -238,6 +239,9 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
     /**
      * @param CsvExporter $exporter
      * @return string
+     * @throws \League\Flysystem\FileExistsException
+     * @throws \common_Exception
+     * @throws \common_exception_InvalidArgumentType
      */
     private function saveToStorage($exporter)
     {
