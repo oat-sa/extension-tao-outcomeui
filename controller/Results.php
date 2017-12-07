@@ -41,6 +41,7 @@ use \tao_helpers_Uri;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoResultServer\models\classes\ResultServerService;
+use oat\tao\helpers\UserHelper;
 
 /**
  * Results Controller provide actions performed from url resolution
@@ -250,7 +251,6 @@ class Results extends tao_actions_SaSModule
             foreach ($results as $res) {
 
                 $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($res['deliveryResultIdentifier']);
-                $testTaker = new core_kernel_classes_Resource($res['testTakerIdentifier']);
 
                 try {
                     $startTime = \tao_helpers_Date::displayeDate($deliveryExecution->getStartTime());
@@ -259,9 +259,15 @@ class Results extends tao_actions_SaSModule
                     $startTime = '';
                 }
 
+                $user = UserHelper::getUser($res['testTakerIdentifier']);
+                $userName = UserHelper::getUserName($user, true);
+                if (empty($userName)) {
+                    $userName = $res['testTakerIdentifier'];
+                }
+
                 $data[] = array(
                     'id' => $deliveryExecution->getIdentifier(),
-                    'ttaker' => empty($testTaker->getLabel())? $res['testTakerIdentifier'] : _dh($testTaker->getLabel()),
+                    'ttaker' => _dh($userName),
                     'time' => $startTime,
                 );
 
