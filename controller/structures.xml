@@ -16,7 +16,7 @@
                     />
                 </trees>
                 <actions>
-                    <action id="results-csv-export" name="Export CSV" url="/taoOutcomeUi/Results/export" group="tree" context="resource">
+                    <action id="results-csv-export" name="Export CSV" url="/taoOutcomeUi/Results/export" group="tree" context="resource" binding="export_csv">
                         <icon id="icon-export"/>
                     </action>
                     <action id="results-class-index" name=" " url="/taoOutcomeUi/Results/index" group="content" context="class">

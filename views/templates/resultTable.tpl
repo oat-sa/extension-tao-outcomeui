@@ -2,6 +2,7 @@
 use oat\tao\helpers\Template;
 use oat\taoOutcomeUi\model\ResultsService;
 ?>
+<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoOutcomeUi/views/css/result.css" />
 <div class="result-table flex-container-full">
     <div class="grid-row clearfix">
         <div class="col-12">
@@ -42,9 +43,7 @@ use oat\taoOutcomeUi\model\ResultsService;
         </div>
     </div>
     <div class="result-table-container"></div>
-    <div class="grid-row">
-        <button class="result-export btn-info disabled small"><span class="icon-export"></span><?=__('Export CSV File')?></button>
- 	</div>
+    <div class="grid-row actions"></div>
 </div>
 <script>
 requirejs.config({

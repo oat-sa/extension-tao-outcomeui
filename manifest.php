@@ -31,7 +31,7 @@ return [
     'label'          => 'Result visualisation',
     'description'    => 'TAO Results extension',
     'license'        => 'GPL-2.0',
-    'version'        => '5.0.0',
+    'version'        => '5.1.0',
     'author'         => 'Open Assessment Technologies, CRP Henri Tudor',
     'requires'       => [
         'taoResultServer' => '>=4.1.0',
