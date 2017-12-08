@@ -77,6 +77,15 @@ class Results extends tao_actions_SaSModule
     }
 
     /**
+     * Ontology data for deliveries (not results, so use deliveryService->getRootClass)
+     * @throws common_exception_IsAjaxAction
+     */
+    public function getOntologyData()
+    {
+        return parent::getOntologyData();
+    }
+
+    /**
      * Action called on click on a delivery (class) construct and call the view to see the table of
      * all delivery execution for a specific delivery
      */
