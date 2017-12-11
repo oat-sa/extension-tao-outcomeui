@@ -83,7 +83,7 @@ class Updater extends \common_ext_ExtensionUpdater
             $this->setVersion('4.6.1');
         }
 
-        $this->skip('4.6.1', '4.12.3');
+        $this->skip('4.6.1', '4.13.0');
 
         if ($this->isVersion('4.12.3')) {
             /** @var TaskLogInterface|ConfigurableService $taskLogService */
