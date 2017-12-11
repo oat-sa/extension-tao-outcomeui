@@ -26,6 +26,7 @@ namespace oat\taoOutcomeUi\model;
 
 use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyRdfs;
+use oat\taoDelivery\model\DeliveryContainerService;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
@@ -812,7 +813,7 @@ class ResultsService extends tao_models_classes_ClassService
                             $value = (string) $value;
                         }
 
-                        if (in_array($column->getProperty()->getUri(), [TAO_DELIVERY_START_PROP, TAO_DELIVERY_END_PROP])) {
+                        if (in_array($column->getProperty()->getUri(), [DeliveryContainerService::PROPERTY_PERIOD_START, DeliveryContainerService::PROPERTY_PERIOD_END])) {
                             $value = \tao_helpers_Date::displayeDate($value, \tao_helpers_Date::FORMAT_VERBOSE);
                         }
 
@@ -820,7 +821,7 @@ class ResultsService extends tao_models_classes_ClassService
                     }, $values);
 
                     // if it's a guest test taker (it has no property values at all), let's display the uri as label
-                    if ($column->isTestTakerType() && empty($values) && $column->getProperty()->getUri() == RDFS_LABEL) {
+                    if ($column->isTestTakerType() && empty($values) && $column->getProperty()->getUri() == OntologyRdfs::RDFS_LABEL) {
                         $values[] = $resource->getUri();
                     }
 
