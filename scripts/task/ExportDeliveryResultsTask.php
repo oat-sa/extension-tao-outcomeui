@@ -21,14 +21,20 @@
 namespace oat\taoOutcomeUi\scripts\task;
 
 use common_report_Report as Report;
+use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyAwareTrait;
+use oat\generis\model\OntologyRdf;
+use oat\generis\model\OntologyRdfs;
 use oat\oatbox\action\Action;
 use oat\oatbox\filesystem\Directory;
 use oat\taoDelivery\model\fields\DeliveryFieldsService;
+use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
+use oat\taoDeliveryRdf\model\DeliveryContainerService;
 use oat\taoOutcomeUi\model\export\ResultExportService;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeUi\model\table\VariableDataProvider;
+use oat\taoTestTaker\models\TestTakerService;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use oat\oatbox\action\ResolutionException;
@@ -120,10 +126,11 @@ class ExportDeliveryResultsTask implements Action, ServiceLocatorAwareInterface
     private function getTestTakerColumns()
     {
         $columns = [];
-        $testTakerProps = [RDFS_LABEL, PROPERTY_USER_LOGIN, PROPERTY_USER_FIRSTNAME, PROPERTY_USER_LASTNAME, PROPERTY_USER_MAIL, PROPERTY_USER_UILG];
+        $testTakerProps = [OntologyRdfs::RDFS_LABEL, GenerisRdf::PROPERTY_USER_LOGIN, GenerisRdf::PROPERTY_USER_FIRSTNAME,
+            GenerisRdf::PROPERTY_USER_LASTNAME, GenerisRdf::PROPERTY_USER_MAIL, GenerisRdf::PROPERTY_USER_UILG];
 
         // add custom properties, it contains the group property as well
-        $customProps = $this->getClass(TAO_CLASS_SUBJECT)->getProperties();
+        $customProps = $this->getClass(TestTakerService::CLASS_URI_SUBJECT)->getProperties();
 
         $testTakerProps = array_merge($testTakerProps, $customProps);
 
@@ -142,10 +149,13 @@ class ExportDeliveryResultsTask implements Action, ServiceLocatorAwareInterface
     {
         $columns = [];
 
-        $deliveryProps = [RDFS_LABEL, DeliveryFieldsService::PROPERTY_CUSTOM_LABEL, TAO_DELIVERY_MAXEXEC_PROP, TAO_DELIVERY_START_PROP, TAO_DELIVERY_END_PROP, DELIVERY_DISPLAY_ORDER_PROP, TAO_DELIVERY_ACCESS_SETTINGS_PROP];
+        $deliveryProps = [OntologyRdfs::RDFS_LABEL, DeliveryFieldsService::PROPERTY_CUSTOM_LABEL,
+            DeliveryContainerService::PROPERTY_MAX_EXEC, DeliveryContainerService::PROPERTY_START,
+            DeliveryContainerService::PROPERTY_END, DeliveryAssemblyService::PROPERTY_DELIVERY_DISPLAY_ORDER_PROP,
+            DeliveryContainerService::PROPERTY_ACCESS_SETTINGS];
 
         // add custom properties, it contains the group property as well
-        $customProps = $this->getClass($this->delivery->getOnePropertyValue($this->getProperty(RDF_TYPE)))->getProperties();
+        $customProps = $this->getClass($this->delivery->getOnePropertyValue($this->getProperty(OntologyRdf::RDF_TYPE)))->getProperties();
 
         $deliveryProps = array_merge($deliveryProps, $customProps);
 
@@ -193,7 +203,7 @@ class ExportDeliveryResultsTask implements Action, ServiceLocatorAwareInterface
         $rows = $resultsService->getResultsByDelivery($this->delivery, $columns, $filter);
         $columnNames = array_reduce($columns, function ($carry, $item) {
 
-            if ($item instanceof ContextTypePropertyColumn && $item->getProperty()->getUri() == RDFS_LABEL) {
+            if ($item instanceof ContextTypePropertyColumn && $item->getProperty()->getUri() == OntologyRdfs::RDFS_LABEL) {
                 $carry[] = $item->isTestTakerType() ? __('Test Taker') : __('Delivery');
             } else {
                 $carry[] = $item->getLabel();
