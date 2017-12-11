@@ -24,6 +24,9 @@
 
 namespace oat\taoOutcomeUi\model;
 
+use oat\generis\model\GenerisRdf;
+use oat\generis\model\OntologyRdfs;
+use oat\taoDelivery\model\DeliveryContainerService;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
@@ -723,11 +726,11 @@ class ResultsService extends tao_models_classes_ClassService
             return $testTaker;
         } else {
             $propValues = $testTaker->getPropertiesValues(array(
-                RDFS_LABEL,
-                PROPERTY_USER_LOGIN,
-                PROPERTY_USER_FIRSTNAME,
-                PROPERTY_USER_LASTNAME,
-                PROPERTY_USER_MAIL,
+                OntologyRdfs::RDFS_LABEL,
+                GenerisRdf::PROPERTY_USER_LOGIN,
+                GenerisRdf::PROPERTY_USER_FIRSTNAME,
+                GenerisRdf::PROPERTY_USER_LASTNAME,
+                GenerisRdf::PROPERTY_USER_MAIL,
             ));
         }
         return $propValues;
@@ -810,7 +813,7 @@ class ResultsService extends tao_models_classes_ClassService
                             $value = (string) $value;
                         }
 
-                        if (in_array($column->getProperty()->getUri(), [TAO_DELIVERY_START_PROP, TAO_DELIVERY_END_PROP])) {
+                        if (in_array($column->getProperty()->getUri(), [DeliveryContainerService::PROPERTY_PERIOD_START, DeliveryContainerService::PROPERTY_PERIOD_END])) {
                             $value = \tao_helpers_Date::displayeDate($value, \tao_helpers_Date::FORMAT_VERBOSE);
                         }
 
@@ -818,7 +821,7 @@ class ResultsService extends tao_models_classes_ClassService
                     }, $values);
 
                     // if it's a guest test taker (it has no property values at all), let's display the uri as label
-                    if ($column->isTestTakerType() && empty($values) && $column->getProperty()->getUri() == RDFS_LABEL) {
+                    if ($column->isTestTakerType() && empty($values) && $column->getProperty()->getUri() == OntologyRdfs::RDFS_LABEL) {
                         $values[] = $resource->getUri();
                     }
 

@@ -24,12 +24,14 @@ namespace oat\taoOutcomeUi\controller;
 use \common_Exception;
 use \core_kernel_classes_Property;
 use \core_kernel_classes_Resource;
+use oat\taoDelivery\model\DeliveryContainerService;
 use oat\taoDelivery\model\fields\DeliveryFieldsService;
 use oat\taoGroups\models\GroupsService;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoResultServer\models\classes\ResultService;
 use oat\generis\model\OntologyAwareTrait;
 use oat\taoOutcomeUi\model\export\ResultExportService;
+use oat\generis\model\GenerisRdf;
 use \tao_models_classes_table_Column;
 use \tao_models_classes_table_PropertyColumn;
 use oat\taoOutcomeUi\model\ResultsService;
@@ -448,7 +450,7 @@ class ResultTable extends \tao_actions_CommonModule
                                 $value = (string) $value;
                             }
 
-                            if (in_array($key, [TAO_DELIVERY_START_PROP, TAO_DELIVERY_END_PROP])) {
+                            if (in_array($key, [DeliveryContainerService::PROPERTY_PERIOD_START, DeliveryContainerService::PROPERTY_PERIOD_END])) {
                                 $value = \tao_helpers_Date::displayeDate($value, \tao_helpers_Date::FORMAT_VERBOSE);
                             }
 
@@ -456,7 +458,7 @@ class ResultTable extends \tao_actions_CommonModule
                         }, $values);
 
                         // if it's a guest test taker (it has no property values at all), let's display the uri as label
-                        if ($column->isTestTakerType() && empty($values) && $column->getProperty()->getUri() == RDFS_LABEL) {
+                        if ($column->isTestTakerType() && empty($values) && $column->getProperty()->getUri() == OntologyRdfs::RDFS_LABEL) {
                             $values[] = $resource->getUri();
                         }
 
