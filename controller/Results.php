@@ -41,6 +41,7 @@ use \tao_helpers_Uri;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoResultServer\models\classes\ResultServerService;
+use oat\tao\helpers\UserHelper;
 
 /**
  * Results Controller provide actions performed from url resolution
@@ -83,74 +84,7 @@ class Results extends tao_actions_SaSModule
      */
     public function getOntologyData()
     {
-        if (!tao_helpers_Request::isAjax()) {
-            throw new common_exception_IsAjaxAction(__FUNCTION__);
-        }
-
-        $options = array(
-            'subclasses' => true,
-            'instances' => true,
-            'highlightUri' => '',
-            'chunk' => false,
-            'offset' => 0,
-            'limit' => 0
-        );
-
-        if ($this->hasRequestParameter('loadNode')) {
-            $options['uniqueNode'] = $this->getRequestParameter('loadNode');
-        }
-
-        if ($this->hasRequestParameter("selected")) {
-            $options['browse'] = array($this->getRequestParameter("selected"));
-        }
-
-        if ($this->hasRequestParameter('hideInstances')) {
-            if ((bool)$this->getRequestParameter('hideInstances')) {
-                $options['instances'] = false;
-            }
-        }
-        if ($this->hasRequestParameter('classUri')) {
-            $clazz = $this->getCurrentClass();
-            $options['chunk'] = !$clazz->equals($this->deliveryService->getRootClass());
-        } else {
-            $clazz = $this->deliveryService->getRootClass();
-        }
-
-        if ($this->hasRequestParameter('offset')) {
-            $options['offset'] = $this->getRequestParameter('offset');
-        }
-
-        if ($this->hasRequestParameter('limit')) {
-            $options['limit'] = $this->getRequestParameter('limit');
-        }
-
-        //generate the tree from the given parameters
-        $tree = $this->getClassService()->toTree($clazz, $options);
-
-        $tree = $this->addPermissions($tree);
-
-        function sortTree(&$tree)
-        {
-            usort($tree, function ($a, $b) {
-                if (isset($a['data']) && isset($b['data'])) {
-                    if ($a['type'] != $b['type']) {
-                        return ($a['type'] == 'class') ? -1 : 1;
-                    } else {
-                        return strcasecmp($a['data'], $b['data']);
-                    }
-                }
-                return 0;
-            });
-        }
-
-        if (isset($tree['children'])) {
-            sortTree($tree['children']);
-        } elseif (array_values($tree) === $tree) {//is indexed array
-            sortTree($tree);
-        }
-
-        //expose the tree
-        $this->returnJson($tree);
+        return parent::getOntologyData();
     }
 
     /**
@@ -186,6 +120,10 @@ class Results extends tao_actions_SaSModule
                     'dataModel' => $model,
                     'plugins' => $this->getResultsListPlugin()
                 ]);
+
+                if ($this->hasRequestParameter('export-callback-url')) {
+                    $this->setData('export-callback-url', $this->getRequestParameter('export-callback-url'));
+                }
 
                 $this->setView('resultList.tpl');
             } catch (\common_exception_Error $e) {
@@ -237,7 +175,6 @@ class Results extends tao_actions_SaSModule
             foreach ($results as $res) {
 
                 $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($res['deliveryResultIdentifier']);
-                $testTaker = new core_kernel_classes_Resource($res['testTakerIdentifier']);
 
                 try {
                     $startTime = \tao_helpers_Date::displayeDate($deliveryExecution->getStartTime());
@@ -246,9 +183,15 @@ class Results extends tao_actions_SaSModule
                     $startTime = '';
                 }
 
+                $user = UserHelper::getUser($res['testTakerIdentifier']);
+                $userName = UserHelper::getUserName($user, true);
+                if (empty($userName)) {
+                    $userName = $res['testTakerIdentifier'];
+                }
+
                 $data[] = array(
                     'id' => $deliveryExecution->getIdentifier(),
-                    'ttaker' => empty($testTaker->getLabel())? $res['testTakerIdentifier'] : _dh($testTaker->getLabel()),
+                    'ttaker' => _dh($userName),
                     'time' => $startTime,
                 );
 
@@ -489,5 +432,24 @@ class Results extends tao_actions_SaSModule
         return array_filter($event->getPlugins(), function ($plugin) {
             return !is_null($plugin) && $plugin->isActive();
         });
+    }
+
+    /**
+     * @param array $options
+     * @return array
+     * @throws
+     */
+    protected function getTreeOptionsFromRequest($options = [])
+    {
+        $config = $this->getServiceManager()->get('taoDeliveryRdf/DeliveryMgmt')->getConfig();
+        $options =  parent::getTreeOptionsFromRequest($options);
+        $options['order'] = key($config['OntologyTreeOrder']);
+        $options['orderdir'] = $config['OntologyTreeOrder'][$options['order']];
+        if ($this->hasRequestParameter('classUri')) {
+            $options['class'] = $this->getCurrentClass();
+        } else {
+            $options['class'] = $this->deliveryService->getRootClass();
+        }
+        return $options;
     }
 }

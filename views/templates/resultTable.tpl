@@ -1,6 +1,7 @@
 <?php
 use oat\tao\helpers\Template;
 ?>
+<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoOutcomeUi/views/css/result.css" />
 <div class="result-table flex-container-full">
     <div class="grid-row clearfix">
         <div class="col-12">
@@ -9,6 +10,12 @@ use oat\tao\helpers\Template;
             </button>
             <button class="btn-error small" data-group="testtaker" data-action="remove" data-url="<?=_url('getResultOfSubjectColumn')?>" >
                 <span class="icon-bin"></span><?=__('Anonymise')?>
+            </button>
+            <button class="btn-info small" data-group="delivery" data-action="add" data-url="<?=_url('getDeliveryColumns')?>">
+                <span class="icon-add"></span><?=__('Add Delivery')?>
+            </button>
+            <button class="btn-error small hidden" data-group="delivery" data-action="remove" data-url="<?=_url('getDeliveryColumns')?>" >
+                <span class="icon-bin"></span><?=__('Remove Delivery')?>
             </button>
             <button class="btn-info small" data-group="grade" data-action="add" data-url="<?=_url('getGradeColumns')?>" >
                 <span class="icon-add"></span><?=__('Add All grades')?>

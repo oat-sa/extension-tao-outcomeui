@@ -15,16 +15,21 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * Copyright (c) 2009-2012 (original work) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV);
- *
+ *               2012-2017 Open Assessment Technologies SA;
  *
  */
-
 
 namespace oat\taoOutcomeUi\controller;
 
 use \common_Exception;
 use \core_kernel_classes_Property;
 use \core_kernel_classes_Resource;
+use oat\taoDelivery\model\fields\DeliveryFieldsService;
+use oat\taoGroups\models\GroupsService;
+use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
+use oat\taoResultServer\models\classes\ResultService;
+use oat\generis\model\OntologyAwareTrait;
+use oat\taoOutcomeUi\model\export\ResultExportService;
 use oat\generis\model\GenerisRdf;
 use \tao_models_classes_table_Column;
 use \tao_models_classes_table_PropertyColumn;
@@ -32,10 +37,11 @@ use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use tao_helpers_Uri;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
-use oat\tao\model\export\implementation\CsvExporter;
 use oat\taoOutcomeUi\model\table\VariableDataProvider;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoDelivery\model\execution\DeliveryExecution;
+use common_report_Report as Report;
+
 
 /**
  * should be entirelyrefactored
@@ -47,7 +53,9 @@ use oat\taoDelivery\model\execution\DeliveryExecution;
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  *
  */
-class ResultTable extends \tao_actions_CommonModule {
+class ResultTable extends \tao_actions_CommonModule
+{
+    use OntologyAwareTrait;
 
     /**
      * constructor: initialize the service and the default data
@@ -86,51 +94,79 @@ class ResultTable extends \tao_actions_CommonModule {
 
     /**
      * Download csv file with all results of all delivery executions of given delivery.
+     *
+     * @throws \common_exception_MissingParameter
+     * @throws common_Exception
      */
     public function getCsvFileByDelivery()
     {
-        $filter = 'lastSubmitted';
-        $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
-        $columns = [];
-        $cols = array_merge(
-             $this->getTestTakerColumn(),
-             $this->service->getVariableColumns($delivery, CLASS_OUTCOME_VARIABLE, $filter),
-             $this->service->getVariableColumns($delivery, CLASS_RESPONSE_VARIABLE, $filter)
-        );
-
-        $dataProvider = new VariableDataProvider();
-        foreach ($cols as $col) {
-            $column = tao_models_classes_table_Column::buildColumnFromArray($col);
-            if (!is_null($column)) {
-                if($column instanceof VariableColumn){
-                    $column->setDataProvider($dataProvider);
-                }
-                $columns[] = $column;
-            }
+        if (!$this->hasRequestParameter('uri')) {
+            throw new \common_exception_MissingParameter('uri', __FUNCTION__);
         }
-        $columns[0]->label = __("Test taker");
-        $rows = $this->service->getResultsByDelivery($delivery, $columns, $filter);
-        $columnNames = array_reduce($columns, function ($carry, $item) {
-            $carry[] = $item->label;
-            return $carry;
-        });
-        $result = [];
-        foreach ($rows as $row) {
-            $rowResult = [];
-            foreach ($row['cell'] as $rowKey => $rowVal) {
-                $rowResult[$columnNames[$rowKey]] = $rowVal[0];
-            }
-            $result[] = $rowResult;
-        }
+        $delivery = $this->getResource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
 
-        //If there are no executions yet, the file is exported but contains only the header
-        if (empty($result)) {
-            $result = [array_fill_keys($columnNames, '')];
+        if ($this->getResultExportService()->isSynchronousExport()) {
+            $this->forward('index', 'Results', \Context::getInstance()->getExtensionName(), [
+                'id' => $delivery->getUri(),
+                'export-callback-url' => _url('downloadCsvByDelivery')
+            ]);
+            exit;
+        } else {
+            $this->setData('uri', tao_helpers_Uri::encode($delivery->getUri()));
+            $this->setData('label', $delivery->getLabel());
+            $this->setData('context', ResultExportService::DELIVERY_EXPORT_QUEUE_CONTEXT);
+            $this->setData(
+                'create-task-callback-url',
+                _url('createCsvFileByDeliveryTask',  \Context::getInstance()->getModuleName(), \Context::getInstance()->getExtensionName())
+            );
+            $this->setView('export-async.tpl');
         }
-
-        $exporter = new CsvExporter($result);
-        $exporter->export(true, true, ";");
     }
+
+    /**
+     * Create a task to export delivery results
+     * A json message is returned with a feedback message
+     *
+     * @throws \common_exception_MethodNotAllowed
+     * @throws \common_exception_MissingParameter
+     */
+    public function createCsvFileByDeliveryTask()
+    {
+        if (!$this->isRequestPost()) {
+            throw new \common_exception_MethodNotAllowed();
+        }
+        if (!$this->hasRequestParameter('uri')) {
+            throw new \common_exception_MissingParameter('uri', __FUNCTION__);
+        }
+        $delivery = $this->getResource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
+        $task = $this->getResultExportService()->createExportTask($delivery);
+
+        $this->returnJson(array(
+            'success' => true,
+            'message' => __('Results export for delivery "%s" successfully scheduled under Task "%s"', $delivery->getLabel(), $task->getLabel())
+        ));
+    }
+
+    /**
+     * Export Delivery results as direct download
+     *
+     * @throws \common_exception_MissingParameter
+     * @throws common_Exception
+     */
+    public function downloadCsvByDelivery()
+    {
+        if (!$this->hasRequestParameter('uri')) {
+            throw new \common_exception_MissingParameter('uri', __FUNCTION__);
+        }
+        $delivery = $this->getResource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
+        $file = $this->getResultExportService()->exportDeliveryResults($delivery);
+
+        header("Content-type: text/csv");
+        header('Content-Disposition: attachment; fileName="' . $file->getBasename() .'"');
+        header("Content-Length: " . $file->getSize());
+        \tao_helpers_Http::returnStream($file->readPsrStream());
+    }
+
 
     /**
      * Relies on two optionnal parameters,
@@ -147,10 +183,17 @@ class ResultTable extends \tao_actions_CommonModule {
 
         $encodedData = $this->dataToCsv($columns, $rows,';','"');
 
+        $fileName = strtolower(\tao_helpers_Display::textCleaner($delivery->getLabel(), '*'))
+            .'_'
+            .\tao_helpers_Uri::getUniqueId($delivery->getUri())
+            .'_'
+            .date('YmdHis')
+            .'.csv';
+
         header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
         setcookie("fileDownload","true", 0, "/");
         header("Content-type: text/csv");
-        header('Content-Disposition: attachment; filename=Data.csv');
+        header('Content-Disposition: attachment; filename='. $fileName);
         echo $encodedData;
     }
 
@@ -159,10 +202,61 @@ class ResultTable extends \tao_actions_CommonModule {
      */
     public function getResultOfSubjectColumn()
     {
-        echo json_encode(array(
-                'columns' => $this->getTestTakerColumn(),
-                'first'   => true
-        ));
+        $columns = [];
+        $testTakerProps = [RDFS_LABEL, PROPERTY_USER_LOGIN, PROPERTY_USER_FIRSTNAME, PROPERTY_USER_LASTNAME, PROPERTY_USER_MAIL, PROPERTY_USER_UILG];
+
+        // add custom properties, it contains the group property as well
+        $customProps = $this->getClass(TAO_CLASS_SUBJECT)->getProperties();
+
+        $testTakerProps = array_merge($testTakerProps, $customProps);
+
+        foreach ($testTakerProps as $property){
+            $property = $this->getProperty($property);
+            $loginCol = new ContextTypePropertyColumn(ContextTypePropertyColumn::CONTEXT_TYPE_TEST_TAKER, $property);
+
+            if ($property->getUri() == RDFS_LABEL) {
+                $loginCol->label = __('Test Taker');
+            }
+
+            $columns[] = $loginCol->toArray();
+        }
+
+        return $this->returnJson([
+            'columns' => $columns,
+            'first'   => true
+        ]);
+    }
+
+    /**
+     * Get columns for deliver metadata
+     */
+    public function getDeliveryColumns()
+    {
+        $columns = [];
+
+        $deliveryProps = [RDFS_LABEL, DeliveryFieldsService::PROPERTY_CUSTOM_LABEL, TAO_DELIVERY_MAXEXEC_PROP, TAO_DELIVERY_START_PROP, TAO_DELIVERY_END_PROP, DELIVERY_DISPLAY_ORDER_PROP, TAO_DELIVERY_ACCESS_SETTINGS_PROP];
+
+        $delivery = $this->getResource(tao_helpers_Uri::decode($this->getRequestParameter('uri')));
+
+        // add custom properties, it contains the group property as well
+        $customProps = $this->getClass($delivery->getOnePropertyValue($this->getProperty(RDF_TYPE)))->getProperties();
+
+        $deliveryProps = array_merge($deliveryProps, $customProps);
+
+        foreach ($deliveryProps as $property){
+            $property = $this->getProperty($property);
+            $loginCol = new ContextTypePropertyColumn(ContextTypePropertyColumn::CONTEXT_TYPE_DELIVERY, $property);
+
+            if ($property->getUri() == RDFS_LABEL) {
+                $loginCol->label = __('Delivery');
+            }
+
+            $columns[] = $loginCol->toArray();
+        }
+
+        return $this->returnJson([
+            'columns' => $columns
+        ]);
     }
 
     /**
@@ -185,16 +279,6 @@ class ResultTable extends \tao_actions_CommonModule {
          echo json_encode(array(
              'columns' => $this->service->getVariableColumns($delivery, \taoResultServer_models_classes_OutcomeVariable::class, $filterData)
          ));
-    }
-
-    /**
-     * @return array
-     */
-    private function getTestTakerColumn()
-    {
-        $testtaker = new tao_models_classes_table_PropertyColumn(new core_kernel_classes_Property(PROPERTY_RESULT_OF_SUBJECT));
-        $arr[] = $testtaker->toArray();
-        return $arr;
     }
 
     /**
@@ -252,7 +336,7 @@ class ResultTable extends \tao_actions_CommonModule {
         $columns = array();
         $variables = json_decode($this->getRequest()->getRawParameters()[$identifier], true);
         foreach ($variables as $array) {
-            if (isset($data['type']) && !is_subclass_of($data['type'], tao_models_classes_table_Column::class)) {
+            if (isset($array['type']) && !is_subclass_of($array['type'], tao_models_classes_table_Column::class)) {
                 throw new \common_exception_Error('Non column specified as column type');
             }
 
@@ -261,6 +345,11 @@ class ResultTable extends \tao_actions_CommonModule {
                 if ($column instanceof VariableColumn) {
                     $column->setDataProvider($dataProvider);
                 }
+
+                if ($column instanceof ContextTypePropertyColumn && $column->getProperty()->getUri() == RDFS_LABEL) {
+                    $column->label = $column->isTestTakerType() ? __('Test Taker') : __('Delivery');
+                }
+
             	$columns[] = $column;
             }
         }
@@ -333,22 +422,46 @@ class ResultTable extends \tao_actions_CommonModule {
             );
             foreach ($columns as $column) {
                 $key = null;
-                if($column instanceof tao_models_classes_table_PropertyColumn){
+                if($column instanceof ContextTypePropertyColumn){
                     $key = $column->getProperty()->getUri(); 
                 } else  if ($column instanceof VariableColumn) {
                     $key =  $column->getContextIdentifier() . '_' . $column->getIdentifier();
                 }
                 if(!is_null($key)){
                     if (count($column->getDataProvider()->cache) > 0) {
+                        // grade or response column values
                         $data[$key] = ResultsService::filterCellData(
                             $column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column),
                             $filterData
                         );
                     } else {
-                        $data[$key] = ResultsService::filterCellData(
-                            (string)$this->service->getTestTaker($result)->getOnePropertyValue(new \core_kernel_classes_Property(GenerisRdf::PROPERTY_USER_LOGIN)),
-                            $filterData
-                        );
+                        // test taker or delivery property values
+                        $resource = $column->isTestTakerType()
+                            ? $this->service->getTestTaker($result)
+                            : $this->service->getDelivery($result);
+
+                        $values = $resource->getPropertyValues($column->getProperty());
+
+                        $values = array_map(function ($value) use ($key) {
+                            if (\common_Utils::isUri($value)) {
+                                $value = (new core_kernel_classes_Resource($value))->getLabel();
+                            } else {
+                                $value = (string) $value;
+                            }
+
+                            if (in_array($key, [TAO_DELIVERY_START_PROP, TAO_DELIVERY_END_PROP])) {
+                                $value = \tao_helpers_Date::displayeDate($value, \tao_helpers_Date::FORMAT_VERBOSE);
+                            }
+
+                            return $value;
+                        }, $values);
+
+                        // if it's a guest test taker (it has no property values at all), let's display the uri as label
+                        if ($column->isTestTakerType() && empty($values) && $column->getProperty()->getUri() == RDFS_LABEL) {
+                            $values[] = $resource->getUri();
+                        }
+
+                        $data[$key] = ResultsService::filterCellData(implode(' ', $values), $filterData);
                     }
                 }
                 else {
@@ -368,4 +481,15 @@ class ResultTable extends \tao_actions_CommonModule {
 
         $this->returnJSON($response);
     }
+
+    /**
+     * Get the results export service
+     *
+     * @return ResultExportService
+     */
+    protected function getResultExportService()
+    {
+        return $this->getServiceManager()->propagate(new ResultExportService());
+    }
+
 }

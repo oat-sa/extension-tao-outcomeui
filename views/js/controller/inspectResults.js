@@ -81,6 +81,8 @@ define([
                             .render($('.inspect-results-grid', $container));
                     })
                     .catch(reportError);
+            } else {
+                loadingBar.stop();
             }
 
 

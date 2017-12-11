@@ -24,6 +24,7 @@
 
 namespace oat\taoOutcomeUi\helper;
 
+use oat\taoResultServer\models\classes\ResultService;
 use oat\generis\model\OntologyRdf;
 use oat\generis\model\OntologyRdfs;
 use \tao_helpers_grid_Cell_ResourceLabelAdapter;
@@ -72,8 +73,8 @@ class DeliveryResultGrid
 		
 		$processProperties = array(
             OntologyRdfs::RDFS_LABEL					=> __('Label'),
-			PROPERTY_RESULT_OF_DELIVERY	=> __('Delivery'),
-			PROPERTY_RESULT_OF_SUBJECT	=> __('Test taker'),
+            ResultService::DELIVERY_CLASS_URI	=> __('Delivery'),
+            ResultService::SUBJECT_CLASS_URI	=> __('Test taker'),
 			OntologyRdf::RDF_TYPE                	=> __('Class')
 		);
 		
