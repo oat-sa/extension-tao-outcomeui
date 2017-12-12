@@ -39,7 +39,7 @@ return [
         'taoItems'        => '>=5.2.0',
         'taoDeliveryRdf'  => '>=3.18.0',
         'tao'             => '>=14.11.0',
-        'taoTaskQueue'    => '>=0.9.0'
+        'taoTaskQueue'    => '>=0.11.0'
     ],
     'install'        => [
         'php' => [
