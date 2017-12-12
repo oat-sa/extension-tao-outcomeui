@@ -465,7 +465,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $imp = $impProphecy->reveal();
         $this->service->setImplementation($imp);
 
-        $itemVar = $this->service->getItemVariableDataFromDeliveryResult('#fakeUri', 'lastSubmitted');
+        $itemVar = $this->service->getItemVariableDataFromDeliveryResult('#fakeUri', ResultsService::VARIABLES_FILTER_LAST_SUBMITTED);
 
         $this->assertArrayHasKey('#item', $itemVar);
         $this->assertArrayHasKey('itemModel', $itemVar['#item']);
@@ -525,7 +525,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
      */
     public function testGetItemVariableDataStatsFromDeliveryResult()
     {
-        $itemVar = $this->service->getItemVariableDataStatsFromDeliveryResult('#fakeUri', 'lastSubmitted');
+        $itemVar = $this->service->getItemVariableDataStatsFromDeliveryResult('#fakeUri', ResultsService::VARIABLES_FILTER_LAST_SUBMITTED);
 
         $this->assertArrayHasKey('nbResponses', $itemVar);
         $this->assertEquals(2, $itemVar['nbResponses']);
@@ -838,7 +838,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
 
         $allVariables = $serviceMock->getStructuredVariables('DeliveryExecutionIdentifier', 'all', array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class));
 
-        $lastVariables = $serviceMock->getStructuredVariables('DeliveryExecutionIdentifier', 'lastSubmitted', array(\taoResultServer_models_classes_TraceVariable::class));
+        $lastVariables = $serviceMock->getStructuredVariables('DeliveryExecutionIdentifier', ResultsService::VARIABLES_FILTER_LAST_SUBMITTED, array(\taoResultServer_models_classes_TraceVariable::class));
 
         $this->assertInternalType('array', $allVariables);
 
