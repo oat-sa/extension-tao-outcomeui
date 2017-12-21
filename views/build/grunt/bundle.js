@@ -25,6 +25,7 @@ module.exports = function(grunt) {
             mainConfigFile : './config/requirejs.build.js',
             paths : {
                 'taoOutcomeUi' : root + '/taoOutcomeUi/views/js',
+                'taoTaskQueue' : root + '/taoTaskQueue/views/js',
                 'taoItems' : root + '/taoItems/views/js',
                 'taoItemsCss' : root + '/taoItems/views/css'
             },
