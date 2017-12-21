@@ -1,15 +1,35 @@
 /**
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; under version 2
+ * of the License (non-upgradable).
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * Copyright (c) 2014-2017 (original work) Open Assessment Technologies SA;
+ */
+
+/**
  * @author Bertrand Chevrier <bertrand@taotesting.com>
  */
 define([
-    'jquery', 
+    'jquery',
     'lodash',
-    'i18n', 
-    'helpers',
+    'i18n',
     'module',
-    'ui/datatable', 
-    'jquery.fileDownload'
-], function($, _, __, helpers, module) {
+    'util/url',
+    'ui/feedback',
+    'taoTaskQueue/model/taskQueue',
+    'taoTaskQueue/component/button/standardButton',
+    'ui/datatable'
+], function($, _, __, module, urlUtil, feedback, taskQueue, standardTaskButtonFactory) {
     'use strict';
 
     /**
@@ -21,7 +41,7 @@ define([
          * Controller entry point
          */
         start : function(){
-	   
+
            var conf = module.config();
            var $container = $(".result-table");
            var $filterField = $('.result-filter', $container);
@@ -31,6 +51,7 @@ define([
             //keep columns through calls
             var columns = [];
             var groups = {};
+            var $actionBar = $container.find('.actions');
 
             /**
              * Load columns to rebuild the datatable dynamically
@@ -53,7 +74,7 @@ define([
                                });
                             });
                         } else {
-                            if(response.first !== undefined && response.first === true){
+                            if(typeof response.first !== 'undefined' && response.first === true){
                                 columns = response.columns.concat(columns);
                             }
                             else{
@@ -64,51 +85,36 @@ define([
                     }
                 });
             };
-            
+
             /**
-             * Rebuild the datatable 
+             * Rebuild the datatable
              * @param {Function} done - once the datatable is loaded
              */
             var _buildTable = function _buildTable(done){
                 var model = [];
 
-                //set up model from columns 
+                //set up model from columns
                 _.forEach(columns, function(col){
                     model.push({
-                        id : col.prop || (col.contextId + '_' + col.variableIdentifier),
+                        id : col.prop ? (col.prop + '_' + col.contextType) : (col.contextId + '_' + col.variableIdentifier),
                         label : col.label,
                         sortable: false
                     });
                 });
-                
-                //re buid the datatable
+
+                //re-build the datatable
                 $tableContainer
                     .empty()
                     .data('ui.datatable', null)
                     .off('load.datatable')
                     .on('load.datatable', function(){
-
-                        //enable to export the loaded table
-                        $('.result-export', $container)
-                            .off('click')
-                            .removeClass('disabled')
-                            .on('click', function(e){
-                                e.preventDefault();
-                                $.fileDownload(helpers._url('getCsvFile', 'ResultTable', 'taoOutcomeUi'), {
-                                    preparingMessageHtml: __("We are preparing your report, please wait..."),
-                                    failMessageHtml: __("There was a problem generating your report, please try again."),
-                                    httpMethod: 'POST',
-                                    data: {'filter': filter, 'columns': JSON.stringify(columns), uri: uri}
-                                });
-                            });
-
                         if(_.isFunction(done)){
                             done();
                             done = '';
                         }
                     })
                     .datatable({
-                        url : helpers._url('data', 'ResultTable', 'taoOutcomeUi', {filterData : filter}),
+                        url : urlUtil.route('feedDataTable', 'ResultTable', 'taoOutcomeUi', {filter : filter}),
                         querytype : 'POST',
                         params: {columns: JSON.stringify(columns), '_search': false, uri: uri},
                         model :  model
@@ -126,11 +132,11 @@ define([
 
             //regarding button data, we rebuild the table
             $container.on('click', '[data-group]', function(e){
-                e.preventDefault();
                 var $elt    = $(this);
                 var group   = $elt.data('group');
                 var action  = $elt.data('action');
                 var url     = $elt.data('url');
+                e.preventDefault();
                 buildGrid(url, action, function(){
                     _.forEach(groups[group], function($btn){
                        $btn.toggleClass('hidden');
@@ -139,18 +145,37 @@ define([
             });
 
             //default table
-            buildGrid(helpers._url('getResultOfSubjectColumn', 'ResultTable', 'taoOutcomeUi', {filter : filter}));
+            buildGrid(urlUtil.route('getTestTakerColumns', 'ResultTable', 'taoOutcomeUi', {filter : filter}));
 
             //setup the filtering
             $filterField.select2({
                 minimumResultsForSearch : -1
             }).select2('val', filter);
 
-            $('.result-filter-btn', $container).click(function(e) {
+            $('.result-filter-btn', $container).click(function() {
                 filter = $filterField.select2('val');
                 //rebuild the current table
                 _buildTable();
             });
+
+            //instantiate the task creation button
+            standardTaskButtonFactory({
+                type : 'info',
+                icon : 'export',
+                title : __('Export CSV File'),
+                label : __('Export CSV File'),
+                taskQueue : taskQueue,
+                taskCreationUrl : urlUtil.route('export', 'ResultTable', 'taoOutcomeUi'),
+                taskCreationData : function getTaskRequestData(){
+                    return {
+                        filter: filter,
+                        columns: JSON.stringify(columns),
+                        uri: uri
+                    };
+                }
+            }).on('error', function(err){
+                feedback().error(err);
+            }).render($actionBar);
         }
     };
     return resulTableController;

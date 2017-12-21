@@ -24,15 +24,19 @@ namespace oat\taoOutcomeUi\controller;
 use \Exception;
 use \common_exception_IsAjaxAction;
 use \core_kernel_classes_Resource;
+use oat\generis\model\GenerisRdf;
+use oat\generis\model\OntologyRdfs;
 use oat\oatbox\event\EventManager;
 use oat\tao\model\accessControl\AclProxy;
 use oat\tao\model\plugins\PluginModule;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
 use oat\taoOutcomeUi\model\event\ResultsListPluginEvent;
+use oat\taoOutcomeUi\model\export\ResultsExporter;
 use oat\taoOutcomeUi\model\plugins\ResultsPluginService;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 use oat\taoResultServer\models\classes\QtiResultsService;
+use oat\taoTaskQueue\model\TaskLogActionTrait;
 use \tao_actions_SaSModule;
 use \tao_helpers_Request;
 use \tao_helpers_Uri;
@@ -52,6 +56,10 @@ use oat\tao\helpers\UserHelper;
  */
 class Results extends tao_actions_SaSModule
 {
+    use TaskLogActionTrait;
+
+    const PARAMETER_DELIVERY_URI = 'uri';
+    const PARAMETER_DELIVERY_CLASS_URI = 'classUri';
 
     private $deliveryService;
 
@@ -91,6 +99,11 @@ class Results extends tao_actions_SaSModule
      */
     public function index()
     {
+        // if delivery class has been selected, return nothing
+        if (!$this->hasRequestParameter(self::PARAMETER_DELIVERY_URI)) {
+            return;
+        }
+
         $model = array(
             array(
                 'id' => 'ttaker',
@@ -259,18 +272,18 @@ class Results extends tao_actions_SaSModule
                 $this->setData('userLastName', $testTaker);
                 $this->setData('userEmail', $testTaker);
             } else {
-                $login = (count($testTaker[PROPERTY_USER_LOGIN]) > 0) ? current(
-                    $testTaker[PROPERTY_USER_LOGIN]
+                $login = (count($testTaker[GenerisRdf::PROPERTY_USER_LOGIN]) > 0) ? current(
+                    $testTaker[GenerisRdf::PROPERTY_USER_LOGIN]
                 )->literal : "";
-                $label = (count($testTaker[RDFS_LABEL]) > 0) ? current($testTaker[RDFS_LABEL])->literal : "";
-                $firstName = (count($testTaker[PROPERTY_USER_FIRSTNAME]) > 0) ? current(
-                    $testTaker[PROPERTY_USER_FIRSTNAME]
+                $label = (count($testTaker[OntologyRdfs::RDFS_LABEL]) > 0) ? current($testTaker[OntologyRdfs::RDFS_LABEL])->literal : "";
+                $firstName = (count($testTaker[GenerisRdf::PROPERTY_USER_FIRSTNAME]) > 0) ? current(
+                    $testTaker[GenerisRdf::PROPERTY_USER_FIRSTNAME]
                 )->literal : "";
-                $userLastName = (count($testTaker[PROPERTY_USER_LASTNAME]) > 0) ? current(
-                    $testTaker[PROPERTY_USER_LASTNAME]
+                $userLastName = (count($testTaker[GenerisRdf::PROPERTY_USER_LASTNAME]) > 0) ? current(
+                    $testTaker[GenerisRdf::PROPERTY_USER_LASTNAME]
                 )->literal : "";
-                $userEmail = (count($testTaker[PROPERTY_USER_MAIL]) > 0) ? current(
-                    $testTaker[PROPERTY_USER_MAIL]
+                $userEmail = (count($testTaker[GenerisRdf::PROPERTY_USER_MAIL]) > 0) ? current(
+                    $testTaker[GenerisRdf::PROPERTY_USER_MAIL]
                 )->literal : "";
 
                 $this->setData('userLogin', $login);
@@ -279,7 +292,7 @@ class Results extends tao_actions_SaSModule
                 $this->setData('userLastName', $userLastName);
                 $this->setData('userEmail', $userEmail);
             }
-            $filterSubmission = ($this->hasRequestParameter("filterSubmission")) ? $this->getRequestParameter("filterSubmission") : "lastSubmitted";
+            $filterSubmission = ($this->hasRequestParameter("filterSubmission")) ? $this->getRequestParameter("filterSubmission") : ResultsService::VARIABLES_FILTER_LAST_SUBMITTED;
             $filterTypes = ($this->hasRequestParameter("filterTypes")) ? $this->getRequestParameter("filterTypes") : array(\taoResultServer_models_classes_ResponseVariable::class, \taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class);
             $variables = $this->getResultVariables($resultId, $filterSubmission, $filterTypes);
             $this->setData('variables', $variables);
@@ -449,5 +462,34 @@ class Results extends tao_actions_SaSModule
             $options['class'] = $this->deliveryService->getRootClass();
         }
         return $options;
+    }
+
+    /**
+     * Exports results by either a class or a single delivery.
+     *
+     * Only creating the export task.
+     *
+     * @throws Exception
+     * @throws \common_Exception
+     */
+    public function export()
+    {
+        if (!\tao_helpers_Request::isAjax()) {
+            throw new \Exception('Only ajax call allowed.');
+        }
+
+        if (!$this->hasRequestParameter(self::PARAMETER_DELIVERY_CLASS_URI) && !$this->hasRequestParameter(self::PARAMETER_DELIVERY_URI)) {
+            throw new \common_Exception('Parameter "'. self::PARAMETER_DELIVERY_CLASS_URI .'" or "'. self::PARAMETER_DELIVERY_URI .'" missing');
+        }
+
+        $resourceUri = $this->hasRequestParameter(self::PARAMETER_DELIVERY_URI)
+            ? \tao_helpers_Uri::decode($this->getRequestParameter(self::PARAMETER_DELIVERY_URI))
+            : \tao_helpers_Uri::decode($this->getRequestParameter(self::PARAMETER_DELIVERY_CLASS_URI));
+
+        /** @var ResultsExporter $exporter */
+        $exporter = $this->getServiceManager()
+            ->propagate(new ResultsExporter($resourceUri, ResultsService::singleton()));
+
+        return $this->returnTaskJson($exporter->createExportTask());
     }
 }
