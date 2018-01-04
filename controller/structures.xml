@@ -12,7 +12,7 @@
                           dataUrl="/taoOutcomeUi/Results/getOntologyData"
                           selectClass="results-class-index"
                           selectInstance="results-index"
-                          delete="results-delete"
+                          type="jstree"
                     />
                 </trees>
                 <actions>
@@ -23,12 +23,6 @@
                     </action>
                     <action id="results-index" name="Results" url="/taoOutcomeUi/Results/index" group="content" context="instance">
                         <icon id="icon-result-small"/>
-                    </action>
-                    <action id="results-view" name="View result" url="/taoOutcomeUi/Results/viewResult" group="content" context="tree">
-                        <icon id="icon-edit"/>
-                    </action>
-                    <action id="results-delete" name="Delete" binding="removeNode" url="/taoOutcomeUi/Results/delete" context="tree" group="tree">
-                        <icon id="icon-bin"/>
                     </action>
                     <action id="results-export" name="Export Table" url="/taoOutcomeUi/ResultTable/index" group="content"  context="instance">
                         <icon id="icon-table"/>
