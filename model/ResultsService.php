@@ -26,7 +26,7 @@ namespace oat\taoOutcomeUi\model;
 
 use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyRdfs;
-use oat\taoDelivery\model\DeliveryContainerService;
+use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
@@ -840,7 +840,7 @@ class ResultsService extends tao_models_classes_ClassService
                             $value = (string) $value;
                         }
 
-                        if (in_array($column->getProperty()->getUri(), [DeliveryContainerService::PROPERTY_PERIOD_START, DeliveryContainerService::PROPERTY_PERIOD_END])) {
+                        if (in_array($column->getProperty()->getUri(), [DeliveryAssemblyService::PROPERTY_START, DeliveryAssemblyService::PROPERTY_END])) {
                             $value = \tao_helpers_Date::displayeDate($value, \tao_helpers_Date::FORMAT_VERBOSE);
                         }
 
