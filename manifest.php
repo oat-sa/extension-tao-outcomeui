@@ -37,7 +37,7 @@ return [
     'requires'       => [
         'taoResultServer' => '>=4.1.0',
         'taoItems'        => '>=5.2.0',
-        'taoDeliveryRdf'  => '>=3.18.0',
+        'taoDeliveryRdf'  => '>=3.24.0',
         'tao'             => '>=14.11.0',
         'taoTaskQueue'    => '>=0.11.0'
     ],
