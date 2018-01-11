@@ -35,6 +35,8 @@ use oat\taoOutcomeUi\model\event\ResultsListPluginEvent;
 use oat\taoOutcomeUi\model\export\ResultsExporter;
 use oat\taoOutcomeUi\model\plugins\ResultsPluginService;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
+use oat\taoResultServer\models\classes\NoResultStorage;
+use oat\taoResultServer\models\classes\NoResultStorageException;
 use oat\taoResultServer\models\classes\QtiResultsService;
 use oat\taoTaskQueue\model\TaskLogActionTrait;
 use \tao_actions_SaSModule;
@@ -388,8 +390,12 @@ class Results extends tao_actions_SaSModule
      */
     protected function getResultStorage($delivery)
     {
+        /** @var ResultServerService $resultServerService */
         $resultServerService = $this->getServiceManager()->get(ResultServerService::SERVICE_ID);
         $resultStorage = $resultServerService->getResultStorage($delivery->getUri());
+        if ($resultStorage instanceof NoResultStorage){
+           throw NoResultStorageException::create();
+        }
         $this->getClassService()->setImplementation($resultStorage);
         return $resultStorage;
     }
