@@ -26,7 +26,7 @@ namespace oat\taoOutcomeUi\model;
 
 use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyRdfs;
-use oat\taoDelivery\model\DeliveryContainerService;
+use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
@@ -38,6 +38,8 @@ use \core_kernel_classes_DbWrapper;
 use \core_kernel_classes_Property;
 use \core_kernel_classes_Resource;
 use oat\taoOutcomeUi\model\table\VariableColumn;
+use oat\taoResultServer\models\classes\NoResultStorage;
+use oat\taoResultServer\models\classes\NoResultStorageException;
 use oat\taoResultServer\models\classes\ResultManagement;
 use oat\taoResultServer\models\classes\ResultService;
 use \tao_models_classes_ClassService;
@@ -740,11 +742,20 @@ class ResultsService extends tao_models_classes_ClassService
      *
      * @param \core_kernel_classes_Resource $delivery
      * @return \taoResultServer_models_classes_ReadableResultStorage
-     * @throws \core_kernel_persistence_Exception
      * @throws common_exception_Error
      */
-    public function getReadableImplementation(\core_kernel_classes_Resource $delivery) {
-        return $this->getServiceManager()->get(ResultServerService::SERVICE_ID)->getResultStorage($delivery);
+    public function getReadableImplementation(\core_kernel_classes_Resource $delivery)
+    {
+        /** @var ResultServerService  $service */
+        $service = $this->getServiceManager()->get(ResultServerService::SERVICE_ID);
+        $resultStorage = $service->getResultStorage($delivery);
+
+        /** NoResultStorage it's not readable only writable */
+        if ($resultStorage instanceof NoResultStorage) {
+            throw NoResultStorageException::create();
+        }
+
+        return $resultStorage;
     }
 
     /**
@@ -840,7 +851,7 @@ class ResultsService extends tao_models_classes_ClassService
                             $value = (string) $value;
                         }
 
-                        if (in_array($column->getProperty()->getUri(), [DeliveryContainerService::PROPERTY_PERIOD_START, DeliveryContainerService::PROPERTY_PERIOD_END])) {
+                        if (in_array($column->getProperty()->getUri(), [DeliveryAssemblyService::PROPERTY_START, DeliveryAssemblyService::PROPERTY_END])) {
                             $value = \tao_helpers_Date::displayeDate($value, \tao_helpers_Date::FORMAT_VERBOSE);
                         }
 
