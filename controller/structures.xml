@@ -10,6 +10,7 @@
                     <tree name="Results library"
                           className="Result"
                           dataUrl="/taoOutcomeUi/Results/getOntologyData"
+                          searchNode="http://www.tao.lu/Ontologies/TAOResult.rdf#DeliveryResult"
                           selectClass="results-class-index"
                           selectInstance="results-index"
                           delete="results-delete"
