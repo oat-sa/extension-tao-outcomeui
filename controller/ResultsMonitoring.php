@@ -1,3 +1,5 @@
+<?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -13,31 +15,29 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2014 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
- * 
- * 
+ * Copyright (c) 2018 (original work) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV);
+ *
+ *
  */
 
-//@see http://forge.taotesting.com/projects/tao/wiki/Front_js
-define(function(){
-    'use strict';
+namespace oat\taoOutcomeUi\controller;
 
-    return {
-        'Results': {
-            'actions': {
-                'viewResult' : 'controller/viewResult',
-                'index' : 'controller/inspectResults'
-            }
-        },
-        'ResultTable': {
-            'actions': {
-                'index' : 'controller/resultTable'
-            }
-        },
-        'ResultsMonitoring': {
-            'actions': {
-                'index': 'controller/resultsMonitoring'
-            }
-        }
-    };
-});
+use oat\taoOutcomeUi\model\table\ResultsMonitoringDatatable;
+
+/**
+ * Class ResultsMonitoring
+ * @package oat\taoOutcomeUi\controller
+ */
+class ResultsMonitoring  extends \tao_actions_CommonModule
+{
+
+    public function index()
+    {
+        $this->setView('resultsMonitoring.tpl');
+    }
+
+    public function data()
+    {
+        $this->returnJson(new ResultsMonitoringDatatable());
+    }
+}

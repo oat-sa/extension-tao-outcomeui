@@ -38,4 +38,12 @@
             </section>
         </sections>
     </structure>
+
+    <structure id="tools" name="Tools" level="18" group="settings">
+        <description/>
+        <icon id="icon-tools" src=""/>
+        <sections>
+            <section id="results-monitoring" name="Results" url="/taoOutcomeUi/ResultsMonitoring/index" />
+        </sections>
+    </structure>
 </structures>
