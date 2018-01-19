@@ -34,6 +34,7 @@ use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
 use oat\taoOutcomeUi\model\event\ResultsListPluginEvent;
 use oat\taoOutcomeUi\model\export\ResultsExporter;
 use oat\taoOutcomeUi\model\plugins\ResultsPluginService;
+use oat\taoOutcomeUi\model\table\ResultsMonitoringDatatable;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 use oat\taoResultServer\models\classes\QtiResultsService;
 use oat\taoTaskQueue\model\TaskLogActionTrait;
@@ -160,6 +161,7 @@ class Results extends tao_actions_SaSModule
         $limit = $this->getRequestParameter('rows');
         $order = $this->getRequestParameter('sortby');
         $sort = $this->getRequestParameter('sortorder');
+        $query = $this->getRequestParameter('filterquery');
         $start = $limit * $page - $limit;
 
         $gau = array(
@@ -170,10 +172,7 @@ class Results extends tao_actions_SaSModule
             'recursive' => true
         );
 
-        $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
-
         try {
-            $this->getResultStorage($delivery);
 
             $data = array();
             $readOnly = array();
@@ -181,8 +180,19 @@ class Results extends tao_actions_SaSModule
             $rights = array(
                 'view' => !AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'viewResult', array()),
                 'delete' => !AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'delete', array()));
-            $results = $this->getClassService()->getImplementation()->getResultByDelivery(array($delivery->getUri()), $gau);
-            $count = $this->getClassService()->getImplementation()->countResultByDelivery(array($delivery->getUri()));
+            if ($query) {
+                $resultsData = new ResultsMonitoringDatatable();
+                $payload = $resultsData->getPayload();
+                $results = $payload['data'];
+                $count = $payload['records'];
+            } else {
+                $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
+                $this->getResultStorage($delivery);
+                $results = $this->getClassService()->getImplementation()->getResultByDelivery(array($delivery->getUri()), $gau);
+                $count = $this->getClassService()->getImplementation()->countResultByDelivery(array($delivery->getUri()));
+            }
+
+
             foreach ($results as $res) {
 
                 $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($res['deliveryResultIdentifier']);

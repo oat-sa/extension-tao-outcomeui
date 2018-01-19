@@ -87,6 +87,7 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
 
         $params = \Context::getInstance()->getRequest()->getParameters();
         $criteria = isset($params['filterquery']) ? $params['filterquery'] : '';
+        $classUri = isset($params['classUri']) ? $params['classUri'] : '';
         $deliveriesArray = [];
 
         if ($criteria) {
@@ -102,7 +103,8 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
                 $limit,
                 [
                     DataProvider::PARAM_RESULT_CLASS => OntologyDeliveryExecution::CLASS_URI,
-                    Search::OPTION_RESPONSE_KEY => 'id'
+                    Search::OPTION_RESPONSE_KEY => 'id',
+                    DataProvider::PARAM_DELIVERY_URI => $classUri
                 ]
             );
             $resultsArray = $resultSet->getArrayCopy();
