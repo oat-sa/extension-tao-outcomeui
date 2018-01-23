@@ -26,8 +26,8 @@ define([
     'module',
     'util/url',
     'ui/feedback',
-    'taoTaskQueue/model/taskQueue',
-    'taoTaskQueue/component/button/standardButton',
+    'core/taskQueue/taskQueue',
+    'ui/taskQueueButton/standardButton',
     'ui/datatable'
 ], function($, _, __, module, urlUtil, feedback, taskQueue, standardTaskButtonFactory) {
     'use strict';
