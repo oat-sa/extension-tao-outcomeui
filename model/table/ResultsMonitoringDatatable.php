@@ -30,6 +30,7 @@ use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoProctoring\model\execution\DeliveryExecution;
 use oat\taoResultServer\models\classes\ResultServerService;
+use oat\taoResultServer\models\classes\ResultService;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
@@ -76,16 +77,24 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
         $deliveryClass = $deliveryService->getRootClass();
         $params = \Context::getInstance()->getRequest()->getParameters();
         $criteria = isset($params['filterquery']) ? $params['filterquery'] : '';
+        $classUri = isset($params['classUri']) ? $params['classUri'] : '';
         $deliveriesArray = [];
         if ($criteria) {
             $searchService = SearchService::getSearchImplementation();
             $class = new \core_kernel_classes_Class(OntologyDeliveryExecution::CLASS_URI);
             $resultsArray = $searchService->query($criteria, $class);
+            if (!$resultsArray->getTotalCount()) {
+                $class = new \core_kernel_classes_Class(ResultService::DELIVERY_RESULT_CLASS_URI);
+                $resultsArray = $searchService->query($criteria, $class);
+            }
             foreach ($resultsArray as $result) {
                 /** @var DeliveryExecution $execution */
                 $execution = ServiceProxy::singleton()->getDeliveryExecution($result);
                 try {
                     $delivery = $execution->getDelivery();
+                    if ($classUri && $delivery->getUri() != $classUri) {
+                        break;
+                    }
                     $user = UserHelper::getUser($execution->getUserIdentifier());
                     $userName = UserHelper::getUserName($user, true);
                     if (empty($userName)) {
@@ -112,6 +121,9 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
                         'limit' => $limit,
                         'recursive' => true
                     );
+                    if ($classUri && $execution->getIdentifier() != $classUri) {
+                        break;
+                    }
                     $this->getResultsByDeliveries([$execution->getIdentifier()], $gau);
                 }
             }
