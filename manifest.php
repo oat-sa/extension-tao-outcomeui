@@ -23,6 +23,7 @@
 
 use oat\taoOutcomeUi\scripts\install\RegisterTestPluginService;
 use oat\taoOutcomeUi\scripts\install\SetUpQueueTasks;
+use oat\taoOutcomeUi\scripts\install\SetupSearchService;
 
 $extpath = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 
@@ -44,7 +45,8 @@ return [
     'install'        => [
         'php' => [
             RegisterTestPluginService::class,
-            SetUpQueueTasks::class
+            SetUpQueueTasks::class,
+            SetupSearchService::class
         ]
     ],
     'uninstall'      => [],
