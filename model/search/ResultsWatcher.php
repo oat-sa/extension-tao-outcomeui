@@ -51,7 +51,8 @@ class ResultsWatcher extends ConfigurableService
         $searchService = SearchService::getSearchImplementation();
         if ($searchService->supportCustomIndex()) {
             $body = [
-                'label' => $deliveryExecution->getLabel()
+                'label' => $deliveryExecution->getLabel(),
+                'delivery' => $deliveryExecution->getDelivery()->getUri()
             ];
             $uri = $deliveryExecution->getIdentifier();
             $queueDispatcher = $this->getServiceLocator()->get(QueueDispatcher::SERVICE_ID);

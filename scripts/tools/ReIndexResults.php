@@ -20,12 +20,9 @@
 namespace oat\taoOutcomeUi\scripts\tools;
 
 use oat\oatbox\extension\AbstractAction;
-use oat\tao\model\search\index\IndexDocument;
 use oat\tao\model\search\SearchService;
-use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
-use oat\taoResultServer\models\classes\ResultServerService;
-use oat\taoResultServer\models\classes\ResultService;
+use oat\taoOutcomeUi\model\search\ResultIndexIterator;
 
 /**
  * ReIndex all results
@@ -36,42 +33,12 @@ class ReIndexResults extends AbstractAction
 {
     /**
      * @param $params
-     * @throws \common_exception_Error
-     * @throws \common_exception_NotFound
      */
     public function __invoke($params)
     {
         $deliveryService = DeliveryAssemblyService::singleton();
         $deliveryClass = $deliveryService->getRootClass();
-        /** @var ResultServerService $resultService */
-        $resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
-        $resultsImplementation = $resultService->getResultStorage('');
-        $deliveries = $deliveryClass->getInstances(true);
-        $deliveriesArray = [];
-        /** @var \core_kernel_classes_Resource $delivery */
-        foreach ($deliveries as $delivery) {
-            $deliveriesArray[] = $delivery->getUri();
-        }
-        $options = array(
-            'recursive' => true
-        );
-        if ($deliveriesArray) {
-            foreach($resultsImplementation->getResultByDelivery($deliveriesArray, $options) as $result){
-                $id = isset($result['deliveryResultIdentifier']) ? $result['deliveryResultIdentifier'] : null;
-                if ($id) {
-                    $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($id);
-                    $body = [
-                        'label' => $deliveryExecution->getLabel()
-                    ];
-                    $document = new IndexDocument(
-                        $deliveryExecution->getIdentifier(),
-                        $deliveryExecution->getIdentifier(),
-                        ResultService::DELIVERY_RESULT_CLASS_URI,
-                        $body
-                    );
-                    SearchService::getSearchImplementation()->index($document);
-                }
-            }
-        }
+        $resultIndexIterator = new ResultIndexIterator([$deliveryClass->getUri()]);
+        SearchService::getSearchImplementation()->addIndexes($resultIndexIterator);
     }
 }
