@@ -43,9 +43,7 @@ class SetupSearchService extends InstallAction
         /** @var IndexService $indexService */
         $indexService = $this->getServiceLocator()->get(IndexService::SERVICE_ID);
         $options = $indexService->getOptions();
-        $options[IndexService::OPTION_ROOT_CLASSES][ResultService::DELIVERY_RESULT_CLASS_URI] = [
-            IndexService::OPTION_CUSTOM_FIELDS => []
-        ];
+        $options[IndexService::OPTION_ROOT_CLASSES][] = ResultService::DELIVERY_RESULT_CLASS_URI;
         $options[IndexService::OPTION_CUSTOM_REINDEX_CLASSES][] = ReIndexResults::class;
 
         $this->getServiceManager()->register(IndexService::SERVICE_ID, new IndexService($options));
