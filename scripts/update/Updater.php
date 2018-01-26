@@ -102,9 +102,9 @@ class Updater extends \common_ext_ExtensionUpdater
             $this->setVersion('5.0.0');
         }
 
-        $this->skip('5.0.0', '5.2.1');
+        $this->skip('5.0.0', '5.2.2');
 
-        if ($this->isVersion('5.2.1')) {
+        if ($this->isVersion('5.2.2')) {
             /** @var IndexService $indexService */
             $indexService = $this->getServiceManager()->get(IndexService::SERVICE_ID);
             $options = $indexService->getOptions();
@@ -122,6 +122,5 @@ class Updater extends \common_ext_ExtensionUpdater
 
             $this->setVersion('5.3.0');
         }
-
     }
 }
