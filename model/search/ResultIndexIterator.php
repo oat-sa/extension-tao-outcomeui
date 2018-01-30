@@ -20,6 +20,7 @@ namespace oat\taoOutcomeUi\model\search;
 
 use oat\oatbox\service\ServiceManager;
 use oat\tao\model\search\index\IndexDocument;
+use oat\tao\model\search\index\IndexService;
 use oat\tao\model\search\SearchTokenGenerator;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDelivery\model\execution\DeliveryExecution;
@@ -188,16 +189,18 @@ class ResultIndexIterator implements \Iterator
      * @throws \common_exception_NotFound
      */
     protected function createDocument(DeliveryExecution $execution) {
+
         $body = [
             'label' => $execution->getLabel(),
-            'delivery' => $execution->getDelivery()->getUri()
+            ResultsWatcher::INDEX_DELIVERY => $execution->getDelivery()->getUri(),
+            'type' => ResultService::DELIVERY_RESULT_CLASS_URI
         ];
-        $document = new IndexDocument(
-            $execution->getIdentifier(),
-            $execution->getIdentifier(),
-            ResultService::DELIVERY_RESULT_CLASS_URI,
-            $body
-        );
-        return $document;
-    }
+        $document = [
+            'id' => $execution->getIdentifier(),
+            'body' => $body
+        ];
+        /** @var IndexService $indexService */
+        $indexService = ServiceManager::getServiceManager()->get(IndexService::SERVICE_ID);
+        return $indexService->createDocumentFromArray($document);
+        }
 }

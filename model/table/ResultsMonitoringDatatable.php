@@ -24,10 +24,13 @@ use oat\oatbox\service\ServiceManager;
 use oat\tao\helpers\UserHelper;
 use oat\tao\model\datatable\DatatablePayload;
 use oat\tao\model\datatable\implementation\DatatableRequest;
+use oat\tao\model\search\index\IndexDocument;
+use oat\tao\model\search\index\IndexService;
 use oat\tao\model\search\SearchService;
 use oat\taoDelivery\model\execution\OntologyDeliveryExecution;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
+use oat\taoOutcomeUi\model\search\ResultsWatcher;
 use oat\taoProctoring\model\execution\DeliveryExecution;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\classes\ResultService;
@@ -81,15 +84,19 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
         $deliveriesArray = [];
         if ($criteria) {
             $searchService = SearchService::getSearchImplementation();
-            $class = new \core_kernel_classes_Class(OntologyDeliveryExecution::CLASS_URI);
+            $class = new \core_kernel_classes_Class(ResultService::DELIVERY_RESULT_CLASS_URI);
             $resultsArray = $searchService->query($criteria, $class);
-            if (!$resultsArray->getTotalCount()) {
-                $class = new \core_kernel_classes_Class(ResultService::DELIVERY_RESULT_CLASS_URI);
-                $resultsArray = $searchService->query($criteria, $class);
-            }
-            foreach ($resultsArray as $result) {
+
+            /** @var IndexService $indexService */
+            $indexService = $this->getServiceLocator()->get(IndexService::SERVICE_ID);
+            $indexMap = $indexService->getOption(IndexService::SUBSTITUTION_CONFIG_KEY);
+
+            /** @var IndexDocument $index */
+            foreach ($resultsArray['results'] as $index) {
+
+                $body = $index->getBody();
                 /** @var DeliveryExecution $execution */
-                $execution = ServiceProxy::singleton()->getDeliveryExecution($result);
+                $execution = ServiceProxy::singleton()->getDeliveryExecution($body[$indexMap[ResultsWatcher::INDEX_DELIVERY]]);
                 try {
                     $delivery = $execution->getDelivery();
                     if ($classUri && $delivery->getUri() != $classUri) {
