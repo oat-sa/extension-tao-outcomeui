@@ -59,6 +59,7 @@ class ResultsWatcher extends ConfigurableService
             ];
             $id = $deliveryExecution->getIdentifier();
             $queueDispatcher = $this->getServiceLocator()->get(QueueDispatcher::SERVICE_ID);
+            $queueDispatcher->setOwner('Index');
             $queueDispatcher->createTask(new AddSearchIndexFromArray(), [$id, $body], __('Adding/Updating search index for %s', $deliveryExecution->getLabel()));
         }
 
