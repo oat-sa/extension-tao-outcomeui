@@ -86,17 +86,11 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
             $searchService = SearchService::getSearchImplementation();
             $class = new \core_kernel_classes_Class(ResultService::DELIVERY_RESULT_CLASS_URI);
             $resultsArray = $searchService->query($criteria, $class);
-
-            /** @var IndexService $indexService */
-            $indexService = $this->getServiceLocator()->get(IndexService::SERVICE_ID);
-            $indexMap = $indexService->getOption(IndexService::SUBSTITUTION_CONFIG_KEY);
-
             /** @var IndexDocument $index */
-            foreach ($resultsArray['results'] as $index) {
+            foreach ($resultsArray as $index) {
 
-                $body = $index->getBody();
                 /** @var DeliveryExecution $execution */
-                $execution = ServiceProxy::singleton()->getDeliveryExecution($body[$indexMap[ResultsWatcher::INDEX_DELIVERY]]);
+                $execution = ServiceProxy::singleton()->getDeliveryExecution($index);
                 try {
                     $delivery = $execution->getDelivery();
                     if ($classUri && $delivery->getUri() != $classUri) {
