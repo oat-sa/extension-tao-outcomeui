@@ -39,6 +39,6 @@ class ReIndexResults extends AbstractAction
         $deliveryService = DeliveryAssemblyService::singleton();
         $deliveryClass = $deliveryService->getRootClass();
         $resultIndexIterator = new ResultIndexIterator([$deliveryClass->getUri()]);
-        SearchService::getSearchImplementation()->addIndexes($resultIndexIterator);
+        SearchService::getSearchImplementation()->index($resultIndexIterator);
     }
 }
