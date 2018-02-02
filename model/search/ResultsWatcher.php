@@ -22,7 +22,6 @@ namespace oat\taoOutcomeUi\model\search;
 use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\service\ConfigurableService;
 use oat\tao\model\search\Search;
-use oat\tao\model\search\SearchService;
 use oat\tao\model\search\tasks\AddSearchIndexFromArray;
 use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;
@@ -49,7 +48,7 @@ class ResultsWatcher extends ConfigurableService
         $deliveryExecution = $event->getDeliveryExecution();
         /** @var Search $searchService */
         $report = \common_report_Report::createSuccess();
-        $searchService = SearchService::getSearchImplementation();
+        $searchService = $this->getServiceLocator()->get(Search::SERVICE_ID);
         if ($searchService->supportCustomIndex()) {
             $body = [
                 'label' => $deliveryExecution->getLabel(),

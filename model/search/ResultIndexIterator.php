@@ -20,7 +20,6 @@ namespace oat\taoOutcomeUi\model\search;
 
 use oat\tao\model\search\index\IndexDocument;
 use oat\tao\model\search\index\IndexService;
-use oat\tao\model\search\SearchTokenGenerator;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDelivery\model\execution\DeliveryExecution;
 use oat\taoResultServer\models\classes\ResultServerService;
@@ -60,8 +59,6 @@ class ResultIndexIterator implements \Iterator
      */
     private $endOfResource = false;
 
-    private $tokenGenerator = null;
-
     /**
      * Whenever we already moved the pointer, used to prevent unnecessary rewinds
      *
@@ -78,7 +75,6 @@ class ResultIndexIterator implements \Iterator
     public function __construct($classes, ServiceLocatorInterface $serviceLocator) {
         $this->setServiceLocator($serviceLocator);
         $this->resourceIterator = new \core_kernel_classes_ResourceIterator($classes);
-        $this->tokenGenerator = new SearchTokenGenerator();
         /** @var ResultServerService $resultService */
         $this->resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
 

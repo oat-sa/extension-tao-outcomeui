@@ -20,10 +20,10 @@
 namespace oat\taoOutcomeUi\scripts\tools;
 
 use oat\oatbox\extension\AbstractAction;
-use oat\tao\model\search\SearchService;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoOutcomeUi\model\search\ResultIndexIterator;
 use common_report_Report as Report;
+use oat\tao\model\search\Search;
 
 /**
  * ReIndex all results
@@ -40,7 +40,8 @@ class ReIndexResults extends AbstractAction
         $deliveryService = DeliveryAssemblyService::singleton();
         $deliveryClass = $deliveryService->getRootClass();
         $resultIndexIterator = new ResultIndexIterator([$deliveryClass->getUri()], $this->getServiceLocator());
-        SearchService::getSearchImplementation()->index($resultIndexIterator);
+        $resultIndexIterator->setServiceLocator($this->getServiceLocator());
+        $this->getServiceLocator()->get(Search::SERVICE_ID)->index($resultIndexIterator);
         return new Report(Report::TYPE_SUCCESS, 'Results are reindexed');
     }
 }
