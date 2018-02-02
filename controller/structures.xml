@@ -12,6 +12,7 @@
                           dataUrl="/taoOutcomeUi/Results/getOntologyData"
                           selectClass="results-class-index"
                           selectInstance="results-index"
+                          searchNode="http://www.tao.lu/Ontologies/TAODelivery.rdf#AssembledDelivery"
                           type="jstree"
                     />
                 </trees>
@@ -29,6 +30,13 @@
                     </action>
                 </actions>
             </section>
+        </sections>
+    </structure>
+    <structure id="tools" name="Tools" level="18" group="settings">
+        <description/>
+        <icon id="icon-tools" src=""/>
+        <sections>
+            <section id="results-monitoring" name="Results Monitoring" url="/taoOutcomeUi/ResultsMonitoring/index" />
         </sections>
     </structure>
 </structures>

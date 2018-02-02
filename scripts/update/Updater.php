@@ -22,11 +22,18 @@
 namespace oat\taoOutcomeUi\scripts\update;
 
 use oat\generis\model\data\ModelManager;
+use oat\oatbox\event\EventManager;
 use oat\oatbox\service\ConfigurableService;
+use oat\tao\model\search\index\IndexService;
+use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;
 use oat\taoOutcomeUi\model\ResultsService;
+use oat\taoOutcomeUi\model\search\ResultCustomFieldsService;
+use oat\taoOutcomeUi\model\search\ResultsWatcher;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 use oat\taoOutcomeUi\scripts\install\RegisterTestPluginService;
 use oat\taoOutcomeUi\scripts\task\ExportDeliveryResults;
+use oat\taoOutcomeUi\scripts\tools\ReIndexResults;
+use oat\taoResultServer\models\classes\ResultService;
 use oat\taoTaskQueue\model\TaskLogInterface;
 
 /**
@@ -97,5 +104,16 @@ class Updater extends \common_ext_ExtensionUpdater
         }
 
         $this->skip('5.0.0', '5.2.2');
+
+        if ($this->isVersion('5.2.2')) {
+            $this->getServiceManager()->register(ResultCustomFieldsService::SERVICE_ID, new ResultCustomFieldsService());
+            $this->getServiceManager()->register(ResultsWatcher::SERVICE_ID, new ResultsWatcher());
+            /** @var EventManager $eventManager */
+            $eventManager = $this->getServiceManager()->get(EventManager::SERVICE_ID);
+            $eventManager->attach(DeliveryExecutionCreated::class, [ResultsWatcher::SERVICE_ID, 'catchCreatedDeliveryExecutionEvent']);
+            $this->getServiceManager()->register(EventManager::SERVICE_ID, $eventManager);
+
+            $this->setVersion('5.3.0');
+        }
     }
 }
