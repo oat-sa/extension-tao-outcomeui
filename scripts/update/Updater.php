@@ -27,6 +27,7 @@ use oat\oatbox\service\ConfigurableService;
 use oat\tao\model\search\index\IndexService;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;
 use oat\taoOutcomeUi\model\ResultsService;
+use oat\taoOutcomeUi\model\search\ResultCustomFieldsService;
 use oat\taoOutcomeUi\model\search\ResultsWatcher;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 use oat\taoOutcomeUi\scripts\install\RegisterTestPluginService;
@@ -105,6 +106,7 @@ class Updater extends \common_ext_ExtensionUpdater
         $this->skip('5.0.0', '5.2.2');
 
         if ($this->isVersion('5.2.2')) {
+            $this->getServiceManager()->register(ResultCustomFieldsService::SERVICE_ID, new ResultCustomFieldsService());
             $this->getServiceManager()->register(ResultsWatcher::SERVICE_ID, new ResultsWatcher());
             /** @var EventManager $eventManager */
             $eventManager = $this->getServiceManager()->get(EventManager::SERVICE_ID);

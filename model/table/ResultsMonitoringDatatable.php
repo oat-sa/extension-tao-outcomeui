@@ -46,11 +46,16 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
     protected $results;
 
     /**
-     * EventLogDatatable constructor.
+     * ResultsMonitoringDatatable constructor.
+     * @param null $serviceLocator
+     * @throws \common_exception_Error
      */
-    public function __construct()
+    public function __construct($serviceLocator = null)
     {
-        $this->setServiceLocator(ServiceManager::getServiceManager());
+        if ($serviceLocator) {
+            $this->setServiceLocator($serviceLocator);
+        }
+
         $request = DatatableRequest::fromGlobals();
         $this->request = $request;
         /** @var ResultServerService $resultService */

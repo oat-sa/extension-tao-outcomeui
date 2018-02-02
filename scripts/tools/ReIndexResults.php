@@ -23,6 +23,7 @@ use oat\oatbox\extension\AbstractAction;
 use oat\tao\model\search\SearchService;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoOutcomeUi\model\search\ResultIndexIterator;
+use common_report_Report as Report;
 
 /**
  * ReIndex all results
@@ -38,7 +39,8 @@ class ReIndexResults extends AbstractAction
     {
         $deliveryService = DeliveryAssemblyService::singleton();
         $deliveryClass = $deliveryService->getRootClass();
-        $resultIndexIterator = new ResultIndexIterator([$deliveryClass->getUri()]);
+        $resultIndexIterator = new ResultIndexIterator([$deliveryClass->getUri()], $this->getServiceLocator());
         SearchService::getSearchImplementation()->index($resultIndexIterator);
+        return new Report(Report::TYPE_SUCCESS, 'Results are reindexed');
     }
 }

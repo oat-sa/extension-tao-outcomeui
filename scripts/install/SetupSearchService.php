@@ -22,6 +22,7 @@ namespace oat\taoOutcomeUi\scripts\install;
 use oat\oatbox\event\EventManager;
 use oat\oatbox\extension\InstallAction;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;
+use oat\taoOutcomeUi\model\search\ResultCustomFieldsService;
 use oat\taoOutcomeUi\model\search\ResultsWatcher;
 
 /**
@@ -37,6 +38,7 @@ class SetupSearchService extends InstallAction
      */
     public function __invoke($params)
     {
+        $this->getServiceManager()->register(ResultCustomFieldsService::SERVICE_ID, new ResultCustomFieldsService());
         $this->getServiceManager()->register(ResultsWatcher::SERVICE_ID, new ResultsWatcher());
         /** @var EventManager $eventManager */
         $eventManager = $this->getServiceLocator()->get(EventManager::SERVICE_ID);

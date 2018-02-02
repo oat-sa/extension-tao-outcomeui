@@ -23,7 +23,6 @@ use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\service\ConfigurableService;
 use oat\tao\model\search\Search;
 use oat\tao\model\search\SearchService;
-use oat\tao\model\search\tasks\AddSearchIndex;
 use oat\tao\model\search\tasks\AddSearchIndexFromArray;
 use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;

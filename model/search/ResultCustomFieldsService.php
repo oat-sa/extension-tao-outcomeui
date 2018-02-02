@@ -14,26 +14,26 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2018 (original work) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV);
- *
+ * Copyright (c) 2018 (original work) Open Assessment Technologies SA;
  *
  */
-namespace oat\taoOutcomeUi\controller;
+namespace oat\taoOutcomeUi\model\search;
 
-use oat\taoOutcomeUi\model\table\ResultsMonitoringDatatable;
+use oat\generis\model\OntologyAwareTrait;
+use oat\oatbox\service\ConfigurableService;
+use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
 
 /**
- * Class ResultsMonitoring
- * @package oat\taoOutcomeUi\controller
+ * Class ResultsWatcher
+ * @package oat\taoOutcomeUi\model\search
  */
-class ResultsMonitoring  extends \tao_actions_CommonModule
+class ResultCustomFieldsService extends ConfigurableService
 {
-    public function index()
+    use OntologyAwareTrait;
+    const SERVICE_ID = 'taoOutcomeUi/ResultCustomFields';
+
+    public function getCustomFields(DeliveryExecutionInterface $deliveryExecution)
     {
-        $this->setView('resultsMonitoring.tpl');
-    }
-    public function data()
-    {
-        $this->returnJson(new ResultsMonitoringDatatable($this->getServiceLocator()));
+       return [];
     }
 }

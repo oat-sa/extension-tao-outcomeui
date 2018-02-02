@@ -182,7 +182,7 @@ class Results extends tao_actions_SaSModule
                 'view' => !AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'viewResult', array()),
                 'delete' => !AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'delete', array()));
             if ($query) {
-                $resultsData = new ResultsMonitoringDatatable();
+                $resultsData = new ResultsMonitoringDatatable($this->getServiceLocator());
                 $payload = $resultsData->getPayload();
                 $results = $payload['data'];
                 $count = $payload['records'];

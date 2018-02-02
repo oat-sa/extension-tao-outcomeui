@@ -18,7 +18,6 @@
  */
 namespace oat\taoOutcomeUi\model\search;
 
-use oat\oatbox\service\ServiceManager;
 use oat\tao\model\search\index\IndexDocument;
 use oat\tao\model\search\index\IndexService;
 use oat\tao\model\search\SearchTokenGenerator;
@@ -26,9 +25,13 @@ use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDelivery\model\execution\DeliveryExecution;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\classes\ResultService;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use Zend\ServiceManager\ServiceLocatorInterface;
 
 class ResultIndexIterator implements \Iterator
 {
+    use ServiceLocatorAwareTrait;
+
     const CACHE_SIZE = 100;
 
     private $resourceIterator;
@@ -70,12 +73,14 @@ class ResultIndexIterator implements \Iterator
      * Constructor of the iterator expecting a class or classes as argument
      *
      * @param mixed $classes array/instance of class(es) to iterate over
+     * @param ServiceLocatorInterface $serviceLocator
      */
-    public function __construct($classes) {
+    public function __construct($classes, ServiceLocatorInterface $serviceLocator) {
+        $this->setServiceLocator($serviceLocator);
         $this->resourceIterator = new \core_kernel_classes_ResourceIterator($classes);
         $this->tokenGenerator = new SearchTokenGenerator();
         /** @var ResultServerService $resultService */
-        $this->resultService = ServiceManager::getServiceManager()->get(ResultServerService::SERVICE_ID);
+        $this->resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
 
         $this->ensureNotEmpty();
     }
@@ -186,21 +191,28 @@ class ResultIndexIterator implements \Iterator
     /**
      * @param DeliveryExecution $execution
      * @return IndexDocument
+     * @throws \common_Exception
      * @throws \common_exception_NotFound
+     * @throws \oat\oatbox\extension\script\MissingOptionException
      */
-    protected function createDocument(DeliveryExecution $execution) {
-
+    protected function createDocument(DeliveryExecution $execution)
+    {
+        /** @var ResultCustomFieldsService $customFieldService */
+        $customFieldService = $this->getServiceLocator()->get(ResultCustomFieldsService::SERVICE_ID);
+        $customBody = $customFieldService->getCustomFields($execution);
         $body = [
             'label' => $execution->getLabel(),
             ResultsWatcher::INDEX_DELIVERY => $execution->getDelivery()->getUri(),
             'type' => ResultService::DELIVERY_RESULT_CLASS_URI
         ];
+
+        $body = array_merge($body, $customBody);
         $document = [
             'id' => $execution->getIdentifier(),
             'body' => $body
         ];
         /** @var IndexService $indexService */
-        $indexService = ServiceManager::getServiceManager()->get(IndexService::SERVICE_ID);
+        $indexService = $this->getServiceLocator()->get(IndexService::SERVICE_ID);
         return $indexService->createDocumentFromArray($document);
         }
 }
