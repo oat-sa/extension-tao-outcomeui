@@ -20,12 +20,11 @@
  */
 namespace oat\taoOutcomeUi\model\table;
 
-use oat\oatbox\service\ServiceManager;
 use oat\tao\helpers\UserHelper;
 use oat\tao\model\datatable\DatatablePayload;
 use oat\tao\model\datatable\implementation\DatatableRequest;
 use oat\tao\model\search\index\IndexDocument;
-use oat\tao\model\search\SearchService;
+use oat\tao\model\search\Search;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoProctoring\model\execution\DeliveryExecution;
@@ -90,9 +89,9 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
         $deliveriesArray = [];
 
         if ($criteria) {
-            $searchService = SearchService::getSearchImplementation();
-            $class = new \core_kernel_classes_Class(ResultService::DELIVERY_RESULT_CLASS_URI);
-            $resultsArray = $searchService->query($criteria, $class);
+            /** @var Search $searchService */
+            $searchService = $this->getServiceLocator()->get(Search::SERVICE_ID);
+            $resultsArray = $searchService->query($criteria, ResultService::DELIVERY_RESULT_CLASS_URI);
             /** @var IndexDocument $index */
             foreach ($resultsArray as $index) {
 
