@@ -21,11 +21,8 @@ namespace oat\taoOutcomeUi\scripts\install;
 
 use oat\oatbox\event\EventManager;
 use oat\oatbox\extension\InstallAction;
-use oat\tao\model\search\index\IndexService;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;
 use oat\taoOutcomeUi\model\search\ResultsWatcher;
-use oat\taoOutcomeUi\scripts\tools\ReIndexResults;
-use oat\taoResultServer\models\classes\ResultService;
 
 /**
  * Class SetupSearchService
@@ -40,12 +37,6 @@ class SetupSearchService extends InstallAction
      */
     public function __invoke($params)
     {
-        /** @var IndexService $indexService */
-        $indexService = $this->getServiceLocator()->get(IndexService::SERVICE_ID);
-        $options = $indexService->getOptions();
-        $options[IndexService::OPTION_CUSTOM_REINDEX_CLASSES][] = ReIndexResults::class;
-        $this->getServiceManager()->register(IndexService::SERVICE_ID, new IndexService($options));
-
         $this->getServiceManager()->register(ResultsWatcher::SERVICE_ID, new ResultsWatcher());
         /** @var EventManager $eventManager */
         $eventManager = $this->getServiceLocator()->get(EventManager::SERVICE_ID);

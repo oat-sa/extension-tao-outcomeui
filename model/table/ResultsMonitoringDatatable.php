@@ -25,12 +25,9 @@ use oat\tao\helpers\UserHelper;
 use oat\tao\model\datatable\DatatablePayload;
 use oat\tao\model\datatable\implementation\DatatableRequest;
 use oat\tao\model\search\index\IndexDocument;
-use oat\tao\model\search\index\IndexService;
 use oat\tao\model\search\SearchService;
-use oat\taoDelivery\model\execution\OntologyDeliveryExecution;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
-use oat\taoOutcomeUi\model\search\ResultsWatcher;
 use oat\taoProctoring\model\execution\DeliveryExecution;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\classes\ResultService;
@@ -47,6 +44,7 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
     protected $request;
     protected $resultsImplementation;
     protected $results;
+
     /**
      * EventLogDatatable constructor.
      */
@@ -60,6 +58,7 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
         $this->resultsImplementation = $resultService->getResultStorage('');
         $this->results = [];
     }
+
     /**
      * @return array
      * @throws \common_Exception
@@ -76,12 +75,15 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
         $order = $this->request->getSortBy();
         $sort = $this->request->getSortOrder();
         $start = $limit * $page - $limit;
-        $deliveryService = DeliveryAssemblyService::singleton();
-        $deliveryClass = $deliveryService->getRootClass();
+
         $params = \Context::getInstance()->getRequest()->getParameters();
         $criteria = isset($params['filterquery']) ? $params['filterquery'] : '';
         $classUri = isset($params['classUri']) ? $params['classUri'] : '';
+
+        $deliveryService = DeliveryAssemblyService::singleton();
+        $deliveryClass = $deliveryService->getRootClass();
         $deliveriesArray = [];
+
         if ($criteria) {
             $searchService = SearchService::getSearchImplementation();
             $class = new \core_kernel_classes_Class(ResultService::DELIVERY_RESULT_CLASS_URI);

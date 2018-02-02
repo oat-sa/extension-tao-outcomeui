@@ -105,13 +105,6 @@ class Updater extends \common_ext_ExtensionUpdater
         $this->skip('5.0.0', '5.2.2');
 
         if ($this->isVersion('5.2.2')) {
-            /** @var IndexService $indexService */
-            $indexService = $this->getServiceManager()->get(IndexService::SERVICE_ID);
-            $options = $indexService->getOptions();
-            $options[IndexService::OPTION_CUSTOM_REINDEX_CLASSES][] = ReIndexResults::class;
-            $options[$indexService::SUBSTITUTION_CONFIG_KEY][ResultsWatcher::INDEX_DELIVERY] = ResultsWatcher::INDEX_DELIVERY.IndexService::INDEX_MAP_PREFIX_STRICT;
-            $this->getServiceManager()->register(IndexService::SERVICE_ID, new IndexService($options));
-
             $this->getServiceManager()->register(ResultsWatcher::SERVICE_ID, new ResultsWatcher());
             /** @var EventManager $eventManager */
             $eventManager = $this->getServiceManager()->get(EventManager::SERVICE_ID);
