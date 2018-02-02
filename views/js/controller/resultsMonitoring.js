@@ -13,7 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2014-2018 (original work) Open Assessment Technologies SA;
+ * Copyright (c) 2018 (original work) Open Assessment Technologies SA ;
  */
 /**
  * @author Aleksej Tikhanovich, <aleksej@taotesting.com>
@@ -30,8 +30,9 @@ define([
     'layout/loading-bar',
     'layout/actions/binder',
     'ui/dialog/confirm',
+    'tpl!taoOutcomeUi/controller/resultModal',
     'ui/datatable'
-], function ($, __, url, uri, feedback, locale, encode, loadingBar, binder, dialogConfirm) {
+], function ($, __, url, uri, feedback, locale, encode, loadingBar, binder, dialogConfirm, resultModalTpl) {
     'use strict';
 
     var $resultsListContainer = $('.results-list-container');
@@ -59,7 +60,7 @@ define([
             url : url.route('viewResult', 'Results', 'taoOutcomeUi', {id : res[0], classUri: res[1]}),
             type : 'GET',
             success : function (result) {
-                var $container = $('<div class="modal results-modal"></div>').append(result);
+                var $container = $(resultModalTpl()).append(result);
                 $resultsListContainer.append($container);
                 $container.modal({
                     startClosed : true,
