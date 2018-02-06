@@ -186,29 +186,34 @@ class ResultIndexIterator implements \Iterator
 
     /**
      * @param DeliveryExecution $execution
-     * @return IndexDocument
-     * @throws \common_Exception
-     * @throws \common_exception_NotFound
-     * @throws \oat\oatbox\extension\script\MissingOptionException
+     * @return mixed|IndexDocument
      */
     protected function createDocument(DeliveryExecution $execution)
     {
         /** @var ResultCustomFieldsService $customFieldService */
         $customFieldService = $this->getServiceLocator()->get(ResultCustomFieldsService::SERVICE_ID);
-        $customBody = $customFieldService->getCustomFields($execution);
-        $body = [
-            'label' => $execution->getLabel(),
-            ResultsWatcher::INDEX_DELIVERY => $execution->getDelivery()->getUri(),
-            'type' => ResultService::DELIVERY_RESULT_CLASS_URI
-        ];
+        try {
+            $customBody = $customFieldService->getCustomFields($execution);
 
-        $body = array_merge($body, $customBody);
-        $document = [
-            'id' => $execution->getIdentifier(),
-            'body' => $body
-        ];
-        /** @var IndexService $indexService */
-        $indexService = $this->getServiceLocator()->get(IndexService::SERVICE_ID);
-        return $indexService->createDocumentFromArray($document);
+            $body = [
+                'label' => $execution->getLabel(),
+                ResultsWatcher::INDEX_DELIVERY => $execution->getDelivery()->getUri(),
+                'type' => ResultService::DELIVERY_RESULT_CLASS_URI
+            ];
+
+            $body = array_merge($body, $customBody);
+            $document = [
+                'id' => $execution->getIdentifier(),
+                'body' => $body
+            ];
+            /** @var IndexService $indexService */
+            $indexService = $this->getServiceLocator()->get(IndexService::SERVICE_ID);
+            return $indexService->createDocumentFromArray($document);
+        } catch (\Exception $e) {
+            \common_Logger::e($e->getMessage());
+            \common_Logger::e('Skip result '. $execution->getIdentifier());
+            $this->next();
+            return $this->current();
         }
+    }
 }
