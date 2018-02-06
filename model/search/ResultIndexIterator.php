@@ -165,7 +165,7 @@ class ResultIndexIterator implements \Iterator
         $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($this->instanceCache[$this->currentInstance]);
        try {
            $deliveryExecution->getDelivery();
-       } catch (\Exception $e) {
+       } catch (\common_exception_NotFound $e) {
            $message = 'Skip result '. $deliveryExecution->getIdentifier(). ' with message '.$e->getMessage();
            \common_Logger::e($message);
            $this->next();
