@@ -81,6 +81,7 @@ class ResultIndexIterator implements \Iterator
         $this->resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
 
         $this->ensureNotEmpty();
+        $this->ensureValidResult();
     }
 
     /**
