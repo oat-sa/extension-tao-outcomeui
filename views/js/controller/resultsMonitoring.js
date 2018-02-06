@@ -66,7 +66,12 @@ define([
                     startClosed : true,
                     minWidth : 450
                 });
-                $container.modal('open');
+                $container
+                    .modal('open')
+                    .on('closed.modal', function(){
+                        $container.modal('destroy');
+                        $(this).remove();
+                    });
                 loadingBar.stop();
             },
             error : function (xhr, err) {

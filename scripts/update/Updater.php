@@ -113,7 +113,9 @@ class Updater extends \common_ext_ExtensionUpdater
             $eventManager->attach(DeliveryExecutionCreated::class, [ResultsWatcher::SERVICE_ID, 'catchCreatedDeliveryExecutionEvent']);
             $this->getServiceManager()->register(EventManager::SERVICE_ID, $eventManager);
 
-            $this->setVersion('5.3.0');
+            $this->setVersion('5.3.1');
         }
+
+        $this->skip('5.3.0', '5.3.1');
     }
 }

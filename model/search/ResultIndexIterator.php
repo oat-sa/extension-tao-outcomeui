@@ -20,10 +20,12 @@ namespace oat\taoOutcomeUi\model\search;
 
 use oat\tao\model\search\index\IndexDocument;
 use oat\tao\model\search\index\IndexService;
+use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDelivery\model\execution\DeliveryExecution;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\classes\ResultService;
+use Slim\Exception\NotFoundException;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorInterface;
 
@@ -79,6 +81,7 @@ class ResultIndexIterator implements \Iterator
         $this->resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
 
         $this->ensureNotEmpty();
+        $this->ensureValidResult();
     }
 
     /**
@@ -128,6 +131,7 @@ class ResultIndexIterator implements \Iterator
                     $this->ensureNotEmpty();
                 }
             }
+            $this->ensureValidResult();
         }
     }
 
@@ -152,6 +156,20 @@ class ResultIndexIterator implements \Iterator
         while ($this->resourceIterator->valid() && !$this->load($this->resourceIterator->current(), 0)) {
             $this->resourceIterator->next();
         }
+    }
+
+    /**
+     * Ensure the current item is valid result
+     */
+    protected function ensureValidResult() {
+        $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($this->instanceCache[$this->currentInstance]);
+       try {
+           $deliveryExecution->getDelivery();
+       } catch (\common_exception_NotFound $e) {
+           $message = 'Skip result '. $deliveryExecution->getIdentifier(). ' with message '.$e->getMessage();
+           \common_Logger::e($message);
+           $this->next();
+       }
     }
 
     /**
@@ -196,10 +214,12 @@ class ResultIndexIterator implements \Iterator
         /** @var ResultCustomFieldsService $customFieldService */
         $customFieldService = $this->getServiceLocator()->get(ResultCustomFieldsService::SERVICE_ID);
         $customBody = $customFieldService->getCustomFields($execution);
+
         $body = [
             'label' => $execution->getLabel(),
             ResultsWatcher::INDEX_DELIVERY => $execution->getDelivery()->getUri(),
-            'type' => ResultService::DELIVERY_RESULT_CLASS_URI
+            'type' => ResultService::DELIVERY_RESULT_CLASS_URI,
+            ResultsWatcher::INDEX_TEST_TAKER => $execution->getUserIdentifier()
         ];
 
         $body = array_merge($body, $customBody);
@@ -210,5 +230,5 @@ class ResultIndexIterator implements \Iterator
         /** @var IndexService $indexService */
         $indexService = $this->getServiceLocator()->get(IndexService::SERVICE_ID);
         return $indexService->createDocumentFromArray($document);
-        }
+    }
 }
