@@ -41,7 +41,7 @@ class ReIndexResults extends AbstractAction
         $deliveryClass = $deliveryService->getRootClass();
         $resultIndexIterator = new ResultIndexIterator([$deliveryClass->getUri()], $this->getServiceLocator());
         $resultIndexIterator->setServiceLocator($this->getServiceLocator());
-        $this->getServiceLocator()->get(Search::SERVICE_ID)->index($resultIndexIterator);
-        return new Report(Report::TYPE_SUCCESS, 'Results are reindexed');
+        $counts = $this->getServiceLocator()->get(Search::SERVICE_ID)->index($resultIndexIterator);
+        return new Report(Report::TYPE_SUCCESS, $counts .' results are reindexed');
     }
 }

@@ -165,11 +165,6 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
         foreach($this->resultsImplementation->getResultByDelivery($deliveriesArray, $options) as $result){
             $id = isset($result['deliveryResultIdentifier']) ? $result['deliveryResultIdentifier'] : null;
             if ($id) {
-                $deliveryResource = new \core_kernel_classes_Resource($result['deliveryIdentifier']);
-                $label = '';
-                if ($deliveryResource) {
-                    $label = $deliveryResource->getLabel();
-                }
                 $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($id);
                 try {
                     $startTime = \tao_helpers_Date::displayeDate($deliveryExecution->getStartTime());
@@ -177,10 +172,23 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
                     \common_Logger::w($e->getMessage());
                     $startTime = '';
                 }
-                $user = UserHelper::getUser($result['testTakerIdentifier']);
+                $label = '';
+                try {
+                    $label = $deliveryExecution->getLabel();
+                } catch (\common_exception_NotFound $e) {
+                    \common_Logger::w($e->getMessage());
+                    if (isset($result['deliveryIdentifier'])) {
+                        $deliveryResource = new \core_kernel_classes_Resource($result['deliveryIdentifier']);
+                        if ($deliveryResource) {
+                            $label = $deliveryResource->getLabel();
+                        }
+                    }
+                }
+                $testTaker = $result['testTakerIdentifier'] ? $result['testTakerIdentifier'] : 'TestTaker';
+                $user = UserHelper::getUser($testTaker);
                 $userName = UserHelper::getUserName($user, true);
                 if (empty($userName)) {
-                    $userName = $result['testTakerIdentifier'];
+                    $userName = $testTaker;
                 }
                 $this->results['data'][] = [
                     'id' => $id.'|'.$result['deliveryIdentifier'],

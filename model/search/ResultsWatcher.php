@@ -37,6 +37,7 @@ class ResultsWatcher extends ConfigurableService
     use OntologyAwareTrait;
     const SERVICE_ID = 'taoOutcomeUi/ResultsWatcher';
     const INDEX_DELIVERY = 'delivery';
+    const INDEX_TEST_TAKER = 'test_taker';
     /**
      * @param DeliveryExecutionCreated $event
      * @return \common_report_Report
@@ -53,7 +54,8 @@ class ResultsWatcher extends ConfigurableService
             $body = [
                 'label' => $deliveryExecution->getLabel(),
                 self::INDEX_DELIVERY => $deliveryExecution->getDelivery()->getUri(),
-                'type' => ResultService::DELIVERY_RESULT_CLASS_URI
+                'type' => ResultService::DELIVERY_RESULT_CLASS_URI,
+                self::INDEX_TEST_TAKER => $deliveryExecution->getUserIdentifier()
             ];
             $id = $deliveryExecution->getIdentifier();
             $queueDispatcher = $this->getServiceLocator()->get(QueueDispatcher::SERVICE_ID);
