@@ -211,8 +211,7 @@ class ResultIndexIterator implements \Iterator
             $indexService = $this->getServiceLocator()->get(IndexService::SERVICE_ID);
             return $indexService->createDocumentFromArray($document);
         } catch (\Exception $e) {
-            \common_Logger::e($e->getMessage());
-            \common_Logger::e('Skip result '. $execution->getIdentifier());
+            \common_Logger::e('Skip result '. $execution->getIdentifier(). ' with message '.$e->getMessage());
             $this->next();
             return $this->current();
         }
