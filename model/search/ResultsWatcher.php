@@ -53,7 +53,8 @@ class ResultsWatcher extends ConfigurableService
             $body = [
                 'label' => $deliveryExecution->getLabel(),
                 self::INDEX_DELIVERY => $deliveryExecution->getDelivery()->getUri(),
-                'type' => ResultService::DELIVERY_RESULT_CLASS_URI
+                'type' => ResultService::DELIVERY_RESULT_CLASS_URI,
+                'test_taker' => $deliveryExecution->getUserIdentifier()
             ];
             $id = $deliveryExecution->getIdentifier();
             $queueDispatcher = $this->getServiceLocator()->get(QueueDispatcher::SERVICE_ID);

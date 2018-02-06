@@ -198,7 +198,8 @@ class ResultIndexIterator implements \Iterator
             $body = [
                 'label' => $execution->getLabel(),
                 ResultsWatcher::INDEX_DELIVERY => $execution->getDelivery()->getUri(),
-                'type' => ResultService::DELIVERY_RESULT_CLASS_URI
+                'type' => ResultService::DELIVERY_RESULT_CLASS_URI,
+                'test_taker' => $execution->getUserIdentifier()
             ];
 
             $body = array_merge($body, $customBody);
