@@ -32,10 +32,11 @@ return [
     'label'          => 'Result visualisation',
     'description'    => 'TAO Results extension',
     'license'        => 'GPL-2.0',
-    'version'        => '5.3.1',
+    'version'        => '5.4.0',
     'author'         => 'Open Assessment Technologies, CRP Henri Tudor',
     // taoItems is only needed for the item model property retrieval
     'requires'       => [
+        'generis' => '>=5.9.0',
         'taoResultServer' => '>=5.1.0',
         'taoItems'        => '>=5.2.0',
         'taoDeliveryRdf'  => '>=3.24.0',
