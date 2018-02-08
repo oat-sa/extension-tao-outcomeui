@@ -131,6 +131,9 @@ define([
                 .datatable({
                     url: url.route('data', 'ResultsMonitoring', 'taoOutcomeUi'),
                     filter: true,
+                    labels: {
+                        filter: __('Search by results')
+                    },
                     model: [{
                         id: 'delivery',
                         label: __('Delivery'),
