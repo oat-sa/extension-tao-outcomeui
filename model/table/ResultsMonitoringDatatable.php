@@ -22,7 +22,6 @@ namespace oat\taoOutcomeUi\model\table;
 
 use oat\tao\helpers\UserHelper;
 use oat\tao\model\datatable\DatatablePayload;
-use oat\tao\model\datatable\implementation\DatatableRequest;
 use oat\tao\model\search\index\IndexDocument;
 use oat\tao\model\search\Search;
 use oat\taoDelivery\model\execution\ServiceProxy;
@@ -32,6 +31,7 @@ use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\classes\ResultService;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use oat\tao\model\datatable\DatatableRequest;
 
 /**
  * Class ResultsMonitoringDatatable
@@ -47,15 +47,10 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
 
     /**
      * ResultsMonitoringDatatable constructor.
-     * @param null $serviceLocator
+     * @param DatatableRequest $request
      */
-    public function __construct($serviceLocator = null)
+    public function __construct(DatatableRequest $request)
     {
-        if ($serviceLocator) {
-            $this->setServiceLocator($serviceLocator);
-        }
-
-        $request = DatatableRequest::fromGlobals();
         $this->request = $request;
         $this->results = [];
     }
