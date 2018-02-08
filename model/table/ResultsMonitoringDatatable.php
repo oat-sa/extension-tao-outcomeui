@@ -22,7 +22,6 @@ namespace oat\taoOutcomeUi\model\table;
 
 use oat\tao\helpers\UserHelper;
 use oat\tao\model\datatable\DatatablePayload;
-use oat\tao\model\datatable\implementation\DatatableRequest;
 use oat\tao\model\search\index\IndexDocument;
 use oat\tao\model\search\Search;
 use oat\taoDelivery\model\execution\ServiceProxy;
@@ -32,6 +31,7 @@ use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\classes\ResultService;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use oat\tao\model\datatable\DatatableRequest;
 
 /**
  * Class ResultsMonitoringDatatable
@@ -40,26 +40,18 @@ use Zend\ServiceManager\ServiceLocatorAwareTrait;
 class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait;
+
     protected $request;
-    protected $resultsImplementation;
-    protected $results;
+
+    protected $results = [];
 
     /**
      * ResultsMonitoringDatatable constructor.
-     * @param null $serviceLocator
-     * @throws \common_exception_Error
+     * @param DatatableRequest $request
      */
-    public function __construct($serviceLocator = null)
+    public function __construct(DatatableRequest $request)
     {
-        if ($serviceLocator) {
-            $this->setServiceLocator($serviceLocator);
-        }
-
-        $request = DatatableRequest::fromGlobals();
         $this->request = $request;
-        /** @var ResultServerService $resultService */
-        $resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
-        $this->resultsImplementation = $resultService->getResultStorage('');
         $this->results = [];
     }
 
@@ -70,6 +62,9 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
      */
     public function getPayload()
     {
+        $deliveryService = DeliveryAssemblyService::singleton();
+        $deliveryClass = $deliveryService->getRootClass();
+
         $this->results = [
             'data' => [],
             'records' => 0
@@ -84,14 +79,15 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
         $criteria = isset($params['filterquery']) ? $params['filterquery'] : '';
         $classUri = isset($params['classUri']) ? $params['classUri'] : '';
 
-        $deliveryService = DeliveryAssemblyService::singleton();
-        $deliveryClass = $deliveryService->getRootClass();
         $deliveriesArray = [];
-
         if ($criteria) {
             /** @var Search $searchService */
             $searchService = $this->getServiceLocator()->get(Search::SERVICE_ID);
-            $resultsArray = $searchService->query($criteria, ResultService::DELIVERY_RESULT_CLASS_URI);
+
+            if ($classUri) {
+                $criteria .= ' AND delivery:"'.$classUri.'"';
+            }
+            $resultsArray = $searchService->query($criteria, ResultService::DELIVERY_RESULT_CLASS_URI, $start, $limit);
             /** @var IndexDocument $index */
             foreach ($resultsArray as $index) {
 
@@ -162,7 +158,11 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
      */
     protected function getResultsByDeliveries($deliveriesArray, $options = [])
     {
-        foreach($this->resultsImplementation->getResultByDelivery($deliveriesArray, $options) as $result){
+        /** @var ResultServerService $resultService */
+        $resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
+        $resultsImplementation = $resultService->getResultStorage(null);
+
+        foreach($resultsImplementation->getResultByDelivery($deliveriesArray, $options) as $result){
             $id = isset($result['deliveryResultIdentifier']) ? $result['deliveryResultIdentifier'] : null;
             if ($id) {
                 $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($id);
@@ -199,8 +199,9 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
                 ];
             }
         }
-        $this->results['records'] = $this->resultsImplementation->countResultByDelivery($deliveriesArray);
+        $this->results['records'] = $resultsImplementation->countResultByDelivery($deliveriesArray);
     }
+
     /**
      * @param array $results
      * @return array
