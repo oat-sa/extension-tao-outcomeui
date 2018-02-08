@@ -88,7 +88,11 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
         if ($criteria) {
             /** @var Search $searchService */
             $searchService = $this->getServiceLocator()->get(Search::SERVICE_ID);
-            $resultsArray = $searchService->query($criteria, ResultService::DELIVERY_RESULT_CLASS_URI);
+
+            if ($classUri) {
+                $criteria .= ' AND delivery:"'.$classUri.'"';
+            }
+            $resultsArray = $searchService->query($criteria, ResultService::DELIVERY_RESULT_CLASS_URI, $start, $limit);
             /** @var IndexDocument $index */
             foreach ($resultsArray as $index) {
 
@@ -202,6 +206,7 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
         }
         $this->results['records'] = $resultsImplementation->countResultByDelivery($deliveriesArray);
     }
+
     /**
      * @param array $results
      * @return array
