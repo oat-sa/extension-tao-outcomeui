@@ -186,7 +186,8 @@ class ResultIndexIterator implements \Iterator
             'limit' => self::CACHE_SIZE
         );
 
-        $resultsImplementation = $this->resultService->getResultStorage($delivery->getUri());
+        $resultsImplementation = $this->resultService->getResultStorage(null);
+
         $this->instanceCache = array();
         $results = $resultsImplementation->getResultByDelivery([$delivery->getUri()], $options);
         foreach($results as $result){

@@ -21,6 +21,7 @@
 namespace oat\taoOutcomeUi\controller;
 
 use oat\taoOutcomeUi\model\table\ResultsMonitoringDatatable;
+use oat\tao\model\datatable\implementation\DatatableRequest;
 
 /**
  * Class ResultsMonitoring
@@ -34,6 +35,8 @@ class ResultsMonitoring  extends \tao_actions_CommonModule
     }
     public function data()
     {
-        $this->returnJson(new ResultsMonitoringDatatable($this->getServiceLocator()));
+        $table = new ResultsMonitoringDatatable(DatatableRequest::fromGlobals());
+        $table->setServiceLocator($this->getServiceLocator());
+        $this->returnJson($table);
     }
 }

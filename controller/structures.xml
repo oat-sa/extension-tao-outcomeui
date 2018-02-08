@@ -9,7 +9,8 @@
                 <trees>
                     <tree name="Results library"
                           className="Result"
-                          dataUrl="/taoOutcomeUi/Results/getOntologyData"
+                          dataUrl="/taoDeliveryRdf/DeliveryMgmt/getOntologyData"
+                          rootNode="http://www.tao.lu/Ontologies/TAODelivery.rdf#AssembledDelivery"
                           selectClass="results-class-index"
                           selectInstance="results-index"
                           searchNode="http://www.tao.lu/Ontologies/TAODelivery.rdf#AssembledDelivery"
