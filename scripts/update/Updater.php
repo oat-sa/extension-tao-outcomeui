@@ -117,5 +117,17 @@ class Updater extends \common_ext_ExtensionUpdater
         }
 
         $this->skip('5.3.0', '5.3.2');
+
+        if ($this->isVersion('5.3.2')) {
+            /** @var \common_persistence_Manager $persistenceManager */
+            $persistenceManager = $this->getServiceManager()->get(\common_persistence_Manager::SERVICE_ID);
+            if (!$persistenceManager->hasPersistence(ResultsService::PERSISTENCE_CACHE_KEY)) {
+                $persistenceManager->registerPersistence(ResultsService::PERSISTENCE_CACHE_KEY, [
+                    'driver' => 'phpfile'
+                ]);
+            }
+
+            $this->setVersion('5.4.0');
+        }
     }
 }
