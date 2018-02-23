@@ -26,6 +26,7 @@ namespace oat\taoOutcomeUi\model;
 
 use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyRdfs;
+use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\GradeColumn;
@@ -53,11 +54,118 @@ class ResultsService extends tao_models_classes_ClassService
     const VARIABLES_FILTER_LAST_SUBMITTED = 'lastSubmitted';
     const VARIABLES_FILTER_FIRST_SUBMITTED = 'firstSubmitted';
 
+    const PERSISTENCE_CACHE_KEY = 'resultCache';
+
     /**
      *
      * @var \taoResultServer_models_classes_ReadableResultStorage
      */
     private $implementation = null;
+
+    /**
+     * Internal cache for item info.
+     *
+     * @var array
+     */
+    private $itemInfoCache = [];
+
+    /**
+     * External cache.
+     *
+     * @var \common_persistence_KvDriver
+     */
+    private $resultCache;
+
+    /**
+     * @return \common_persistence_KvDriver|null
+     */
+    public function getCache()
+    {
+        if (is_null($this->resultCache)) {
+            /** @var \common_persistence_Manager $persistenceManager */
+            $persistenceManager = $this->getServiceLocator()->get(\common_persistence_Manager::SERVICE_ID);
+            if ($persistenceManager->hasPersistence(self::PERSISTENCE_CACHE_KEY)) {
+                $this->resultCache = $persistenceManager->getPersistenceById(self::PERSISTENCE_CACHE_KEY);
+            }
+        }
+
+        return $this->resultCache;
+    }
+
+    public function getCacheKey($resultIdentifier, $suffix = '')
+    {
+        return 'resultPageCache:'. $resultIdentifier .':'. $suffix;
+    }
+
+    protected function getContainerCacheKey($resultIdentifier)
+    {
+        return $this->getCacheKey($resultIdentifier, 'keys');
+    }
+
+    public function setCacheValue($resultIdentifier, $fullKey, $value)
+    {
+        if (is_null($this->getCache())) {
+            return false;
+        }
+
+        $fullKeys = [];
+
+        $containerKey = $this->getContainerCacheKey($resultIdentifier);
+        if ($this->getCache()->exists($containerKey)) {
+            $fullKeys = $this->getContainerCacheValue($containerKey);
+        }
+
+        $fullKeys[] = $fullKey;
+
+        if ($this->getCache()->set($fullKey, $value)) {
+            // let's save the container of the keys as well
+            return $this->setContainerCacheValue($containerKey, $fullKeys);
+        }
+
+        return false;
+    }
+
+    public function deleteCacheFor($resultIdentifier)
+    {
+        if (is_null($this->getCache())) {
+            return false;
+        }
+
+        $containerKey = $this->getContainerCacheKey($resultIdentifier);
+        if (!$this->getCache()->exists($containerKey)) {
+            return false;
+        }
+
+        $fullKeys = $this->getContainerCacheValue($containerKey);
+        $initialCount = count($fullKeys);
+
+        foreach ($fullKeys as $i => $key) {
+            if ($this->getCache()->del($key)) {
+                unset($fullKeys[$i]);
+            }
+        }
+
+        if (empty($fullKeys)) {
+            // delete the whole container
+            return $this->getCache()->del($containerKey);
+        } else if (count($fullKeys) < $initialCount) {
+            // update the container
+            return $this->setContainerCacheValue($containerKey, $fullKeys);
+        }
+
+        // no cache has been deleted
+        return false;
+    }
+
+    protected function setContainerCacheValue($containerKey, array $fullKeys)
+    {
+        return $this->getCache()->set($containerKey, gzencode(json_encode(array_unique($fullKeys)), 9));
+    }
+
+    protected function getContainerCacheValue($containerKey)
+    {
+        return json_decode(gzdecode($this->getCache()->get($containerKey)), true);
+    }
 
     /**
      * (non-PHPdoc)
@@ -127,27 +235,32 @@ class ResultsService extends tao_models_classes_ClassService
         } else {
             $returnValue = $variables;
         }
-        
+
 
         return (array) $returnValue;
     }
 
     /**
-     * @param  string $itemResult
-     * @param array $wantedTypes
+     * @param string|array $itemResult
+     * @param array        $wantedTypes
      * @return array
+     * @throws common_exception_Error
      */
-    public function getVariablesFromObjectResult($itemResult, $wantedTypes = array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class)) {
-        $returnedVariables = array();
+    public function getVariablesFromObjectResult($itemResult, $wantedTypes = [\taoResultServer_models_classes_ResponseVariable::class, \taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class])
+    {
+        $returnedVariables = [];
         $variables = $this->getImplementation()->getVariables($itemResult);
 
-        if(!empty($wantedTypes)){
-            foreach($variables as $variable){
-                if(in_array(get_class($variable[0]->variable),$wantedTypes)){
+        if (!empty($wantedTypes)) {
+            foreach ($variables as $variable) {
+                if (in_array(get_class($variable[0]->variable), $wantedTypes)) {
                     $returnedVariables[] = $variable;
                 }
             }
         }
+
+        unset($variables);
+
         return $returnedVariables;
     }
 
@@ -289,7 +402,8 @@ class ResultsService extends tao_models_classes_ClassService
      * @param $itemVariables
      * @return array item information ['uri' => xxx, 'label' => yyy, 'itemModel' => zzz]
      */
-    private function getItemInfos($itemCallId, $itemVariables){
+    private function getItemInfos($itemCallId, $itemVariables)
+    {
         $undefinedStr = __('unknown'); //some data may have not been submitted
 
         try {
@@ -299,12 +413,20 @@ class ResultsService extends tao_models_classes_ClassService
             common_Logger::w("The item call '" . $itemCallId . "' is not linked to a valid item. (deleted item ?)");
             $relatedItem = null;
         }
+
         if ($relatedItem instanceof \core_kernel_classes_Literal) {
             $itemIdentifier = $relatedItem->__toString();
             $itemLabel = $relatedItem->__toString();
             $itemModel = $undefinedStr;
         } elseif ($relatedItem instanceof core_kernel_classes_Resource) {
             $itemIdentifier = $relatedItem->getUri();
+
+            // check item info in internal cache
+            if (isset($this->itemInfoCache[$itemIdentifier])) {
+                common_Logger::d("Item info found in internal cache for item " . $relatedItem->getUri() . "");
+                return $this->itemInfoCache[$itemIdentifier];
+            }
+
             $itemLabel = $relatedItem->getLabel();
 
             try {
@@ -319,9 +441,16 @@ class ResultsService extends tao_models_classes_ClassService
             $itemLabel = $undefinedStr;
             $itemModel = $undefinedStr;
         }
+
         $item['itemModel'] = $itemModel;
         $item['label'] = $itemLabel;
         $item['uri'] = $itemIdentifier;
+
+        // storing item info in memory to not hit the db for the same item again and again
+        // when method "getStructuredVariables" are called multiple times in the same request
+        if ($relatedItem instanceof core_kernel_classes_Resource) {
+            $this->itemInfoCache[$itemIdentifier] = $item;
+        }
 
         return $item;
     }
@@ -363,10 +492,15 @@ class ResultsService extends tao_models_classes_ClassService
         $tmpitem = array();
         $item = array();
 
-        foreach ($itemCallIds as $itemCallId) {
+        // splitting call ids into chunks to perform bulk queries
+        $itemCallIdChunks = array_chunk($itemCallIds, 50);
+
+        foreach ($itemCallIdChunks as $ids) {
             $firstEpoch = null;
-            $itemVariables = array_merge($itemVariables, $this->getVariablesFromObjectResult($itemCallId, $wantedTypes));
+            $itemVariables = array_merge($itemVariables, $this->getVariablesFromObjectResult($ids, $wantedTypes));
         }
+
+        unset($itemCallIds, $itemCallIdChunks);
 
         usort($itemVariables, function($a, $b){
             $variableA = $a[0]->variable;
@@ -387,7 +521,7 @@ class ResultsService extends tao_models_classes_ClassService
 
         $lastItemCallId = null;
 
-        foreach($itemVariables as $variable){
+        foreach ($itemVariables as $variable) {
             $currentItemCallId = $variable[0]->callIdItem;
 
             /** @var \taoResultServer_models_classes_Variable $variableTemp */
@@ -396,7 +530,7 @@ class ResultsService extends tao_models_classes_ClassService
             //retrieve the type of the variable
             $type = get_class($variableTemp);
 
-            if(is_null($lastItemCallId)){
+            if (is_null($lastItemCallId)) {
                 $lastItemCallId = $currentItemCallId;
                 $firstEpoch = $variableTemp->getEpoch();
                 $item = $this->getItemInfos($currentItemCallId, array($variable));
@@ -418,17 +552,16 @@ class ResultsService extends tao_models_classes_ClassService
                 $variableDescription["isCorrect"] = "unscored";
             }
 
-
-            if($currentItemCallId !== $lastItemCallId){
+            if ($currentItemCallId !== $lastItemCallId) {
                 //no yet saved
                 //already saved and filter not first
-                if(!isset($savedItems[$item['uri']]) || $filter !== self::VARIABLES_FILTER_FIRST_SUBMITTED){
+                if (!isset($savedItems[$item['uri']]) || $filter !== self::VARIABLES_FILTER_FIRST_SUBMITTED) {
                     //last submitted and already something saved
-                    if($filter === self::VARIABLES_FILTER_LAST_SUBMITTED && isset($savedItems[$item['uri']])){
+                    if ($filter === self::VARIABLES_FILTER_LAST_SUBMITTED && isset($savedItems[$item['uri']])) {
                         //$tmpitem not empty and contains at least one wanted type
-                        if(!empty($tmpitem)){
-                            foreach($wantedTypes as $type){
-                                if(isset($tmpitem[$type])){
+                        if (!empty($tmpitem)) {
+                            foreach ($wantedTypes as $type) {
+                                if (isset($tmpitem[$type])) {
                                     unset($variablesByItem[$savedItems[$item['uri']]]);
                                     $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
                                     continue;
@@ -449,13 +582,13 @@ class ResultsService extends tao_models_classes_ClassService
             $tmpitem[$type][$variableIdentifier] = $variableDescription;
         }
 
-        if(!empty($item) && (!isset($savedItems[$item['uri']]) || $filter !== self::VARIABLES_FILTER_FIRST_SUBMITTED)){
+        if (!empty($item) && (!isset($savedItems[$item['uri']]) || $filter !== self::VARIABLES_FILTER_FIRST_SUBMITTED)) {
             //last submitted and already something saved
-            if($filter === self::VARIABLES_FILTER_LAST_SUBMITTED && isset($savedItems[$item['uri']])){
+            if ($filter === self::VARIABLES_FILTER_LAST_SUBMITTED && isset($savedItems[$item['uri']])) {
                 //$tmpitem not empty and contains at least one wanted type
-                if(!empty($tmpitem)){
-                    foreach($wantedTypes as $type){
-                        if(isset($tmpitem[$type])){
+                if (!empty($tmpitem)){
+                    foreach ($wantedTypes as $type) {
+                        if (isset($tmpitem[$type])) {
                             unset($variablesByItem[$savedItems[$item['uri']]]);
                             $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
                             break;

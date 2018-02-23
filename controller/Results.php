@@ -29,6 +29,7 @@ use oat\generis\model\OntologyRdfs;
 use oat\oatbox\event\EventManager;
 use oat\tao\model\accessControl\AclProxy;
 use oat\tao\model\plugins\PluginModule;
+use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
 use oat\taoOutcomeUi\model\event\ResultsListPluginEvent;
@@ -86,6 +87,14 @@ class Results extends \tao_actions_CommonModule
     protected function getResultsService()
     {
         return $this->getServiceManager()->get(ResultServiceWrapper::SERVICE_ID)->getService();
+    }
+
+    /**
+     * @return object|ServiceProxy
+     */
+    protected function getServiceProxy()
+    {
+        return $this->getServiceLocator()->get(ServiceProxy::SERVICE_ID);
     }
 
     /**
@@ -188,7 +197,7 @@ class Results extends \tao_actions_CommonModule
 
             foreach ($results as $res) {
 
-                $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($res['deliveryResultIdentifier']);
+                $deliveryExecution = $this->getServiceProxy()->getDeliveryExecution($res['deliveryResultIdentifier']);
 
                 try {
                     $startTime = \tao_helpers_Date::displayeDate($deliveryExecution->getStartTime());
@@ -237,7 +246,7 @@ class Results extends \tao_actions_CommonModule
             throw new Exception("wrong request mode");
         }
         $deliveryExecutionUri = tao_helpers_Uri::decode($this->getRequestParameter('uri'));
-        $de = ServiceProxy::singleton()->getDeliveryExecution($deliveryExecutionUri);
+        $de = $this->getServiceProxy()->getDeliveryExecution($deliveryExecutionUri);
 
         try {
             $this->getResultStorage($de->getDelivery());
@@ -248,6 +257,18 @@ class Results extends \tao_actions_CommonModule
         } catch (\common_exception_Error $e) {
             $this->returnJson(array('error' => $e->getMessage()));
         }
+    }
+
+    /**
+     * Is the given delivery execution aka. result cacheable?
+     *
+     * @param string $resultIdentifier
+     * @return bool
+     * @throws \common_exception_NotFound
+     */
+    private function isCacheable($resultIdentifier)
+    {
+        return $this->getServiceProxy()->getDeliveryExecution($resultIdentifier)->getState()->getUri() == DeliveryExecutionInterface::STATE_FINISHIED;
     }
 
     /**
@@ -297,6 +318,24 @@ class Results extends \tao_actions_CommonModule
             }
             $filterSubmission = ($this->hasRequestParameter("filterSubmission")) ? $this->getRequestParameter("filterSubmission") : ResultsService::VARIABLES_FILTER_LAST_SUBMITTED;
             $filterTypes = ($this->hasRequestParameter("filterTypes")) ? $this->getRequestParameter("filterTypes") : array(\taoResultServer_models_classes_ResponseVariable::class, \taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class);
+
+            // check the result page cache; if we have hit than return the gzencoded string and let the client to encode the data
+            $cacheKey = $this->getResultsService()->getCacheKey($resultId, md5($filterSubmission . implode(',', $filterTypes)));
+            if ($this->isCacheable($resultId)
+                && $this->getResultsService()->getCache()
+                && $this->getResultsService()->getCache()->exists($cacheKey)
+            ) {
+                \common_Logger::d('Result page cache hit for "'. $cacheKey .'"');
+
+                $gzipOutput = $this->getResultsService()->getCache()->get($cacheKey);
+
+                header('Content-Encoding: gzip');
+                header('Content-Length: '. strlen($gzipOutput));
+
+                echo $gzipOutput;
+                exit;
+            }
+
             $variables = $this->getResultVariables($resultId, $filterSubmission, $filterTypes);
             $this->setData('variables', $variables);
 
@@ -314,6 +353,17 @@ class Results extends \tao_actions_CommonModule
             $this->setData('filterSubmission', $filterSubmission);
             $this->setData('filterTypes', $filterTypes);
             $this->setView('viewResult.tpl');
+
+            // quick hack to gain performance: caching the entire result page if it is cacheable
+            // "gzencode" is used to reduce the size of the string to be cached
+            ob_start(function($buffer) use($resultId, $cacheKey) {
+                if ($this->isCacheable($resultId)) {
+                    \common_Logger::d('Result page cache set for "'. $cacheKey .'"');
+                    $this->getResultsService()->setCacheValue($resultId, $cacheKey, gzencode($buffer, 9));
+                }
+
+                return $buffer;
+            });
         } catch (\common_exception_Error $e) {
             $this->setData('type', 'error');
             $this->setData('error', $e->getMessage());
