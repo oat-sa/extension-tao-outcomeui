@@ -86,8 +86,6 @@ class ResultsService extends tao_models_classes_ClassService
             $persistenceManager = $this->getServiceLocator()->get(\common_persistence_Manager::SERVICE_ID);
             if ($persistenceManager->hasPersistence(self::PERSISTENCE_CACHE_KEY)) {
                 $this->resultCache = $persistenceManager->getPersistenceById(self::PERSISTENCE_CACHE_KEY);
-            } else {
-                common_Logger::i('Set a persistence with key "'. self::PERSISTENCE_CACHE_KEY .'" in order to cache result data.');
             }
         }
 
