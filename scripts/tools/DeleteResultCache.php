@@ -66,11 +66,7 @@ class DeleteResultCache extends ScriptAction
             $serviceProxy = $this->getServiceLocator()->get(ServiceProxy::SERVICE_ID);
 
             /** @var \core_kernel_classes_Resource $resource */
-            $resource = $serviceProxy->getDeliveryExecution($this->getOption('deliveryExecutionUri'));
-
-            if (!$resource->exists()) {
-                throw new \RuntimeException('Delivery Execution "'. $this->getOption('deliveryExecutionUri'). '" not found');
-            }
+            $deliveryExecution = $serviceProxy->getDeliveryExecution($this->getOption('deliveryExecutionUri'));
 
             /** @var ResultsService $resultsService */
             $resultsService = $this->getServiceManager()->get(ResultServiceWrapper::SERVICE_ID)->getService();
@@ -79,10 +75,11 @@ class DeleteResultCache extends ScriptAction
                 throw new \RuntimeException('No result cache has been configured in persistence, so there is nothing to delete.');
             }
 
-            if ($resultsService->deleteCacheFor($resource->getUri())) {
-                $report = Report::createSuccess('Cache has been successfully deleted');
+            $deliveryExecutionIdentifier = $deliveryExecution->getIdentifier();
+            if ($resultsService->deleteCacheFor($deliveryExecutionIdentifier)) {
+                $report = Report::createSuccess("Cache has been successfully deleted for entry '${deliveryExecutionIdentifier}'.");
             } else {
-                throw new \RuntimeException('No cache has been deleted');
+                throw new \RuntimeException("No cache has been deleted for entry '${deliveryExecutionIdentifier}'.");
             }
         } catch (\Exception $e) {
             $report = Report::createFailure($e->getMessage());
