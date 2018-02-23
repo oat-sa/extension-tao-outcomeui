@@ -21,7 +21,7 @@
  *
  */
 
-use oat\taoOutcomeUi\scripts\install\RegisterDefaultResultCache;
+use oat\taoOutcomeUi\scripts\install\RegisterEvent;
 use oat\taoOutcomeUi\scripts\install\RegisterTestPluginService;
 use oat\taoOutcomeUi\scripts\install\SetUpQueueTasks;
 use oat\taoOutcomeUi\scripts\install\SetupSearchService;
@@ -37,7 +37,7 @@ return [
     'author'         => 'Open Assessment Technologies, CRP Henri Tudor',
     // taoItems is only needed for the item model property retrieval
     'requires'       => [
-        'taoResultServer' => '>=6.2.0',
+        'taoResultServer' => '>=6.3.0',
         'taoItems'        => '>=5.2.0',
         'taoDeliveryRdf'  => '>=3.24.0',
         'tao'             => '>=15.16.0',
@@ -48,7 +48,7 @@ return [
             RegisterTestPluginService::class,
             SetUpQueueTasks::class,
             SetupSearchService::class,
-            RegisterDefaultResultCache::class
+            RegisterEvent::class
         ]
     ],
     'uninstall'      => [],

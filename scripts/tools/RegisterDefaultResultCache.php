@@ -17,12 +17,12 @@
  * Copyright (c) 2017 (original work) Open Assessment Technologies SA;
  */
 
-namespace oat\taoOutcomeUi\scripts\install;
+namespace oat\taoOutcomeUi\scripts\tools;
 
-use oat\oatbox\extension\InstallAction;
+use oat\oatbox\extension\AbstractAction;
 use oat\taoOutcomeUi\model\ResultsService;
 
-class RegisterDefaultResultCache extends InstallAction
+class RegisterDefaultResultCache extends AbstractAction
 {
     public function __invoke($params)
     {

@@ -320,14 +320,14 @@ class Results extends \tao_actions_CommonModule
             $filterTypes = ($this->hasRequestParameter("filterTypes")) ? $this->getRequestParameter("filterTypes") : array(\taoResultServer_models_classes_ResponseVariable::class, \taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class);
 
             // check the result page cache; if we have hit than return the gzencoded string and let the client to encode the data
-            $cacheKey = 'resultPageCache:'. $resultId .':'. md5($filterSubmission . implode(',', $filterTypes));
+            $cacheKey = $this->getResultsService()->getCacheKey($resultId, md5($filterSubmission . implode(',', $filterTypes)));
             if ($this->isCacheable($resultId)
-                && $this->getResultsService()->getResultCache()
-                && $this->getResultsService()->getResultCache()->exists($cacheKey)
+                && $this->getResultsService()->getCache()
+                && $this->getResultsService()->getCache()->exists($cacheKey)
             ) {
                 \common_Logger::d('Result page cache hit for "'. $cacheKey .'"');
 
-                $gzipOutput = $this->getResultsService()->getResultCache()->get($cacheKey);
+                $gzipOutput = $this->getResultsService()->getCache()->get($cacheKey);
 
                 header('Content-Encoding: gzip');
                 header('Content-Length: '. strlen($gzipOutput));
@@ -357,9 +357,9 @@ class Results extends \tao_actions_CommonModule
             // quick hack to gain performance: caching the entire result page if it is cacheable
             // "gzencode" is used to reduce the size of the string to be cached
             ob_start(function($buffer) use($resultId, $cacheKey) {
-                if ($this->isCacheable($resultId) && $this->getResultsService()->getResultCache()) {
+                if ($this->isCacheable($resultId)) {
                     \common_Logger::d('Result page cache set for "'. $cacheKey .'"');
-                    $this->getResultsService()->getResultCache()->set($cacheKey, gzencode($buffer, 9));
+                    $this->getResultsService()->setCacheValue($resultId, $cacheKey, gzencode($buffer, 9));
                 }
 
                 return $buffer;

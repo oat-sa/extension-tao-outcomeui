@@ -77,9 +77,9 @@ class ResultsService extends tao_models_classes_ClassService
     private $resultCache;
 
     /**
-     * @return \common_persistence_KvDriver
+     * @return \common_persistence_KvDriver|null
      */
-    public function getResultCache()
+    public function getCache()
     {
         if (is_null($this->resultCache)) {
             /** @var \common_persistence_Manager $persistenceManager */
@@ -92,6 +92,81 @@ class ResultsService extends tao_models_classes_ClassService
         }
 
         return $this->resultCache;
+    }
+
+    public function getCacheKey($resultIdentifier, $suffix = '')
+    {
+        return 'resultPageCache:'. $resultIdentifier .':'. $suffix;
+    }
+
+    protected function getContainerCacheKey($resultIdentifier)
+    {
+        return $this->getCacheKey($resultIdentifier, 'keys');
+    }
+
+    public function setCacheValue($resultIdentifier, $fullKey, $value)
+    {
+        if (is_null($this->getCache())) {
+            return false;
+        }
+
+        $fullKeys = [];
+
+        $containerKey = $this->getContainerCacheKey($resultIdentifier);
+        if ($this->getCache()->exists($containerKey)) {
+            $fullKeys = $this->getContainerCacheValue($containerKey);
+        }
+
+        $fullKeys[] = $fullKey;
+
+        if ($this->getCache()->set($fullKey, $value)) {
+            // let's save the container of the keys as well
+            return $this->setContainerCacheValue($containerKey, $fullKeys);
+        }
+
+        return false;
+    }
+
+    public function deleteCacheFor($resultIdentifier)
+    {
+        if (is_null($this->getCache())) {
+            return false;
+        }
+
+        $containerKey = $this->getContainerCacheKey($resultIdentifier);
+        if (!$this->getCache()->exists($containerKey)) {
+            return false;
+        }
+
+        $fullKeys = $this->getContainerCacheValue($containerKey);
+        $initialCount = count($fullKeys);
+
+        foreach ($fullKeys as $i => $key) {
+            if ($this->getCache()->del($key)) {
+                unset($fullKeys[$i]);
+            }
+        }
+
+        if (empty($fullKeys)) {
+            // delete the whole container
+            return $this->getCache()->del($containerKey);
+        } else if (count($fullKeys) < $initialCount) {
+            // update the container
+            return $this->setContainerCacheValue($containerKey, $fullKeys);
+        }
+
+        // no cache has been deleted
+        return false;
+    }
+
+    protected function setContainerCacheValue($containerKey, array $fullKeys)
+    {
+        return $this->getCache()->set($containerKey, gzencode(json_encode(array_unique($fullKeys)), 9));
+    }
+
+    protected function getContainerCacheValue($containerKey)
+    {
+        return json_decode(gzdecode($this->getCache()->get($containerKey)), true);
     }
 
     /**

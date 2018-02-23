@@ -26,6 +26,7 @@ use oat\oatbox\event\EventManager;
 use oat\oatbox\service\ConfigurableService;
 use oat\tao\model\search\index\IndexService;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;
+use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionState;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\search\ResultCustomFieldsService;
 use oat\taoOutcomeUi\model\search\ResultsWatcher;
@@ -119,13 +120,10 @@ class Updater extends \common_ext_ExtensionUpdater
         $this->skip('5.3.0', '5.3.2');
 
         if ($this->isVersion('5.3.2')) {
-            /** @var \common_persistence_Manager $persistenceManager */
-            $persistenceManager = $this->getServiceManager()->get(\common_persistence_Manager::SERVICE_ID);
-            if (!$persistenceManager->hasPersistence(ResultsService::PERSISTENCE_CACHE_KEY)) {
-                $persistenceManager->registerPersistence(ResultsService::PERSISTENCE_CACHE_KEY, [
-                    'driver' => 'phpfile'
-                ]);
-            }
+            /** @var EventManager $eventManager */
+            $eventManager = $this->getServiceManager()->get(EventManager::SERVICE_ID);
+            $eventManager->attach(DeliveryExecutionState::class, [ResultServiceWrapper::class, 'deleteResultCache']);
+            $this->getServiceManager()->register(EventManager::SERVICE_ID, $eventManager);
 
             $this->setVersion('5.4.0');
         }
