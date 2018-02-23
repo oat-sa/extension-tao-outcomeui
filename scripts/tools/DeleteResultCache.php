@@ -21,6 +21,7 @@ namespace oat\taoOutcomeUi\scripts\tools;
 
 use common_report_Report as Report;
 use oat\oatbox\extension\script\ScriptAction;
+use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 
@@ -61,7 +62,11 @@ class DeleteResultCache extends ScriptAction
     protected function run()
     {
         try {
-            $resource = new \core_kernel_classes_Resource($this->getOption('deliveryExecutionUri'));
+            /** @var ServiceProxy $serviceProxy */
+            $serviceProxy = $this->getServiceLocator()->get(ServiceProxy::SERVICE_ID);
+
+            /** @var \core_kernel_classes_Resource $resource */
+            $resource = $serviceProxy->getDeliveryExecution($this->getOption('deliveryExecutionUri'));
 
             if (!$resource->exists()) {
                 throw new \RuntimeException('Delivery Execution "'. $this->getOption('deliveryExecutionUri'). '" not found');
