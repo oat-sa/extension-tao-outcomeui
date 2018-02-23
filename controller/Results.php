@@ -447,6 +447,10 @@ class Results extends \tao_actions_CommonModule
         if ($resultStorage instanceof NoResultStorage){
            throw NoResultStorageException::create();
         }
+
+        if (!$resultStorage instanceof \taoResultServer_models_classes_ReadableResultStorage){
+           throw new \common_exception_Error('The results storage it is not readable');
+        }
         $this->getResultsService()->setImplementation($resultStorage);
         return $resultStorage;
     }

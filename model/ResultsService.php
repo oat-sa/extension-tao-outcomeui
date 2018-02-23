@@ -890,6 +890,10 @@ class ResultsService extends tao_models_classes_ClassService
             throw NoResultStorageException::create();
         }
 
+        if (!$resultStorage instanceof \taoResultServer_models_classes_ReadableResultStorage){
+            throw new \common_exception_Error('The results storage it is not readable');
+        }
+
         return $resultStorage;
     }
 
