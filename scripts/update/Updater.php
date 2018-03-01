@@ -122,7 +122,7 @@ class Updater extends \common_ext_ExtensionUpdater
             $eventManager->attach(DeliveryExecutionState::class, [ResultServiceWrapper::class, 'deleteResultCache']);
             $this->getServiceManager()->register(EventManager::SERVICE_ID, $eventManager);
 
-            $this->setVersion('5.5.0');
+            $this->setVersion('5.5.1');
         }
     }
 }
