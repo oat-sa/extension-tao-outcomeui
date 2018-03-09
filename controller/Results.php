@@ -357,9 +357,9 @@ class Results extends \tao_actions_CommonModule
             // quick hack to gain performance: caching the entire result page if it is cacheable
             // "gzencode" is used to reduce the size of the string to be cached
             ob_start(function($buffer) use($resultId, $cacheKey) {
-                if ($this->isCacheable($resultId)) {
+                if ($this->isCacheable($resultId)
+                    && $this->getResultsService()->setCacheValue($resultId, $cacheKey, gzencode($buffer, 9))) {
                     \common_Logger::d('Result page cache set for "'. $cacheKey .'"');
-                    $this->getResultsService()->setCacheValue($resultId, $cacheKey, gzencode($buffer, 9));
                 }
 
                 return $buffer;
