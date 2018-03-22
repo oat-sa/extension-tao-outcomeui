@@ -154,6 +154,7 @@ define([
                     paginationStrategyTop: 'simple',
                     paginationStrategyBottom: 'pages',
                     rows: 25,
+                    sortby: 'result_id',
                     actions : {
                         'view' : {
                             id: 'view',
