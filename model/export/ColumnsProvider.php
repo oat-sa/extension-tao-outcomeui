@@ -20,10 +20,16 @@
 
 namespace oat\taoOutcomeUi\model\export;
 
+use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyAwareTrait;
+use oat\generis\model\OntologyRdf;
+use oat\generis\model\OntologyRdfs;
 use oat\taoDelivery\model\fields\DeliveryFieldsService;
+use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
+use oat\taoDeliveryRdf\model\DeliveryContainerService;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
+use oat\taoTestTaker\models\TestTakerService;
 
 /**
  * ColumnsProvider
@@ -43,12 +49,12 @@ class ColumnsProvider
      * @var array
      */
     private $testTakerProperties = [
-        RDFS_LABEL,
-        PROPERTY_USER_LOGIN,
-        PROPERTY_USER_FIRSTNAME,
-        PROPERTY_USER_LASTNAME,
-        PROPERTY_USER_MAIL,
-        PROPERTY_USER_UILG
+        OntologyRdfs::RDFS_LABEL,
+        GenerisRdf::PROPERTY_USER_LOGIN,
+        GenerisRdf::PROPERTY_USER_FIRSTNAME,
+        GenerisRdf::PROPERTY_USER_LASTNAME,
+        GenerisRdf::PROPERTY_USER_MAIL,
+        GenerisRdf::PROPERTY_USER_UILG
     ];
 
     /**
@@ -57,13 +63,13 @@ class ColumnsProvider
      * @var array
      */
     private $deliveryProperties = [
-        RDFS_LABEL,
+        OntologyRdfs::RDFS_LABEL,
         DeliveryFieldsService::PROPERTY_CUSTOM_LABEL,
-        TAO_DELIVERY_MAXEXEC_PROP,
-        TAO_DELIVERY_START_PROP,
-        TAO_DELIVERY_END_PROP,
-        DELIVERY_DISPLAY_ORDER_PROP,
-        TAO_DELIVERY_ACCESS_SETTINGS_PROP
+        DeliveryContainerService::PROPERTY_MAX_EXEC,
+        DeliveryAssemblyService::PROPERTY_START,
+        DeliveryAssemblyService::PROPERTY_END,
+        DeliveryAssemblyService::PROPERTY_DELIVERY_DISPLAY_ORDER_PROP,
+        DeliveryContainerService::PROPERTY_ACCESS_SETTINGS
     ];
 
     /**
@@ -92,7 +98,7 @@ class ColumnsProvider
         $columns = [];
 
         // add custom properties, it contains the GROUP property as well
-        $customProps = $this->getClass(TAO_CLASS_SUBJECT)->getProperties();
+        $customProps = $this->getClass(TestTakerService::CLASS_URI_SUBJECT)->getProperties();
 
         $testTakerProps = array_merge($this->testTakerProperties, $customProps);
 
@@ -100,7 +106,7 @@ class ColumnsProvider
             $property = $this->getProperty($property);
             $col = new ContextTypePropertyColumn(ContextTypePropertyColumn::CONTEXT_TYPE_TEST_TAKER, $property);
 
-            if ($property->getUri() == RDFS_LABEL) {
+            if ($property->getUri() == OntologyRdfs::RDFS_LABEL) {
                 $col->label = __('Test Taker');
             }
 
@@ -115,13 +121,14 @@ class ColumnsProvider
      *
      * @throws \RuntimeException
      * @return array
+     * @throws \core_kernel_persistence_Exception
      */
     public function getDeliveryColumns()
     {
         $columns = [];
 
         // add custom properties, it contains the group property as well
-        $customProps = $this->getClass($this->delivery->getOnePropertyValue($this->getProperty(RDF_TYPE)))->getProperties();
+        $customProps = $this->getClass($this->delivery->getOnePropertyValue($this->getProperty(OntologyRdf::RDF_TYPE)))->getProperties();
 
         $deliveryProps = array_merge($this->deliveryProperties, $customProps);
 
@@ -129,7 +136,7 @@ class ColumnsProvider
             $property = $this->getProperty($property);
             $loginCol = new ContextTypePropertyColumn(ContextTypePropertyColumn::CONTEXT_TYPE_DELIVERY, $property);
 
-            if ($property->getUri() == RDFS_LABEL) {
+            if ($property->getUri() == OntologyRdfs::RDFS_LABEL) {
                 $loginCol->label = __('Delivery');
             }
 
@@ -163,6 +170,7 @@ class ColumnsProvider
 
     /**
      * @return array
+     * @throws \core_kernel_persistence_Exception
      */
     public function getAll()
     {

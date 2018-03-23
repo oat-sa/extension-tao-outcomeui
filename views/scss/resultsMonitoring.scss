@@ -1,0 +1,24 @@
+@import "inc/bootstrap";
+
+.results-list-container {
+
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+
+    .datatable-wrapper {
+        display: table-cell;
+    }
+
+    table.datatable {
+        .delivery {
+            max-width: 25%;
+
+        }
+        .actions {
+            white-space: nowrap;
+        }
+    }
+}
+
+
