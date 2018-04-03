@@ -1041,8 +1041,15 @@ class ResultsService extends tao_models_classes_ClassService
         //retrieving The list of the variables identifiers per activities defintions as observed
         $variableTypes = array();
         foreach ($selectedVariables as $variable) {
-            if((!is_null($variable[0]->item) ||  !is_null($variable[0]->test))&& (get_class($variable[0]->variable) == 'taoResultServer_models_classes_OutcomeVariable' && $variableClassUri == CLASS_OUTCOME_VARIABLE)
-                || (get_class($variable[0]->variable) == 'taoResultServer_models_classes_ResponseVariable' && $variableClassUri == CLASS_RESPONSE_VARIABLE)){
+            if(
+                (!is_null($variable[0]->item) ||  !is_null($variable[0]->test))
+                && (
+                    get_class($variable[0]->variable) == \taoResultServer_models_classes_OutcomeVariable::class
+                    && $variableClassUri == \taoResultServer_models_classes_OutcomeVariable::class
+                ) || (
+                    get_class($variable[0]->variable) == \taoResultServer_models_classes_ResponseVariable::class
+                    && $variableClassUri == \taoResultServer_models_classes_ResponseVariable::class
+                )) {
                 //variableIdentifier
                 $variableIdentifier = $variable[0]->variable->identifier;
                 $uri = (!is_null($variable[0]->item))? $variable[0]->item : $variable[0]->test;
