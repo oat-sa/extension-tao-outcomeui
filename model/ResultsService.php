@@ -436,9 +436,6 @@ class ResultsService extends tao_models_classes_ClassService
                 } catch (common_Exception $e) { //a resource but unknown
                     $itemModel = $undefinedStr;
                 }
-            } else {
-                $itemLabel = $undefinedStr;
-                $itemModel = $undefinedStr;
             }
         }
 
