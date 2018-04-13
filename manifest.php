@@ -41,7 +41,7 @@ return [
         'taoResultServer' => '>=5.1.0',
         'taoItems'        => '>=5.2.0',
         'taoDeliveryRdf'  => '>=3.24.0',
-        'tao'             => '>=15.16.0',
+        'tao'             => '>=18.1.0',
         'taoTaskQueue'    => '>=0.11.0'
     ],
     'install'        => [
