@@ -82,6 +82,13 @@ define([
         });
     }
 
+    function checkValidItem() {
+        if (!this.start_time) {
+            return true
+        }
+        return false;
+    }
+
     function removeResult(rowId) {
         var res = parseRowId(rowId);
         // prompt a confirmation dialog and then delete the result
@@ -161,21 +168,24 @@ define([
                             id: 'view',
                             label: __('View'),
                             icon: 'view',
-                            action: viewResult
+                            action: viewResult,
+                            disabled: checkValidItem
                         },
                         'remove' : {
                             id : 'remove',
                             title : __('Delete result'),
                             icon : 'bin',
                             label : __('Delete'),
-                            action: removeResult
+                            action: removeResult,
+                            disabled: checkValidItem
                         },
                         'download' :{
                             id : 'download',
                             title : __('Download result'),
                             icon : 'download',
                             label : __('Download'),
-                            action: downloadResult
+                            action: downloadResult,
+                            disabled: checkValidItem
                         }
                     }
                 });
