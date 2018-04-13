@@ -18,6 +18,7 @@
  */
 namespace oat\taoOutcomeUi\model\search;
 
+use oat\tao\helpers\UserHelper;
 use oat\tao\model\search\index\IndexDocument;
 use oat\tao\model\search\index\IndexService;
 use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
@@ -216,11 +217,16 @@ class ResultIndexIterator implements \Iterator
         $customFieldService = $this->getServiceLocator()->get(ResultCustomFieldsService::SERVICE_ID);
         $customBody = $customFieldService->getCustomFields($execution);
 
+        $user = UserHelper::getUser($execution->getUserIdentifier());
+        $userName = UserHelper::getUserName($user, true);
+
         $body = [
             'label' => $execution->getLabel(),
             ResultsWatcher::INDEX_DELIVERY => $execution->getDelivery()->getUri(),
             'type' => ResultService::DELIVERY_RESULT_CLASS_URI,
-            ResultsWatcher::INDEX_TEST_TAKER => $execution->getUserIdentifier()
+            ResultsWatcher::INDEX_TEST_TAKER => $user->getIdentifier(),
+            ResultsWatcher::INDEX_TEST_TAKER_NAME => $userName,
+            ResultsWatcher::INDEX_DELIVERY_EXECUTION => $execution->getIdentifier(),
         ];
 
         $body = array_merge($body, $customBody);
