@@ -365,11 +365,6 @@ class Results extends \tao_actions_CommonModule
                 return $buffer;
             });
         }
-//        catch (\common_exception_NotFound $e) {
-//            $this->setData('type', 'error');
-//            $this->setData('error', _('Can\'t find execution for this result'));
-//            $this->setView('index.tpl');
-//        }
         catch (\common_exception_Error $e) {
             $this->setData('type', 'error');
             $this->setData('error', $e->getMessage());
