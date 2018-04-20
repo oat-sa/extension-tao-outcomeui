@@ -21,6 +21,7 @@ namespace oat\taoOutcomeUi\model\search;
 
 use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\service\ConfigurableService;
+use oat\tao\helpers\UserHelper;
 use oat\tao\model\search\Search;
 use oat\tao\model\search\tasks\AddSearchIndexFromArray;
 use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
@@ -38,6 +39,9 @@ class ResultsWatcher extends ConfigurableService
     const SERVICE_ID = 'taoOutcomeUi/ResultsWatcher';
     const INDEX_DELIVERY = 'delivery';
     const INDEX_TEST_TAKER = 'test_taker';
+    const INDEX_TEST_TAKER_NAME = 'test_taker_name';
+    const INDEX_DELIVERY_EXECUTION = 'delivery_execution';
+
     /**
      * @param DeliveryExecutionCreated $event
      * @return \common_report_Report
@@ -51,13 +55,17 @@ class ResultsWatcher extends ConfigurableService
         $report = \common_report_Report::createSuccess();
         $searchService = $this->getServiceLocator()->get(Search::SERVICE_ID);
         if ($searchService->supportCustomIndex()) {
+            $id = $deliveryExecution->getIdentifier();
+            $user = UserHelper::getUser($deliveryExecution->getUserIdentifier());
+            $userName = UserHelper::getUserName($user, true);
             $body = [
                 'label' => $deliveryExecution->getLabel(),
                 self::INDEX_DELIVERY => $deliveryExecution->getDelivery()->getUri(),
                 'type' => ResultService::DELIVERY_RESULT_CLASS_URI,
-                self::INDEX_TEST_TAKER => $deliveryExecution->getUserIdentifier()
+                self::INDEX_TEST_TAKER => $user->getIdentifier(),
+                self::INDEX_TEST_TAKER_NAME => $userName,
+                self::INDEX_DELIVERY_EXECUTION => $id,
             ];
-            $id = $deliveryExecution->getIdentifier();
             $queueDispatcher = $this->getServiceLocator()->get(QueueDispatcher::SERVICE_ID);
             $queueDispatcher->setOwner('Index');
             $queueDispatcher->createTask(new AddSearchIndexFromArray(), [$id, $body], __('Adding/Updating search index for %s', $deliveryExecution->getLabel()));

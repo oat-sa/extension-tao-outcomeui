@@ -414,11 +414,11 @@ class ResultsService extends tao_models_classes_ClassService
             $relatedItem = null;
         }
 
-        if ($relatedItem instanceof \core_kernel_classes_Literal) {
-            $itemIdentifier = $relatedItem->__toString();
-            $itemLabel = $relatedItem->__toString();
-            $itemModel = $undefinedStr;
-        } elseif ($relatedItem instanceof core_kernel_classes_Resource) {
+        $itemIdentifier = $undefinedStr;
+        $itemLabel = $undefinedStr;
+        $itemModel = $undefinedStr;
+
+        if ($relatedItem instanceof core_kernel_classes_Resource) {
             $itemIdentifier = $relatedItem->getUri();
 
             // check item info in internal cache
@@ -427,19 +427,16 @@ class ResultsService extends tao_models_classes_ClassService
                 return $this->itemInfoCache[$itemIdentifier];
             }
 
-            $itemLabel = $relatedItem->getLabel();
-
-            try {
-                common_Logger::d("Retrieving related Item model for item " . $relatedItem->getUri() . "");
-                $itemModel = $relatedItem->getUniquePropertyValue(new core_kernel_classes_Property(taoItems_models_classes_ItemsService::PROPERTY_ITEM_MODEL));
-                $itemModel = $itemModel->getLabel();
-            } catch (common_Exception $e) { //a resource but unknown
-                $itemModel = $undefinedStr;
+            if ($relatedItem->exists()) {
+                $itemLabel = $relatedItem->getLabel();
+                try {
+                    common_Logger::d("Retrieving related Item model for item " . $relatedItem->getUri() . "");
+                    $itemModel = $relatedItem->getUniquePropertyValue(new core_kernel_classes_Property(taoItems_models_classes_ItemsService::PROPERTY_ITEM_MODEL));
+                    $itemModel = $itemModel->getLabel();
+                } catch (common_Exception $e) { //a resource but unknown
+                    $itemModel = $undefinedStr;
+                }
             }
-        } else {
-            $itemIdentifier = $undefinedStr;
-            $itemLabel = $undefinedStr;
-            $itemModel = $undefinedStr;
         }
 
         $item['itemModel'] = $itemModel;

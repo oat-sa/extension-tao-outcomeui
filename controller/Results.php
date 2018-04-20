@@ -364,7 +364,8 @@ class Results extends \tao_actions_CommonModule
 
                 return $buffer;
             });
-        } catch (\common_exception_Error $e) {
+        }
+        catch (\common_exception_Error $e) {
             $this->setData('type', 'error');
             $this->setData('error', $e->getMessage());
             $this->setView('index.tpl');

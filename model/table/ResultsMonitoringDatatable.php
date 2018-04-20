@@ -87,7 +87,8 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
             if ($classUri) {
                 $criteria .= ' AND delivery:"'.$classUri.'"';
             }
-            $resultsArray = $searchService->query($criteria, ResultService::DELIVERY_RESULT_CLASS_URI, $start, $limit);
+
+            $resultsArray = $searchService->query($criteria, ResultService::DELIVERY_RESULT_CLASS_URI, $start, $limit, 'id', 'DESC');
             /** @var IndexDocument $index */
             foreach ($resultsArray as $index) {
 
