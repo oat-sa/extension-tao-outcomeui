@@ -66,6 +66,7 @@ define([
                     startClosed : true,
                     minWidth : 450
                 });
+                $container.modal().css({'max-height': $(window).height() - 80 + 'px', 'overflow-y': 'auto'});
                 $container
                     .modal('open')
                     .on('closed.modal', function(){
@@ -80,6 +81,13 @@ define([
                 loadingBar.stop();
             }
         });
+    }
+
+    function checkValidItem() {
+        if (!this.start_time) {
+            return true
+        }
+        return false;
     }
 
     function removeResult(rowId) {
@@ -161,21 +169,24 @@ define([
                             id: 'view',
                             label: __('View'),
                             icon: 'view',
-                            action: viewResult
+                            action: viewResult,
+                            disabled: checkValidItem
                         },
                         'remove' : {
                             id : 'remove',
                             title : __('Delete result'),
                             icon : 'bin',
                             label : __('Delete'),
-                            action: removeResult
+                            action: removeResult,
+                            disabled: checkValidItem
                         },
                         'download' :{
                             id : 'download',
                             title : __('Download result'),
                             icon : 'download',
                             label : __('Download'),
-                            action: downloadResult
+                            action: downloadResult,
+                            disabled: checkValidItem
                         }
                     }
                 });
