@@ -24,10 +24,13 @@
 
 namespace oat\taoOutcomeUi\model;
 
+use common_Utils;
 use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyRdfs;
+use oat\taoDelivery\model\AssignmentService;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
+use oat\taoItems\model\ItemCompilerIndex;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
@@ -36,7 +39,6 @@ use \common_Logger;
 use \common_exception_Error;
 use \core_kernel_classes_Class;
 use \core_kernel_classes_DbWrapper;
-use \core_kernel_classes_Property;
 use \core_kernel_classes_Resource;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoResultServer\models\classes\NoResultStorage;
@@ -47,7 +49,9 @@ use \tao_models_classes_ClassService;
 use oat\taoOutcomeUi\helper\Datatypes;
 use oat\taoDelivery\model\execution\DeliveryExecution;
 use oat\taoResultServer\models\classes\ResultServerService;
-use taoItems_models_classes_ItemsService;
+use tao_models_classes_service_StorageDirectory;
+use taoQtiTest_models_classes_QtiTestService;
+use oat\taoQtiTest\models\QtiTestCompilerIndex;
 
 class ResultsService extends tao_models_classes_ClassService
 {
@@ -310,8 +314,16 @@ class ResultsService extends tao_models_classes_ClassService
         $tmpItems = array_shift($itemVariables);
 
         //get the first object
-        if(!is_null($tmpItems[0]->item)){
-            $item = new core_kernel_classes_Resource($tmpItems[0]->item);
+        $itemUri = $tmpItems[0]->item;
+
+        $executionUri = $this->getDeliveryExecutionId($itemCallId);
+        /** @var DeliveryExecution $execution */
+        $execution = $this->getServiceManager()->get(ServiceProxy::class)->getDeliveryExecution($executionUri);
+        $delivery = $execution->getDelivery();
+        $itemIndexer = $this->getItemIndexer($delivery);
+
+        if(!is_null($itemUri)){
+            $item = array_merge($itemIndexer->getItem($itemUri, $this->getResultLanguage() ),['uriResource'=>$itemUri]);
         }
         return $item;
     }
@@ -400,7 +412,7 @@ class ResultsService extends tao_models_classes_ClassService
     /**
      * @param $itemCallId
      * @param $itemVariables
-     * @return array item information ['uri' => xxx, 'label' => yyy, 'itemModel' => zzz]
+     * @return array item information ['uri' => xxx, 'label' => yyy]
      */
     private function getItemInfos($itemCallId, $itemVariables)
     {
@@ -414,41 +426,28 @@ class ResultsService extends tao_models_classes_ClassService
             $relatedItem = null;
         }
 
-        if ($relatedItem instanceof \core_kernel_classes_Literal) {
-            $itemIdentifier = $relatedItem->__toString();
-            $itemLabel = $relatedItem->__toString();
-            $itemModel = $undefinedStr;
-        } elseif ($relatedItem instanceof core_kernel_classes_Resource) {
-            $itemIdentifier = $relatedItem->getUri();
+        if ($relatedItem) {
+            $itemIdentifier = $relatedItem['uriResource'];
 
             // check item info in internal cache
             if (isset($this->itemInfoCache[$itemIdentifier])) {
-                common_Logger::d("Item info found in internal cache for item " . $relatedItem->getUri() . "");
+                common_Logger::t("Item info found in internal cache for item " . $itemIdentifier . "");
                 return $this->itemInfoCache[$itemIdentifier];
             }
+            $itemLabel = $relatedItem['label'];
 
-            $itemLabel = $relatedItem->getLabel();
-
-            try {
-                common_Logger::d("Retrieving related Item model for item " . $relatedItem->getUri() . "");
-                $itemModel = $relatedItem->getUniquePropertyValue(new core_kernel_classes_Property(taoItems_models_classes_ItemsService::PROPERTY_ITEM_MODEL));
-                $itemModel = $itemModel->getLabel();
-            } catch (common_Exception $e) { //a resource but unknown
-                $itemModel = $undefinedStr;
-            }
         } else {
             $itemIdentifier = $undefinedStr;
             $itemLabel = $undefinedStr;
-            $itemModel = $undefinedStr;
         }
 
-        $item['itemModel'] = $itemModel;
+        $item['itemModel'] = '---';
         $item['label'] = $itemLabel;
         $item['uri'] = $itemIdentifier;
 
         // storing item info in memory to not hit the db for the same item again and again
         // when method "getStructuredVariables" are called multiple times in the same request
-        if ($relatedItem instanceof core_kernel_classes_Resource) {
+        if ($relatedItem) {
             $this->itemInfoCache[$itemIdentifier] = $item;
         }
 
@@ -465,7 +464,6 @@ class ResultsService extends tao_models_classes_ClassService
      * @return array
         [
             'epoch1' => [
-                'itemModel' => QTI,
                 'label' => Example_0_Introduction,
                 'uri' => http://tao.local/mytao.rdf#i1462952280695832,
                 'taoResultServer_models_classes_Variable class name' => [
@@ -1040,6 +1038,9 @@ class ResultsService extends tao_models_classes_ClassService
         }
         //retrieving The list of the variables identifiers per activities defintions as observed
         $variableTypes = array();
+
+        $itemIndex = $this->getItemIndexer($delivery);
+
         foreach ($selectedVariables as $variable) {
             if(
                 (!is_null($variable[0]->item) ||  !is_null($variable[0]->test))
@@ -1053,15 +1054,8 @@ class ResultsService extends tao_models_classes_ClassService
                 //variableIdentifier
                 $variableIdentifier = $variable[0]->variable->identifier;
                 $uri = (!is_null($variable[0]->item))? $variable[0]->item : $variable[0]->test;
-                $object = new core_kernel_classes_Resource($uri);
-                if (get_class($object) == "core_kernel_classes_Resource") {
-                    $contextIdentifierLabel = $object->getLabel();
-                    $contextIdentifier = $object->getUri(); // use the callId/itemResult identifier
-                }
-                else {
-                    $contextIdentifierLabel = $object->__toString();
-                    $contextIdentifier = $object->__toString();
-                }
+                $contextIdentifierLabel = $itemIndex->getItemValue($uri, $this->getResultLanguage(), 'label');
+                $contextIdentifier = $uri;
                 $variableTypes[$contextIdentifier.$variableIdentifier] = array("contextLabel" => $contextIdentifierLabel, "contextId" => $contextIdentifier, "variableIdentifier" => $variableIdentifier);
             }
         }
@@ -1116,6 +1110,67 @@ class ResultsService extends tao_models_classes_ClassService
             $returnValue = [$cellData];
         }
         return $returnValue;
+    }
+
+    /**
+     * @param $delivery
+     * @return ItemCompilerIndex
+     * @throws common_exception_Error
+     */
+    private function getItemIndexer($delivery)
+    {
+        $runtime = $this->getServiceLocator()->get(AssignmentService::SERVICE_ID)->getRuntime($delivery);
+        $inputParameters = \tao_models_classes_service_ServiceCallHelper::getInputValues($runtime, []);
+        $directoryIds = explode('|', $inputParameters['QtiTestCompilation']);
+
+        return $this->getDecompiledIndexer($directoryIds[0]);
+    }
+
+    /**
+     * @param string $directoryId
+     * @return QtiTestCompilerIndex
+     */
+    private function getDecompiledIndexer($directoryId)
+    {
+        $fileStorage = \tao_models_classes_service_FileStorage::singleton();
+        /** @var tao_models_classes_service_StorageDirectory $private */
+        $private = $fileStorage->getDirectoryById($directoryId);
+
+        $itemIndex = new QtiTestCompilerIndex();
+
+        try {
+            $data = $private->read(taoQtiTest_models_classes_QtiTestService::TEST_COMPILED_INDEX);
+            if ($data) {
+                $itemIndex->unserialize($data);
+            }
+        } catch (\Exception $e) {
+            \common_Logger::d('Ignoring file not found exception for Items Index');
+        }
+        return $itemIndex;
+    }
+
+    /**
+     * Calculates execution id by itemcallid
+     * @param $itemCallId
+     * @param string $delimiter
+     * @return string
+     */
+    private function getDeliveryExecutionId($itemCallId, $delimiter = '.')
+    {
+        $raw = explode($delimiter, $itemCallId);
+        if (count($raw) < 3 && common_Utils::isUri($itemCallId)) {
+            return $itemCallId;
+        }
+        return implode($delimiter, array_slice($raw, 0, count($raw) - 2));
+    }
+
+    /**
+     * Should be changed if real result language would matter
+     * @return string
+     */
+    private function getResultLanguage()
+    {
+        return DEFAULT_LANG;
     }
 
 }

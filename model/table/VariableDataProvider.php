@@ -17,12 +17,10 @@ namespace oat\taoOutcomeUi\model\table;
 
 use \common_Logger;
 use \common_cache_FileCache;
-use \core_kernel_classes_Class;
 use \core_kernel_classes_Resource;
 use oat\taoOutcomeUi\helper\Datatypes;
 use qtism\common\datatypes\QtiDuration;
 use \tao_helpers_Date;
-use \tao_helpers_Uri;
 use \tao_models_classes_table_Column;
 use \tao_models_classes_table_DataProvider;
 use oat\taoOutcomeUi\model\ResultsService;
@@ -54,8 +52,6 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
      */
     public static $singleton = null;
     
-    // --- OPERATIONS ---
-    
     /**
      * Short description of method prepare
      *
@@ -64,11 +60,12 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
      * @param array resources results
      * @param array columns variables
      * @return mixed
+     * @throws \common_Exception
      */
     public function prepare($resources, $columns)
     {
         $resultsService = ResultsService::singleton();
-        
+        $undefinedStr = __('unknown'); //some data may have not been submitted
         /**
          * @var DeliveryExecution $result
          */
@@ -78,23 +75,25 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
             foreach ($itemresults as $itemResultUri => $vars) {
                 // cache the item information pertaining to a given itemResult (stable over time)
                 if (common_cache_FileCache::singleton()->has('itemResultItemCache' . $itemResultUri)) {
-                    $itemUri = common_cache_FileCache::singleton()->get('itemResultItemCache' . $itemResultUri);
-                    $object = new core_kernel_classes_Resource($itemUri);
+                    $object = json_decode(common_cache_FileCache::singleton()->get('itemResultItemCache' . $itemResultUri), true);
                 } else {
                     $object = $resultsService->getItemFromItemResult($itemResultUri);
                     if (is_null($object)) {
                         $object = $resultsService->getVariableFromTest($itemResultUri);
                     }
                     if (! is_null($object)) {
-                        common_cache_FileCache::singleton()->put($object->getUri(), 'itemResultItemCache' . $itemResultUri);
+                        common_cache_FileCache::singleton()->put(json_encode($object), 'itemResultItemCache' . $itemResultUri);
                     }
                 }
-                if (get_class($object) == "core_kernel_classes_Resource") {
-                    $contextIdentifier = (string) $object->getUri();
-                } else 
-                    if (! is_null($object)) {
-                        $contextIdentifier = (string) $object->__toString();
+                if ($object) {
+                    if ($object instanceof core_kernel_classes_Resource) {
+                        $contextIdentifier = $object->getUri();
+                    } else {
+                        $contextIdentifier = $object['uriResource'];
                     }
+                } else {
+                    $contextIdentifier = $undefinedStr;
+                }
                 foreach ($vars as $var) {
                     $var = $var[0];
                     // cache the variable data
