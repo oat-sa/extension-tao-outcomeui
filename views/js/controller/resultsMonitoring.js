@@ -66,7 +66,7 @@ define([
                     startClosed : true,
                     minWidth : 450
                 });
-                $container.modal().css({'max-height': $(window).height() - 80 + 'px', 'overflow-y': 'auto'});
+                $container.modal().css({'max-height': $(window).height() - 80 + 'px', 'overflow': 'auto'});
                 $container
                     .modal('open')
                     .on('closed.modal', function(){
