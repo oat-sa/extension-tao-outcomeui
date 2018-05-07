@@ -424,6 +424,9 @@ class ResultsService extends tao_models_classes_ClassService
             $relatedItem = null;
         }
 
+        $itemIdentifier = $undefinedStr;
+        $itemLabel = $undefinedStr;
+
         if ($relatedItem) {
             $itemIdentifier = $relatedItem['uriResource'];
 
@@ -433,10 +436,6 @@ class ResultsService extends tao_models_classes_ClassService
                 return $this->itemInfoCache[$itemIdentifier];
             }
             $itemLabel = $relatedItem['label'];
-
-        } else {
-            $itemIdentifier = $undefinedStr;
-            $itemLabel = $undefinedStr;
         }
 
         $item['itemModel'] = '---';
