@@ -316,10 +316,8 @@ class ResultsService extends tao_models_classes_ClassService
         //get the first object
         $itemUri = $tmpItems[0]->item;
 
-        $executionUri = $this->getDeliveryExecutionId($itemCallId);
-        /** @var DeliveryExecution $execution */
-        $execution = $this->getServiceManager()->get(ServiceProxy::class)->getDeliveryExecution($executionUri);
-        $delivery = $execution->getDelivery();
+        $delivery = $this->getDeliveryByCallId($itemCallId);
+
         $itemIndexer = $this->getItemIndexer($delivery);
 
         if(!is_null($itemUri)){
@@ -1171,6 +1169,28 @@ class ResultsService extends tao_models_classes_ClassService
     private function getResultLanguage()
     {
         return DEFAULT_LANG;
+    }
+
+    /**
+     * @param $itemCallId
+     * @return core_kernel_classes_Resource
+     * @throws \common_exception_NotFound
+     */
+    private function getDeliveryByCallId($itemCallId)
+    {
+        $cache = $this->getCache();
+        $ddCachePrefix = 'results_de_cache';
+        $executionUri = $this->getDeliveryExecutionId($itemCallId);
+        if (!$cache || !$delivery = $cache->get($ddCachePrefix . $executionUri)) {
+            /** @var DeliveryExecution $execution */
+            $execution = $this->getServiceManager()->get(ServiceProxy::class)->getDeliveryExecution($executionUri);
+            $delivery = $execution->getDelivery();
+            if ($cache) {
+                $cache->set($ddCachePrefix . $itemCallId, $delivery);
+            }
+        }
+
+        return $delivery;
     }
 
 }
