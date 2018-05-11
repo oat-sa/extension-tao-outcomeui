@@ -90,32 +90,6 @@ define([
         return false;
     }
 
-    function removeResult(rowId) {
-        var res = parseRowId(rowId);
-        // prompt a confirmation dialog and then delete the result
-        dialogConfirm(__('Please confirm deletion'), function () {
-            $.ajax({
-                url: url.route('delete', 'Results', 'taoOutcomeUi'),
-                type: "POST",
-                data: {
-                    uri: uri.encode(res[0])
-                },
-                dataType: 'json'
-            }).done(function (response) {
-                if (response.deleted) {
-                    feedback().success(__('Result has been deleted'));
-                    $resultsListContainer.datatable('refresh');
-                } else {
-                    feedback().error(__('Something went wrong...') + '<br>' + encode.html(response.error), {encodeHtml: false});
-                    $resultsListContainer.trigger('error', response.error);
-                }
-            }).fail(function (err) {
-                feedback().error(__('Something went wrong...'));
-                $resultsListContainer.trigger('error', err);
-            });
-        });
-    }
-
     function downloadResult(rowId) {
         var res = parseRowId(rowId);
         $.fileDownload(url.route('downloadXML', 'Results', 'taoOutcomeUi'), {
@@ -170,14 +144,6 @@ define([
                             label: __('View'),
                             icon: 'view',
                             action: viewResult,
-                            disabled: checkValidItem
-                        },
-                        'remove' : {
-                            id : 'remove',
-                            title : __('Delete result'),
-                            icon : 'bin',
-                            label : __('Delete'),
-                            action: removeResult,
                             disabled: checkValidItem
                         },
                         'download' :{
