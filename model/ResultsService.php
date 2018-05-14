@@ -300,7 +300,9 @@ class ResultsService extends tao_models_classes_ClassService
      *
      * @param string $itemCallId
      * @param array $itemVariables already retrieved variables
-     * @return \core_kernel_classes_Resource
+     * @return array|null
+     * @throws \common_exception_NotFound
+     * @throws common_exception_Error
      */
     public function getItemFromItemResult($itemCallId, $itemVariables = array())
     {
