@@ -316,7 +316,7 @@ class ResultsService extends tao_models_classes_ClassService
         //get the first object
         $itemUri = $tmpItems[0]->item;
 
-        $delivery = $this->getDeliveryByCallId($itemCallId);
+        $delivery = $this->getDeliveryByResultId($tmpItems[0]->deliveryResultIdentifier);
 
         $itemIndexer = $this->getItemIndexer($delivery);
 
@@ -1147,21 +1147,6 @@ class ResultsService extends tao_models_classes_ClassService
     }
 
     /**
-     * Calculates execution id by itemcallid
-     * @param $itemCallId
-     * @param string $delimiter
-     * @return string
-     */
-    private function getDeliveryExecutionId($itemCallId, $delimiter = '.')
-    {
-        $raw = explode($delimiter, $itemCallId);
-        if (count($raw) < 3 && common_Utils::isUri($itemCallId)) {
-            return $itemCallId;
-        }
-        return implode($delimiter, array_slice($raw, 0, count($raw) - 2));
-    }
-
-    /**
      * Should be changed if real result language would matter
      * @return string
      */
@@ -1175,17 +1160,16 @@ class ResultsService extends tao_models_classes_ClassService
      * @return core_kernel_classes_Resource
      * @throws \common_exception_NotFound
      */
-    private function getDeliveryByCallId($itemCallId)
+    private function getDeliveryByResultId($executionUri)
     {
         $cache = $this->getCache();
         $ddCachePrefix = 'results_de_cache';
-        $executionUri = $this->getDeliveryExecutionId($itemCallId);
         if (!$cache || !$delivery = $cache->get($ddCachePrefix . $executionUri)) {
             /** @var DeliveryExecution $execution */
             $execution = $this->getServiceManager()->get(ServiceProxy::class)->getDeliveryExecution($executionUri);
             $delivery = $execution->getDelivery();
             if ($cache) {
-                $cache->set($ddCachePrefix . $itemCallId, $delivery);
+                $cache->set($ddCachePrefix . $executionUri, $delivery);
             }
         }
 
