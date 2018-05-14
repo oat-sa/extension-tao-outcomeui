@@ -80,6 +80,11 @@ class ResultsService extends tao_models_classes_ClassService
      */
     private $resultCache;
 
+    /** @var array  */
+    private $indexerCache = [];
+    /** @var array  */
+    private $executionCache = [];
+
     /**
      * @return \common_persistence_KvDriver|null
      */
@@ -1118,11 +1123,16 @@ class ResultsService extends tao_models_classes_ClassService
      */
     private function getItemIndexer($delivery)
     {
-        $runtime = $this->getServiceLocator()->get(AssignmentService::SERVICE_ID)->getRuntime($delivery);
-        $inputParameters = \tao_models_classes_service_ServiceCallHelper::getInputValues($runtime, []);
-        $directoryIds = explode('|', $inputParameters['QtiTestCompilation']);
-
-        return $this->getDecompiledIndexer($directoryIds[0]);
+        $deliveryUri = $delivery->getUri();
+        if (!array_key_exists($deliveryUri, $this->indexerCache)) {
+            $runtime = $this->getServiceLocator()->get(AssignmentService::SERVICE_ID)->getRuntime($delivery);
+            $inputParameters = \tao_models_classes_service_ServiceCallHelper::getInputValues($runtime, []);
+            $directoryIds = explode('|', $inputParameters['QtiTestCompilation']);
+            $indexer = $this->getDecompiledIndexer($directoryIds[0]);
+            $this->indexerCache[$deliveryUri] = $indexer;
+        }
+        $indexer = $this->indexerCache[$deliveryUri] ;
+        return $indexer;
     }
 
     /**
@@ -1158,23 +1168,19 @@ class ResultsService extends tao_models_classes_ClassService
     }
 
     /**
-     * @param $itemCallId
+     * @param $executionUri
      * @return core_kernel_classes_Resource
      * @throws \common_exception_NotFound
      */
     private function getDeliveryByResultId($executionUri)
     {
-        $cache = $this->getCache();
-        $ddCachePrefix = 'results_de_cache';
-        if (!$cache || !$delivery = $cache->get($ddCachePrefix . $executionUri)) {
+        if (!array_key_exists($executionUri, $this->executionCache)) {
             /** @var DeliveryExecution $execution */
             $execution = $this->getServiceManager()->get(ServiceProxy::class)->getDeliveryExecution($executionUri);
             $delivery = $execution->getDelivery();
-            if ($cache) {
-                $cache->set($ddCachePrefix . $executionUri, $delivery);
-            }
+            $this->executionCache[$executionUri] = $delivery;
         }
-
+        $delivery = $this->executionCache[$executionUri];
         return $delivery;
     }
 
