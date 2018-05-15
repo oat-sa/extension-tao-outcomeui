@@ -465,6 +465,7 @@ class ResultsService extends tao_models_classes_ClassService
                 'itemModel' => QTI,
                 'label' => Example_0_Introduction,
                 'uri' => http://tao.local/mytao.rdf#i1462952280695832,
+     *          'internalIdentifier' => item-1,
                 'taoResultServer_models_classes_Variable class name' => [
                     'Variable identifier 1' => [
                         'uri' => 1,
@@ -575,6 +576,9 @@ class ResultsService extends tao_models_classes_ClassService
                 $item = $this->getItemInfos($currentItemCallId, array($variable));
                 $lastItemCallId = $currentItemCallId;
             }
+
+            // item identifier within the test
+            $item['internalIdentifier'] = explode('.', str_replace($resultIdentifier, '', $currentItemCallId), 3)[1];
 
             $tmpitem[$type][$variableIdentifier] = $variableDescription;
         }
