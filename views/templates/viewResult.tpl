@@ -89,7 +89,7 @@ use oat\taoOutcomeUi\model\ResultsService;
                 <thead>
                 <tr>
                     <th colspan="5" class="bold">
-                        <b><?= _dh($item['label']) ?> (<?= _dh($item['itemModel']) ?>)</b>
+                        <b><?= _dh($item['label']) ?></b>
                     </th>
                     <th>
                         <a href="#" data-uri="<?=$item['uri']?>"  data-state="<?=htmlspecialchars($item['state'])?>" class="btn-info small preview" target="preview">
