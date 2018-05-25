@@ -24,10 +24,10 @@
 
 namespace oat\taoOutcomeUi\model;
 
-use common_Utils;
 use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyRdfs;
 use oat\taoDelivery\model\AssignmentService;
+use oat\taoDeliveryRdf\model\DeliveryContainerService;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoItems\model\ItemCompilerIndex;
@@ -981,21 +981,26 @@ class ResultsService extends tao_models_classes_ClassService
                         ? $this->getTestTaker($result)
                         : $this->getDelivery($result);
 
-                    $values = $resource->getPropertyValues($column->getProperty());
+                    if ($column->getProperty()->getUri() == DeliveryContainerService::PROPERTY_ACCESS_SETTINGS) {
+                        /** @var core_kernel_classes_Resource $ttResource */
+                        $ttResource = $this->getTestTaker($result);
+                        $values[] = $ttResource->exists() ? '' : __('Anonymous');
+                    } else {
+                        $values = $resource->getPropertyValues($column->getProperty());
+                        $values = array_map(function ($value) use ($column) {
+                            if (\common_Utils::isUri($value)) {
+                                $value = (new core_kernel_classes_Resource($value))->getLabel();
+                            } else {
+                                $value = (string) $value;
+                            }
 
-                    $values = array_map(function ($value) use ($column) {
-                        if (\common_Utils::isUri($value)) {
-                            $value = (new core_kernel_classes_Resource($value))->getLabel();
-                        } else {
-                            $value = (string) $value;
-                        }
+                            if (in_array($column->getProperty()->getUri(), [DeliveryAssemblyService::PROPERTY_START, DeliveryAssemblyService::PROPERTY_END])) {
+                                $value = \tao_helpers_Date::displayeDate($value, \tao_helpers_Date::FORMAT_VERBOSE);
+                            }
 
-                        if (in_array($column->getProperty()->getUri(), [DeliveryAssemblyService::PROPERTY_START, DeliveryAssemblyService::PROPERTY_END])) {
-                            $value = \tao_helpers_Date::displayeDate($value, \tao_helpers_Date::FORMAT_VERBOSE);
-                        }
-
-                        return $value;
-                    }, $values);
+                            return $value;
+                        }, $values);
+                    }
 
                     // if it's a guest test taker (it has no property values at all), let's display the uri as label
                     if ($column->isTestTakerType() && empty($values) && $column->getProperty()->getUri() == OntologyRdfs::RDFS_LABEL) {
