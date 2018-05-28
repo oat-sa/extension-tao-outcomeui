@@ -66,10 +66,23 @@ define([
 
             $('.preview', $container).on("click", function (e) {
                 var $this = $(this);
+                var deliveryId = $this.data('deliveryId');
+                var resultId = $this.data('resultId');
+                var itemDefinition = $this.data('definition');
                 var uri = $this.data('uri');
                 var type = $this.data('type');
                 var state = $this.data('state');
                 e.preventDefault();
+
+                if (deliveryId && resultId && itemDefinition) {
+                    uri = {
+                        uri: uri,
+                        resultId: resultId,
+                        itemDefinition: itemDefinition,
+                        deliveryUri: deliveryId
+                    };
+                }
+
                 previewerFactory(type, uri, state, {
                     readOnly: true,
                     fullPage: true
