@@ -70,7 +70,10 @@ define([
                 var type = $this.data('type');
                 var state = $this.data('state');
                 e.preventDefault();
-                previewerFactory(type, uri, state);
+                previewerFactory(type, uri, state, {
+                    readOnly: true,
+                    fullPage: true
+                });
             });
 
         }
