@@ -186,7 +186,7 @@ define([
                                 url: self.config.dataUrl,
                                 model: self.config.model,
                                 actions: actions,
-                                filter: true,
+                                filter: self.config.searchable,
                                 labels: {
                                     filter: __('Search by delivery results')
                                 }

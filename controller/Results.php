@@ -22,7 +22,6 @@
 namespace oat\taoOutcomeUi\controller;
 
 use \Exception;
-use \common_exception_IsAjaxAction;
 use \core_kernel_classes_Resource;
 use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyRdfs;
@@ -35,13 +34,13 @@ use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
 use oat\taoOutcomeUi\model\event\ResultsListPluginEvent;
 use oat\taoOutcomeUi\model\export\ResultsExporter;
 use oat\taoOutcomeUi\model\plugins\ResultsPluginService;
+use oat\taoOutcomeUi\model\search\ResultsWatcher;
 use oat\taoOutcomeUi\model\table\ResultsMonitoringDatatable;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 use oat\taoResultServer\models\classes\NoResultStorage;
 use oat\taoResultServer\models\classes\NoResultStorageException;
 use oat\taoResultServer\models\classes\QtiResultsService;
 use oat\taoTaskQueue\model\TaskLogActionTrait;
-use \tao_actions_RdfController;
 use \tao_helpers_Request;
 use \tao_helpers_Uri;
 use oat\taoOutcomeUi\model\ResultsService;
@@ -49,7 +48,6 @@ use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\tao\helpers\UserHelper;
 use oat\tao\model\datatable\implementation\DatatableRequest;
-use oat\taoResultServer\models\classes\ResultService;
 
 /**
  * Results Controller provide actions performed from url resolution
@@ -133,7 +131,8 @@ class Results extends \tao_actions_CommonModule
                 $this->setData('title', $delivery->getLabel());
                 $this->setData('config', [
                     'dataModel' => $model,
-                    'plugins' => $this->getResultsListPlugin()
+                    'plugins' => $this->getResultsListPlugin(),
+                    'searchable' => $this->getServiceLocator()->get(ResultsWatcher::SERVICE_ID)->isResultSearchEnabled(),
                 ]);
 
                 if ($this->hasRequestParameter('export-callback-url')) {
