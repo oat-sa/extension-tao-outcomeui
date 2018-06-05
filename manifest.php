@@ -21,8 +21,10 @@
  *
  */
 
+use oat\taoOutcomeUi\scripts\install\RegisterEvent;
 use oat\taoOutcomeUi\scripts\install\RegisterTestPluginService;
 use oat\taoOutcomeUi\scripts\install\SetUpQueueTasks;
+use oat\taoOutcomeUi\scripts\install\SetupSearchService;
 
 $extpath = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 
@@ -31,20 +33,23 @@ return [
     'label'          => 'Result visualisation',
     'description'    => 'TAO Results extension',
     'license'        => 'GPL-2.0',
-    'version'        => '5.2.2',
+    'version'        => '5.9.2',
     'author'         => 'Open Assessment Technologies, CRP Henri Tudor',
     // taoItems is only needed for the item model property retrieval
     'requires'       => [
+        'generis' => '>=5.9.0',
         'taoResultServer' => '>=5.1.0',
         'taoItems'        => '>=5.2.0',
         'taoDeliveryRdf'  => '>=3.24.0',
-        'tao'             => '>=14.11.0',
+        'tao'             => '>=18.1.0',
         'taoTaskQueue'    => '>=0.11.0'
     ],
     'install'        => [
         'php' => [
             RegisterTestPluginService::class,
-            SetUpQueueTasks::class
+            SetUpQueueTasks::class,
+            SetupSearchService::class,
+            RegisterEvent::class
         ]
     ],
     'uninstall'      => [],

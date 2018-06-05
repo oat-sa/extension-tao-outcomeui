@@ -22,30 +22,32 @@
 namespace oat\taoOutcomeUi\controller;
 
 use \Exception;
-use \common_exception_IsAjaxAction;
 use \core_kernel_classes_Resource;
 use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyRdfs;
 use oat\oatbox\event\EventManager;
 use oat\tao\model\accessControl\AclProxy;
 use oat\tao\model\plugins\PluginModule;
+use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
 use oat\taoOutcomeUi\model\event\ResultsListPluginEvent;
 use oat\taoOutcomeUi\model\export\ResultsExporter;
 use oat\taoOutcomeUi\model\plugins\ResultsPluginService;
+use oat\taoOutcomeUi\model\search\ResultsWatcher;
+use oat\taoOutcomeUi\model\table\ResultsMonitoringDatatable;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 use oat\taoResultServer\models\classes\NoResultStorage;
 use oat\taoResultServer\models\classes\NoResultStorageException;
 use oat\taoResultServer\models\classes\QtiResultsService;
 use oat\taoTaskQueue\model\TaskLogActionTrait;
-use \tao_actions_SaSModule;
 use \tao_helpers_Request;
 use \tao_helpers_Uri;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\tao\helpers\UserHelper;
+use oat\tao\model\datatable\implementation\DatatableRequest;
 
 /**
  * Results Controller provide actions performed from url resolution
@@ -56,7 +58,7 @@ use oat\tao\helpers\UserHelper;
  * @package taoOutcomeUi
  * @license GPLv2  http://www.opensource.org/licenses/gpl-2.0.php
  */
-class Results extends tao_actions_SaSModule
+class Results extends \tao_actions_CommonModule
 {
     use TaskLogActionTrait;
 
@@ -73,7 +75,6 @@ class Results extends tao_actions_SaSModule
     {
         parent::__construct();
 
-        $this->service = $this->getServiceManager()->get(ResultServiceWrapper::SERVICE_ID)->getService();
         $this->deliveryService = DeliveryAssemblyService::singleton();
         $this->defaultData();
     }
@@ -81,18 +82,17 @@ class Results extends tao_actions_SaSModule
     /**
      * @return ResultsService
      */
-    protected function getClassService()
+    protected function getResultsService()
     {
-        return $this->service;
+        return $this->getServiceManager()->get(ResultServiceWrapper::SERVICE_ID)->getService();
     }
 
     /**
-     * Ontology data for deliveries (not results, so use deliveryService->getRootClass)
-     * @throws common_exception_IsAjaxAction
+     * @return object|ServiceProxy
      */
-    public function getOntologyData()
+    protected function getServiceProxy()
     {
-        return parent::getOntologyData();
+        return $this->getServiceLocator()->get(ServiceProxy::SERVICE_ID);
     }
 
     /**
@@ -131,7 +131,8 @@ class Results extends tao_actions_SaSModule
                 $this->setData('title', $delivery->getLabel());
                 $this->setData('config', [
                     'dataModel' => $model,
-                    'plugins' => $this->getResultsListPlugin()
+                    'plugins' => $this->getResultsListPlugin(),
+                    'searchable' => $this->getServiceLocator()->get(ResultsWatcher::SERVICE_ID)->isResultSearchEnabled(),
                 ]);
 
                 if ($this->hasRequestParameter('export-callback-url')) {
@@ -162,6 +163,7 @@ class Results extends tao_actions_SaSModule
         $limit = $this->getRequestParameter('rows');
         $order = $this->getRequestParameter('sortby');
         $sort = $this->getRequestParameter('sortorder');
+        $query = $this->getRequestParameter('filterquery');
         $start = $limit * $page - $limit;
 
         $gau = array(
@@ -172,22 +174,29 @@ class Results extends tao_actions_SaSModule
             'recursive' => true
         );
 
-        $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
-
         try {
-            $this->getResultStorage($delivery);
-
             $data = array();
             $readOnly = array();
             $user = \common_session_SessionManager::getSession()->getUser();
             $rights = array(
                 'view' => !AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'viewResult', array()),
                 'delete' => !AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'delete', array()));
-            $results = $this->getClassService()->getImplementation()->getResultByDelivery(array($delivery->getUri()), $gau);
-            $count = $this->getClassService()->getImplementation()->countResultByDelivery(array($delivery->getUri()));
+            if ($query) {
+                $resultsData = new ResultsMonitoringDatatable(DatatableRequest::fromGlobals());
+                $resultsData->setServiceLocator($this->getServiceLocator());
+                $payload = $resultsData->getPayload();
+                $results = $payload['data'];
+                $count = $payload['records'];
+            } else {
+                $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
+                $this->getResultStorage($delivery);
+                $results = $this->getResultsService()->getImplementation()->getResultByDelivery(array($delivery->getUri()), $gau);
+                $count = $this->getResultsService()->getImplementation()->countResultByDelivery(array($delivery->getUri()));
+            }
+
             foreach ($results as $res) {
 
-                $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($res['deliveryResultIdentifier']);
+                $deliveryExecution = $this->getServiceProxy()->getDeliveryExecution($res['deliveryResultIdentifier']);
 
                 try {
                     $startTime = \tao_helpers_Date::displayeDate($deliveryExecution->getStartTime());
@@ -236,17 +245,29 @@ class Results extends tao_actions_SaSModule
             throw new Exception("wrong request mode");
         }
         $deliveryExecutionUri = tao_helpers_Uri::decode($this->getRequestParameter('uri'));
-        $de = ServiceProxy::singleton()->getDeliveryExecution($deliveryExecutionUri);
+        $de = $this->getServiceProxy()->getDeliveryExecution($deliveryExecutionUri);
 
         try {
             $this->getResultStorage($de->getDelivery());
 
-            $deleted = $this->getClassService()->deleteResult($deliveryExecutionUri);
+            $deleted = $this->getResultsService()->deleteResult($deliveryExecutionUri);
 
             $this->returnJson(array('deleted' => $deleted));
         } catch (\common_exception_Error $e) {
             $this->returnJson(array('error' => $e->getMessage()));
         }
+    }
+
+    /**
+     * Is the given delivery execution aka. result cacheable?
+     *
+     * @param string $resultIdentifier
+     * @return bool
+     * @throws \common_exception_NotFound
+     */
+    private function isCacheable($resultIdentifier)
+    {
+        return $this->getServiceProxy()->getDeliveryExecution($resultIdentifier)->getState()->getUri() == DeliveryExecutionInterface::STATE_FINISHIED;
     }
 
     /**
@@ -260,7 +281,7 @@ class Results extends tao_actions_SaSModule
         try {
             $this->getResultStorage($delivery);
 
-            $testTaker = $this->getClassService()->getTestTakerData($resultId);
+            $testTaker = $this->getResultsService()->getTestTakerData($resultId);
 
             if (
                 (is_object($testTaker) and (get_class($testTaker) == 'core_kernel_classes_Literal'))
@@ -296,24 +317,54 @@ class Results extends tao_actions_SaSModule
             }
             $filterSubmission = ($this->hasRequestParameter("filterSubmission")) ? $this->getRequestParameter("filterSubmission") : ResultsService::VARIABLES_FILTER_LAST_SUBMITTED;
             $filterTypes = ($this->hasRequestParameter("filterTypes")) ? $this->getRequestParameter("filterTypes") : array(\taoResultServer_models_classes_ResponseVariable::class, \taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class);
+
+            // check the result page cache; if we have hit than return the gzencoded string and let the client to encode the data
+            $cacheKey = $this->getResultsService()->getCacheKey($resultId, md5($filterSubmission . implode(',', $filterTypes)));
+            if ($this->isCacheable($resultId)
+                && $this->getResultsService()->getCache()
+                && $this->getResultsService()->getCache()->exists($cacheKey)
+            ) {
+                \common_Logger::d('Result page cache hit for "'. $cacheKey .'"');
+
+                $gzipOutput = $this->getResultsService()->getCache()->get($cacheKey);
+
+                header('Content-Encoding: gzip');
+                header('Content-Length: '. strlen($gzipOutput));
+
+                echo $gzipOutput;
+                exit;
+            }
+
             $variables = $this->getResultVariables($resultId, $filterSubmission, $filterTypes);
             $this->setData('variables', $variables);
 
-            $stats = $this->getClassService()->calculateResponseStatistics($variables);
+            $stats = $this->getResultsService()->calculateResponseStatistics($variables);
             $this->setData('nbResponses', $stats["nbResponses"]);
             $this->setData('nbCorrectResponses', $stats["nbCorrectResponses"]);
             $this->setData('nbIncorrectResponses', $stats["nbIncorrectResponses"]);
             $this->setData('nbUnscoredResponses', $stats["nbUnscoredResponses"]);
 
             //retireve variables not related to item executions
-            $deliveryVariables = $this->getClassService()->getVariableDataFromDeliveryResult($resultId, $filterTypes);
+            $deliveryVariables = $this->getResultsService()->getVariableDataFromDeliveryResult($resultId, $filterTypes);
             $this->setData('deliveryVariables', $deliveryVariables);
             $this->setData('id', $this->getRawParameter("id"));
             $this->setData('classUri', $this->getRequestParameter("classUri"));
             $this->setData('filterSubmission', $filterSubmission);
             $this->setData('filterTypes', $filterTypes);
             $this->setView('viewResult.tpl');
-        } catch (\common_exception_Error $e) {
+
+            // quick hack to gain performance: caching the entire result page if it is cacheable
+            // "gzencode" is used to reduce the size of the string to be cached
+            ob_start(function($buffer) use($resultId, $cacheKey) {
+                if ($this->isCacheable($resultId)
+                    && $this->getResultsService()->setCacheValue($resultId, $cacheKey, gzencode($buffer, 9))) {
+                    \common_Logger::d('Result page cache set for "'. $cacheKey .'"');
+                }
+
+                return $buffer;
+            });
+        }
+        catch (\common_exception_Error $e) {
             $this->setData('type', 'error');
             $this->setData('error', $e->getMessage());
             $this->setView('index.tpl');
@@ -364,7 +415,7 @@ class Results extends tao_actions_SaSModule
         try {
             $this->getResultStorage($delivery);
 
-            $file = $this->getClassService()->getVariableFile($variableUri);
+            $file = $this->getResultsService()->getVariableFile($variableUri);
             header(
                 'Set-Cookie: fileDownload=true'
             ); //used by jquery file download to find out the download has been triggered ...
@@ -396,7 +447,11 @@ class Results extends tao_actions_SaSModule
         if ($resultStorage instanceof NoResultStorage){
            throw NoResultStorageException::create();
         }
-        $this->getClassService()->setImplementation($resultStorage);
+
+        if (!$resultStorage instanceof \taoResultServer_models_classes_ReadableResultStorage){
+           throw new \common_exception_Error('The results storage it is not readable');
+        }
+        $this->getResultsService()->setImplementation($resultStorage);
         return $resultStorage;
     }
 
@@ -410,7 +465,7 @@ class Results extends tao_actions_SaSModule
      */
     protected function getResultVariables($resultId, $filterSubmission, $filterTypes = array())
     {
-        $resultService = $this->getClassService();
+        $resultService = $this->getResultsService();
         $displayedVariables = $resultService->getStructuredVariables($resultId, $filterSubmission, $filterTypes);
         $resultVariables = $resultService->getStructuredVariables($resultId, $filterSubmission, [\taoResultServer_models_classes_ResponseVariable::class]);
         $responses = ResponseVariableFormatter::formatStructuredVariablesToItemState($resultVariables);

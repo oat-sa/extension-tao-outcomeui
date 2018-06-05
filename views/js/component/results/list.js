@@ -20,6 +20,7 @@
  */
 define([
     'jquery',
+    'i18n',
     'lodash',
     'uri',
     'core/promise',
@@ -27,7 +28,7 @@ define([
     'taoOutcomeUi/component/results/areaBroker',
     'tpl!taoOutcomeUi/component/results/list',
     'ui/datatable'
-], function ($, _, uri, Promise, component, resultsAreaBroker, listTpl) {
+], function ($, __, _, uri, Promise, component, resultsAreaBroker, listTpl) {
     'use strict';
 
     /**
@@ -184,7 +185,11 @@ define([
                             .datatable({
                                 url: self.config.dataUrl,
                                 model: self.config.model,
-                                actions: actions
+                                actions: actions,
+                                filter: self.config.searchable,
+                                labels: {
+                                    filter: __('Search by delivery results')
+                                }
                             });
                     })
                     .catch(function (err) {

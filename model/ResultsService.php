@@ -24,9 +24,13 @@
 
 namespace oat\taoOutcomeUi\model;
 
+use common_Utils;
 use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyRdfs;
+use oat\taoDelivery\model\AssignmentService;
+use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
+use oat\taoItems\model\ItemCompilerIndex;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
@@ -35,7 +39,6 @@ use \common_Logger;
 use \common_exception_Error;
 use \core_kernel_classes_Class;
 use \core_kernel_classes_DbWrapper;
-use \core_kernel_classes_Property;
 use \core_kernel_classes_Resource;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoResultServer\models\classes\NoResultStorage;
@@ -46,18 +49,132 @@ use \tao_models_classes_ClassService;
 use oat\taoOutcomeUi\helper\Datatypes;
 use oat\taoDelivery\model\execution\DeliveryExecution;
 use oat\taoResultServer\models\classes\ResultServerService;
-use taoItems_models_classes_ItemsService;
+use tao_models_classes_service_StorageDirectory;
+use taoQtiTest_models_classes_QtiTestService;
+use oat\taoQtiTest\models\QtiTestCompilerIndex;
 
 class ResultsService extends tao_models_classes_ClassService
 {
     const VARIABLES_FILTER_LAST_SUBMITTED = 'lastSubmitted';
     const VARIABLES_FILTER_FIRST_SUBMITTED = 'firstSubmitted';
 
+    const PERSISTENCE_CACHE_KEY = 'resultCache';
+
     /**
      *
      * @var \taoResultServer_models_classes_ReadableResultStorage
      */
     private $implementation = null;
+
+    /**
+     * Internal cache for item info.
+     *
+     * @var array
+     */
+    private $itemInfoCache = [];
+
+    /**
+     * External cache.
+     *
+     * @var \common_persistence_KvDriver
+     */
+    private $resultCache;
+
+    /** @var array  */
+    private $indexerCache = [];
+    /** @var array  */
+    private $executionCache = [];
+
+    /**
+     * @return \common_persistence_KvDriver|null
+     */
+    public function getCache()
+    {
+        if (is_null($this->resultCache)) {
+            /** @var \common_persistence_Manager $persistenceManager */
+            $persistenceManager = $this->getServiceLocator()->get(\common_persistence_Manager::SERVICE_ID);
+            if ($persistenceManager->hasPersistence(self::PERSISTENCE_CACHE_KEY)) {
+                $this->resultCache = $persistenceManager->getPersistenceById(self::PERSISTENCE_CACHE_KEY);
+            }
+        }
+
+        return $this->resultCache;
+    }
+
+    public function getCacheKey($resultIdentifier, $suffix = '')
+    {
+        return 'resultPageCache:'. $resultIdentifier .':'. $suffix;
+    }
+
+    protected function getContainerCacheKey($resultIdentifier)
+    {
+        return $this->getCacheKey($resultIdentifier, 'keys');
+    }
+
+    public function setCacheValue($resultIdentifier, $fullKey, $value)
+    {
+        if (is_null($this->getCache())) {
+            return false;
+        }
+
+        $fullKeys = [];
+
+        $containerKey = $this->getContainerCacheKey($resultIdentifier);
+        if ($this->getCache()->exists($containerKey)) {
+            $fullKeys = $this->getContainerCacheValue($containerKey);
+        }
+
+        $fullKeys[] = $fullKey;
+
+        if ($this->getCache()->set($fullKey, $value)) {
+            // let's save the container of the keys as well
+            return $this->setContainerCacheValue($containerKey, $fullKeys);
+        }
+
+        return false;
+    }
+
+    public function deleteCacheFor($resultIdentifier)
+    {
+        if (is_null($this->getCache())) {
+            return false;
+        }
+
+        $containerKey = $this->getContainerCacheKey($resultIdentifier);
+        if (!$this->getCache()->exists($containerKey)) {
+            return false;
+        }
+
+        $fullKeys = $this->getContainerCacheValue($containerKey);
+        $initialCount = count($fullKeys);
+
+        foreach ($fullKeys as $i => $key) {
+            if ($this->getCache()->del($key)) {
+                unset($fullKeys[$i]);
+            }
+        }
+
+        if (empty($fullKeys)) {
+            // delete the whole container
+            return $this->getCache()->del($containerKey);
+        } else if (count($fullKeys) < $initialCount) {
+            // update the container
+            return $this->setContainerCacheValue($containerKey, $fullKeys);
+        }
+
+        // no cache has been deleted
+        return false;
+    }
+
+    protected function setContainerCacheValue($containerKey, array $fullKeys)
+    {
+        return $this->getCache()->set($containerKey, gzencode(json_encode(array_unique($fullKeys)), 9));
+    }
+
+    protected function getContainerCacheValue($containerKey)
+    {
+        return json_decode(gzdecode($this->getCache()->get($containerKey)), true);
+    }
 
     /**
      * (non-PHPdoc)
@@ -127,27 +244,32 @@ class ResultsService extends tao_models_classes_ClassService
         } else {
             $returnValue = $variables;
         }
-        
+
 
         return (array) $returnValue;
     }
 
     /**
-     * @param  string $itemResult
-     * @param array $wantedTypes
+     * @param string|array $itemResult
+     * @param array        $wantedTypes
      * @return array
+     * @throws common_exception_Error
      */
-    public function getVariablesFromObjectResult($itemResult, $wantedTypes = array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class)) {
-        $returnedVariables = array();
+    public function getVariablesFromObjectResult($itemResult, $wantedTypes = [\taoResultServer_models_classes_ResponseVariable::class, \taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class])
+    {
+        $returnedVariables = [];
         $variables = $this->getImplementation()->getVariables($itemResult);
 
-        if(!empty($wantedTypes)){
-            foreach($variables as $variable){
-                if(in_array(get_class($variable[0]->variable),$wantedTypes)){
+        if (!empty($wantedTypes)) {
+            foreach ($variables as $variable) {
+                if (in_array(get_class($variable[0]->variable), $wantedTypes)) {
                     $returnedVariables[] = $variable;
                 }
             }
         }
+
+        unset($variables);
+
         return $returnedVariables;
     }
 
@@ -183,7 +305,9 @@ class ResultsService extends tao_models_classes_ClassService
      *
      * @param string $itemCallId
      * @param array $itemVariables already retrieved variables
-     * @return \core_kernel_classes_Resource
+     * @return array|null
+     * @throws \common_exception_NotFound
+     * @throws common_exception_Error
      */
     public function getItemFromItemResult($itemCallId, $itemVariables = array())
     {
@@ -197,8 +321,14 @@ class ResultsService extends tao_models_classes_ClassService
         $tmpItems = array_shift($itemVariables);
 
         //get the first object
-        if(!is_null($tmpItems[0]->item)){
-            $item = new core_kernel_classes_Resource($tmpItems[0]->item);
+        $itemUri = $tmpItems[0]->item;
+
+        $delivery = $this->getDeliveryByResultId($tmpItems[0]->deliveryResultIdentifier);
+
+        $itemIndexer = $this->getItemIndexer($delivery);
+
+        if(!is_null($itemUri)){
+            $item = array_merge($itemIndexer->getItem($itemUri, $this->getResultLanguage() ),['uriResource'=>$itemUri]);
         }
         return $item;
     }
@@ -287,9 +417,10 @@ class ResultsService extends tao_models_classes_ClassService
     /**
      * @param $itemCallId
      * @param $itemVariables
-     * @return array item information ['uri' => xxx, 'label' => yyy, 'itemModel' => zzz]
+     * @return array item information ['uri' => xxx, 'label' => yyy]
      */
-    private function getItemInfos($itemCallId, $itemVariables){
+    private function getItemInfos($itemCallId, $itemVariables)
+    {
         $undefinedStr = __('unknown'); //some data may have not been submitted
 
         try {
@@ -299,29 +430,30 @@ class ResultsService extends tao_models_classes_ClassService
             common_Logger::w("The item call '" . $itemCallId . "' is not linked to a valid item. (deleted item ?)");
             $relatedItem = null;
         }
-        if ($relatedItem instanceof \core_kernel_classes_Literal) {
-            $itemIdentifier = $relatedItem->__toString();
-            $itemLabel = $relatedItem->__toString();
-            $itemModel = $undefinedStr;
-        } elseif ($relatedItem instanceof core_kernel_classes_Resource) {
-            $itemIdentifier = $relatedItem->getUri();
-            $itemLabel = $relatedItem->getLabel();
 
-            try {
-                common_Logger::d("Retrieving related Item model for item " . $relatedItem->getUri() . "");
-                $itemModel = $relatedItem->getUniquePropertyValue(new core_kernel_classes_Property(taoItems_models_classes_ItemsService::PROPERTY_ITEM_MODEL));
-                $itemModel = $itemModel->getLabel();
-            } catch (common_Exception $e) { //a resource but unknown
-                $itemModel = $undefinedStr;
+        $itemIdentifier = $undefinedStr;
+        $itemLabel = $undefinedStr;
+
+        if ($relatedItem) {
+            $itemIdentifier = $relatedItem['uriResource'];
+
+            // check item info in internal cache
+            if (isset($this->itemInfoCache[$itemIdentifier])) {
+                common_Logger::t("Item info found in internal cache for item " . $itemIdentifier . "");
+                return $this->itemInfoCache[$itemIdentifier];
             }
-        } else {
-            $itemIdentifier = $undefinedStr;
-            $itemLabel = $undefinedStr;
-            $itemModel = $undefinedStr;
+            $itemLabel = $relatedItem['label'];
         }
-        $item['itemModel'] = $itemModel;
+
+        $item['itemModel'] = '---';
         $item['label'] = $itemLabel;
         $item['uri'] = $itemIdentifier;
+
+        // storing item info in memory to not hit the db for the same item again and again
+        // when method "getStructuredVariables" are called multiple times in the same request
+        if ($relatedItem) {
+            $this->itemInfoCache[$itemIdentifier] = $item;
+        }
 
         return $item;
     }
@@ -336,7 +468,6 @@ class ResultsService extends tao_models_classes_ClassService
      * @return array
         [
             'epoch1' => [
-                'itemModel' => QTI,
                 'label' => Example_0_Introduction,
                 'uri' => http://tao.local/mytao.rdf#i1462952280695832,
                 'taoResultServer_models_classes_Variable class name' => [
@@ -363,10 +494,15 @@ class ResultsService extends tao_models_classes_ClassService
         $tmpitem = array();
         $item = array();
 
-        foreach ($itemCallIds as $itemCallId) {
+        // splitting call ids into chunks to perform bulk queries
+        $itemCallIdChunks = array_chunk($itemCallIds, 50);
+
+        foreach ($itemCallIdChunks as $ids) {
             $firstEpoch = null;
-            $itemVariables = array_merge($itemVariables, $this->getVariablesFromObjectResult($itemCallId, $wantedTypes));
+            $itemVariables = array_merge($itemVariables, $this->getVariablesFromObjectResult($ids, $wantedTypes));
         }
+
+        unset($itemCallIds, $itemCallIdChunks);
 
         usort($itemVariables, function($a, $b){
             $variableA = $a[0]->variable;
@@ -387,7 +523,7 @@ class ResultsService extends tao_models_classes_ClassService
 
         $lastItemCallId = null;
 
-        foreach($itemVariables as $variable){
+        foreach ($itemVariables as $variable) {
             $currentItemCallId = $variable[0]->callIdItem;
 
             /** @var \taoResultServer_models_classes_Variable $variableTemp */
@@ -396,7 +532,7 @@ class ResultsService extends tao_models_classes_ClassService
             //retrieve the type of the variable
             $type = get_class($variableTemp);
 
-            if(is_null($lastItemCallId)){
+            if (is_null($lastItemCallId)) {
                 $lastItemCallId = $currentItemCallId;
                 $firstEpoch = $variableTemp->getEpoch();
                 $item = $this->getItemInfos($currentItemCallId, array($variable));
@@ -418,17 +554,16 @@ class ResultsService extends tao_models_classes_ClassService
                 $variableDescription["isCorrect"] = "unscored";
             }
 
-
-            if($currentItemCallId !== $lastItemCallId){
+            if ($currentItemCallId !== $lastItemCallId) {
                 //no yet saved
                 //already saved and filter not first
-                if(!isset($savedItems[$item['uri']]) || $filter !== self::VARIABLES_FILTER_FIRST_SUBMITTED){
+                if (!isset($savedItems[$item['uri']]) || $filter !== self::VARIABLES_FILTER_FIRST_SUBMITTED) {
                     //last submitted and already something saved
-                    if($filter === self::VARIABLES_FILTER_LAST_SUBMITTED && isset($savedItems[$item['uri']])){
+                    if ($filter === self::VARIABLES_FILTER_LAST_SUBMITTED && isset($savedItems[$item['uri']])) {
                         //$tmpitem not empty and contains at least one wanted type
-                        if(!empty($tmpitem)){
-                            foreach($wantedTypes as $type){
-                                if(isset($tmpitem[$type])){
+                        if (!empty($tmpitem)) {
+                            foreach ($wantedTypes as $type) {
+                                if (isset($tmpitem[$type])) {
                                     unset($variablesByItem[$savedItems[$item['uri']]]);
                                     $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
                                     continue;
@@ -449,13 +584,13 @@ class ResultsService extends tao_models_classes_ClassService
             $tmpitem[$type][$variableIdentifier] = $variableDescription;
         }
 
-        if(!empty($item) && (!isset($savedItems[$item['uri']]) || $filter !== self::VARIABLES_FILTER_FIRST_SUBMITTED)){
+        if (!empty($item) && (!isset($savedItems[$item['uri']]) || $filter !== self::VARIABLES_FILTER_FIRST_SUBMITTED)) {
             //last submitted and already something saved
-            if($filter === self::VARIABLES_FILTER_LAST_SUBMITTED && isset($savedItems[$item['uri']])){
+            if ($filter === self::VARIABLES_FILTER_LAST_SUBMITTED && isset($savedItems[$item['uri']])) {
                 //$tmpitem not empty and contains at least one wanted type
-                if(!empty($tmpitem)){
-                    foreach($wantedTypes as $type){
-                        if(isset($tmpitem[$type])){
+                if (!empty($tmpitem)){
+                    foreach ($wantedTypes as $type) {
+                        if (isset($tmpitem[$type])) {
                             unset($variablesByItem[$savedItems[$item['uri']]]);
                             $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
                             break;
@@ -755,6 +890,10 @@ class ResultsService extends tao_models_classes_ClassService
             throw NoResultStorageException::create();
         }
 
+        if (!$resultStorage instanceof \taoResultServer_models_classes_ReadableResultStorage){
+            throw new \common_exception_Error('The results storage it is not readable');
+        }
+
         return $resultStorage;
     }
 
@@ -903,21 +1042,24 @@ class ResultsService extends tao_models_classes_ClassService
         }
         //retrieving The list of the variables identifiers per activities defintions as observed
         $variableTypes = array();
+
+        $itemIndex = $this->getItemIndexer($delivery);
+
         foreach ($selectedVariables as $variable) {
-            if((!is_null($variable[0]->item) ||  !is_null($variable[0]->test))&& (get_class($variable[0]->variable) == 'taoResultServer_models_classes_OutcomeVariable' && $variableClassUri == CLASS_OUTCOME_VARIABLE)
-                || (get_class($variable[0]->variable) == 'taoResultServer_models_classes_ResponseVariable' && $variableClassUri == CLASS_RESPONSE_VARIABLE)){
+            if(
+                (!is_null($variable[0]->item) ||  !is_null($variable[0]->test))
+                && (
+                    get_class($variable[0]->variable) == \taoResultServer_models_classes_OutcomeVariable::class
+                    && $variableClassUri == \taoResultServer_models_classes_OutcomeVariable::class
+                ) || (
+                    get_class($variable[0]->variable) == \taoResultServer_models_classes_ResponseVariable::class
+                    && $variableClassUri == \taoResultServer_models_classes_ResponseVariable::class
+                )) {
                 //variableIdentifier
                 $variableIdentifier = $variable[0]->variable->identifier;
                 $uri = (!is_null($variable[0]->item))? $variable[0]->item : $variable[0]->test;
-                $object = new core_kernel_classes_Resource($uri);
-                if (get_class($object) == "core_kernel_classes_Resource") {
-                    $contextIdentifierLabel = $object->getLabel();
-                    $contextIdentifier = $object->getUri(); // use the callId/itemResult identifier
-                }
-                else {
-                    $contextIdentifierLabel = $object->__toString();
-                    $contextIdentifier = $object->__toString();
-                }
+                $contextIdentifierLabel = $itemIndex->getItemValue($uri, $this->getResultLanguage(), 'label');
+                $contextIdentifier = $uri;
                 $variableTypes[$contextIdentifier.$variableIdentifier] = array("contextLabel" => $contextIdentifierLabel, "contextId" => $contextIdentifier, "variableIdentifier" => $variableIdentifier);
             }
         }
@@ -972,6 +1114,74 @@ class ResultsService extends tao_models_classes_ClassService
             $returnValue = [$cellData];
         }
         return $returnValue;
+    }
+
+    /**
+     * @param $delivery
+     * @return ItemCompilerIndex
+     * @throws common_exception_Error
+     */
+    private function getItemIndexer($delivery)
+    {
+        $deliveryUri = $delivery->getUri();
+        if (!array_key_exists($deliveryUri, $this->indexerCache)) {
+            $runtime = $this->getServiceLocator()->get(AssignmentService::SERVICE_ID)->getRuntime($delivery);
+            $inputParameters = \tao_models_classes_service_ServiceCallHelper::getInputValues($runtime, []);
+            $directoryIds = explode('|', $inputParameters['QtiTestCompilation']);
+            $indexer = $this->getDecompiledIndexer($directoryIds[0]);
+            $this->indexerCache[$deliveryUri] = $indexer;
+        }
+        $indexer = $this->indexerCache[$deliveryUri] ;
+        return $indexer;
+    }
+
+    /**
+     * @param string $directoryId
+     * @return QtiTestCompilerIndex
+     */
+    private function getDecompiledIndexer($directoryId)
+    {
+        $fileStorage = \tao_models_classes_service_FileStorage::singleton();
+        /** @var tao_models_classes_service_StorageDirectory $private */
+        $private = $fileStorage->getDirectoryById($directoryId);
+
+        $itemIndex = new QtiTestCompilerIndex();
+
+        try {
+            $data = $private->read(taoQtiTest_models_classes_QtiTestService::TEST_COMPILED_INDEX);
+            if ($data) {
+                $itemIndex->unserialize($data);
+            }
+        } catch (\Exception $e) {
+            \common_Logger::d('Ignoring file not found exception for Items Index');
+        }
+        return $itemIndex;
+    }
+
+    /**
+     * Should be changed if real result language would matter
+     * @return string
+     */
+    private function getResultLanguage()
+    {
+        return DEFAULT_LANG;
+    }
+
+    /**
+     * @param $executionUri
+     * @return core_kernel_classes_Resource
+     * @throws \common_exception_NotFound
+     */
+    private function getDeliveryByResultId($executionUri)
+    {
+        if (!array_key_exists($executionUri, $this->executionCache)) {
+            /** @var DeliveryExecution $execution */
+            $execution = $this->getServiceManager()->get(ServiceProxy::class)->getDeliveryExecution($executionUri);
+            $delivery = $execution->getDelivery();
+            $this->executionCache[$executionUri] = $delivery;
+        }
+        $delivery = $this->executionCache[$executionUri];
+        return $delivery;
     }
 
 }

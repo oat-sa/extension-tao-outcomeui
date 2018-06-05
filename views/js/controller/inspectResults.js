@@ -52,6 +52,7 @@ define([
                     classUri: classUri
                 }),
                 model: config.dataModel,
+                searchable: config.searchable,
                 classUri: classUri
             };
             var taskButton;
