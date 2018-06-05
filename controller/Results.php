@@ -348,7 +348,7 @@ class Results extends \tao_actions_CommonModule
             //retireve variables not related to item executions
             $deliveryVariables = $this->getResultsService()->getVariableDataFromDeliveryResult($resultId, $filterTypes);
             $this->setData('deliveryVariables', $deliveryVariables);
-            $this->setData('itemType', 'qtiItem'); // @todo dynamically set this value
+            $this->setData('itemType', $this->getResultsService()->getDeliveryItemType($resultId));
             $this->setData('id', $this->getRawParameter("id"));
             $this->setData('classUri', $this->getRequestParameter("classUri"));
             $this->setData('filterSubmission', $filterSubmission);

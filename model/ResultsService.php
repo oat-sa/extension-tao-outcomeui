@@ -284,6 +284,17 @@ class ResultsService extends tao_models_classes_ClassService
     }
 
     /**
+     * Ges the type of items contained by the delivery
+     * @param string $resultIdentifier
+     * @return string
+     */
+    public function getDeliveryItemType($resultIdentifier)
+    {
+        $resultsViewerService = $this->getServiceLocator()->get(ResultsViewerService::SERVICE_ID);
+        return $resultsViewerService->getDeliveryItemType($resultIdentifier);
+    }
+
+    /**
      * Returns all label of itemResults related to the delvieryResults
      * @param string $resultIdentifier
      * @return array string uri
