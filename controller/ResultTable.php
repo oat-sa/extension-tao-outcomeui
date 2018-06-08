@@ -22,12 +22,12 @@
 namespace oat\taoOutcomeUi\controller;
 
 use \common_Exception;
+use oat\tao\model\taskQueue\TaskLogActionTrait;
 use oat\taoOutcomeUi\model\export\ColumnsProvider;
 use oat\generis\model\OntologyAwareTrait;
 use oat\taoOutcomeUi\model\export\ResultsExporter;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\table\ResultsPayload;
-use oat\taoTaskQueue\model\TaskLogActionTrait;
 use tao_helpers_Uri;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 

@@ -24,11 +24,11 @@ use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\filesystem\Directory;
 use oat\oatbox\filesystem\FileSystemService;
 use oat\tao\model\export\implementation\CsvExporter;
+use oat\tao\model\taskQueue\QueueDispatcherInterface;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeUi\model\table\VariableDataProvider;
-use oat\taoTaskQueue\model\QueueDispatcherInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
 /**

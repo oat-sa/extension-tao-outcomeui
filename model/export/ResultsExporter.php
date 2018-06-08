@@ -21,10 +21,10 @@
 namespace oat\taoOutcomeUi\model\export;
 
 use oat\generis\model\OntologyAwareTrait;
+use oat\tao\model\taskQueue\QueueDispatcherInterface;
+use oat\tao\model\taskQueue\Task\CallbackTaskInterface;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\scripts\task\ExportDeliveryResults;
-use oat\taoTaskQueue\model\QueueDispatcher;
-use oat\taoTaskQueue\model\Task\CallbackTaskInterface;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
@@ -105,8 +105,8 @@ class ResultsExporter implements ServiceLocatorAwareInterface
      */
     public function createExportTask()
     {
-        /** @var QueueDispatcher $queueDispatcher */
-        $queueDispatcher = $this->getServiceLocator()->get(QueueDispatcher::SERVICE_ID);
+        /** @var QueueDispatcherInterface $queueDispatcher */
+        $queueDispatcher = $this->getServiceLocator()->get(QueueDispatcherInterface::SERVICE_ID);
 
         $columns = [];
 
