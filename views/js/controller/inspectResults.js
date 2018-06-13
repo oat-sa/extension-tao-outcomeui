@@ -12,10 +12,10 @@ define([
     'layout/actions/binder',
     'layout/loading-bar',
     'ui/feedback',
-    'taoTaskQueue/model/taskQueue',
+    'core/taskQueue/taskQueue',
     'taoOutcomeUi/component/results/pluginsLoader',
     'taoOutcomeUi/component/results/list',
-    'taoTaskQueue/component/button/treeButton'
+    'ui/taskQueueButton/treeButton'
 ], function ($, _, __, module, loggerFactory, urlHelper, binder, loadingBar, feedback, taskQueue, resultsPluginsLoader, resultsListFactory, treeTaskButtonFactory) {
     'use strict';
 
