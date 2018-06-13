@@ -126,9 +126,9 @@ class Updater extends \common_ext_ExtensionUpdater
             $this->setVersion('5.5.0');
         }
 
-        $this->skip('5.5.0', '5.9.1');
+        $this->skip('5.5.0', '5.9.2');
         
-        if ($this->isVersion('5.9.1')) {
+        if ($this->isVersion('5.9.2')) {
             $service = new ResultsViewerService();
             $this->getServiceManager()->register(ResultsViewerService::SERVICE_ID , $service);
             

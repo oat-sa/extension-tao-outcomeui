@@ -17,6 +17,7 @@
  * Copyright (c) 2018 (original work) Open Assessment Technologies SA;
  *
  */
+
 namespace oat\taoOutcomeUi\model\search;
 
 use oat\generis\model\OntologyAwareTrait;
@@ -41,6 +42,7 @@ class ResultsWatcher extends ConfigurableService
     const INDEX_TEST_TAKER = 'test_taker';
     const INDEX_TEST_TAKER_NAME = 'test_taker_name';
     const INDEX_DELIVERY_EXECUTION = 'delivery_execution';
+    const OPTION_RESULT_SEARCH_FIELD_VISIBILITY = 'option_result_search_field_visibility';
 
     /**
      * @param DeliveryExecutionCreated $event
@@ -72,6 +74,15 @@ class ResultsWatcher extends ConfigurableService
         }
 
         return $report;
+    }
+
+    /**
+     * Control filtering visibility
+     * @return boolean
+     */
+    public function isResultSearchEnabled()
+    {
+        return (boolean)$this->getOption(self::OPTION_RESULT_SEARCH_FIELD_VISIBILITY);
     }
 
 }
