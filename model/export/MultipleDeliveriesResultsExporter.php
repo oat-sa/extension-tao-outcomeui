@@ -23,8 +23,8 @@ namespace oat\taoOutcomeUi\model\export;
 use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\filesystem\Directory;
 use oat\oatbox\filesystem\FileSystemService;
+use oat\tao\model\taskQueue\QueueDispatcherInterface;
 use oat\taoOutcomeUi\model\ResultsService;
-use oat\taoTaskQueue\model\QueueDispatcherInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
 /**
