@@ -67,10 +67,16 @@ define([
                     minWidth : 450
                 });
                 $container.modal().css({'max-height': $(window).height() - 80 + 'px', 'overflow': 'auto'});
+                $container.on('click', function(e) {
+                    if($(e.target).hasClass('preview')){
+                        $('.preview-overlay').css({ zIndex: $container.modal().css('z-index') + 1 });
+                    }
+                });
                 $container
                     .modal('open')
                     .on('closed.modal', function(){
                         $container.modal('destroy');
+                        $('.modal-bg').remove();
                         $(this).remove();
                     });
                 loadingBar.stop();
@@ -142,7 +148,7 @@ define([
                         'view' : {
                             id: 'view',
                             label: __('View'),
-                            icon: 'view',
+                            icon: 'external',
                             action: viewResult,
                             disabled: checkValidItem
                         },

@@ -25,10 +25,10 @@ use oat\oatbox\service\ConfigurableService;
 use oat\tao\helpers\UserHelper;
 use oat\tao\model\search\Search;
 use oat\tao\model\search\tasks\AddSearchIndexFromArray;
+use oat\tao\model\taskQueue\QueueDispatcherInterface;
 use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;
 use oat\taoResultServer\models\classes\ResultService;
-use oat\taoTaskQueue\model\QueueDispatcher;
 
 /**
  * Class ResultsWatcher
@@ -37,6 +37,7 @@ use oat\taoTaskQueue\model\QueueDispatcher;
 class ResultsWatcher extends ConfigurableService
 {
     use OntologyAwareTrait;
+
     const SERVICE_ID = 'taoOutcomeUi/ResultsWatcher';
     const INDEX_DELIVERY = 'delivery';
     const INDEX_TEST_TAKER = 'test_taker';
@@ -68,7 +69,7 @@ class ResultsWatcher extends ConfigurableService
                 self::INDEX_TEST_TAKER_NAME => $userName,
                 self::INDEX_DELIVERY_EXECUTION => $id,
             ];
-            $queueDispatcher = $this->getServiceLocator()->get(QueueDispatcher::SERVICE_ID);
+            $queueDispatcher = $this->getServiceLocator()->get(QueueDispatcherInterface::SERVICE_ID);
             $queueDispatcher->setOwner('Index');
             $queueDispatcher->createTask(new AddSearchIndexFromArray(), [$id, $body], __('Adding/Updating search index for %s', $deliveryExecution->getLabel()));
         }

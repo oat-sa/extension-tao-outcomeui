@@ -23,10 +23,10 @@ namespace oat\taoOutcomeUi\scripts\task;
 use common_report_Report as Report;
 use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\action\Action;
+use oat\tao\model\taskQueue\Task\WorkerContextAwareInterface;
+use oat\tao\model\taskQueue\Task\WorkerContextAwareTrait;
 use oat\taoOutcomeUi\model\export\ResultsExporter;
 use oat\taoOutcomeUi\model\ResultsService;
-use oat\taoTaskQueue\model\Task\WorkerContextAwareInterface;
-use oat\taoTaskQueue\model\Task\WorkerContextAwareTrait;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 
