@@ -28,6 +28,7 @@ use oat\tao\model\taskQueue\TaskLogInterface;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionState;
 use oat\taoOutcomeUi\model\ResultsService;
+use oat\taoOutcomeUi\model\ResultsViewerService;
 use oat\taoOutcomeUi\model\search\ResultCustomFieldsService;
 use oat\taoOutcomeUi\model\search\ResultsWatcher;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
@@ -128,5 +129,12 @@ class Updater extends \common_ext_ExtensionUpdater
         }
 
         $this->skip('5.10.0', '5.10.1');
+        
+        if ($this->isVersion('5.10.1')) {
+            $service = new ResultsViewerService();
+            $this->getServiceManager()->register(ResultsViewerService::SERVICE_ID , $service);
+            
+            $this->setVersion('5.11.0');
+        }
     }
 }

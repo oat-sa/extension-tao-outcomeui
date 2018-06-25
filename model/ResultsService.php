@@ -284,6 +284,17 @@ class ResultsService extends tao_models_classes_ClassService
     }
 
     /**
+     * Ges the type of items contained by the delivery
+     * @param string $resultIdentifier
+     * @return string
+     */
+    public function getDeliveryItemType($resultIdentifier)
+    {
+        $resultsViewerService = $this->getServiceLocator()->get(ResultsViewerService::SERVICE_ID);
+        return $resultsViewerService->getDeliveryItemType($resultIdentifier);
+    }
+
+    /**
      * Returns all label of itemResults related to the delvieryResults
      * @param string $resultIdentifier
      * @return array string uri
@@ -470,6 +481,7 @@ class ResultsService extends tao_models_classes_ClassService
             'epoch1' => [
                 'label' => Example_0_Introduction,
                 'uri' => http://tao.local/mytao.rdf#i1462952280695832,
+     *          'internalIdentifier' => item-1,
                 'taoResultServer_models_classes_Variable class name' => [
                     'Variable identifier 1' => [
                         'uri' => 1,
@@ -580,6 +592,9 @@ class ResultsService extends tao_models_classes_ClassService
                 $item = $this->getItemInfos($currentItemCallId, array($variable));
                 $lastItemCallId = $currentItemCallId;
             }
+
+            // item identifier within the test
+            $item['internalIdentifier'] = explode('.', str_replace($resultIdentifier, '', $currentItemCallId), 3)[1];
 
             $tmpitem[$type][$variableIdentifier] = $variableDescription;
         }

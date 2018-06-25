@@ -7,9 +7,9 @@ define([
     'i18n',
     'util/url',
     'layout/section',
-    'taoItems/preview/preview',
+    'taoItems/previewer/factory',
     'jquery.fileDownload'
-], function (module, $,  __,  urlHelper, section, preview) {
+], function (module, $,  __,  urlHelper, section, previewerFactory) {
     'use strict';
 
     /**
@@ -66,12 +66,27 @@ define([
 
             $('.preview', $container).on("click", function (e) {
                 var $this = $(this);
+                var deliveryId = $this.data('deliveryId');
+                var resultId = $this.data('resultId');
+                var itemDefinition = $this.data('definition');
                 var uri = $this.data('uri');
+                var type = $this.data('type');
                 var state = $this.data('state');
                 e.preventDefault();
-                window.scrollTo(0,0);
-                preview.init(urlHelper.route('forwardMe', 'ItemPreview', 'taoItems', {uri : uri}), state);
-                preview.show();
+
+                if (deliveryId && resultId && itemDefinition) {
+                    uri = {
+                        uri: uri,
+                        resultId: resultId,
+                        itemDefinition: itemDefinition,
+                        deliveryUri: deliveryId
+                    };
+                }
+
+                previewerFactory(type, uri, state, {
+                    readOnly: true,
+                    fullPage: true
+                });
             });
 
         }
