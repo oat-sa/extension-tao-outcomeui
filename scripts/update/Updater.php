@@ -129,12 +129,14 @@ class Updater extends \common_ext_ExtensionUpdater
         }
 
         $this->skip('5.10.0', '5.10.1');
-        
+
         if ($this->isVersion('5.10.1')) {
             $service = new ResultsViewerService();
             $this->getServiceManager()->register(ResultsViewerService::SERVICE_ID , $service);
-            
+
             $this->setVersion('5.11.0');
         }
+
+        $this->skip('5.11.0', '5.11.1');
     }
 }
