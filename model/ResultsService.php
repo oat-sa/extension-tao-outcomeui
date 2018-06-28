@@ -1107,11 +1107,12 @@ class ResultsService extends tao_models_classes_ClassService
      *
      * 3 allowed filters: firstSubmitted, lastSubmitted, all
      *
-     * @param $observationsList
-     * @param $filterData
+     * @param array $observationsList The list of variable values
+     * @param string $filterData The filter
+     * @param string $allDelimiter $delimiter to separate values in "all" filter context
      * @return array
      */
-    public static function filterCellData($observationsList, $filterData)
+    public static function filterCellData($observationsList, $filterData, $allDelimiter = '|')
     {
         //if the cell content is not an array with multiple entries, do not filter
         if (!is_array($observationsList)) {
@@ -1138,7 +1139,7 @@ class ResultsService extends tao_models_classes_ClassService
 
             case self::VARIABLES_FILTER_ALL:
             default:
-                $value = implode('|', $observationsList);
+                $value = implode($allDelimiter, $observationsList);
             break;
         }
 
