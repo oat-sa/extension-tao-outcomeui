@@ -1136,7 +1136,7 @@ class ResultsService extends tao_models_classes_ClassService
 
             case self::VARIABLES_FILTER_ALL:
             default:
-                $value = [implode('|', $observationsList)];
+                $value = implode('|', $observationsList);
             break;
         }
 
