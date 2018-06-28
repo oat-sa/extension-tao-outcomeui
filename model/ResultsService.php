@@ -1118,8 +1118,10 @@ class ResultsService extends tao_models_classes_ClassService
             return $observationsList;
         }
 
+        // Sort by TimeStamps
         uksort($observationsList, "oat\\taoOutcomeUi\\model\\ResultsService::sortTimeStamps");
 
+        // Extract the value to make this array flat
         $observationsList = array_map(function($obs) {
             return $obs[0];
         }, $observationsList);
