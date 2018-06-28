@@ -57,6 +57,7 @@ class ResultsService extends tao_models_classes_ClassService
 {
     const VARIABLES_FILTER_LAST_SUBMITTED = 'lastSubmitted';
     const VARIABLES_FILTER_FIRST_SUBMITTED = 'firstSubmitted';
+    const VARIABLES_FILTER_ALL = 'all';
 
     const PERSISTENCE_CACHE_KEY = 'resultCache';
 
@@ -1099,36 +1100,47 @@ class ResultsService extends tao_models_classes_ClassService
     }
 
     /**
+     * Sort the list of variables by filters
+     *
+     * List of variables contains the response for an interaction.
+     * Each attempts is an entry in $observationList
+     *
+     * 3 allowed filters: firstSubmitted, lastSubmitted, all
+     *
      * @param $observationsList
      * @param $filterData
-     * @return array|string
+     * @return array
      */
-    public static function filterCellData($observationsList, $filterData){
+    public static function filterCellData($observationsList, $filterData)
+    {
         //if the cell content is not an array with multiple entries, do not filter
-        if (!(is_array($observationsList))){
+        if (!is_array($observationsList)) {
             return $observationsList;
         }
-        //takes only the alst or the first observation
-        if (
-            ($filterData == self::VARIABLES_FILTER_LAST_SUBMITTED or $filterData == self::VARIABLES_FILTER_FIRST_SUBMITTED)
-            and
-            (is_array($observationsList))
-        ){
-            $returnValue = array();
 
-            //sort by timestamp observation
-            uksort($observationsList, "oat\\taoOutcomeUi\\model\\ResultsService::sortTimeStamps");
-            $filteredObservation = ($filterData == self::VARIABLES_FILTER_LAST_SUBMITTED) ? array_pop($observationsList) : array_shift($observationsList);
-            $returnValue[]= $filteredObservation[0];
+        uksort($observationsList, "oat\\taoOutcomeUi\\model\\ResultsService::sortTimeStamps");
 
-        } else {
-            $cellData = '';
-            foreach ($observationsList as $observation) {
-                $cellData.= $observation[0];
-            }
-            $returnValue = [$cellData];
+        $observationsList = array_map(function($obs) {
+            return $obs[0];
+        }, $observationsList);
+
+        switch ($filterData) {
+
+            case self::VARIABLES_FILTER_LAST_SUBMITTED:
+                $value = array_pop($observationsList);
+            break;
+
+            case self::VARIABLES_FILTER_FIRST_SUBMITTED:
+                $value = array_shift($observationsList);
+            break;
+
+            case self::VARIABLES_FILTER_ALL:
+            default:
+                $value = [implode('|', $observationsList)];
+            break;
         }
-        return $returnValue;
+
+        return [$value];
     }
 
     /**
