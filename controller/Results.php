@@ -466,12 +466,11 @@ class Results extends \tao_actions_CommonModule
      */
     protected function getResultVariables($resultId, $filterSubmission, $filterTypes = array())
     {
+        \common_Logger::w(count($filterTypes));
         $resultService = $this->getResultsService();
-        $displayedVariables = $resultService->getStructuredVariables($resultId, $filterSubmission, $filterTypes);
-        $resultVariables = in_array(\taoResultServer_models_classes_ResponseVariable::class, $filterTypes)
-            ? $displayedVariables
-            : $resultService->getStructuredVariables($resultId, $filterSubmission, [\taoResultServer_models_classes_ResponseVariable::class]);
-        $responses = ResponseVariableFormatter::formatStructuredVariablesToItemState($resultVariables);
+        $variables = $resultService->getStructuredVariables($resultId, $filterSubmission, array_merge($filterTypes, [\taoResultServer_models_classes_ResponseVariable::class]));
+        $displayedVariables = $resultService->filterStructuredVariables($variables, $filterTypes);
+        $responses = ResponseVariableFormatter::formatStructuredVariablesToItemState($variables);
         $excludedVariables = array_flip(['numAttempts', 'duration']);
 
         foreach ($displayedVariables as &$item) {
