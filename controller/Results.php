@@ -466,7 +466,6 @@ class Results extends \tao_actions_CommonModule
      */
     protected function getResultVariables($resultId, $filterSubmission, $filterTypes = array())
     {
-        \common_Logger::w(count($filterTypes));
         $resultService = $this->getResultsService();
         $variables = $resultService->getStructuredVariables($resultId, $filterSubmission, array_merge($filterTypes, [\taoResultServer_models_classes_ResponseVariable::class]));
         $displayedVariables = $resultService->filterStructuredVariables($variables, $filterTypes);
