@@ -623,8 +623,9 @@ class ResultsService extends tao_models_classes_ClassService
 
     /**
      * Filters the complex array structure for variable classes
-     * @param array $structure
+     * @param array $structure as defined by getStructuredVariables()
      * @param array $filter classes to keep
+     * @return array as defined by getStructuredVariables()
      */
     public function filterStructuredVariables($structure, $filter)
     {
