@@ -468,7 +468,9 @@ class Results extends \tao_actions_CommonModule
     {
         $resultService = $this->getResultsService();
         $displayedVariables = $resultService->getStructuredVariables($resultId, $filterSubmission, $filterTypes);
-        $resultVariables = $resultService->getStructuredVariables($resultId, $filterSubmission, [\taoResultServer_models_classes_ResponseVariable::class]);
+        $resultVariables = in_array(\taoResultServer_models_classes_ResponseVariable::class, $filterTypes)
+            ? $displayedVariables
+            : $resultService->getStructuredVariables($resultId, $filterSubmission, [\taoResultServer_models_classes_ResponseVariable::class]);
         $responses = ResponseVariableFormatter::formatStructuredVariablesToItemState($resultVariables);
         $excludedVariables = array_flip(['numAttempts', 'duration']);
 
