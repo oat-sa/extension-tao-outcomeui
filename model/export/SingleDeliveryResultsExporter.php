@@ -144,7 +144,12 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      */
     public function setVariableToExport($variableToExport)
     {
-        if (!in_array($variableToExport, [ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED, ResultsService::VARIABLES_FILTER_LAST_SUBMITTED])) {
+        $allowedFilters = [
+            ResultsService::VARIABLES_FILTER_ALL,
+            ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED,
+            ResultsService::VARIABLES_FILTER_LAST_SUBMITTED,
+        ];
+        if (!in_array($variableToExport, $allowedFilters)) {
             throw new \InvalidArgumentException('Results Exporter: wrong submitted variable "'. $variableToExport .'"');
         }
 

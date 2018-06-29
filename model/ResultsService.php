@@ -57,6 +57,7 @@ class ResultsService extends tao_models_classes_ClassService
 {
     const VARIABLES_FILTER_LAST_SUBMITTED = 'lastSubmitted';
     const VARIABLES_FILTER_FIRST_SUBMITTED = 'firstSubmitted';
+    const VARIABLES_FILTER_ALL = 'all';
 
     const PERSISTENCE_CACHE_KEY = 'resultCache';
 
@@ -284,6 +285,17 @@ class ResultsService extends tao_models_classes_ClassService
     }
 
     /**
+     * Ges the type of items contained by the delivery
+     * @param string $resultIdentifier
+     * @return string
+     */
+    public function getDeliveryItemType($resultIdentifier)
+    {
+        $resultsViewerService = $this->getServiceLocator()->get(ResultsViewerService::SERVICE_ID);
+        return $resultsViewerService->getDeliveryItemType($resultIdentifier);
+    }
+
+    /**
      * Returns all label of itemResults related to the delvieryResults
      * @param string $resultIdentifier
      * @return array string uri
@@ -470,6 +482,7 @@ class ResultsService extends tao_models_classes_ClassService
             'epoch1' => [
                 'label' => Example_0_Introduction,
                 'uri' => http://tao.local/mytao.rdf#i1462952280695832,
+     *          'internalIdentifier' => item-1,
                 'taoResultServer_models_classes_Variable class name' => [
                     'Variable identifier 1' => [
                         'uri' => 1,
@@ -580,6 +593,9 @@ class ResultsService extends tao_models_classes_ClassService
                 $item = $this->getItemInfos($currentItemCallId, array($variable));
                 $lastItemCallId = $currentItemCallId;
             }
+
+            // item identifier within the test
+            $item['internalIdentifier'] = explode('.', str_replace($resultIdentifier, '', $currentItemCallId), 3)[1];
 
             $tmpitem[$type][$variableIdentifier] = $variableDescription;
         }
@@ -1084,36 +1100,50 @@ class ResultsService extends tao_models_classes_ClassService
     }
 
     /**
-     * @param $observationsList
-     * @param $filterData
-     * @return array|string
+     * Sort the list of variables by filters
+     *
+     * List of variables contains the response for an interaction.
+     * Each attempts is an entry in $observationList
+     *
+     * 3 allowed filters: firstSubmitted, lastSubmitted, all
+     *
+     * @param array $observationsList The list of variable values
+     * @param string $filterData The filter
+     * @param string $allDelimiter $delimiter to separate values in "all" filter context
+     * @return array
      */
-    public static function filterCellData($observationsList, $filterData){
+    public static function filterCellData($observationsList, $filterData, $allDelimiter = '|')
+    {
         //if the cell content is not an array with multiple entries, do not filter
-        if (!(is_array($observationsList))){
+        if (!is_array($observationsList)) {
             return $observationsList;
         }
-        //takes only the alst or the first observation
-        if (
-            ($filterData == self::VARIABLES_FILTER_LAST_SUBMITTED or $filterData == self::VARIABLES_FILTER_FIRST_SUBMITTED)
-            and
-            (is_array($observationsList))
-        ){
-            $returnValue = array();
 
-            //sort by timestamp observation
-            uksort($observationsList, "oat\\taoOutcomeUi\\model\\ResultsService::sortTimeStamps");
-            $filteredObservation = ($filterData == self::VARIABLES_FILTER_LAST_SUBMITTED) ? array_pop($observationsList) : array_shift($observationsList);
-            $returnValue[]= $filteredObservation[0];
+        // Sort by TimeStamps
+        uksort($observationsList, "oat\\taoOutcomeUi\\model\\ResultsService::sortTimeStamps");
 
-        } else {
-            $cellData = '';
-            foreach ($observationsList as $observation) {
-                $cellData.= $observation[0];
-            }
-            $returnValue = [$cellData];
+        // Extract the value to make this array flat
+        $observationsList = array_map(function($obs) {
+            return $obs[0];
+        }, $observationsList);
+
+        switch ($filterData) {
+
+            case self::VARIABLES_FILTER_LAST_SUBMITTED:
+                $value = array_pop($observationsList);
+            break;
+
+            case self::VARIABLES_FILTER_FIRST_SUBMITTED:
+                $value = array_shift($observationsList);
+            break;
+
+            case self::VARIABLES_FILTER_ALL:
+            default:
+                $value = implode($allDelimiter, $observationsList);
+            break;
         }
-        return $returnValue;
+
+        return [$value];
     }
 
     /**
