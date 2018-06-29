@@ -627,7 +627,7 @@ class ResultsService extends tao_models_classes_ClassService
      * @param array $filter classes to keep
      * @return array as defined by getStructuredVariables()
      */
-    public function filterStructuredVariables($structure, $filter)
+    public function filterStructuredVariables(array $structure, array $filter)
     {
         $all = [
             \taoResultServer_models_classes_ResponseVariable::class,
