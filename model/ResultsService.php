@@ -621,6 +621,30 @@ class ResultsService extends tao_models_classes_ClassService
         return $variablesByItem;
     }
 
+    /**
+     * Filters the complex array structure for variable classes
+     * @param array $structure as defined by getStructuredVariables()
+     * @param array $filter classes to keep
+     * @return array as defined by getStructuredVariables()
+     */
+    public function filterStructuredVariables(array $structure, array $filter)
+    {
+        $all = [
+            \taoResultServer_models_classes_ResponseVariable::class,
+            \taoResultServer_models_classes_OutcomeVariable::class,
+            \taoResultServer_models_classes_TraceVariable::class
+        ];
+        $toRemove = array_diff($all, $filter);
+        $filtered = $structure;
+        foreach ($filtered as $timestamp => $entry) {
+            foreach ($entry as $key => $value) {
+                if (in_array($key, $toRemove)) {
+                    unset($filtered[$timestamp][$key]);
+                }
+            }
+        }
+        return $filtered;
+    }
 
     /**
      *
