@@ -25,6 +25,7 @@ use oat\generis\model\data\ModelManager;
 use oat\oatbox\event\EventManager;
 use oat\oatbox\service\ConfigurableService;
 use oat\tao\model\taskQueue\TaskLogInterface;
+use oat\tao\scripts\update\OntologyUpdater;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionState;
 use oat\taoOutcomeUi\model\ResultsService;
@@ -138,5 +139,10 @@ class Updater extends \common_ext_ExtensionUpdater
         }
 
         $this->skip('5.11.0', '5.11.3');
+
+        if ($this->isVersion('5.11.3')) {
+            OntologyUpdater::syncModels();
+            $this->setVersion('5.12.0');
+        }
     }
 }
