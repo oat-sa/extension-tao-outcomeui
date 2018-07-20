@@ -58,7 +58,8 @@ return [
     'update'         => 'oat\\taoOutcomeUi\\scripts\\update\\Updater',
     'managementRole' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole',
     'acl'            => [
-        ['grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', ['ext' => 'taoOutcomeUi']]
+        ['grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', ['ext' => 'taoOutcomeUi']],
+        ['grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#TaoQtiReviewerRole', ['ext' => 'taoDeliveryRdf', 'mod' => 'DeliveryMgmt', 'act' => 'getOntologyData']]
     ],
     'routes'         => [
         '/taoOutcomeUi' => 'oat\\taoOutcomeUi\\controller'

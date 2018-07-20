@@ -24,6 +24,8 @@ namespace oat\taoOutcomeUi\scripts\update;
 use oat\generis\model\data\ModelManager;
 use oat\oatbox\event\EventManager;
 use oat\oatbox\service\ConfigurableService;
+use oat\tao\model\accessControl\func\AclProxy;
+use oat\tao\model\accessControl\func\AccessRule;
 use oat\tao\model\taskQueue\TaskLogInterface;
 use oat\tao\scripts\update\OntologyUpdater;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;
@@ -142,6 +144,11 @@ class Updater extends \common_ext_ExtensionUpdater
 
         if ($this->isVersion('5.11.3')) {
             OntologyUpdater::syncModels();
+            AclProxy::applyRule(new AccessRule(
+                AccessRule::GRANT,
+                'http://www.tao.lu/Ontologies/TAOResult.rdf#TaoQtiReviewerRole',
+                ['ext' => 'taoDeliveryRdf', 'mod' => 'DeliveryMgmt', 'act' => 'getOntologyData']
+            ));
             $this->setVersion('5.12.0');
         }
     }
