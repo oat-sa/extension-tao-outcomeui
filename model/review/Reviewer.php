@@ -22,5 +22,5 @@ namespace oat\taoOutcomeUi\model\review;
 
 interface Reviewer
 {
-    const REVIEWER_ROLE = 'http://www.tao.lu/Ontologies/TAOResult.rdf#TaoQtiReviewerRole';
+    const REVIEWER_ROLE = 'http://www.tao.lu/Ontologies/TAOResult.rdf#TaoReviewerRole';
 }

@@ -25,6 +25,9 @@ use oat\taoOutcomeUi\scripts\install\RegisterEvent;
 use oat\taoOutcomeUi\scripts\install\RegisterTestPluginService;
 use oat\taoOutcomeUi\scripts\install\SetUpQueueTasks;
 use oat\taoOutcomeUi\scripts\install\SetupSearchService;
+use oat\taoOutcomeUi\model\review\Reviewer;
+use oat\taoDeliveryRdf\controller\DeliveryMgmt;
+use oat\tao\model\accessControl\func\AccessRule;
 
 $extpath = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 
@@ -59,7 +62,7 @@ return [
     'managementRole' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole',
     'acl'            => [
         ['grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', ['ext' => 'taoOutcomeUi']],
-        ['grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#TaoQtiReviewerRole', ['ext' => 'taoDeliveryRdf', 'mod' => 'DeliveryMgmt', 'act' => 'getOntologyData']]
+        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, DeliveryMgmt::class.'@getOntologyData'],
     ],
     'routes'         => [
         '/taoOutcomeUi' => 'oat\\taoOutcomeUi\\controller'

@@ -32,6 +32,7 @@ use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionState;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\ResultsViewerService;
+use oat\taoOutcomeUi\model\review\Reviewer;
 use oat\taoOutcomeUi\model\search\ResultCustomFieldsService;
 use oat\taoOutcomeUi\model\search\ResultsWatcher;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
@@ -146,7 +147,7 @@ class Updater extends \common_ext_ExtensionUpdater
             OntologyUpdater::syncModels();
             AclProxy::applyRule(new AccessRule(
                 AccessRule::GRANT,
-                'http://www.tao.lu/Ontologies/TAOResult.rdf#TaoQtiReviewerRole',
+                Reviewer::REVIEWER_ROLE,
                 ['ext' => 'taoDeliveryRdf', 'mod' => 'DeliveryMgmt', 'act' => 'getOntologyData']
             ));
             $this->setVersion('5.12.0');
