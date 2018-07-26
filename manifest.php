@@ -63,6 +63,13 @@ return [
     'acl'            => [
         ['grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', ['ext' => 'taoOutcomeUi']],
         [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, DeliveryMgmt::class.'@getOntologyData'],
+        [AccessRule::GRANT, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'index']],
+        [AccessRule::GRANT, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'getResults']],
+        [AccessRule::GRANT, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'viewResult']],
+        [AccessRule::GRANT, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'downloadXML']],
+        [AccessRule::GRANT, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'getFile']],
+        [AccessRule::GRANT, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'getResultsListPlugin']],
+        [AccessRule::GRANT, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'export']],
     ],
     'routes'         => [
         '/taoOutcomeUi' => 'oat\\taoOutcomeUi\\controller'
