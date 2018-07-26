@@ -28,6 +28,7 @@ use oat\taoOutcomeUi\scripts\install\SetupSearchService;
 use oat\taoOutcomeUi\model\review\Reviewer;
 use oat\taoDeliveryRdf\controller\DeliveryMgmt;
 use oat\tao\model\accessControl\func\AccessRule;
+use oat\taoOutcomeUi\controller\Results;
 
 $extpath = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 
@@ -63,13 +64,13 @@ return [
     'acl'            => [
         ['grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', ['ext' => 'taoOutcomeUi']],
         [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, DeliveryMgmt::class.'@getOntologyData'],
-        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'index']],
-        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'getResults']],
-        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'viewResult']],
-        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'downloadXML']],
-        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'getFile']],
-        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'getResultsListPlugin']],
-        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'export']],
+        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@index'],
+        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@getResults'],
+        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@viewResult'],
+        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@downloadXML'],
+        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@getFile'],
+        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@getResultsListPlugin'],
+        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@export'],
     ],
     'routes'         => [
         '/taoOutcomeUi' => 'oat\\taoOutcomeUi\\controller'

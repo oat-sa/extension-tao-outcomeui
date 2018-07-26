@@ -30,6 +30,8 @@ use oat\tao\model\taskQueue\TaskLogInterface;
 use oat\tao\scripts\update\OntologyUpdater;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionState;
+use oat\taoDeliveryRdf\controller\DeliveryMgmt;
+use oat\taoOutcomeUi\controller\Results;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\ResultsViewerService;
 use oat\taoOutcomeUi\model\review\Reviewer;
@@ -145,15 +147,14 @@ class Updater extends \common_ext_ExtensionUpdater
 
         if ($this->isVersion('5.11.3')) {
             OntologyUpdater::syncModels();
-            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, ['ext' => 'taoDeliveryRdf', 'mod' => 'DeliveryMgmt', 'act' => 'getOntologyData']));
-            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'index']));
-            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'getResults']));
-            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'viewResult']));
-            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'downloadXML']));
-            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'getFile']));
-            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'getResultsListPlugin']));
-            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'export']));
-            AclProxy::applyRule(new AccessRule(AccessRule::DENY, Reviewer::REVIEWER_ROLE, ['ext' => 'taoOutcomeUi', 'mod' => 'Results', 'act' => 'delete']));
+            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, DeliveryMgmt::class . '@getOntologyData'));
+            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@index'));
+            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@getResults'));
+            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@viewResult'));
+            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@downloadXML'));
+            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@getFile'));
+            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@getResultsListPlugin'));
+            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@export'));
             $this->setVersion('5.12.0');
         }
     }
