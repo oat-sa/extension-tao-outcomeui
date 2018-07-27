@@ -24,11 +24,17 @@ namespace oat\taoOutcomeUi\scripts\update;
 use oat\generis\model\data\ModelManager;
 use oat\oatbox\event\EventManager;
 use oat\oatbox\service\ConfigurableService;
+use oat\tao\model\accessControl\func\AccessRule;
+use oat\tao\model\accessControl\func\AclProxy;
 use oat\tao\model\taskQueue\TaskLogInterface;
+use oat\tao\scripts\update\OntologyUpdater;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionState;
+use oat\taoDeliveryRdf\controller\DeliveryMgmt;
+use oat\taoOutcomeUi\controller\Results;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\ResultsViewerService;
+use oat\taoOutcomeUi\model\review\Reviewer;
 use oat\taoOutcomeUi\model\search\ResultCustomFieldsService;
 use oat\taoOutcomeUi\model\search\ResultsWatcher;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
@@ -138,5 +144,18 @@ class Updater extends \common_ext_ExtensionUpdater
         }
 
         $this->skip('5.11.0', '5.11.3');
+
+        if ($this->isVersion('5.11.3')) {
+            OntologyUpdater::syncModels();
+            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, DeliveryMgmt::class . '@getOntologyData'));
+            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@index'));
+            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@getResults'));
+            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@viewResult'));
+            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@downloadXML'));
+            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@getFile'));
+            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@getResultsListPlugin'));
+            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@export'));
+            $this->setVersion('5.12.0');
+        }
     }
 }

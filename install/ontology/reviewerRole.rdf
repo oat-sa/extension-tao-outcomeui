@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<rdf:RDF
+        xml:base="http://www.tao.lu/Ontologies/TAOResult.rdf#"
+        xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+        xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+        xmlns:generis="http://www.tao.lu/Ontologies/generis.rdf#"
+>
+    <rdf:Description rdf:about="http://www.tao.lu/Ontologies/TAOResult.rdf#TaoReviewerRole">
+        <rdf:type rdf:resource="http://www.tao.lu/Ontologies/generis.rdf#UserRole"/>
+        <rdfs:label xml:lang="en-US"><![CDATA[Reviewer Role]]></rdfs:label>
+        <rdfs:comment xml:lang="en-US"><![CDATA[Allow a reviewer Role to fetch item content and delivery results]]></rdfs:comment>
+        <generis:includesRole rdf:resource="http://www.tao.lu/Ontologies/TAO.rdf#BackOfficeRole"/>
+    </rdf:Description>
+</rdf:RDF>

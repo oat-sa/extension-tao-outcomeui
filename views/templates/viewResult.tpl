@@ -93,7 +93,7 @@ use oat\taoOutcomeUi\model\ResultsService;
                     </th>
                     <th>
                         <a href="#" data-delivery-id="<?=get_data('classUri')?>" data-result-id="<?=get_data('id')?>" data-type="<?=get_data('itemType')?>" data-uri="<?=$item['uri']?>" data-definition="<?=$item['internalIdentifier']?>" data-state="<?=htmlspecialchars($item['state'])?>" class="btn-info small preview" target="preview">
-                            <span class="icon-preview"></span><?=__('Preview')?>
+                            <span class="icon-preview"></span><?=__('Review')?>
                         </a>
                     </th>
                 </tr>
