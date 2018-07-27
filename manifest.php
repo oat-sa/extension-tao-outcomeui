@@ -25,6 +25,10 @@ use oat\taoOutcomeUi\scripts\install\RegisterEvent;
 use oat\taoOutcomeUi\scripts\install\RegisterTestPluginService;
 use oat\taoOutcomeUi\scripts\install\SetUpQueueTasks;
 use oat\taoOutcomeUi\scripts\install\SetupSearchService;
+use oat\taoOutcomeUi\model\review\Reviewer;
+use oat\taoDeliveryRdf\controller\DeliveryMgmt;
+use oat\tao\model\accessControl\func\AccessRule;
+use oat\taoOutcomeUi\controller\Results;
 
 $extpath = dirname(__FILE__) . DIRECTORY_SEPARATOR;
 
@@ -33,7 +37,7 @@ return [
     'label'          => 'Result visualisation',
     'description'    => 'TAO Results extension',
     'license'        => 'GPL-2.0',
-    'version'        => '5.11.3',
+    'version'        => '5.12.0',
     'author'         => 'Open Assessment Technologies, CRP Henri Tudor',
     // taoItems is only needed for the item model property retrieval
     'requires'       => [
@@ -49,13 +53,24 @@ return [
             SetUpQueueTasks::class,
             SetupSearchService::class,
             RegisterEvent::class
+        ],
+        'rdf' => [
+            __DIR__ . '/install/ontology/reviewerRole.rdf',
         ]
     ],
     'uninstall'      => [],
     'update'         => 'oat\\taoOutcomeUi\\scripts\\update\\Updater',
     'managementRole' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole',
     'acl'            => [
-        ['grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', ['ext' => 'taoOutcomeUi']]
+        ['grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', ['ext' => 'taoOutcomeUi']],
+        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, DeliveryMgmt::class.'@getOntologyData'],
+        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@index'],
+        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@getResults'],
+        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@viewResult'],
+        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@downloadXML'],
+        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@getFile'],
+        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@getResultsListPlugin'],
+        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@export'],
     ],
     'routes'         => [
         '/taoOutcomeUi' => 'oat\\taoOutcomeUi\\controller'
