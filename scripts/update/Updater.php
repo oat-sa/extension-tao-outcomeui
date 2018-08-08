@@ -157,5 +157,7 @@ class Updater extends \common_ext_ExtensionUpdater
             AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@export'));
             $this->setVersion('5.12.0');
         }
+
+        $this->skip('5.12.0', '5.12.1');
     }
 }
