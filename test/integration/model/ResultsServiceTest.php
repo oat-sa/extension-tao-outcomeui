@@ -17,7 +17,9 @@
  * Copyright (c) 2015 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
-namespace oat\taoOutcomeUi\test\model;
+namespace oat\taoOutcomeUi\test\integration\model;
+
+require_once dirname(__FILE__).'/../../../../tao/includes/raw_start.php';
 
 use oat\tao\test\TaoPhpUnitTestRunner;
 use \common_ext_ExtensionsManager;
@@ -31,19 +33,19 @@ use taoItems_models_classes_ItemsService;
  * This test case focuses on testing ResultsService.
  *
  * @author Lionel Lecaque <lionel@taotesting.com>
- *        
+ *
  */
 class ResultsServiceTest extends TaoPhpUnitTestRunner
 {
 
     /**
-     * 
+     *
      * @var ResultsService
      */
     protected $service;
 
     /**
-     * 
+     *
      * @see PHPUnit_Framework_TestCase::setUp()
      */
     public function setUp()
@@ -189,6 +191,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
 
         $this->service->setImplementation($imp);
 
+        // @todo fix "common_exception_Error: could not create resource from NULL"
         $resultItem = $this->service->getItemFromItemResult('#foo');
         $this->assertInstanceOf('core_kernel_classes_Resource', $resultItem);
         $this->assertEquals('#item', $resultItem->getUri());
@@ -280,7 +283,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
     /**
      *
      * @author Lionel Lecaque, lionel@taotesting.com
-     *         @expectedException \common_exception_Error
+     *         @expectedException \common_exception_Error (@todo fix)
      *         @expectedExceptionMessage This delivery has no Result Server
      */
     public function testGetReadableImplementationNoResultStorage()
@@ -296,7 +299,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
     /**
      *
      * @author Lionel Lecaque, lionel@taotesting.com
-     *         @expectedException \common_exception_Error
+     *         @expectedException \common_exception_Error (@todo fix)
      *         @expectedExceptionMessage This delivery has no readable Result Server
      */
     public function testGetReadableImplementationNoResultServer()
@@ -318,7 +321,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
     /**
      *
      * @author Lionel Lecaque, lionel@taotesting.com
-     *         @expectedException \common_exception_Error
+     *         @expectedException \common_exception_Error (@todo fix)
      *         @expectedExceptionMessage This delivery has no readable Result Server
      */
     public function testGetReadableImplementationNoResultServerModel()
@@ -467,6 +470,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
 
         $itemVar = $this->service->getItemVariableDataFromDeliveryResult('#fakeUri', ResultsService::VARIABLES_FILTER_LAST_SUBMITTED);
 
+        // @todo fix (Failed asserting that an array has the key '#item')
         $this->assertArrayHasKey('#item', $itemVar);
         $this->assertArrayHasKey('itemModel', $itemVar['#item']);
         $this->assertEquals('unknown', $itemVar['#item']['itemModel']);
@@ -836,6 +840,7 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $impProphecy->getVariables($callId3)->willReturn($variables3);
         $serviceMock->setImplementation($impProphecy->reveal());
 
+        // @todo fix method call not expected
         $allVariables = $serviceMock->getStructuredVariables('DeliveryExecutionIdentifier', 'all', array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class));
 
         $lastVariables = $serviceMock->getStructuredVariables('DeliveryExecutionIdentifier', ResultsService::VARIABLES_FILTER_LAST_SUBMITTED, array(\taoResultServer_models_classes_TraceVariable::class));
@@ -1089,5 +1094,5 @@ class ResultsServiceTest extends TaoPhpUnitTestRunner
         $this->assertArrayHasKey('nbUnscoredResponses', $responseStats);
         $this->assertEquals(1,$responseStats['nbUnscoredResponses']);
     }
-    
+
 }
