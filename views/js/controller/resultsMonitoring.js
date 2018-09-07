@@ -68,7 +68,13 @@ define([
                 });
                 $container.modal().css({'max-height': $(window).height() - 80 + 'px', 'overflow': 'auto'});
                 $container.on('click', function(e) {
+                    // the trigger button might itself be inside a modal, in this case close that modal before doing anything else
+                    // only one modal should be open
+                    var $modalContainer = $(e.target).parents('.modal');
                     if($(e.target).hasClass('preview')){
+                        if($modalContainer.length) {
+                            $modalContainer.trigger('closed.modal');
+                        }
                         $('.preview-overlay').css({ zIndex: $container.modal().css('z-index') + 1 });
                     }
                 });
