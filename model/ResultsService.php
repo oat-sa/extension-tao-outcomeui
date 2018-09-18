@@ -1034,7 +1034,7 @@ class ResultsService extends tao_models_classes_ClassService
      * @return mixed
      * @throws common_exception_Error
      */
-    public function getResultsVariables($resultsIds)
+    protected function getResultsVariables($resultsIds)
     {
         return $this->getImplementation()->getDeliveryVariables($resultsIds);
     }
@@ -1052,10 +1052,10 @@ class ResultsService extends tao_models_classes_ClassService
         $this->setImplementation($this->getReadableImplementation($delivery));
         //The list of delivery Results matching the current selection filters
         $results = $this->getImplementation()->getResultByDelivery([$delivery->getUri()]);
-        $resultsIds = [];
+
         //retrieveing all individual response variables referring to the  selected delivery results
         $itemIndex = $this->getItemIndexer($delivery);
-        
+
         $resultsIds  = array_column($results, 'deliveryResultIdentifier');
 
         //retrieving The list of the variables identifiers per activities defintions as observed
