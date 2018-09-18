@@ -1104,18 +1104,19 @@ class ResultsService extends tao_models_classes_ClassService
         foreach (array_chunk($resultsIds, $resultServiceWrapper->getOption(ResultServiceWrapper::RESULT_COLUMNS_CHUNK_SIZE_OPTION)) as $resultsIdsItem) {
             $selectedVariables = $this->getResultsVariables($resultsIdsItem);
             foreach ($selectedVariables as $variable) {
+                $class = isset($variable[0]->class) ? $variable[0]->class : get_class($variable[0]->variable);
                 if(
-                    (!is_null($variable[0]->item) ||  !is_null($variable[0]->test))
+                    (null != $variable[0]->item ||  null != $variable[0]->test)
                     && (
-                        get_class($variable[0]->variable) == \taoResultServer_models_classes_OutcomeVariable::class
+                        $class == \taoResultServer_models_classes_OutcomeVariable::class
                         && $variableClassUri == \taoResultServer_models_classes_OutcomeVariable::class
                     ) || (
-                        get_class($variable[0]->variable) == \taoResultServer_models_classes_ResponseVariable::class
+                        $class == \taoResultServer_models_classes_ResponseVariable::class
                         && $variableClassUri == \taoResultServer_models_classes_ResponseVariable::class
                     )) {
                     //variableIdentifier
                     $variableIdentifier = $variable[0]->variable->identifier;
-                    $uri = (!is_null($variable[0]->item))? $variable[0]->item : $variable[0]->test;
+                    $uri = (null != $variable[0]->item) ? $variable[0]->item : $variable[0]->test;
                     $contextIdentifierLabel = $itemIndex->getItemValue($uri, $this->getResultLanguage(), 'label');
                     $contextIdentifier = $uri;
                     $variableTypes[$contextIdentifier.$variableIdentifier] = array("contextLabel" => $contextIdentifierLabel, "contextId" => $contextIdentifier, "variableIdentifier" => $variableIdentifier);
