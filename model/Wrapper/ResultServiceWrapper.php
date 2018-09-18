@@ -20,6 +20,7 @@ class ResultServiceWrapper extends ConfigurableService
 
     const SERVICE_ID  = 'taoOutcomeUi/resultService';
 
+    const RESULT_COLUMNS_CHUNK_SIZE_OPTION = 'resultColumnsChunkSize';
     /**
      * @var ResultsService
      */
