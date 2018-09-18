@@ -1061,6 +1061,11 @@ class ResultsService extends tao_models_classes_ClassService
         //retrieving The list of the variables identifiers per activities defintions as observed
         $variableTypes = array();
 
+        $responseVariableClass = \taoResultServer_models_classes_ResponseVariable::class;
+        $outcomeVariableClass = \taoResultServer_models_classes_OutcomeVariable::class;
+
+        $resultLanguage = $this->getResultLanguage();
+
         foreach (array_chunk($resultsIds, $resultServiceWrapper->getOption(ResultServiceWrapper::RESULT_COLUMNS_CHUNK_SIZE_OPTION)) as $resultsIdsItem) {
             $selectedVariables = $this->getResultsVariables($resultsIdsItem);
             foreach ($selectedVariables as $variable) {
@@ -1068,18 +1073,17 @@ class ResultsService extends tao_models_classes_ClassService
                 if(
                     (null != $variable[0]->item ||  null != $variable[0]->test)
                     && (
-                        $class == \taoResultServer_models_classes_OutcomeVariable::class
-                        && $variableClassUri == \taoResultServer_models_classes_OutcomeVariable::class
+                        $class == $outcomeVariableClass
+                        && $variableClassUri == $outcomeVariableClass
                     ) || (
-                        $class == \taoResultServer_models_classes_ResponseVariable::class
-                        && $variableClassUri == \taoResultServer_models_classes_ResponseVariable::class
+                        $class == $responseVariableClass
+                        && $variableClassUri == $responseVariableClass
                     )) {
                     //variableIdentifier
                     $variableIdentifier = $variable[0]->variable->identifier;
                     $uri = (null != $variable[0]->item) ? $variable[0]->item : $variable[0]->test;
-                    $contextIdentifierLabel = $itemIndex->getItemValue($uri, $this->getResultLanguage(), 'label');
-                    $contextIdentifier = $uri;
-                    $variableTypes[$contextIdentifier.$variableIdentifier] = array("contextLabel" => $contextIdentifierLabel, "contextId" => $contextIdentifier, "variableIdentifier" => $variableIdentifier);
+                    $contextIdentifierLabel = $itemIndex->getItemValue($uri, $resultLanguage, 'label');
+                    $variableTypes[$uri.$variableIdentifier] = array("contextLabel" => $contextIdentifierLabel, "contextId" => $uri, "variableIdentifier" => $variableIdentifier);
                 }
             }
         }
