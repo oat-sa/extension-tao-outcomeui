@@ -164,7 +164,7 @@ class Updater extends \common_ext_ExtensionUpdater
             /** @var ResultServiceWrapper $resultsService */
             $resultsService = $this->getServiceManager()->get(ResultServiceWrapper::SERVICE_ID);
             $options = $resultsService->getOptions();
-            $options[ResultServiceWrapper::RESULT_COLUMNS_CHUNK_SIZE_OPTION] = 50;
+            $options[ResultServiceWrapper::RESULT_COLUMNS_CHUNK_SIZE_OPTION] = 20;
             $resultsService->setOptions($options);
             $this->getServiceManager()->register(ResultServiceWrapper::SERVICE_ID, $resultsService);
             $this->setVersion('5.13.0');
