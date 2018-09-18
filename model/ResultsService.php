@@ -1095,10 +1095,8 @@ class ResultsService extends tao_models_classes_ClassService
         $resultsIds = [];
         //retrieveing all individual response variables referring to the  selected delivery results
         $itemIndex = $this->getItemIndexer($delivery);
-
-        foreach ($results as $result){
-            $resultsIds[] = $result["deliveryResultIdentifier"];
-        }
+        
+        $resultsIds  = array_column($results, 'deliveryResultIdentifier');
 
         //retrieving The list of the variables identifiers per activities defintions as observed
         $variableTypes = array();
