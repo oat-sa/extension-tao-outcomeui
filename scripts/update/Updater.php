@@ -159,5 +159,16 @@ class Updater extends \common_ext_ExtensionUpdater
         }
 
         $this->skip('5.12.0', '5.12.2');
+
+        if ($this->isVersion('5.12.2')) {
+            /** @var ResultServiceWrapper $resultsService */
+            $resultsService = $this->getServiceManager()->get(ResultServiceWrapper::SERVICE_ID);
+            $options = $resultsService->getOptions();
+            $options[ResultServiceWrapper::RESULT_COLUMNS_CHUNK_SIZE_OPTION] = 20;
+            $resultsService->setOptions($options);
+            $this->getServiceManager()->register(ResultServiceWrapper::SERVICE_ID, $resultsService);
+            $this->setVersion('5.13.0');
+        }
+
     }
 }

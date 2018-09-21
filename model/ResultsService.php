@@ -41,6 +41,7 @@ use \core_kernel_classes_Class;
 use \core_kernel_classes_DbWrapper;
 use \core_kernel_classes_Resource;
 use oat\taoOutcomeUi\model\table\VariableColumn;
+use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 use oat\taoResultServer\models\classes\NoResultStorage;
 use oat\taoResultServer\models\classes\NoResultStorageException;
 use oat\taoResultServer\models\classes\ResultManagement;
@@ -218,14 +219,19 @@ class ResultsService extends tao_models_classes_ClassService
         //if (common_cache_FileCache::singleton()->has($serial)) {
         //    $variables = common_cache_FileCache::singleton()->get($serial);
         //} else {
-            foreach ($this->getItemResultsFromDeliveryResult($resultIdentifier) as $itemResult) {
-                $itemResultVariables = $this->getVariablesFromObjectResult($itemResult);
-                $variables[$itemResult] = $itemResultVariables;
-            }
-            foreach ($this->getTestsFromDeliveryResult($resultIdentifier) as $testResult) {
-                $testResultVariables = $this->getVariablesFromObjectResult($testResult);
-                $variables[$testResult] = $testResultVariables;
-            }
+
+        $itemResultVariablesArray = array_values($this->getItemResultsFromDeliveryResult($resultIdentifier));
+        $testResultVariablesArray = array_values($this->getTestsFromDeliveryResult($resultIdentifier));
+
+        $finalResultVariables = array_merge($itemResultVariablesArray, $testResultVariablesArray);
+
+        $resultVariables = $this->getVariablesFromObjectResult($finalResultVariables);
+        foreach ($resultVariables as $resultVariable) {
+            $currentItem = current($resultVariable);
+            $key = $currentItem->callIdItem ? $currentItem->callIdItem : $currentItem->callIdTest;
+            $variables[$key][] = $resultVariable;
+        }
+
         // impossible to determine state DeliveryExecution::STATE_FINISHIED 
         //    if (false) {
         //        common_cache_FileCache::singleton()->put($variables, $serial);
@@ -340,7 +346,8 @@ class ResultsService extends tao_models_classes_ClassService
         $itemIndexer = $this->getItemIndexer($delivery);
 
         if(!is_null($itemUri)){
-            $item = array_merge($itemIndexer->getItem($itemUri, $this->getResultLanguage() ),['uriResource'=>$itemUri]);
+            $langItem = $itemIndexer->getItem($itemUri, $this->getResultLanguage() );
+            $item = array_merge(is_array($langItem) ? $langItem : [],['uriResource'=>$itemUri]);
         }
         return $item;
     }
@@ -1063,57 +1070,75 @@ class ResultsService extends tao_models_classes_ClassService
     }
 
     /**
+     * @param array|string $resultsIds
+     * @return mixed
+     * @throws common_exception_Error
+     */
+    protected function getResultsVariables($resultsIds)
+    {
+        return $this->getImplementation()->getDeliveryVariables($resultsIds);
+    }
+
+    /**
      * Retrieve the different variables columns pertainign to the current selection of results
      * Implementation note : it nalyses all the data collected to identify the different response variables submitted by the items in the context of activities
      */
     public function getVariableColumns($delivery, $variableClassUri)
     {
         $columns = array();
+        /** @var ResultServiceWrapper $resultServiceWrapper */
+        $resultServiceWrapper = $this->getServiceLocator()->get(ResultServiceWrapper::SERVICE_ID);
 
         $this->setImplementation($this->getReadableImplementation($delivery));
         //The list of delivery Results matching the current selection filters
         $results = $this->getImplementation()->getResultByDelivery([$delivery->getUri()]);
 
         //retrieveing all individual response variables referring to the  selected delivery results
-        $selectedVariables = array ();
-        foreach ($results as $result){
-            $variables = $this->getVariables($result["deliveryResultIdentifier"]);
-            $selectedVariables = array_merge($selectedVariables, $variables);
-        }
+        $itemIndex = $this->getItemIndexer($delivery);
+
+        $resultsIds  = array_column($results, 'deliveryResultIdentifier');
+
         //retrieving The list of the variables identifiers per activities defintions as observed
         $variableTypes = array();
 
-        $itemIndex = $this->getItemIndexer($delivery);
+        $responseVariableClass = \taoResultServer_models_classes_ResponseVariable::class;
+        $outcomeVariableClass = \taoResultServer_models_classes_OutcomeVariable::class;
 
-        foreach ($selectedVariables as $variable) {
-            if(
-                (!is_null($variable[0]->item) ||  !is_null($variable[0]->test))
-                && (
-                    get_class($variable[0]->variable) == \taoResultServer_models_classes_OutcomeVariable::class
-                    && $variableClassUri == \taoResultServer_models_classes_OutcomeVariable::class
-                ) || (
-                    get_class($variable[0]->variable) == \taoResultServer_models_classes_ResponseVariable::class
-                    && $variableClassUri == \taoResultServer_models_classes_ResponseVariable::class
-                )) {
-                //variableIdentifier
-                $variableIdentifier = $variable[0]->variable->identifier;
-                $uri = (!is_null($variable[0]->item))? $variable[0]->item : $variable[0]->test;
-                $contextIdentifierLabel = $itemIndex->getItemValue($uri, $this->getResultLanguage(), 'label');
-                $contextIdentifier = $uri;
-                $variableTypes[$contextIdentifier.$variableIdentifier] = array("contextLabel" => $contextIdentifierLabel, "contextId" => $contextIdentifier, "variableIdentifier" => $variableIdentifier);
+        $resultLanguage = $this->getResultLanguage();
+
+        foreach (array_chunk($resultsIds, $resultServiceWrapper->getOption(ResultServiceWrapper::RESULT_COLUMNS_CHUNK_SIZE_OPTION)) as $resultsIdsItem) {
+            $selectedVariables = $this->getResultsVariables($resultsIdsItem);
+            foreach ($selectedVariables as $variable) {
+                $class = isset($variable[0]->class) ? $variable[0]->class : get_class($variable[0]->variable);
+                if(
+                    (null != $variable[0]->item ||  null != $variable[0]->test)
+                    && (
+                        $class == $outcomeVariableClass
+                        && $variableClassUri == $outcomeVariableClass
+                    ) || (
+                        $class == $responseVariableClass
+                        && $variableClassUri == $responseVariableClass
+                    )) {
+                    //variableIdentifier
+                    $variableIdentifier = $variable[0]->variable->identifier;
+                    $uri = (null != $variable[0]->item) ? $variable[0]->item : $variable[0]->test;
+                    $contextIdentifierLabel = $itemIndex->getItemValue($uri, $resultLanguage, 'label');
+                    $variableTypes[$uri.$variableIdentifier] = array("contextLabel" => $contextIdentifierLabel, "contextId" => $uri, "variableIdentifier" => $variableIdentifier);
+                }
             }
         }
-        foreach ($variableTypes as $variable){
+
+        foreach ($variableTypes as $variableType){
 
             switch ($variableClassUri){
                 case \taoResultServer_models_classes_OutcomeVariable::class :
-                    $columns[] = new GradeColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);
+                    $columns[] = new GradeColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"]);
                     break;
                 case \taoResultServer_models_classes_ResponseVariable::class :
-                    $columns[] = new ResponseColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);
+                    $columns[] = new ResponseColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"]);
                     break;
                 default:
-                    $columns[] = new ResponseColumn($variable["contextId"], $variable["contextLabel"], $variable["variableIdentifier"]);
+                    $columns[] = new ResponseColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"]);
             }
         }
         $arr = array();
