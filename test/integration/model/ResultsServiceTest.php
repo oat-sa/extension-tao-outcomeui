@@ -21,15 +21,22 @@ namespace oat\taoOutcomeUi\test\integration\model;
 
 use oat\generis\test\GenerisPhpUnitTestRunner;
 use oat\tao\test\TaoPhpUnitTestRunner;
-use \common_ext_ExtensionsManager;
+use common_ext_ExtensionsManager;
 use oat\taoDeliveryRdf\model\DeliveryContainerService;
 use oat\taoOutcomeRds\model\RdsResultStorage;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoResultServer\models\classes\ResultServerService;
+use taoResultServer_models_classes_OutcomeVariable;
+use taoResultServer_models_classes_ResponseVariable;
+use taoResultServer_models_classes_TraceVariable;
 use core_kernel_classes_Resource;
+use core_kernel_classes_Property;
+use common_exception_Error;
 
 /**
- * TODO:: Because of usage of tao/models/classes/ClassServiceTrait.php in ResultService we can not mock storage and fix this test.
+ * @TODO:: Because of usage of tao/models/classes/ClassServiceTrait.php in ResultService we can not mock storage and fix this test.
+ *         We need to use ServiceLocatorAwareTrait to be able to set service locator with mocked services.
+ *
  * This test case focuses on testing ResultsService.
  *
  * @author Lionel Lecaque <lionel@taotesting.com>
@@ -71,7 +78,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      */
     public function testGetImplementation()
     {
-        $this->expectException(\common_exception_Error::class);
+        $this->expectException(common_exception_Error::class);
 
         $this->service->getImplementation();
     }
@@ -112,7 +119,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $this->service->setImplementation($imp);
 
         $delivery = $this->service->getDelivery('#fakeUri');
-        $this->assertInstanceOf('core_kernel_classes_Resource', $delivery);
+        $this->assertInstanceOf(core_kernel_classes_Resource::class, $delivery);
         $this->assertEquals('#fakeDelivery', $delivery->getUri());
     }
     /**
@@ -123,7 +130,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $impProphecy = $this->prophesize(RdsResultStorage::class);
 
         $variable = new \stdClass();
-        $variable->variable = new \taoResultServer_models_classes_ResponseVariable();
+        $variable->variable = new taoResultServer_models_classes_ResponseVariable();
         $variable->value = '#bar';
         $impProphecy->getVariables('#foo')->willReturn(array(array($variable)));
         $imp = $impProphecy->reveal();
@@ -164,7 +171,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      * @author Lionel Lecaque, lionel@taotesting.com
      */
     public function testGetItemFromItemResult() {
-        // TODO: Refactor ResultService class to be able to mock dependencies and fix test.
+        // @TODO: Refactor ResultService class to be able to mock dependencies and fix test.
         $this->markTestSkipped();
 
         $impProphecy = $this->prophesize(RdsResultStorage::class);
@@ -182,7 +189,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
         // @todo fix "common_exception_Error: could not create resource from NULL"
         $resultItem = $this->service->getItemFromItemResult('#foo');
-        $this->assertInstanceOf('core_kernel_classes_Resource', $resultItem);
+        $this->assertInstanceOf(core_kernel_classes_Resource::class, $resultItem);
         $this->assertEquals('#item', $resultItem->getUri());
     }
     /**
@@ -196,7 +203,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
         $var = new \stdClass();
         $var->callIdTest = 'callId';
-        $responseVariable = new \taoResultServer_models_classes_ResponseVariable();
+        $responseVariable = new taoResultServer_models_classes_ResponseVariable();
         $responseVariable->setIdentifier('myID');
         $second = microtime();
         $responseVariable->setEpoch($second);
@@ -204,7 +211,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
         $var2 = new \stdClass();
         $var2->callIdTest = 'callId';
-        $outcomeVariable = new \taoResultServer_models_classes_OutcomeVariable();
+        $outcomeVariable = new taoResultServer_models_classes_OutcomeVariable();
         $outcomeVariable->setIdentifier('mySecondID');
         $outcomeVariable->setEpoch($first);
         $var2->variable = $outcomeVariable;
@@ -226,9 +233,9 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
             $outcomeVariable,
             $responseVariable
         ), $varDataAll);
-        $varDataEmpty = $this->service->getVariableDataFromDeliveryResult('#fakeUri', array(\taoResultServer_models_classes_TraceVariable::class));
+        $varDataEmpty = $this->service->getVariableDataFromDeliveryResult('#fakeUri', array(taoResultServer_models_classes_TraceVariable::class));
         $this->assertEmpty($varDataEmpty);
-        $varData = $this->service->getVariableDataFromDeliveryResult('#fakeUri', array(\taoResultServer_models_classes_ResponseVariable::class));
+        $varData = $this->service->getVariableDataFromDeliveryResult('#fakeUri', array(taoResultServer_models_classes_ResponseVariable::class));
         $this->assertEquals(array(
             $responseVariable
         ), $varData);
@@ -246,7 +253,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $this->service->setImplementation($imp);
 
         $item = $this->service->getTestTaker('#fakeUri');
-        $this->assertInstanceOf('core_kernel_classes_Resource', $item);
+        $this->assertInstanceOf(core_kernel_classes_Resource::class, $item);
         $this->assertEquals('#testTaker', $item->getUri());
     }
     /**
@@ -271,10 +278,10 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      */
     public function testGetReadableImplementationNoResultStorage()
     {
-        // TODO: Refactor ResultService class to be able to mock dependencies and fix test.
+        // @TODO: Refactor ResultService class to be able to mock dependencies and fix test.
         $this->markTestSkipped();
 
-        $this->expectException(\common_exception_Error::class);
+        $this->expectException(common_exception_Error::class);
 
         $deliveryProphecy = $this->prophesize(core_kernel_classes_Resource::class);
         $delivery = $deliveryProphecy->reveal();
@@ -289,16 +296,16 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      */
     public function testGetReadableImplementationNoResultServer()
     {
-        // TODO: Refactor ResultService class to be able to mock dependencies and fix test.
+        // @TODO: Refactor ResultService class to be able to mock dependencies and fix test.
         $this->markTestSkipped();
 
-        $this->expectException(\common_exception_Error::class);
+        $this->expectException(common_exception_Error::class);
 
         $resultProphecy = $this->prophesize(core_kernel_classes_Resource::class);
         $resultServer = $resultProphecy->reveal();
 
         $deliveryProphecy = $this->prophesize(core_kernel_classes_Resource::class);
-        $deliveryProphecy->getOnePropertyValue(new \core_kernel_classes_Property(DeliveryContainerService::PROPERTY_RESULT_SERVER))->willReturn($resultServer);
+        $deliveryProphecy->getOnePropertyValue(new core_kernel_classes_Property(DeliveryContainerService::PROPERTY_RESULT_SERVER))->willReturn($resultServer);
         $delivery = $deliveryProphecy->reveal();
 
         $this->service->getReadableImplementation($delivery);
@@ -310,20 +317,20 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      */
     public function testGetReadableImplementationNoResultServerModel()
     {
-        // TODO: Refactor ResultService class to be able to mock dependencies and fix test.
+        // @TODO: Refactor ResultService class to be able to mock dependencies and fix test.
         $this->markTestSkipped();
 
-        $this->expectException(\common_exception_Error::class);
+        $this->expectException(common_exception_Error::class);
 
-        $resultProphecy = $this->prophesize('core_kernel_classes_Resource');
-        $resultProphecy->getPropertyValues(new \core_kernel_classes_Property(ResultServerService::PROPERTY_HAS_MODEL))->willReturn(array(
+        $resultProphecy = $this->prophesize(core_kernel_classes_Resource::class);
+        $resultProphecy->getPropertyValues(new core_kernel_classes_Property(ResultServerService::PROPERTY_HAS_MODEL))->willReturn(array(
             '#fakeUri'
         ));
         $resultServer = $resultProphecy->reveal();
 
-        $deliveryProphecy = $this->prophesize('core_kernel_classes_Resource');
+        $deliveryProphecy = $this->prophesize(core_kernel_classes_Resource::class);
 
-        $deliveryProphecy->getOnePropertyValue(new \core_kernel_classes_Property(DeliveryContainerService::PROPERTY_RESULT_SERVER))->willReturn($resultServer);
+        $deliveryProphecy->getOnePropertyValue(new core_kernel_classes_Property(DeliveryContainerService::PROPERTY_RESULT_SERVER))->willReturn($resultServer);
 
         $delivery = $deliveryProphecy->reveal();
         $this->service->getReadableImplementation($delivery);
@@ -336,13 +343,13 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
     public function testGetReadableImplementation()
     {
         $resultProphecy = $this->prophesize(core_kernel_classes_Resource::class);
-        $resultProphecy->getPropertyValues(new \core_kernel_classes_Property(ResultServerService::PROPERTY_HAS_MODEL))->willReturn(array(
+        $resultProphecy->getPropertyValues(new core_kernel_classes_Property(ResultServerService::PROPERTY_HAS_MODEL))->willReturn(array(
             'http://www.tao.lu/Ontologies/taoOutcomeRds.rdf#RdsResultStorageModel'
         ));
         $resultServer = $resultProphecy->reveal();
 
         $deliveryProphecy = $this->prophesize(core_kernel_classes_Resource::class);
-        $deliveryProphecy->getOnePropertyValue(new \core_kernel_classes_Property(DeliveryContainerService::PROPERTY_RESULT_SERVER))->willReturn($resultServer);
+        $deliveryProphecy->getOnePropertyValue(new core_kernel_classes_Property(DeliveryContainerService::PROPERTY_RESULT_SERVER))->willReturn($resultServer);
         $delivery = $deliveryProphecy->reveal();
 
         $this->assertInstanceOf(RdsResultStorage::class, $this->service->getReadableImplementation($delivery));
@@ -351,12 +358,12 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
     public function testGetVariables()
     {
         $variable1 = new \stdClass();
-        $variable1->variable = new \taoResultServer_models_classes_ResponseVariable();
+        $variable1->variable = new taoResultServer_models_classes_ResponseVariable();
         $variable1->value = 'foo';
         $variable1->callIdItem = '#itemResultVariable';
 
         $variable2 = new \stdClass();
-        $variable2->variable = new \taoResultServer_models_classes_ResponseVariable();
+        $variable2->variable = new taoResultServer_models_classes_ResponseVariable();
         $variable2->value = 'bar';
         $variable2->callIdTest = '#testResultVariable';
 
@@ -385,7 +392,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      * @author Lionel Lecaque, lionel@taotesting.com
      */
     public function testGetItemVariableDataFromDeliveryResult() {
-        // TODO: Refactor ResultService class to be able to mock dependencies and fix test.
+        // @TODO: Refactor ResultService class to be able to mock dependencies and fix test.
         $this->markTestSkipped();
 
         $impProphecy = $this->prophesize(RdsResultStorage::class);
@@ -399,7 +406,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $item->item = '#item';
         $item->uri = '#uri';
 
-        $var = new \taoResultServer_models_classes_TraceVariable();
+        $var = new taoResultServer_models_classes_TraceVariable();
         $var->setEpoch(microtime());
         $var->setIdentifier('varIdentifier');
         $item->variable = $var;
@@ -408,7 +415,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $item2->item = '#item2';
         $item2->uri = '#uri2';
 
-        $var2 = new \taoResultServer_models_classes_ResponseVariable();
+        $var2 = new taoResultServer_models_classes_ResponseVariable();
         $var2->setEpoch(microtime());
         $var2->setIdentifier('varIdentifier2');
         // response correct
@@ -419,7 +426,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $item3->item = '#item3';
         $item3->uri = '#uri3';
 
-        $var3 = new \taoResultServer_models_classes_ResponseVariable();
+        $var3 = new taoResultServer_models_classes_ResponseVariable();
         $var3->setEpoch(microtime());
         $var3->setIdentifier('varIdentifier3');
         // response incorrect
@@ -454,18 +461,18 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $this->assertEquals('unknown', $itemVar['#item']['itemModel']);
 
         $this->assertArrayHasKey('sortedVars', $itemVar['#item']);
-        $this->assertArrayHasKey('taoResultServer_models_classes_TraceVariable', $itemVar['#item']['sortedVars']);
-        $this->assertArrayHasKey('varIdentifier', $itemVar['#item']['sortedVars']['taoResultServer_models_classes_TraceVariable']);
+        $this->assertArrayHasKey(taoResultServer_models_classes_TraceVariable::class, $itemVar['#item']['sortedVars']);
+        $this->assertArrayHasKey('varIdentifier', $itemVar['#item']['sortedVars'][taoResultServer_models_classes_TraceVariable::class]);
 
-        $this->assertArrayHasKey('uri', $itemVar['#item']['sortedVars']['taoResultServer_models_classes_TraceVariable']['varIdentifier'][0]);
-        $this->assertEquals('#uri', $itemVar['#item']['sortedVars']['taoResultServer_models_classes_TraceVariable']['varIdentifier'][0]['uri']);
+        $this->assertArrayHasKey('uri', $itemVar['#item']['sortedVars'][taoResultServer_models_classes_TraceVariable::class]['varIdentifier'][0]);
+        $this->assertEquals('#uri', $itemVar['#item']['sortedVars'][taoResultServer_models_classes_TraceVariable::class]['varIdentifier'][0]['uri']);
 
-        $this->assertArrayHasKey('isCorrect', $itemVar['#item']['sortedVars']['taoResultServer_models_classes_TraceVariable']['varIdentifier'][0]);
-        $this->assertEquals('unscored', $itemVar['#item']['sortedVars']['taoResultServer_models_classes_TraceVariable']['varIdentifier'][0]['isCorrect']);
+        $this->assertArrayHasKey('isCorrect', $itemVar['#item']['sortedVars'][taoResultServer_models_classes_TraceVariable::class]['varIdentifier'][0]);
+        $this->assertEquals('unscored', $itemVar['#item']['sortedVars'][taoResultServer_models_classes_TraceVariable::class]['varIdentifier'][0]['isCorrect']);
 
-        $this->assertArrayHasKey('var', $itemVar['#item']['sortedVars']['taoResultServer_models_classes_TraceVariable']['varIdentifier'][0]);
-        $this->assertInstanceOf('taoResultServer_models_classes_TraceVariable', $itemVar['#item']['sortedVars']['taoResultServer_models_classes_TraceVariable']['varIdentifier'][0]['var']);
-        $this->assertEquals($var, $itemVar['#item']['sortedVars']['taoResultServer_models_classes_TraceVariable']['varIdentifier'][0]['var']);
+        $this->assertArrayHasKey('var', $itemVar['#item']['sortedVars'][taoResultServer_models_classes_TraceVariable::class]['varIdentifier'][0]);
+        $this->assertInstanceOf(taoResultServer_models_classes_TraceVariable::class, $itemVar['#item']['sortedVars'][taoResultServer_models_classes_TraceVariable::class]['varIdentifier'][0]['var']);
+        $this->assertEquals($var, $itemVar['#item']['sortedVars'][taoResultServer_models_classes_TraceVariable::class]['varIdentifier'][0]['var']);
 
         $this->assertArrayHasKey('label', $itemVar['#item']);
 
@@ -475,14 +482,14 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $this->assertEquals('unknown', $itemVar['#item2']['itemModel']);
 
         $this->assertArrayHasKey('sortedVars', $itemVar['#item2']);
-        $this->assertArrayHasKey('taoResultServer_models_classes_ResponseVariable', $itemVar['#item2']['sortedVars']);
-        $this->assertArrayHasKey('varIdentifier2', $itemVar['#item2']['sortedVars']['taoResultServer_models_classes_ResponseVariable']);
+        $this->assertArrayHasKey(taoResultServer_models_classes_ResponseVariable::class, $itemVar['#item2']['sortedVars']);
+        $this->assertArrayHasKey('varIdentifier2', $itemVar['#item2']['sortedVars'][taoResultServer_models_classes_ResponseVariable::class]);
 
-        $this->assertArrayHasKey('uri', $itemVar['#item2']['sortedVars']['taoResultServer_models_classes_ResponseVariable']['varIdentifier2'][0]);
-        $this->assertEquals('#uri2', $itemVar['#item2']['sortedVars']['taoResultServer_models_classes_ResponseVariable']['varIdentifier2'][0]['uri']);
+        $this->assertArrayHasKey('uri', $itemVar['#item2']['sortedVars'][taoResultServer_models_classes_ResponseVariable::class]['varIdentifier2'][0]);
+        $this->assertEquals('#uri2', $itemVar['#item2']['sortedVars'][taoResultServer_models_classes_ResponseVariable::class]['varIdentifier2'][0]['uri']);
 
-        $this->assertArrayHasKey('isCorrect', $itemVar['#item2']['sortedVars']['taoResultServer_models_classes_ResponseVariable']['varIdentifier2'][0]);
-        $this->assertEquals('correct', $itemVar['#item2']['sortedVars']['taoResultServer_models_classes_ResponseVariable']['varIdentifier2'][0]['isCorrect']);
+        $this->assertArrayHasKey('isCorrect', $itemVar['#item2']['sortedVars'][taoResultServer_models_classes_ResponseVariable::class]['varIdentifier2'][0]);
+        $this->assertEquals('correct', $itemVar['#item2']['sortedVars'][taoResultServer_models_classes_ResponseVariable::class]['varIdentifier2'][0]['isCorrect']);
 
         // item3
         $this->assertArrayHasKey('#item3', $itemVar);
@@ -490,14 +497,14 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $this->assertEquals('unknown', $itemVar['#item3']['itemModel']);
 
         $this->assertArrayHasKey('sortedVars', $itemVar['#item3']);
-        $this->assertArrayHasKey('taoResultServer_models_classes_ResponseVariable', $itemVar['#item3']['sortedVars']);
-        $this->assertArrayHasKey('varIdentifier3', $itemVar['#item3']['sortedVars']['taoResultServer_models_classes_ResponseVariable']);
+        $this->assertArrayHasKey(taoResultServer_models_classes_ResponseVariable::class, $itemVar['#item3']['sortedVars']);
+        $this->assertArrayHasKey('varIdentifier3', $itemVar['#item3']['sortedVars'][taoResultServer_models_classes_ResponseVariable::class]);
 
-        $this->assertArrayHasKey('uri', $itemVar['#item3']['sortedVars']['taoResultServer_models_classes_ResponseVariable']['varIdentifier3'][0]);
-        $this->assertEquals('#uri3', $itemVar['#item3']['sortedVars']['taoResultServer_models_classes_ResponseVariable']['varIdentifier3'][0]['uri']);
+        $this->assertArrayHasKey('uri', $itemVar['#item3']['sortedVars'][taoResultServer_models_classes_ResponseVariable::class]['varIdentifier3'][0]);
+        $this->assertEquals('#uri3', $itemVar['#item3']['sortedVars'][taoResultServer_models_classes_ResponseVariable::class]['varIdentifier3'][0]['uri']);
 
-        $this->assertArrayHasKey('isCorrect', $itemVar['#item3']['sortedVars']['taoResultServer_models_classes_ResponseVariable']['varIdentifier3'][0]);
-        $this->assertEquals('incorrect', $itemVar['#item3']['sortedVars']['taoResultServer_models_classes_ResponseVariable']['varIdentifier3'][0]['isCorrect']);
+        $this->assertArrayHasKey('isCorrect', $itemVar['#item3']['sortedVars'][taoResultServer_models_classes_ResponseVariable::class]['varIdentifier3'][0]);
+        $this->assertEquals('incorrect', $itemVar['#item3']['sortedVars'][taoResultServer_models_classes_ResponseVariable::class]['varIdentifier3'][0]['isCorrect']);
     }
 
     /**
@@ -507,7 +514,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      */
     public function testGetItemVariableDataStatsFromDeliveryResult()
     {
-        // TODO: Refactor ResultService class to be able to mock dependencies and fix test.
+        // @TODO: Refactor ResultService class to be able to mock dependencies and fix test.
         $this->markTestSkipped();
 
         $itemVar = $this->service->getItemVariableDataStatsFromDeliveryResult('#fakeUri', ResultsService::VARIABLES_FILTER_LAST_SUBMITTED);
@@ -526,7 +533,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
     public function testAllGetStructuredVariables()
     {
-        // TODO: Refactor ResultService class to be able to mock dependencies and fix test.
+        // @TODO: Refactor ResultService class to be able to mock dependencies and fix test.
         $this->markTestSkipped();
 
         $serviceMock = $this->getMockBuilder(ResultsService::class)
@@ -534,36 +541,36 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
             ->setMethods(array('getItemFromItemResult'))
             ->getMock();
 
-        $itemModel1Prophecy = $this->prophesize('\core_kernel_classes_Resource');
+        $itemModel1Prophecy = $this->prophesize(core_kernel_classes_Resource::class);
         $itemModel1Prophecy->getLabel()->willReturn('MyItemModel');
 
-        $relatedItem1Prophecy = $this->prophesize('\core_kernel_classes_Resource');
+        $relatedItem1Prophecy = $this->prophesize(core_kernel_classes_Resource::class);
         $relatedItem1Prophecy->getLabel()->willReturn('MyRelatedItem1');
         $relatedItem1Prophecy->getUri()->willReturn('MyRelatedItemUri1');
-        $relatedItem1Prophecy->getUniquePropertyValue(new \core_kernel_classes_Property(taoItems_models_classes_ItemsService::PROPERTY_ITEM_MODEL))->willReturn($itemModel1Prophecy->reveal());
+        $relatedItem1Prophecy->getUniquePropertyValue(new core_kernel_classes_Property(taoItems_models_classes_ItemsService::PROPERTY_ITEM_MODEL))->willReturn($itemModel1Prophecy->reveal());
 
-        $itemModel2Prophecy = $this->prophesize('\core_kernel_classes_Resource');
+        $itemModel2Prophecy = $this->prophesize(core_kernel_classes_Resource::class);
         $itemModel2Prophecy->getLabel()->willReturn('MySecondItemModel');
 
-        $relatedItem2Prophecy = $this->prophesize('\core_kernel_classes_Resource');
+        $relatedItem2Prophecy = $this->prophesize(core_kernel_classes_Resource::class);
         $relatedItem2Prophecy->getLabel()->willReturn('MyRelatedItem2');
         $relatedItem2Prophecy->getUri()->willReturn('MyRelatedItemUri2');
-        $relatedItem2Prophecy->getUniquePropertyValue(new \core_kernel_classes_Property(taoItems_models_classes_ItemsService::PROPERTY_ITEM_MODEL))->willReturn($itemModel2Prophecy->reveal());
+        $relatedItem2Prophecy->getUniquePropertyValue(new core_kernel_classes_Property(taoItems_models_classes_ItemsService::PROPERTY_ITEM_MODEL))->willReturn($itemModel2Prophecy->reveal());
 
-        $itemModel3Prophecy = $this->prophesize('\core_kernel_classes_Resource');
+        $itemModel3Prophecy = $this->prophesize(core_kernel_classes_Resource::class);
         $itemModel3Prophecy->getLabel()->willReturn('MyThirdItemModel');
 
-        $relatedItem3Prophecy = $this->prophesize('\core_kernel_classes_Resource');
+        $relatedItem3Prophecy = $this->prophesize(core_kernel_classes_Resource::class);
         $relatedItem3Prophecy->getLabel()->willReturn('MyRelatedItem3');
         $relatedItem3Prophecy->getUri()->willReturn('MyRelatedItemUri3');
-        $relatedItem3Prophecy->getUniquePropertyValue(new \core_kernel_classes_Property(taoItems_models_classes_ItemsService::PROPERTY_ITEM_MODEL))->willReturn($itemModel3Prophecy->reveal());
+        $relatedItem3Prophecy->getUniquePropertyValue(new core_kernel_classes_Property(taoItems_models_classes_ItemsService::PROPERTY_ITEM_MODEL))->willReturn($itemModel3Prophecy->reveal());
 
 
         //Variables for Item 1
         $callId1 = 'callId1';
         $epoch1 = microtime();
         $variable1 = new \stdClass();
-        $responseVariable1 = new \taoResultServer_models_classes_ResponseVariable();
+        $responseVariable1 = new taoResultServer_models_classes_ResponseVariable();
         $responseVariable1->setValue('myValue');
         $responseVariable1->setCorrectResponse(1);
         $responseVariable1->setBaseType('string');
@@ -571,7 +578,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $responseVariable1->setEpoch($epoch1);
         $responseVariable1->setIdentifier('MyFirstResponseVariableIdentifier');
         $variable1->uri = 'uri11';
-        $variable1->class = 'taoResultServer_models_classes_ResponseVariable';
+        $variable1->class = taoResultServer_models_classes_ResponseVariable::class;
         $variable1->deliveryResultIdentifier = '#fakeUri';
         $variable1->callIdItem = 'callId1';
         $variable1->callIdTest = '';
@@ -581,7 +588,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
         $epoch12 = microtime();
         $variable12 = new \stdClass();
-        $outcomeVariable1 = new \taoResultServer_models_classes_OutcomeVariable();
+        $outcomeVariable1 = new taoResultServer_models_classes_OutcomeVariable();
         $outcomeVariable1->setValue('myOutcomeValue');
         $outcomeVariable1->setBaseType('string');
         $outcomeVariable1->setCardinality('multiple');
@@ -590,7 +597,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $outcomeVariable1->setNormalMaximum(10);
         $outcomeVariable1->setNormalMinimum(1);
         $variable12->uri = 'uri12';
-        $variable12->class = 'taoResultServer_models_classes_OutcomeVariable';
+        $variable12->class = taoResultServer_models_classes_OutcomeVariable::class;
         $variable12->deliveryResultIdentifier = '#fakeUri';
         $variable12->callIdItem = 'callId1';
         $variable12->callIdTest = '';
@@ -600,7 +607,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
         $epoch13 = microtime();
         $variable13 = new \stdClass();
-        $traceVariable1 = new \taoResultServer_models_classes_TraceVariable();
+        $traceVariable1 = new taoResultServer_models_classes_TraceVariable();
         $traceVariable1->setValue(true);
         $traceVariable1->setTrace('my first trace');
         $traceVariable1->setBaseType('boolean');
@@ -608,7 +615,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $traceVariable1->setEpoch($epoch13);
         $traceVariable1->setIdentifier('MyFirstTraceVariableIdentifier');
         $variable13->uri = 'uri13';
-        $variable13->class = 'taoResultServer_models_classes_TraceVariable';
+        $variable13->class = taoResultServer_models_classes_TraceVariable::class;
         $variable13->deliveryResultIdentifier = '#fakeUri';
         $variable13->callIdItem = 'callId1';
         $variable13->callIdTest = '';
@@ -633,7 +640,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $callId2 = 'callId2';
         $epoch2 = microtime();
         $variable2 = new \stdClass();
-        $responseVariable2 = new \taoResultServer_models_classes_ResponseVariable();
+        $responseVariable2 = new taoResultServer_models_classes_ResponseVariable();
         $responseVariable2->setValue('myValue');
         $responseVariable2->setCorrectResponse(0);
         $responseVariable2->setBaseType('string');
@@ -641,7 +648,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $responseVariable2->setEpoch($epoch2);
         $responseVariable2->setIdentifier('MySecondResponseVariableIdentifier');
         $variable2->uri = 'uri21';
-        $variable2->class = 'taoResultServer_models_classes_ResponseVariable';
+        $variable2->class = taoResultServer_models_classes_ResponseVariable::class;
         $variable2->deliveryResultIdentifier = '#fakeUri';
         $variable2->callIdItem = 'callId2';
         $variable2->callIdTest = '';
@@ -651,7 +658,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
         $epoch22 = microtime();
         $variable22 = new \stdClass();
-        $outcomeVariable2 = new \taoResultServer_models_classes_OutcomeVariable();
+        $outcomeVariable2 = new taoResultServer_models_classes_OutcomeVariable();
         $outcomeVariable2->setValue('myOutcomeValue');
         $outcomeVariable2->setBaseType('string');
         $outcomeVariable2->setCardinality('multiple');
@@ -660,7 +667,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $outcomeVariable2->setNormalMaximum(10);
         $outcomeVariable2->setNormalMinimum(1);
         $variable22->uri = 'uri22';
-        $variable22->class = 'taoResultServer_models_classes_OutcomeVariable';
+        $variable22->class = taoResultServer_models_classes_OutcomeVariable::class;
         $variable22->deliveryResultIdentifier = '#fakeUri';
         $variable22->callIdItem = 'callId2';
         $variable22->callIdTest = '';
@@ -670,7 +677,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
         $epoch23 = microtime();
         $variable23 = new \stdClass();
-        $traceVariable2 = new \taoResultServer_models_classes_TraceVariable();
+        $traceVariable2 = new taoResultServer_models_classes_TraceVariable();
         $traceVariable2->setValue(true);
         $traceVariable2->setTrace('my second trace');
         $traceVariable2->setBaseType('boolean');
@@ -678,7 +685,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $traceVariable2->setEpoch($epoch23);
         $traceVariable2->setIdentifier('MySecondTraceVariableIdentifier');
         $variable23->uri = 'uri23';
-        $variable23->class = 'taoResultServer_models_classes_TraceVariable';
+        $variable23->class = taoResultServer_models_classes_TraceVariable::class;
         $variable23->deliveryResultIdentifier = '#fakeUri';
         $variable23->callIdItem = 'callId2';
         $variable23->callIdTest = '';
@@ -692,7 +699,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $callId3 = 'callId3';
         $epoch3 = microtime();
         $variable3 = new \stdClass();
-        $responseVariable3 = new \taoResultServer_models_classes_ResponseVariable();
+        $responseVariable3 = new taoResultServer_models_classes_ResponseVariable();
         $responseVariable3->setValue('myValue');
         $responseVariable3->setCorrectResponse(1);
         $responseVariable3->setBaseType('string');
@@ -700,7 +707,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $responseVariable3->setEpoch($epoch3);
         $responseVariable3->setIdentifier('MyThirdResponseVariableIdentifier');
         $variable3->uri = 'uri31';
-        $variable3->class = 'taoResultServer_models_classes_ResponseVariable';
+        $variable3->class = taoResultServer_models_classes_ResponseVariable::class;
         $variable3->deliveryResultIdentifier = '#fakeUri';
         $variable3->callIdItem = 'callId3';
         $variable3->callIdTest = '';
@@ -710,7 +717,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
         $epoch32 = microtime();
         $variable32 = new \stdClass();
-        $outcomeVariable3 = new \taoResultServer_models_classes_OutcomeVariable();
+        $outcomeVariable3 = new taoResultServer_models_classes_OutcomeVariable();
         $outcomeVariable3->setValue('myOutcomeValue');
         $outcomeVariable3->setBaseType('string');
         $outcomeVariable3->setCardinality('multiple');
@@ -719,7 +726,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $outcomeVariable3->setNormalMaximum(10);
         $outcomeVariable3->setNormalMinimum(1);
         $variable32->uri = 'uri32';
-        $variable32->class = 'taoResultServer_models_classes_OutcomeVariable';
+        $variable32->class = taoResultServer_models_classes_OutcomeVariable::class;
         $variable32->deliveryResultIdentifier = '#fakeUri';
         $variable32->callIdItem = 'callId3';
         $variable32->callIdTest = '';
@@ -729,7 +736,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
         $epoch33 = microtime();
         $variable33 = new \stdClass();
-        $traceVariable3 = new \taoResultServer_models_classes_TraceVariable();
+        $traceVariable3 = new taoResultServer_models_classes_TraceVariable();
         $traceVariable3->setValue(true);
         $traceVariable3->setTrace('my third trace');
         $traceVariable3->setBaseType('boolean');
@@ -737,7 +744,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $traceVariable3->setEpoch($epoch33);
         $traceVariable3->setIdentifier('MyThirdTraceVariableIdentifier');
         $variable33->uri = 'uri33';
-        $variable33->class = 'taoResultServer_models_classes_TraceVariable';
+        $variable33->class = taoResultServer_models_classes_TraceVariable::class;
         $variable33->deliveryResultIdentifier = '#fakeUri';
         $variable33->callIdItem = 'callId3';
         $variable33->callIdTest = '';
@@ -747,7 +754,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
         $epoch24 = microtime();
         $variable24 = new \stdClass();
-        $traceVariable22 = new \taoResultServer_models_classes_TraceVariable();
+        $traceVariable22 = new taoResultServer_models_classes_TraceVariable();
         $traceVariable22->setValue(true);
         $traceVariable22->setTrace('my forth trace');
         $traceVariable22->setBaseType('boolean');
@@ -755,7 +762,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $traceVariable22->setEpoch($epoch24);
         $traceVariable22->setIdentifier('TraceVariableIdentifier');
         $variable24->uri = 'uri24';
-        $variable24->class = 'taoResultServer_models_classes_TraceVariable';
+        $variable24->class = taoResultServer_models_classes_TraceVariable::class;
         $variable24->deliveryResultIdentifier = '#fakeUri';
         $variable24->callIdItem = 'callId2';
         $variable24->callIdTest = '';
@@ -823,13 +830,13 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
         // @todo fix method call not expected
         $wantedTypes = [
-            \taoResultServer_models_classes_ResponseVariable::class,
-            \taoResultServer_models_classes_OutcomeVariable::class,
-            \taoResultServer_models_classes_TraceVariable::class
+            taoResultServer_models_classes_ResponseVariable::class,
+            taoResultServer_models_classes_OutcomeVariable::class,
+            taoResultServer_models_classes_TraceVariable::class
         ];
         $allVariables = $serviceMock->getStructuredVariables('DeliveryExecutionIdentifier', 'all', $wantedTypes);
 
-        $lastVariables = $serviceMock->getStructuredVariables('DeliveryExecutionIdentifier', ResultsService::VARIABLES_FILTER_LAST_SUBMITTED, array(\taoResultServer_models_classes_TraceVariable::class));
+        $lastVariables = $serviceMock->getStructuredVariables('DeliveryExecutionIdentifier', ResultsService::VARIABLES_FILTER_LAST_SUBMITTED, array(taoResultServer_models_classes_TraceVariable::class));
 
         $this->assertInternalType('array', $allVariables);
 
@@ -859,203 +866,203 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $this->assertArrayHasKey('uri', $allVariables[$epoch3]);
         $this->assertEquals('MyRelatedItemUri3', $allVariables[$epoch3]['uri']);
 
-        $this->assertArrayHasKey('taoResultServer_models_classes_ResponseVariable', $allVariables[$epoch1]);
-        $this->assertInternalType('array', $allVariables[$epoch1]['taoResultServer_models_classes_ResponseVariable']);
-        $this->assertArrayHasKey('MyFirstResponseVariableIdentifier', $allVariables[$epoch1]['taoResultServer_models_classes_ResponseVariable']);
-        $this->assertInternalType('array', $allVariables[$epoch1]['taoResultServer_models_classes_ResponseVariable']['MyFirstResponseVariableIdentifier']);
-        $this->assertArrayHasKey('uri', $allVariables[$epoch1]['taoResultServer_models_classes_ResponseVariable']['MyFirstResponseVariableIdentifier']);
-        $this->assertEquals('uri11', $allVariables[$epoch1]['taoResultServer_models_classes_ResponseVariable']['MyFirstResponseVariableIdentifier']['uri']);
+        $this->assertArrayHasKey(taoResultServer_models_classes_ResponseVariable::class, $allVariables[$epoch1]);
+        $this->assertInternalType('array', $allVariables[$epoch1][taoResultServer_models_classes_ResponseVariable::class]);
+        $this->assertArrayHasKey('MyFirstResponseVariableIdentifier', $allVariables[$epoch1][taoResultServer_models_classes_ResponseVariable::class]);
+        $this->assertInternalType('array', $allVariables[$epoch1][taoResultServer_models_classes_ResponseVariable::class]['MyFirstResponseVariableIdentifier']);
+        $this->assertArrayHasKey('uri', $allVariables[$epoch1][taoResultServer_models_classes_ResponseVariable::class]['MyFirstResponseVariableIdentifier']);
+        $this->assertEquals('uri11', $allVariables[$epoch1][taoResultServer_models_classes_ResponseVariable::class]['MyFirstResponseVariableIdentifier']['uri']);
 
-        $this->assertArrayHasKey('var', $allVariables[$epoch1]['taoResultServer_models_classes_ResponseVariable']['MyFirstResponseVariableIdentifier']);
-        $this->assertEquals($responseVariable1, $allVariables[$epoch1]['taoResultServer_models_classes_ResponseVariable']['MyFirstResponseVariableIdentifier']['var']);
+        $this->assertArrayHasKey('var', $allVariables[$epoch1][taoResultServer_models_classes_ResponseVariable::class]['MyFirstResponseVariableIdentifier']);
+        $this->assertEquals($responseVariable1, $allVariables[$epoch1][taoResultServer_models_classes_ResponseVariable::class]['MyFirstResponseVariableIdentifier']['var']);
 
-        $this->assertArrayHasKey('isCorrect', $allVariables[$epoch1]['taoResultServer_models_classes_ResponseVariable']['MyFirstResponseVariableIdentifier']);
-        $this->assertEquals('correct', $allVariables[$epoch1]['taoResultServer_models_classes_ResponseVariable']['MyFirstResponseVariableIdentifier']['isCorrect']);
+        $this->assertArrayHasKey('isCorrect', $allVariables[$epoch1][taoResultServer_models_classes_ResponseVariable::class]['MyFirstResponseVariableIdentifier']);
+        $this->assertEquals('correct', $allVariables[$epoch1][taoResultServer_models_classes_ResponseVariable::class]['MyFirstResponseVariableIdentifier']['isCorrect']);
 
-        $this->assertArrayHasKey('taoResultServer_models_classes_OutcomeVariable', $allVariables[$epoch1]);
-        $this->assertInternalType('array', $allVariables[$epoch1]['taoResultServer_models_classes_OutcomeVariable']);
-        $this->assertArrayHasKey('MyFirstOutcomeVariableIdentifier', $allVariables[$epoch1]['taoResultServer_models_classes_OutcomeVariable']);
-        $this->assertInternalType('array', $allVariables[$epoch1]['taoResultServer_models_classes_OutcomeVariable']['MyFirstOutcomeVariableIdentifier']);
-        $this->assertArrayHasKey('uri', $allVariables[$epoch1]['taoResultServer_models_classes_OutcomeVariable']['MyFirstOutcomeVariableIdentifier']);
-        $this->assertEquals('uri12', $allVariables[$epoch1]['taoResultServer_models_classes_OutcomeVariable']['MyFirstOutcomeVariableIdentifier']['uri']);
+        $this->assertArrayHasKey(taoResultServer_models_classes_OutcomeVariable::class, $allVariables[$epoch1]);
+        $this->assertInternalType('array', $allVariables[$epoch1][taoResultServer_models_classes_OutcomeVariable::class]);
+        $this->assertArrayHasKey('MyFirstOutcomeVariableIdentifier', $allVariables[$epoch1][taoResultServer_models_classes_OutcomeVariable::class]);
+        $this->assertInternalType('array', $allVariables[$epoch1][taoResultServer_models_classes_OutcomeVariable::class]['MyFirstOutcomeVariableIdentifier']);
+        $this->assertArrayHasKey('uri', $allVariables[$epoch1][taoResultServer_models_classes_OutcomeVariable::class]['MyFirstOutcomeVariableIdentifier']);
+        $this->assertEquals('uri12', $allVariables[$epoch1][taoResultServer_models_classes_OutcomeVariable::class]['MyFirstOutcomeVariableIdentifier']['uri']);
 
-        $this->assertArrayHasKey('var', $allVariables[$epoch1]['taoResultServer_models_classes_OutcomeVariable']['MyFirstOutcomeVariableIdentifier']);
-        $this->assertEquals($outcomeVariable1, $allVariables[$epoch1]['taoResultServer_models_classes_OutcomeVariable']['MyFirstOutcomeVariableIdentifier']['var']);
+        $this->assertArrayHasKey('var', $allVariables[$epoch1][taoResultServer_models_classes_OutcomeVariable::class]['MyFirstOutcomeVariableIdentifier']);
+        $this->assertEquals($outcomeVariable1, $allVariables[$epoch1][taoResultServer_models_classes_OutcomeVariable::class]['MyFirstOutcomeVariableIdentifier']['var']);
 
-        $this->assertArrayHasKey('isCorrect', $allVariables[$epoch1]['taoResultServer_models_classes_OutcomeVariable']['MyFirstOutcomeVariableIdentifier']);
-        $this->assertEquals('unscored', $allVariables[$epoch1]['taoResultServer_models_classes_OutcomeVariable']['MyFirstOutcomeVariableIdentifier']['isCorrect']);
+        $this->assertArrayHasKey('isCorrect', $allVariables[$epoch1][taoResultServer_models_classes_OutcomeVariable::class]['MyFirstOutcomeVariableIdentifier']);
+        $this->assertEquals('unscored', $allVariables[$epoch1][taoResultServer_models_classes_OutcomeVariable::class]['MyFirstOutcomeVariableIdentifier']['isCorrect']);
 
-        $this->assertArrayHasKey('taoResultServer_models_classes_TraceVariable', $allVariables[$epoch1]);
-        $this->assertInternalType('array', $allVariables[$epoch1]['taoResultServer_models_classes_TraceVariable']);
-        $this->assertArrayHasKey('MyFirstTraceVariableIdentifier', $allVariables[$epoch1]['taoResultServer_models_classes_TraceVariable']);
-        $this->assertInternalType('array', $allVariables[$epoch1]['taoResultServer_models_classes_TraceVariable']['MyFirstTraceVariableIdentifier']);
-        $this->assertArrayHasKey('uri', $allVariables[$epoch1]['taoResultServer_models_classes_TraceVariable']['MyFirstTraceVariableIdentifier']);
-        $this->assertEquals('uri13', $allVariables[$epoch1]['taoResultServer_models_classes_TraceVariable']['MyFirstTraceVariableIdentifier']['uri']);
+        $this->assertArrayHasKey(taoResultServer_models_classes_TraceVariable::class, $allVariables[$epoch1]);
+        $this->assertInternalType('array', $allVariables[$epoch1][taoResultServer_models_classes_TraceVariable::class]);
+        $this->assertArrayHasKey('MyFirstTraceVariableIdentifier', $allVariables[$epoch1][taoResultServer_models_classes_TraceVariable::class]);
+        $this->assertInternalType('array', $allVariables[$epoch1][taoResultServer_models_classes_TraceVariable::class]['MyFirstTraceVariableIdentifier']);
+        $this->assertArrayHasKey('uri', $allVariables[$epoch1][taoResultServer_models_classes_TraceVariable::class]['MyFirstTraceVariableIdentifier']);
+        $this->assertEquals('uri13', $allVariables[$epoch1][taoResultServer_models_classes_TraceVariable::class]['MyFirstTraceVariableIdentifier']['uri']);
 
-        $this->assertArrayHasKey('var', $allVariables[$epoch1]['taoResultServer_models_classes_TraceVariable']['MyFirstTraceVariableIdentifier']);
-        $this->assertEquals($traceVariable1, $allVariables[$epoch1]['taoResultServer_models_classes_TraceVariable']['MyFirstTraceVariableIdentifier']['var']);
+        $this->assertArrayHasKey('var', $allVariables[$epoch1][taoResultServer_models_classes_TraceVariable::class]['MyFirstTraceVariableIdentifier']);
+        $this->assertEquals($traceVariable1, $allVariables[$epoch1][taoResultServer_models_classes_TraceVariable::class]['MyFirstTraceVariableIdentifier']['var']);
 
-        $this->assertArrayHasKey('isCorrect', $allVariables[$epoch1]['taoResultServer_models_classes_TraceVariable']['MyFirstTraceVariableIdentifier']);
-        $this->assertEquals('unscored', $allVariables[$epoch1]['taoResultServer_models_classes_TraceVariable']['MyFirstTraceVariableIdentifier']['isCorrect']);
+        $this->assertArrayHasKey('isCorrect', $allVariables[$epoch1][taoResultServer_models_classes_TraceVariable::class]['MyFirstTraceVariableIdentifier']);
+        $this->assertEquals('unscored', $allVariables[$epoch1][taoResultServer_models_classes_TraceVariable::class]['MyFirstTraceVariableIdentifier']['isCorrect']);
 
 
-        $this->assertArrayHasKey('taoResultServer_models_classes_ResponseVariable', $allVariables[$epoch2]);
-        $this->assertInternalType('array', $allVariables[$epoch2]['taoResultServer_models_classes_ResponseVariable']);
-        $this->assertArrayHasKey('MySecondResponseVariableIdentifier', $allVariables[$epoch2]['taoResultServer_models_classes_ResponseVariable']);
-        $this->assertInternalType('array', $allVariables[$epoch2]['taoResultServer_models_classes_ResponseVariable']['MySecondResponseVariableIdentifier']);
-        $this->assertArrayHasKey('uri', $allVariables[$epoch2]['taoResultServer_models_classes_ResponseVariable']['MySecondResponseVariableIdentifier']);
-        $this->assertEquals('uri21', $allVariables[$epoch2]['taoResultServer_models_classes_ResponseVariable']['MySecondResponseVariableIdentifier']['uri']);
+        $this->assertArrayHasKey(taoResultServer_models_classes_ResponseVariable::class, $allVariables[$epoch2]);
+        $this->assertInternalType('array', $allVariables[$epoch2][taoResultServer_models_classes_ResponseVariable::class]);
+        $this->assertArrayHasKey('MySecondResponseVariableIdentifier', $allVariables[$epoch2][taoResultServer_models_classes_ResponseVariable::class]);
+        $this->assertInternalType('array', $allVariables[$epoch2][taoResultServer_models_classes_ResponseVariable::class]['MySecondResponseVariableIdentifier']);
+        $this->assertArrayHasKey('uri', $allVariables[$epoch2][taoResultServer_models_classes_ResponseVariable::class]['MySecondResponseVariableIdentifier']);
+        $this->assertEquals('uri21', $allVariables[$epoch2][taoResultServer_models_classes_ResponseVariable::class]['MySecondResponseVariableIdentifier']['uri']);
 
-        $this->assertArrayHasKey('var', $allVariables[$epoch2]['taoResultServer_models_classes_ResponseVariable']['MySecondResponseVariableIdentifier']);
-        $this->assertEquals($responseVariable2, $allVariables[$epoch2]['taoResultServer_models_classes_ResponseVariable']['MySecondResponseVariableIdentifier']['var']);
+        $this->assertArrayHasKey('var', $allVariables[$epoch2][taoResultServer_models_classes_ResponseVariable::class]['MySecondResponseVariableIdentifier']);
+        $this->assertEquals($responseVariable2, $allVariables[$epoch2][taoResultServer_models_classes_ResponseVariable::class]['MySecondResponseVariableIdentifier']['var']);
 
-        $this->assertArrayHasKey('isCorrect', $allVariables[$epoch2]['taoResultServer_models_classes_ResponseVariable']['MySecondResponseVariableIdentifier']);
-        $this->assertEquals('incorrect', $allVariables[$epoch2]['taoResultServer_models_classes_ResponseVariable']['MySecondResponseVariableIdentifier']['isCorrect']);
+        $this->assertArrayHasKey('isCorrect', $allVariables[$epoch2][taoResultServer_models_classes_ResponseVariable::class]['MySecondResponseVariableIdentifier']);
+        $this->assertEquals('incorrect', $allVariables[$epoch2][taoResultServer_models_classes_ResponseVariable::class]['MySecondResponseVariableIdentifier']['isCorrect']);
 
-        $this->assertArrayHasKey('taoResultServer_models_classes_OutcomeVariable', $allVariables[$epoch2]);
-        $this->assertInternalType('array', $allVariables[$epoch2]['taoResultServer_models_classes_OutcomeVariable']);
-        $this->assertArrayHasKey('MySecondOutcomeVariableIdentifier', $allVariables[$epoch2]['taoResultServer_models_classes_OutcomeVariable']);
-        $this->assertInternalType('array', $allVariables[$epoch2]['taoResultServer_models_classes_OutcomeVariable']['MySecondOutcomeVariableIdentifier']);
-        $this->assertArrayHasKey('uri', $allVariables[$epoch2]['taoResultServer_models_classes_OutcomeVariable']['MySecondOutcomeVariableIdentifier']);
-        $this->assertEquals('uri22', $allVariables[$epoch2]['taoResultServer_models_classes_OutcomeVariable']['MySecondOutcomeVariableIdentifier']['uri']);
+        $this->assertArrayHasKey(taoResultServer_models_classes_OutcomeVariable::class, $allVariables[$epoch2]);
+        $this->assertInternalType('array', $allVariables[$epoch2][taoResultServer_models_classes_OutcomeVariable::class]);
+        $this->assertArrayHasKey('MySecondOutcomeVariableIdentifier', $allVariables[$epoch2][taoResultServer_models_classes_OutcomeVariable::class]);
+        $this->assertInternalType('array', $allVariables[$epoch2][taoResultServer_models_classes_OutcomeVariable::class]['MySecondOutcomeVariableIdentifier']);
+        $this->assertArrayHasKey('uri', $allVariables[$epoch2][taoResultServer_models_classes_OutcomeVariable::class]['MySecondOutcomeVariableIdentifier']);
+        $this->assertEquals('uri22', $allVariables[$epoch2][taoResultServer_models_classes_OutcomeVariable::class]['MySecondOutcomeVariableIdentifier']['uri']);
 
-        $this->assertArrayHasKey('var', $allVariables[$epoch2]['taoResultServer_models_classes_OutcomeVariable']['MySecondOutcomeVariableIdentifier']);
-        $this->assertEquals($outcomeVariable2, $allVariables[$epoch2]['taoResultServer_models_classes_OutcomeVariable']['MySecondOutcomeVariableIdentifier']['var']);
+        $this->assertArrayHasKey('var', $allVariables[$epoch2][taoResultServer_models_classes_OutcomeVariable::class]['MySecondOutcomeVariableIdentifier']);
+        $this->assertEquals($outcomeVariable2, $allVariables[$epoch2][taoResultServer_models_classes_OutcomeVariable::class]['MySecondOutcomeVariableIdentifier']['var']);
 
-        $this->assertArrayHasKey('isCorrect', $allVariables[$epoch2]['taoResultServer_models_classes_OutcomeVariable']['MySecondOutcomeVariableIdentifier']);
-        $this->assertEquals('unscored', $allVariables[$epoch2]['taoResultServer_models_classes_OutcomeVariable']['MySecondOutcomeVariableIdentifier']['isCorrect']);
+        $this->assertArrayHasKey('isCorrect', $allVariables[$epoch2][taoResultServer_models_classes_OutcomeVariable::class]['MySecondOutcomeVariableIdentifier']);
+        $this->assertEquals('unscored', $allVariables[$epoch2][taoResultServer_models_classes_OutcomeVariable::class]['MySecondOutcomeVariableIdentifier']['isCorrect']);
 
-        $this->assertArrayHasKey('taoResultServer_models_classes_TraceVariable', $allVariables[$epoch2]);
-        $this->assertInternalType('array', $allVariables[$epoch2]['taoResultServer_models_classes_TraceVariable']);
-        $this->assertArrayHasKey('MySecondTraceVariableIdentifier', $allVariables[$epoch2]['taoResultServer_models_classes_TraceVariable']);
-        $this->assertInternalType('array', $allVariables[$epoch2]['taoResultServer_models_classes_TraceVariable']['MySecondTraceVariableIdentifier']);
-        $this->assertArrayHasKey('uri', $allVariables[$epoch2]['taoResultServer_models_classes_TraceVariable']['MySecondTraceVariableIdentifier']);
-        $this->assertEquals('uri23', $allVariables[$epoch2]['taoResultServer_models_classes_TraceVariable']['MySecondTraceVariableIdentifier']['uri']);
+        $this->assertArrayHasKey(taoResultServer_models_classes_TraceVariable::class, $allVariables[$epoch2]);
+        $this->assertInternalType('array', $allVariables[$epoch2][taoResultServer_models_classes_TraceVariable::class]);
+        $this->assertArrayHasKey('MySecondTraceVariableIdentifier', $allVariables[$epoch2][taoResultServer_models_classes_TraceVariable::class]);
+        $this->assertInternalType('array', $allVariables[$epoch2][taoResultServer_models_classes_TraceVariable::class]['MySecondTraceVariableIdentifier']);
+        $this->assertArrayHasKey('uri', $allVariables[$epoch2][taoResultServer_models_classes_TraceVariable::class]['MySecondTraceVariableIdentifier']);
+        $this->assertEquals('uri23', $allVariables[$epoch2][taoResultServer_models_classes_TraceVariable::class]['MySecondTraceVariableIdentifier']['uri']);
 
-        $this->assertArrayHasKey('var', $allVariables[$epoch2]['taoResultServer_models_classes_TraceVariable']['MySecondTraceVariableIdentifier']);
-        $this->assertEquals($traceVariable2, $allVariables[$epoch2]['taoResultServer_models_classes_TraceVariable']['MySecondTraceVariableIdentifier']['var']);
+        $this->assertArrayHasKey('var', $allVariables[$epoch2][taoResultServer_models_classes_TraceVariable::class]['MySecondTraceVariableIdentifier']);
+        $this->assertEquals($traceVariable2, $allVariables[$epoch2][taoResultServer_models_classes_TraceVariable::class]['MySecondTraceVariableIdentifier']['var']);
 
-        $this->assertArrayHasKey('isCorrect', $allVariables[$epoch2]['taoResultServer_models_classes_TraceVariable']['MySecondTraceVariableIdentifier']);
-        $this->assertEquals('unscored', $allVariables[$epoch2]['taoResultServer_models_classes_TraceVariable']['MySecondTraceVariableIdentifier']['isCorrect']);
+        $this->assertArrayHasKey('isCorrect', $allVariables[$epoch2][taoResultServer_models_classes_TraceVariable::class]['MySecondTraceVariableIdentifier']);
+        $this->assertEquals('unscored', $allVariables[$epoch2][taoResultServer_models_classes_TraceVariable::class]['MySecondTraceVariableIdentifier']['isCorrect']);
 
-        $this->assertArrayHasKey('taoResultServer_models_classes_ResponseVariable', $allVariables[$epoch3]);
-        $this->assertInternalType('array', $allVariables[$epoch3]['taoResultServer_models_classes_ResponseVariable']);
-        $this->assertArrayHasKey('MyThirdResponseVariableIdentifier', $allVariables[$epoch3]['taoResultServer_models_classes_ResponseVariable']);
-        $this->assertInternalType('array', $allVariables[$epoch3]['taoResultServer_models_classes_ResponseVariable']['MyThirdResponseVariableIdentifier']);
-        $this->assertArrayHasKey('uri', $allVariables[$epoch3]['taoResultServer_models_classes_ResponseVariable']['MyThirdResponseVariableIdentifier']);
-        $this->assertEquals('uri31', $allVariables[$epoch3]['taoResultServer_models_classes_ResponseVariable']['MyThirdResponseVariableIdentifier']['uri']);
+        $this->assertArrayHasKey(taoResultServer_models_classes_ResponseVariable::class, $allVariables[$epoch3]);
+        $this->assertInternalType('array', $allVariables[$epoch3][taoResultServer_models_classes_ResponseVariable::class]);
+        $this->assertArrayHasKey('MyThirdResponseVariableIdentifier', $allVariables[$epoch3][taoResultServer_models_classes_ResponseVariable::class]);
+        $this->assertInternalType('array', $allVariables[$epoch3][taoResultServer_models_classes_ResponseVariable::class]['MyThirdResponseVariableIdentifier']);
+        $this->assertArrayHasKey('uri', $allVariables[$epoch3][taoResultServer_models_classes_ResponseVariable::class]['MyThirdResponseVariableIdentifier']);
+        $this->assertEquals('uri31', $allVariables[$epoch3][taoResultServer_models_classes_ResponseVariable::class]['MyThirdResponseVariableIdentifier']['uri']);
 
-        $this->assertArrayHasKey('var', $allVariables[$epoch3]['taoResultServer_models_classes_ResponseVariable']['MyThirdResponseVariableIdentifier']);
-        $this->assertEquals($responseVariable3, $allVariables[$epoch3]['taoResultServer_models_classes_ResponseVariable']['MyThirdResponseVariableIdentifier']['var']);
+        $this->assertArrayHasKey('var', $allVariables[$epoch3][taoResultServer_models_classes_ResponseVariable::class]['MyThirdResponseVariableIdentifier']);
+        $this->assertEquals($responseVariable3, $allVariables[$epoch3][taoResultServer_models_classes_ResponseVariable::class]['MyThirdResponseVariableIdentifier']['var']);
 
-        $this->assertArrayHasKey('isCorrect', $allVariables[$epoch3]['taoResultServer_models_classes_ResponseVariable']['MyThirdResponseVariableIdentifier']);
-        $this->assertEquals('correct', $allVariables[$epoch3]['taoResultServer_models_classes_ResponseVariable']['MyThirdResponseVariableIdentifier']['isCorrect']);
+        $this->assertArrayHasKey('isCorrect', $allVariables[$epoch3][taoResultServer_models_classes_ResponseVariable::class]['MyThirdResponseVariableIdentifier']);
+        $this->assertEquals('correct', $allVariables[$epoch3][taoResultServer_models_classes_ResponseVariable::class]['MyThirdResponseVariableIdentifier']['isCorrect']);
 
-        $this->assertArrayHasKey('taoResultServer_models_classes_OutcomeVariable', $allVariables[$epoch3]);
-        $this->assertInternalType('array', $allVariables[$epoch3]['taoResultServer_models_classes_OutcomeVariable']);
-        $this->assertArrayHasKey('MyThirdOutcomeVariableIdentifier', $allVariables[$epoch3]['taoResultServer_models_classes_OutcomeVariable']);
-        $this->assertInternalType('array', $allVariables[$epoch3]['taoResultServer_models_classes_OutcomeVariable']['MyThirdOutcomeVariableIdentifier']);
-        $this->assertArrayHasKey('uri', $allVariables[$epoch3]['taoResultServer_models_classes_OutcomeVariable']['MyThirdOutcomeVariableIdentifier']);
-        $this->assertEquals('uri32', $allVariables[$epoch3]['taoResultServer_models_classes_OutcomeVariable']['MyThirdOutcomeVariableIdentifier']['uri']);
+        $this->assertArrayHasKey(taoResultServer_models_classes_OutcomeVariable::class, $allVariables[$epoch3]);
+        $this->assertInternalType('array', $allVariables[$epoch3][taoResultServer_models_classes_OutcomeVariable::class]);
+        $this->assertArrayHasKey('MyThirdOutcomeVariableIdentifier', $allVariables[$epoch3][taoResultServer_models_classes_OutcomeVariable::class]);
+        $this->assertInternalType('array', $allVariables[$epoch3][taoResultServer_models_classes_OutcomeVariable::class]['MyThirdOutcomeVariableIdentifier']);
+        $this->assertArrayHasKey('uri', $allVariables[$epoch3][taoResultServer_models_classes_OutcomeVariable::class]['MyThirdOutcomeVariableIdentifier']);
+        $this->assertEquals('uri32', $allVariables[$epoch3][taoResultServer_models_classes_OutcomeVariable::class]['MyThirdOutcomeVariableIdentifier']['uri']);
 
-        $this->assertArrayHasKey('var', $allVariables[$epoch3]['taoResultServer_models_classes_OutcomeVariable']['MyThirdOutcomeVariableIdentifier']);
-        $this->assertEquals($outcomeVariable3, $allVariables[$epoch3]['taoResultServer_models_classes_OutcomeVariable']['MyThirdOutcomeVariableIdentifier']['var']);
+        $this->assertArrayHasKey('var', $allVariables[$epoch3][taoResultServer_models_classes_OutcomeVariable::class]['MyThirdOutcomeVariableIdentifier']);
+        $this->assertEquals($outcomeVariable3, $allVariables[$epoch3][taoResultServer_models_classes_OutcomeVariable::class]['MyThirdOutcomeVariableIdentifier']['var']);
 
-        $this->assertArrayHasKey('isCorrect', $allVariables[$epoch3]['taoResultServer_models_classes_OutcomeVariable']['MyThirdOutcomeVariableIdentifier']);
-        $this->assertEquals('unscored', $allVariables[$epoch3]['taoResultServer_models_classes_OutcomeVariable']['MyThirdOutcomeVariableIdentifier']['isCorrect']);
+        $this->assertArrayHasKey('isCorrect', $allVariables[$epoch3][taoResultServer_models_classes_OutcomeVariable::class]['MyThirdOutcomeVariableIdentifier']);
+        $this->assertEquals('unscored', $allVariables[$epoch3][taoResultServer_models_classes_OutcomeVariable::class]['MyThirdOutcomeVariableIdentifier']['isCorrect']);
 
-        $this->assertArrayHasKey('taoResultServer_models_classes_TraceVariable', $allVariables[$epoch3]);
-        $this->assertInternalType('array', $allVariables[$epoch3]['taoResultServer_models_classes_TraceVariable']);
-        $this->assertArrayHasKey('MyThirdTraceVariableIdentifier', $allVariables[$epoch3]['taoResultServer_models_classes_TraceVariable']);
-        $this->assertInternalType('array', $allVariables[$epoch3]['taoResultServer_models_classes_TraceVariable']['MyThirdTraceVariableIdentifier']);
-        $this->assertArrayHasKey('uri', $allVariables[$epoch3]['taoResultServer_models_classes_TraceVariable']['MyThirdTraceVariableIdentifier']);
-        $this->assertEquals('uri33', $allVariables[$epoch3]['taoResultServer_models_classes_TraceVariable']['MyThirdTraceVariableIdentifier']['uri']);
+        $this->assertArrayHasKey(taoResultServer_models_classes_TraceVariable::class, $allVariables[$epoch3]);
+        $this->assertInternalType('array', $allVariables[$epoch3][taoResultServer_models_classes_TraceVariable::class]);
+        $this->assertArrayHasKey('MyThirdTraceVariableIdentifier', $allVariables[$epoch3][taoResultServer_models_classes_TraceVariable::class]);
+        $this->assertInternalType('array', $allVariables[$epoch3][taoResultServer_models_classes_TraceVariable::class]['MyThirdTraceVariableIdentifier']);
+        $this->assertArrayHasKey('uri', $allVariables[$epoch3][taoResultServer_models_classes_TraceVariable::class]['MyThirdTraceVariableIdentifier']);
+        $this->assertEquals('uri33', $allVariables[$epoch3][taoResultServer_models_classes_TraceVariable::class]['MyThirdTraceVariableIdentifier']['uri']);
 
-        $this->assertArrayHasKey('var', $allVariables[$epoch3]['taoResultServer_models_classes_TraceVariable']['MyThirdTraceVariableIdentifier']);
-        $this->assertEquals($traceVariable3, $allVariables[$epoch3]['taoResultServer_models_classes_TraceVariable']['MyThirdTraceVariableIdentifier']['var']);
+        $this->assertArrayHasKey('var', $allVariables[$epoch3][taoResultServer_models_classes_TraceVariable::class]['MyThirdTraceVariableIdentifier']);
+        $this->assertEquals($traceVariable3, $allVariables[$epoch3][taoResultServer_models_classes_TraceVariable::class]['MyThirdTraceVariableIdentifier']['var']);
 
-        $this->assertArrayHasKey('isCorrect', $allVariables[$epoch3]['taoResultServer_models_classes_TraceVariable']['MyThirdTraceVariableIdentifier']);
-        $this->assertEquals('unscored', $allVariables[$epoch3]['taoResultServer_models_classes_TraceVariable']['MyThirdTraceVariableIdentifier']['isCorrect']);
+        $this->assertArrayHasKey('isCorrect', $allVariables[$epoch3][taoResultServer_models_classes_TraceVariable::class]['MyThirdTraceVariableIdentifier']);
+        $this->assertEquals('unscored', $allVariables[$epoch3][taoResultServer_models_classes_TraceVariable::class]['MyThirdTraceVariableIdentifier']['isCorrect']);
 
-        $this->assertArrayHasKey('taoResultServer_models_classes_TraceVariable', $allVariables[$epoch24]);
-        $this->assertInternalType('array', $allVariables[$epoch24]['taoResultServer_models_classes_TraceVariable']);
-        $this->assertArrayHasKey('TraceVariableIdentifier', $allVariables[$epoch24]['taoResultServer_models_classes_TraceVariable']);
-        $this->assertInternalType('array', $allVariables[$epoch24]['taoResultServer_models_classes_TraceVariable']['TraceVariableIdentifier']);
-        $this->assertArrayHasKey('uri', $allVariables[$epoch24]['taoResultServer_models_classes_TraceVariable']['TraceVariableIdentifier']);
-        $this->assertEquals('uri24', $allVariables[$epoch24]['taoResultServer_models_classes_TraceVariable']['TraceVariableIdentifier']['uri']);
+        $this->assertArrayHasKey(taoResultServer_models_classes_TraceVariable::class, $allVariables[$epoch24]);
+        $this->assertInternalType('array', $allVariables[$epoch24][taoResultServer_models_classes_TraceVariable::class]);
+        $this->assertArrayHasKey('TraceVariableIdentifier', $allVariables[$epoch24][taoResultServer_models_classes_TraceVariable::class]);
+        $this->assertInternalType('array', $allVariables[$epoch24][taoResultServer_models_classes_TraceVariable::class]['TraceVariableIdentifier']);
+        $this->assertArrayHasKey('uri', $allVariables[$epoch24][taoResultServer_models_classes_TraceVariable::class]['TraceVariableIdentifier']);
+        $this->assertEquals('uri24', $allVariables[$epoch24][taoResultServer_models_classes_TraceVariable::class]['TraceVariableIdentifier']['uri']);
 
-        $this->assertArrayHasKey('var', $allVariables[$epoch24]['taoResultServer_models_classes_TraceVariable']['TraceVariableIdentifier']);
-        $this->assertEquals($traceVariable22, $allVariables[$epoch24]['taoResultServer_models_classes_TraceVariable']['TraceVariableIdentifier']['var']);
+        $this->assertArrayHasKey('var', $allVariables[$epoch24][taoResultServer_models_classes_TraceVariable::class]['TraceVariableIdentifier']);
+        $this->assertEquals($traceVariable22, $allVariables[$epoch24][taoResultServer_models_classes_TraceVariable::class]['TraceVariableIdentifier']['var']);
 
-        $this->assertArrayHasKey('isCorrect', $allVariables[$epoch24]['taoResultServer_models_classes_TraceVariable']['TraceVariableIdentifier']);
-        $this->assertEquals('unscored', $allVariables[$epoch24]['taoResultServer_models_classes_TraceVariable']['TraceVariableIdentifier']['isCorrect']);
+        $this->assertArrayHasKey('isCorrect', $allVariables[$epoch24][taoResultServer_models_classes_TraceVariable::class]['TraceVariableIdentifier']);
+        $this->assertEquals('unscored', $allVariables[$epoch24][taoResultServer_models_classes_TraceVariable::class]['TraceVariableIdentifier']['isCorrect']);
 
         $this->assertInternalType('array', $lastVariables);
         $this->assertEquals(array($epoch13, $epoch33, $epoch24), array_keys($lastVariables));
 
-        $this->assertArrayHasKey('taoResultServer_models_classes_TraceVariable', $lastVariables[$epoch13]);
-        $this->assertInternalType('array', $lastVariables[$epoch13]['taoResultServer_models_classes_TraceVariable']);
-        $this->assertArrayHasKey('MyFirstTraceVariableIdentifier', $lastVariables[$epoch13]['taoResultServer_models_classes_TraceVariable']);
-        $this->assertInternalType('array', $lastVariables[$epoch13]['taoResultServer_models_classes_TraceVariable']['MyFirstTraceVariableIdentifier']);
-        $this->assertArrayHasKey('uri', $lastVariables[$epoch13]['taoResultServer_models_classes_TraceVariable']['MyFirstTraceVariableIdentifier']);
-        $this->assertEquals('uri13', $lastVariables[$epoch13]['taoResultServer_models_classes_TraceVariable']['MyFirstTraceVariableIdentifier']['uri']);
+        $this->assertArrayHasKey(taoResultServer_models_classes_TraceVariable::class, $lastVariables[$epoch13]);
+        $this->assertInternalType('array', $lastVariables[$epoch13][taoResultServer_models_classes_TraceVariable::class]);
+        $this->assertArrayHasKey('MyFirstTraceVariableIdentifier', $lastVariables[$epoch13][taoResultServer_models_classes_TraceVariable::class]);
+        $this->assertInternalType('array', $lastVariables[$epoch13][taoResultServer_models_classes_TraceVariable::class]['MyFirstTraceVariableIdentifier']);
+        $this->assertArrayHasKey('uri', $lastVariables[$epoch13][taoResultServer_models_classes_TraceVariable::class]['MyFirstTraceVariableIdentifier']);
+        $this->assertEquals('uri13', $lastVariables[$epoch13][taoResultServer_models_classes_TraceVariable::class]['MyFirstTraceVariableIdentifier']['uri']);
 
-        $this->assertArrayHasKey('var', $lastVariables[$epoch13]['taoResultServer_models_classes_TraceVariable']['MyFirstTraceVariableIdentifier']);
-        $this->assertEquals($traceVariable1, $lastVariables[$epoch13]['taoResultServer_models_classes_TraceVariable']['MyFirstTraceVariableIdentifier']['var']);
+        $this->assertArrayHasKey('var', $lastVariables[$epoch13][taoResultServer_models_classes_TraceVariable::class]['MyFirstTraceVariableIdentifier']);
+        $this->assertEquals($traceVariable1, $lastVariables[$epoch13][taoResultServer_models_classes_TraceVariable::class]['MyFirstTraceVariableIdentifier']['var']);
 
-        $this->assertArrayHasKey('taoResultServer_models_classes_TraceVariable', $lastVariables[$epoch33]);
-        $this->assertInternalType('array', $lastVariables[$epoch33]['taoResultServer_models_classes_TraceVariable']);
-        $this->assertArrayHasKey('MyThirdTraceVariableIdentifier', $lastVariables[$epoch33]['taoResultServer_models_classes_TraceVariable']);
-        $this->assertInternalType('array', $lastVariables[$epoch33]['taoResultServer_models_classes_TraceVariable']['MyThirdTraceVariableIdentifier']);
-        $this->assertArrayHasKey('uri', $lastVariables[$epoch33]['taoResultServer_models_classes_TraceVariable']['MyThirdTraceVariableIdentifier']);
-        $this->assertEquals('uri33', $lastVariables[$epoch33]['taoResultServer_models_classes_TraceVariable']['MyThirdTraceVariableIdentifier']['uri']);
+        $this->assertArrayHasKey(taoResultServer_models_classes_TraceVariable::class, $lastVariables[$epoch33]);
+        $this->assertInternalType('array', $lastVariables[$epoch33][taoResultServer_models_classes_TraceVariable::class]);
+        $this->assertArrayHasKey('MyThirdTraceVariableIdentifier', $lastVariables[$epoch33][taoResultServer_models_classes_TraceVariable::class]);
+        $this->assertInternalType('array', $lastVariables[$epoch33][taoResultServer_models_classes_TraceVariable::class]['MyThirdTraceVariableIdentifier']);
+        $this->assertArrayHasKey('uri', $lastVariables[$epoch33][taoResultServer_models_classes_TraceVariable::class]['MyThirdTraceVariableIdentifier']);
+        $this->assertEquals('uri33', $lastVariables[$epoch33][taoResultServer_models_classes_TraceVariable::class]['MyThirdTraceVariableIdentifier']['uri']);
 
-        $this->assertArrayHasKey('var', $lastVariables[$epoch33]['taoResultServer_models_classes_TraceVariable']['MyThirdTraceVariableIdentifier']);
-        $this->assertEquals($traceVariable3, $lastVariables[$epoch33]['taoResultServer_models_classes_TraceVariable']['MyThirdTraceVariableIdentifier']['var']);
+        $this->assertArrayHasKey('var', $lastVariables[$epoch33][taoResultServer_models_classes_TraceVariable::class]['MyThirdTraceVariableIdentifier']);
+        $this->assertEquals($traceVariable3, $lastVariables[$epoch33][taoResultServer_models_classes_TraceVariable::class]['MyThirdTraceVariableIdentifier']['var']);
 
-        $this->assertArrayHasKey('isCorrect', $lastVariables[$epoch33]['taoResultServer_models_classes_TraceVariable']['MyThirdTraceVariableIdentifier']);
-        $this->assertEquals('unscored', $lastVariables[$epoch33]['taoResultServer_models_classes_TraceVariable']['MyThirdTraceVariableIdentifier']['isCorrect']);
+        $this->assertArrayHasKey('isCorrect', $lastVariables[$epoch33][taoResultServer_models_classes_TraceVariable::class]['MyThirdTraceVariableIdentifier']);
+        $this->assertEquals('unscored', $lastVariables[$epoch33][taoResultServer_models_classes_TraceVariable::class]['MyThirdTraceVariableIdentifier']['isCorrect']);
 
-        $this->assertArrayHasKey('taoResultServer_models_classes_TraceVariable', $lastVariables[$epoch24]);
-        $this->assertInternalType('array', $lastVariables[$epoch24]['taoResultServer_models_classes_TraceVariable']);
-        $this->assertArrayHasKey('TraceVariableIdentifier', $lastVariables[$epoch24]['taoResultServer_models_classes_TraceVariable']);
-        $this->assertInternalType('array', $lastVariables[$epoch24]['taoResultServer_models_classes_TraceVariable']['TraceVariableIdentifier']);
-        $this->assertArrayHasKey('uri', $lastVariables[$epoch24]['taoResultServer_models_classes_TraceVariable']['TraceVariableIdentifier']);
-        $this->assertEquals('uri24', $lastVariables[$epoch24]['taoResultServer_models_classes_TraceVariable']['TraceVariableIdentifier']['uri']);
+        $this->assertArrayHasKey(taoResultServer_models_classes_TraceVariable::class, $lastVariables[$epoch24]);
+        $this->assertInternalType('array', $lastVariables[$epoch24][taoResultServer_models_classes_TraceVariable::class]);
+        $this->assertArrayHasKey('TraceVariableIdentifier', $lastVariables[$epoch24][taoResultServer_models_classes_TraceVariable::class]);
+        $this->assertInternalType('array', $lastVariables[$epoch24][taoResultServer_models_classes_TraceVariable::class]['TraceVariableIdentifier']);
+        $this->assertArrayHasKey('uri', $lastVariables[$epoch24][taoResultServer_models_classes_TraceVariable::class]['TraceVariableIdentifier']);
+        $this->assertEquals('uri24', $lastVariables[$epoch24][taoResultServer_models_classes_TraceVariable::class]['TraceVariableIdentifier']['uri']);
 
-        $this->assertArrayHasKey('var', $lastVariables[$epoch24]['taoResultServer_models_classes_TraceVariable']['TraceVariableIdentifier']);
-        $this->assertEquals($traceVariable22, $lastVariables[$epoch24]['taoResultServer_models_classes_TraceVariable']['TraceVariableIdentifier']['var']);
+        $this->assertArrayHasKey('var', $lastVariables[$epoch24][taoResultServer_models_classes_TraceVariable::class]['TraceVariableIdentifier']);
+        $this->assertEquals($traceVariable22, $lastVariables[$epoch24][taoResultServer_models_classes_TraceVariable::class]['TraceVariableIdentifier']['var']);
 
-        $this->assertArrayHasKey('isCorrect', $lastVariables[$epoch24]['taoResultServer_models_classes_TraceVariable']['TraceVariableIdentifier']);
-        $this->assertEquals('unscored', $lastVariables[$epoch24]['taoResultServer_models_classes_TraceVariable']['TraceVariableIdentifier']['isCorrect']);
+        $this->assertArrayHasKey('isCorrect', $lastVariables[$epoch24][taoResultServer_models_classes_TraceVariable::class]['TraceVariableIdentifier']);
+        $this->assertEquals('unscored', $lastVariables[$epoch24][taoResultServer_models_classes_TraceVariable::class]['TraceVariableIdentifier']['isCorrect']);
 
     }
 
     public function testCalculateResponseStatistics()
     {
         $itemVar1 = array(
-            'taoResultServer_models_classes_ResponseVariable' => array('variableIdentifier' => array('isCorrect' => 'correct'))
+            taoResultServer_models_classes_ResponseVariable::class => array('variableIdentifier' => array('isCorrect' => 'correct'))
         );
         $itemVar2 = array(
-            'taoResultServer_models_classes_ResponseVariable' => array('variableIdentifier' => array('isCorrect' => 'incorrect'))
+            taoResultServer_models_classes_ResponseVariable::class => array('variableIdentifier' => array('isCorrect' => 'incorrect'))
         );
         $itemVar3 = array(
-            'taoResultServer_models_classes_ResponseVariable' => array('variableIdentifier' => array('isCorrect' => 'incorrect'))
+            taoResultServer_models_classes_ResponseVariable::class => array('variableIdentifier' => array('isCorrect' => 'incorrect'))
         );
         $itemVar4 = array(
-            'taoResultServer_models_classes_ResponseVariable' => array('variableIdentifier' => array('isCorrect' => 'unscored'))
+            taoResultServer_models_classes_ResponseVariable::class => array('variableIdentifier' => array('isCorrect' => 'unscored'))
         );
         $itemVar5 = array(
-            'taoResultServer_models_classes_ResponseVariable' => array('variableIdentifier' => array('isCorrect' => 'incorrect'))
+            taoResultServer_models_classes_ResponseVariable::class => array('variableIdentifier' => array('isCorrect' => 'incorrect'))
         );
         $itemVar6 = array(
             'notAValidVariableType' => array('variableIdentifier' => array('isCorrect' => 'correct'))
         );
         $itemVar7 = array(
-            'taoResultServer_models_classes_ResponseVariable' => array('variableIdentifier' => array('isCorrect' => 'undefinedValue'))
+            taoResultServer_models_classes_ResponseVariable::class => array('variableIdentifier' => array('isCorrect' => 'undefinedValue'))
         );
         $itemVar8 = array(
-            'taoResultServer_models_classes_ResponseVariable' => array('variableIdentifier' => array('isCorrect' => 'correct'))
+            taoResultServer_models_classes_ResponseVariable::class => array('variableIdentifier' => array('isCorrect' => 'correct'))
         );
         $variables = array(
             'epoch1' => $itemVar1,
