@@ -228,7 +228,7 @@ class ResultsService extends tao_models_classes_ClassService
         $resultVariables = $this->getVariablesFromObjectResult($finalResultVariables);
         foreach ($resultVariables as $resultVariable) {
             $currentItem = current($resultVariable);
-            $key = $currentItem->callIdItem ? $currentItem->callIdItem : $currentItem->callIdTest;
+            $key = isset($currentItem->callIdItem) ? $currentItem->callIdItem : $currentItem->callIdTest;
             $variables[$key][] = $resultVariable;
         }
 
