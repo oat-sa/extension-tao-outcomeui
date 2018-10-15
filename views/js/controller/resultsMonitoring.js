@@ -37,6 +37,31 @@ define([
 
     var $resultsListContainer = $('.results-list-container');
 
+
+    /**
+     * Internet Explorer and Edge will not open the detail view when the table row was below originally below the fold.
+     * This is not cause by a too low container or some sort of overlay. As a workaround they get just as many rows
+     * as they can handle in one fold.
+     * @returns {number}
+     */
+    function getNumRows() {
+        var lineHeight       = 30;
+        var searchPagination = 70;
+        var $upperElem       = $('.content-container h2');
+        var topSpace         = $upperElem.offset().top
+            + $upperElem.height()
+            + parseInt($upperElem.css('margin-bottom'), 10)
+            + lineHeight
+            + searchPagination;
+        var availableHeight = $(window).height() - topSpace - $('footer.dark-bar').height();
+        if(!window.MSInputMethodContext && !document.documentMode && !window.StyleMedia) {
+           return 25;
+        }
+        return Math.min(Math.floor(availableHeight / lineHeight), 25);
+    }
+
+
+
     function getRequestErrorMessage (xhr) {
         loadingBar.start();
         var message = '';
@@ -60,6 +85,7 @@ define([
             url : url.route('viewResult', 'Results', 'taoOutcomeUi', {id : res[0], classUri: res[1]}),
             type : 'GET',
             success : function (result) {
+
                 var $container = $(resultModalTpl()).append(result);
                 $resultsListContainer.append($container);
                 $container.modal({
@@ -147,7 +173,7 @@ define([
                     }],
                     paginationStrategyTop: 'simple',
                     paginationStrategyBottom: 'pages',
-                    rows: 25,
+                    rows: getNumRows(),
                     sortby: 'result_id',
                     sortorder: 'desc',
                     actions : {
