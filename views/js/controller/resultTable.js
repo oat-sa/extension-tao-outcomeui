@@ -91,7 +91,6 @@ define([
              * @param {Function} done - once the datatable is loaded
              */
             var _buildTable = function _buildTable(done){
-                return
                 var model = [];
 
                 //set up model from columns
