@@ -110,9 +110,11 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
                         \common_Logger::w($e->getMessage());
                         $startTime = '';
                     }
+                    $label = $delivery->getLabel() ? $delivery->getLabel() : $execution->getLabel();
+
                     $this->results['data'][] = [
                         'id' => $execution->getIdentifier().'|'.$delivery->getUri(),
-                        'delivery' => $delivery->getLabel(),
+                        'delivery' => $label,
                         'testTakerIdentifier' => $userName,
                         'deliveryResultIdentifier' => $execution->getIdentifier(),
                         'start_time' => $startTime
