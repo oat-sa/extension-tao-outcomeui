@@ -1108,32 +1108,21 @@ class ResultsService extends tao_models_classes_ClassService
         //retrieving The list of the variables identifiers per activities defintions as observed
         $variableTypes = array();
 
-        $responseVariableClass = \taoResultServer_models_classes_ResponseVariable::class;
-        $outcomeVariableClass = \taoResultServer_models_classes_OutcomeVariable::class;
-
         $resultLanguage = $this->getResultLanguage();
 
         foreach (array_chunk($resultsIds, $resultServiceWrapper->getOption(ResultServiceWrapper::RESULT_COLUMNS_CHUNK_SIZE_OPTION)) as $resultsIdsItem) {
             $selectedVariables = $this->getResultsVariables($resultsIdsItem);
             foreach ($selectedVariables as $variable) {
-                $class = isset($variable[0]->class) ? $variable[0]->class : get_class($variable[0]->variable);
-                if(
-                    (null != $variable[0]->item ||  null != $variable[0]->test)
-                    && (
-                        $class == $outcomeVariableClass
-                        && $variableClassUri == $outcomeVariableClass
-                    ) || (
-                        $class == $responseVariableClass
-                        && $variableClassUri == $responseVariableClass
-                    )) {
+                $variable = $variable[0];
+                if($this->isResultVariable($variable, $variableClassUri)) {
                     //variableIdentifier
-                    $variableIdentifier = $variable[0]->variable->identifier;
-                    $uri = (null != $variable[0]->item) ? $variable[0]->item : $variable[0]->test;
+                    $variableIdentifier = $variable->variable->identifier;
+                    $uri = (null != $variable->item) ? $variable->item : $variable->test;
 
-                    if (!is_null($variable[0]->item)) {
+                    if (!is_null($variable->item)) {
                         $contextIdentifierLabel = $itemIndex->getItemValue($uri, $resultLanguage, 'label');
                     } else {
-                        $testData = $this->getTestMetadata($delivery, $variable[0]->test);
+                        $testData = $this->getTestMetadata($delivery, $variable->test);
                         $contextIdentifierLabel = $testData->getLabel();
                     }
 
@@ -1160,6 +1149,29 @@ class ResultsService extends tao_models_classes_ClassService
             $arr[] = $column->toArray();
         }
         return $arr;
+    }
+
+    /**
+     * Check if provided variable is a result variable.
+     *
+     * @param $variable
+     * @param $variableClassUri
+     * @return bool
+     */
+    private function isResultVariable($variable, $variableClassUri)
+    {
+        $responseVariableClass = \taoResultServer_models_classes_ResponseVariable::class;
+        $outcomeVariableClass = \taoResultServer_models_classes_OutcomeVariable::class;
+        $class = isset($variable->class) ? $variable->class : get_class($variable->variable);
+
+        return (null != $variable->item ||  null != $variable->test)
+            && (
+                $class == $outcomeVariableClass
+                && $variableClassUri == $outcomeVariableClass
+            ) || (
+                $class == $responseVariableClass
+                && $variableClassUri == $responseVariableClass
+            );
     }
 
     /**
