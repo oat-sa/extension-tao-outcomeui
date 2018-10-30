@@ -25,8 +25,12 @@
 namespace oat\taoOutcomeUi\model;
 
 use common_Utils;
+use League\Flysystem\FileNotFoundException;
 use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyRdfs;
+use oat\tao\helpers\metadata\ResourceCompiledMetadataHelper;
+use oat\tao\model\metadata\compiler\ResourceJsonMetadataCompiler;
+use oat\tao\model\metadata\compiler\ResourceMetadataCompilerInterface;
 use oat\taoDelivery\model\AssignmentService;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
@@ -86,6 +90,9 @@ class ResultsService extends tao_models_classes_ClassService
     private $indexerCache = [];
     /** @var array  */
     private $executionCache = [];
+
+    /** @var array */
+    private $testMetadataCache = [];
 
     /**
      * @return \common_persistence_KvDriver|null
@@ -1101,28 +1108,24 @@ class ResultsService extends tao_models_classes_ClassService
         //retrieving The list of the variables identifiers per activities defintions as observed
         $variableTypes = array();
 
-        $responseVariableClass = \taoResultServer_models_classes_ResponseVariable::class;
-        $outcomeVariableClass = \taoResultServer_models_classes_OutcomeVariable::class;
-
         $resultLanguage = $this->getResultLanguage();
 
         foreach (array_chunk($resultsIds, $resultServiceWrapper->getOption(ResultServiceWrapper::RESULT_COLUMNS_CHUNK_SIZE_OPTION)) as $resultsIdsItem) {
             $selectedVariables = $this->getResultsVariables($resultsIdsItem);
             foreach ($selectedVariables as $variable) {
-                $class = isset($variable[0]->class) ? $variable[0]->class : get_class($variable[0]->variable);
-                if(
-                    (null != $variable[0]->item ||  null != $variable[0]->test)
-                    && (
-                        $class == $outcomeVariableClass
-                        && $variableClassUri == $outcomeVariableClass
-                    ) || (
-                        $class == $responseVariableClass
-                        && $variableClassUri == $responseVariableClass
-                    )) {
+                $variable = $variable[0];
+                if($this->isResultVariable($variable, $variableClassUri)) {
                     //variableIdentifier
-                    $variableIdentifier = $variable[0]->variable->identifier;
-                    $uri = (null != $variable[0]->item) ? $variable[0]->item : $variable[0]->test;
-                    $contextIdentifierLabel = $itemIndex->getItemValue($uri, $resultLanguage, 'label');
+                    $variableIdentifier = $variable->variable->identifier;
+                    if (!is_null($variable->item)) {
+                        $uri = $variable->item;
+                        $contextIdentifierLabel = $itemIndex->getItemValue($uri, $resultLanguage, 'label');
+                    } else {
+                        $uri = $variable->test;
+                        $testData = $this->getTestMetadata($delivery, $variable->test);
+                        $contextIdentifierLabel = $testData->getLabel();
+                    }
+
                     $variableTypes[$uri.$variableIdentifier] = array("contextLabel" => $contextIdentifierLabel, "contextId" => $uri, "variableIdentifier" => $variableIdentifier);
                 }
             }
@@ -1146,6 +1149,29 @@ class ResultsService extends tao_models_classes_ClassService
             $arr[] = $column->toArray();
         }
         return $arr;
+    }
+
+    /**
+     * Check if provided variable is a result variable.
+     *
+     * @param $variable
+     * @param $variableClassUri
+     * @return bool
+     */
+    private function isResultVariable($variable, $variableClassUri)
+    {
+        $responseVariableClass = \taoResultServer_models_classes_ResponseVariable::class;
+        $outcomeVariableClass = \taoResultServer_models_classes_OutcomeVariable::class;
+        $class = isset($variable->class) ? $variable->class : get_class($variable->variable);
+
+        return (null != $variable->item ||  null != $variable->test)
+            && (
+                $class == $outcomeVariableClass
+                && $variableClassUri == $outcomeVariableClass
+            ) || (
+                $class == $responseVariableClass
+                && $variableClassUri == $responseVariableClass
+            );
     }
 
     /**
@@ -1204,10 +1230,8 @@ class ResultsService extends tao_models_classes_ClassService
     {
         $deliveryUri = $delivery->getUri();
         if (!array_key_exists($deliveryUri, $this->indexerCache)) {
-            $runtime = $this->getServiceLocator()->get(AssignmentService::SERVICE_ID)->getRuntime($delivery);
-            $inputParameters = \tao_models_classes_service_ServiceCallHelper::getInputValues($runtime, []);
-            $directoryIds = explode('|', $inputParameters['QtiTestCompilation']);
-            $indexer = $this->getDecompiledIndexer($directoryIds[0]);
+            $directory = $this->getPrivateDirectory($delivery);
+            $indexer = $this->getDecompiledIndexer($directory);
             $this->indexerCache[$deliveryUri] = $indexer;
         }
         $indexer = $this->indexerCache[$deliveryUri] ;
@@ -1215,19 +1239,95 @@ class ResultsService extends tao_models_classes_ClassService
     }
 
     /**
-     * @param string $directoryId
-     * @return QtiTestCompilerIndex
+     * @param $delivery
+     * @param $testUri
+     * @return ResourceCompiledMetadataHelper
      */
-    private function getDecompiledIndexer($directoryId)
+    private function getTestMetadata(core_kernel_classes_Resource $delivery, $testUri)
     {
-        $fileStorage = \tao_models_classes_service_FileStorage::singleton();
-        /** @var tao_models_classes_service_StorageDirectory $private */
-        $private = $fileStorage->getDirectoryById($directoryId);
+        if (isset($this->testMetadataCache[$testUri])) {
+            return $this->testMetadataCache[$testUri];
+        }
 
-        $itemIndex = new QtiTestCompilerIndex();
+        $compiledMetadataHelper = new ResourceCompiledMetadataHelper();
 
         try {
-            $data = $private->read(taoQtiTest_models_classes_QtiTestService::TEST_COMPILED_INDEX);
+            $directory = $this->getPrivateDirectory($delivery);
+            $testMetadata = $this->loadTestMetadata($directory, $testUri);
+            if (!empty($testMetadata)) {
+                $compiledMetadataHelper->unserialize($testMetadata);
+            }
+        } catch (\Exception $e) {
+            \common_Logger::d('Ignoring data not found exception for Test Metadata');
+        }
+
+        $this->testMetadataCache[$testUri] = $compiledMetadataHelper;
+
+        return $this->testMetadataCache[$testUri];
+    }
+
+    /**
+     * Load test metadata from file. For deliveries without compiled file try  to compile test metadata.
+     *
+     * @param tao_models_classes_service_StorageDirectory $directory
+     * @param string $testUri
+     * @return false|string
+     * @throws \FileNotFoundException
+     * @throws common_Exception
+     */
+    private function loadTestMetadata(tao_models_classes_service_StorageDirectory $directory, $testUri) {
+        try {
+            $testMetadata = $this->loadTestMetadataFromFile($directory);
+        } catch (FileNotFoundException $e) {
+            \common_Logger::d('Compiled test metadata file not found. Try to compile a new file.');
+
+            $this->compileTestMetadata($directory, $testUri);
+            $testMetadata = $this->loadTestMetadataFromFile($directory);
+        }
+
+        return $testMetadata;
+    }
+
+    /**
+     * Get teast metadata from file.
+     *
+     * @param tao_models_classes_service_StorageDirectory $directory
+     * @return false|string
+     */
+    private function loadTestMetadataFromFile(tao_models_classes_service_StorageDirectory $directory)
+    {
+        return $directory->read(taoQtiTest_models_classes_QtiTestService::TEST_COMPILED_METADATA_FILENAME);
+    }
+
+    /**
+     * Compile test metadata and store into file.
+     * Added for backward compatibility for deliveries without compiled test metadata.
+     *
+     * @param tao_models_classes_service_StorageDirectory $directory
+     * @param $testUri
+     * @throws \FileNotFoundException
+     * @throws common_Exception
+     */
+    private function compileTestMetadata(tao_models_classes_service_StorageDirectory $directory, $testUri)
+    {
+        $resource = $this->getResource($testUri);
+
+        /** @var ResourceMetadataCompilerInterface $resourceMetadataCompiler */
+        $resourceMetadataCompiler = $this->getServiceLocator()->get(ResourceJsonMetadataCompiler::SERVICE_ID);
+        $metadata = $resourceMetadataCompiler->compile($resource);
+
+        $directory->write(taoQtiTest_models_classes_QtiTestService::TEST_COMPILED_METADATA_FILENAME, json_encode($metadata));
+    }
+
+    /**
+     * @param string $directory
+     * @return QtiTestCompilerIndex
+     */
+    private function getDecompiledIndexer(tao_models_classes_service_StorageDirectory $directory)
+    {
+        $itemIndex = new QtiTestCompilerIndex();
+        try {
+            $data = $directory->read(taoQtiTest_models_classes_QtiTestService::TEST_COMPILED_INDEX);
             if ($data) {
                 $itemIndex->unserialize($data);
             }
@@ -1263,4 +1363,30 @@ class ResultsService extends tao_models_classes_ClassService
         return $delivery;
     }
 
+    /**
+     * @param $delivery
+     * @return array
+     * @throws common_exception_Error
+     */
+    private function getDirectoryIds($delivery)
+    {
+        $runtime = $this->getServiceLocator()->get(AssignmentService::SERVICE_ID)->getRuntime($delivery);
+        $inputParameters = \tao_models_classes_service_ServiceCallHelper::getInputValues($runtime, []);
+        $directoryIds = explode('|', $inputParameters['QtiTestCompilation']);
+
+        return $directoryIds;
+    }
+
+    /**
+     * @param $delivery
+     * @return tao_models_classes_service_StorageDirectory
+     * @throws common_exception_Error
+     */
+    private function getPrivateDirectory($delivery)
+    {
+        $directoryIds = $this->getDirectoryIds($delivery);
+        $fileStorage = \tao_models_classes_service_FileStorage::singleton();
+
+        return $fileStorage->getDirectoryById($directoryIds[0]);
+    }
 }
