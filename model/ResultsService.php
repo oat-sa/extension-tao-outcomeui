@@ -1117,11 +1117,11 @@ class ResultsService extends tao_models_classes_ClassService
                 if($this->isResultVariable($variable, $variableClassUri)) {
                     //variableIdentifier
                     $variableIdentifier = $variable->variable->identifier;
-                    $uri = (null != $variable->item) ? $variable->item : $variable->test;
-
                     if (!is_null($variable->item)) {
+                        $uri = $variable->item;
                         $contextIdentifierLabel = $itemIndex->getItemValue($uri, $resultLanguage, 'label');
                     } else {
+                        $uri = $variable->test;
                         $testData = $this->getTestMetadata($delivery, $variable->test);
                         $contextIdentifierLabel = $testData->getLabel();
                     }
@@ -1245,7 +1245,7 @@ class ResultsService extends tao_models_classes_ClassService
      */
     private function getTestMetadata(core_kernel_classes_Resource $delivery, $testUri)
     {
-        if (array_key_exists($testUri, $this->testMetadataCache)) {
+        if (isset($this->testMetadataCache[$testUri])) {
             return $this->testMetadataCache[$testUri];
         }
 
