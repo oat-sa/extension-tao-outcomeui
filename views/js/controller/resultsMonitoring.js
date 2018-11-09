@@ -53,7 +53,7 @@ define([
             + parseInt($upperElem.css('margin-bottom'), 10)
             + lineHeight
             + searchPagination;
-        var availableHeight = $(window).height() - topSpace - $('footer.dark-bar').height();
+        var availableHeight = $(window).height() - topSpace - $('footer.dark-bar').outerHeight();
         if(!window.MSInputMethodContext && !document.documentMode && !window.StyleMedia) {
            return 25;
         }
