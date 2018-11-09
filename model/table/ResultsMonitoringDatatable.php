@@ -27,6 +27,7 @@ use oat\tao\model\search\Search;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoProctoring\model\execution\DeliveryExecution;
+use oat\taoResultServer\models\classes\ResultManagement;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\classes\ResultService;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -110,9 +111,11 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
                         \common_Logger::w($e->getMessage());
                         $startTime = '';
                     }
+                    $label = $delivery->getLabel() ? $delivery->getLabel() : $execution->getLabel();
+
                     $this->results['data'][] = [
                         'id' => $execution->getIdentifier().'|'.$delivery->getUri(),
-                        'delivery' => $delivery->getLabel(),
+                        'delivery' => $label,
                         'testTakerIdentifier' => $userName,
                         'deliveryResultIdentifier' => $execution->getIdentifier(),
                         'start_time' => $startTime
@@ -163,44 +166,48 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
         $resultService = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
         $resultsImplementation = $resultService->getResultStorage(null);
 
-        foreach($resultsImplementation->getResultByDelivery($deliveriesArray, $options) as $result){
-            $id = isset($result['deliveryResultIdentifier']) ? $result['deliveryResultIdentifier'] : null;
-            if ($id) {
-                $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($id);
-                try {
-                    $startTime = \tao_helpers_Date::displayeDate($deliveryExecution->getStartTime());
-                } catch (\common_exception_NotFound $e) {
-                    \common_Logger::w($e->getMessage());
-                    $startTime = '';
-                }
-                $label = '';
-                try {
-                    $label = $deliveryExecution->getLabel();
-                } catch (\common_exception_NotFound $e) {
-                    \common_Logger::w($e->getMessage());
-                    if (isset($result['deliveryIdentifier'])) {
-                        $deliveryResource = new \core_kernel_classes_Resource($result['deliveryIdentifier']);
-                        if ($deliveryResource) {
-                            $label = $deliveryResource->getLabel();
+        if ($resultsImplementation instanceof ResultManagement) {
+            foreach ($resultsImplementation->getResultByDelivery($deliveriesArray, $options) as $result) {
+                $id = isset($result['deliveryResultIdentifier']) ? $result['deliveryResultIdentifier'] : null;
+                if ($id) {
+                    $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($id);
+                    try {
+                        $startTime = \tao_helpers_Date::displayeDate($deliveryExecution->getStartTime());
+                    } catch (\common_exception_NotFound $e) {
+                        \common_Logger::w($e->getMessage());
+                        $startTime = '';
+                    }
+                    $label = '';
+                    try {
+                        $label = $deliveryExecution->getLabel();
+                    } catch (\common_exception_NotFound $e) {
+                        \common_Logger::w($e->getMessage());
+                        if (isset($result['deliveryIdentifier'])) {
+                            $deliveryResource = new \core_kernel_classes_Resource($result['deliveryIdentifier']);
+                            if ($deliveryResource) {
+                                $label = $deliveryResource->getLabel();
+                            }
                         }
                     }
+                    $testTaker = $result['testTakerIdentifier'] ? $result['testTakerIdentifier'] : 'TestTaker';
+                    $user = UserHelper::getUser($testTaker);
+                    $userName = UserHelper::getUserName($user, true);
+                    if (empty($userName)) {
+                        $userName = $testTaker;
+                    }
+                    $this->results['data'][] = [
+                        'id' => $id . '|' . $result['deliveryIdentifier'],
+                        'delivery' => $label,
+                        'testTakerIdentifier' => $userName,
+                        'deliveryResultIdentifier' => $id,
+                        'start_time' => $startTime
+                    ];
                 }
-                $testTaker = $result['testTakerIdentifier'] ? $result['testTakerIdentifier'] : 'TestTaker';
-                $user = UserHelper::getUser($testTaker);
-                $userName = UserHelper::getUserName($user, true);
-                if (empty($userName)) {
-                    $userName = $testTaker;
-                }
-                $this->results['data'][] = [
-                    'id' => $id.'|'.$result['deliveryIdentifier'],
-                    'delivery' => $label,
-                    'testTakerIdentifier' => $userName,
-                    'deliveryResultIdentifier' => $id,
-                    'start_time' => $startTime
-                ];
             }
+            $this->results['records'] = $resultsImplementation->countResultByDelivery($deliveriesArray);
+        }else{
+            \common_Logger::i('Attempt to read from non-manageable result storage');
         }
-        $this->results['records'] = $resultsImplementation->countResultByDelivery($deliveriesArray);
     }
 
     /**
