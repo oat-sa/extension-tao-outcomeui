@@ -89,10 +89,11 @@ define([
                 var $container = $(resultModalTpl()).append(result);
                 $resultsListContainer.append($container);
                 $container.modal({
-                    startClosed : true,
-                    minWidth : 450
+                    startClosed : false,
+                    minWidth : 450,
+                    top: 50
                 });
-                $container.modal().css({'max-height': $(window).height() - 80 + 'px', 'overflow': 'auto'});
+                $container.css({'max-height': $(window).height() - 80 + 'px', 'overflow': 'auto'});
                 $container.on('click', function(e) {
                     // the trigger button might itself be inside a modal, in this case close that modal before doing anything else
                     // only one modal should be open
@@ -105,7 +106,6 @@ define([
                     }
                 });
                 $container
-                    .modal('open')
                     .on('closed.modal', function(){
                         $container.modal('destroy');
                         $('.modal-bg').remove();
@@ -147,6 +147,25 @@ define([
 
     return {
         start: function () {
+            var $contentBlock = $resultsListContainer.parents(".content-block");
+
+            var resizeContainer = function() {
+                var padding = $contentBlock.innerHeight() - $contentBlock.height();
+
+                //calculate height for contentArea
+                $contentBlock.height(
+                    $(window).height()
+                    - $("footer").outerHeight()
+                    - $("header").outerHeight()
+                    - $(".tab-container").outerHeight()
+                    - $(".action-bar").outerHeight()
+                    - padding
+                );
+            };
+
+            $(window).on('resize', resizeContainer);
+            resizeContainer();
+
             $resultsListContainer
                 .datatable({
                     url: url.route('data', 'ResultsMonitoring', 'taoOutcomeUi'),
