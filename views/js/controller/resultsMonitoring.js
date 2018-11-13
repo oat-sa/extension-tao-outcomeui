@@ -21,6 +21,7 @@
 
 define([
     'jquery',
+    'lodash',
     'i18n',
     'util/url',
     'uri',
@@ -32,7 +33,7 @@ define([
     'ui/dialog/confirm',
     'tpl!taoOutcomeUi/controller/resultModal',
     'ui/datatable'
-], function ($, __, url, uri, feedback, locale, encode, loadingBar, binder, dialogConfirm, resultModalTpl) {
+], function ($, _, __, url, uri, feedback, locale, encode, loadingBar, binder, dialogConfirm, resultModalTpl) {
     'use strict';
 
     var $resultsListContainer = $('.results-list-container');
@@ -163,7 +164,7 @@ define([
                 );
             };
 
-            $(window).on('resize', resizeContainer);
+            $(window).on('resize', _.debounce(resizeContainer, 300));
             resizeContainer();
 
             $resultsListContainer
