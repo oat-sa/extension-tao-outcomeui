@@ -37,7 +37,7 @@ define([
     'use strict';
 
     var $resultsListContainer = $('.results-list-container');
-
+    var $window = $(window);
 
     /**
      * Internet Explorer and Edge will not open the detail view when the table row was below originally below the fold.
@@ -54,7 +54,7 @@ define([
             + parseInt($upperElem.css('margin-bottom'), 10)
             + lineHeight
             + searchPagination;
-        var availableHeight = $(window).height() - topSpace - $('footer.dark-bar').outerHeight();
+        var availableHeight = $window.height() - topSpace - $('footer.dark-bar').outerHeight();
         if(!window.MSInputMethodContext && !document.documentMode && !window.StyleMedia) {
            return 25;
         }
@@ -94,7 +94,7 @@ define([
                     minWidth : 450,
                     top: 50
                 });
-                $container.css({'max-height': $(window).height() - 80 + 'px', 'overflow': 'auto'});
+                $container.css({'max-height': $window.height() - 80 + 'px', 'overflow': 'auto'});
                 $container.on('click', function(e) {
                     // the trigger button might itself be inside a modal, in this case close that modal before doing anything else
                     // only one modal should be open
@@ -155,7 +155,7 @@ define([
 
                 //calculate height for contentArea
                 $contentBlock.height(
-                    $(window).height()
+                    $window.height()
                     - $("footer").outerHeight()
                     - $("header").outerHeight()
                     - $(".tab-container").outerHeight()
@@ -164,7 +164,7 @@ define([
                 );
             };
 
-            $(window).on('resize', _.debounce(resizeContainer, 300));
+            $window.on('resize', _.debounce(resizeContainer, 300));
             resizeContainer();
 
             $resultsListContainer
