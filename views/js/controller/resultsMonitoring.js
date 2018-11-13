@@ -156,10 +156,10 @@ define([
                 //calculate height for contentArea
                 $contentBlock.height(
                     $window.height()
-                    - $("footer").outerHeight()
-                    - $("header").outerHeight()
+                    - $("footer.dark-bar").outerHeight()
+                    - $("header.dark-bar").outerHeight()
                     - $(".tab-container").outerHeight()
-                    - $(".action-bar").outerHeight()
+                    - $(".action-bar.content-action-bar").outerHeight()
                     - padding
                 );
             };
