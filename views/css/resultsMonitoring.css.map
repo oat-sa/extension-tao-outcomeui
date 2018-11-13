@@ -1,7 +1,14 @@
 {
-"version": 3,
-"mappings": "AAEA,uBAAwB,CAEpB,OAAO,CAAE,KAAK,CACd,KAAK,CAAE,IAAI,CAEX,0CAAmB,CACf,OAAO,CAAE,KAAK,CAId,iDAAU,CACN,SAAS,CAAE,GAAG,CAGlB,gDAAS,CACL,WAAW,CAAE,MAAM",
-"sources": ["../scss/resultsMonitoring.scss"],
-"names": [],
-"file": "resultsMonitoring.css"
+	"version": 3,
+	"file": "resultsMonitoring.css",
+	"sources": [
+		"../scss/resultsMonitoring.scss",
+		"../../../tao/views/scss/inc/_bootstrap.scss",
+		"../../../tao/views/scss/inc/_variables.scss",
+		"../../../tao/views/scss/inc/_functions.scss",
+		"../../../tao/views/scss/inc/_colors.scss",
+		"../../../tao/views/scss/inc/fonts/_tao-icon-vars.scss"
+	],
+	"names": [],
+	"mappings": "AAEA,AAAA,uBAAuB,AAAC,CAEpB,OAAO,CAAE,KAAK,CACd,KAAK,CAAE,IAAI,CAed,AAlBD,AAKI,uBALmB,CAKnB,kBAAkB,AAAC,CACf,OAAO,CAAE,KAAK,CACjB,AAPL,AAUQ,uBAVe,CASnB,KAAK,AAAA,UAAU,CACX,SAAS,AAAC,CACN,SAAS,CAAE,GAAG,CAEjB,AAbT,AAcQ,uBAde,CASnB,KAAK,AAAA,UAAU,CAKX,QAAQ,AAAC,CACL,WAAW,CAAE,MAAM,CACtB,AAKT,AACI,aADS,CACT,SAAS,AACL,WAAY,AAAC,CACT,KAAK,CAAE,IAAI,CACd"
 }
