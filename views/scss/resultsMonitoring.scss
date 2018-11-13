@@ -21,3 +21,10 @@
 }
 
 
+.results-list {
+    .grid-row{
+        &.pagination {
+            width: 100%;
+        }
+    }
+}
