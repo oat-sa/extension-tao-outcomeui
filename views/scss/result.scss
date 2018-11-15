@@ -119,12 +119,11 @@ tr td {
 }
 
 .result-table-container {
-    display: table;
-    table-layout: fixed;
+    display: block;
     width: 100%;
 
     .datatable-wrapper {
-        display: table-cell;
+        display: block;
     }
 }
 
