@@ -170,6 +170,7 @@ class Updater extends \common_ext_ExtensionUpdater
             $this->setVersion('5.13.0');
         }
 
-        $this->skip('5.13.0', '7.1.0');
+        $this->skip('5.13.0', '7.2.0');
+
     }
 }

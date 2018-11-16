@@ -2,12 +2,11 @@
 
 .results-list-container {
 
-    display: table;
-    table-layout: fixed;
+    display: block;
     width: 100%;
 
     .datatable-wrapper {
-        display: table-cell;
+        display: block;
     }
 
     table.datatable {
@@ -22,3 +21,10 @@
 }
 
 
+.results-list {
+    .grid-row{
+        &.pagination {
+            width: 100%;
+        }
+    }
+}

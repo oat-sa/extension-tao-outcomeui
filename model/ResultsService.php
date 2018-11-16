@@ -28,6 +28,7 @@ use common_Utils;
 use League\Flysystem\FileNotFoundException;
 use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyRdfs;
+use oat\oatbox\user\User;
 use oat\tao\helpers\metadata\ResourceCompiledMetadataHelper;
 use oat\tao\model\metadata\compiler\ResourceJsonMetadataCompiler;
 use oat\tao\model\metadata\compiler\ResourceMetadataCompilerInterface;
@@ -843,11 +844,14 @@ class ResultsService extends tao_models_classes_ClassService
      * returns the test taker related to the delivery
      *
      * @param string $resultIdentifier
-     * @return \core_kernel_classes_Resource
+     * @return User
      */
     public function getTestTaker($resultIdentifier) {
         $testTaker = $this->getImplementation()->getTestTaker($resultIdentifier);
-        return new core_kernel_classes_Resource($testTaker);
+        /** @var \tao_models_classes_UserService $userService */
+        $userService = $this->getServiceLocator()->get(\tao_models_classes_UserService::SERVICE_ID);
+        $user = $userService->getUserById($testTaker);
+        return $user;
     }
 
     /**

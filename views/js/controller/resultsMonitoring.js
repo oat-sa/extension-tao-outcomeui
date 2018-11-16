@@ -21,6 +21,7 @@
 
 define([
     'jquery',
+    'lodash',
     'i18n',
     'util/url',
     'uri',
@@ -32,10 +33,35 @@ define([
     'ui/dialog/confirm',
     'tpl!taoOutcomeUi/controller/resultModal',
     'ui/datatable'
-], function ($, __, url, uri, feedback, locale, encode, loadingBar, binder, dialogConfirm, resultModalTpl) {
+], function ($, _, __, url, uri, feedback, locale, encode, loadingBar, binder, dialogConfirm, resultModalTpl) {
     'use strict';
 
     var $resultsListContainer = $('.results-list-container');
+    var $window = $(window);
+
+    /**
+     * Internet Explorer and Edge will not open the detail view when the table row was below originally below the fold.
+     * This is not cause by a too low container or some sort of overlay. As a workaround they get just as many rows
+     * as they can handle in one fold.
+     * @returns {number}
+     */
+    function getNumRows() {
+        var lineHeight       = 30;
+        var searchPagination = 70;
+        var $upperElem       = $('.content-container h2');
+        var topSpace         = $upperElem.offset().top
+            + $upperElem.height()
+            + parseInt($upperElem.css('margin-bottom'), 10)
+            + lineHeight
+            + searchPagination;
+        var availableHeight = $window.height() - topSpace - $('footer.dark-bar').outerHeight();
+        if(!window.MSInputMethodContext && !document.documentMode && !window.StyleMedia) {
+           return 25;
+        }
+        return Math.min(Math.floor(availableHeight / lineHeight), 25);
+    }
+
+
 
     function getRequestErrorMessage (xhr) {
         loadingBar.start();
@@ -60,13 +86,15 @@ define([
             url : url.route('viewResult', 'Results', 'taoOutcomeUi', {id : res[0], classUri: res[1]}),
             type : 'GET',
             success : function (result) {
+
                 var $container = $(resultModalTpl()).append(result);
                 $resultsListContainer.append($container);
                 $container.modal({
-                    startClosed : true,
-                    minWidth : 450
+                    startClosed : false,
+                    minWidth : 450,
+                    top: 50
                 });
-                $container.modal().css({'max-height': $(window).height() - 80 + 'px', 'overflow': 'auto'});
+                $container.css({'max-height': $window.height() - 80 + 'px', 'overflow': 'auto'});
                 $container.on('click', function(e) {
                     // the trigger button might itself be inside a modal, in this case close that modal before doing anything else
                     // only one modal should be open
@@ -79,7 +107,6 @@ define([
                     }
                 });
                 $container
-                    .modal('open')
                     .on('closed.modal', function(){
                         $container.modal('destroy');
                         $('.modal-bg').remove();
@@ -121,6 +148,25 @@ define([
 
     return {
         start: function () {
+            var $contentBlock = $resultsListContainer.parents(".content-block");
+
+            var resizeContainer = function() {
+                var padding = $contentBlock.innerHeight() - $contentBlock.height();
+
+                //calculate height for contentArea
+                $contentBlock.height(
+                    $window.height()
+                    - $("footer.dark-bar").outerHeight()
+                    - $("header.dark-bar").outerHeight()
+                    - $(".tab-container").outerHeight()
+                    - $(".action-bar.content-action-bar").outerHeight()
+                    - padding
+                );
+            };
+
+            $window.on('resize', _.debounce(resizeContainer, 300));
+            resizeContainer();
+
             $resultsListContainer
                 .datatable({
                     url: url.route('data', 'ResultsMonitoring', 'taoOutcomeUi'),
@@ -147,7 +193,7 @@ define([
                     }],
                     paginationStrategyTop: 'simple',
                     paginationStrategyBottom: 'pages',
-                    rows: 25,
+                    rows: getNumRows(),
                     sortby: 'result_id',
                     sortorder: 'desc',
                     actions : {
