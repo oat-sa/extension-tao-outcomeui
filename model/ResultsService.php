@@ -489,7 +489,7 @@ class ResultsService extends tao_models_classes_ClassService
             'epoch1' => [
                 'label' => Example_0_Introduction,
                 'uri' => http://tao.local/mytao.rdf#i1462952280695832,
-     *          'internalIdentifier' => item-1,
+                'internalIdentifier' => item-1,
                 'taoResultServer_models_classes_Variable class name' => [
                     'Variable identifier 1' => [
                         'uri' => 1,
@@ -504,128 +504,214 @@ class ResultsService extends tao_models_classes_ClassService
                 ]
             ]
         ]
+     *
+     * @throws common_exception_Error
      */
     public function getStructuredVariables($resultIdentifier, $filter, $wantedTypes = array())
     {
-        $itemCallIds = $this->getItemResultsFromDeliveryResult($resultIdentifier);
-        $variablesByItem = array();
-        $savedItems = array();
-        $itemVariables = array();
-        $tmpitem = array();
-        $item = array();
+        $structuredVariables = [];
+        $epochToItemAttempt = [];
 
+        // Gets the sorted item variables.
+        $itemVariables = $this->getSortedItemVariablesByEpoch(
+            $this->getItemVariablesByItemCallIds(
+                $this->getItemResultsFromDeliveryResult($resultIdentifier),
+                $wantedTypes
+            )
+        );
+
+        foreach ($itemVariables as $itemVariable) {
+            foreach ($this->getFilteredItemVariableAttempts($filter, $itemVariable) as $index => $currentItemVariableAttempt) {
+                /** @var \taoResultServer_models_classes_Variable $attemptDetails */
+                $attemptDetails = $currentItemVariableAttempt->variable;
+
+                // Sets the variable details.
+                $variableDescription['uri'] = $currentItemVariableAttempt->uri;
+                $variableDescription['var'] = $attemptDetails;
+                $variableDescription['isCorrect'] = $this->isCorrectResponse($attemptDetails);
+
+                // Gets the same epoch key for each variable type on the same attempt.
+                if (empty($epochToItemAttempt[$currentItemVariableAttempt->callIdItem][$index])) {
+                    $epochToItemAttempt[$currentItemVariableAttempt->callIdItem][$index] = $attemptDetails->getEpoch();
+                }
+
+                // Sets the item details on the key initialization.
+                $epochMainKey = $epochToItemAttempt[$currentItemVariableAttempt->callIdItem][$index];
+                if (empty($structuredVariables[$epochMainKey])) {
+                    $structuredVariables[$epochMainKey] = $this->getItemInfos($currentItemVariableAttempt->callIdItem, [$itemVariable]);
+                    $structuredVariables[$epochMainKey]['internalIdentifier'] = explode(
+                        '.',
+                        str_replace($resultIdentifier, '', $currentItemVariableAttempt->callIdItem), 3
+                    )[1];
+                }
+
+                // Adds the current type on the current attempt of the variable.
+                $type = get_class($attemptDetails);
+                $variableIdentifier = $attemptDetails->getIdentifier();
+                $structuredVariables[$epochMainKey][$type][$variableIdentifier] = $variableDescription;
+            }
+        }
+
+        return $structuredVariables;
+    }
+
+    /**
+     * Returns the sorted item variables by epoch.
+     *
+     * @param array $itemVariables
+     *
+     * @return array
+     */
+    private function getSortedItemVariablesByEpoch(array $itemVariables)
+    {
+        foreach ($itemVariables as &$itemVariable) {
+            usort($itemVariable, function($a, $b) {
+                return $this->isItemVariableAttemptEpochGreater($a, $b);
+            });
+        }
+        usort($itemVariables, function($a, $b){
+            return $this->isItemVariableAttemptEpochGreater($a[0], $b[0]);
+        });
+
+        return $itemVariables;
+    }
+
+    /**
+     * Checks which variable attempt is earlier.
+     *
+     * @param $variableAttemptA
+     * @param $variableAttemptB
+     *
+     * @return int
+     */
+    private function isItemVariableAttemptEpochGreater($variableAttemptA, $variableAttemptB)
+    {
+        $uTimeA = $this->getUTimeFromEpoch($variableAttemptA->variable->getEpoch());
+        $uTimeB = $this->getUTimeFromEpoch($variableAttemptB->variable->getEpoch());
+
+        if (floatval($uTimeA) > floatval($uTimeB)) {
+            return 1;
+        } elseif (floatval($uTimeA) < floatval($uTimeB)) {
+            return -1;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Calculates and returns the time from epoch string.
+     *
+     * @param string $epoch
+     *
+     * @return float
+     */
+    private function getUTimeFromEpoch($epoch)
+    {
+        list($usec, $sec) = explode(" ", $epoch);
+
+        return ((float) $usec + (float) $sec);
+    }
+
+    /**
+     * @param array $itemCallIds
+     * @param array $wantedTypes
+     *
+     * @return array
+     *
+     * @throws common_exception_Error
+     */
+    private function getItemVariablesByItemCallIds(array $itemCallIds, array $wantedTypes)
+    {
         // splitting call ids into chunks to perform bulk queries
         $itemCallIdChunks = array_chunk($itemCallIds, 50);
 
+        $itemVariables = [];
         foreach ($itemCallIdChunks as $ids) {
             $firstEpoch = null;
             $itemVariables = array_merge($itemVariables, $this->getVariablesFromObjectResult($ids, $wantedTypes));
         }
 
-        unset($itemCallIds, $itemCallIdChunks);
+        return $itemVariables;
+    }
 
-        usort($itemVariables, function($a, $b){
-            $variableA = $a[0]->variable;
-            $variableB = $b[0]->variable;
-            list($usec, $sec) = explode(" ", $variableA->getEpoch());
-            $floata = ((float) $usec + (float) $sec);
-            list($usec, $sec) = explode(" ", $variableB->getEpoch());
-            $floatb = ((float) $usec + (float) $sec);
+    /**
+     * @param string $filter
+     * @param array $itemVariable
+     *
+     * @return array
+     */
+    private function getFilteredItemVariableAttempts($filter, $itemVariable)
+    {
+        switch ($filter) {
+            case self::VARIABLES_FILTER_FIRST_SUBMITTED:
+                return [$this->filterVariablesFirstEpoch($itemVariable)];
 
-            if ((floatval($floata) - floatval($floatb)) > 0) {
-                return 1;
-            } elseif ((floatval($floata) - floatval($floatb)) < 0) {
-                return -1;
-            } else {
-                return 0;
+            case self::VARIABLES_FILTER_LAST_SUBMITTED:
+                return [$this->filterVariablesLastEpoch($itemVariable)];
+
+            case self::VARIABLES_FILTER_ALL:
+            default:
+                return $itemVariable;
+        }
+    }
+
+    /**
+     * @param array $itemVariable
+     *
+     * @return mixed
+     */
+    private function filterVariablesFirstEpoch($itemVariable)
+    {
+        $firstEpochVersionItemVariable = null;
+        foreach ($itemVariable as $currentVersionItemVariable) {
+            if (empty($firstEpochVersionItemVariable)) {
+                $firstEpochVersionItemVariable = $currentVersionItemVariable;
+            } elseif ($this->getUTimeFromEpoch($currentVersionItemVariable->variable->getEpoch()) < $this->getUTimeFromEpoch($firstEpochVersionItemVariable->variable->getEpoch())) {
+                $firstEpochVersionItemVariable = $currentVersionItemVariable;
             }
-        });
+        }
 
-        $lastItemCallId = null;
+        return $firstEpochVersionItemVariable;
+    }
 
-        foreach ($itemVariables as $variable) {
-            $currentItemCallId = $variable[0]->callIdItem;
-
-            /** @var \taoResultServer_models_classes_Variable $variableTemp */
-            $variableTemp = $variable[0]->variable;
-            $variableDescription = array();
-            //retrieve the type of the variable
-            $type = get_class($variableTemp);
-
-            if (is_null($lastItemCallId)) {
-                $lastItemCallId = $currentItemCallId;
-                $firstEpoch = $variableTemp->getEpoch();
-                $item = $this->getItemInfos($currentItemCallId, array($variable));
+    /**
+     * @param array $itemVariable
+     *
+     * @return mixed
+     */
+    private function filterVariablesLastEpoch($itemVariable)
+    {
+        $lastEpochVersionItemVariable = null;
+        foreach ($itemVariable as $currentVersionItemVariable) {
+            if (empty($lastEpochVersionItemVariable)) {
+                $lastEpochVersionItemVariable = $currentVersionItemVariable;
+            } elseif ($this->getUTimeFromEpoch($currentVersionItemVariable->variable->getEpoch()) > $this->getUTimeFromEpoch($lastEpochVersionItemVariable->variable->getEpoch())) {
+                $lastEpochVersionItemVariable = $currentVersionItemVariable;
             }
+        }
 
-            $variableIdentifier = $variableTemp->getIdentifier();
-            $variableDescription["uri"] = $variable[0]->uri;
-            $variableDescription["var"] = $variableTemp;
+        return $lastEpochVersionItemVariable;
+    }
 
-            if (method_exists($variableTemp, 'getCorrectResponse') && !is_null($variableTemp->getCorrectResponse())) {
-                if($variableTemp->getCorrectResponse() >= 1){
-                    $variableDescription["isCorrect"] = "correct";
-                }
-                else{
-                    $variableDescription["isCorrect"] = "incorrect";
-                }
+    /**
+     * Decides the correctness of the response.
+     *
+     * @param \taoResultServer_models_classes_ResponseVariable|mixed $variable
+     *
+     * @return string
+     */
+    private function isCorrectResponse($variable)
+    {
+        if (method_exists($variable, 'getCorrectResponse') && !is_null($variable->getCorrectResponse())) {
+            if($variable->getCorrectResponse() >= 1){
+                return 'correct';
             }
             else{
-                $variableDescription["isCorrect"] = "unscored";
-            }
-
-            if ($currentItemCallId !== $lastItemCallId) {
-                //no yet saved
-                //already saved and filter not first
-                if (!isset($savedItems[$item['uri']]) || $filter !== self::VARIABLES_FILTER_FIRST_SUBMITTED) {
-                    //last submitted and already something saved
-                    if ($filter === self::VARIABLES_FILTER_LAST_SUBMITTED && isset($savedItems[$item['uri']])) {
-                        //$tmpitem not empty and contains at least one wanted type
-                        if (!empty($tmpitem)) {
-                            foreach ($wantedTypes as $type) {
-                                if (isset($tmpitem[$type])) {
-                                    unset($variablesByItem[$savedItems[$item['uri']]]);
-                                    $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
-                                    continue;
-                                }
-                            }
-                        }
-                    } else {
-                        $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
-                    }
-                    $savedItems[$item['uri']] = $firstEpoch;
-                }
-                $tmpitem = array();
-                $firstEpoch = $variableTemp->getEpoch();
-                $item = $this->getItemInfos($currentItemCallId, array($variable));
-                $lastItemCallId = $currentItemCallId;
-            }
-
-            // item identifier within the test
-            $item['internalIdentifier'] = explode('.', str_replace($resultIdentifier, '', $currentItemCallId), 3)[1];
-
-            $tmpitem[$type][$variableIdentifier] = $variableDescription;
-        }
-
-        if (!empty($item) && (!isset($savedItems[$item['uri']]) || $filter !== self::VARIABLES_FILTER_FIRST_SUBMITTED)) {
-            //last submitted and already something saved
-            if ($filter === self::VARIABLES_FILTER_LAST_SUBMITTED && isset($savedItems[$item['uri']])) {
-                //$tmpitem not empty and contains at least one wanted type
-                if (!empty($tmpitem)){
-                    foreach ($wantedTypes as $type) {
-                        if (isset($tmpitem[$type])) {
-                            unset($variablesByItem[$savedItems[$item['uri']]]);
-                            $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
-                            break;
-                        }
-                    }
-                }
-            } else {
-                $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
+                return 'incorrect';
             }
         }
 
-        return $variablesByItem;
+        return 'unscored';
     }
 
     /**
