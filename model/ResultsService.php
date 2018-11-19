@@ -929,14 +929,9 @@ class ResultsService extends tao_models_classes_ClassService
             ];
             $propValues = [];
             foreach ($arrayOfProperties as $property) {
-                $propertyValues = $testTaker->getPropertyValues($property);
                 $values = [];
-                if (sizeof($propertyValues) > 1) {
-                    foreach ($propertyValues as $value) {
-                        $values[] = new \core_kernel_classes_Literal($value);
-                    }
-                } else {
-                    $values = [new \core_kernel_classes_Literal(current($propertyValues))];
+                foreach ($testTaker->getPropertyValues($property) as $value) {
+                    $values[] = new \core_kernel_classes_Literal($value);
                 }
                 $propValues[$property] = $values;
             }
