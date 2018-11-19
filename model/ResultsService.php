@@ -920,13 +920,21 @@ class ResultsService extends tao_models_classes_ClassService
         if (get_class($testTaker) == 'core_kernel_classes_Literal') {
             return $testTaker;
         } else {
-            $propValues = $testTaker->getPropertiesValues(array(
+            $arrayOfProperties = [
                 OntologyRdfs::RDFS_LABEL,
                 GenerisRdf::PROPERTY_USER_LOGIN,
                 GenerisRdf::PROPERTY_USER_FIRSTNAME,
                 GenerisRdf::PROPERTY_USER_LASTNAME,
-                GenerisRdf::PROPERTY_USER_MAIL,
-            ));
+                GenerisRdf::PROPERTY_USER_MAIL
+            ];
+            $propValues = [];
+            foreach ($arrayOfProperties as $property) {
+                $values = [];
+                foreach ($testTaker->getPropertyValues($property) as $value) {
+                    $values[] = new \core_kernel_classes_Literal($value);
+                }
+                $propValues[$property] = $values;
+            }
         }
         return $propValues;
     }

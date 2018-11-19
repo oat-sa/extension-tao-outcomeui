@@ -253,8 +253,8 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $this->service->setImplementation($imp);
 
         $item = $this->service->getTestTaker('#fakeUri');
-        $this->assertInstanceOf(core_kernel_classes_Resource::class, $item);
-        $this->assertEquals('#testTaker', $item->getUri());
+        $this->assertInstanceOf(\core_kernel_users_GenerisUser::class, $item);
+        $this->assertEquals('#testTaker', $item->getIdentifier());
     }
     /**
      *
