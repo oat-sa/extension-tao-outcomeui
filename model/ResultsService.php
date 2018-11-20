@@ -446,7 +446,7 @@ class ResultsService extends tao_models_classes_ClassService
      * @param $itemVariables
      * @return array item information ['uri' => xxx, 'label' => yyy]
      */
-    private function getItemInfos($itemCallId, $itemVariables)
+    protected function getItemInfos($itemCallId, $itemVariables)
     {
         $undefinedStr = __('unknown'); //some data may have not been submitted
 
@@ -520,14 +520,7 @@ class ResultsService extends tao_models_classes_ClassService
         $structuredVariables = [];
         $epochToItemAttempt = [];
 
-        // Gets the sorted item variables.
-        $itemVariables = $this->getSortedItemVariablesByEpoch(
-            $this->getItemVariablesByItemCallIds(
-                $this->getItemResultsFromDeliveryResult($resultIdentifier),
-                $wantedTypes
-            )
-        );
-
+        $itemVariables = $this->getOrderedItemVariablesByResultIdentifierAndWantedTypes($resultIdentifier, $wantedTypes);
         foreach ($itemVariables as $itemVariable) {
             foreach ($this->getFilteredItemVariableAttempts($filter, $itemVariable) as $index => $currentItemVariableAttempt) {
                 /** @var \taoResultServer_models_classes_Variable $attemptDetails */
@@ -561,6 +554,26 @@ class ResultsService extends tao_models_classes_ClassService
         }
 
         return $structuredVariables;
+    }
+
+    /**
+     * Returns the item variables in time order by result identifier filtered by wanted types.
+     *
+     * @param string $resultIdentifier
+     * @param array $wantedTypes
+     *
+     * @return array
+     *
+     * @throws common_exception_Error
+     */
+    protected function getOrderedItemVariablesByResultIdentifierAndWantedTypes($resultIdentifier, $wantedTypes = [])
+    {
+        return $this->getSortedItemVariablesByEpoch(
+            $this->getItemVariablesByItemCallIds(
+                $this->getItemResultsFromDeliveryResult($resultIdentifier),
+                $wantedTypes
+            )
+        );
     }
 
     /**
