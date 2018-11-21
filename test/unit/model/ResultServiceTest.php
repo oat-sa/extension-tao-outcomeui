@@ -40,26 +40,21 @@ class ResultServiceTest extends TestCase
             ->method('getItemInfos')
             ->willReturn([
                 'itemModel' => '---',
-                'label' => 'Cool Test Item',
-                'uri' => 'kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375.item-1.0',
+                'label' => 'Associate Things',
+                'uri' => 'http://www.taotesting.com/ontologies/ionut.rdf#i1532536164849216',
         ]);
 
         $mock->expects($this->once())
             ->method('getOrderedItemVariablesByResultIdentifierAndWantedTypes')
-            ->willReturn($this->getItemVariableStructureShuffled());
+            ->willReturn($this->getItemVariableStructureOrdered());
 
         $structuredVariables = $mock->getStructuredVariables(
             $this->resultIdentifierFixture,
             ResultsService::VARIABLES_FILTER_ALL
         );
 
-        $this->assertArrayHasKey(
-            $this->epochAFixture,
-            $structuredVariables
-        );
-
-        $this->assertArrayHasKey(
-            $this->epochBFixture,
+        $this->assertEquals(
+            $this->getStructuredItemVariableStructureOrdered(),
             $structuredVariables
         );
     }

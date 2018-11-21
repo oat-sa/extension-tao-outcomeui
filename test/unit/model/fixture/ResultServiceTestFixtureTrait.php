@@ -99,7 +99,7 @@ trait ResultServiceTestFixtureTrait
             'test' => 'http://www.taotesting.com/ontologies/ionut.rdf#i1542124156831368-',
             'item' => 'http://www.taotesting.com/ontologies/ionut.rdf#i1532536164849216',
             'variable' => $this->getResponseVariable([
-                'correctResponse' => null,
+                'correctResponse' => false,
                 'candidateResponse' => 'RCBQ',
                 'identifier' => 'RESPONSE',
                 'cardinality' => 'single',
@@ -120,8 +120,8 @@ trait ResultServiceTestFixtureTrait
             'test' => 'http://www.taotesting.com/ontologies/ionut.rdf#i1542124156831368-',
             'item' => 'http://www.taotesting.com/ontologies/ionut.rdf#i1532536164849216',
             'variable' => $this->getResponseVariable([
-                'correctResponse' => null,
-                'candidateResponse' => 'RCBQ',
+                'correctResponse' => false,
+                'candidateResponse' => 'RCBD',
                 'identifier' => 'RESPONSE',
                 'cardinality' => 'single',
                 'baseType' => 'directedPair',
@@ -141,7 +141,7 @@ trait ResultServiceTestFixtureTrait
             'test' => 'http://www.taotesting.com/ontologies/ionut.rdf#i1542124156831368-',
             'item' => 'http://www.taotesting.com/ontologies/ionut.rdf#i1532536164849216',
             'variable' => $this->getResponseVariable([
-                'correctResponse' => null,
+                'correctResponse' => false,
                 'candidateResponse' => 'RCBQ',
                 'identifier' => 'RESPONSE',
                 'cardinality' => 'single',
@@ -152,6 +152,72 @@ trait ResultServiceTestFixtureTrait
             'uri' => 'kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375.item-1.0_prop_RESPONSE',
             'callIdTest' => null,
             'class' => 'taoResultServer_models_classes_ResponseVariable',
+        ];
+    }
+
+    protected function getItemVariableFirstAttemptScore()
+    {
+        return (object)[
+            'deliveryResultIdentifier' => 'kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375',
+            'test' => 'http://www.taotesting.com/ontologies/ionut.rdf#i1542124156831368-',
+            'item' => 'http://www.taotesting.com/ontologies/ionut.rdf#i1532536164849216',
+            'variable' => $this->getOutcomeVariable([
+                'normalMaximum' => null,
+                'normalMinimum' => null,
+                'value' => 'MA==',
+                'identifier' => 'SCORE',
+                'cardinality' => 'single',
+                'baseType' => 'float',
+                'epoch' => '0.10640200 1542124218',
+            ]),
+            'callIdItem' => 'kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375.item-1.0',
+            'uri' => 'kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375.item-1.0_prop_SCORE',
+            'callIdTest' => null,
+            'class' => 'taoResultServer_models_classes_OutcomeVariable',
+        ];
+    }
+
+    protected function getItemVariableSecondAttemptScore()
+    {
+        return (object)[
+            'deliveryResultIdentifier' => 'kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375',
+            'test' => 'http://www.taotesting.com/ontologies/ionut.rdf#i1542124156831368-',
+            'item' => 'http://www.taotesting.com/ontologies/ionut.rdf#i1532536164849216',
+            'variable' => $this->getOutcomeVariable([
+                'normalMaximum' => null,
+                'normalMinimum' => null,
+                'value' => 'MA==',
+                'identifier' => 'SCORE',
+                'cardinality' => 'single',
+                'baseType' => 'float',
+                'epoch' => '0.84401000 1542124722',
+            ]),
+            'callIdItem' => 'kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375.item-1.0',
+            'uri' => 'kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375.item-1.0_prop_SCORE',
+            'callIdTest' => null,
+            'class' => 'taoResultServer_models_classes_OutcomeVariable',
+        ];
+    }
+
+    protected function getItemVariableThirdAttemptScore()
+    {
+        return (object)[
+            'deliveryResultIdentifier' => 'kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375',
+            'test' => 'http://www.taotesting.com/ontologies/ionut.rdf#i1542124156831368-',
+            'item' => 'http://www.taotesting.com/ontologies/ionut.rdf#i1532536164849216',
+            'variable' => $this->getOutcomeVariable([
+                'normalMaximum' => null,
+                'normalMinimum' => null,
+                'value' => 'MA==',
+                'identifier' => 'SCORE',
+                'cardinality' => 'single',
+                'baseType' => 'float',
+                'epoch' => '0.29765300 1542124889',
+            ]),
+            'callIdItem' => 'kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375.item-1.0',
+            'uri' => 'kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375.item-1.0_prop_SCORE',
+            'callIdTest' => null,
+            'class' => 'taoResultServer_models_classes_OutcomeVariable',
         ];
     }
 
@@ -173,10 +239,20 @@ trait ResultServiceTestFixtureTrait
         ];
     }
 
+    protected function getItemVariableAttemptScoresOrdered()
+    {
+        return [
+            $this->getItemVariableFirstAttemptScore(),
+            $this->getItemVariableSecondAttemptScore(),
+            $this->getItemVariableThirdAttemptScore(),
+        ];
+    }
+
     protected function getItemVariableStructureOrdered()
     {
         return [
             $this->getItemVariableAttemptAttemptsOrdered(),
+            $this->getItemVariableAttemptScoresOrdered(),
             $this->getItemVariableAttemptResponsesOrdered(),
         ];
     }
@@ -190,9 +266,161 @@ trait ResultServiceTestFixtureTrait
                 $this->getItemVariableSecondAttemptAttempt(),
             ],
             [
+                $this->getItemVariableSecondAttemptScore(),
+                $this->getItemVariableThirdAttemptScore(),
+                $this->getItemVariableFirstAttemptScore(),
+            ],
+            [
                 $this->getItemVariableSecondAttemptResponse(),
                 $this->getItemVariableThirdAttemptResponse(),
                 $this->getItemVariableFirstAttemptResponse(),
+            ],
+        ];
+    }
+
+    protected function getStructuredItemVariableStructureOrdered()
+    {
+        return [
+            '0.96196000 1542124217' => [
+                'itemModel' => '---',
+                'label' => 'Associate Things',
+                'uri' => 'http://www.taotesting.com/ontologies/ionut.rdf#i1532536164849216',
+                'internalIdentifier' => 'item-1',
+                'taoResultServer_models_classes_ResponseVariable' => [
+                    'numAttempts' => [
+                        'uri' => 'kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375.item-1.0_prop_numAttempts',
+                        'var' => $this->getResponseVariable([
+                            'correctResponse' => null,
+                            'candidateResponse' => 'MQ==',
+                            'identifier' => 'numAttempts',
+                            'cardinality' => 'single',
+                            'baseType' => 'integer',
+                            'epoch' => '0.96196000 1542124217',
+                        ]),
+                        'isCorrect' => 'unscored',
+                    ],
+                    'RESPONSE' => [
+                        'uri' => 'kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375.item-1.0_prop_RESPONSE',
+                        'var' => $this->getResponseVariable([
+                            'correctResponse' => false,
+                            'candidateResponse' => 'RCBQ',
+                            'identifier' => 'RESPONSE',
+                            'cardinality' => 'single',
+                            'baseType' => 'directedPair',
+                            'epoch' => '0.16842800 1542124218',
+                        ]),
+                        'isCorrect' => 'incorrect',
+                    ],
+                ],
+                'taoResultServer_models_classes_OutcomeVariable' => [
+                    'SCORE' => [
+                        'uri' => 'kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375.item-1.0_prop_SCORE',
+                        'var' => $this->getOutcomeVariable([
+                            'normalMaximum' => null,
+                            'normalMinimum' => null,
+                            'value' => 'MA==',
+                            'identifier' => 'SCORE',
+                            'cardinality' => 'single',
+                            'baseType' => 'float',
+                            'epoch' => '0.10640200 1542124218',
+                        ]),
+                        'isCorrect' => 'unscored',
+                    ],
+                ],
+            ],
+            '0.67674700 1542124722' => [
+                'itemModel' => '---',
+                'label' => 'Associate Things',
+                'uri' => 'http://www.taotesting.com/ontologies/ionut.rdf#i1532536164849216',
+                'internalIdentifier' => 'item-1',
+                'taoResultServer_models_classes_ResponseVariable' => [
+                    'numAttempts' => [
+                        'uri' => 'kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375.item-1.0_prop_numAttempts',
+                        'var' => $this->getResponseVariable([
+                            'correctResponse' => null,
+                            'candidateResponse' => 'Mg==',
+                            'identifier' => 'numAttempts',
+                            'cardinality' => 'single',
+                            'baseType' => 'integer',
+                            'epoch' => '0.67674700 1542124722',
+                        ]),
+                        'isCorrect' => 'unscored',
+                    ],
+                    'RESPONSE' => [
+                        'uri' => 'kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375.item-1.0_prop_RESPONSE',
+                        'var' => $this->getResponseVariable([
+                            'correctResponse' => false,
+                            'candidateResponse' => 'RCBD',
+                            'identifier' => 'RESPONSE',
+                            'cardinality' => 'single',
+                            'baseType' => 'directedPair',
+                            'epoch' => '0.89667500 1542124722',
+                        ]),
+                        'isCorrect' => 'incorrect',
+                    ],
+                ],
+                'taoResultServer_models_classes_OutcomeVariable' => [
+                    'SCORE' => [
+                        'uri' => 'kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375.item-1.0_prop_SCORE',
+                        'var' => $this->getOutcomeVariable([
+                            'normalMaximum' => null,
+                            'normalMinimum' => null,
+                            'value' => 'MA==',
+                            'identifier' => 'SCORE',
+                            'cardinality' => 'single',
+                            'baseType' => 'float',
+                            'epoch' => '0.84401000 1542124722',
+                        ]),
+                        'isCorrect' => 'unscored',
+                    ],
+                ],
+            ],
+            '0.17111300 1542124889' => [
+                'itemModel' => '---',
+                'label' => 'Associate Things',
+                'uri' => 'http://www.taotesting.com/ontologies/ionut.rdf#i1532536164849216',
+                'internalIdentifier' => 'item-1',
+                'taoResultServer_models_classes_ResponseVariable' => [
+                    'numAttempts' => [
+                        'uri' => 'kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375.item-1.0_prop_numAttempts',
+                        'var' => $this->getResponseVariable([
+                            'correctResponse' => null,
+                            'candidateResponse' => 'Mw==',
+                            'identifier' => 'numAttempts',
+                            'cardinality' => 'single',
+                            'baseType' => 'integer',
+                            'epoch' => '0.17111300 1542124889',
+                        ]),
+                        'isCorrect' => 'unscored',
+                    ],
+                    'RESPONSE' => [
+                        'uri' => 'kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375.item-1.0_prop_RESPONSE',
+                        'var' => $this->getResponseVariable([
+                            'correctResponse' => false,
+                            'candidateResponse' => 'RCBQ',
+                            'identifier' => 'RESPONSE',
+                            'cardinality' => 'single',
+                            'baseType' => 'directedPair',
+                            'epoch' => '0.33639000 1542124889',
+                        ]),
+                        'isCorrect' => 'incorrect',
+                    ],
+                ],
+                'taoResultServer_models_classes_OutcomeVariable' => [
+                    'SCORE' => [
+                        'uri' => 'kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375kve_de_http://www.taotesting.com/ontologies/ionut.rdf#i15421242071985375.item-1.0_prop_SCORE',
+                        'var' => $this->getOutcomeVariable([
+                            'normalMaximum' => null,
+                            'normalMinimum' => null,
+                            'value' => 'MA==',
+                            'identifier' => 'SCORE',
+                            'cardinality' => 'single',
+                            'baseType' => 'float',
+                            'epoch' => '0.29765300 1542124889',
+                        ]),
+                        'isCorrect' => 'unscored',
+                    ],
+                ],
             ],
         ];
     }
@@ -203,13 +431,12 @@ trait ResultServiceTestFixtureTrait
      * @param $correctResponse
      *
      * @return \taoResultServer_models_classes_ResponseVariable
+     *
+     * @throws \common_exception_InvalidArgumentType
      */
     protected function getResponseVariableWithCorrectResponse($correctResponse)
     {
-        $variable = new \taoResultServer_models_classes_ResponseVariable();
-        $variable->setCorrectResponse($correctResponse);
-
-        return $variable;
+        return $this->getResponseVariable(['correctResponse' => $correctResponse]);
     }
 
     /**
@@ -218,13 +445,12 @@ trait ResultServiceTestFixtureTrait
      * @param $epoch
      *
      * @return \taoResultServer_models_classes_ResponseVariable
+     *
+     * @throws \common_exception_InvalidArgumentType
      */
     protected function getResponseVariableWithEpoch($epoch)
     {
-        $variable = new \taoResultServer_models_classes_ResponseVariable();
-        $variable->setEpoch($epoch);
-
-        return $variable;
+        return $this->getResponseVariable(['epoch' => $epoch]);
     }
 
     /**
@@ -242,7 +468,7 @@ trait ResultServiceTestFixtureTrait
      *
      * @throws \common_exception_InvalidArgumentType
      */
-    protected function getResponseVariable($variable = [], $correctResponse = '', $candidateResponse= '', $identifier = '', $cardinality = '', $baseType = '', $epoch = '')
+    protected function getResponseVariable($variable = [], $correctResponse = '', $candidateResponse= '', $identifier = '', $cardinality = \taoResultServer_models_classes_Variable::CARDINALITY_SINGLE, $baseType = '', $epoch = '')
     {
         if (!empty($variable)) {
             extract($variable);
@@ -252,6 +478,24 @@ trait ResultServiceTestFixtureTrait
         $variable->setCorrectResponse($correctResponse);
         $variable->setCandidateResponse($candidateResponse);
         $variable->setIdentifier($identifier);
+        $variable->setCardinality($cardinality);
+        $variable->setBaseType($baseType);
+        $variable->setEpoch($epoch);
+
+        return $variable;
+    }
+
+    protected function getOutcomeVariable($variable = [], $identifier = '', $maximum = 0, $minimum = 0, $value = '', $cardinality = \taoResultServer_models_classes_Variable::CARDINALITY_SINGLE, $baseType = '', $epoch = '')
+    {
+        if (!empty($variable)) {
+            extract($variable);
+        }
+
+        $variable = new \taoResultServer_models_classes_OutcomeVariable();
+        $variable->setIdentifier($identifier);
+        $variable->setNormalMaximum($maximum);
+        $variable->setNormalMinimum($minimum);
+        $variable->setValue(base64_decode($value));
         $variable->setCardinality($cardinality);
         $variable->setBaseType($baseType);
         $variable->setEpoch($epoch);
