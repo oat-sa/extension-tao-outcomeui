@@ -22,6 +22,7 @@
 namespace oat\taoOutcomeUi\controller;
 
 use \Exception;
+use \common_exception_BadRequest;
 use \core_kernel_classes_Resource;
 use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyRdfs;
@@ -237,12 +238,13 @@ class Results extends \tao_actions_CommonModule
     /**
      * Delete a result or a result class
      * @throws Exception
+     * @throws common_exception_BadRequest
      * @return string json {'deleted' : true}
      */
     public function delete()
     {
         if (!tao_helpers_Request::isAjax()) {
-            throw new Exception("wrong request mode");
+            throw new common_exception_BadRequest('wrong request mode');
         }
         $deliveryExecutionUri = tao_helpers_Uri::decode($this->getRequestParameter('uri'));
         $de = $this->getServiceProxy()->getDeliveryExecution($deliveryExecutionUri);
