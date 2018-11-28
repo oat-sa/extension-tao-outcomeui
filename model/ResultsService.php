@@ -1065,7 +1065,9 @@ class ResultsService extends tao_models_classes_ClassService
 
                     // if it's a guest test taker (it has no property values at all), let's display the uri as label
                     if ($column->isTestTakerType() && empty($values) && $column->getProperty()->getUri() == OntologyRdfs::RDFS_LABEL) {
-                        $values[] = $resource->getUri();
+                        $values[] = ($resource instanceof \core_kernel_classes_Resource)
+                            ? $resource->getUri()
+                            : $resource->getIdentifier();
                     }
 
                     $cellData[$cellKey] = [self::filterCellData(implode(' ', $values), $filter)];
