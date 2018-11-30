@@ -28,6 +28,7 @@ use common_Utils;
 use League\Flysystem\FileNotFoundException;
 use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyRdfs;
+use oat\oatbox\service\ServiceManager;
 use oat\oatbox\user\User;
 use oat\tao\helpers\metadata\ResourceCompiledMetadataHelper;
 use oat\tao\model\metadata\compiler\ResourceJsonMetadataCompiler;
@@ -58,9 +59,12 @@ use oat\taoResultServer\models\classes\ResultServerService;
 use tao_models_classes_service_StorageDirectory;
 use taoQtiTest_models_classes_QtiTestService;
 use oat\taoQtiTest\models\QtiTestCompilerIndex;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
 class ResultsService extends tao_models_classes_ClassService
 {
+    use ServiceLocatorAwareTrait;
+
     const VARIABLES_FILTER_LAST_SUBMITTED = 'lastSubmitted';
     const VARIABLES_FILTER_FIRST_SUBMITTED = 'firstSubmitted';
     const VARIABLES_FILTER_ALL = 'all';
@@ -948,7 +952,7 @@ class ResultsService extends tao_models_classes_ClassService
     public function getReadableImplementation(\core_kernel_classes_Resource $delivery)
     {
         /** @var ResultServerService  $service */
-        $service = $this->getServiceManager()->get(ResultServerService::SERVICE_ID);
+        $service = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
         $resultStorage = $service->getResultStorage($delivery);
 
         /** NoResultStorage it's not readable only writable */
@@ -1002,6 +1006,7 @@ class ResultsService extends tao_models_classes_ClassService
 
         //The list of delivery Results matching the current selection filters
         $results = array();
+
         $this->setImplementation($this->getReadableImplementation($delivery));
         foreach($this->getImplementation()->getResultByDelivery([$delivery->getUri()], $storageOptions) as $result){
             $results[] = $result['deliveryResultIdentifier'];
@@ -1402,5 +1407,16 @@ class ResultsService extends tao_models_classes_ClassService
         $fileStorage = \tao_models_classes_service_FileStorage::singleton();
 
         return $fileStorage->getDirectoryById($directoryIds[0]);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getServiceLocator()
+    {
+        if (!$this->serviceLocator) {
+            $this->setServiceLocator(ServiceManager::getServiceManager());
+        }
+        return $this->serviceLocator;
     }
 }
