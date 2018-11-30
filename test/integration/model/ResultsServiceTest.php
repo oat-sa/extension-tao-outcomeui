@@ -1105,7 +1105,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $delivery = $deliveryProphecy->reveal();
         $user = $this->prophesize(User::class);
         $user->getIdentifier()->willReturn('#fakeTestUri');
-        $user->getPropertyValues($prop)->willReturn('');
+        $user->getPropertyValues($prop)->willReturn([]);
 
         $impProphecy->getRelatedTestCallIds("#fakeUri")->willReturn(array("#fakeTestUri"));
         $impProphecy->getTestTaker('#fakeUri1')->willReturn('#testTaker');
