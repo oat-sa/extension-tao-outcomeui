@@ -95,7 +95,9 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
                     $contextIdentifier = $undefinedStr;
                 }
                 foreach ($vars as $var) {
-                    $var = $var[0];
+                    if ($var[0] instanceof \taoResultServer_models_classes_ResponseVariable && count($var) > 1) {
+                        $var = $var[count($var) - 1];
+                    }
                     // cache the variable data
                     /**
                      * @var \taoResultServer_models_classes_Variable $varData
