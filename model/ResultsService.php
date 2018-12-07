@@ -551,7 +551,7 @@ class ResultsService extends tao_models_classes_ClassService implements ServiceL
             }
         });
 
-        $savedItems = array();
+        $savedItems = $variablesByItem = [];
         $firstEpoch = null;
 
         foreach ($itemVariables as $variables) {
@@ -570,19 +570,21 @@ class ResultsService extends tao_models_classes_ClassService implements ServiceL
                             continue;
                         }
                         if ($filter == self::VARIABLES_FILTER_LAST_SUBMITTED) {
+                            unset($variablesByItem[$savedItems[$itemCallId]]);
                             unset($savedItems[$itemCallId]);
                         }
                     }
                 }
-                $savedItems[$itemCallId][$firstEpoch] = $this->getItemInfos($itemCallId, [[$itemVariable]]);
+                $variablesByItem[$firstEpoch] = $this->getItemInfos($itemCallId, [[$itemVariable]]);
+                $savedItems[$itemCallId] = $firstEpoch;
             }
 
-            if (!isset($savedItems[$itemCallId][$firstEpoch])) {
+            if (!isset($variablesByItem[$firstEpoch])) {
                 continue;
             }
 
             $variableDescription = [
-                'uri' => $savedItems[$itemCallId][$firstEpoch]['uri'],
+                'uri' => $variablesByItem[$firstEpoch]['uri'],
                 'var' => $variable,
             ];
 
@@ -592,15 +594,8 @@ class ResultsService extends tao_models_classes_ClassService implements ServiceL
                 $variableDescription['isCorrect'] = 'unscored';
             }
 
-            $savedItems[$itemCallId][$firstEpoch]['internalIdentifier'] = explode('.', str_replace($resultIdentifier, '', $itemCallId), 3)[1];
-            $savedItems[$itemCallId][$firstEpoch][get_class($variable)][$variable->getIdentifier()] = $variableDescription;
-        }
-
-        $variablesByItem = [];
-        foreach ($savedItems as $itemCallId => $byEpoch) {
-            foreach ($byEpoch as $epoch => $savedItem) {
-                $variablesByItem[$epoch] = $savedItem;
-            }
+            $variablesByItem[$firstEpoch]['internalIdentifier'] = explode('.', str_replace($resultIdentifier, '', $itemCallId), 3)[1];
+            $variablesByItem[$firstEpoch][get_class($variable)][$variable->getIdentifier()] = $variableDescription;
         }
 
         return $variablesByItem;
