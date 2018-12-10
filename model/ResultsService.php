@@ -576,6 +576,7 @@ class ResultsService extends tao_models_classes_ClassService implements ServiceL
                     }
                 }
                 $variablesByItem[$firstEpoch] = $this->getItemInfos($itemCallId, [[$itemVariable]]);
+                $variablesByItem[$firstEpoch]['attempt'] = $variable->getValue();
                 $savedItems[$itemCallId] = $firstEpoch;
             }
 
