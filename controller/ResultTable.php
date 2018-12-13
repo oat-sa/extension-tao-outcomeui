@@ -76,7 +76,7 @@ class ResultTable extends \tao_actions_CommonModule
      */
     public function feedDataTable()
     {
-        if (!\tao_helpers_Request::isAjax()) {
+        if (!$this->isXmlHttpRequest()) {
             throw new \Exception('Only ajax call allowed.');
         }
 
@@ -96,7 +96,7 @@ class ResultTable extends \tao_actions_CommonModule
      */
     public function export()
     {
-        if (!\tao_helpers_Request::isAjax()) {
+        if (!$this->isXmlHttpRequest()) {
             throw new \Exception('Only ajax call allowed.');
         }
 
@@ -110,7 +110,7 @@ class ResultTable extends \tao_actions_CommonModule
      */
     public function getTestTakerColumns()
     {
-        if (!\tao_helpers_Request::isAjax()) {
+        if (!$this->isXmlHttpRequest()) {
             throw new \Exception('Only ajax call allowed.');
         }
 
@@ -127,7 +127,7 @@ class ResultTable extends \tao_actions_CommonModule
      */
     public function getDeliveryColumns()
     {
-        if (!\tao_helpers_Request::isAjax()) {
+        if (!$this->isXmlHttpRequest()) {
             throw new \Exception('Only ajax call allowed.');
         }
 
@@ -143,7 +143,7 @@ class ResultTable extends \tao_actions_CommonModule
      */
     public function getGradeColumns()
     {
-        if (!\tao_helpers_Request::isAjax()) {
+        if (!$this->isXmlHttpRequest()) {
             throw new \Exception('Only ajax call allowed.');
         }
 
@@ -159,7 +159,7 @@ class ResultTable extends \tao_actions_CommonModule
      */
     public function getResponseColumns()
     {
-        if (!\tao_helpers_Request::isAjax()) {
+        if (!$this->isXmlHttpRequest()) {
             throw new \Exception('Only ajax call allowed.');
         }
 
@@ -183,8 +183,7 @@ class ResultTable extends \tao_actions_CommonModule
     private function getExporterService()
     {
         /** @var ResultsExporter $exporter */
-        $exporter = $this->getServiceManager()
-            ->propagate(new ResultsExporter($this->getDeliveryUri(), ResultsService::singleton()));
+        $exporter = $this->propagate(new ResultsExporter($this->getDeliveryUri(), ResultsService::singleton()));
 
         if ($this->hasRequestParameter(self::PARAMETER_COLUMNS)) {
             $exporter->setColumnsToExport($this->getRawParameter(self::PARAMETER_COLUMNS));
