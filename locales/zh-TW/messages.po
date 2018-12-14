@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO 3.1.0-sprint15\n"
-"PO-Revision-Date: 2015-12-23T13:23:25\n"
+"Project-Id-Version: TAO 3.3.0-sprint91\n"
+"PO-Revision-Date: 2018-12-14T14:50:35\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: zh-TW\n"
@@ -13,25 +13,8 @@ msgstr ""
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-SearchPath-0: .\n"
 
-msgid " seconds"
-msgstr " 秒"
-
-msgid "# Collected Results"
-msgstr "# 收集的結果"
-
-msgid "# Collected Score Variables"
-msgstr "# 收集的分數可變數"
-
-msgid "# data collected"
-msgstr "# 收集的數據"
-
-msgid "# Distinct Test Takers"
-msgstr "# 不同的考生"
-
-msgid "# Distinct variable types"
-msgstr "# 不同的可變數類型"
-
-msgid "%s tests has been finished."
+#, tao-public
+msgid " "
 msgstr ""
 
 msgid "Add All grades"
@@ -40,8 +23,14 @@ msgstr "加入所有的分數"
 msgid "Add All responses"
 msgstr "加入所有的回應"
 
+msgid "Add Delivery"
+msgstr ""
+
 msgid "Add Test Taker"
 msgstr "加入考生"
+
+msgid "Adding/Updating search index for %s"
+msgstr ""
 
 msgid "All collected variables"
 msgstr "所有收集的可變數"
@@ -49,43 +38,39 @@ msgstr "所有收集的可變數"
 msgid "Anonymise"
 msgstr "匿名化"
 
-msgid "Average"
-msgstr "平均值"
-
-msgid "Cancel"
-msgstr "取消"
-
 msgid "Class"
 msgstr "類別"
 
-msgid "Collected Results"
-msgstr "收集的結果"
-
-#, tao-public
-msgid "Complete expired tests"
+msgid "CSV results export for delivery \"%s"
 msgstr ""
 
-msgid "Data Collection per Variable"
-msgstr "從每個可變數收集的數據"
+msgid "CSV results export for delivery class \"%s"
+msgstr ""
 
-msgid "Data collection statistics :"
-msgstr "數據收集的統計："
-
-#, tao-public
 msgid "Delete"
 msgstr "刪除"
 
 msgid "Delivery"
 msgstr "遞送"
 
+msgid "Delivery Execution"
+msgstr ""
+
 msgid "Download"
 msgstr "下載"
+
+msgid "Download result"
+msgstr ""
 
 msgid "Email:"
 msgstr "電子郵件："
 
 msgid "Error"
 msgstr "錯誤"
+
+#, tao-public
+msgid "Export CSV"
+msgstr ""
 
 msgid "Export CSV File"
 msgstr "匯出 CSV 檔案"
@@ -102,12 +87,6 @@ msgstr "名："
 
 msgid "First submitted variables only"
 msgstr "只要第一個提交的可變數"
-
-msgid "Frequency per Score"
-msgstr "每個分數的頻率"
-
-msgid "Generated on: "
-msgstr "產生于："
 
 msgid "Grades"
 msgstr "分數"
@@ -131,29 +110,11 @@ msgstr "登入:"
 msgid "Manage Results"
 msgstr "管理結果"
 
-msgid "No Results"
-msgstr "沒有結果"
-
 msgid "No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here."
 msgstr "尚未有人考試。考生考完試後，這裏會顯示考試結果。"
 
-msgid "Observed performances per distinc score variable types "
-msgstr "每個獨特得分可變數類型的表現"
-
-msgid "Ok"
-msgstr "確定"
-
 msgid "Please confirm deletion"
 msgstr "請確認刪除"
-
-msgid "Preview"
-msgstr "預覽"
-
-msgid "Print Report"
-msgstr "列印報告"
-
-msgid "Related Deliveries:"
-msgstr "相關的遞交："
 
 msgid "Remove All grades"
 msgstr "移除所有分數"
@@ -161,8 +122,8 @@ msgstr "移除所有分數"
 msgid "Remove All responses"
 msgstr "移除所有回應"
 
-msgid "Report generated from the following subset of results : "
-msgstr "從以下子集結果產生的報告"
+msgid "Remove Delivery"
+msgstr ""
 
 msgid "Responses"
 msgstr "回應"
@@ -174,33 +135,31 @@ msgstr "結果已被刪除"
 msgid "Results"
 msgstr "結果"
 
-msgid "Results distribution"
-msgstr "結果分佈"
-
 #, tao-public
 msgid "Results library"
 msgstr "結果書庫"
 
-msgid "score average"
-msgstr "得分平均"
+#, tao-public
+msgid "Results Monitoring"
+msgstr ""
 
-msgid "Score average"
-msgstr "得分平均"
+msgid "Results monitoring"
+msgstr ""
 
-msgid "Score average per Variable"
-msgstr "每一個變數的平均得分"
+msgid "Review"
+msgstr ""
 
-msgid "Score per Observation"
-msgstr "每一個觀察的平均得分"
+msgid "Search by delivery results"
+msgstr ""
 
-msgid "Scores and response rates statistics"
-msgstr "得分和回應率統計"
+msgid "Search by results"
+msgstr ""
 
-msgid "Something went wrong ..."
-msgstr "發生錯誤..."
+msgid "Something went wrong..."
+msgstr ""
 
-msgid "Summary Report"
-msgstr "摘要報告"
+msgid "Start Time"
+msgstr ""
 
 msgid "Test taker"
 msgstr "考生"
@@ -220,36 +179,22 @@ msgstr "觀察數量太少了"
 msgid "There was a problem generating your report, please try again."
 msgstr "在產生您的報告的時候發生了一個錯誤， 請再試一次。"
 
-msgid "This delivery doesn\'t exists"
-msgstr "此遞送並不存在\\"\n"
-"\n"
-"msgid "
+#, tao-public
+msgid "Tools"
+msgstr ""
 
-msgid "This delivery has no readable Result Server"
-msgstr "此遞送沒有可讀的結果服務器"
-
-msgid "This delivery has no Result Server"
-msgstr "此遞交沒有結果服務器"
-
-msgid "Total Average Score"
-msgstr "總平均分"
-
-msgid "Total Standard Deviation"
-msgstr "總標準偏差"
+msgid "Traces"
+msgstr ""
 
 msgid "unknown"
 msgstr "未知"
 
-msgid "VariableName"
-msgstr "可變數名稱"
+msgid "View"
+msgstr ""
 
 #, tao-public
 msgid "View and format the collected results."
 msgstr "视图和格式收集的结果。"
-
-#, tao-public
-msgid "View result"
-msgstr "查看結果"
 
 msgid "We are preparing your report, please wait..."
 msgstr "我們正在準備你的報告，請稍等。"

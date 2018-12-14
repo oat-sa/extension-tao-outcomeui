@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO 3.1.0-sprint15\n"
-"PO-Revision-Date: 2016-02-19T14:23:07\n"
+"Project-Id-Version: TAO 3.3.0-sprint91\n"
+"PO-Revision-Date: 2018-12-14T14:50:34\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: it-IT\n"
@@ -13,26 +13,9 @@ msgstr ""
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-SearchPath-0: .\n"
 
-msgid " seconds"
-msgstr "secondi"
-
-msgid "# Collected Results"
-msgstr "Risultati Raccolti"
-
-msgid "# Collected Score Variables"
-msgstr "Punteggio delle variabili ottenuto"
-
-msgid "# data collected"
-msgstr "dati ricevuti"
-
-msgid "# Distinct Test Takers"
-msgstr "studenti differenti"
-
-msgid "# Distinct variable types"
-msgstr "Differenti tipi di variabili "
-
-msgid "%s tests has been finished."
-msgstr "%s i test sono finiti"
+#, tao-public
+msgid " "
+msgstr ""
 
 msgid "Add All grades"
 msgstr "Aggiungi Tutti i gradi"
@@ -40,8 +23,14 @@ msgstr "Aggiungi Tutti i gradi"
 msgid "Add All responses"
 msgstr "Aggiungi tutte le risposte"
 
+msgid "Add Delivery"
+msgstr ""
+
 msgid "Add Test Taker"
 msgstr "Aggiungi Studente"
+
+msgid "Adding/Updating search index for %s"
+msgstr ""
 
 msgid "All collected variables"
 msgstr "tutte le variabili collezionate"
@@ -49,43 +38,39 @@ msgstr "tutte le variabili collezionate"
 msgid "Anonymise"
 msgstr "anonimato"
 
-msgid "Average"
-msgstr "media"
-
-msgid "Cancel"
-msgstr "cancella"
-
 msgid "Class"
 msgstr "Classe"
 
-msgid "Collected Results"
-msgstr "risultati raccolti"
+msgid "CSV results export for delivery \"%s"
+msgstr ""
 
-#, tao-public
-msgid "Complete expired tests"
-msgstr "Test scaduti completati"
+msgid "CSV results export for delivery class \"%s"
+msgstr ""
 
-msgid "Data Collection per Variable"
-msgstr "Dati raccolti per variabile"
-
-msgid "Data collection statistics :"
-msgstr "Statistiche dei dati raccolti"
-
-#, tao-public
 msgid "Delete"
 msgstr "Elimina"
 
 msgid "Delivery"
 msgstr "Consegna"
 
+msgid "Delivery Execution"
+msgstr ""
+
 msgid "Download"
 msgstr "Scarica"
+
+msgid "Download result"
+msgstr ""
 
 msgid "Email:"
 msgstr "Email:"
 
 msgid "Error"
 msgstr "Errore"
+
+#, tao-public
+msgid "Export CSV"
+msgstr ""
 
 msgid "Export CSV File"
 msgstr "Esporta in un file CSV"
@@ -102,12 +87,6 @@ msgstr "Nome:"
 
 msgid "First submitted variables only"
 msgstr "Solo variabili prima presentate"
-
-msgid "Frequency per Score"
-msgstr "Frequenza per punto"
-
-msgid "Generated on: "
-msgstr "Generato su"
 
 msgid "Grades"
 msgstr "Gradi"
@@ -131,29 +110,11 @@ msgstr "Accesso"
 msgid "Manage Results"
 msgstr "Gestione risultati"
 
-msgid "No Results"
-msgstr "Nessun risultato"
-
 msgid "No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here."
 msgstr "Non è stato ancora inviato alcun test. Non appena uno studente completerà un test, il suo risultato sarà visualizzato qui"
 
-msgid "Observed performances per distinc score variable types "
-msgstr "Performance osservate per differenti punteggi di tipo variabile"
-
-msgid "Ok"
-msgstr "Ok"
-
 msgid "Please confirm deletion"
 msgstr "Prego conferma la cancellazione"
-
-msgid "Preview"
-msgstr "Anteprima"
-
-msgid "Print Report"
-msgstr "Stampa rapporto"
-
-msgid "Related Deliveries:"
-msgstr "Somministrazioni collegate"
 
 msgid "Remove All grades"
 msgstr "Rimuovi tutti i voti"
@@ -161,8 +122,8 @@ msgstr "Rimuovi tutti i voti"
 msgid "Remove All responses"
 msgstr "Rimuovi tutte le risposte"
 
-msgid "Report generated from the following subset of results : "
-msgstr "Report generato dal seguente sottoinsieme di risultati: "
+msgid "Remove Delivery"
+msgstr ""
 
 msgid "Responses"
 msgstr "Risposte"
@@ -174,33 +135,31 @@ msgstr "Il risultato è stato cancellato"
 msgid "Results"
 msgstr "Risultati"
 
-msgid "Results distribution"
-msgstr "Distribuzione dei risultati "
-
 #, tao-public
 msgid "Results library"
 msgstr "Raccolta dei risultati"
 
-msgid "score average"
-msgstr "media punteggio"
+#, tao-public
+msgid "Results Monitoring"
+msgstr ""
 
-msgid "Score average"
-msgstr "Media punteggio"
+msgid "Results monitoring"
+msgstr ""
 
-msgid "Score average per Variable"
-msgstr "Media punteggio per variabile"
+msgid "Review"
+msgstr ""
 
-msgid "Score per Observation"
-msgstr "Punteggio per osservazione"
+msgid "Search by delivery results"
+msgstr ""
 
-msgid "Scores and response rates statistics"
-msgstr "Statistiche di punteggi e risposte"
+msgid "Search by results"
+msgstr ""
 
-msgid "Something went wrong ..."
-msgstr "Qualcosa è errato"
+msgid "Something went wrong..."
+msgstr ""
 
-msgid "Summary Report"
-msgstr "Report sommario"
+msgid "Start Time"
+msgstr ""
 
 msgid "Test taker"
 msgstr "Partecipante al test"
@@ -220,34 +179,22 @@ msgstr "Il numero delle osservazioni è troppo basso"
 msgid "There was a problem generating your report, please try again."
 msgstr "C'è stato un problema nella generazione del tuo report, prego riprova."
 
-msgid "This delivery doesn\'t exists"
-msgstr "Questa somministrazione non esiste"
+#, tao-public
+msgid "Tools"
+msgstr ""
 
-msgid "This delivery has no readable Result Server"
-msgstr "Questa consegna non ha un Server di risultati leggibile"
-
-msgid "This delivery has no Result Server"
-msgstr "Questa consegna non ha un Server di risultati leggibile"
-
-msgid "Total Average Score"
-msgstr "Media punteggio totale"
-
-msgid "Total Standard Deviation"
-msgstr "Deviazione standard totale"
+msgid "Traces"
+msgstr ""
 
 msgid "unknown"
 msgstr "sconosciuto"
 
-msgid "VariableName"
-msgstr "Nome della variabile "
+msgid "View"
+msgstr ""
 
 #, tao-public
 msgid "View and format the collected results."
 msgstr "Visualizza e formatta i risultati raccolti"
-
-#, tao-public
-msgid "View result"
-msgstr "Visualizza il risultato"
 
 msgid "We are preparing your report, please wait..."
 msgstr "Stiamo preparando il tuo report, prego aspetta...."

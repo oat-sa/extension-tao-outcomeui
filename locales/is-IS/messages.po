@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO 3.1.0-sprint15\n"
-"PO-Revision-Date: 2015-12-23T13:23:23\n"
+"Project-Id-Version: TAO 3.3.0-sprint91\n"
+"PO-Revision-Date: 2018-12-14T14:50:34\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: is-IS\n"
@@ -13,25 +13,8 @@ msgstr ""
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-SearchPath-0: .\n"
 
-msgid " seconds"
-msgstr " sekúndur"
-
-msgid "# Collected Results"
-msgstr ""
-
-msgid "# Collected Score Variables"
-msgstr ""
-
-msgid "# data collected"
-msgstr ""
-
-msgid "# Distinct Test Takers"
-msgstr ""
-
-msgid "# Distinct variable types"
-msgstr ""
-
-msgid "%s tests has been finished."
+#, tao-public
+msgid " "
 msgstr ""
 
 msgid "Add All grades"
@@ -40,8 +23,14 @@ msgstr "Bæta Öllum einkunnum við"
 msgid "Add All responses"
 msgstr "Bæta Öllum svörum við"
 
+msgid "Add Delivery"
+msgstr ""
+
 msgid "Add Test Taker"
 msgstr "Bæta Próftaka við"
+
+msgid "Adding/Updating search index for %s"
+msgstr ""
 
 msgid "All collected variables"
 msgstr "Allar safnaðar breytur"
@@ -49,36 +38,28 @@ msgstr "Allar safnaðar breytur"
 msgid "Anonymise"
 msgstr "Gert nafnlaust"
 
-msgid "Average"
-msgstr "Meðaltal"
-
-msgid "Cancel"
-msgstr "Hætta við"
-
 msgid "Class"
 msgstr "Flokkur"
 
-msgid "Collected Results"
-msgstr "Safnaðar Niðurstöður"
-
-#, tao-public
-msgid "Complete expired tests"
+msgid "CSV results export for delivery \"%s"
 msgstr ""
 
-msgid "Data Collection per Variable"
-msgstr "Gagnasafn á hverja Breytu"
+msgid "CSV results export for delivery class \"%s"
+msgstr ""
 
-msgid "Data collection statistics :"
-msgstr "Tölfræði Gagnasafns :"
-
-#, tao-public
 msgid "Delete"
 msgstr ""
 
 msgid "Delivery"
 msgstr ""
 
+msgid "Delivery Execution"
+msgstr ""
+
 msgid "Download"
+msgstr ""
+
+msgid "Download result"
 msgstr ""
 
 msgid "Email:"
@@ -86,6 +67,10 @@ msgstr ""
 
 msgid "Error"
 msgstr "Villa"
+
+#, tao-public
+msgid "Export CSV"
+msgstr ""
 
 msgid "Export CSV File"
 msgstr "Flytja út CSV Skrá"
@@ -101,12 +86,6 @@ msgid "First Name:"
 msgstr "Eiginnafn:"
 
 msgid "First submitted variables only"
-msgstr ""
-
-msgid "Frequency per Score"
-msgstr "Tíðni af hverju Skori"
-
-msgid "Generated on: "
 msgstr ""
 
 msgid "Grades"
@@ -131,29 +110,11 @@ msgstr ""
 msgid "Manage Results"
 msgstr ""
 
-msgid "No Results"
-msgstr ""
-
 msgid "No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here."
 msgstr ""
 
-msgid "Observed performances per distinc score variable types "
-msgstr ""
-
-msgid "Ok"
-msgstr "Í lagi"
-
 msgid "Please confirm deletion"
 msgstr "Staðfesta eyðingu"
-
-msgid "Preview"
-msgstr "Forskoðun"
-
-msgid "Print Report"
-msgstr "Prenta Skýrslu"
-
-msgid "Related Deliveries:"
-msgstr "Skyldar Afhendingar:"
 
 msgid "Remove All grades"
 msgstr "Fjarlægja Allar einkunnir"
@@ -161,8 +122,8 @@ msgstr "Fjarlægja Allar einkunnir"
 msgid "Remove All responses"
 msgstr "Fjarlægja Öll svör"
 
-msgid "Report generated from the following subset of results : "
-msgstr "Skýrsla yfir eftirfarandi hlutmengi niðurstaðna : "
+msgid "Remove Delivery"
+msgstr ""
 
 msgid "Responses"
 msgstr ""
@@ -174,33 +135,31 @@ msgstr ""
 msgid "Results"
 msgstr ""
 
-msgid "Results distribution"
-msgstr ""
-
 #, tao-public
 msgid "Results library"
 msgstr ""
 
-msgid "score average"
+#, tao-public
+msgid "Results Monitoring"
 msgstr ""
 
-msgid "Score average"
-msgstr "Meðalskor"
+msgid "Results monitoring"
+msgstr ""
 
-msgid "Score average per Variable"
-msgstr "Meðalskor á hverja breytu"
+msgid "Review"
+msgstr ""
 
-msgid "Score per Observation"
-msgstr "Skor á Skoðun"
+msgid "Search by delivery results"
+msgstr ""
 
-msgid "Scores and response rates statistics"
-msgstr "Tölfræði hlutfalls skora og svara"
+msgid "Search by results"
+msgstr ""
 
-msgid "Something went wrong ..."
-msgstr "Eitthvað fór úrskeiðis ..."
+msgid "Something went wrong..."
+msgstr ""
 
-msgid "Summary Report"
-msgstr "Samtektarskýrsla"
+msgid "Start Time"
+msgstr ""
 
 msgid "Test taker"
 msgstr "Próftaki"
@@ -220,34 +179,22 @@ msgstr ""
 msgid "There was a problem generating your report, please try again."
 msgstr ""
 
-msgid "This delivery doesn\'t exists"
+#, tao-public
+msgid "Tools"
 msgstr ""
 
-msgid "This delivery has no readable Result Server"
+msgid "Traces"
 msgstr ""
-
-msgid "This delivery has no Result Server"
-msgstr ""
-
-msgid "Total Average Score"
-msgstr "Heildar Meðalskor"
-
-msgid "Total Standard Deviation"
-msgstr "Heildar Staðalfrávik"
 
 msgid "unknown"
 msgstr "óþekkt"
 
-msgid "VariableName"
-msgstr "BreytuNafn"
+msgid "View"
+msgstr ""
 
 #, tao-public
 msgid "View and format the collected results."
 msgstr "Skoða og forsníða safnaðar niðurstöður."
-
-#, tao-public
-msgid "View result"
-msgstr "Skoða niðurstöðu"
 
 msgid "We are preparing your report, please wait..."
 msgstr "Við erum að undirbúa skýrslu þína, gerðu svo vel að bíða..."

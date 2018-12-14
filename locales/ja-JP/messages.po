@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO 3.1.0-sprint33\n"
-"PO-Revision-Date: 2016-08-25T14:33:40\n"
+"Project-Id-Version: TAO 3.3.0-sprint91\n"
+"PO-Revision-Date: 2018-12-14T14:50:34\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: ja-JP\n"
@@ -13,14 +13,24 @@ msgstr ""
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-SearchPath-0: .\n"
 
+#, tao-public
+msgid " "
+msgstr ""
+
 msgid "Add All grades"
 msgstr "すべてのグレードに追加"
 
 msgid "Add All responses"
 msgstr "すべてのレスポンスに追加"
 
+msgid "Add Delivery"
+msgstr ""
+
 msgid "Add Test Taker"
 msgstr "受験者を追加"
+
+msgid "Adding/Updating search index for %s"
+msgstr ""
 
 msgid "All collected variables"
 msgstr "すべての変数"
@@ -28,21 +38,29 @@ msgstr "すべての変数"
 msgid "Anonymise"
 msgstr "匿名化"
 
-msgid "Cancel"
-msgstr "キャンセル"
-
 msgid "Class"
 msgstr "クラス"
 
-#, tao-public
+msgid "CSV results export for delivery \"%s"
+msgstr ""
+
+msgid "CSV results export for delivery class \"%s"
+msgstr ""
+
 msgid "Delete"
 msgstr "削除"
 
 msgid "Delivery"
 msgstr "デリバリ"
 
+msgid "Delivery Execution"
+msgstr ""
+
 msgid "Download"
 msgstr "ダウンロード"
+
+msgid "Download result"
+msgstr ""
 
 msgid "Email:"
 msgstr "電子メール:"
@@ -95,20 +113,17 @@ msgstr "結果の管理"
 msgid "No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here."
 msgstr "テストがまだ受験されていません。テストを受験次第結果が表示されます"
 
-msgid "Ok"
-msgstr "OK"
-
 msgid "Please confirm deletion"
 msgstr "削除を確認してください"
-
-msgid "Preview"
-msgstr "プレビュー"
 
 msgid "Remove All grades"
 msgstr "すべてのグレードを削除"
 
 msgid "Remove All responses"
 msgstr "すべてのレスポンスを削除"
+
+msgid "Remove Delivery"
+msgstr ""
 
 msgid "Responses"
 msgstr "応答"
@@ -124,8 +139,24 @@ msgstr "結果"
 msgid "Results library"
 msgstr "結果ライブラリー"
 
-msgid "Something went wrong ..."
-msgstr "何かが間違っていました..."
+#, tao-public
+msgid "Results Monitoring"
+msgstr ""
+
+msgid "Results monitoring"
+msgstr ""
+
+msgid "Review"
+msgstr ""
+
+msgid "Search by delivery results"
+msgstr ""
+
+msgid "Search by results"
+msgstr ""
+
+msgid "Something went wrong..."
+msgstr ""
 
 msgid "Start Time"
 msgstr ""
@@ -148,19 +179,22 @@ msgstr "観点の値が低すぎます"
 msgid "There was a problem generating your report, please try again."
 msgstr "レポート生成中に問題が発生しました。再度実行してください。"
 
+#, tao-public
+msgid "Tools"
+msgstr ""
+
 msgid "Traces"
 msgstr ""
 
 msgid "unknown"
 msgstr "不明"
 
+msgid "View"
+msgstr ""
+
 #, tao-public
 msgid "View and format the collected results."
 msgstr "収集された結果の表示とフォーマット。"
-
-#, tao-public
-msgid "View result"
-msgstr "結果を表示"
 
 msgid "We are preparing your report, please wait..."
 msgstr "レポート作成中、しばらくお待ちください..."
