@@ -157,7 +157,8 @@ class ResponseVariableFormatter {
                     'response' => self::formatVariableToPci($responseVariable)
                 ];
             }
-            $formatted[$itemUri] = $itemResults;
+
+            $formatted[$itemUri][$itemResult['attempt']] = $itemResults;
         }
         return $formatted;
     }

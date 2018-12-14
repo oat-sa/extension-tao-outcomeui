@@ -479,11 +479,9 @@ class Results extends \tao_actions_CommonModule
                 continue;
             }
             $itemUri = $item['uri'];
-            if (isset($responses[$itemUri])) {
-                $item['state'] = json_encode(array_diff_key($responses[$itemUri], $excludedVariables));
-            } else {
-                $item['state'] = null;
-            }
+            $item['state'] = isset($responses[$itemUri][$item['attempt']])
+                ? json_encode(array_diff_key($responses[$itemUri][$item['attempt']], $excludedVariables))
+                : null;
         }
 
         return $displayedVariables;
