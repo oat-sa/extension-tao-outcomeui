@@ -68,8 +68,6 @@ class Results extends \tao_actions_CommonModule
     const PARAMETER_DELIVERY_URI = 'uri';
     const PARAMETER_DELIVERY_CLASS_URI = 'classUri';
 
-    private $deliveryService;
-
     /**
      * @return ResultsService
      */
@@ -91,10 +89,7 @@ class Results extends \tao_actions_CommonModule
      */
     protected function getDeliveryAssemblyService()
     {
-        if (!$this->deliveryService) {
-            $this->deliveryService = DeliveryAssemblyService::singleton();
-        }
-        return $this->deliveryService;
+        return DeliveryAssemblyService::singleton();
     }
 
     /**
@@ -523,7 +518,7 @@ class Results extends \tao_actions_CommonModule
         if ($this->hasRequestParameter('classUri')) {
             $options['class'] = $this->getCurrentClass();
         } else {
-            $options['class'] = $this->deliveryService->getRootClass();
+            $options['class'] = $this->getDeliveryAssemblyService()->getRootClass();
         }
         return $options;
     }
