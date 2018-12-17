@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO 3.1.0-sprint15\n"
-"PO-Revision-Date: 2015-12-23T13:23:25\n"
+"Project-Id-Version: TAO 3.3.0-sprint91\n"
+"PO-Revision-Date: 2018-12-14T14:50:35\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: zh-SG\n"
@@ -13,25 +13,8 @@ msgstr ""
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-SearchPath-0: .\n"
 
-msgid " seconds"
-msgstr ""
-
-msgid "# Collected Results"
-msgstr ""
-
-msgid "# Collected Score Variables"
-msgstr ""
-
-msgid "# data collected"
-msgstr ""
-
-msgid "# Distinct Test Takers"
-msgstr ""
-
-msgid "# Distinct variable types"
-msgstr ""
-
-msgid "%s tests has been finished."
+#, tao-public
+msgid " "
 msgstr ""
 
 msgid "Add All grades"
@@ -40,7 +23,13 @@ msgstr ""
 msgid "Add All responses"
 msgstr ""
 
+msgid "Add Delivery"
+msgstr ""
+
 msgid "Add Test Taker"
+msgstr ""
+
+msgid "Adding/Updating search index for %s"
 msgstr ""
 
 msgid "All collected variables"
@@ -49,42 +38,38 @@ msgstr ""
 msgid "Anonymise"
 msgstr ""
 
-msgid "Average"
-msgstr ""
-
-msgid "Cancel"
-msgstr ""
-
 msgid "Class"
 msgstr ""
 
-msgid "Collected Results"
+msgid "CSV results export for delivery \"%s"
 msgstr ""
 
-#, tao-public
-msgid "Complete expired tests"
+msgid "CSV results export for delivery class \"%s"
 msgstr ""
 
-msgid "Data Collection per Variable"
-msgstr ""
-
-msgid "Data collection statistics :"
-msgstr ""
-
-#, tao-public
 msgid "Delete"
 msgstr ""
 
 msgid "Delivery"
 msgstr ""
 
+msgid "Delivery Execution"
+msgstr ""
+
 msgid "Download"
+msgstr ""
+
+msgid "Download result"
 msgstr ""
 
 msgid "Email:"
 msgstr ""
 
 msgid "Error"
+msgstr ""
+
+#, tao-public
+msgid "Export CSV"
 msgstr ""
 
 msgid "Export CSV File"
@@ -101,12 +86,6 @@ msgid "First Name:"
 msgstr ""
 
 msgid "First submitted variables only"
-msgstr ""
-
-msgid "Frequency per Score"
-msgstr ""
-
-msgid "Generated on: "
 msgstr ""
 
 msgid "Grades"
@@ -131,28 +110,10 @@ msgstr ""
 msgid "Manage Results"
 msgstr ""
 
-msgid "No Results"
-msgstr ""
-
 msgid "No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here."
 msgstr ""
 
-msgid "Observed performances per distinc score variable types "
-msgstr ""
-
-msgid "Ok"
-msgstr ""
-
 msgid "Please confirm deletion"
-msgstr ""
-
-msgid "Preview"
-msgstr ""
-
-msgid "Print Report"
-msgstr ""
-
-msgid "Related Deliveries:"
 msgstr ""
 
 msgid "Remove All grades"
@@ -161,7 +122,7 @@ msgstr ""
 msgid "Remove All responses"
 msgstr ""
 
-msgid "Report generated from the following subset of results : "
+msgid "Remove Delivery"
 msgstr ""
 
 msgid "Responses"
@@ -174,32 +135,30 @@ msgstr ""
 msgid "Results"
 msgstr ""
 
-msgid "Results distribution"
-msgstr ""
-
 #, tao-public
 msgid "Results library"
 msgstr ""
 
-msgid "score average"
+#, tao-public
+msgid "Results Monitoring"
 msgstr ""
 
-msgid "Score average"
+msgid "Results monitoring"
 msgstr ""
 
-msgid "Score average per Variable"
+msgid "Review"
 msgstr ""
 
-msgid "Score per Observation"
+msgid "Search by delivery results"
 msgstr ""
 
-msgid "Scores and response rates statistics"
+msgid "Search by results"
 msgstr ""
 
-msgid "Something went wrong ..."
+msgid "Something went wrong..."
 msgstr ""
 
-msgid "Summary Report"
+msgid "Start Time"
 msgstr ""
 
 msgid "Test taker"
@@ -220,33 +179,21 @@ msgstr ""
 msgid "There was a problem generating your report, please try again."
 msgstr ""
 
-msgid "This delivery doesn\'t exists"
+#, tao-public
+msgid "Tools"
 msgstr ""
 
-msgid "This delivery has no readable Result Server"
-msgstr ""
-
-msgid "This delivery has no Result Server"
-msgstr ""
-
-msgid "Total Average Score"
-msgstr ""
-
-msgid "Total Standard Deviation"
+msgid "Traces"
 msgstr ""
 
 msgid "unknown"
 msgstr ""
 
-msgid "VariableName"
+msgid "View"
 msgstr ""
 
 #, tao-public
 msgid "View and format the collected results."
-msgstr ""
-
-#, tao-public
-msgid "View result"
 msgstr ""
 
 msgid "We are preparing your report, please wait..."
