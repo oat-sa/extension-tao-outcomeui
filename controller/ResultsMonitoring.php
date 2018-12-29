@@ -35,8 +35,7 @@ class ResultsMonitoring  extends \tao_actions_CommonModule
     }
     public function data()
     {
-        $table = new ResultsMonitoringDatatable(DatatableRequest::fromGlobals());
-        $table->setServiceLocator($this->getServiceLocator());
+        $table = $this->propagate(new ResultsMonitoringDatatable(DatatableRequest::fromGlobals()));
         $this->returnJson($table);
     }
 }
