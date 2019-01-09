@@ -919,6 +919,8 @@ class ResultsService extends tao_models_classes_ClassService
         $testTaker = $this->gettestTaker($resultIdentifier);
         if (get_class($testTaker) == 'core_kernel_classes_Literal') {
             return $testTaker;
+        } elseif (empty($testTaker)) {
+            return null;
         } else {
             $arrayOfProperties = [
                 OntologyRdfs::RDFS_LABEL,
