@@ -51,7 +51,7 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
      * @var VariableDataProvider
      */
     public static $singleton = null;
-    
+
     /**
      * Short description of method prepare
      *
@@ -71,7 +71,7 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
          */
         foreach ($resources as $result) {
             $itemresults = $resultsService->getVariables($result, false);
-            
+
             foreach ($itemresults as $itemResultUri => $vars) {
                 // cache the item information pertaining to a given itemResult (stable over time)
                 if (common_cache_FileCache::singleton()->has('itemResultItemCache' . $itemResultUri)) {
@@ -101,12 +101,13 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
                      * @var \taoResultServer_models_classes_Variable $varData
                      */
                     $varData = $var->variable;
-                    if (common_cache_FileCache::singleton()->has('variableDataCache' . $var->uri . '_' . $varData->getIdentifier())) {
-                        $varData = common_cache_FileCache::singleton()->get('variableDataCache' . $var->uri . '_' . $varData->getIdentifier());
+                    $cacheKey =  'variableDataCache' . $var->uri . '_' . $varData->getIdentifier() . '_' . tao_helpers_Date::getTimeStamp($varData->getEpoch());
+                    if (common_cache_FileCache::singleton()->has($cacheKey)) {
+                        $varData = common_cache_FileCache::singleton()->get($cacheKey);
                     } else {
-                        common_cache_FileCache::singleton()->put($varData, 'variableDataCache' . $var->uri . '_' . $varData->getIdentifier());
+                        common_cache_FileCache::singleton()->put($varData, $cacheKey);
                     }
-                    
+
                     if ($varData->getBaseType() === 'file') {
                         $decodedFile = Datatypes::decodeFile($varData->getValue());
                         $varData->setValue($decodedFile['name']);
@@ -114,7 +115,7 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
                     $variableIdentifier = (string) $varData->getIdentifier();
                     foreach ($columns as $column) {
                         if ($variableIdentifier == $column->getIdentifier() and $contextIdentifier == $column->getContextIdentifier()) {
-                            
+
                             $epoch = $varData->getEpoch();
                             $readableTime = "";
                             if ($epoch != "") {
@@ -147,19 +148,19 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
     public function getValue(core_kernel_classes_Resource $resource, tao_models_classes_table_Column $column)
     {
         $returnValue = array();
-        
+
         if (! $column instanceof VariableColumn) {
             throw new \common_exception_InconsistentData('Unexpected colum type ' . get_class($column) . ' for ' . __CLASS__);
         }
-        
+
         $vcUri = $column->getVariableType();
-        
+
         if (isset($this->cache[$vcUri][$resource->getUri()][$column->getContextIdentifier() . $column->getIdentifier()])) {
             $returnValue = $this->cache[$vcUri][$resource->getUri()][$column->getContextIdentifier() . $column->getIdentifier()];
         } else {
             common_Logger::d('no data for resource: ' . $resource->getUri() . ' column: ' . $column->getIdentifier());
         }
-        
+
         return $returnValue;
     }
 
