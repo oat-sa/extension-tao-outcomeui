@@ -66,23 +66,24 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
     {
         $resultsService = ResultsService::singleton();
         $undefinedStr = __('unknown'); //some data may have not been submitted
+        /** @var common_cache_FileCache $cache */
+        $cache = common_cache_FileCache::singleton();
         /**
          * @var DeliveryExecution $result
          */
         foreach ($resources as $result) {
-            $itemresults = $resultsService->getVariables($result, false);
-            
-            foreach ($itemresults as $itemResultUri => $vars) {
+            $itemResults = $resultsService->getVariables($result, false);
+
+            foreach ($itemResults as $itemResultUri => $vars) {
                 // cache the item information pertaining to a given itemResult (stable over time)
-                if (common_cache_FileCache::singleton()->has('itemResultItemCache' . $itemResultUri)) {
-                    $object = json_decode(common_cache_FileCache::singleton()->get('itemResultItemCache' . $itemResultUri), true);
+                if ($cache->has('itemResultItemCache' . $itemResultUri)) {
+                    $object = json_decode($cache->get('itemResultItemCache' . $itemResultUri), true);
                 } else {
                     $object = $resultsService->getItemFromItemResult($itemResultUri);
-                    if (is_null($object)) {
+                    if ($object === null) {
                         $object = $resultsService->getVariableFromTest($itemResultUri);
-                    }
-                    if (! is_null($object)) {
-                        common_cache_FileCache::singleton()->put(json_encode($object), 'itemResultItemCache' . $itemResultUri);
+                    } else {
+                        $cache->put(json_encode($object), 'itemResultItemCache' . $itemResultUri);
                     }
                 }
                 if ($object) {
@@ -94,31 +95,27 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
                 } else {
                     $contextIdentifier = $undefinedStr;
                 }
-                foreach ($vars as $var) {
-                    $var = $var[0];
+                foreach ($vars as $varItem) {
+                    $var = $varItem[0];
                     // cache the variable data
                     /**
                      * @var \taoResultServer_models_classes_Variable $varData
                      */
                     $varData = $var->variable;
-                    if (common_cache_FileCache::singleton()->has('variableDataCache' . $var->uri . '_' . $varData->getIdentifier())) {
-                        $varData = common_cache_FileCache::singleton()->get('variableDataCache' . $var->uri . '_' . $varData->getIdentifier());
-                    } else {
-                        common_cache_FileCache::singleton()->put($varData, 'variableDataCache' . $var->uri . '_' . $varData->getIdentifier());
-                    }
-                    
+
                     if ($varData->getBaseType() === 'file') {
                         $decodedFile = Datatypes::decodeFile($varData->getValue());
                         $varData->setValue($decodedFile['name']);
                     }
+
                     $variableIdentifier = (string) $varData->getIdentifier();
                     foreach ($columns as $column) {
-                        if ($variableIdentifier == $column->getIdentifier() and $contextIdentifier == $column->getContextIdentifier()) {
+                        if ($variableIdentifier === $column->getIdentifier() && $contextIdentifier === $column->getContextIdentifier()) {
                             
                             $epoch = $varData->getEpoch();
-                            $readableTime = "";
-                            if ($epoch != "") {
-                                $readableTime = "@" . tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE);
+                            $readableTime = '';
+                            if ($epoch !== '') {
+                                $readableTime = '@' . tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE);
                             }
 
                             $value = $varData->getValue();
