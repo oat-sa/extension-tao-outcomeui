@@ -101,13 +101,7 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
                      * @var \taoResultServer_models_classes_Variable $varData
                      */
                     $varData = $var->variable;
-                    $cacheKey =  'variableDataCache' . $var->uri . '_' . $varData->getIdentifier() . '_' . tao_helpers_Date::getTimeStamp($varData->getEpoch());
-                    if (common_cache_FileCache::singleton()->has($cacheKey)) {
-                        $varData = common_cache_FileCache::singleton()->get($cacheKey);
-                    } else {
-                        common_cache_FileCache::singleton()->put($varData, $cacheKey);
-                    }
-
+                    
                     if ($varData->getBaseType() === 'file') {
                         $decodedFile = Datatypes::decodeFile($varData->getValue());
                         $varData->setValue($decodedFile['name']);
