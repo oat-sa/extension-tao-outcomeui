@@ -171,9 +171,9 @@ class Updater extends \common_ext_ExtensionUpdater
             $this->setVersion('5.13.0');
         }
 
-        $this->skip('5.13.0', '7.4.1');
+        $this->skip('5.13.0', '7.4.2');
 
-        if ($this->isVersion('7.4.1')) {
+        if ($this->isVersion('7.4.2')) {
             /** @var EventManager $eventManager */
             $eventManager = $this->getServiceManager()->get(EventManager::SERVICE_ID);
             $eventManager->attach(TestChangedEvent::EVENT_NAME, [ResultsWatcher::SERVICE_ID, 'catchTestChangedEvent']);
