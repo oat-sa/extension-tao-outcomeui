@@ -29,6 +29,8 @@ use oat\tao\model\taskQueue\QueueDispatcherInterface;
 use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;
 use oat\taoResultServer\models\classes\ResultService;
+use oat\taoTests\models\event\TestChangedEvent;
+use oat\taoDelivery\model\execution\ServiceProxy;
 
 /**
  * Class ResultsWatcher
@@ -54,12 +56,39 @@ class ResultsWatcher extends ConfigurableService
     {
         /** @var DeliveryExecutionInterface $resource */
         $deliveryExecution = $event->getDeliveryExecution();
+        return $this->addIndex($deliveryExecution);
+    }
+
+    /**
+     * @param TestChangedEvent $event
+     * @return \common_report_Report
+     * @throws \common_exception_NotFound
+     */
+    public function catchTestChangedEvent(TestChangedEvent $event)
+    {
+        $sessionMemento = $event->getSessionMemento();
+        $session = $event->getSession();
+        if ($sessionMemento && $session->getState() !== $sessionMemento->getState()) {
+            $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($event->getServiceCallId());
+            return $this->addIndex($deliveryExecution);
+        }
+    }
+
+    /**
+     * @param DeliveryExecutionInterface $deliveryExecution
+     * @return \common_report_Report
+     * @throws \common_exception_NotFound
+     */
+    protected function addIndex(DeliveryExecutionInterface $deliveryExecution)
+    {
         /** @var Search $searchService */
         $report = \common_report_Report::createSuccess();
         $searchService = $this->getServiceLocator()->get(Search::SERVICE_ID);
         if ($searchService->supportCustomIndex()) {
             $id = $deliveryExecution->getIdentifier();
             $user = UserHelper::getUser($deliveryExecution->getUserIdentifier());
+            $customFieldService = $this->getServiceLocator()->get(ResultCustomFieldsService::SERVICE_ID);
+            $customBody = $customFieldService->getCustomFields($deliveryExecution);
             $userName = UserHelper::getUserName($user, true);
             $body = [
                 'label' => $deliveryExecution->getLabel(),
@@ -69,11 +98,11 @@ class ResultsWatcher extends ConfigurableService
                 self::INDEX_TEST_TAKER_NAME => $userName,
                 self::INDEX_DELIVERY_EXECUTION => $id,
             ];
+            $body = array_merge($body, $customBody);
             $queueDispatcher = $this->getServiceLocator()->get(QueueDispatcherInterface::SERVICE_ID);
             $queueDispatcher->setOwner('Index');
             $queueDispatcher->createTask(new AddSearchIndexFromArray(), [$id, $body], __('Adding/Updating search index for %s', $deliveryExecution->getLabel()));
         }
-
         return $report;
     }
 
