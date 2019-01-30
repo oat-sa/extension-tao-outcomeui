@@ -171,7 +171,7 @@ class Updater extends \common_ext_ExtensionUpdater
             $this->setVersion('5.13.0');
         }
 
-        $this->skip('5.13.0', '7.4.4');
+        $this->skip('5.13.0', '7.4.3');
 
         if ($this->isVersion('7.4.3')) {
             /** @var EventManager $eventManager */
