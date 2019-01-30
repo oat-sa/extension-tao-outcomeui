@@ -5,7 +5,7 @@ use oat\tao\helpers\Template;
 
 <div class="results-headings flex-container-full">
     <header>
-        <h2><?=get_data("title")?></h2>
+        <h2><?=_dh(get_data("title"))?></h2>
     </header>
 </div>
 
