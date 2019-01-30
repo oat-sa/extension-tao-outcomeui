@@ -40,6 +40,7 @@ use oat\taoOutcomeUi\model\search\ResultsWatcher;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 use oat\taoOutcomeUi\scripts\install\RegisterTestPluginService;
 use oat\taoOutcomeUi\scripts\task\ExportDeliveryResults;
+use oat\taoTests\models\event\TestChangedEvent;
 
 /**
  *
@@ -172,5 +173,15 @@ class Updater extends \common_ext_ExtensionUpdater
 
         $this->skip('5.13.0', '7.4.4');
 
+        if ($this->isVersion('7.4.3')) {
+            /** @var EventManager $eventManager */
+            $eventManager = $this->getServiceManager()->get(EventManager::SERVICE_ID);
+            $eventManager->attach(TestChangedEvent::EVENT_NAME, [ResultsWatcher::SERVICE_ID, 'catchTestChangedEvent']);
+            $this->getServiceManager()->register(EventManager::SERVICE_ID, $eventManager);
+
+            $this->setVersion('7.5.0');
+        }
+
+        $this->skip('7.5.0', '7.5.1');
     }
 }
