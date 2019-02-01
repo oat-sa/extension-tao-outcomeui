@@ -128,8 +128,19 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      */
     public function getColumnsToExport()
     {
-        // if we have columns set from outside, let's use that otherwise we are querying for all type of columns
-        $columns = $this->columnsToExport ?: $this->columnsProvider->getAll();
+        if (!empty($this->columnsToExport)) {
+            $columns = $this->columnsToExport;
+        } else {
+            $variables = array_merge($this->columnsProvider->getGradeColumns(),$this->columnsProvider->getResponseColumns());
+            usort($variables, function ($a, $b) {
+                return strcmp($a["label"], $b["label"]);
+            });
+            $columns = array_merge(
+                $this->columnsProvider->getTestTakerColumns(),
+                $this->columnsProvider->getDeliveryColumns(),
+                $variables
+            );
+        }
 
         if (empty($this->builtColumns)) {
             // build column objects
@@ -331,7 +342,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
                 $columns[] = $column;
             }
         }
-
+        
         return $columns;
     }
 }

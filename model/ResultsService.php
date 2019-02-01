@@ -585,7 +585,7 @@ class ResultsService extends tao_models_classes_ClassService implements ServiceL
             }
 
             $variableDescription = [
-                'uri' => $variablesByItem[$firstEpoch]['uri'],
+                'uri' => $itemVariable->uri,
                 'var' => $variable,
             ];
 

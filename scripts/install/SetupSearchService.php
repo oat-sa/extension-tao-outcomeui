@@ -24,6 +24,7 @@ use oat\oatbox\extension\InstallAction;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;
 use oat\taoOutcomeUi\model\search\ResultCustomFieldsService;
 use oat\taoOutcomeUi\model\search\ResultsWatcher;
+use oat\taoTests\models\event\TestChangedEvent;
 
 /**
  * Class SetupSearchService
@@ -43,6 +44,7 @@ class SetupSearchService extends InstallAction
         /** @var EventManager $eventManager */
         $eventManager = $this->getServiceLocator()->get(EventManager::SERVICE_ID);
         $eventManager->attach(DeliveryExecutionCreated::class, [ResultsWatcher::SERVICE_ID, 'catchCreatedDeliveryExecutionEvent']);
+        $eventManager->attach(TestChangedEvent::EVENT_NAME, [ResultsWatcher::SERVICE_ID, 'catchTestChangedEvent']);
         $this->getServiceManager()->register(EventManager::SERVICE_ID, $eventManager);
     }
 }
