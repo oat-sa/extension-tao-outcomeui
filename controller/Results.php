@@ -22,8 +22,10 @@
 namespace oat\taoOutcomeUi\controller;
 
 use \Exception;
+use \common_exception_BadRequest;
 use \core_kernel_classes_Resource;
 use oat\generis\model\GenerisRdf;
+use oat\generis\model\OntologyAwareTrait;
 use oat\generis\model\OntologyRdfs;
 use oat\oatbox\event\EventManager;
 use oat\tao\model\accessControl\AclProxy;
@@ -61,23 +63,10 @@ use oat\tao\model\datatable\implementation\DatatableRequest;
 class Results extends \tao_actions_CommonModule
 {
     use TaskLogActionTrait;
+    use OntologyAwareTrait;
 
     const PARAMETER_DELIVERY_URI = 'uri';
     const PARAMETER_DELIVERY_CLASS_URI = 'classUri';
-
-    private $deliveryService;
-
-    /**
-     * constructor: initialize the service and the default data
-     * @return Results
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->deliveryService = DeliveryAssemblyService::singleton();
-        $this->defaultData();
-    }
 
     /**
      * @return ResultsService
@@ -96,11 +85,21 @@ class Results extends \tao_actions_CommonModule
     }
 
     /**
+     * @return DeliveryAssemblyService
+     */
+    protected function getDeliveryAssemblyService()
+    {
+        return DeliveryAssemblyService::singleton();
+    }
+
+    /**
      * Action called on click on a delivery (class) construct and call the view to see the table of
      * all delivery execution for a specific delivery
      */
     public function index()
     {
+        $this->defaultData();
+
         // if delivery class has been selected, return nothing
         if (!$this->hasRequestParameter(self::PARAMETER_DELIVERY_URI)) {
             return;
@@ -120,7 +119,7 @@ class Results extends \tao_actions_CommonModule
         );
 
         $deliveryService = DeliveryAssemblyService::singleton();
-        $delivery = new core_kernel_classes_Resource($this->getRequestParameter('id'));
+        $delivery = $this->getResource($this->getRequestParameter('id'));
         if ($delivery->getUri() !== $deliveryService->getRootClass()->getUri()) {
 
             try {
@@ -177,7 +176,7 @@ class Results extends \tao_actions_CommonModule
         try {
             $data = array();
             $readOnly = array();
-            $user = \common_session_SessionManager::getSession()->getUser();
+            $user = $this->getSession()->getUser();
             $rights = array(
                 'view' => !AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'viewResult', array()),
                 'delete' => !AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'delete', array()));
@@ -201,7 +200,7 @@ class Results extends \tao_actions_CommonModule
                 try {
                     $startTime = \tao_helpers_Date::displayeDate($deliveryExecution->getStartTime());
                 } catch (\common_exception_NotFound $e) {
-                    \common_Logger::w($e->getMessage());
+                    $this->logWarning($e->getMessage());
                     $startTime = '';
                 }
 
@@ -237,12 +236,13 @@ class Results extends \tao_actions_CommonModule
     /**
      * Delete a result or a result class
      * @throws Exception
+     * @throws common_exception_BadRequest
      * @return string json {'deleted' : true}
      */
     public function delete()
     {
-        if (!tao_helpers_Request::isAjax()) {
-            throw new Exception("wrong request mode");
+        if (!$this->isXmlHttpRequest()) {
+            throw new common_exception_BadRequest('wrong request mode');
         }
         $deliveryExecutionUri = tao_helpers_Uri::decode($this->getRequestParameter('uri'));
         $de = $this->getServiceProxy()->getDeliveryExecution($deliveryExecutionUri);
@@ -275,8 +275,10 @@ class Results extends \tao_actions_CommonModule
      */
     public function viewResult()
     {
+        $this->defaultData();
+
         $resultId = $this->getRawParameter('id');
-        $delivery = new \core_kernel_classes_Resource($this->getRequestParameter('classUri'));
+        $delivery = $this->getResource($this->getRequestParameter('classUri'));
 
         try {
             $this->getResultStorage($delivery);
@@ -324,7 +326,7 @@ class Results extends \tao_actions_CommonModule
                 && $this->getResultsService()->getCache()
                 && $this->getResultsService()->getCache()->exists($cacheKey)
             ) {
-                \common_Logger::d('Result page cache hit for "'. $cacheKey .'"');
+                $this->logDebug('Result page cache hit for "'. $cacheKey .'"');
 
                 $gzipOutput = $this->getResultsService()->getCache()->get($cacheKey);
 
@@ -409,10 +411,9 @@ class Results extends \tao_actions_CommonModule
      */
     public function getFile()
     {
-
         $variableUri = $_POST["variableUri"];
 
-        $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('deliveryUri')));
+        $delivery = $this->getResource(tao_helpers_Uri::decode($this->getRequestParameter('deliveryUri')));
         try {
             $this->getResultStorage($delivery);
 
@@ -477,11 +478,9 @@ class Results extends \tao_actions_CommonModule
                 continue;
             }
             $itemUri = $item['uri'];
-            if (isset($responses[$itemUri])) {
-                $item['state'] = json_encode(array_diff_key($responses[$itemUri], $excludedVariables));
-            } else {
-                $item['state'] = null;
-            }
+            $item['state'] = isset($responses[$itemUri][$item['attempt']])
+                ? json_encode(array_diff_key($responses[$itemUri][$item['attempt']], $excludedVariables))
+                : null;
         }
 
         return $displayedVariables;
@@ -493,13 +492,11 @@ class Results extends \tao_actions_CommonModule
      */
     public function getResultsListPlugin()
     {
-        $serviceManager = $this->getServiceManager();
-
         /* @var ResultsPluginService $pluginService */
-        $pluginService = $serviceManager->get(ResultsPluginService::SERVICE_ID);
+        $pluginService = $this->getServiceLocator()->get(ResultsPluginService::SERVICE_ID);
 
         $event = new ResultsListPluginEvent($pluginService->getAllPlugins());
-        $serviceManager->get(EventManager::SERVICE_ID)->trigger($event);
+        $this->getServiceLocator()->get(EventManager::SERVICE_ID)->trigger($event);
 
         // return the list of active plugins
         return array_filter($event->getPlugins(), function ($plugin) {
@@ -521,7 +518,7 @@ class Results extends \tao_actions_CommonModule
         if ($this->hasRequestParameter('classUri')) {
             $options['class'] = $this->getCurrentClass();
         } else {
-            $options['class'] = $this->deliveryService->getRootClass();
+            $options['class'] = $this->getDeliveryAssemblyService()->getRootClass();
         }
         return $options;
     }
@@ -536,7 +533,7 @@ class Results extends \tao_actions_CommonModule
      */
     public function export()
     {
-        if (!\tao_helpers_Request::isAjax()) {
+        if (!$this->isXmlHttpRequest()) {
             throw new \Exception('Only ajax call allowed.');
         }
 
@@ -549,8 +546,7 @@ class Results extends \tao_actions_CommonModule
             : \tao_helpers_Uri::decode($this->getRequestParameter(self::PARAMETER_DELIVERY_CLASS_URI));
 
         /** @var ResultsExporter $exporter */
-        $exporter = $this->getServiceManager()
-            ->propagate(new ResultsExporter($resourceUri, ResultsService::singleton()));
+        $exporter = $this->propagate(new ResultsExporter($resourceUri, ResultsService::singleton()));
 
         return $this->returnTaskJson($exporter->createExportTask());
     }

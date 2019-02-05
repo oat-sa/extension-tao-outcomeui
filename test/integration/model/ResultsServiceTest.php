@@ -20,6 +20,8 @@
 namespace oat\taoOutcomeUi\test\integration\model;
 
 use oat\generis\test\GenerisPhpUnitTestRunner;
+use oat\oatbox\service\ServiceManager;
+use oat\oatbox\user\User;
 use oat\tao\test\TaoPhpUnitTestRunner;
 use common_ext_ExtensionsManager;
 use oat\taoDeliveryRdf\model\DeliveryContainerService;
@@ -252,9 +254,12 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
         $this->service->setImplementation($imp);
 
+        $serviceManager = ServiceManager::getServiceManager();
+        $this->service->setServiceLocator($serviceManager);
+
         $item = $this->service->getTestTaker('#fakeUri');
-        $this->assertInstanceOf(core_kernel_classes_Resource::class, $item);
-        $this->assertEquals('#testTaker', $item->getUri());
+        $this->assertInstanceOf(\core_kernel_users_GenerisUser::class, $item);
+        $this->assertEquals('#testTaker', $item->getIdentifier());
     }
     /**
      *
@@ -1088,4 +1093,44 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $this->assertEquals(1,$responseStats['nbUnscoredResponses']);
     }
 
+    public function testGetResultsFromDelivery()
+    {
+        $prop = new \core_kernel_classes_Property('http://www.w3.org/2000/01/rdf-schema#label');
+        $impProphecy = $this->prophesize(RdsResultStorage::class);
+
+        $deliveryProphecy = $this->prophesize(core_kernel_classes_Resource::class);
+        $deliveryProphecy->getUri()->willReturn('#fakeUri');
+        $deliveryProphecy->__toString()->willReturn('#fakeUri');
+
+        $delivery = $deliveryProphecy->reveal();
+        $user = $this->prophesize(User::class);
+        $user->getIdentifier()->willReturn('#fakeTestUri');
+        $user->getPropertyValues($prop)->willReturn([]);
+
+        $impProphecy->getRelatedTestCallIds("#fakeUri")->willReturn(array("#fakeTestUri"));
+        $impProphecy->getTestTaker('#fakeUri1')->willReturn('#testTaker');
+
+        $impProphecy->getResultByDelivery(['#fakeUri'], [])->willReturn([[
+            'deliveryResultIdentifier' => '#fakeUri1',
+            'testTakerIdentifier' => '123',
+            'deliveryIdentifier' => '#fakeUri2',
+        ]]);
+
+        $imp = $impProphecy->reveal();
+        $resultServerServiceMock = $this->prophesize(ResultServerService::class);
+        $resultServerServiceMock->getResultStorage($delivery)->willReturn($imp);
+
+        $userService = $this->prophesize(\tao_models_classes_UserService::class);
+        $userService->getUserById('#testTaker')->willReturn($user->reveal());
+
+        $serviceManager = $this->getServiceLocatorMock([ResultServerService::SERVICE_ID => $resultServerServiceMock->reveal(), \tao_models_classes_UserService::SERVICE_ID => $userService->reveal()]);
+        $this->service->setServiceLocator($serviceManager);
+        $columns = [
+                new \oat\taoOutcomeUi\model\table\ContextTypePropertyColumn('test_taker', $prop)
+        ];
+
+        $varDataAll = $this->service->getResultsByDelivery($delivery, $columns, 'lastSubmitted');
+        $this->assertEquals('#fakeUri1' ,$varDataAll[0]['id']);
+
+    }
 }

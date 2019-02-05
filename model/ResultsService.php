@@ -28,6 +28,8 @@ use common_Utils;
 use League\Flysystem\FileNotFoundException;
 use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyRdfs;
+use oat\oatbox\service\ServiceManager;
+use oat\oatbox\user\User;
 use oat\tao\helpers\metadata\ResourceCompiledMetadataHelper;
 use oat\tao\model\metadata\compiler\ResourceJsonMetadataCompiler;
 use oat\tao\model\metadata\compiler\ResourceMetadataCompilerInterface;
@@ -57,9 +59,13 @@ use oat\taoResultServer\models\classes\ResultServerService;
 use tao_models_classes_service_StorageDirectory;
 use taoQtiTest_models_classes_QtiTestService;
 use oat\taoQtiTest\models\QtiTestCompilerIndex;
+use Zend\ServiceManager\ServiceLocatorAwareInterface;
+use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
-class ResultsService extends tao_models_classes_ClassService
+class ResultsService extends tao_models_classes_ClassService implements ServiceLocatorAwareInterface
 {
+    use ServiceLocatorAwareTrait;
+
     const VARIABLES_FILTER_LAST_SUBMITTED = 'lastSubmitted';
     const VARIABLES_FILTER_FIRST_SUBMITTED = 'firstSubmitted';
     const VARIABLES_FILTER_ALL = 'all';
@@ -219,7 +225,7 @@ class ResultsService extends tao_models_classes_ClassService
      */
     public function getVariables($resultIdentifier, $flat = true) {
         $variables = array();
-        //this service is slow due to the way the data model design  
+        //this service is slow due to the way the data model design
         //if the delvieryResult related execution is finished, the data is stored in cache.
 
         $serial = 'deliveryResultVariables:'.$resultIdentifier;
@@ -239,7 +245,7 @@ class ResultsService extends tao_models_classes_ClassService
             $variables[$key][] = $resultVariable;
         }
 
-        // impossible to determine state DeliveryExecution::STATE_FINISHIED 
+        // impossible to determine state DeliveryExecution::STATE_FINISHIED
         //    if (false) {
         //        common_cache_FileCache::singleton()->put($variables, $serial);
         //    }
@@ -274,10 +280,10 @@ class ResultsService extends tao_models_classes_ClassService
         $returnedVariables = [];
         $variables = $this->getImplementation()->getVariables($itemResult);
 
-        if (!empty($wantedTypes)) {
-            foreach ($variables as $variable) {
-                if (in_array(get_class($variable[0]->variable), $wantedTypes)) {
-                    $returnedVariables[] = $variable;
+        foreach ($variables as $itemVariables) {
+            foreach ($itemVariables as $variable) {
+                if (in_array(get_class($variable->variable), $wantedTypes)) {
+                    $returnedVariables[] = [$variable];
                 }
             }
         }
@@ -496,7 +502,7 @@ class ResultsService extends tao_models_classes_ClassService
             'epoch1' => [
                 'label' => Example_0_Introduction,
                 'uri' => http://tao.local/mytao.rdf#i1462952280695832,
-     *          'internalIdentifier' => item-1,
+                'internalIdentifier' => item-1,
                 'taoResultServer_models_classes_Variable class name' => [
                     'Variable identifier 1' => [
                         'uri' => 1,
@@ -511,21 +517,18 @@ class ResultsService extends tao_models_classes_ClassService
                 ]
             ]
         ]
+     *
+     * @throws common_exception_Error
      */
     public function getStructuredVariables($resultIdentifier, $filter, $wantedTypes = array())
     {
         $itemCallIds = $this->getItemResultsFromDeliveryResult($resultIdentifier);
-        $variablesByItem = array();
-        $savedItems = array();
-        $itemVariables = array();
-        $tmpitem = array();
-        $item = array();
 
         // splitting call ids into chunks to perform bulk queries
         $itemCallIdChunks = array_chunk($itemCallIds, 50);
 
+        $itemVariables = [];
         foreach ($itemCallIdChunks as $ids) {
-            $firstEpoch = null;
             $itemVariables = array_merge($itemVariables, $this->getVariablesFromObjectResult($ids, $wantedTypes));
         }
 
@@ -548,88 +551,52 @@ class ResultsService extends tao_models_classes_ClassService
             }
         });
 
-        $lastItemCallId = null;
+        $savedItems = $variablesByItem = [];
+        $firstEpoch = null;
 
-        foreach ($itemVariables as $variable) {
-            $currentItemCallId = $variable[0]->callIdItem;
+        foreach ($itemVariables as $variables) {
 
-            /** @var \taoResultServer_models_classes_Variable $variableTemp */
-            $variableTemp = $variable[0]->variable;
-            $variableDescription = array();
-            //retrieve the type of the variable
-            $type = get_class($variableTemp);
+            $itemVariable = $variables[0];
 
-            if (is_null($lastItemCallId)) {
-                $lastItemCallId = $currentItemCallId;
-                $firstEpoch = $variableTemp->getEpoch();
-                $item = $this->getItemInfos($currentItemCallId, array($variable));
-            }
+            /** @var \taoResultServer_models_classes_Variable $variable */
+            $variable = $itemVariable->variable;
+            $itemCallId = $itemVariable->callIdItem;
 
-            $variableIdentifier = $variableTemp->getIdentifier();
-            $variableDescription["uri"] = $variable[0]->uri;
-            $variableDescription["var"] = $variableTemp;
-
-            if (method_exists($variableTemp, 'getCorrectResponse') && !is_null($variableTemp->getCorrectResponse())) {
-                if($variableTemp->getCorrectResponse() >= 1){
-                    $variableDescription["isCorrect"] = "correct";
-                }
-                else{
-                    $variableDescription["isCorrect"] = "incorrect";
-                }
-            }
-            else{
-                $variableDescription["isCorrect"] = "unscored";
-            }
-
-            if ($currentItemCallId !== $lastItemCallId) {
-                //no yet saved
-                //already saved and filter not first
-                if (!isset($savedItems[$item['uri']]) || $filter !== self::VARIABLES_FILTER_FIRST_SUBMITTED) {
-                    //last submitted and already something saved
-                    if ($filter === self::VARIABLES_FILTER_LAST_SUBMITTED && isset($savedItems[$item['uri']])) {
-                        //$tmpitem not empty and contains at least one wanted type
-                        if (!empty($tmpitem)) {
-                            foreach ($wantedTypes as $type) {
-                                if (isset($tmpitem[$type])) {
-                                    unset($variablesByItem[$savedItems[$item['uri']]]);
-                                    $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
-                                    continue;
-                                }
-                            }
+            if ($variable->getIdentifier() == 'numAttempts') {
+                $firstEpoch = $variable->getEpoch();
+                if ($filter != self::VARIABLES_FILTER_ALL) {
+                    if (array_key_exists($itemCallId, $savedItems)) {
+                        if ($filter == self::VARIABLES_FILTER_FIRST_SUBMITTED) {
+                            continue;
                         }
-                    } else {
-                        $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
-                    }
-                    $savedItems[$item['uri']] = $firstEpoch;
-                }
-                $tmpitem = array();
-                $firstEpoch = $variableTemp->getEpoch();
-                $item = $this->getItemInfos($currentItemCallId, array($variable));
-                $lastItemCallId = $currentItemCallId;
-            }
-
-            // item identifier within the test
-            $item['internalIdentifier'] = explode('.', str_replace($resultIdentifier, '', $currentItemCallId), 3)[1];
-
-            $tmpitem[$type][$variableIdentifier] = $variableDescription;
-        }
-
-        if (!empty($item) && (!isset($savedItems[$item['uri']]) || $filter !== self::VARIABLES_FILTER_FIRST_SUBMITTED)) {
-            //last submitted and already something saved
-            if ($filter === self::VARIABLES_FILTER_LAST_SUBMITTED && isset($savedItems[$item['uri']])) {
-                //$tmpitem not empty and contains at least one wanted type
-                if (!empty($tmpitem)){
-                    foreach ($wantedTypes as $type) {
-                        if (isset($tmpitem[$type])) {
-                            unset($variablesByItem[$savedItems[$item['uri']]]);
-                            $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
-                            break;
+                        if ($filter == self::VARIABLES_FILTER_LAST_SUBMITTED) {
+                            unset($variablesByItem[$savedItems[$itemCallId]]);
+                            unset($savedItems[$itemCallId]);
                         }
                     }
                 }
+                $variablesByItem[$firstEpoch] = $this->getItemInfos($itemCallId, [[$itemVariable]]);
+                $variablesByItem[$firstEpoch]['attempt'] = $variable->getValue();
+                $savedItems[$itemCallId] = $firstEpoch;
+            }
+
+            if (!isset($variablesByItem[$firstEpoch])) {
+                continue;
+            }
+
+            $variableDescription = [
+                'uri' => $itemVariable->uri,
+                'var' => $variable,
+            ];
+
+            if ($variable instanceof \taoResultServer_models_classes_ResponseVariable && !is_null($variable->getCorrectResponse())) {
+                $variableDescription['isCorrect'] = $variable->getCorrectResponse() >= 1 ? 'correct' : 'incorrect';
             } else {
-                $variablesByItem[$firstEpoch] = array_merge($item,$tmpitem);
+                $variableDescription['isCorrect'] = 'unscored';
             }
+
+            $variablesByItem[$firstEpoch]['internalIdentifier'] = explode('.', str_replace($resultIdentifier, '', $itemCallId), 3)[1];
+            $variablesByItem[$firstEpoch][get_class($variable)][$variable->getIdentifier()] = $variableDescription;
         }
 
         return $variablesByItem;
@@ -843,11 +810,14 @@ class ResultsService extends tao_models_classes_ClassService
      * returns the test taker related to the delivery
      *
      * @param string $resultIdentifier
-     * @return \core_kernel_classes_Resource
+     * @return User
      */
     public function getTestTaker($resultIdentifier) {
         $testTaker = $this->getImplementation()->getTestTaker($resultIdentifier);
-        return new core_kernel_classes_Resource($testTaker);
+        /** @var \tao_models_classes_UserService $userService */
+        $userService = $this->getServiceLocator()->get(\tao_models_classes_UserService::SERVICE_ID);
+        $user = $userService->getUserById($testTaker);
+        return $user;
     }
 
     /**
@@ -871,9 +841,9 @@ class ResultsService extends tao_models_classes_ClassService
         //distinguish QTI file from other "file" base type
         $baseType = $this->getVariableBaseType($variableUri);
 
-        // https://bugs.php.net/bug.php?id=52623 ; 
+        // https://bugs.php.net/bug.php?id=52623 ;
         // if the constant for max buffering, mysqlnd or similar driver
-        // is being used without need to adapt buffer size as it is atutomatically adapted for all the data. 
+        // is being used without need to adapt buffer size as it is atutomatically adapted for all the data.
         if (core_kernel_classes_DbWrapper::singleton()->getPlatForm()->getName() == 'mysql') {
             if (defined("PDO::MYSQL_ATTR_MAX_BUFFER_SIZE")) {
                 $maxBuffer = (is_int(ini_get('upload_max_filesize'))) ? (ini_get('upload_max_filesize')* 1.5) : 10485760 ;
@@ -915,14 +885,24 @@ class ResultsService extends tao_models_classes_ClassService
         $testTaker = $this->gettestTaker($resultIdentifier);
         if (get_class($testTaker) == 'core_kernel_classes_Literal') {
             return $testTaker;
+        } elseif (empty($testTaker)) {
+            return null;
         } else {
-            $propValues = $testTaker->getPropertiesValues(array(
+            $arrayOfProperties = [
                 OntologyRdfs::RDFS_LABEL,
                 GenerisRdf::PROPERTY_USER_LOGIN,
                 GenerisRdf::PROPERTY_USER_FIRSTNAME,
                 GenerisRdf::PROPERTY_USER_LASTNAME,
-                GenerisRdf::PROPERTY_USER_MAIL,
-            ));
+                GenerisRdf::PROPERTY_USER_MAIL
+            ];
+            $propValues = [];
+            foreach ($arrayOfProperties as $property) {
+                $values = [];
+                foreach ($testTaker->getPropertyValues($property) as $value) {
+                    $values[] = new \core_kernel_classes_Literal($value);
+                }
+                $propValues[$property] = $values;
+            }
         }
         return $propValues;
     }
@@ -936,7 +916,7 @@ class ResultsService extends tao_models_classes_ClassService
     public function getReadableImplementation(\core_kernel_classes_Resource $delivery)
     {
         /** @var ResultServerService  $service */
-        $service = $this->getServiceManager()->get(ResultServerService::SERVICE_ID);
+        $service = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
         $resultStorage = $service->getResultStorage($delivery);
 
         /** NoResultStorage it's not readable only writable */
@@ -990,6 +970,7 @@ class ResultsService extends tao_models_classes_ClassService
 
         //The list of delivery Results matching the current selection filters
         $results = array();
+
         $this->setImplementation($this->getReadableImplementation($delivery));
         foreach($this->getImplementation()->getResultByDelivery([$delivery->getUri()], $storageOptions) as $result){
             $results[] = $result['deliveryResultIdentifier'];
@@ -1053,7 +1034,16 @@ class ResultsService extends tao_models_classes_ClassService
 
                     // if it's a guest test taker (it has no property values at all), let's display the uri as label
                     if ($column->isTestTakerType() && empty($values) && $column->getProperty()->getUri() == OntologyRdfs::RDFS_LABEL) {
-                        $values[] = $resource->getUri();
+                        switch(true) {
+                            case $resource instanceof core_kernel_classes_Resource:
+                                $values[] = $resource->getUri();
+                                break;
+                            case $resource instanceof User:
+                                $values[] = $resource->getIdentifier();
+                                break;
+                            default:
+                                throw new \Exception('Invalid type of resource property values.');
+                        }
                     }
 
                     $cellData[$cellKey] = [self::filterCellData(implode(' ', $values), $filter)];
@@ -1388,5 +1378,16 @@ class ResultsService extends tao_models_classes_ClassService
         $fileStorage = \tao_models_classes_service_FileStorage::singleton();
 
         return $fileStorage->getDirectoryById($directoryIds[0]);
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getServiceLocator()
+    {
+        if (!$this->serviceLocator) {
+            $this->setServiceLocator(ServiceManager::getServiceManager());
+        }
+        return $this->serviceLocator;
     }
 }
