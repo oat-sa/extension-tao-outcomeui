@@ -17,7 +17,7 @@
  * Copyright (c) 2017 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
-namespace oat\taoOutcomeUi\test\unit\helper;
+namespace oat\taoOutcomeUi\test\integration\helper;
 
 use oat\tao\test\TaoPhpUnitTestRunner;
 use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
