@@ -17,13 +17,13 @@
  * Copyright (c) 2017 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
-namespace oat\taoOutcomeUi\test\integration\helper;
+namespace oat\taoOutcomeUi\test\unit\helper;
 
-use oat\tao\test\TaoPhpUnitTestRunner;
+use oat\generis\test\TestCase;
 use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
 use \taoResultServer_models_classes_ResponseVariable as ResponseVariable;
 
-class ResponseVariableFormatterTest extends TaoPhpUnitTestRunner
+class ResponseVariableFormatterTest extends TestCase
 {
     public function testFormatSingleNull()
     {
