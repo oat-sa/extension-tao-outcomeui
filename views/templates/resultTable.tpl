@@ -30,6 +30,12 @@ use oat\taoOutcomeUi\model\ResultsService;
             <button class="btn-error small hidden" data-group="response" data-action="remove" data-url="<?=_url('getResponseColumns')?>"  >
                 <span class="icon-bin"></span><?=__('Remove All responses')?>
             </button>
+            <button class="btn-info small" data-group="deliveryexecution" data-action="add" data-url="<?=_url('getDeliveryExecutionColumns')?>">
+                <span class="icon-add"></span><?=__('Add Delivery Execution')?>
+            </button>
+            <button class="btn-error small hidden" data-group="deliveryexecution" data-action="remove" data-url="<?=_url('getDeliveryExecutionColumns')?>" >
+                <span class="icon-bin"></span><?=__('Remove Delivery Execution')?>
+            </button>
         </div>
     </div>
     <div class="grid-row">

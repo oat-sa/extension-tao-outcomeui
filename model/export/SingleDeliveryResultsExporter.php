@@ -27,6 +27,7 @@ use oat\tao\model\export\implementation\CsvExporter;
 use oat\tao\model\taskQueue\QueueDispatcherInterface;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
+use oat\taoOutcomeUi\model\table\DeliveryExecutionColumn;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeUi\model\table\VariableDataProvider;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
@@ -337,6 +338,10 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
 
                 if ($column instanceof ContextTypePropertyColumn && $column->getProperty()->getUri() == RDFS_LABEL) {
                     $column->label = $column->isTestTakerType() ? __('Test Taker') : __('Delivery');
+                }
+
+                if ($column instanceof DeliveryExecutionColumn) {
+                    // data provider already there
                 }
 
                 $columns[] = $column;

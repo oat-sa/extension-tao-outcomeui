@@ -128,11 +128,27 @@ class ResultTable extends \tao_actions_CommonModule
     public function getDeliveryColumns()
     {
         if (!$this->isXmlHttpRequest()) {
-            throw new \Exception('Only ajax call allowed.');
+            throw new \common_exception_Error('Only ajax call allowed.');
         }
 
         return $this->returnJson([
             'columns' => $this->getColumnsProvider()->getDeliveryColumns()
+        ]);
+    }
+
+    /**
+     * Returns delivery execution metadata columns.
+     *
+     * @throws \Exception
+     */
+    public function getDeliveryExecutionColumns()
+    {
+        if (!$this->isXmlHttpRequest()) {
+            throw new \common_exception_Error('Only ajax call allowed.');
+        }
+
+        return $this->returnJson([
+            'columns' => $this->getColumnsProvider()->getDeliveryExecutionColumns()
         ]);
     }
 
@@ -144,7 +160,7 @@ class ResultTable extends \tao_actions_CommonModule
     public function getGradeColumns()
     {
         if (!$this->isXmlHttpRequest()) {
-            throw new \Exception('Only ajax call allowed.');
+            throw new \common_exception_Error('Only ajax call allowed.');
         }
 
         return $this->returnJson([
