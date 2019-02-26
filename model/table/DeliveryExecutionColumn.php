@@ -30,7 +30,6 @@ class DeliveryExecutionColumn extends \tao_models_classes_table_Column
 {
     private static $dataProvider;
     private $identifier;
-    private $contextIdentifier;
 
     public function __construct($label, $identifier)
     {
@@ -64,16 +63,18 @@ class DeliveryExecutionColumn extends \tao_models_classes_table_Column
         return 'delivery_execution';
     }
 
-    public function setContextIdentifier($contextIdentifier)
-    {
-        $this->contextIdentifier = $contextIdentifier;
-    }
-
     public function getDataProvider()
     {
         if (!self::$dataProvider) {
             self::$dataProvider = new DeliveryExecutionDataProvider();
         }
         return self::$dataProvider;
+    }
+
+    public function toArray()
+    {
+        $res = parent::toArray();
+        $res['variableIdentifier'] = $this->getIdentifier();
+        return $res;
     }
 }

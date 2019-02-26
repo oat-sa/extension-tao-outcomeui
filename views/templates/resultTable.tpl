@@ -3,6 +3,8 @@ use oat\tao\helpers\Template;
 use oat\taoOutcomeUi\model\ResultsService;
 ?>
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoOutcomeUi/views/css/result.css" />
+<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoOutcomeUi/views/css/resultTable.css" />
+
 <div class="result-table flex-container-full">
     <div class="grid-row clearfix">
         <div class="col-12">
@@ -38,14 +40,25 @@ use oat\taoOutcomeUi\model\ResultsService;
             </button>
         </div>
     </div>
-    <div class="grid-row">
+    <div class="grid-row filters-container">
         <div class="col-12">
-            <select class="result-filter">
-                <option  value="all"><?=__('All collected variables')?></option>
-                <option  value="<?= ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED ?>"><?=__('First submitted variables only')?></option>
-                <option  value="<?= ResultsService::VARIABLES_FILTER_LAST_SUBMITTED ?>"><?=__('Last submitted variables only')?></option>
-            </select>
-            <button class="btn-info small result-filter-btn"><?=__('Filter');?></button>
+            <div class="grid-row">
+                <div class="col-12 result-range"></div>
+            </div>
+            <div class="grid-row">
+                <div class="col-12">
+                    <select class="result-filter">
+                        <option  value="all"><?=__('All collected variables')?></option>
+                        <option  value="<?= ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED ?>"><?=__('First submitted variables only')?></option>
+                        <option  value="<?= ResultsService::VARIABLES_FILTER_LAST_SUBMITTED ?>"><?=__('Last submitted variables only')?></option>
+                    </select>
+                </div>
+            </div>
+            <div class="grid-row">
+                <div class="col-12">
+                    <button class="btn-info small result-filter-btn"><?=__('Filter');?></button>
+                </div>
+            </div>
         </div>
     </div>
     <div class="result-table-container"></div>

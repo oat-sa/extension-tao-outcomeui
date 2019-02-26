@@ -48,6 +48,8 @@ class DeliveryExecutionDataProvider implements tao_models_classes_table_DataProv
     /**
      * @param $resources
      * @param $columns
+     * @return mixed|void
+     * @throws \common_Exception
      * @throws \common_exception_Error
      * @throws \common_exception_NotFound
      */
@@ -81,8 +83,9 @@ class DeliveryExecutionDataProvider implements tao_models_classes_table_DataProv
     }
 
     /**
-     * (non-PHPdoc)
-     * @see tao_models_classes_table_DataProvider::getValue()
+     * @param core_kernel_classes_Resource $resource
+     * @param tao_models_classes_table_Column $column
+     * @return array|string
      */
     public function getValue(core_kernel_classes_Resource $resource, tao_models_classes_table_Column $column)
     {

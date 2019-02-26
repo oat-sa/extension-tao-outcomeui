@@ -28,8 +28,9 @@ define([
     'ui/feedback',
     'core/taskQueue/taskQueue',
     'ui/taskQueueButton/standardButton',
+    'ui/dateRange',
     'ui/datatable'
-], function($, _, __, module, urlUtil, feedback, taskQueue, standardTaskButtonFactory) {
+], function($, _, __, module, urlUtil, feedback, taskQueue, standardTaskButtonFactory, dateRangeFactory) {
     'use strict';
 
     /**
@@ -46,12 +47,28 @@ define([
            var $container = $(".result-table");
            var $filterField = $('.result-filter', $container);
            var $tableContainer = $('.result-table-container', $container);
+           var $dateRangeContainer = $('.result-range', $container);
            var filter = conf.filter || 'lastSubmitted';
            var uri = conf.uri || '';
             //keep columns through calls
             var columns = [];
             var groups = {};
             var $actionBar = $container.find('.actions');
+
+            var filterRange = dateRangeFactory({
+                pickerType: 'datetimepicker',
+                //renderTo: $dateRangeContainer,
+                pickerConfig: {
+                    // configurations from lib/jquery.timePicker.js
+                    dateFormat: 'yy-mm-dd',
+                    timeFormat: 'HH:mm:ss'
+                }
+            })
+                .on('render', function () {
+                    $('button', $dateRangeContainer).hide();
+                })
+                .render($dateRangeContainer);
+
 
             /**
              * Load columns to rebuild the datatable dynamically
