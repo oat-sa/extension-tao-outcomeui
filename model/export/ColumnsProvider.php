@@ -29,8 +29,6 @@ use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoDeliveryRdf\model\DeliveryContainerService;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
-use oat\taoOutcomeUi\model\table\DeliveryExecutionColumn;
-use oat\taoOutcomeUi\model\table\DeliveryExecutionDataProvider;
 use oat\taoTestTaker\models\TestTakerService;
 
 /**
@@ -149,27 +147,6 @@ class ColumnsProvider
     }
 
     /**
-     * Get delivery execution columns to be exported
-     */
-    public function getDeliveryExecutionColumns()
-    {
-        return [
-            [
-                'type' => DeliveryExecutionColumn::class,
-                'label' => 'Start Delivery Execution',
-                'contextId' => 'delivery_execution',
-                'variableIdentifier' => DeliveryExecutionDataProvider::PROP_STARTED_AT
-            ],
-            [
-                'type' => DeliveryExecutionColumn::class,
-                'label' => 'End Delivery Execution',
-                'contextId' => 'delivery_execution',
-                'variableIdentifier' => DeliveryExecutionDataProvider::PROP_FINISHED_AT,
-            ],
-        ];
-    }
-
-    /**
      * Returns all grade columns to be exported.
      *
      * @throws \RuntimeException
@@ -201,8 +178,7 @@ class ColumnsProvider
             $this->getTestTakerColumns(),
             $this->getDeliveryColumns(),
             $this->getGradeColumns(),
-            $this->getResponseColumns(),
-            $this->getDeliveryExecutionColumns()
+            $this->getResponseColumns()
         );
     }
 }
