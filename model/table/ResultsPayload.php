@@ -68,7 +68,6 @@ class ResultsPayload implements DataTablePayloadInterface
         $data = $this->exporter->getData();
 
         $countTotal = ResultsService::singleton()->countResultByDelivery([$this->exporter->getResourceToExport()->getUri()]);
-
         $payload = [
             'data' => $data,
             'page' => $page,
