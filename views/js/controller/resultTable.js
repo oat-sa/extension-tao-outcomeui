@@ -46,6 +46,7 @@ define([
             var conf = module.config();
             var $container = $(".result-table");
             var $filterField = $('.result-filter', $container);
+            var $filterButtonsContainer = $('.filter-buttons', $container);
             var $tableContainer = $('.result-table-container', $container);
             var $dateStartRangeContainer = $('.de-start-range', $container);
             var $dateEndRangeContainer = $('.de-end-range', $container);
@@ -214,7 +215,7 @@ define([
                 }
             }).on('error', function(err){
                 feedback().error(err);
-            }).render($actionBar);
+            }).render($filterButtonsContainer);
         }
     };
     return resulTableController;
