@@ -88,7 +88,10 @@ use oat\taoOutcomeUi\model\ResultsService;
                 </div>
             </div>
             <div class="grid-row filter-buttons">
-                <button class="btn-info small result-filter-btn"><?=__('Preview');?></button>
+                <button class="btn-info small result-filter-btn">
+                    <span class="icon-preview"></span>
+                    <?=__('Preview');?>
+                </button>
             </div>
         </div>
     </div>
