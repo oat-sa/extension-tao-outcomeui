@@ -50,15 +50,20 @@ class ResultsPayload implements DataTablePayloadInterface
      */
     public function getPayload()
     {
+
         $page = $this->request->getPage();
         $limit = $this->request->getRows();
+        $period = $this->request->periodFilter();
+        $options = [
+            'offset' => $limit * ($page - 1),
+            'limit' => $limit
+        ];
+        $options = array_merge($options, $period);
 
         // offset and limit be default for getResultsByDelivery()
 
-        $this->exporter->setStorageOptions([
-            'offset' => $limit * ($page - 1),
-            'limit' => $limit
-        ]);
+
+        $this->exporter->setStorageOptions($options);
 
         $data = $this->exporter->getData();
 
