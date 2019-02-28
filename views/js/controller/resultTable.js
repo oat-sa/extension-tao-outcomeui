@@ -59,7 +59,6 @@ define([
             //keep columns through calls
             var columns = [];
             var groups = {};
-            var $actionBar = $container.find('.actions');
 
             var filterDeStartRange = dateRangeFactory({
                 pickerType: 'datetimepicker',
