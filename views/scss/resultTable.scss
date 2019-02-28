@@ -1,5 +1,10 @@
 .result-table {
+  min-width: 800px;
   .filters-container {
-    padding-top: 15px;
+    padding: 15px 0 15px 15px;
+    background: #f3f1ef;
+    border: 1px solid #ddd;
+    max-width: 500px;
+    margin-bottom: 25px;
   }
 }

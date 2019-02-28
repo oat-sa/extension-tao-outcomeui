@@ -5,7 +5,7 @@ use oat\taoOutcomeUi\model\ResultsService;
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoOutcomeUi/views/css/result.css" />
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoOutcomeUi/views/css/resultTable.css" />
 
-<div class="result-table flex-container-full">
+<div class="result-table">
     <div class="grid-row clearfix">
         <div class="col-12">
             <button class="btn-info small hidden" data-group="testtaker" data-action="add" data-url="<?=_url('getTestTakerColumns')?>">
@@ -40,6 +40,9 @@ use oat\taoOutcomeUi\model\ResultsService;
             </button>
         </div>
     </div>
+    <header class="flex-container-full">
+        <h3><?=__('Filters')?></h3>
+    </header>
     <div class="grid-row filters-container">
         <div class="col-12">
             <div class="grid-row">
@@ -84,10 +87,11 @@ use oat\taoOutcomeUi\model\ResultsService;
                     </div>
                 </div>
             </div>
-            <div class="grid-row">
-                <div class="col-12">
-                    <button class="btn-info small result-filter-btn"><?=__('Filter');?></button>
-                </div>
+            <div class="grid-row filter-buttons">
+                <button class="btn-info small result-filter-btn">
+                    <span class="icon-preview"></span>
+                    <?=__('Preview');?>
+                </button>
             </div>
         </div>
     </div>
