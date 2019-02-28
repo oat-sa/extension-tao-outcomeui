@@ -43,21 +43,25 @@ define([
          */
         start : function(){
 
-           var conf = module.config();
-           var $container = $(".result-table");
-           var $filterField = $('.result-filter', $container);
-           var $tableContainer = $('.result-table-container', $container);
-           var $dateRangeContainer = $('.result-range', $container);
-           var filter = conf.filter || 'lastSubmitted';
-           var uri = conf.uri || '';
+            var conf = module.config();
+            var $container = $(".result-table");
+            var $filterField = $('.result-filter', $container);
+            var $tableContainer = $('.result-table-container', $container);
+            var $dateStartRangeContainer = $('.de-start-range', $container);
+            var $dateEndRangeContainer = $('.de-end-range', $container);
+            var filter = conf.filter || 'lastSubmitted';
+            var deStartFrom = '';
+            var deStartTo = '';
+            var deEndFrom = '';
+            var deEndTo = '';
+            var uri = conf.uri || '';
             //keep columns through calls
             var columns = [];
             var groups = {};
             var $actionBar = $container.find('.actions');
 
-            var filterRange = dateRangeFactory({
+            var filterDeStartRange = dateRangeFactory({
                 pickerType: 'datetimepicker',
-                //renderTo: $dateRangeContainer,
                 pickerConfig: {
                     // configurations from lib/jquery.timePicker.js
                     dateFormat: 'yy-mm-dd',
@@ -65,9 +69,22 @@ define([
                 }
             })
                 .on('render', function () {
-                    $('button', $dateRangeContainer).hide();
+                    $('button', $dateStartRangeContainer).hide();
                 })
-                .render($dateRangeContainer);
+                .render($dateStartRangeContainer);
+
+            var filterDeEndRange = dateRangeFactory({
+                pickerType: 'datetimepicker',
+                pickerConfig: {
+                    // configurations from lib/jquery.timePicker.js
+                    dateFormat: 'yy-mm-dd',
+                    timeFormat: 'HH:mm:ss'
+                }
+            })
+                .on('render', function () {
+                    $('button', $dateEndRangeContainer).hide();
+                })
+                .render($dateEndRangeContainer);
 
 
             /**
@@ -131,7 +148,8 @@ define([
                         }
                     })
                     .datatable({
-                        url : urlUtil.route('feedDataTable', 'ResultTable', 'taoOutcomeUi', {filter : filter}),
+                        url : urlUtil.route('feedDataTable', 'ResultTable', 'taoOutcomeUi',
+                            {filter : filter, startfrom: deStartFrom, startto: deStartTo, endfrom: deEndFrom, endto: deEndTo}),
                         querytype : 'POST',
                         params: {columns: JSON.stringify(columns), '_search': false, uri: uri},
                         model :  model
@@ -171,6 +189,10 @@ define([
 
             $('.result-filter-btn', $container).click(function() {
                 filter = $filterField.select2('val');
+                deStartFrom = filterDeStartRange.getStart();
+                deStartTo = filterDeStartRange.getEnd();
+                deEndFrom = filterDeEndRange.getStart();
+                deEndTo = filterDeEndRange.getEnd();
                 //rebuild the current table
                 _buildTable();
             });

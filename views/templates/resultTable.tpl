@@ -43,15 +43,45 @@ use oat\taoOutcomeUi\model\ResultsService;
     <div class="grid-row filters-container">
         <div class="col-12">
             <div class="grid-row">
-                <div class="col-12 result-range"></div>
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <b><?=__('Start Delivery Execution')?>:</b>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 de-start-range"></div>
+                    </div>
+                </div>
             </div>
             <div class="grid-row">
                 <div class="col-12">
-                    <select class="result-filter">
-                        <option  value="all"><?=__('All collected variables')?></option>
-                        <option  value="<?= ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED ?>"><?=__('First submitted variables only')?></option>
-                        <option  value="<?= ResultsService::VARIABLES_FILTER_LAST_SUBMITTED ?>"><?=__('Last submitted variables only')?></option>
-                    </select>
+                    <div class="row">
+                        <div class="col-12">
+                            <b><?=__('End Delivery Execution')?>:</b>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 de-end-range"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <b><?=__('Variables')?>:</b>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <select class="result-filter">
+                                <option  value="all"><?=__('All collected variables')?></option>
+                                <option  value="<?= ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED ?>"><?=__('First submitted variables only')?></option>
+                                <option  value="<?= ResultsService::VARIABLES_FILTER_LAST_SUBMITTED ?>"><?=__('Last submitted variables only')?></option>
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div class="grid-row">
