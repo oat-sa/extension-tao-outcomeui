@@ -174,7 +174,7 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
 
                         if (in_array(self::COLUMNS_CLI_VALUE_ALL, $columns)) {
                             // do nothing because SingleDeliveryResultsExporter will use all columns by default if no columns specified
-                            continue;
+                            break;
                         }
 
                         foreach ($columns as $column) {
