@@ -38,7 +38,6 @@ use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoItems\model\ItemCompilerIndex;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
-use oat\taoOutcomeUi\model\table\DeliveryExecutionColumn;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
 use \common_Exception;
@@ -953,13 +952,9 @@ class ResultsService extends tao_models_classes_ClassService implements ServiceL
      */
     private function getColumnId(\tao_models_classes_table_Column $column)
     {
-        if ($column instanceof ContextTypePropertyColumn) {
-            $id = $column->getProperty()->getUri() .'_'. $column->getContextType();
-        } else {
-            $id = $column->getContextIdentifier() .'_'. $column->getIdentifier();
-        }
-
-        return $id;
+        return $column instanceof ContextTypePropertyColumn
+            ? $column->getProperty()->getUri() .'_'. $column->getContextType()
+            : $column->getContextIdentifier() .'_'. $column->getIdentifier();
     }
 
     /**

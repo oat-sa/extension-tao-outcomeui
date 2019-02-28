@@ -16,7 +16,6 @@ module.exports = function (grunt) {
     sass.taooutcomeui.files[root + 'css/icon.css'] = root + 'scss/icon.scss';
     sass.taooutcomeui.files[root + 'css/result.css'] = root + 'scss/result.scss';
     sass.taooutcomeui.files[root + 'css/resultsMonitoring.css'] = root + 'scss/resultsMonitoring.scss';
-    sass.taooutcomeui.files[root + 'css/resultTable.css'] = root + 'scss/resultTable.scss';
 
 
     watch.taooutcomeuisass = {
