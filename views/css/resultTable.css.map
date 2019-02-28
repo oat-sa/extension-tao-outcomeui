@@ -1,0 +1,9 @@
+{
+	"version": 3,
+	"file": "resultTable.css",
+	"sources": [
+		"../scss/resultTable.scss"
+	],
+	"names": [],
+	"mappings": "AAAA,AACE,aADW,CACX,kBAAkB,AAAC,CACjB,WAAW,CAAE,IAAI,CAClB"
+}
