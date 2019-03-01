@@ -102,6 +102,14 @@ class ResultsService extends tao_models_classes_ClassService implements ServiceL
     private $testMetadataCache = [];
 
     /**
+     *  period FILTER variables
+     */
+    const PARAM_START_FROM = 'startfrom';
+    const PARAM_START_TO = 'startto';
+    const PARAM_END_FROM = 'endfrom';
+    const PARAM_END_TO = 'endto';
+
+    /**
      * @return \common_persistence_KvDriver|null
      */
     public function getCache()
