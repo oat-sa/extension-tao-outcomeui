@@ -23,6 +23,7 @@ namespace oat\taoOutcomeUi\model\table;
 use oat\tao\model\datatable\DatatablePayload as DataTablePayloadInterface;
 use oat\tao\model\datatable\implementation\DatatableRequest;
 use oat\taoOutcomeUi\model\export\ResultsExporterInterface;
+use oat\taoOutcomeUi\model\request\DataTablePeriodRequest;
 use oat\taoOutcomeUi\model\ResultsService;
 
 /**
@@ -41,7 +42,7 @@ class ResultsPayload implements DataTablePayloadInterface
 
     public function __construct(ResultsExporterInterface $exporter)
     {
-        $this->request = DatatableRequest::fromGlobals();
+        $this->request = DataTablePeriodRequest::fromGlobals();
         $this->exporter = $exporter;
     }
 
