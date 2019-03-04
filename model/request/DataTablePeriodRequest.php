@@ -40,4 +40,5 @@ class DataTablePeriodRequest extends DatatableRequest
 
         return $period;
     }
+
 }
