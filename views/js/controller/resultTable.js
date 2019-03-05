@@ -156,6 +156,16 @@ define([
                     });
             };
 
+            var filterChanged = function filterChanged () {
+                filter = $filterField.select2('val');
+                deStartFrom = filterDeStartRange.getStart();
+                deStartTo = filterDeStartRange.getEnd();
+                deEndFrom = filterDeEndRange.getStart();
+                deEndTo = filterDeEndRange.getEnd();
+                //rebuild the current table
+                _buildTable();
+            };
+
             //group button to toggle them
             $('[data-group]', $container).each(function(){
                 var $elt = $(this);
@@ -187,15 +197,10 @@ define([
                 minimumResultsForSearch : -1
             }).select2('val', filter);
 
-            $('.result-filter-btn', $container).click(function() {
-                filter = $filterField.select2('val');
-                deStartFrom = filterDeStartRange.getStart();
-                deStartTo = filterDeStartRange.getEnd();
-                deEndFrom = filterDeEndRange.getStart();
-                deEndTo = filterDeEndRange.getEnd();
-                //rebuild the current table
-                _buildTable();
-            });
+            $('.result-filter-btn', $container)
+                .click(function() {
+                    filterChanged();
+                });
 
             //instantiate the task creation button
             standardTaskButtonFactory({
@@ -206,10 +211,15 @@ define([
                 taskQueue : taskQueue,
                 taskCreationUrl : urlUtil.route('export', 'ResultTable', 'taoOutcomeUi'),
                 taskCreationData : function getTaskRequestData(){
+                    filterChanged();
                     return {
                         filter: filter,
                         columns: JSON.stringify(columns),
-                        uri: uri
+                        uri: uri,
+                        startfrom: deStartFrom,
+                        startto: deStartTo,
+                        endfrom: deEndFrom,
+                        endto: deEndTo
                     };
                 }
             }).on('error', function(err){

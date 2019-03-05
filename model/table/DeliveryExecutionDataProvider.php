@@ -22,9 +22,7 @@ namespace oat\taoOutcomeUi\model\table;
 
 use \core_kernel_classes_Resource;
 use oat\oatbox\service\ServiceManager;
-use oat\tao\helpers\test\DateHelperTest;
 use oat\taoDelivery\model\execution\ServiceProxy;
-use tao_helpers_Date;
 use \tao_models_classes_table_Column;
 use \tao_models_classes_table_DataProvider;
 
@@ -65,15 +63,11 @@ class DeliveryExecutionDataProvider implements tao_models_classes_table_DataProv
                 switch ($column->getIdentifier()) {
                     case self::PROP_STARTED_AT:
                         //$column->setContextIdentifier($identifier);
-                        $this->cache[$identifier][$column->getIdentifier()] = $de->getStartTime()
-                            ? tao_helpers_Date::displayeDate($de->getStartTime())
-                            : '';
+                        $this->cache[$identifier][$column->getIdentifier()] = $de->getStartTime() ? $de->getStartTime() : '';
                         break;
                     case self::PROP_FINISHED_AT:
                         //$column->setContextIdentifier($identifier);
-                        $this->cache[$identifier][$column->getIdentifier()] = $de->getFinishTime()
-                            ? tao_helpers_Date::displayeDate($de->getFinishTime())
-                            : '';
+                        $this->cache[$identifier][$column->getIdentifier()] = $de->getFinishTime() ? $de->getFinishTime() : '';
                         break;
                     default:
                         throw new \common_exception_Error('Undefined property ' . $column->getIdentifier());

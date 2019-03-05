@@ -32,6 +32,8 @@ use oat\taoOutcomeUi\model\ResultsService;
  */
 class ResultsPayload implements DataTablePayloadInterface
 {
+
+
     private $request;
 
     /**
@@ -50,28 +52,48 @@ class ResultsPayload implements DataTablePayloadInterface
      */
     public function getPayload()
     {
-        $page = $this->request->getPage();
-        $limit = $this->request->getRows();
-
-        // offset and limit be default for getResultsByDelivery()
-
-        $this->exporter->setStorageOptions([
-            'offset' => $limit * ($page - 1),
-            'limit' => $limit
-        ]);
-
         $data = $this->exporter->getData();
+        return $this->doPostProcessing($data);
+    }
 
-        $countTotal = ResultsService::singleton()->countResultByDelivery([$this->exporter->getResourceToExport()->getUri()]);
+    private function doPostProcessing($data)
+    {
+        $countTotal = count($data);
+        $filters = $this->getFilters();
+        $this->limitRows($data, $filters);
 
         $payload = [
             'data' => $data,
-            'page' => $page,
+            'page' => $this->request->getPage(),
             'amount'  => count($data),
-            'total' => ceil($countTotal / $limit)
+            'total' => ceil($countTotal / $filters['limit'])
         ];
 
         return $payload;
+    }
+
+    private function limitRows(&$data, $filters) {
+        $data = array_slice($data, $filters['offset'], $filters['limit']);
+    }
+
+    protected function getFilters()
+    {
+        $page = $this->request->getPage();
+        $limit = $this->request->getRows();
+
+        $filters = [
+            'offset' => $limit * ($page - 1),
+            'limit' => $limit
+        ];
+
+        $params = \Context::getInstance()->getRequest()->getParameters();
+        foreach ($params as $key => $val) {
+            if (empty($params[$key])) {
+                unset($params[$key]);
+            }
+        }
+
+        return $filters;
     }
 
     /**

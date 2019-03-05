@@ -85,6 +85,11 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
     private $columnsProvider;
 
     /**
+     * @var array
+     */
+    private $filters = [];
+
+    /**
      * @param string|\core_kernel_classes_Resource $delivery
      * @param ResultsService                       $resultsService
      * @param ColumnsProvider                      $columnsProvider
@@ -139,10 +144,13 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
             $columns = array_merge(
                 $this->columnsProvider->getTestTakerColumns(),
                 $this->columnsProvider->getDeliveryColumns(),
-                $this->columnsProvider->getDeliveryExecutionColumns(),
                 $variables
             );
         }
+
+        // Needed by the filter to filter by start and end date
+        // filtering will be done as a post-processing
+        $columns = array_merge($columns, $this->columnsProvider->getDeliveryExecutionColumns());
 
         if (empty($this->builtColumns)) {
             // build column objects
@@ -169,6 +177,17 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
         $this->variableToExport = $variableToExport;
 
         return $this;
+    }
+
+    public function setFiltersToExport($filters)
+    {
+        $this->filters = $filters;
+        return $this;
+    }
+
+    public function getFiltersToExport()
+    {
+        return $this->filters;
     }
 
     /**
@@ -198,7 +217,8 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
             $this->getResourceToExport(),
             $this->getColumnsToExport(),
             $this->getVariableToExport(),
-            $this->storageOptions
+            $this->storageOptions,
+            $this->getFiltersToExport()
         );
 
         // flattening data: only 'cell' is what we need
@@ -339,10 +359,6 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
 
                 if ($column instanceof ContextTypePropertyColumn && $column->getProperty()->getUri() == RDFS_LABEL) {
                     $column->label = $column->isTestTakerType() ? __('Test Taker') : __('Delivery');
-                }
-
-                if ($column instanceof DeliveryExecutionColumn) {
-                    // data provider already there
                 }
 
                 $columns[] = $column;
