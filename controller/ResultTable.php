@@ -234,7 +234,7 @@ class ResultTable extends \tao_actions_CommonModule
             }
         }
         if ($this->hasRequestParameter(self::PARAMETER_END_TO)) {
-            $time = $this->getRequestParameter(self::PARAMETER_END_TO);
+            $time = $this->getTime($this->getRequestParameter(self::PARAMETER_END_TO));
             if($time) {
                 $filters[self::PARAMETER_END_TO] = $time;
             }

@@ -1119,8 +1119,8 @@ class ResultsService extends tao_models_classes_ClassService implements ServiceL
                 if ($matched && array_key_exists('endfrom', $filters) && $filters['endfrom']) {
                     $matched = $endTime >= $filters['endfrom'];
                 }
-                if ($matched && array_key_exists('endfrom', $filters) && $filters['endfrom']) {
-                    $matched = $endTime <= $filters['endfrom'];
+                if ($matched && array_key_exists('endto', $filters) && $filters['endto']) {
+                    $matched = $endTime <= $filters['endto'];
                 }
             }
         }
