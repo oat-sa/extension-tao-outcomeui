@@ -86,13 +86,6 @@ class ResultsPayload implements DataTablePayloadInterface
             'limit' => $limit
         ];
 
-        $params = \Context::getInstance()->getRequest()->getParameters();
-        foreach ($params as $key => $val) {
-            if (empty($params[$key])) {
-                unset($params[$key]);
-            }
-        }
-
         return $filters;
     }
 
