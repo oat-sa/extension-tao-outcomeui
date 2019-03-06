@@ -27,6 +27,7 @@ use oat\tao\model\export\implementation\CsvExporter;
 use oat\tao\model\taskQueue\QueueDispatcherInterface;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
+use oat\taoOutcomeUi\model\table\DeliveryExecutionColumn;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeUi\model\table\VariableDataProvider;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
@@ -82,6 +83,11 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      * @var ColumnsProvider
      */
     private $columnsProvider;
+
+    /**
+     * @var array
+     */
+    private $filters = [];
 
     /**
      * @param string|\core_kernel_classes_Resource $delivery
@@ -142,6 +148,10 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
             );
         }
 
+        // Needed by the filter to filter by start and end date
+        // filtering will be done as a post-processing
+        $columns = array_merge($columns, $this->columnsProvider->getDeliveryExecutionColumns());
+
         if (empty($this->builtColumns)) {
             // build column objects
             $this->builtColumns = $this->buildColumns($columns);
@@ -167,6 +177,17 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
         $this->variableToExport = $variableToExport;
 
         return $this;
+    }
+
+    public function setFiltersToExport($filters)
+    {
+        $this->filters = $filters;
+        return $this;
+    }
+
+    public function getFiltersToExport()
+    {
+        return $this->filters;
     }
 
     /**
@@ -196,7 +217,8 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
             $this->getResourceToExport(),
             $this->getColumnsToExport(),
             $this->getVariableToExport(),
-            $this->storageOptions
+            $this->storageOptions,
+            $this->getFiltersToExport()
         );
 
         // flattening data: only 'cell' is what we need

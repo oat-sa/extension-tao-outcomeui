@@ -42,6 +42,11 @@ class ResultTable extends \tao_actions_CommonModule
     const PARAMETER_DELIVERY_URI = 'uri';
     const PARAMETER_FILTER = 'filter';
 
+    const PARAMETER_START_FROM = 'startfrom';
+    const PARAMETER_START_TO = 'startto';
+    const PARAMETER_END_FROM = 'endfrom';
+    const PARAMETER_END_TO = 'endto';
+
     use OntologyAwareTrait;
     use TaskLogActionTrait;
 
@@ -84,7 +89,7 @@ class ResultTable extends \tao_actions_CommonModule
             throw new common_Exception('Parameter "'. self::PARAMETER_COLUMNS .'" missing');
         }
 
-        $this->returnJSON((new ResultsPayload($this->getExporterService()->getExporter()))->getPayload());
+        $this->returnJson((new ResultsPayload($this->getExporterService()->getExporter()))->getPayload());
     }
 
     /**
@@ -128,11 +133,27 @@ class ResultTable extends \tao_actions_CommonModule
     public function getDeliveryColumns()
     {
         if (!$this->isXmlHttpRequest()) {
-            throw new \Exception('Only ajax call allowed.');
+            throw new \common_exception_Error('Only ajax call allowed.');
         }
 
         return $this->returnJson([
             'columns' => $this->getColumnsProvider()->getDeliveryColumns()
+        ]);
+    }
+
+    /**
+     * Returns delivery execution metadata columns.
+     *
+     * @throws \Exception
+     */
+    public function getDeliveryExecutionColumns()
+    {
+        if (!$this->isXmlHttpRequest()) {
+            throw new \common_exception_Error('Only ajax call allowed.');
+        }
+
+        return $this->returnJson([
+            'columns' => $this->getColumnsProvider()->getDeliveryExecutionColumns()
         ]);
     }
 
@@ -144,7 +165,7 @@ class ResultTable extends \tao_actions_CommonModule
     public function getGradeColumns()
     {
         if (!$this->isXmlHttpRequest()) {
-            throw new \Exception('Only ajax call allowed.');
+            throw new \common_exception_Error('Only ajax call allowed.');
         }
 
         return $this->returnJson([
@@ -193,9 +214,43 @@ class ResultTable extends \tao_actions_CommonModule
             $exporter->setVariableToExport($this->getRequestParameter(self::PARAMETER_FILTER));
         }
 
+        $filters = [];
+        if ($this->hasRequestParameter(self::PARAMETER_START_FROM)) {
+            $time = $this->getTime($this->getRequestParameter(self::PARAMETER_START_FROM));
+            if ($time) {
+                $filters[self::PARAMETER_START_FROM] = $time;
+            }
+        }
+        if ($this->hasRequestParameter(self::PARAMETER_START_TO)) {
+            $time = $this->getTime($this->getRequestParameter(self::PARAMETER_START_TO));
+            if ($time) {
+                $filters[self::PARAMETER_START_TO] = $time;
+            }
+        }
+        if ($this->hasRequestParameter(self::PARAMETER_END_FROM)) {
+            $time = $this->getTime($this->getRequestParameter(self::PARAMETER_END_FROM));
+            if ($time) {
+                $filters[self::PARAMETER_END_FROM] = $time;
+            }
+        }
+        if ($this->hasRequestParameter(self::PARAMETER_END_TO)) {
+            $time = $this->getTime($this->getRequestParameter(self::PARAMETER_END_TO));
+            if($time) {
+                $filters[self::PARAMETER_END_TO] = $time;
+            }
+        }
+
+        if (count($filters)) {
+            $exporter->setFiltersToExport($filters);
+        }
+
         return $exporter;
     }
 
+    private function getTime($date = '') {
+        return $date ? strtotime($date) : 0;
+    }
+    
     /**
      * @return string
      * @throws common_Exception

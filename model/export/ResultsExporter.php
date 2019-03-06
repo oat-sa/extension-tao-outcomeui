@@ -87,7 +87,12 @@ class ResultsExporter implements ServiceLocatorAwareInterface
     public function setVariableToExport($variableToExport)
     {
         $this->getExporter()->setVariableToExport($variableToExport);
+        return $this;
+    }
 
+    public function setFiltersToExport($filters)
+    {
+        $this->getExporter()->setFiltersToExport($filters);
         return $this;
     }
 
@@ -124,7 +129,8 @@ class ResultsExporter implements ServiceLocatorAwareInterface
             [
                 $this->getExporter()->getResourceToExport()->getUri(),
                 $columns,
-                $this->getExporter()->getVariableToExport()
+                $this->getExporter()->getVariableToExport(),
+                $this->getExporter()->getFiltersToExport(),
             ],
             $label
         );
