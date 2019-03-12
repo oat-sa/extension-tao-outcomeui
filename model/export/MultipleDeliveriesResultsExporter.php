@@ -24,6 +24,7 @@ use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\filesystem\Directory;
 use oat\oatbox\filesystem\FileSystemService;
 use oat\tao\model\taskQueue\QueueDispatcherInterface;
+use oat\tao\model\taskQueue\Task\FilesystemAwareTrait;
 use oat\taoOutcomeUi\model\ResultsService;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
@@ -36,6 +37,7 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
 {
     use OntologyAwareTrait;
     use ServiceLocatorAwareTrait;
+    use FilesystemAwareTrait;
 
     /**
      * @var \core_kernel_classes_Resource|string
@@ -196,11 +198,10 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
 
         if (file_exists($tmpZipPath)) {
             $finaleName = is_null($destination)
-                ? $this->saveToStorage($tmpZipPath)
+                ? $this->saveFileToStorage($tmpZipPath, $this->getFileName())
                 : $this->saveToLocal($tmpZipPath, $destination);
 
-            // delete temp files and dir
-            unlink($tmpZipPath);
+            // empty the temp dir
             if (\helpers_File::emptyDirectory($this->tmpDir)) {
                 rmdir($this->tmpDir);
             }
@@ -226,34 +227,12 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
     }
 
     /**
-     * @param string $tmpZipPath
-     * @return string
-     * @throws \common_Exception
-     */
-    private function saveToStorage($tmpZipPath)
-    {
-        /** @var Directory $queueStorage */
-        $queueStorage = $this->getServiceLocator()
-            ->get(FileSystemService::SERVICE_ID)
-            ->getDirectory(QueueDispatcherInterface::FILE_SYSTEM_ID);
-
-        $file = $queueStorage->getFile($this->getFileName());
-
-        $stream = fopen($tmpZipPath, 'r');
-
-        $file->put($stream);
-
-        fclose($stream);
-
-        return $file->getPrefix();
-    }
-
-    /**
      * @return string
      */
     private function getFileName()
     {
-        return strtolower(\tao_helpers_Display::textCleaner($this->deliveryClass->getLabel(), '*'))
+        return 'results_export_'
+            .strtolower(\tao_helpers_Display::textCleaner($this->deliveryClass->getLabel(), '*'))
             .'_'
             .\tao_helpers_Uri::getUniqueId($this->deliveryClass->getUri())
             .'_'
@@ -288,5 +267,14 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
                 $this->exportIntoFolder($subClass, $newDestination);
             }
         }
+    }
+
+    /**
+     * @see FilesystemAwareTrait::getFileSystemService()
+     */
+    protected function getFileSystemService()
+    {
+        return $this->getServiceLocator()
+            ->get(FileSystemService::SERVICE_ID);
     }
 }

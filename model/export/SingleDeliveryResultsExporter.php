@@ -21,10 +21,9 @@
 namespace oat\taoOutcomeUi\model\export;
 
 use oat\generis\model\OntologyAwareTrait;
-use oat\oatbox\filesystem\Directory;
 use oat\oatbox\filesystem\FileSystemService;
 use oat\tao\model\export\implementation\CsvExporter;
-use oat\tao\model\taskQueue\QueueDispatcherInterface;
+use oat\tao\model\taskQueue\Task\FilesystemAwareTrait;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\DeliveryExecutionColumn;
@@ -41,6 +40,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
 {
     use OntologyAwareTrait;
     use ServiceLocatorAwareTrait;
+    use FilesystemAwareTrait;
 
     /**
      * @var \core_kernel_classes_Resource
@@ -255,7 +255,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
         unset($columnNames, $data, $result);
 
         return is_null($destination)
-            ? $this->saveToStorage($exporter)
+            ? $this->saveStringToStorage($exporter->export(true, false), $this->getFileName())
             : $this->saveToLocal($exporter, $destination);
     }
 
@@ -275,32 +275,12 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
     }
 
     /**
-     * @param CsvExporter $exporter
-     * @return string
-     * @throws \League\Flysystem\FileExistsException
-     * @throws \common_Exception
-     * @throws \common_exception_InvalidArgumentType
-     */
-    private function saveToStorage($exporter)
-    {
-        /** @var Directory $queueStorage */
-        $queueStorage = $this->getServiceLocator()
-            ->get(FileSystemService::SERVICE_ID)
-            ->getDirectory(QueueDispatcherInterface::FILE_SYSTEM_ID);
-
-        $file = $queueStorage->getFile($this->getFileName());
-
-        $file->write($exporter->export(true, false));
-
-        return $file->getPrefix();
-    }
-
-    /**
      * @return string
      */
     private function getFileName()
     {
-        return strtolower(\tao_helpers_Display::textCleaner($this->delivery->getLabel(), '*'))
+        return 'results_export_'
+            .strtolower(\tao_helpers_Display::textCleaner($this->delivery->getLabel(), '*'))
             .'_'
             .\tao_helpers_Uri::getUniqueId($this->delivery->getUri())
             .'_'
@@ -366,5 +346,14 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
         }
         
         return $columns;
+    }
+
+    /**
+     * @see FilesystemAwareTrait::getFileSystemService()
+     */
+    protected function getFileSystemService()
+    {
+        return $this->getServiceLocator()
+            ->get(FileSystemService::SERVICE_ID);
     }
 }
