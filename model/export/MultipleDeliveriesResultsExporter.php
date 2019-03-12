@@ -63,6 +63,11 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
     private $tmpDir;
 
     /**
+     * @var array
+     */
+    private $filters = [];
+
+    /**
      * MultipleDeliveriesResultsExporter constructor.
      *
      * @param string|\core_kernel_classes_Class $deliveryClass
@@ -137,6 +142,16 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
     public function getVariableToExport()
     {
         return $this->variableToExport;
+    }
+
+    public function setFiltersToExport($filters)
+    {
+        $this->filters = $filters;
+    }
+
+    public function getFiltersToExport($filters)
+    {
+        return $this->filters;
     }
 
     /**

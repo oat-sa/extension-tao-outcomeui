@@ -57,6 +57,17 @@ interface ResultsExporterInterface extends ServiceLocatorAwareInterface
     public function getVariableToExport();
 
     /**
+     * @param array $filters
+     * @return ResultsExporterInterface
+     */
+    public function setFiltersToExport($filters);
+
+    /**
+     * @return array
+     */
+    public function getFiltersToExport();
+
+    /**
      * @param array $storageOptions
      * @see \oat\taoResultServer\models\classes\ResultManagement::getResultByDelivery()
      * @return ResultsExporterInterface

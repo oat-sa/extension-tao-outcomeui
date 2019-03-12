@@ -28,8 +28,9 @@ define([
     'ui/feedback',
     'core/taskQueue/taskQueue',
     'ui/taskQueueButton/standardButton',
+    'ui/dateRange',
     'ui/datatable'
-], function($, _, __, module, urlUtil, feedback, taskQueue, standardTaskButtonFactory) {
+], function($, _, __, module, urlUtil, feedback, taskQueue, standardTaskButtonFactory, dateRangeFactory) {
     'use strict';
 
     /**
@@ -42,16 +43,49 @@ define([
          */
         start : function(){
 
-           var conf = module.config();
-           var $container = $(".result-table");
-           var $filterField = $('.result-filter', $container);
-           var $tableContainer = $('.result-table-container', $container);
-           var filter = conf.filter || 'lastSubmitted';
-           var uri = conf.uri || '';
+            var conf = module.config();
+            var $container = $(".result-table");
+            var $filterField = $('.result-filter', $container);
+            var $filterButtonsContainer = $('.filter-buttons', $container);
+            var $tableContainer = $('.result-table-container', $container);
+            var $dateStartRangeContainer = $('.de-start-range', $container);
+            var $dateEndRangeContainer = $('.de-end-range', $container);
+            var filter = conf.filter || 'lastSubmitted';
+            var deStartFrom = '';
+            var deStartTo = '';
+            var deEndFrom = '';
+            var deEndTo = '';
+            var uri = conf.uri || '';
             //keep columns through calls
             var columns = [];
             var groups = {};
-            var $actionBar = $container.find('.actions');
+
+            var filterDeStartRange = dateRangeFactory({
+                pickerType: 'datetimepicker',
+                pickerConfig: {
+                    // configurations from lib/jquery.timePicker.js
+                    dateFormat: 'yy-mm-dd',
+                    timeFormat: 'HH:mm:ss'
+                }
+            })
+                .on('render', function () {
+                    $('button', $dateStartRangeContainer).hide();
+                })
+                .render($dateStartRangeContainer);
+
+            var filterDeEndRange = dateRangeFactory({
+                pickerType: 'datetimepicker',
+                pickerConfig: {
+                    // configurations from lib/jquery.timePicker.js
+                    dateFormat: 'yy-mm-dd',
+                    timeFormat: 'HH:mm:ss'
+                }
+            })
+                .on('render', function () {
+                    $('button', $dateEndRangeContainer).hide();
+                })
+                .render($dateEndRangeContainer);
+
 
             /**
              * Load columns to rebuild the datatable dynamically
@@ -114,11 +148,22 @@ define([
                         }
                     })
                     .datatable({
-                        url : urlUtil.route('feedDataTable', 'ResultTable', 'taoOutcomeUi', {filter : filter}),
+                        url : urlUtil.route('feedDataTable', 'ResultTable', 'taoOutcomeUi',
+                            {filter : filter, startfrom: deStartFrom, startto: deStartTo, endfrom: deEndFrom, endto: deEndTo}),
                         querytype : 'POST',
                         params: {columns: JSON.stringify(columns), '_search': false, uri: uri},
                         model :  model
                     });
+            };
+
+            var filterChanged = function filterChanged () {
+                filter = $filterField.select2('val');
+                deStartFrom = filterDeStartRange.getStart();
+                deStartTo = filterDeStartRange.getEnd();
+                deEndFrom = filterDeEndRange.getStart();
+                deEndTo = filterDeEndRange.getEnd();
+                //rebuild the current table
+                _buildTable();
             };
 
             //group button to toggle them
@@ -152,11 +197,10 @@ define([
                 minimumResultsForSearch : -1
             }).select2('val', filter);
 
-            $('.result-filter-btn', $container).click(function() {
-                filter = $filterField.select2('val');
-                //rebuild the current table
-                _buildTable();
-            });
+            $('.result-filter-btn', $container)
+                .click(function() {
+                    filterChanged();
+                });
 
             //instantiate the task creation button
             standardTaskButtonFactory({
@@ -167,15 +211,20 @@ define([
                 taskQueue : taskQueue,
                 taskCreationUrl : urlUtil.route('export', 'ResultTable', 'taoOutcomeUi'),
                 taskCreationData : function getTaskRequestData(){
+                    filterChanged();
                     return {
                         filter: filter,
                         columns: JSON.stringify(columns),
-                        uri: uri
+                        uri: uri,
+                        startfrom: deStartFrom,
+                        startto: deStartTo,
+                        endfrom: deEndFrom,
+                        endto: deEndTo
                     };
                 }
             }).on('error', function(err){
                 feedback().error(err);
-            }).render($actionBar);
+            }).render($filterButtonsContainer);
         }
     };
     return resulTableController;

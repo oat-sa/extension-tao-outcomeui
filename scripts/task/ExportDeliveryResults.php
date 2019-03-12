@@ -69,6 +69,7 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
     private $columns = [];
     private $submittedVersion;
     private $destination;
+    private $filters = [];
 
     /**
      * @param array $params
@@ -87,6 +88,7 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
 
             $fileName = $this->getExporterService()
                 ->setColumnsToExport($this->columns)
+                ->setFiltersToExport($this->filters)
                 ->export($this->destination);
 
             $msg = $fileName
@@ -152,6 +154,10 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
             if (isset($params[2])) {
                 $this->submittedVersion = $params[2];
             }
+
+            if (isset($params[2])) {
+                $this->filters = $params[3];
+            }
         } else {
             // if the task is called from CLI
 
@@ -174,7 +180,7 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
 
                         if (in_array(self::COLUMNS_CLI_VALUE_ALL, $columns)) {
                             // do nothing because SingleDeliveryResultsExporter will use all columns by default if no columns specified
-                            continue;
+                            break;
                         }
 
                         foreach ($columns as $column) {
@@ -215,6 +221,12 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
                             throw new \InvalidArgumentException('Directory "'. $value .'" not writable.');
                         }
                         $this->destination = $value;
+                        break;
+                    case '--start-from':
+                        $this->filters['startfrom'] = $value;
+                        break;
+                    case '--start-to':
+                        $this->filters['startto'] = $value;
                         break;
                 }
             }
