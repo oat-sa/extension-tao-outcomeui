@@ -3,7 +3,9 @@ use oat\tao\helpers\Template;
 use oat\taoOutcomeUi\model\ResultsService;
 ?>
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoOutcomeUi/views/css/result.css" />
-<div class="result-table flex-container-full">
+<link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoOutcomeUi/views/css/resultTable.css" />
+
+<div class="result-table">
     <div class="grid-row clearfix">
         <div class="col-12">
             <button class="btn-info small hidden" data-group="testtaker" data-action="add" data-url="<?=_url('getTestTakerColumns')?>">
@@ -30,16 +32,67 @@ use oat\taoOutcomeUi\model\ResultsService;
             <button class="btn-error small hidden" data-group="response" data-action="remove" data-url="<?=_url('getResponseColumns')?>"  >
                 <span class="icon-bin"></span><?=__('Remove All responses')?>
             </button>
+            <button class="btn-info small" data-group="deliveryexecution" data-action="add" data-url="<?=_url('getDeliveryExecutionColumns')?>">
+                <span class="icon-add"></span><?=__('Add Delivery Execution')?>
+            </button>
+            <button class="btn-error small hidden" data-group="deliveryexecution" data-action="remove" data-url="<?=_url('getDeliveryExecutionColumns')?>" >
+                <span class="icon-bin"></span><?=__('Remove Delivery Execution')?>
+            </button>
         </div>
     </div>
-    <div class="grid-row">
+    <header class="flex-container-full">
+        <h3><?=__('Filters')?></h3>
+    </header>
+    <div class="grid-row filters-container">
         <div class="col-12">
-            <select class="result-filter">
-                <option  value="all"><?=__('All collected variables')?></option>
-                <option  value="<?= ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED ?>"><?=__('First submitted variables only')?></option>
-                <option  value="<?= ResultsService::VARIABLES_FILTER_LAST_SUBMITTED ?>"><?=__('Last submitted variables only')?></option>
-            </select>
-            <button class="btn-info small result-filter-btn"><?=__('Filter');?></button>
+            <div class="grid-row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <b><?=__('Start Delivery Execution')?>:</b>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 de-start-range"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <b><?=__('End Delivery Execution')?>:</b>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 de-end-range"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-row">
+                <div class="col-12">
+                    <div class="row">
+                        <div class="col-12">
+                            <b><?=__('Variables')?>:</b>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <select class="result-filter">
+                                <option  value="all"><?=__('All collected variables')?></option>
+                                <option  value="<?= ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED ?>"><?=__('First submitted variables only')?></option>
+                                <option  value="<?= ResultsService::VARIABLES_FILTER_LAST_SUBMITTED ?>"><?=__('Last submitted variables only')?></option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="grid-row filter-buttons">
+                <button class="btn-info small result-filter-btn">
+                    <span class="icon-preview"></span>
+                    <?=__('Preview');?>
+                </button>
+            </div>
         </div>
     </div>
     <div class="result-table-container"></div>

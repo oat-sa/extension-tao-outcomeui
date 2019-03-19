@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TAO 3.3.0-sprint91\n"
-"PO-Revision-Date: 2019-03-01T09:19:34\n"
+"PO-Revision-Date: 2019-03-15T09:30:05\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: nl-NL\n"
@@ -24,6 +24,9 @@ msgid "Add All responses"
 msgstr "Voeg alle antwoorden toe"
 
 msgid "Add Delivery"
+msgstr ""
+
+msgid "Add Delivery Execution"
 msgstr ""
 
 msgid "Add Test Taker"
@@ -65,6 +68,9 @@ msgstr ""
 msgid "Email:"
 msgstr "E-mail:"
 
+msgid "End Delivery Execution"
+msgstr ""
+
 msgid "Error"
 msgstr "Fout"
 
@@ -81,6 +87,9 @@ msgstr "Export tabel"
 
 msgid "Filter"
 msgstr "Filter"
+
+msgid "Filters"
+msgstr ""
 
 msgid "First Name:"
 msgstr "Voornaam:"
@@ -116,6 +125,9 @@ msgstr "Er zijn nog geen toetsen afgenomen. Zodra een kandidaat een toets aflegt
 msgid "Please confirm deletion"
 msgstr "Bevestig a.u.b. de verwijdering"
 
+msgid "Preview"
+msgstr ""
+
 msgid "Remove All grades"
 msgstr "Verwijder alle uitslagen"
 
@@ -123,6 +135,9 @@ msgid "Remove All responses"
 msgstr "Verwijder alle antwoorden"
 
 msgid "Remove Delivery"
+msgstr ""
+
+msgid "Remove Delivery Execution"
 msgstr ""
 
 msgid "Responses"
@@ -139,11 +154,11 @@ msgstr "Resultaten"
 msgid "Results library"
 msgstr "Resultaat bank"
 
-#, tao-public
-msgid "Results Monitoring"
+msgid "Results monitoring"
 msgstr ""
 
-msgid "Results monitoring"
+#, tao-public
+msgid "Results Monitoring"
 msgstr ""
 
 msgid "Review"
@@ -158,13 +173,16 @@ msgstr ""
 msgid "Something went wrong..."
 msgstr ""
 
+msgid "Start Delivery Execution"
+msgstr ""
+
 msgid "Start Time"
 msgstr ""
 
-msgid "Test taker"
+msgid "Test Taker"
 msgstr "Kandidaat"
 
-msgid "Test Taker"
+msgid "Test taker"
 msgstr "Kandidaat"
 
 msgid "Test Variables"
@@ -188,6 +206,9 @@ msgstr ""
 
 msgid "unknown"
 msgstr "onbekend"
+
+msgid "Variables"
+msgstr ""
 
 msgid "View"
 msgstr ""

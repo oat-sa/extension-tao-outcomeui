@@ -38,6 +38,7 @@ use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoItems\model\ItemCompilerIndex;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
+use oat\taoOutcomeUi\model\table\DeliveryExecutionColumn;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
 use \common_Exception;
@@ -71,6 +72,8 @@ class ResultsService extends tao_models_classes_ClassService implements ServiceL
     const VARIABLES_FILTER_ALL = 'all';
 
     const PERSISTENCE_CACHE_KEY = 'resultCache';
+
+    const PERIODS = ['startfrom', 'startto', 'endfrom', 'endto'];
 
     /**
      *
@@ -952,19 +955,25 @@ class ResultsService extends tao_models_classes_ClassService implements ServiceL
      */
     private function getColumnId(\tao_models_classes_table_Column $column)
     {
-        return $column instanceof ContextTypePropertyColumn
-            ? $column->getProperty()->getUri() .'_'. $column->getContextType()
-            : $column->getContextIdentifier() .'_'. $column->getIdentifier();
+        if ($column instanceof ContextTypePropertyColumn) {
+            $id = $column->getProperty()->getUri() .'_'. $column->getContextType();
+        } else {
+            $id = $column->getContextIdentifier() .'_'. $column->getIdentifier();
+        }
+
+        return $id;
     }
 
     /**
      * @param core_kernel_classes_Resource $delivery
      * @param                              $columns - columns to be exported
      * @param                              $filter  'lastSubmitted' or 'firstSubmitted'
-     * @param array                        $storageOptions
+     * @param $storageOptions
+     * @param array $filters
      * @return array
+     * @throws common_exception_Error
      */
-    public function getResultsByDelivery(\core_kernel_classes_Resource $delivery, $columns, $filter, array $storageOptions = [])
+    public function getResultsByDelivery(\core_kernel_classes_Resource $delivery, $columns, $filter, array $storageOptions = [], array $filters = [])
     {
         $rows = array();
 
@@ -1049,12 +1058,73 @@ class ResultsService extends tao_models_classes_ClassService implements ServiceL
                     $cellData[$cellKey] = [self::filterCellData(implode(' ', $values), $filter)];
                 }
             }
-            $rows[] = array(
-                'id' => $result,
-                'cell' => $cellData
-            );
+            if ($this->meetFilters($cellData, $filters)) {
+                $this->convertDates($cellData);
+                $rows[] = array(
+                    'id' => $result,
+                    'cell' => $cellData
+                );
+            }
         }
+        $this->sortByStartDate($rows);
         return $rows;
+    }
+
+    private function sortByStartDate(&$data)
+    {
+        usort($data, function ($a, $b) {
+            $bDate = current($b['cell']['delivery_execution_started_at']);
+            $aDate = current($a['cell']['delivery_execution_started_at']);
+            $startB = $bDate ? strtotime($bDate) : 0;
+            $startA = $aDate ? strtotime($aDate) : 0;
+            return $startB - $startA;
+        });
+       $data = array_reverse($data);
+    }
+
+    private function convertDates(&$data)
+    {
+        $sd = current($data['delivery_execution_started_at']);
+        $data['delivery_execution_started_at'][0] = $sd ? \tao_helpers_Date::displayeDate($sd) : '';
+        $ed = current($data['delivery_execution_finished_at']);
+        $data['delivery_execution_finished_at'][0] = $ed ? \tao_helpers_Date::displayeDate($ed) : '';
+    }
+
+    /**
+     * Check that data is apply to these filter params
+     * @param $row
+     * @param array $filters
+     * @return bool
+     */
+    private function meetFilters($row, array $filters)
+    {
+        $matched = true;
+        if (count($filters) && count(array_diff(self::PERIODS, array_keys($filters)))) {
+
+            $startDate = current($row['delivery_execution_started_at']);
+            $startTime = $startDate ? \tao_helpers_Date::getTimeStamp($startDate) : 0;
+            $endDate = current($row['delivery_execution_finished_at']);
+            $endTime = $endDate ? \tao_helpers_Date::getTimeStamp($endDate) : 0;
+
+            if ($startTime) {
+                if ($matched && array_key_exists('startfrom', $filters) && $filters['startfrom']) {
+                    $matched = $startTime >= $filters['startfrom'];
+                }
+                if ($matched && array_key_exists('startto', $filters) && $filters['startto']) {
+                    $matched = $startTime <= $filters['startto'];
+                }
+            }
+
+            if ($endTime && $matched) {
+                if ($matched && array_key_exists('endfrom', $filters) && $filters['endfrom']) {
+                    $matched = $endTime >= $filters['endfrom'];
+                }
+                if ($matched && array_key_exists('endto', $filters) && $filters['endto']) {
+                    $matched = $endTime <= $filters['endto'];
+                }
+            }
+        }
+        return $matched;
     }
 
     /**
