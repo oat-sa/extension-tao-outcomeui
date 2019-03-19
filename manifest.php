@@ -45,7 +45,7 @@ return [
         'taoResultServer' => '>=7.0.0',
         'taoItems'        => '>=6.0.0',
         'taoDeliveryRdf'  => '>=6.0.0',
-        'tao'             => '>=21.15.0'
+        'tao'             => '>=30.0.0'
     ],
     'install'        => [
         'php' => [
