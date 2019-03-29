@@ -19,10 +19,11 @@
  * @author Jean-Sébastien Conan <jean-sebastien@taotesting.com>
  */
 define([
+
     'jquery',
     'core/promise',
     'taoOutcomeUi/component/results/list'
-], function ($, Promise, resultsListFactory) {
+], function($, Promise, resultsListFactory) {
     'use strict';
 
     var dataUrl = '../../taoOutcomeUi/views/js/test/component/results/list/data.json';
@@ -37,11 +38,9 @@ define([
         {title: 'getActions'}
     ];
 
-
     QUnit.module('resultsList');
 
-
-    QUnit.test('module', function (assert) {
+    QUnit.test('module', function(assert) {
         var config = {
             classUri: 'http://tao.dev/class#123',
             dataUrl: dataUrl,
@@ -49,17 +48,16 @@ define([
         };
         var plugins = [];
 
-        QUnit.expect(3);
+        assert.expect(3);
 
-        assert.equal(typeof resultsListFactory, 'function', "The resultsListFactory module exposes a function");
-        assert.equal(typeof resultsListFactory(config, plugins), 'object', "The resultsListFactory factory produces an object");
-        assert.notStrictEqual(resultsListFactory(config, plugins), resultsListFactory(config, plugins), "The resultsListFactory factory provides a different object on each call");
+        assert.equal(typeof resultsListFactory, 'function', 'The resultsListFactory module exposes a function');
+        assert.equal(typeof resultsListFactory(config, plugins), 'object', 'The resultsListFactory factory produces an object');
+        assert.notStrictEqual(resultsListFactory(config, plugins), resultsListFactory(config, plugins), 'The resultsListFactory factory provides a different object on each call');
     });
 
-
     QUnit
-        .cases(resultsListApi)
-        .test('instance API ', function (data, assert) {
+        .cases.init(resultsListApi)
+        .test('instance API ', function(data, assert) {
             var config = {
                 classUri: 'http://tao.dev/class#123',
                 dataUrl: dataUrl,
@@ -68,11 +66,10 @@ define([
             var plugins = [];
             var instance = resultsListFactory(config, plugins);
 
-            QUnit.expect(1);
+            assert.expect(1);
 
             assert.equal(typeof instance[data.title], 'function', 'The resultsListFactory instance exposes a "' + data.title + '" function');
         });
-
 
     QUnit.test('resultsList#error', function(assert) {
         var config = {
@@ -82,7 +79,7 @@ define([
         };
         var plugins = [];
 
-        QUnit.expect(6);
+        assert.expect(6);
 
         assert.throws(function() {
             resultsListFactory();
@@ -117,8 +114,8 @@ define([
         }, 'Missing model');
     });
 
-
-    QUnit.asyncTest('resultsList.init', function(assert) {
+    QUnit.test('resultsList.init', function(assert) {
+        var ready = assert.async();
         var config = {
             classUri: 'http://tao.dev/class#123',
             dataUrl: dataUrl,
@@ -131,21 +128,21 @@ define([
                 },
                 init: function init() {
                     assert.ok(true, 'The plugin has been initialized');
-                    QUnit.start();
+                    ready();
                 }
             };
         }];
         var instance;
 
-        QUnit.expect(3);
+        assert.expect(3);
 
         instance = resultsListFactory(config, plugins).render();
         assert.deepEqual(instance.getConfig(), config, 'The config should be accessible');
         assert.equal(instance.getClassUri(), config.classUri, 'The class URI should be accessible');
     });
 
-
-    QUnit.asyncTest('resultsList.init#error', function(assert) {
+    QUnit.test('resultsList.init#error', function(assert) {
+        var ready = assert.async();
         var config = {
             classUri: 'http://tao.dev/class#123',
             dataUrl: dataUrl,
@@ -162,22 +159,22 @@ define([
                 }
             };
         }];
-        QUnit.expect(2);
+        assert.expect(2);
 
         resultsListFactory(config, plugins)
             .on('init', function() {
                 assert.ok(false, 'The instance should not be initialized');
-                QUnit.start();
+                ready();
             })
             .on('error', function() {
                 assert.ok(true, 'The plugin has broken the init');
-                QUnit.start();
+                ready();
             })
             .render();
     });
 
-
-    QUnit.asyncTest('resultsList.addAction', function(assert) {
+    QUnit.test('resultsList.addAction', function(assert) {
+        var ready = assert.async();
         var config = {
             classUri: 'http://tao.dev/class#123',
             dataUrl: dataUrl,
@@ -213,20 +210,20 @@ define([
 
                     assert.deepEqual(instance.getActions(), actions, 'The actions have been registered');
                     assert.ok(true, 'The instance has been initialized');
-                    QUnit.start();
+                    ready();
                 }
             };
         }];
 
-        QUnit.expect(3);
+        assert.expect(3);
         resultsListFactory(config, plugins).render();
     });
 
-
-    QUnit.asyncTest('resultsList.render', function(assert) {
+    QUnit.test('resultsList.render', function(assert) {
+        var ready = assert.async();
         var $container = $('#fixture-1');
-        var expectedId = "http:\/\/tao.dev\/tao.rdf#i14938999025623262";
-        var expectedName = "billy.laporte";
+        var expectedId = 'http:\/\/tao.dev\/tao.rdf#i14938999025623262';
+        var expectedName = 'billy.laporte';
         var config = {
             classUri: 'http://tao.dev/class#123',
             dataUrl: dataUrl,
@@ -245,7 +242,7 @@ define([
                     instance.addAction('action1', function action1(id) {
                         assert.ok(true, 'The action has been activated');
                         assert.equal(id, expectedId, 'The right ID has been sent');
-                        QUnit.start();
+                        ready();
                     });
                     assert.ok(true, 'The plugin has been initialized');
                 },
@@ -254,7 +251,7 @@ define([
                 }
             };
         }];
-        QUnit.expect(12);
+        assert.expect(12);
 
         assert.equal($container.children().length, 0, 'There is nothing in the container');
 
@@ -274,8 +271,8 @@ define([
             .render($container);
     });
 
-
-    QUnit.asyncTest('resultsList.render#error', function(assert) {
+    QUnit.test('resultsList.render#error', function(assert) {
+        var ready = assert.async();
         var config = {
             classUri: 'http://tao.dev/class#123',
             dataUrl: dataUrl,
@@ -299,26 +296,26 @@ define([
                 }
             };
         }];
-        QUnit.expect(3);
+        assert.expect(3);
 
         resultsListFactory(config, plugins)
             .on('render', function() {
                 assert.ok(false, 'The instance should not be rendered');
-                QUnit.start();
+                ready();
             })
             .on('loaded', function() {
-                assert.ok(true, 'The data should not be loaded');
-                QUnit.start();
+                assert.ok(false, 'The data should not be loaded');
+                ready();
             })
             .on('error', function() {
                 assert.ok(true, 'The plugin has broken the render');
-                QUnit.start();
+                ready();
             })
             .render($container);
     });
 
-
-    QUnit.asyncTest('resultsList.refresh', function(assert) {
+    QUnit.test('resultsList.refresh', function(assert) {
+        var ready = assert.async();
         var config = {
             classUri: 'http://tao.dev/class#123',
             dataUrl: dataUrl,
@@ -344,7 +341,7 @@ define([
         }];
         var loads = 0;
 
-        QUnit.expect(5);
+        assert.expect(5);
 
         resultsListFactory(config, plugins)
             .on('render', function() {
@@ -353,7 +350,7 @@ define([
             .on('loaded', function() {
                 assert.ok(true, 'The data has been loaded');
                 if (++loads === 2) {
-                    QUnit.start();
+                    ready();
                 } else {
                     this.refresh();
                 }
@@ -361,8 +358,8 @@ define([
             .render($container);
     });
 
-
-    QUnit.asyncTest('resultsList.destroy', function(assert) {
+    QUnit.test('resultsList.destroy', function(assert) {
+        var ready = assert.async();
         var config = {
             classUri: 'http://tao.dev/class#123',
             dataUrl: dataUrl,
@@ -388,7 +385,7 @@ define([
                 }
             };
         }];
-        QUnit.expect(9);
+        assert.expect(9);
 
         assert.equal($container.children().length, 0, 'There is nothing in the container');
 
@@ -404,13 +401,13 @@ define([
             .on('destroy', function() {
                 assert.ok(true, 'The instance has been destroyed');
                 assert.equal($container.children().length, 0, 'There is nothing in the container');
-                QUnit.start();
+                ready();
             })
             .render($container);
     });
 
-
-    QUnit.asyncTest('resultsList.destroy#error', function(assert) {
+    QUnit.test('resultsList.destroy#error', function(assert) {
+        var ready = assert.async();
         var config = {
             classUri: 'http://tao.dev/class#123',
             dataUrl: dataUrl,
@@ -437,7 +434,7 @@ define([
                 }
             };
         }];
-        QUnit.expect(9);
+        assert.expect(9);
 
         assert.equal($container.children().length, 0, 'There is nothing in the container');
 
@@ -452,7 +449,7 @@ define([
             })
             .on('error', function() {
                 assert.ok(true, 'An error should be triggered');
-                QUnit.start();
+                ready();
             })
             .on('destroy', function() {
                 assert.ok(true, 'The instance should be destroyed');
