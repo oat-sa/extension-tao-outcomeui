@@ -571,8 +571,23 @@ class Results extends \tao_actions_CommonModule
             }
             $this->returnJson($this->getStateReport($deliveryExecution));
 
-        }catch (\Exception $e){
-
+        }catch (\common_exception_MissingParameter $e){
+                return $this->returnJson([
+                    'success'=>false,
+                    'errorCode' => 3,
+                    'errorMsg'=>$e->getMessage()
+                ]);
+        }catch (\common_exception_BadRequest $e) {
+            return $this->returnJson([
+                'success' => false,
+                'errorCode' => 2,
+                'errorMsg' => $e->getMessage()
+            ]);
+        }catch (\Exception $e) {
+            return $this->returnJson([
+                'success' => false,
+                'errorMsg' => $e->getMessage()
+            ]);
         }
     }
 
