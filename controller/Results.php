@@ -554,7 +554,8 @@ class Results extends \tao_actions_CommonModule
         return $this->returnTaskJson($exporter->createExportTask());
     }
 
-    public function state(){
+    public function state()
+    {
         $test =null;
         try{
             if (!$this->isRequestGet()) {
@@ -572,22 +573,13 @@ class Results extends \tao_actions_CommonModule
             $this->returnJson($this->getStateReport($deliveryExecution));
 
         }catch (\common_exception_MissingParameter $e){
-                return $this->returnJson([
-                    'success'=>false,
-                    'errorCode' => 3,
-                    'errorMsg'=>$e->getMessage()
-                ]);
+                 $this->returnJson($this->generateErrorResponse(3, $e->getMessage()));
         }catch (\common_exception_BadRequest $e) {
-            return $this->returnJson([
-                'success' => false,
-                'errorCode' => 2,
-                'errorMsg' => $e->getMessage()
-            ]);
+            $this->returnJson($this->generateErrorResponse(2, $e->getMessage()));
+        }catch (\common_exception_NotFound $e){
+            $this->returnJson($this->generateErrorResponse(5, $e->getMessage()));
         }catch (\Exception $e) {
-            return $this->returnJson([
-                'success' => false,
-                'errorMsg' => $e->getMessage()
-            ]);
+            $this->returnJson($this->generateErrorResponse('', $e->getMessage()));
         }
     }
 
@@ -610,6 +602,14 @@ class Results extends \tao_actions_CommonModule
             'state' => $state->getUri(),
             'scoreReport' => $scoreReport,
             'scores' => $scores,
+        ];
+    }
+
+    protected function generateErrorResponse( $errorCode='', $errorMsg){
+       return [
+            'success'=>false,
+            'errorCode' => $errorCode,
+            'errorMsg'=>$errorMsg
         ];
     }
 }
