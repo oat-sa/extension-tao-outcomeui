@@ -556,7 +556,6 @@ class Results extends \tao_actions_CommonModule
 
     public function state()
     {
-        $test =null;
         try{
             if (!$this->isRequestGet()) {
                 throw new \common_exception_BadRequest(sprintf('Bad Request Method: %s.', $this->getRequestMethod()));
