@@ -31,6 +31,7 @@ use oat\oatbox\event\EventManager;
 use oat\tao\model\accessControl\AclProxy;
 use oat\tao\model\plugins\PluginModule;
 use oat\tao\model\taskQueue\TaskLogActionTrait;
+use oat\taoDelivery\model\execution\DeliveryExecution;
 use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
@@ -43,6 +44,7 @@ use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 use oat\taoResultServer\models\classes\NoResultStorage;
 use oat\taoResultServer\models\classes\NoResultStorageException;
 use oat\taoResultServer\models\classes\QtiResultsService;
+use Renderer;
 use \tao_helpers_Request;
 use \tao_helpers_Uri;
 use oat\taoOutcomeUi\model\ResultsService;
@@ -50,6 +52,7 @@ use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\tao\helpers\UserHelper;
 use oat\tao\model\datatable\implementation\DatatableRequest;
+use oat\tao\helpers\Template;
 
 /**
  * Results Controller provide actions performed from url resolution
@@ -549,5 +552,49 @@ class Results extends \tao_actions_CommonModule
         $exporter = $this->propagate(new ResultsExporter($resourceUri, ResultsService::singleton()));
 
         return $this->returnTaskJson($exporter->createExportTask());
+    }
+
+    public function state(){
+        $test =null;
+        try{
+            if (!$this->isRequestGet()) {
+                throw new \common_exception_BadRequest(sprintf('Bad Request Method: %s.', $this->getRequestMethod()));
+            }
+
+            if(!$this->hasRequestParameter('deliveryExecution')){
+                throw  new \common_exception_MissingParameter('Missing required parameter');
+            }
+            $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($this->getRequestParameter('deliveryExecution'));
+
+            if (!$deliveryExecution->exists()) {
+                throw new \common_exception_NotFound('Delivery Execution not found');
+            }
+            $this->returnJson($this->getStateReport($deliveryExecution));
+
+        }catch (\Exception $e){
+
+        }
+    }
+
+    protected function getStateReport($deliveryExecution)
+    {
+        $state =  $deliveryExecution->getState();
+        $resultService = ResultsService::singleton();
+        $scores =$resultService->getScores($deliveryExecution->getIdentifier());
+        $scoreReport = null;
+        if ($state->getUri() === DeliveryExecution::STATE_FINISHED) {
+            $renderer = new Renderer();
+            $template = Template::getTemplate('stateReport.tpl', 'taoOutcomeUi');
+            $renderer->setData('scores', $scores);
+            $renderer->setTemplate($template);
+            $scoreReport = $renderer->render();
+        }
+
+        return [
+            'success' => true,
+            'state' => $state->getUri(),
+            'scoreReport' => $scoreReport,
+            'scores' => $scores,
+        ];
     }
 }
