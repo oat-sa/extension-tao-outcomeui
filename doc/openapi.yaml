@@ -1,0 +1,117 @@
+openapi: 3.0.1
+info:
+  title:  DeliveryExecution state
+  description: |-
+    A rest interface to obtain the status and scores of a delivery execution.
+     `NOTE` For getting access to this endpoint you need to use a token of a consumer who has the role http://www.tao.lu/Ontologies/btRest.rdf#ApiServerUser in the host server. 
+  version: 1.0.0
+servers:
+- url: 'https://rootdomain.com/'
+- url: 'http://rootdomain.com/'
+tags:
+- name: store
+  description: Get information about delivery execution
+paths:
+  /taoOutcomeUi/resultApi/state:
+    get:
+      security:
+      - tao_auth: []
+      tags:
+      - store
+      summary: Check delivery execution status
+      description:  Returns the status and the scores by delivery execution id
+      operationId: getStatusById
+      parameters:
+      - name: deliveryExecutionID
+        in: query
+        description: 'Id of delivery execution '
+        required: true
+        schema:
+          type: string
+      - name: Authorization
+        in: header
+        description: access_token
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: successful operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/State'
+
+        '400':
+          description: Invalid status value
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: false
+                  errorCode:
+                    type: string
+                    default: '400'
+                  errorMsg:
+                    type: string
+
+        '401':
+          description: You are not authorized to access this functionality
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    default: false
+                  errorCode:
+                    type: string
+                    default: '401'
+                  errorMsg:
+                    type: string
+components:
+  schemas:
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          default: false
+        errorCode:
+          type: integer
+          enum: [2,3,4,5]
+          description: >
+            Error code:
+             * `2` - Missing parameter deliveryExecutionID
+             * `3` - Expected parameter missing
+             * `4` - Not Found
+             * `5` - Failed to get delivery execution state
+        errorMsg:
+          type: string
+          default: "Bad request"
+    State:
+      type: object
+      properties:
+        success:
+          description: "This property can have two values: true - if operation finished successful, and false if request is wrong "
+          type: boolean
+        state:
+          description: 'State of delivery execution'
+          type: string
+        scoreReport:
+          description: 'Small report about delivery Execution in HTML format '
+          type: string
+        scores:
+          $ref: '#/components/schemas/Scores'
+    Scores:
+      type: object
+    
+  securitySchemes:
+    tao_auth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
