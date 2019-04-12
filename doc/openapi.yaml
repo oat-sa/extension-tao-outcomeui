@@ -22,7 +22,7 @@ paths:
       description:  Returns the status and the scores by delivery execution id
       operationId: getStatusById
       parameters:
-      - name: deliveryExecutionID
+      - name: deliveryExecution
         in: query
         description: 'Id of delivery execution '
         required: true
@@ -86,7 +86,7 @@ components:
           enum: [2,3,4,5]
           description: >
             Error code:
-             * `2` - Missing parameter deliveryExecutionID
+             * `2` - Missing parameter deliveryExecution
              * `3` - Expected parameter missing
              * `4` - Not Found
              * `5` - Failed to get delivery execution state
