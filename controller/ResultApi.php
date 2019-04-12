@@ -25,11 +25,10 @@ class ResultApi extends \tao_actions_RestController
                 throw new \common_exception_BadRequest(sprintf('Bad Request Method: %s.', $this->getRequestMethod()));
             }
 
-            if(!$this->hasRequestParameter('deliveryExecution')){
+            if(!$this->hasGetParameter('deliveryExecution')){
                 throw  new \common_exception_MissingParameter('Missing required parameter');
-            }
-            $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($this->getRequestParameter('deliveryExecution'));
-
+           }
+            $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($this->getGetParameter('deliveryExecution'));
             if (!$deliveryExecution->exists()) {
                 throw new \common_exception_NotFound('Delivery Execution not found');
             }
