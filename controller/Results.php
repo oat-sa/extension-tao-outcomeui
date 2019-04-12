@@ -23,7 +23,6 @@ namespace oat\taoOutcomeUi\controller;
 
 use \Exception;
 use \common_exception_BadRequest;
-use \core_kernel_classes_Resource;
 use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyAwareTrait;
 use oat\generis\model\OntologyRdfs;
@@ -31,7 +30,6 @@ use oat\oatbox\event\EventManager;
 use oat\tao\model\accessControl\AclProxy;
 use oat\tao\model\plugins\PluginModule;
 use oat\tao\model\taskQueue\TaskLogActionTrait;
-use oat\taoDelivery\model\execution\DeliveryExecution;
 use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
@@ -44,15 +42,13 @@ use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 use oat\taoResultServer\models\classes\NoResultStorage;
 use oat\taoResultServer\models\classes\NoResultStorageException;
 use oat\taoResultServer\models\classes\QtiResultsService;
-use Renderer;
-use \tao_helpers_Request;
 use \tao_helpers_Uri;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\tao\helpers\UserHelper;
 use oat\tao\model\datatable\implementation\DatatableRequest;
-use oat\tao\helpers\Template;
+
 
 /**
  * Results Controller provide actions performed from url resolution
