@@ -23,7 +23,6 @@ namespace oat\taoOutcomeUi\controller;
 
 use \Exception;
 use \common_exception_BadRequest;
-use \core_kernel_classes_Resource;
 use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyAwareTrait;
 use oat\generis\model\OntologyRdfs;
@@ -43,13 +42,13 @@ use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 use oat\taoResultServer\models\classes\NoResultStorage;
 use oat\taoResultServer\models\classes\NoResultStorageException;
 use oat\taoResultServer\models\classes\QtiResultsService;
-use \tao_helpers_Request;
 use \tao_helpers_Uri;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\tao\helpers\UserHelper;
 use oat\tao\model\datatable\implementation\DatatableRequest;
+
 
 /**
  * Results Controller provide actions performed from url resolution
@@ -551,3 +550,5 @@ class Results extends \tao_actions_CommonModule
         return $this->returnTaskJson($exporter->createExportTask());
     }
 }
+
+
