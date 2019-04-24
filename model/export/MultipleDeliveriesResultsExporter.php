@@ -149,7 +149,10 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
         $this->filters = $filters;
     }
 
-    public function getFiltersToExport($filters)
+    /**
+     * @return array
+     */
+    public function getFiltersToExport()
     {
         return $this->filters;
     }
