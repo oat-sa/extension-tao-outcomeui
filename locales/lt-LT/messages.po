@@ -1,0 +1,201 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: TAO 3.3.0-sprint96\n"
+"PO-Revision-Date: 2019-04-25T01:14:03\n"
+"Last-Translator: TAO Translation Team <translation@tao.lu>\n"
+"MIME-Version: 1.0\n"
+"Language: lt-LT\n"
+"sourceLanguage: en-US\n"
+"targetLanguage: lt-LT\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Basepath: ../../\n"
+"X-Poedit-KeywordsList: __\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#, tao-public
+msgid " "
+msgstr ""
+
+msgid "Add All grades"
+msgstr "Pridėti Visus pažymius"
+
+msgid "Add All responses"
+msgstr "Pridėti Visus atsakymus"
+
+msgid "Add Delivery"
+msgstr ""
+
+msgid "Add Test Taker"
+msgstr "Pridėti Testo Laikytoją"
+
+msgid "Adding/Updating search index for %s"
+msgstr ""
+
+msgid "All collected variables"
+msgstr "Visi surinkti kintamieji"
+
+msgid "Anonymise"
+msgstr "Anonimizuoti"
+
+msgid "Class"
+msgstr "Klasė"
+
+msgid "CSV results export for delivery \"%s"
+msgstr ""
+
+msgid "CSV results export for delivery class \"%s"
+msgstr ""
+
+msgid "Delete"
+msgstr "Ištrinti"
+
+msgid "Delivery"
+msgstr "Pateiktis"
+
+msgid "Delivery Execution"
+msgstr ""
+
+msgid "Download"
+msgstr "Atsisiųsti"
+
+msgid "Download result"
+msgstr ""
+
+msgid "Email:"
+msgstr "El. paštas:"
+
+msgid "Error"
+msgstr "Klaida"
+
+#, tao-public
+msgid "Export CSV"
+msgstr "Eksportuoti CSV"
+
+msgid "Export CSV File"
+msgstr "Eksportuoti CSV Failą"
+
+#, tao-public
+msgid "Export Table"
+msgstr "Eksportuoti Lentelę"
+
+msgid "Filter"
+msgstr "Filtras"
+
+msgid "First Name:"
+msgstr "Vardas:"
+
+msgid "First submitted variables only"
+msgstr "Tik pirmi pateikti kintamieji"
+
+msgid "Grades"
+msgstr "Pažymiai"
+
+msgid "Label"
+msgstr "Pavadinimas"
+
+msgid "Label:"
+msgstr "Pavadinimas:"
+
+msgid "Last Name:"
+msgstr "Pavardė:"
+
+msgid "Last submitted variables only"
+msgstr "Tik paskutiniai pateikti kintamieji"
+
+msgid "Login:"
+msgstr "Prisijungimas:"
+
+#, tao-public
+msgid "Manage Results"
+msgstr "Tvarkyti Rezultatus"
+
+msgid "No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here."
+msgstr "Joks testas dar nebuvo pradėtas. Kai testo laikytojas pradės laikyti testą, rezultatai bus pateikti čia."
+
+msgid "Please confirm deletion"
+msgstr "Prašome patvirtinti ištrynimą"
+
+msgid "Remove All grades"
+msgstr "Pašalinti Visus pažymius"
+
+msgid "Remove All responses"
+msgstr "Pašalinti Visus atsakymus"
+
+msgid "Remove Delivery"
+msgstr ""
+
+msgid "Responses"
+msgstr "Atsakymai"
+
+msgid "Result has been deleted"
+msgstr "Rezultatas buvo pašalintas"
+
+#, tao-public
+msgid "Results"
+msgstr "Rezultatai"
+
+#, tao-public
+msgid "Results library"
+msgstr "Rezultatų biblioteka"
+
+#, tao-public
+msgid "Results Monitoring"
+msgstr ""
+
+msgid "Results monitoring"
+msgstr ""
+
+msgid "Review"
+msgstr ""
+
+msgid "Search by delivery results"
+msgstr ""
+
+msgid "Search by results"
+msgstr ""
+
+msgid "Something went wrong..."
+msgstr "Kažkas blogai nutiko..."
+
+msgid "Start Time"
+msgstr "Pradžios Laikas"
+
+msgid "Test taker"
+msgstr "Testo laikytojas"
+
+msgid "Test Taker"
+msgstr "Testo Laikytojas"
+
+msgid "Test Variables"
+msgstr "Testo Kintamieji"
+
+msgid "The class you have selected contains no results to be analysed, please select a different class"
+msgstr "Klasė, kurią jūs pasirinkote neturi jokių rezultatų analizavimui. Prašome pasirinkti kitą klasę."
+
+msgid "The number of observations is too low"
+msgstr "Stebėjimų kiekis yra per mažas"
+
+msgid "There was a problem generating your report, please try again."
+msgstr "Įvyko problema generuotojant jūsų ataskaitą, prašome bandyti dar kartą."
+
+#, tao-public
+msgid "Tools"
+msgstr ""
+
+msgid "Traces"
+msgstr "Pėdsakai"
+
+msgid "unknown"
+msgstr "nežinoma"
+
+msgid "View"
+msgstr "Peržiūrėti"
+
+#, tao-public
+msgid "View and format the collected results."
+msgstr "Peržiūrėti ir formatuoti pasirinktus rezultatus."
+
+msgid "We are preparing your report, please wait..."
+msgstr "Mes ruošiame jūsų ataskaitą, prašome palaukti..."
+

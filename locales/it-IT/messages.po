@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO 3.3.0-sprint91\n"
-"PO-Revision-Date: 2019-01-18T09:47:39\n"
+"Project-Id-Version: TAO 3.3.0-sprint96\n"
+"PO-Revision-Date: 2019-04-25T01:04:24\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: it-IT\n"
@@ -18,7 +18,7 @@ msgid " "
 msgstr ""
 
 msgid "Add All grades"
-msgstr "Aggiungi Tutti i gradi"
+msgstr "Aggiungi tutti i gradi"
 
 msgid "Add All responses"
 msgstr "Aggiungi tutte le risposte"
@@ -27,16 +27,16 @@ msgid "Add Delivery"
 msgstr ""
 
 msgid "Add Test Taker"
-msgstr "Aggiungi Studente"
+msgstr "Aggiungi Partecipante"
 
 msgid "Adding/Updating search index for %s"
 msgstr ""
 
 msgid "All collected variables"
-msgstr "tutte le variabili collezionate"
+msgstr "Tutte le variabili raccolte"
 
 msgid "Anonymise"
-msgstr "anonimato"
+msgstr "Rendere anonimi"
 
 msgid "Class"
 msgstr "Classe"
@@ -51,13 +51,13 @@ msgid "Delete"
 msgstr "Elimina"
 
 msgid "Delivery"
-msgstr "Consegna"
+msgstr "Somministrazione"
 
 msgid "Delivery Execution"
 msgstr ""
 
 msgid "Download"
-msgstr "Scarica"
+msgstr "Scaricare"
 
 msgid "Download result"
 msgstr ""
@@ -73,11 +73,11 @@ msgid "Export CSV"
 msgstr ""
 
 msgid "Export CSV File"
-msgstr "Esporta in un file CSV"
+msgstr "Esporta File CSV"
 
 #, tao-public
 msgid "Export Table"
-msgstr "Esporta tabella"
+msgstr "Esporta Tabella"
 
 msgid "Filter"
 msgstr "Filtro"
@@ -86,41 +86,41 @@ msgid "First Name:"
 msgstr "Nome:"
 
 msgid "First submitted variables only"
-msgstr "Solo variabili prima presentate"
+msgstr "Solo le prime variabili inviate"
 
 msgid "Grades"
 msgstr "Gradi"
 
 msgid "Label"
-msgstr "nome"
+msgstr "Etichetta"
 
 msgid "Label:"
-msgstr "nome:"
+msgstr "Etichetta:"
 
 msgid "Last Name:"
-msgstr "Cognome"
+msgstr "Cognome:"
 
 msgid "Last submitted variables only"
-msgstr "solo l'ultima variabile inviata"
+msgstr "Solo le ultime variabili inviate"
 
 msgid "Login:"
-msgstr "Accesso"
+msgstr "Accesso:"
 
 #, tao-public
 msgid "Manage Results"
-msgstr "Gestione risultati"
+msgstr "Gestisci Risultati"
 
 msgid "No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here."
-msgstr "Non è stato ancora inviato alcun test. Non appena uno studente completerà un test, il suo risultato sarà visualizzato qui"
+msgstr "Non sono stati ancora effettuati test. Non appena un partecipante farà un test i suoi risultati verranno visualizzati qui."
 
 msgid "Please confirm deletion"
-msgstr "Prego conferma la cancellazione"
+msgstr "Si prega di confermare la cancellazione"
 
 msgid "Remove All grades"
-msgstr "Rimuovi tutti i voti"
+msgstr "Rimuovi Tutti i voti"
 
 msgid "Remove All responses"
-msgstr "Rimuovi tutte le risposte"
+msgstr "Rimuovi Tutte le risposte"
 
 msgid "Remove Delivery"
 msgstr ""
@@ -137,7 +137,7 @@ msgstr "Risultati"
 
 #, tao-public
 msgid "Results library"
-msgstr "Raccolta dei risultati"
+msgstr "Raccolta risultati"
 
 #, tao-public
 msgid "Results Monitoring"
@@ -165,19 +165,19 @@ msgid "Test taker"
 msgstr "Partecipante al test"
 
 msgid "Test Taker"
-msgstr "Partecipante al test"
+msgstr "Partecipante al Test"
 
 msgid "Test Variables"
-msgstr "Variabili di prova"
+msgstr "Variabili di Test"
 
 msgid "The class you have selected contains no results to be analysed, please select a different class"
-msgstr "La classe selezionata non presenta alcun risultato da essere analizzato, prego seleziona una classe diversa"
+msgstr "La classe selezionata non contiene risultati da analizzare, si prega di selezionare una classe diversa"
 
 msgid "The number of observations is too low"
-msgstr "Il numero delle osservazioni è troppo basso"
+msgstr "Il numero di osservazioni è troppo basso"
 
 msgid "There was a problem generating your report, please try again."
-msgstr "C'è stato un problema nella generazione del tuo report, prego riprova."
+msgstr "Si è verificato un problema durante la generazione del tuo rapporto, si prega di riprovare."
 
 #, tao-public
 msgid "Tools"
@@ -194,8 +194,8 @@ msgstr ""
 
 #, tao-public
 msgid "View and format the collected results."
-msgstr "Visualizza e formatta i risultati raccolti"
+msgstr "Visualizzare e formattare i risultati raccolti."
 
 msgid "We are preparing your report, please wait..."
-msgstr "Stiamo preparando il tuo report, prego aspetta...."
+msgstr "Stiamo preparando il tuo rapporto, per favore attendi..."
 

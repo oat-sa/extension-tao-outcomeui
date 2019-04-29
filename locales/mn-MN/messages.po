@@ -1,0 +1,201 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: TAO 3.3.0-sprint96\n"
+"PO-Revision-Date: 2019-04-25T01:16:13\n"
+"Last-Translator: TAO Translation Team <translation@tao.lu>\n"
+"MIME-Version: 1.0\n"
+"Language: mn-MN\n"
+"sourceLanguage: en-US\n"
+"targetLanguage: mn-MN\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Basepath: ../../\n"
+"X-Poedit-KeywordsList: __\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#, tao-public
+msgid " "
+msgstr ""
+
+msgid "Add All grades"
+msgstr ""
+
+msgid "Add All responses"
+msgstr ""
+
+msgid "Add Delivery"
+msgstr ""
+
+msgid "Add Test Taker"
+msgstr ""
+
+msgid "Adding/Updating search index for %s"
+msgstr ""
+
+msgid "All collected variables"
+msgstr ""
+
+msgid "Anonymise"
+msgstr ""
+
+msgid "Class"
+msgstr ""
+
+msgid "CSV results export for delivery \"%s"
+msgstr ""
+
+msgid "CSV results export for delivery class \"%s"
+msgstr ""
+
+msgid "Delete"
+msgstr ""
+
+msgid "Delivery"
+msgstr ""
+
+msgid "Delivery Execution"
+msgstr ""
+
+msgid "Download"
+msgstr ""
+
+msgid "Download result"
+msgstr ""
+
+msgid "Email:"
+msgstr ""
+
+msgid "Error"
+msgstr ""
+
+#, tao-public
+msgid "Export CSV"
+msgstr ""
+
+msgid "Export CSV File"
+msgstr ""
+
+#, tao-public
+msgid "Export Table"
+msgstr ""
+
+msgid "Filter"
+msgstr ""
+
+msgid "First Name:"
+msgstr ""
+
+msgid "First submitted variables only"
+msgstr ""
+
+msgid "Grades"
+msgstr ""
+
+msgid "Label"
+msgstr ""
+
+msgid "Label:"
+msgstr ""
+
+msgid "Last Name:"
+msgstr ""
+
+msgid "Last submitted variables only"
+msgstr ""
+
+msgid "Login:"
+msgstr ""
+
+#, tao-public
+msgid "Manage Results"
+msgstr ""
+
+msgid "No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here."
+msgstr ""
+
+msgid "Please confirm deletion"
+msgstr ""
+
+msgid "Remove All grades"
+msgstr ""
+
+msgid "Remove All responses"
+msgstr ""
+
+msgid "Remove Delivery"
+msgstr ""
+
+msgid "Responses"
+msgstr ""
+
+msgid "Result has been deleted"
+msgstr ""
+
+#, tao-public
+msgid "Results"
+msgstr ""
+
+#, tao-public
+msgid "Results library"
+msgstr ""
+
+#, tao-public
+msgid "Results Monitoring"
+msgstr ""
+
+msgid "Results monitoring"
+msgstr ""
+
+msgid "Review"
+msgstr ""
+
+msgid "Search by delivery results"
+msgstr ""
+
+msgid "Search by results"
+msgstr ""
+
+msgid "Something went wrong..."
+msgstr ""
+
+msgid "Start Time"
+msgstr ""
+
+msgid "Test taker"
+msgstr ""
+
+msgid "Test Taker"
+msgstr ""
+
+msgid "Test Variables"
+msgstr ""
+
+msgid "The class you have selected contains no results to be analysed, please select a different class"
+msgstr ""
+
+msgid "The number of observations is too low"
+msgstr ""
+
+msgid "There was a problem generating your report, please try again."
+msgstr ""
+
+#, tao-public
+msgid "Tools"
+msgstr ""
+
+msgid "Traces"
+msgstr ""
+
+msgid "unknown"
+msgstr ""
+
+msgid "View"
+msgstr ""
+
+#, tao-public
+msgid "View and format the collected results."
+msgstr ""
+
+msgid "We are preparing your report, please wait..."
+msgstr ""
+

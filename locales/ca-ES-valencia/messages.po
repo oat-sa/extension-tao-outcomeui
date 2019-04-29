@@ -1,0 +1,201 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: TAO 3.3.0-sprint96\n"
+"PO-Revision-Date: 2019-04-25T01:10:56\n"
+"Last-Translator: TAO Translation Team <translation@tao.lu>\n"
+"MIME-Version: 1.0\n"
+"Language: ca-ES-valencia\n"
+"sourceLanguage: en-US\n"
+"targetLanguage: ca-ES-valencia\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Basepath: ../../\n"
+"X-Poedit-KeywordsList: __\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#, tao-public
+msgid " "
+msgstr ""
+
+msgid "Add All grades"
+msgstr "Afig totes les qualificacions"
+
+msgid "Add All responses"
+msgstr "Afig totes les respostes"
+
+msgid "Add Delivery"
+msgstr ""
+
+msgid "Add Test Taker"
+msgstr "Afig els participant de la prova"
+
+msgid "Adding/Updating search index for %s"
+msgstr ""
+
+msgid "All collected variables"
+msgstr "Totes les variables acumulades"
+
+msgid "Anonymise"
+msgstr "Anonimitza"
+
+msgid "Class"
+msgstr "Classe"
+
+msgid "CSV results export for delivery \"%s"
+msgstr ""
+
+msgid "CSV results export for delivery class \"%s"
+msgstr ""
+
+msgid "Delete"
+msgstr "Elimina"
+
+msgid "Delivery"
+msgstr "Lliurament"
+
+msgid "Delivery Execution"
+msgstr ""
+
+msgid "Download"
+msgstr "Baixa"
+
+msgid "Download result"
+msgstr ""
+
+msgid "Email:"
+msgstr "Correu electrònic:"
+
+msgid "Error"
+msgstr "Error"
+
+#, tao-public
+msgid "Export CSV"
+msgstr "Exporta el CSV"
+
+msgid "Export CSV File"
+msgstr "Exporta el fitxer CSV"
+
+#, tao-public
+msgid "Export Table"
+msgstr "Exporta la taula "
+
+msgid "Filter"
+msgstr "Filtre"
+
+msgid "First Name:"
+msgstr "Nom:"
+
+msgid "First submitted variables only"
+msgstr "Només les primeres variables enviades"
+
+msgid "Grades"
+msgstr "Qualificacions"
+
+msgid "Label"
+msgstr "Etiqueta"
+
+msgid "Label:"
+msgstr "Etiqueta:"
+
+msgid "Last Name:"
+msgstr "Cognom:"
+
+msgid "Last submitted variables only"
+msgstr "Només les últimes variables enviades"
+
+msgid "Login:"
+msgstr "Inici de sessió:"
+
+#, tao-public
+msgid "Manage Results"
+msgstr "Gestiona els resultats"
+
+msgid "No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here."
+msgstr "Encara no s'ha realitzat cap prova. Tan prompte com un participant realitze una prova, el resultat es mostrarà ací."
+
+msgid "Please confirm deletion"
+msgstr "Confirmeu l'eliminació"
+
+msgid "Remove All grades"
+msgstr "Suprimeix totes les qualificacions"
+
+msgid "Remove All responses"
+msgstr "Suprimeix totes les respostes"
+
+msgid "Remove Delivery"
+msgstr ""
+
+msgid "Responses"
+msgstr "Respostes"
+
+msgid "Result has been deleted"
+msgstr "El resultat s'ha eliminat."
+
+#, tao-public
+msgid "Results"
+msgstr "Resultats"
+
+#, tao-public
+msgid "Results library"
+msgstr "Biblioteca de resultats"
+
+#, tao-public
+msgid "Results Monitoring"
+msgstr ""
+
+msgid "Results monitoring"
+msgstr ""
+
+msgid "Review"
+msgstr ""
+
+msgid "Search by delivery results"
+msgstr ""
+
+msgid "Search by results"
+msgstr ""
+
+msgid "Something went wrong..."
+msgstr "Alguna cosa ha anat malament..."
+
+msgid "Start Time"
+msgstr "Hora d'inici"
+
+msgid "Test taker"
+msgstr "Participant de la prova"
+
+msgid "Test Taker"
+msgstr "Participant de la prova"
+
+msgid "Test Variables"
+msgstr "Variables de la prova"
+
+msgid "The class you have selected contains no results to be analysed, please select a different class"
+msgstr "La classe que heu seleccionat no conté cap resultat per analitzar, seleccioneu una classe diferent"
+
+msgid "The number of observations is too low"
+msgstr "El nombre d'observacions és massa baix."
+
+msgid "There was a problem generating your report, please try again."
+msgstr "S'ha produït un problema en la generació del vostre informe, torneu-ho a provar"
+
+#, tao-public
+msgid "Tools"
+msgstr ""
+
+msgid "Traces"
+msgstr "Traces"
+
+msgid "unknown"
+msgstr "desconegut"
+
+msgid "View"
+msgstr "Visualitza"
+
+#, tao-public
+msgid "View and format the collected results."
+msgstr "Visualitza i formata els resultats acumulats"
+
+msgid "We are preparing your report, please wait..."
+msgstr "Estem preparant el vostre informe, espereu..."
+

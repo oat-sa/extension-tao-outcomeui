@@ -1,0 +1,201 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: TAO 3.3.0-sprint96\n"
+"PO-Revision-Date: 2019-04-25T01:07:40\n"
+"Last-Translator: TAO Translation Team <translation@tao.lu>\n"
+"MIME-Version: 1.0\n"
+"Language: vi-VN\n"
+"sourceLanguage: en-US\n"
+"targetLanguage: vi-VN\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Basepath: ../../\n"
+"X-Poedit-KeywordsList: __\n"
+"X-Poedit-SearchPath-0: .\n"
+
+#, tao-public
+msgid " "
+msgstr ""
+
+msgid "Add All grades"
+msgstr ""
+
+msgid "Add All responses"
+msgstr ""
+
+msgid "Add Delivery"
+msgstr ""
+
+msgid "Add Test Taker"
+msgstr "Thêm thí sinh"
+
+msgid "Adding/Updating search index for %s"
+msgstr ""
+
+msgid "All collected variables"
+msgstr ""
+
+msgid "Anonymise"
+msgstr "Ẩn danh"
+
+msgid "Class"
+msgstr "Lớp"
+
+msgid "CSV results export for delivery \"%s"
+msgstr ""
+
+msgid "CSV results export for delivery class \"%s"
+msgstr ""
+
+msgid "Delete"
+msgstr "Xóa"
+
+msgid "Delivery"
+msgstr ""
+
+msgid "Delivery Execution"
+msgstr ""
+
+msgid "Download"
+msgstr "Tải xuống"
+
+msgid "Download result"
+msgstr ""
+
+msgid "Email:"
+msgstr "Thư điện tử:"
+
+msgid "Error"
+msgstr "Lỗi"
+
+#, tao-public
+msgid "Export CSV"
+msgstr "Xuất CSV"
+
+msgid "Export CSV File"
+msgstr "Xuất ra tệp CSV"
+
+#, tao-public
+msgid "Export Table"
+msgstr "Xuất ra bảng"
+
+msgid "Filter"
+msgstr "Bộ lọc"
+
+msgid "First Name:"
+msgstr "Tên"
+
+msgid "First submitted variables only"
+msgstr ""
+
+msgid "Grades"
+msgstr ""
+
+msgid "Label"
+msgstr "Nhãn"
+
+msgid "Label:"
+msgstr "Nhãn:"
+
+msgid "Last Name:"
+msgstr "Họ"
+
+msgid "Last submitted variables only"
+msgstr ""
+
+msgid "Login:"
+msgstr "Đăng nhập:"
+
+#, tao-public
+msgid "Manage Results"
+msgstr "Quản lí kết quả"
+
+msgid "No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here."
+msgstr ""
+
+msgid "Please confirm deletion"
+msgstr ""
+
+msgid "Remove All grades"
+msgstr ""
+
+msgid "Remove All responses"
+msgstr ""
+
+msgid "Remove Delivery"
+msgstr ""
+
+msgid "Responses"
+msgstr ""
+
+msgid "Result has been deleted"
+msgstr ""
+
+#, tao-public
+msgid "Results"
+msgstr "Kết quả"
+
+#, tao-public
+msgid "Results library"
+msgstr ""
+
+#, tao-public
+msgid "Results Monitoring"
+msgstr ""
+
+msgid "Results monitoring"
+msgstr ""
+
+msgid "Review"
+msgstr ""
+
+msgid "Search by delivery results"
+msgstr ""
+
+msgid "Search by results"
+msgstr ""
+
+msgid "Something went wrong..."
+msgstr ""
+
+msgid "Start Time"
+msgstr "Thời gian bắt đầu"
+
+msgid "Test taker"
+msgstr ""
+
+msgid "Test Taker"
+msgstr ""
+
+msgid "Test Variables"
+msgstr "Kiểm tra biến"
+
+msgid "The class you have selected contains no results to be analysed, please select a different class"
+msgstr ""
+
+msgid "The number of observations is too low"
+msgstr ""
+
+msgid "There was a problem generating your report, please try again."
+msgstr ""
+
+#, tao-public
+msgid "Tools"
+msgstr ""
+
+msgid "Traces"
+msgstr "Lưu vết"
+
+msgid "unknown"
+msgstr "không xác định"
+
+msgid "View"
+msgstr "Xem"
+
+#, tao-public
+msgid "View and format the collected results."
+msgstr ""
+
+msgid "We are preparing your report, please wait..."
+msgstr "Chúng tôi đang tạo báo cáo, vui long đợi..."
+

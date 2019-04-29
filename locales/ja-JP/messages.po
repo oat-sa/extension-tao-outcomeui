@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO 3.3.0-sprint91\n"
-"PO-Revision-Date: 2019-01-18T09:47:39\n"
+"Project-Id-Version: TAO 3.3.0-sprint96\n"
+"PO-Revision-Date: 2019-04-25T01:06:31\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: ja-JP\n"
@@ -18,16 +18,16 @@ msgid " "
 msgstr ""
 
 msgid "Add All grades"
-msgstr "すべてのグレードに追加"
+msgstr "全てのグレードを追加"
 
 msgid "Add All responses"
-msgstr "すべてのレスポンスに追加"
+msgstr "全てのレスポンスを追加"
 
 msgid "Add Delivery"
 msgstr ""
 
 msgid "Add Test Taker"
-msgstr "受験者を追加"
+msgstr "受験者名を追加"
 
 msgid "Adding/Updating search index for %s"
 msgstr ""
@@ -51,7 +51,7 @@ msgid "Delete"
 msgstr "削除"
 
 msgid "Delivery"
-msgstr "デリバリ"
+msgstr "デリバリー"
 
 msgid "Delivery Execution"
 msgstr ""
@@ -70,10 +70,10 @@ msgstr "エラー"
 
 #, tao-public
 msgid "Export CSV"
-msgstr ""
+msgstr "CSV エクスポート"
 
 msgid "Export CSV File"
-msgstr "CSV ファイルにエクスポート"
+msgstr "CSVファイルのエクスポート"
 
 #, tao-public
 msgid "Export Table"
@@ -86,7 +86,7 @@ msgid "First Name:"
 msgstr "名:"
 
 msgid "First submitted variables only"
-msgstr "最初の変数のみをサブミット"
+msgstr "最初に送信した変数のみ"
 
 msgid "Grades"
 msgstr "グレード"
@@ -101,7 +101,7 @@ msgid "Last Name:"
 msgstr "姓:"
 
 msgid "Last submitted variables only"
-msgstr "最後の変数のみサブミット"
+msgstr "最後に送信した変数のみ"
 
 msgid "Login:"
 msgstr "ログイン名:"
@@ -117,16 +117,16 @@ msgid "Please confirm deletion"
 msgstr "削除を確認してください"
 
 msgid "Remove All grades"
-msgstr "すべてのグレードを削除"
+msgstr "全てのグレードを除外"
 
 msgid "Remove All responses"
-msgstr "すべてのレスポンスを削除"
+msgstr "全てのレスポンスを除外"
 
 msgid "Remove Delivery"
 msgstr ""
 
 msgid "Responses"
-msgstr "応答"
+msgstr "解答"
 
 msgid "Result has been deleted"
 msgstr "結果は削除されました"
@@ -159,7 +159,7 @@ msgid "Something went wrong..."
 msgstr ""
 
 msgid "Start Time"
-msgstr ""
+msgstr "開始時間"
 
 msgid "Test taker"
 msgstr "受験者"
@@ -184,7 +184,7 @@ msgid "Tools"
 msgstr ""
 
 msgid "Traces"
-msgstr ""
+msgstr "トレース"
 
 msgid "unknown"
 msgstr "不明"
