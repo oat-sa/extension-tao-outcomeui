@@ -18,6 +18,7 @@ namespace oat\taoOutcomeUi\model\table;
 use \common_Logger;
 use \common_cache_FileCache;
 use \core_kernel_classes_Resource;
+use oat\oatbox\service\ServiceManager;
 use oat\taoOutcomeUi\helper\Datatypes;
 use qtism\common\datatypes\QtiDuration;
 use \tao_helpers_Date;
@@ -74,15 +75,15 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
 
             foreach ($itemresults as $itemResultUri => $vars) {
                 // cache the item information pertaining to a given itemResult (stable over time)
-                if (common_cache_FileCache::singleton()->has('itemResultItemCache' . $itemResultUri)) {
-                    $object = json_decode(common_cache_FileCache::singleton()->get('itemResultItemCache' . $itemResultUri), true);
+                if ($this->getCache()->has('itemResultItemCache' . $itemResultUri)) {
+                    $object = json_decode($this->getCache()->get('itemResultItemCache' . $itemResultUri), true);
                 } else {
                     $object = $resultsService->getItemFromItemResult($itemResultUri);
                     if (is_null($object)) {
                         $object = $resultsService->getVariableFromTest($itemResultUri);
                     }
                     if (! is_null($object)) {
-                        common_cache_FileCache::singleton()->put(json_encode($object), 'itemResultItemCache' . $itemResultUri);
+                        $this->getCache()->put(json_encode($object), 'itemResultItemCache' . $itemResultUri);
                     }
                 }
                 if ($object) {
@@ -101,7 +102,7 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
                      * @var \taoResultServer_models_classes_Variable $varData
                      */
                     $varData = $var->variable;
-                    
+
                     if ($varData->getBaseType() === 'file') {
                         $decodedFile = Datatypes::decodeFile($varData->getValue());
                         $varData->setValue($decodedFile['name']);
@@ -121,7 +122,7 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
                             // display the duration in seconds with microseconds
                             if ($column->getIdentifier() === 'duration') {
                                 $qtiDuration = new QtiDuration($value);
-                                $value = $qtiDuration->getSeconds() .'.'. $qtiDuration->getMicroseconds();
+                                $value = $qtiDuration->getSeconds(true) .'.'. $qtiDuration->getMicroseconds();
                             }
 
                             $this->cache[get_class($varData)][$result][$column->getContextIdentifier() . $variableIdentifier][(string) $epoch] = array(
@@ -156,6 +157,16 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
         }
 
         return $returnValue;
+    }
+
+    /**
+     * Get the cache service
+     *
+     * @return \common_cache_Cache
+     */
+    protected function getCache()
+    {
+        return ServiceManager::getServiceManager()->get(\common_cache_Cache::SERVICE_ID);
     }
 
 }
