@@ -26,7 +26,7 @@ define([
     'module',
     'util/url',
     'ui/feedback',
-    'core/taskQueue/taskQueue',
+    'ui/taskQueue/taskQueue',
     'ui/taskQueueButton/standardButton',
     'ui/dateRange/dateRange',
     'ui/datatable'
