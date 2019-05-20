@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO 3.3.0-sprint91\n"
-"PO-Revision-Date: 2019-03-15T09:30:04\n"
+"Project-Id-Version: TAO 3.3.0-sprint100\n"
+"PO-Revision-Date: 2019-04-26T11:57:18\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: is-IS\n"
@@ -179,10 +179,10 @@ msgstr ""
 msgid "Start Time"
 msgstr ""
 
-msgid "Test Taker"
+msgid "Test taker"
 msgstr "Próftaki"
 
-msgid "Test taker"
+msgid "Test Taker"
 msgstr "Próftaki"
 
 msgid "Test Variables"
@@ -219,4 +219,10 @@ msgstr "Skoða og forsníða safnaðar niðurstöður."
 
 msgid "We are preparing your report, please wait..."
 msgstr "Við erum að undirbúa skýrslu þína, gerðu svo vel að bíða..."
+
+msgid "You have just completed your practice exam."
+msgstr ""
+
+msgid "Your\'s statistic."
+msgstr ""
 

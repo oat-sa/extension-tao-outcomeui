@@ -13,7 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2014-2017 (original work) Open Assessment Technologies SA;
+ * Copyright (c) 2014-2019 (original work) Open Assessment Technologies SA;
  */
 
 /**
@@ -28,7 +28,7 @@ define([
     'ui/feedback',
     'core/taskQueue/taskQueue',
     'ui/taskQueueButton/standardButton',
-    'ui/dateRange',
+    'ui/dateRange/dateRange',
     'ui/datatable'
 ], function($, _, __, module, urlUtil, feedback, taskQueue, standardTaskButtonFactory, dateRangeFactory) {
     'use strict';
@@ -41,7 +41,7 @@ define([
         /**
          * Controller entry point
          */
-        start : function(){
+        start : function start(){
 
             var conf = module.config();
             var $container = $(".result-table");
@@ -60,32 +60,15 @@ define([
             var columns = [];
             var groups = {};
 
-            var filterDeStartRange = dateRangeFactory({
-                pickerType: 'datetimepicker',
-                pickerConfig: {
-                    // configurations from lib/jquery.timePicker.js
-                    dateFormat: 'yy-mm-dd',
-                    timeFormat: 'HH:mm:ss'
-                }
-            })
-                .on('render', function () {
+            //setup the date range pickers
+            var filterDeStartRange = dateRangeFactory($dateStartRangeContainer)
+                .on('render', function() {
                     $('button', $dateStartRangeContainer).hide();
-                })
-                .render($dateStartRangeContainer);
-
-            var filterDeEndRange = dateRangeFactory({
-                pickerType: 'datetimepicker',
-                pickerConfig: {
-                    // configurations from lib/jquery.timePicker.js
-                    dateFormat: 'yy-mm-dd',
-                    timeFormat: 'HH:mm:ss'
-                }
-            })
-                .on('render', function () {
+                });
+            var filterDeEndRange = dateRangeFactory($dateEndRangeContainer)
+                .on('render', function() {
                     $('button', $dateEndRangeContainer).hide();
-                })
-                .render($dateEndRangeContainer);
-
+                });
 
             /**
              * Load columns to rebuild the datatable dynamically
@@ -103,9 +86,9 @@ define([
                     if(response && response.columns){
                         if(action === 'remove'){
                             columns = _.reject(columns, function(col){
-                               return _.find(response.columns, function(resCol){
+                                return _.find(response.columns, function(resCol){
                                     return _.isEqual(col, resCol);
-                               });
+                                });
                             });
                         } else {
                             if(typeof response.first !== 'undefined' && response.first === true){
@@ -184,7 +167,7 @@ define([
                 e.preventDefault();
                 buildGrid(url, action, function(){
                     _.forEach(groups[group], function($btn){
-                       $btn.toggleClass('hidden');
+                        $btn.toggleClass('hidden');
                     });
                 });
             });

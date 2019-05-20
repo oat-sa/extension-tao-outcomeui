@@ -36,6 +36,7 @@ use oat\taoDelivery\model\AssignmentService;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoItems\model\ItemCompilerIndex;
+use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
@@ -1446,5 +1447,43 @@ class ResultsService extends tao_models_classes_ClassService implements ServiceL
             $this->setServiceLocator(ServiceManager::getServiceManager());
         }
         return $this->serviceLocator;
+    }
+
+    public function getScores($resultIdentifier)
+    {
+        $implementation = $this->getReadableImplementation($this->getDeliveryByResultId($resultIdentifier));
+        $this->setImplementation($implementation);
+        $variables = $this->getResultVariables($resultIdentifier);
+        $scoreReport = $this->calculateResponseStatistics($variables);
+        $testCallId = $this->getTestsFromDeliveryResult($resultIdentifier)[0];
+        $testVariables = $this->getVariablesFromObjectResult($testCallId);
+        foreach ($testVariables as $testVariable) {
+            /** @var \taoResultServer_models_classes_OutcomeVariable $variable */
+            $variable= $testVariable[0]->variable;
+            if (in_array($variable->getIdentifier(), array_keys($scoreReport))) {
+                $scoreReport[$variable->getIdentifier()] = $variable->getValue();
+            }
+        }
+
+        return $scoreReport;
+    }
+
+    protected function getResultVariables($resultId){
+        $filterSubmission = self::VARIABLES_FILTER_LAST_SUBMITTED;
+        $filterTypes = array(\taoResultServer_models_classes_ResponseVariable::class, \taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class);
+        $variables = $this->getStructuredVariables($resultId, $filterSubmission, array_merge($filterTypes, [\taoResultServer_models_classes_ResponseVariable::class]));
+        $displayedVariables = $this->filterStructuredVariables($variables, $filterTypes);
+        $responses = ResponseVariableFormatter::formatStructuredVariablesToItemState($variables);
+        $excludedVariables = array_flip(['numAttempts', 'duration']);
+        foreach ($displayedVariables as &$item) {
+            if (!isset($item['uri'])) {
+                continue;
+            }
+            $itemUri = $item['uri'];
+            $item['state'] = isset($responses[$itemUri][$item['attempt']])
+                ? json_encode(array_diff_key($responses[$itemUri][$item['attempt']], $excludedVariables))
+                : null;
+        }
+        return $displayedVariables;
     }
 }
