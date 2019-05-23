@@ -1086,7 +1086,7 @@ class ResultsService extends tao_models_classes_ClassService implements ServiceL
     private function meetFilters($row, array $filters)
     {
         $matched = true;
-        if (count($filters) && count(array_diff(self::PERIODS, array_keys($filters)))) {
+        if (count($filters) && count(array_intersect(self::PERIODS, array_keys($filters)))) {
 
             $startDate = current($row['delivery_execution_started_at']);
             $startTime = $startDate ? \tao_helpers_Date::getTimeStamp($startDate) : 0;
