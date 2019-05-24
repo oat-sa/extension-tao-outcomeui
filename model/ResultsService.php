@@ -24,7 +24,6 @@
 
 namespace oat\taoOutcomeUi\model;
 
-use common_Utils;
 use League\Flysystem\FileNotFoundException;
 use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyRdfs;
@@ -37,16 +36,13 @@ use oat\taoDelivery\model\AssignmentService;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoItems\model\ItemCompilerIndex;
-use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
-use oat\taoOutcomeUi\model\table\DeliveryExecutionColumn;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
 use \common_Exception;
 use \common_Logger;
 use \common_exception_Error;
 use \core_kernel_classes_Class;
-use \core_kernel_classes_DbWrapper;
 use \core_kernel_classes_Resource;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
@@ -845,16 +841,6 @@ class ResultsService extends tao_models_classes_ClassService implements ServiceL
         //distinguish QTI file from other "file" base type
         $baseType = $this->getVariableBaseType($variableUri);
 
-        // https://bugs.php.net/bug.php?id=52623 ;
-        // if the constant for max buffering, mysqlnd or similar driver
-        // is being used without need to adapt buffer size as it is atutomatically adapted for all the data.
-        if (core_kernel_classes_DbWrapper::singleton()->getPlatForm()->getName() == 'mysql') {
-            if (defined("PDO::MYSQL_ATTR_MAX_BUFFER_SIZE")) {
-                $maxBuffer = (is_int(ini_get('upload_max_filesize'))) ? (ini_get('upload_max_filesize')* 1.5) : 10485760 ;
-                core_kernel_classes_DbWrapper::singleton()->getSchemaManager()->setAttribute(\PDO::MYSQL_ATTR_MAX_BUFFER_SIZE,$maxBuffer);
-            }
-        }
-
         switch ($baseType) {
             case "file": {
                     $value = $this->getVariableCandidateResponse($variableUri);
@@ -1100,7 +1086,7 @@ class ResultsService extends tao_models_classes_ClassService implements ServiceL
     private function meetFilters($row, array $filters)
     {
         $matched = true;
-        if (count($filters) && count(array_diff(self::PERIODS, array_keys($filters)))) {
+        if (count($filters) && count(array_intersect(self::PERIODS, array_keys($filters)))) {
 
             $startDate = current($row['delivery_execution_started_at']);
             $startTime = $startDate ? \tao_helpers_Date::getTimeStamp($startDate) : 0;
@@ -1460,43 +1446,5 @@ class ResultsService extends tao_models_classes_ClassService implements ServiceL
             $this->setServiceLocator(ServiceManager::getServiceManager());
         }
         return $this->serviceLocator;
-    }
-
-    public function getScores($resultIdentifier)
-    {
-        $implementation = $this->getReadableImplementation($this->getDeliveryByResultId($resultIdentifier));
-        $this->setImplementation($implementation);
-        $variables = $this->getResultVariables($resultIdentifier);
-        $scoreReport = $this->calculateResponseStatistics($variables);
-        $testCallId = $this->getTestsFromDeliveryResult($resultIdentifier)[0];
-        $testVariables = $this->getVariablesFromObjectResult($testCallId);
-        foreach ($testVariables as $testVariable) {
-            /** @var \taoResultServer_models_classes_OutcomeVariable $variable */
-            $variable= $testVariable[0]->variable;
-            if (in_array($variable->getIdentifier(), array_keys($scoreReport))) {
-                $scoreReport[$variable->getIdentifier()] = $variable->getValue();
-            }
-        }
-
-        return $scoreReport;
-    }
-
-    protected function getResultVariables($resultId){
-        $filterSubmission = self::VARIABLES_FILTER_LAST_SUBMITTED;
-        $filterTypes = array(\taoResultServer_models_classes_ResponseVariable::class, \taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class);
-        $variables = $this->getStructuredVariables($resultId, $filterSubmission, array_merge($filterTypes, [\taoResultServer_models_classes_ResponseVariable::class]));
-        $displayedVariables = $this->filterStructuredVariables($variables, $filterTypes);
-        $responses = ResponseVariableFormatter::formatStructuredVariablesToItemState($variables);
-        $excludedVariables = array_flip(['numAttempts', 'duration']);
-        foreach ($displayedVariables as &$item) {
-            if (!isset($item['uri'])) {
-                continue;
-            }
-            $itemUri = $item['uri'];
-            $item['state'] = isset($responses[$itemUri][$item['attempt']])
-                ? json_encode(array_diff_key($responses[$itemUri][$item['attempt']], $excludedVariables))
-                : null;
-        }
-        return $displayedVariables;
     }
 }
