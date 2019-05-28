@@ -49,7 +49,6 @@ use oat\taoResultServer\models\classes\ResultServerService;
 use oat\tao\helpers\UserHelper;
 use oat\tao\model\datatable\implementation\DatatableRequest;
 
-
 /**
  * Results Controller provide actions performed from url resolution
  *
@@ -550,5 +549,3 @@ class Results extends \tao_actions_CommonModule
         return $this->returnTaskJson($exporter->createExportTask());
     }
 }
-
-
