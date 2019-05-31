@@ -19,6 +19,8 @@
 /**
  * configure the extension bundles
  * @author Bertrand Chevrier <bertrand@taotesting.com>
+ *
+ * @param {Object} grunt - the grunt object
  */
 module.exports = function(grunt) {
     'use strict';
@@ -32,7 +34,8 @@ module.exports = function(grunt) {
                     dependencies : ['taoItems'],
                     bundles : [{
                         name : 'taoOutcomeUi',
-                        default : true
+                        default : true,
+                        babel : true
                     }]
                 }
             }
