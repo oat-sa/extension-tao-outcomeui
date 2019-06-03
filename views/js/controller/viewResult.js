@@ -52,9 +52,9 @@ define([
                 $(`[value="${classFilter[i]}"]`).prop('checked', 'checked');
             }
 
-            $('.result-filter-btn', $container).click(function() {
+            $('.result-filter-btn', $container).click( () => {
                 classFilter = [''];
-                $classFilterField.each(function(){
+                $classFilterField.each(function() {
                     if($(this).prop('checked')){
                         classFilter.push($(this).val());
                     }
@@ -71,7 +71,7 @@ define([
 
 
             //bind the download buttons
-            $('.download', $container).on("click", function () {
+            $('.download', $container).on('click', function() {
                 var variableUri = $(this).val();
                 $.fileDownload(urlHelper.route('getFile', 'Results', 'taoOutcomeUi'), {
                     preparingMessageHtml: __("We are preparing your report, please wait..."),
@@ -82,7 +82,7 @@ define([
                 });
             });
 
-            $('.preview', $container).on("click", function (e) {
+            $('.preview', $container).on('click', function(e) {
                 const $this = $(this);
                 const deliveryId = $this.data('deliveryId');
                 const resultId = $this.data('resultId');
