@@ -1,4 +1,21 @@
 /**
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; under version 2
+ * of the License (non-upgradable).
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * Copyright (c) 2014-2019 (original work) Open Assessment Technologies SA ;
+ */
+/**
  * @author Bertrand Chevrier <bertrand@taotesting.com>
  */
 define([
@@ -15,45 +32,46 @@ define([
     /**
      * @exports taoOutcomeUi/controller/viewResult
      */
-    var viewResultController =  {
+    const viewResultController =  {
 
         /**
          * Controller entry point
          */
-        start : function(){
-           var conf = module.config();
-           var $container = $('#view-result');
-           var $resultFilterField = $('.result-filter', $container);
-           var $classFilterField = $('[name="class-filter"]', $container);
-           var classFilter = JSON.parse(conf.filterTypes) || [];
+        start(){
+            const conf = module.config();
+            const $container = $('#view-result');
+            const $resultFilterField = $('.result-filter', $container);
+            const $classFilterField = $('[name="class-filter"]', $container);
+            let classFilter = JSON.parse(conf.filterTypes) || [];
             //set up filter field
             $resultFilterField.select2({
                 minimumResultsForSearch : -1
             }).select2('val', conf.filterSubmission || 'all');
 
-            for(var i in classFilter){
-                $('[value="'+classFilter[i]+'"]').prop('checked', 'checked');
+            for(let i in classFilter){
+                $(`[value="${classFilter[i]}"]`).prop('checked', 'checked');
             }
 
-            $('.result-filter-btn', $container).click(function(e) {
+            $('.result-filter-btn', $container).click( () => {
                 classFilter = [''];
-                $classFilterField.each(function(){
+                $classFilterField.each(function() {
                     if($(this).prop('checked')){
                         classFilter.push($(this).val());
                     }
                 });
                 section.loadContentBlock(
                     urlHelper.route('viewResult', 'Results', 'taoOutcomeUi'), {
-                    id: conf.id,
-                    classUri:  conf.classUri,
-                    filterSubmission: $resultFilterField.select2('val'),
-                    filterTypes: classFilter
-                });
+                        id: conf.id,
+                        classUri:  conf.classUri,
+                        filterSubmission: $resultFilterField.select2('val'),
+                        filterTypes: classFilter
+                    }
+                );
             });
 
 
             //bind the download buttons
-            $('.download', $container).on("click", function (e) {
+            $('.download', $container).on('click', function() {
                 var variableUri = $(this).val();
                 $.fileDownload(urlHelper.route('getFile', 'Results', 'taoOutcomeUi'), {
                     preparingMessageHtml: __("We are preparing your report, please wait..."),
@@ -64,14 +82,14 @@ define([
                 });
             });
 
-            $('.preview', $container).on("click", function (e) {
-                var $this = $(this);
-                var deliveryId = $this.data('deliveryId');
-                var resultId = $this.data('resultId');
-                var itemDefinition = $this.data('definition');
-                var uri = $this.data('uri');
-                var type = $this.data('type');
-                var state = $this.data('state');
+            $('.preview', $container).on('click', function(e) {
+                const $this = $(this);
+                const deliveryId = $this.data('deliveryId');
+                const resultId = $this.data('resultId');
+                const itemDefinition = $this.data('definition');
+                let uri = $this.data('uri');
+                const type = $this.data('type');
+                const state = $this.data('state');
                 e.preventDefault();
 
                 if (deliveryId && resultId && itemDefinition) {

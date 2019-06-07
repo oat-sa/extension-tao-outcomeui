@@ -12,7 +12,7 @@ define([
     'layout/actions/binder',
     'layout/loading-bar',
     'ui/feedback',
-    'core/taskQueue/taskQueue',
+    'ui/taskQueue/taskQueue',
     'taoOutcomeUi/component/results/pluginsLoader',
     'taoOutcomeUi/component/results/list',
     'ui/taskQueueButton/treeButton'
