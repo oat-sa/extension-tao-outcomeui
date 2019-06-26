@@ -83,17 +83,18 @@ define([
                 .on('render', function() {
                     $('button', $dateStartRangeContainer).hide();
                 });
+
             var filterDeEndRange = dateRangeFactory($dateEndRangeContainer, {
                 startPicker: {
                     setup: 'datetime',
-                    format: 'YY-MM-DD HH:mm:ss',
+                    format: 'YYYY-MM-DD HH:mm:ss',
                     field: {
                         name: 'periodStart',
                     }
                 },
                 endPicker: {
                     setup: 'datetime',
-                    format: 'YY-MM-DD HH:mm:ss',
+                    format: 'YYYY-MM-DD HH:mm:ss',
                     field: {
                         name: 'periodEnd'
                     }
@@ -174,7 +175,6 @@ define([
 
             var filterChanged = function filterChanged () {
                 filter = $filterField.select2('val');
-                console.log(filterDeStartRange);
                 deStartFrom = filterDeStartRange.getStart();
                 deStartTo = filterDeStartRange.getEnd();
                 deEndFrom = filterDeEndRange.getStart();
