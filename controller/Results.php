@@ -105,6 +105,11 @@ class Results extends \tao_actions_CommonModule
 
         $model = array(
             array(
+                'id' => 'ttakerid',
+                'label' => __('Test Taker ID'),
+                'sortable' => false
+            ),
+            array(
                 'id' => 'ttaker',
                 'label' => __('Test Taker'),
                 'sortable' => false
@@ -204,12 +209,10 @@ class Results extends \tao_actions_CommonModule
 
                 $user = UserHelper::getUser($res['testTakerIdentifier']);
                 $userName = UserHelper::getUserName($user, true);
-                if (empty($userName)) {
-                    $userName = $res['testTakerIdentifier'];
-                }
 
                 $data[] = array(
                     'id' => $deliveryExecution->getIdentifier(),
+                    'ttakerid' => $res['testTakerIdentifier'],
                     'ttaker' => _dh($userName),
                     'time' => $startTime,
                 );
