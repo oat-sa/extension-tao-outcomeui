@@ -61,11 +61,45 @@ define([
             var groups = {};
 
             //setup the date range pickers
-            var filterDeStartRange = dateRangeFactory($dateStartRangeContainer)
+            var filterDeStartRange = dateRangeFactory($dateStartRangeContainer, {
+                startPicker: {
+                    setup: 'datetime',
+                    format: 'YYYY-MM-DD HH:mm:ss',
+                    field: {
+                        name: 'periodStart',
+                    }
+                },
+                endPicker: {
+                    setup: 'datetime',
+                    format: 'YYYY-MM-DD HH:mm:ss',
+                    field: {
+                        name: 'periodEnd'
+                    }
+                }
+            })
+                .on('change', function (v) {
+                    console.log('changed', v)
+                })
                 .on('render', function() {
                     $('button', $dateStartRangeContainer).hide();
                 });
-            var filterDeEndRange = dateRangeFactory($dateEndRangeContainer)
+
+            var filterDeEndRange = dateRangeFactory($dateEndRangeContainer, {
+                startPicker: {
+                    setup: 'datetime',
+                    format: 'YYYY-MM-DD HH:mm:ss',
+                    field: {
+                        name: 'periodStart',
+                    }
+                },
+                endPicker: {
+                    setup: 'datetime',
+                    format: 'YYYY-MM-DD HH:mm:ss',
+                    field: {
+                        name: 'periodEnd'
+                    }
+                }
+            })
                 .on('render', function() {
                     $('button', $dateEndRangeContainer).hide();
                 });
