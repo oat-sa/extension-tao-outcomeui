@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO 3.3.0-sprint100\n"
-"PO-Revision-Date: 2019-04-26T11:57:19\n"
+"Project-Id-Version: TAO 3.3.0-sprint105\n"
+"PO-Revision-Date: 2019-07-05T08:47:22\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: zh-SG\n"
@@ -179,10 +179,13 @@ msgstr ""
 msgid "Start Time"
 msgstr ""
 
+msgid "Test Taker"
+msgstr ""
+
 msgid "Test taker"
 msgstr ""
 
-msgid "Test Taker"
+msgid "Test Taker ID"
 msgstr ""
 
 msgid "Test Variables"
@@ -218,11 +221,5 @@ msgid "View and format the collected results."
 msgstr ""
 
 msgid "We are preparing your report, please wait..."
-msgstr ""
-
-msgid "You have just completed your practice exam."
-msgstr ""
-
-msgid "Your\'s statistic."
 msgstr ""
 
