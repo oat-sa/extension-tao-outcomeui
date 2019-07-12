@@ -60,8 +60,9 @@ use taoQtiTest_models_classes_QtiTestService;
 use oat\taoQtiTest\models\QtiTestCompilerIndex;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
+use oat\tao\model\OntologyClassService;
 
-class ResultsService extends tao_models_classes_ClassService implements ServiceLocatorAwareInterface
+class ResultsService extends OntologyClassService implements ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait;
 
@@ -203,7 +204,7 @@ class ResultsService extends tao_models_classes_ClassService implements ServiceL
      * @see tao_models_classes_ClassService::getRootClass()
      */
     public function getRootClass() {
-        return new core_kernel_classes_Class(ResultService::DELIVERY_RESULT_CLASS_URI);
+        return $this->getClass(ResultService::DELIVERY_RESULT_CLASS_URI);
     }
 
     public function setImplementation(ResultManagement $implementation){
