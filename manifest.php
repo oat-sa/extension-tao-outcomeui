@@ -41,7 +41,7 @@ return [
     'author'         => 'Open Assessment Technologies, CRP Henri Tudor',
     // taoItems is only needed for the item model property retrieval
     'requires'       => [
-        'generis' => '>=7.9.8',
+        'generis' => '>=7.9.9',
         'taoResultServer' => '>=7.0.0',
         'taoItems'        => '>=6.0.0',
         'taoDeliveryRdf'  => '>=6.0.0',
