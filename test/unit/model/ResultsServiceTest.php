@@ -5,6 +5,8 @@ namespace oat\taoOutcomeUi\unit\model;
 use oat\generis\test\TestCase;
 use oat\taoOutcomeRds\model\RdsResultStorage;
 use oat\taoOutcomeUi\model\ResultsService;
+use ReflectionClass;
+use ReflectionException;
 
 class ResultsServiceTest extends TestCase
 {
@@ -55,5 +57,133 @@ class ResultsServiceTest extends TestCase
                 ], 3
             ]
         ];
+    }
+
+
+    public function filterDataProvider()
+    {
+        return [
+            // exact time of the action
+            [
+                //expected
+                true,
+                // row
+                [
+                    ResultsService::DELIVERY_EXECUTION_STARTED_AT => [''],
+                    // 2019-06-24T15:01:09
+                    ResultsService::DELIVERY_EXECUTION_FINISHED_AT => ['0.86410800 1561388469'],
+                ],
+                // filters
+                [
+                    ResultsService::FILTER_START_FROM => '',
+                    ResultsService::FILTER_START_TO => '',
+                    // 2019-06-24T15:01:09
+                    ResultsService::FILTER_END_FROM => '1561388469',
+                    // 2019-06-24T15:01:09
+                    ResultsService::FILTER_END_TO => '1561388469',
+                ],
+            ],
+            // looking for data that is not in the range
+            [
+                //expected
+                false,
+                // row
+                [
+                    ResultsService::DELIVERY_EXECUTION_STARTED_AT => [''],
+                    // 2019-06-24T15:01:09
+                    ResultsService::DELIVERY_EXECUTION_FINISHED_AT => ['0.86410800 1561388469'],
+                ],
+                // filters
+                [
+                    ResultsService::FILTER_START_FROM => '',
+                    ResultsService::FILTER_START_TO => '',
+                    // 2019-06-25T00:00:00+00:00
+                    ResultsService::FILTER_END_FROM => '1561420800',
+                    // 2019-06-26T00:00:00+00:00
+                    ResultsService::FILTER_END_TO => '1561507200',
+                ],
+            ],
+            // data without finished date but with filters by finished date
+            [
+                //expected
+                false,
+                // row
+                [
+                    ResultsService::DELIVERY_EXECUTION_STARTED_AT => [''],
+                    ResultsService::DELIVERY_EXECUTION_FINISHED_AT => [''],
+                ],
+                // filters
+                [
+                    ResultsService::FILTER_START_FROM => '',
+                    ResultsService::FILTER_START_TO => '',
+                    // 2019-06-25T00:00:00+00:00
+                    ResultsService::FILTER_END_FROM => '1561420800',
+                    // 2019-06-26T00:00:00+00:00
+                    ResultsService::FILTER_END_TO => '1561507200',
+                ],
+            ],
+            // all filters matched
+            [
+                //expected
+                true,
+                // row
+                [
+                    // 2019-01-01T00:00:00+00:00
+                    ResultsService::DELIVERY_EXECUTION_STARTED_AT => ['0.86410800 1546300800'],
+                    // 2019-06-24T15:01:09
+                    ResultsService::DELIVERY_EXECUTION_FINISHED_AT => ['0.86410800 1561388469'],
+                ],
+                // filters
+                [
+                    // 2018-12-30T00:00:00+00:00
+                    ResultsService::FILTER_START_FROM => '1546128000',
+                    // 2019-01-01T00:00:01
+                    ResultsService::FILTER_START_TO => '1546300801',
+                    // 2019-06-24T00:00:00+00:00
+                    ResultsService::FILTER_END_FROM => '1561334400',
+                    // 2019-06-26T00:00:00+00:00
+                    ResultsService::FILTER_END_TO => '1561507200',
+                ],
+            ],
+            // start to is not matched
+            [
+                //expected
+                false,
+                // row
+                [
+                    // 2019-01-01T00:00:00+00:00
+                    ResultsService::DELIVERY_EXECUTION_STARTED_AT => ['0.86410800 1546300800'],
+                    // 2019-06-24T15:01:09
+                    ResultsService::DELIVERY_EXECUTION_FINISHED_AT => ['0.86410800 1561388469'],
+                ],
+                // filters
+                [
+                    // 2018-12-30T00:00:00+00:00
+                    ResultsService::FILTER_START_FROM => '1546128000',
+                    // 2018-12-31T00:00:00
+                    ResultsService::FILTER_START_TO => '1546214400',
+                    // 2019-06-24T00:00:00+00:00
+                    ResultsService::FILTER_END_FROM => '1561334400',
+                    // 2019-06-26T00:00:00+00:00
+                    ResultsService::FILTER_END_TO => '1561507200',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider filterDataProvider
+     * @param bool $expected
+     * @param array $row
+     * @param array $filters
+     * @throws ReflectionException
+     */
+    public function testFilterData($expected, $row, $filters)
+    {
+        $class = new ReflectionClass(ResultsService::class);
+        $method = $class->getMethod('filterData');
+        $method->setAccessible(true);
+        $resultsService = ResultsService::singleton();
+        self::assertSame($expected, $method->invokeArgs($resultsService, [$row, $filters]));
     }
 }

@@ -50,6 +50,7 @@ use oat\taoResultServer\models\classes\NoResultStorage;
 use oat\taoResultServer\models\classes\NoResultStorageException;
 use oat\taoResultServer\models\classes\ResultManagement;
 use oat\taoResultServer\models\classes\ResultService;
+use tao_helpers_Date;
 use \tao_models_classes_ClassService;
 use oat\taoOutcomeUi\helper\Datatypes;
 use oat\taoDelivery\model\execution\DeliveryExecution;
@@ -71,7 +72,13 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
 
     const PERSISTENCE_CACHE_KEY = 'resultCache';
 
-    const PERIODS = ['startfrom', 'startto', 'endfrom', 'endto'];
+    const PERIODS = [self::FILTER_START_FROM, self::FILTER_START_TO, self::FILTER_END_FROM, self::FILTER_END_TO];
+    const DELIVERY_EXECUTION_STARTED_AT = 'delivery_execution_started_at';
+    const DELIVERY_EXECUTION_FINISHED_AT = 'delivery_execution_finished_at';
+    const FILTER_START_FROM = 'startfrom';
+    const FILTER_START_TO = 'startto';
+    const FILTER_END_FROM = 'endfrom';
+    const FILTER_END_TO = 'endto';
 
     /**
      *
@@ -956,9 +963,10 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      * @param core_kernel_classes_Resource $delivery
      * @param                              $columns - columns to be exported
      * @param                              $filter  'lastSubmitted' or 'firstSubmitted'
-     * @param $storageOptions
+     * @param array $storageOptions
      * @param array $filters
      * @return array
+     * @throws common_Exception
      * @throws common_exception_Error
      */
     public function getResultsByDelivery(\core_kernel_classes_Resource $delivery, $columns, $filter, array $storageOptions = [], array $filters = [])
@@ -1023,7 +1031,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
                         }
 
                         if (in_array($column->getProperty()->getUri(), [DeliveryAssemblyService::PROPERTY_START, DeliveryAssemblyService::PROPERTY_END])) {
-                            $value = \tao_helpers_Date::displayeDate($value, \tao_helpers_Date::FORMAT_VERBOSE);
+                            $value = tao_helpers_Date::displayeDate($value, tao_helpers_Date::FORMAT_VERBOSE);
                         }
 
                         return $value;
@@ -1046,7 +1054,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
                     $cellData[$cellKey] = [self::filterCellData(implode(' ', $values), $filter)];
                 }
             }
-            if ($this->meetFilters($cellData, $filters)) {
+            if ($this->filterData($cellData, $filters)) {
                 $this->convertDates($cellData);
                 $rows[] = array(
                     'id' => $result,
@@ -1070,12 +1078,16 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
        $data = array_reverse($data);
     }
 
+    /**
+     * @param $data
+     * @throws common_Exception
+     */
     private function convertDates(&$data)
     {
-        $sd = current($data['delivery_execution_started_at']);
-        $data['delivery_execution_started_at'][0] = $sd ? \tao_helpers_Date::displayeDate($sd) : '';
-        $ed = current($data['delivery_execution_finished_at']);
-        $data['delivery_execution_finished_at'][0] = $ed ? \tao_helpers_Date::displayeDate($ed) : '';
+        $sd = current($data[self::DELIVERY_EXECUTION_STARTED_AT]);
+        $data[self::DELIVERY_EXECUTION_STARTED_AT][0] = $sd ? tao_helpers_Date::displayeDate($sd) : '';
+        $ed = current($data[self::DELIVERY_EXECUTION_FINISHED_AT]);
+        $data[self::DELIVERY_EXECUTION_FINISHED_AT][0] = $ed ? tao_helpers_Date::displayeDate($ed) : '';
     }
 
     /**
@@ -1084,32 +1096,28 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      * @param array $filters
      * @return bool
      */
-    private function meetFilters($row, array $filters)
+    private function filterData($row, array $filters)
     {
         $matched = true;
         if (count($filters) && count(array_intersect(self::PERIODS, array_keys($filters)))) {
 
-            $startDate = current($row['delivery_execution_started_at']);
-            $startTime = $startDate ? \tao_helpers_Date::getTimeStamp($startDate) : 0;
-            $endDate = current($row['delivery_execution_finished_at']);
-            $endTime = $endDate ? \tao_helpers_Date::getTimeStamp($endDate) : 0;
+            $startDate = current($row[self::DELIVERY_EXECUTION_STARTED_AT]);
+            $startTime = $startDate ? tao_helpers_Date::getTimeStamp($startDate) : 0;
 
-            if ($startTime) {
-                if ($matched && array_key_exists('startfrom', $filters) && $filters['startfrom']) {
-                    $matched = $startTime >= $filters['startfrom'];
-                }
-                if ($matched && array_key_exists('startto', $filters) && $filters['startto']) {
-                    $matched = $startTime <= $filters['startto'];
-                }
+            $endDate = current($row[self::DELIVERY_EXECUTION_FINISHED_AT]);
+            $endTime = $endDate ? tao_helpers_Date::getTimeStamp($endDate) : 0;
+
+            if ($matched && array_key_exists(self::FILTER_START_FROM, $filters) && $filters[self::FILTER_START_FROM]) {
+                $matched = $startTime >= $filters[self::FILTER_START_FROM];
             }
-
-            if ($endTime && $matched) {
-                if ($matched && array_key_exists('endfrom', $filters) && $filters['endfrom']) {
-                    $matched = $endTime >= $filters['endfrom'];
-                }
-                if ($matched && array_key_exists('endto', $filters) && $filters['endto']) {
-                    $matched = $endTime <= $filters['endto'];
-                }
+            if ($matched && array_key_exists(self::FILTER_START_TO, $filters) && $filters[self::FILTER_START_TO]) {
+                $matched = $startTime <= $filters[self::FILTER_START_TO];
+            }
+            if ($matched && array_key_exists(self::FILTER_END_FROM, $filters) && $filters[self::FILTER_END_FROM]) {
+                $matched = $endTime >= $filters[self::FILTER_END_FROM];
+            }
+            if ($matched && array_key_exists(self::FILTER_END_TO, $filters) && $filters[self::FILTER_END_TO]) {
+                $matched = $endTime <= $filters[self::FILTER_END_TO];
             }
         }
         return $matched;
@@ -1118,6 +1126,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
     /**
      * @param array $deliveryUris
      * @return int
+     * @throws common_exception_Error
      */
     public function countResultByDelivery(array $deliveryUris)
     {

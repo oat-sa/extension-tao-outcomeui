@@ -98,6 +98,17 @@ class ColumnsProvider
     public function getTestTakerColumns()
     {
         $columns = [];
+        // add tt ID
+        $columns[] = [
+            'type' => DeliveryExecutionColumn::class,
+            'label' => __('Test Taker ID'),
+            // for the BE to select test taker from the DeliveryExecution
+            'contextId' => ContextTypePropertyColumn::CONTEXT_TYPE_TEST_TAKER,
+            'variableIdentifier' => DeliveryExecutionDataProvider::PROP_USER_ID,
+            // for the FE to show DE property within Test Takers data
+            'prop' => 'delivery_execution',
+            'contextType' => DeliveryExecutionDataProvider::PROP_USER_ID,
+        ];
 
         // add custom properties, it contains the GROUP property as well
         $customProps = $this->getClass(TestTakerService::CLASS_URI_SUBJECT)->getProperties();
@@ -108,7 +119,7 @@ class ColumnsProvider
             $property = $this->getProperty($property);
             $col = new ContextTypePropertyColumn(ContextTypePropertyColumn::CONTEXT_TYPE_TEST_TAKER, $property);
 
-            if ($property->getUri() == OntologyRdfs::RDFS_LABEL) {
+            if ($property->getUri() === OntologyRdfs::RDFS_LABEL) {
                 $col->label = __('Test Taker');
             }
 

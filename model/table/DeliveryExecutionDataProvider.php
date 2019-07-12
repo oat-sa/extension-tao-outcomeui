@@ -37,6 +37,7 @@ class DeliveryExecutionDataProvider implements tao_models_classes_table_DataProv
 
     const PROP_STARTED_AT = 'started_at';
     const PROP_FINISHED_AT = 'finished_at';
+    const PROP_USER_ID = 'user_id';
 
     /**
      * @var array
@@ -63,11 +64,14 @@ class DeliveryExecutionDataProvider implements tao_models_classes_table_DataProv
                 switch ($column->getIdentifier()) {
                     case self::PROP_STARTED_AT:
                         //$column->setContextIdentifier($identifier);
-                        $this->cache[$identifier][$column->getIdentifier()] = $de->getStartTime() ? $de->getStartTime() : '';
+                        $this->cache[$identifier][$column->getIdentifier()] = $de->getStartTime() ?: '';
                         break;
                     case self::PROP_FINISHED_AT:
                         //$column->setContextIdentifier($identifier);
-                        $this->cache[$identifier][$column->getIdentifier()] = $de->getFinishTime() ? $de->getFinishTime() : '';
+                        $this->cache[$identifier][$column->getIdentifier()] = $de->getFinishTime() ?: '';
+                        break;
+                    case self::PROP_USER_ID:
+                        $this->cache[$identifier][$column->getIdentifier()] = $de->getUserIdentifier() ?: '';
                         break;
                     default:
                         throw new \common_exception_Error('Undefined property ' . $column->getIdentifier());
