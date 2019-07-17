@@ -124,7 +124,7 @@ class Updater extends \common_ext_ExtensionUpdater
 
         $this->skip('5.5.0', '5.9.2');
 
-        if ($this->isVersion('5.9.2')) {
+        if ($this->isVersion('5.9.2') || $this->isVersion('5.9.2.1')) {
             /** @var TaskLogInterface|ConfigurableService $taskLogService */
             $taskLogService = $this->getServiceManager()->get(TaskLogInterface::SERVICE_ID);
 
