@@ -60,8 +60,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
     public function setUp()
     {
         TaoPhpUnitTestRunner::initTest();
-        common_ext_ExtensionsManager::singleton()->getExtensionById('taoOutcomeUi');
-        $this->service = ResultsService::singleton();
+        $this->service = new ResultsService();
     }
 
     /**
