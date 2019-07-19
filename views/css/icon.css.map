@@ -7,7 +7,7 @@
 		"../../../tao/views/node_modules/@oat-sa/tao-core-ui/scss/inc/_variables.scss",
 		"../../../tao/views/node_modules/@oat-sa/tao-core-ui/scss/inc/_functions.scss",
 		"../../../tao/views/node_modules/@oat-sa/tao-core-ui/scss/inc/_colors.scss",
-		"../../../tao/views/scss/inc/fonts/_tao-icon-vars.scss"
+		"../../../tao/views/node_modules/@oat-sa/tao-core-ui/scss/inc/fonts/_tao-icon-vars.scss"
 	],
 	"names": [],
 	"mappings": "AAEA,AAAA,UAAU,AAAA,OAAO,AAAC,CKAhB,WAAW,CAAE,gBAAgB,CAC7B,KAAK,CAAE,IAAI,CACX,UAAU,CAAE,MAAM,CAClB,WAAW,CAAE,MAAM,CACnB,YAAY,CAAE,MAAM,CACpB,cAAc,CAAE,IAAI,CACpB,WAAW,CAAE,CAAC,CAGd,sBAAsB,CAAE,WAAW,CACnC,uBAAuB,CAAE,SAAS,CAyEb,OAAO,CAAE,OAAO,CLhFtC,AACD,AAAA,YAAY,AAAA,OAAO,AAAC,CKJlB,WAAW,CAAE,gBAAgB,CAC7B,KAAK,CAAE,IAAI,CACX,UAAU,CAAE,MAAM,CAClB,WAAW,CAAE,MAAM,CACnB,YAAY,CAAE,MAAM,CACpB,cAAc,CAAE,IAAI,CACpB,WAAW,CAAE,CAAC,CAGd,sBAAsB,CAAE,WAAW,CACnC,uBAAuB,CAAE,SAAS,CAgDlB,OAAO,CAAE,OAAO,CLnDjC"
