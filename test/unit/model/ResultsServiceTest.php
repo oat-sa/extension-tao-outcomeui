@@ -1,5 +1,21 @@
 <?php
-
+/**
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; under version 2
+ * of the License (non-upgradable).
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * Copyright (c) 2019  (original work) Open Assessment Technologies SA;
+ */
 namespace oat\taoOutcomeUi\unit\model;
 
 use oat\generis\test\TestCase;
@@ -19,7 +35,7 @@ class ResultsServiceTest extends TestCase
      */
     public function testGetVariablesFromObjectResult($variables, $expectedVariablesCount)
     {
-        $service = ResultsService::singleton();
+        $service = new ResultsService();
 
         $mock = $this->getMockBuilder(RdsResultStorage::class)->getMock();
         $mock->expects($this->once())
@@ -183,7 +199,7 @@ class ResultsServiceTest extends TestCase
         $class = new ReflectionClass(ResultsService::class);
         $method = $class->getMethod('filterData');
         $method->setAccessible(true);
-        $resultsService = ResultsService::singleton();
+        $resultsService = new ResultsService();
         self::assertSame($expected, $method->invokeArgs($resultsService, [$row, $filters]));
     }
 }
