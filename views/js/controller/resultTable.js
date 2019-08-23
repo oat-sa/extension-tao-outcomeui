@@ -132,7 +132,10 @@ define([
                                 columns = columns.concat(response.columns);
                             }
                         }
-                        _buildTable(done);
+                        // setTimeout hotfix: let loadingBar be stopped by code in main.js and only then start
+                        // new datatable initialization which starts new request and starts loadingBar again
+                        // otherwise loadingBar will be stopped by main.js just after start
+                        setTimeout(function () { _buildTable(done); }, 0);
                     }
                 });
             };
