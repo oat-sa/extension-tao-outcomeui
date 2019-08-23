@@ -136,7 +136,9 @@ define([
                             }
                         }
                     }
-                    done();
+                    if (_.isFunction(done)) {
+                        done();
+                    }
                 });
             };
 
