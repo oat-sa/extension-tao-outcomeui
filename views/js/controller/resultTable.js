@@ -29,8 +29,9 @@ define([
     'ui/taskQueue/taskQueue',
     'ui/taskQueueButton/standardButton',
     'ui/dateRange/dateRange',
+    'layout/loading-bar',
     'ui/datatable'
-], function($, _, __, module, urlUtil, feedback, taskQueue, standardTaskButtonFactory, dateRangeFactory) {
+], function($, _, __, module, urlUtil, feedback, taskQueue, standardTaskButtonFactory, dateRangeFactory, loadingBar) {
     'use strict';
 
     /**
@@ -111,6 +112,7 @@ define([
              * @param {Function} done - once the datatable is loaded
              */
             var buildGrid = function buildGrid(url, action, done){
+                loadingBar.start();
                 $.ajax({
                     url : url,
                     dataType : 'json',
@@ -137,6 +139,8 @@ define([
                         // otherwise loadingBar will be stopped by main.js just after start
                         setTimeout(function () { _buildTable(done); }, 0);
                     }
+                }).always(function () {
+                    loadingBar.stop();
                 });
             };
 
