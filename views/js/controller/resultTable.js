@@ -119,7 +119,6 @@ define([
                     data : {filter : filter, uri : uri},
                     type :'GET'
                 }).done(function(response){
-                    loadingBar.stop();
                     if(response && response.columns){
                         if(action === 'remove'){
                             columns = _.reject(columns, function(col){
@@ -139,6 +138,8 @@ define([
                     if (_.isFunction(done)) {
                         done();
                     }
+                }).always(function () {
+                    loadingBar.stop();
                 });
             };
 
