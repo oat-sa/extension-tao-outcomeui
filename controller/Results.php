@@ -212,7 +212,7 @@ class Results extends \tao_actions_CommonModule
 
                 $data[] = array(
                     'id' => $deliveryExecution->getIdentifier(),
-                    'ttakerid' => $res['testTakerIdentifier'],
+                    'ttakerid' => $user->getIdentifier(),
                     'ttaker' => _dh($userName),
                     'time' => $startTime,
                 );
