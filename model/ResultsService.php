@@ -973,12 +973,8 @@ class ResultsService extends tao_models_classes_ClassService implements ServiceL
         $rows = array();
 
         //The list of delivery Results matching the current selection filters
-        $results = array();
-
         $this->setImplementation($this->getReadableImplementation($delivery));
-        foreach($this->getImplementation()->getResultByDelivery([$delivery->getUri()], $storageOptions) as $result){
-            $results[] = $result['deliveryResultIdentifier'];
-        }
+        $results = $this->findResultsByDeliveryAndFilters($delivery, $filters, $storageOptions);
         $dpmap = array();
         foreach ($columns as $column) {
             $dataprovider = $column->getDataProvider();
@@ -1146,7 +1142,7 @@ class ResultsService extends tao_models_classes_ClassService implements ServiceL
      * Retrieve the different variables columns pertainign to the current selection of results
      * Implementation note : it nalyses all the data collected to identify the different response variables submitted by the items in the context of activities
      */
-    public function getVariableColumns($delivery, $variableClassUri)
+    public function getVariableColumns($delivery, $variableClassUri, array $filters = [], array $storageOptions = [])
     {
         $columns = array();
         /** @var ResultServiceWrapper $resultServiceWrapper */
@@ -1154,12 +1150,10 @@ class ResultsService extends tao_models_classes_ClassService implements ServiceL
 
         $this->setImplementation($this->getReadableImplementation($delivery));
         //The list of delivery Results matching the current selection filters
-        $results = $this->getImplementation()->getResultByDelivery([$delivery->getUri()]);
+        $resultsIds= $this->findResultsByDeliveryAndFilters($delivery, $filters, $storageOptions);
 
         //retrieveing all individual response variables referring to the  selected delivery results
         $itemIndex = $this->getItemIndexer($delivery);
-
-        $resultsIds  = array_column($results, 'deliveryResultIdentifier');
 
         //retrieving The list of the variables identifiers per activities defintions as observed
         $variableTypes = array();
@@ -1455,5 +1449,22 @@ class ResultsService extends tao_models_classes_ClassService implements ServiceL
             $this->setServiceLocator(ServiceManager::getServiceManager());
         }
         return $this->serviceLocator;
+    }
+
+    /**
+     * @param core_kernel_classes_Resource $delivery
+     * @param array $filters
+     * @param array $storageOptions
+     * @return array
+     * @throws common_exception_Error
+     */
+    protected function findResultsByDeliveryAndFilters($delivery, array $filters = [], array $storageOptions = [])
+    {
+        $results = [];
+        foreach($this->getImplementation()->getResultByDelivery([$delivery->getUri()], $storageOptions) as $result){
+            $results[] = $result['deliveryResultIdentifier'];
+        }
+
+        return $results;
     }
 }
