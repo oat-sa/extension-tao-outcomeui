@@ -120,7 +120,8 @@ tr td {
 
 .result-table-container {
     display: block;
-    width: 100%;
+    // navigation-bar and container padding has to be considered
+    width: calc(100vw - 320px);
 
     .datatable-wrapper {
         display: block;
