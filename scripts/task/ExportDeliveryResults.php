@@ -155,7 +155,7 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
                 $this->submittedVersion = $params[2];
             }
 
-            if (isset($params[2])) {
+            if (isset($params[3])) {
                 $this->filters = $params[3];
             }
         } else {
