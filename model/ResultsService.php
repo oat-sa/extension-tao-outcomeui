@@ -556,60 +556,103 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
             }
         });
 
-        $savedItems = $variablesByItem = [];
-        $firstEpoch = null;
-
-        foreach ($itemVariables as $variables) {
-
-            $itemVariable = $variables[0];
-
-            /** @var \taoResultServer_models_classes_Variable $variable */
-            $variable = $itemVariable->variable;
-            $itemCallId = $itemVariable->callIdItem;
-            if (is_null($itemCallId)) {
-                // not an item result
-                continue;
-            }
-            if ($variable->getIdentifier() == 'numAttempts') {
-                $firstEpoch = $variable->getEpoch();
-                if ($filter != self::VARIABLES_FILTER_ALL) {
-                    if (array_key_exists($itemCallId, $savedItems)) {
-                        if ($filter == self::VARIABLES_FILTER_FIRST_SUBMITTED) {
-                            continue;
-                        }
-                        if ($filter == self::VARIABLES_FILTER_LAST_SUBMITTED) {
-                            unset($variablesByItem[$savedItems[$itemCallId]]);
-                            unset($savedItems[$itemCallId]);
-                        }
-                    }
+        $attempts = $this->splitByItemAndAttempt($itemVariables, $filter);
+        $variablesByItem = [];
+        foreach ($attempts as $time => $variables) {
+            foreach ($variables as $itemVariable) {
+                $variable = $itemVariable->variable;
+                $itemCallId = $itemVariable->callIdItem;
+                if ($variable->getIdentifier() == 'numAttempts') {
+                    $variablesByItem[$time] = $this->getItemInfos($itemCallId, [[$itemVariable]]);
+                    $variablesByItem[$time]['attempt'] = $variable->getValue();
                 }
-                $variablesByItem[$firstEpoch] = $this->getItemInfos($itemCallId, [[$itemVariable]]);
-                $variablesByItem[$firstEpoch]['attempt'] = $variable->getValue();
-                $savedItems[$itemCallId] = $firstEpoch;
+                $variableDescription = [
+                    'uri' => $itemVariable->uri,
+                    'var' => $variable,
+                ];
+                if ($variable instanceof \taoResultServer_models_classes_ResponseVariable && !is_null($variable->getCorrectResponse())) {
+                    $variableDescription['isCorrect'] = $variable->getCorrectResponse() >= 1 ? 'correct' : 'incorrect';
+                } else {
+                    $variableDescription['isCorrect'] = 'unscored';
+                }
+
+                // some dangerous assumptions about the call Id structure
+                $callIdParts = explode('.', $itemCallId);
+                $variablesByItem[$time]['internalIdentifier'] = $callIdParts[count($callIdParts)-2];
+                $variablesByItem[$time][get_class($variable)][$variable->getIdentifier()] = $variableDescription;
             }
-
-            if (!isset($variablesByItem[$firstEpoch])) {
-                continue;
-            }
-
-            $variableDescription = [
-                'uri' => $itemVariable->uri,
-                'var' => $variable,
-            ];
-
-            if ($variable instanceof \taoResultServer_models_classes_ResponseVariable && !is_null($variable->getCorrectResponse())) {
-                $variableDescription['isCorrect'] = $variable->getCorrectResponse() >= 1 ? 'correct' : 'incorrect';
-            } else {
-                $variableDescription['isCorrect'] = 'unscored';
-            }
-
-            // some dangerous assumptions about the call Id structure
-            $callIdParts = explode('.', $itemCallId);
-            $variablesByItem[$firstEpoch]['internalIdentifier'] = $callIdParts[count($callIdParts)-2];
-            $variablesByItem[$firstEpoch][get_class($variable)][$variable->getIdentifier()] = $variableDescription;
         }
 
         return $variablesByItem;
+    }
+
+    public function splitByItemAndAttempt($itemVariables, $filter)
+    {
+        $sorted = [];
+        foreach ($this->splitByItem($itemVariables) as $variables) {
+            $byAttempt = $this->splitByAttempt($variables);
+            switch ($filter) {
+                case self::VARIABLES_FILTER_ALL:
+                    foreach ($byAttempt as $time => $attempt) {
+                        $sorted[$time] = $attempt;
+                    }
+                    break;
+                case self::VARIABLES_FILTER_FIRST_SUBMITTED:
+                    reset($byAttempt);
+                    $sorted[key($byAttempt)] = current($byAttempt);
+                    break;
+                case self::VARIABLES_FILTER_LAST_SUBMITTED:
+                    end($byAttempt);
+                    $sorted[key($byAttempt)] = current($byAttempt);
+                    break;
+                default:
+                    throw new \common_exception_InconsistentData('Unknown Filter '.$filter);
+            }
+        }
+        ksort($sorted);
+        return $sorted;
+    }
+
+    /**
+     * Split item variables by item
+     */
+    public function splitByItem($itemVariables)
+    {
+        $byItem = [];
+        foreach ($itemVariables as $variable) {
+            $itemVariable = $variable[0];
+            if (!is_null($itemVariable->callIdItem)) {
+                if (!isset($byItem[$itemVariable->callIdItem])) {
+                    $byItem[$itemVariable->callIdItem] = [$itemVariable];
+                } else {
+                    $byItem[$itemVariable->callIdItem][] = $itemVariable;
+                }
+            }
+        }
+        return $byItem;
+    }
+
+    public function splitByAttempt($itemVariables)
+    {
+        $attempts = [];
+        foreach ($itemVariables as $variable) {
+            if ($variable->variable->getIdentifier() == 'numAttempts') {
+                $attempts[(string)$variable->variable->getCreationTime()] = [];
+            }
+        }
+        foreach ($itemVariables as $variable) {
+            $cand = null;
+            $bestDist = null;
+            foreach (array_keys($attempts) as $time) {
+                $dist = abs($time - $variable->variable->getCreationTime());
+                if (is_null($bestDist) || $dist < $bestDist) {
+                    $bestDist = $dist;
+                    $cand = $time;
+                }
+            }
+            $attempts[$cand][] = $variable;
+        }
+        return $attempts;
     }
 
     /**
