@@ -240,13 +240,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         //if (common_cache_FileCache::singleton()->has($serial)) {
         //    $variables = common_cache_FileCache::singleton()->get($serial);
         //} else {
-
-        $itemResultVariablesArray = array_values($this->getItemResultsFromDeliveryResult($resultIdentifier));
-        $testResultVariablesArray = array_values($this->getTestsFromDeliveryResult($resultIdentifier));
-
-        $finalResultVariables = array_merge($itemResultVariablesArray, $testResultVariablesArray);
-
-        $resultVariables = $this->getVariablesFromObjectResult($finalResultVariables);
+        $resultVariables = $this->getImplementation()->getDeliveryVariables($resultIdentifier);
         foreach ($resultVariables as $resultVariable) {
             $currentItem = current($resultVariable);
             $key = isset($currentItem->callIdItem) ? $currentItem->callIdItem : $currentItem->callIdTest;
@@ -540,8 +534,11 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
             $itemVariables = array_merge($itemVariables, $this->getVariablesFromObjectResult($ids, $wantedTypes));
         }
 
-        unset($itemCallIds, $itemCallIdChunks);
+        return $this->structureItemVariables($itemVariables, $filter);
+    }
 
+    public function structureItemVariables($itemVariables, $filter)
+    {
         usort($itemVariables, function($a, $b){
             $variableA = $a[0]->variable;
             $variableB = $b[0]->variable;
@@ -569,7 +566,10 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
             /** @var \taoResultServer_models_classes_Variable $variable */
             $variable = $itemVariable->variable;
             $itemCallId = $itemVariable->callIdItem;
-
+            if (is_null($itemCallId)) {
+                // not an item result
+                continue;
+            }
             if ($variable->getIdentifier() == 'numAttempts') {
                 $firstEpoch = $variable->getEpoch();
                 if ($filter != self::VARIABLES_FILTER_ALL) {
@@ -603,7 +603,9 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
                 $variableDescription['isCorrect'] = 'unscored';
             }
 
-            $variablesByItem[$firstEpoch]['internalIdentifier'] = explode('.', str_replace($resultIdentifier, '', $itemCallId), 3)[1];
+            // some dangerous assumptions about the call Id structure
+            $callIdParts = explode('.', $itemCallId);
+            $variablesByItem[$firstEpoch]['internalIdentifier'] = $callIdParts[count($callIdParts)-2];
             $variablesByItem[$firstEpoch][get_class($variable)][$variable->getIdentifier()] = $variableDescription;
         }
 
@@ -789,12 +791,15 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      * @return array
      */
     public function getVariableDataFromDeliveryResult($resultIdentifier, $wantedTypes = array(\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class)) {
+        $testCallIds = $this->getTestsFromDeliveryResult($resultIdentifier);
+        return $this->extractTestVariables($this->getVariablesFromObjectResult($testCallIds), $wantedTypes);
+    }
+
+    public function extractTestVariables($variableObjects, $wantedTypes) {
         $variablesData = array();
-        foreach ($this->getTestsFromDeliveryResult($resultIdentifier) as $testResult) {
-            foreach ($this->getVariablesFromObjectResult($testResult) as $variable) {
-                if($variable[0]->callIdTest != "" && in_array(get_class($variable[0]->variable), $wantedTypes)){
-                    $variablesData[] = $variable[0]->variable;
-                }
+        foreach ($variableObjects as $variable) {
+            if(is_null($variable[0]->callIdItem) && in_array(get_class($variable[0]->variable), $wantedTypes)){
+                $variablesData[] = $variable[0]->variable;
             }
         }
         usort($variablesData, function($a, $b){

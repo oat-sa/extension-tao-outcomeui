@@ -338,21 +338,24 @@ class Results extends \tao_actions_CommonModule
                 exit;
             }
 
-            $variables = $this->getResultVariables($resultId, $filterSubmission, $filterTypes);
-            $this->setData('variables', $variables);
+            $variables = $this->getResultsService()->getImplementation()->getDeliveryVariables($resultId);
+            $structuredItemVariables = $this->getResultsService()->structureItemVariables($variables, $filterSubmission);
+            $itemVariables = $this->formatItemVariables($structuredItemVariables, $filterTypes);
+            $testVariables = $this->getResultsService()->extractTestVariables($variables, $filterTypes);
 
-            $stats = $this->getResultsService()->calculateResponseStatistics($variables);
+            // render item variables
+            $this->setData('variables', $itemVariables);
+            $stats = $this->getResultsService()->calculateResponseStatistics($itemVariables);
             $this->setData('nbResponses', $stats["nbResponses"]);
             $this->setData('nbCorrectResponses', $stats["nbCorrectResponses"]);
             $this->setData('nbIncorrectResponses', $stats["nbIncorrectResponses"]);
             $this->setData('nbUnscoredResponses', $stats["nbUnscoredResponses"]);
+            // render test variables
+            $this->setData('deliveryVariables', $testVariables);
 
-            //retireve variables not related to item executions
-            $deliveryVariables = $this->getResultsService()->getVariableDataFromDeliveryResult($resultId, $filterTypes);
-            $this->setData('deliveryVariables', $deliveryVariables);
             $this->setData('itemType', $this->getResultsService()->getDeliveryItemType($resultId));
-            $this->setData('id', $this->getRawParameter("id"));
-            $this->setData('classUri', $this->getRequestParameter("classUri"));
+            $this->setData('id', $resultId);
+            $this->setData('classUri', $delivery->getUri());
             $this->setData('filterSubmission', $filterSubmission);
             $this->setData('filterTypes', $filterTypes);
             $this->setView('viewResult.tpl');
@@ -459,18 +462,14 @@ class Results extends \tao_actions_CommonModule
     }
 
     /**
-     * Extracts the result variables, with respect to the user's filter, and inject item states to allow preview with results
-     *
-     * @param string $resultId
-     * @param string $filterSubmission
+     * Regroup item variables by attempt
+     * @param array $variables
      * @param array $filterTypes
      * @return array
      */
-    protected function getResultVariables($resultId, $filterSubmission, $filterTypes = array())
+    protected function formatItemVariables($variables, $filterTypes)
     {
-        $resultService = $this->getResultsService();
-        $variables = $resultService->getStructuredVariables($resultId, $filterSubmission, array_merge($filterTypes, [\taoResultServer_models_classes_ResponseVariable::class]));
-        $displayedVariables = $resultService->filterStructuredVariables($variables, $filterTypes);
+        $displayedVariables = $this->getResultsService()->filterStructuredVariables($variables, $filterTypes);
         $responses = ResponseVariableFormatter::formatStructuredVariablesToItemState($variables);
         $excludedVariables = array_flip(['numAttempts', 'duration']);
 
