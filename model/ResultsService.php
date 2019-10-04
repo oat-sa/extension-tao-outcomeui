@@ -14,7 +14,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2013-2017 Open Assessment Technologies S.A.
+ * Copyright (c) 2013-2019 Open Assessment Technologies S.A.
  *
  *
  * @access public
@@ -42,7 +42,6 @@ use oat\taoOutcomeUi\model\table\ResponseColumn;
 use \common_Exception;
 use \common_Logger;
 use \common_exception_Error;
-use \core_kernel_classes_Class;
 use \core_kernel_classes_Resource;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
@@ -559,6 +558,8 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
             }
         });
 
+        $itemVariables = $this->sortItemVariables($itemVariables);
+
         $savedItems = $variablesByItem = [];
         $firstEpoch = null;
 
@@ -610,6 +611,37 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         return $variablesByItem;
     }
 
+    /**
+     * Sort item variable by group variables by item results.
+     * In itemResults variables, first has to be numAttempts
+     *
+     * @param array $itemVariables
+     * @return array A flat list of sorted variables
+     */
+    protected function sortItemVariables(array $itemVariables)
+    {
+        $sortedVariables = $return = [];
+
+        foreach ($itemVariables as $variables) {
+            $variable = $variables[0];
+            if (!isset($sortedVariables[$variable->callIdItem])) {
+                $sortedVariables[$variable->callIdItem] = [];
+            }
+            if ($variable->variable->getIdentifier() == 'numAttempts') {
+                array_unshift($sortedVariables[$variable->callIdItem], $variables);
+            } else {
+                $sortedVariables[$variable->callIdItem][] = $variables;
+            }
+        }
+
+        foreach ($sortedVariables as $callId => $sortedVariable) {
+            foreach ($sortedVariable as $var) {
+                $return[] = $var;
+            }
+        }
+
+        return $return;
+    }
     /**
      * Filters the complex array structure for variable classes
      * @param array $structure as defined by getStructuredVariables()
@@ -1171,6 +1203,9 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
                     if (!is_null($variable->item)) {
                         $uri = $variable->item;
                         $contextIdentifierLabel = $itemIndex->getItemValue($uri, $resultLanguage, 'label');
+                        if (empty($contextIdentifierLabel)) {
+                            $contextIdentifierLabel = $variable->item;
+                        }
                     } else {
                         $uri = $variable->test;
                         $testData = $this->getTestMetadata($delivery, $variable->test);
