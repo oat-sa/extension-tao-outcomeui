@@ -13,10 +13,6 @@ msgstr ""
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#, tao-public
-msgid " "
-msgstr " "
-
 msgid "Add All grades"
 msgstr "Pridėti Visus pažymius"
 
@@ -44,11 +40,11 @@ msgstr "Anonimizuoti"
 msgid "Class"
 msgstr "Klasė"
 
-msgid "CSV results export for delivery \"%s"
-msgstr "CSV rezultatų eksportavimas pateikčiai \"%s"
+msgid "CSV results export for delivery\"%s\""
+msgstr "CSV rezultatų eksportavimas pateikčiai \"%s\""
 
-msgid "CSV results export for delivery class \"%s"
-msgstr "CSV rezultatų eksportavimas pateikties klasei \"%s"
+msgid "CSV results export for delivery class \"%s\""
+msgstr "CSV rezultatų eksportavimas pateikties klasei \"%s\""
 
 msgid "Delete"
 msgstr "Ištrinti"
