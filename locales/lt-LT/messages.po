@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: TAO 3.4.0-sprint112\n"
-"PO-Revision-Date: 2019-10-09T09:03:10\n"
+"PO-Revision-Date: 2019-10-11T09:48:40\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: lt-LT\n"
@@ -12,6 +12,10 @@ msgstr ""
 "X-Poedit-Basepath: ../../\n"
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-SearchPath-0: .\n"
+
+#, tao-public
+msgid " "
+msgstr ""
 
 msgid "Add All grades"
 msgstr "Pridėti Visus pažymius"
@@ -40,11 +44,11 @@ msgstr "Anonimizuoti"
 msgid "Class"
 msgstr "Klasė"
 
-msgid "CSV results export for delivery\"%s\""
-msgstr "CSV rezultatų eksportavimas pateikčiai \"%s\""
+msgid "CSV results export for delivery \"%s"
+msgstr ""
 
-msgid "CSV results export for delivery class \"%s\""
-msgstr "CSV rezultatų eksportavimas pateikties klasei \"%s\""
+msgid "CSV results export for delivery class \"%s"
+msgstr ""
 
 msgid "Delete"
 msgstr "Ištrinti"
