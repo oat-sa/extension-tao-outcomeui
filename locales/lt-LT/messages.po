@@ -126,7 +126,7 @@ msgid "Please confirm deletion"
 msgstr "Prašome patvirtinti ištrynimą"
 
 msgid "Preview"
-msgstr ""
+msgstr "Peržiūra"
 
 msgid "Remove All grades"
 msgstr "Pašalinti Visus pažymius"
