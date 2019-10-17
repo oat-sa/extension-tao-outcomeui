@@ -77,5 +77,15 @@ As a system administrator you also install it through the TAO Extension Manager:
 *Possible values:* 
 * a `ResultsViewerService` model.
 
+### Registering default (phpfile) result page cache
+```bash
+ $ sudo -u www-data php index.php '\oat\taoOutcomeUi\scripts\tools\RegisterDefaultResultCache'
+```
+
+### Delete result cache for a delivery execution aka. result
+```bash
+ $ sudo -u www-data php index.php 'oat\taoOutcomeUi\scripts\tools\DeleteResultCache' -u {deliveryExecutionUri}
+```
+
 ## Extension Wiki
 You can find the [extension wiki here](https://github.com/oat-sa/extension-tao-outcomeui/wiki).
