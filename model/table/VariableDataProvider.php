@@ -65,6 +65,8 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
      */
     public function prepare($resources, $columns)
     {
+        $this->cache = [];
+
         $resultsService = ResultsService::singleton();
         $undefinedStr = __('unknown'); //some data may have not been submitted
         /**

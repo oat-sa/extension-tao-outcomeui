@@ -981,32 +981,15 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         //The list of delivery Results matching the current selection filters
         $this->setImplementation($this->getReadableImplementation($delivery));
         $results = $this->findResultsByDeliveryAndFilters($delivery, $filters, $storageOptions);
-        $dpmap = array();
-        foreach ($columns as $column) {
-            $dataprovider = $column->getDataProvider();
-            $found = false;
-            foreach ($dpmap as $k => $dp) {
-                if ($dp['instance'] == $dataprovider) {
-                    $found = true;
-                    $dpmap[$k]['columns'][] = $column;
-                }
-            }
-            if (!$found) {
-                $dpmap[] = array(
-                    'instance'	=> $dataprovider,
-                    'columns'	=> array(
-                        $column
-                    )
-                );
-            }
-        }
 
-        foreach ($dpmap as $arr) {
-            $arr['instance']->prepare($results, $arr['columns']);
-        }
-
+        $dataProviderMap = $this->collectColumnDataProviderMap($columns);
         /** @var DeliveryExecution $result */
         foreach($results as $result) {
+            // initialize column data providers for single result
+            foreach ($dataProviderMap as $element) {
+                $element['instance']->prepare([$result], $element['columns']);
+            }
+
             $cellData = array();
 
             /** @var ContextTypePropertyColumn|VariableColumn $column */
@@ -1065,6 +1048,33 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         }
         $this->sortByStartDate($rows);
         return $rows;
+    }
+
+    /**
+     * @param $columns
+     * @return array
+     */
+    private function collectColumnDataProviderMap($columns)
+    {
+        $dataProviderMap = [];
+        foreach ($columns as $column) {
+            $dataProvider = $column->getDataProvider();
+            $found = false;
+            foreach ($dataProviderMap as $index => $element) {
+                if ($element['instance'] == $dataProvider) {
+                    $dataProviderMap[$index]['columns'][] = $column;
+                    $found = true;
+                }
+            }
+            if (!$found) {
+                $dataProviderMap[] = [
+                    'instance' => $dataProvider,
+                    'columns' => [$column]
+                ];
+            }
+        }
+
+        return $dataProviderMap;
     }
 
     private function sortByStartDate(&$data)
