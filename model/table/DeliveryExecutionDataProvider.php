@@ -54,6 +54,8 @@ class DeliveryExecutionDataProvider implements tao_models_classes_table_DataProv
      */
     public function prepare($resources, $columns)
     {
+        $this->cache = [];
+
         /** @var ServiceProxy $service */
         $service = $this->getServiceLocator()->get(ServiceProxy::SERVICE_ID);
         foreach ($resources as $identifier) {
