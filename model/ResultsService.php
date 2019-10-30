@@ -1062,7 +1062,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
                 );
             }
         }
-        $this->sortByStartDate($rows);
+
         return $rows;
     }
 
@@ -1091,18 +1091,6 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         }
 
         return $dataProviderMap;
-    }
-
-    private function sortByStartDate(&$data)
-    {
-        usort($data, function ($a, $b) {
-            $bDate = current($b['cell']['delivery_execution_started_at']);
-            $aDate = current($a['cell']['delivery_execution_started_at']);
-            $startB = $bDate ? strtotime($bDate) : 0;
-            $startA = $aDate ? strtotime($aDate) : 0;
-            return $startB - $startA;
-        });
-       $data = array_reverse($data);
     }
 
     /**
