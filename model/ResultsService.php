@@ -966,25 +966,40 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
 
     /**
      * @param core_kernel_classes_Resource $delivery
-     * @param                              $columns - columns to be exported
-     * @param                              $filter  'lastSubmitted' or 'firstSubmitted'
      * @param array $storageOptions
      * @param array $filters
+     * @throws common_Exception
+     * @throws common_exception_Error
+     */
+    public function getResultsByDelivery(\core_kernel_classes_Resource $delivery, array $storageOptions = [], array $filters = [])
+    {
+        //The list of delivery Results matching the current selection filters
+        $this->setImplementation($this->getReadableImplementation($delivery));
+        return $this->findResultsByDeliveryAndFilters($delivery, $filters, $storageOptions);
+    }
+
+    /**
+     * @param array $results
+     * @param                              $columns - columns to be exported
+     * @param                              $filter  'lastSubmitted' or 'firstSubmitted'
+     * @param array $filters
+     * @param int $offset
+     * @param int $limit
      * @return array
      * @throws common_Exception
      * @throws common_exception_Error
      */
-    public function getResultsByDelivery(\core_kernel_classes_Resource $delivery, $columns, $filter, array $storageOptions = [], array $filters = [])
+    public function getCellsByResults(array $results, $columns, $filter, array $filters = [], $offset = 0, $limit = null)
     {
         $rows = array();
-
-        //The list of delivery Results matching the current selection filters
-        $this->setImplementation($this->getReadableImplementation($delivery));
-        $results = $this->findResultsByDeliveryAndFilters($delivery, $filters, $storageOptions);
-
         $dataProviderMap = $this->collectColumnDataProviderMap($columns);
+
         /** @var DeliveryExecution $result */
-        foreach($results as $result) {
+        for ($i = $offset; $i < ($offset + $limit); $i++) {
+            if (!array_key_exists($i, $results)) {
+                continue;
+            }
+            $result = $results[$i];
             // initialize column data providers for single result
             foreach ($dataProviderMap as $element) {
                 $element['instance']->prepare([$result], $element['columns']);

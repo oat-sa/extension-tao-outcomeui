@@ -213,18 +213,36 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      */
     public function getData()
     {
-        $data = $this->resultsService->getResultsByDelivery(
+        return $this->resultsService->getResultsByDelivery(
             $this->getResourceToExport(),
-            $this->getColumnsToExport(),
-            $this->getVariableToExport(),
             $this->storageOptions,
             $this->getFiltersToExport()
+        );
+    }
+
+    /**
+     * @param array $results
+     * @param int $offset
+     * @param null $limit
+     * @return array
+     * @throws \common_Exception
+     * @throws \common_exception_Error
+     */
+    private function getCells($results, $offset = 0, $limit = null)
+    {
+        $cells = $this->resultsService->getCellsByResults(
+            $results,
+            $this->getColumnsToExport(),
+            $this->getVariableToExport(),
+            $this->getFiltersToExport(),
+            $offset,
+            $limit
         );
 
         // flattening data: only 'cell' is what we need
         return array_map(function($row){
             return $row['cell'];
-        }, $data);
+        }, $cells);
     }
 
     /**
@@ -233,17 +251,25 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
     public function export($destination = null)
     {
         $columnNames = $this->resultsService->getColumnNames($this->getColumnsToExport());
+
         $data = $this->getData();
 
-        // merge column names and data into one array
+        $offset = 0;
+        $limit = 100;
+
         $result = [];
-        foreach ($data as $row) {
-            $rowResult = [];
-            foreach ($row as $rowKey => $rowVal) {
-                $rowResult[$columnNames[$rowKey]] = $rowVal[0];
+        do {
+            $cells = $this->getCells($data, $offset, $limit);
+            $offset += $limit;
+
+            foreach ($cells as $row) {
+                $rowResult = [];
+                foreach ($row as $rowKey => $rowVal) {
+                    $rowResult[$columnNames[$rowKey]] = $rowVal[0];
+                }
+                $result[] = $rowResult;
             }
-            $result[] = $rowResult;
-        }
+        } while (count($cells));
 
         //If there are no executions yet, the file is exported but contains only the header
         if (empty($result)) {
