@@ -220,6 +220,18 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
         );
     }
 
+    private function sortByStartDate(&$data)
+    {
+        usort($data, function ($a, $b) {
+            $bDate = $b[ColumnsProvider::LABEL_START_DELIVERY_EXECUTION];
+            $aDate = $a[ColumnsProvider::LABEL_START_DELIVERY_EXECUTION];
+            $startB = $bDate ? strtotime($bDate) : 0;
+            $startA = $aDate ? strtotime($aDate) : 0;
+            return $startB - $startA;
+        });
+        $data = array_reverse($data);
+    }
+
     /**
      * @param array $results
      * @param int $offset
@@ -270,6 +282,8 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
                 $result[] = $rowResult;
             }
         } while (count($cells));
+
+        $this->sortByStartDate($result);
 
         //If there are no executions yet, the file is exported but contains only the header
         if (empty($result)) {
