@@ -996,10 +996,11 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
             foreach ($columns as $column) {
                 $cellKey = $this->getColumnId($column);
 
+                $cellData[$cellKey] = null;
                 if (count($column->getDataProvider()->cache) > 0) {
                     // grade or response column values
                     $cellData[$cellKey] = self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column), $filter);
-                } else {
+                } elseif ($column instanceof ContextTypePropertyColumn) {
                     // test taker or delivery property values
                     $resource = $column->isTestTakerType()
                         ? $this->getTestTaker($result)
