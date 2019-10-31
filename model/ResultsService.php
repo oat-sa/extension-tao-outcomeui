@@ -997,7 +997,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         /** @var DeliveryExecution $result */
         for ($i = $offset; $i < ($offset + $limit); $i++) {
             if (!array_key_exists($i, $results)) {
-                continue;
+                break;
             }
             $result = $results[$i];
             // initialize column data providers for single result

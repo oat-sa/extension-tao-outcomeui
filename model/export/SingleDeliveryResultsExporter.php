@@ -213,11 +213,25 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      */
     public function getData()
     {
-        return $this->resultsService->getResultsByDelivery(
+        $results = $this->resultsService->getResultsByDelivery(
             $this->getResourceToExport(),
             $this->storageOptions,
             $this->getFiltersToExport()
         );
+
+        $cells = $this->resultsService->getCellsByResults(
+            $results,
+            $this->getColumnsToExport(),
+            $this->getVariableToExport(),
+            $this->getFiltersToExport(),
+            0,
+            PHP_INT_MAX
+        );
+
+        // flattening data: only 'cell' is what we need
+        return array_map(function($row){
+            return $row['cell'];
+        }, $cells);
     }
 
     private function sortByStartDate(&$data)
@@ -264,7 +278,11 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
     {
         $columnNames = $this->resultsService->getColumnNames($this->getColumnsToExport());
 
-        $data = $this->getData();
+        $data = $this->resultsService->getResultsByDelivery(
+            $this->getResourceToExport(),
+            $this->storageOptions,
+            $this->getFiltersToExport()
+        );
 
         $offset = 0;
         $limit = 100;
