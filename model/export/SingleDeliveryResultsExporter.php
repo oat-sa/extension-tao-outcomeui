@@ -89,6 +89,8 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      */
     private $filters = [];
 
+    const CHUNK_SIZE = 100;
+
     /**
      * @param string|\core_kernel_classes_Resource $delivery
      * @param ResultsService                       $resultsService
@@ -285,12 +287,13 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
         );
 
         $offset = 0;
-        $limit = 100;
 
         $result = [];
+
+        // getCells() consumes much memory inside it, so let's collect cells iteratively
         do {
-            $cells = $this->getCells($data, $offset, $limit);
-            $offset += $limit;
+            $cells = $this->getCells($data, $offset, self::CHUNK_SIZE);
+            $offset += self::CHUNK_SIZE;
 
             foreach ($cells as $row) {
                 $rowResult = [];
