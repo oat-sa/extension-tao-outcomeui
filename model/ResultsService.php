@@ -979,6 +979,15 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
     }
 
     /**
+     * @param string $result
+     * @return bool
+     */
+    protected function shouldResultBeSkipped($result)
+    {
+        return false;
+    }
+
+    /**
      * @param array $results
      * @param                              $columns - columns to be exported
      * @param                              $filter  'lastSubmitted' or 'firstSubmitted'
@@ -1000,6 +1009,10 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
                 break;
             }
             $result = $results[$i];
+            if ($this->shouldResultBeSkipped($result)) {
+                continue;
+            }
+
             // initialize column data providers for single result
             foreach ($dataProviderMap as $element) {
                 $element['instance']->prepare([$result], $element['columns']);
