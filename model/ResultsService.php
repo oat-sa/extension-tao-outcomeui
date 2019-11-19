@@ -1034,7 +1034,11 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
                         ? $this->getTestTaker($result)
                         : $this->getDelivery($result);
 
-                    $values = $resource->getPropertyValues($column->getProperty());
+                    $property = $column->getProperty();
+                    if ($resource instanceof User) {
+                        $property = $column->getProperty()->getUri();
+                    }
+                    $values = $resource->getPropertyValues($property);
 
                     $values = array_map(function ($value) use ($column) {
                         if (\common_Utils::isUri($value)) {
