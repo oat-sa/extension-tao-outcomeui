@@ -571,7 +571,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
                 continue;
             }
             if ($variable->getIdentifier() == 'numAttempts') {
-                $firstEpoch = $variable->getEpoch();
+                $firstEpoch = uniqid($variable->getEpoch(), true);
                 if ($filter != self::VARIABLES_FILTER_ALL) {
                     if (array_key_exists($itemCallId, $savedItems)) {
                         if ($filter == self::VARIABLES_FILTER_FIRST_SUBMITTED) {
