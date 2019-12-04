@@ -590,20 +590,21 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
     {
         $sorted = [];
         foreach ($this->splitByItem($itemVariables) as $variables) {
+            $itemCallId = current($variables)->callIdItem;
             $byAttempt = $this->splitByAttempt($variables);
             switch ($filter) {
                 case self::VARIABLES_FILTER_ALL:
                     foreach ($byAttempt as $time => $attempt) {
-                        $sorted[$time] = $attempt;
+                        $sorted[$time.$itemCallId] = $attempt;
                     }
                     break;
                 case self::VARIABLES_FILTER_FIRST_SUBMITTED:
                     reset($byAttempt);
-                    $sorted[key($byAttempt)] = current($byAttempt);
+                    $sorted[key($byAttempt).$itemCallId] = current($byAttempt);
                     break;
                 case self::VARIABLES_FILTER_LAST_SUBMITTED:
                     end($byAttempt);
-                    $sorted[key($byAttempt)] = current($byAttempt);
+                    $sorted[key($byAttempt).$itemCallId] = current($byAttempt);
                     break;
                 default:
                     throw new \common_exception_InconsistentData('Unknown Filter '.$filter);
