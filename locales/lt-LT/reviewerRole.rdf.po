@@ -4,16 +4,16 @@ msgstr ""
 "PO-Revision-Date: 2019-10-11T09:48:40\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
-"Language: fi-FI\n"
+"Language: lt-LT\n"
 "sourceLanguage: en-US\n"
-"targetLanguage: fi-FI\n"
+"targetLanguage: lt-LT\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#TaoReviewerRole
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "Reviewer Role"
-msgstr ""
+msgstr "Peržiūrėtojo Rolė"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#TaoReviewerRole
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"

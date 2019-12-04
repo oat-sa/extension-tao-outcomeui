@@ -1010,63 +1010,79 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
 
     /**
      * @param core_kernel_classes_Resource $delivery
-     * @param                              $columns - columns to be exported
-     * @param                              $filter  'lastSubmitted' or 'firstSubmitted'
      * @param array $storageOptions
      * @param array $filters
+     * @throws common_Exception
+     * @throws common_exception_Error
+     */
+    public function getResultsByDelivery(\core_kernel_classes_Resource $delivery, array $storageOptions = [], array $filters = [])
+    {
+        //The list of delivery Results matching the current selection filters
+        $this->setImplementation($this->getReadableImplementation($delivery));
+        return $this->findResultsByDeliveryAndFilters($delivery, $filters, $storageOptions);
+    }
+
+    /**
+     * @param string $result
+     * @return bool
+     */
+    protected function shouldResultBeSkipped($result)
+    {
+        return false;
+    }
+
+    /**
+     * @param array $results
+     * @param                              $columns - columns to be exported
+     * @param                              $filter  'lastSubmitted' or 'firstSubmitted'
+     * @param array $filters
+     * @param int $offset
+     * @param int $limit
      * @return array
      * @throws common_Exception
      * @throws common_exception_Error
      */
-    public function getResultsByDelivery(\core_kernel_classes_Resource $delivery, $columns, $filter, array $storageOptions = [], array $filters = [])
+    public function getCellsByResults(array $results, $columns, $filter, array $filters = [], $offset = 0, $limit = null)
     {
         $rows = array();
-
-        //The list of delivery Results matching the current selection filters
-        $this->setImplementation($this->getReadableImplementation($delivery));
-        $results = $this->findResultsByDeliveryAndFilters($delivery, $filters, $storageOptions);
-        $dpmap = array();
-        foreach ($columns as $column) {
-            $dataprovider = $column->getDataProvider();
-            $found = false;
-            foreach ($dpmap as $k => $dp) {
-                if ($dp['instance'] == $dataprovider) {
-                    $found = true;
-                    $dpmap[$k]['columns'][] = $column;
-                }
-            }
-            if (!$found) {
-                $dpmap[] = array(
-                    'instance'	=> $dataprovider,
-                    'columns'	=> array(
-                        $column
-                    )
-                );
-            }
-        }
-
-        foreach ($dpmap as $arr) {
-            $arr['instance']->prepare($results, $arr['columns']);
-        }
+        $dataProviderMap = $this->collectColumnDataProviderMap($columns);
 
         /** @var DeliveryExecution $result */
-        foreach($results as $result) {
+        for ($i = $offset; $i < ($offset + $limit); $i++) {
+            if (!array_key_exists($i, $results)) {
+                break;
+            }
+            $result = $results[$i];
+            if ($this->shouldResultBeSkipped($result)) {
+                continue;
+            }
+
+            // initialize column data providers for single result
+            foreach ($dataProviderMap as $element) {
+                $element['instance']->prepare([$result], $element['columns']);
+            }
+
             $cellData = array();
 
             /** @var ContextTypePropertyColumn|VariableColumn $column */
             foreach ($columns as $column) {
                 $cellKey = $this->getColumnId($column);
 
+                $cellData[$cellKey] = null;
                 if (count($column->getDataProvider()->cache) > 0) {
                     // grade or response column values
                     $cellData[$cellKey] = self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column), $filter);
-                } else {
+                } elseif ($column instanceof ContextTypePropertyColumn) {
                     // test taker or delivery property values
                     $resource = $column->isTestTakerType()
                         ? $this->getTestTaker($result)
                         : $this->getDelivery($result);
 
-                    $values = $resource->getPropertyValues($column->getProperty());
+                    $property = $column->getProperty();
+                    if ($resource instanceof User) {
+                        $property = $column->getProperty()->getUri();
+                    }
+                    $values = $resource->getPropertyValues($property);
 
                     $values = array_map(function ($value) use ($column) {
                         if (\common_Utils::isUri($value)) {
@@ -1107,20 +1123,35 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
                 );
             }
         }
-        $this->sortByStartDate($rows);
+
         return $rows;
     }
 
-    private function sortByStartDate(&$data)
+    /**
+     * @param $columns
+     * @return array
+     */
+    private function collectColumnDataProviderMap($columns)
     {
-        usort($data, function ($a, $b) {
-            $bDate = current($b['cell']['delivery_execution_started_at']);
-            $aDate = current($a['cell']['delivery_execution_started_at']);
-            $startB = $bDate ? strtotime($bDate) : 0;
-            $startA = $aDate ? strtotime($aDate) : 0;
-            return $startB - $startA;
-        });
-       $data = array_reverse($data);
+        $dataProviderMap = [];
+        foreach ($columns as $column) {
+            $dataProvider = $column->getDataProvider();
+            $found = false;
+            foreach ($dataProviderMap as $index => $element) {
+                if ($element['instance'] == $dataProvider) {
+                    $dataProviderMap[$index]['columns'][] = $column;
+                    $found = true;
+                }
+            }
+            if (!$found) {
+                $dataProviderMap[] = [
+                    'instance' => $dataProvider,
+                    'columns' => [$column]
+                ];
+            }
+        }
+
+        return $dataProviderMap;
     }
 
     /**

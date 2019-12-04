@@ -89,6 +89,8 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      */
     private $filters = [];
 
+    const CHUNK_SIZE = 100;
+
     /**
      * @param string|\core_kernel_classes_Resource $delivery
      * @param ResultsService                       $resultsService
@@ -213,18 +215,62 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      */
     public function getData()
     {
-        $data = $this->resultsService->getResultsByDelivery(
+        $results = $this->resultsService->getResultsByDelivery(
             $this->getResourceToExport(),
-            $this->getColumnsToExport(),
-            $this->getVariableToExport(),
             $this->storageOptions,
             $this->getFiltersToExport()
+        );
+
+        $cells = $this->resultsService->getCellsByResults(
+            $results,
+            $this->getColumnsToExport(),
+            $this->getVariableToExport(),
+            $this->getFiltersToExport(),
+            0,
+            PHP_INT_MAX
         );
 
         // flattening data: only 'cell' is what we need
         return array_map(function($row){
             return $row['cell'];
-        }, $data);
+        }, $cells);
+    }
+
+    private function sortByStartDate(&$data)
+    {
+        usort($data, function ($a, $b) {
+            $bDate = $b[ColumnsProvider::LABEL_START_DELIVERY_EXECUTION];
+            $aDate = $a[ColumnsProvider::LABEL_START_DELIVERY_EXECUTION];
+            $startB = $bDate ? strtotime($bDate) : 0;
+            $startA = $aDate ? strtotime($aDate) : 0;
+            return $startB - $startA;
+        });
+        $data = array_reverse($data);
+    }
+
+    /**
+     * @param array $results
+     * @param int $offset
+     * @param null $limit
+     * @return array
+     * @throws \common_Exception
+     * @throws \common_exception_Error
+     */
+    private function getCells($results, $offset = 0, $limit = null)
+    {
+        $cells = $this->resultsService->getCellsByResults(
+            $results,
+            $this->getColumnsToExport(),
+            $this->getVariableToExport(),
+            $this->getFiltersToExport(),
+            $offset,
+            $limit
+        );
+
+        // flattening data: only 'cell' is what we need
+        return array_map(function($row){
+            return $row['cell'];
+        }, $cells);
     }
 
     /**
@@ -233,17 +279,32 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
     public function export($destination = null)
     {
         $columnNames = $this->resultsService->getColumnNames($this->getColumnsToExport());
-        $data = $this->getData();
 
-        // merge column names and data into one array
+        $data = $this->resultsService->getResultsByDelivery(
+            $this->getResourceToExport(),
+            $this->storageOptions,
+            $this->getFiltersToExport()
+        );
+
+        $offset = 0;
+
         $result = [];
-        foreach ($data as $row) {
-            $rowResult = [];
-            foreach ($row as $rowKey => $rowVal) {
-                $rowResult[$columnNames[$rowKey]] = $rowVal[0];
+
+        // getCells() consumes much memory inside it, so let's collect cells iteratively
+        do {
+            $cells = $this->getCells($data, $offset, self::CHUNK_SIZE);
+            $offset += self::CHUNK_SIZE;
+
+            foreach ($cells as $row) {
+                $rowResult = [];
+                foreach ($row as $rowKey => $rowVal) {
+                    $rowResult[$columnNames[$rowKey]] = $rowVal[0];
+                }
+                $result[] = $rowResult;
             }
-            $result[] = $rowResult;
-        }
+        } while (count($cells));
+
+        $this->sortByStartDate($result);
 
         //If there are no executions yet, the file is exported but contains only the header
         if (empty($result)) {
