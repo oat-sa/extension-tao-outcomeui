@@ -92,9 +92,11 @@ use oat\taoOutcomeUi\model\ResultsService;
                         <b><?= _dh($item['label']) ?></b>
                     </th>
                     <th>
-                        <a href="#" data-delivery-id="<?=get_data('classUri')?>" data-result-id="<?=get_data('id')?>" data-type="<?=get_data('itemType')?>" data-uri="<?=$item['uri']?>" data-definition="<?=$item['internalIdentifier']?>" data-state="<?=htmlspecialchars($item['state'])?>" class="btn-info small preview" target="preview">
-                            <span class="icon-preview"></span><?=__('Review')?>
-                        </a>
+                        <?php if ($item['uri'] != 'unknown'): ?>
+                            <a href="#" data-delivery-id="<?=get_data('classUri')?>" data-result-id="<?=get_data('id')?>" data-type="<?=get_data('itemType')?>" data-uri="<?=$item['uri']?>" data-definition="<?=$item['internalIdentifier']?>" data-state="<?=htmlspecialchars($item['state'])?>" class="btn-info small preview" target="preview">
+                                <span class="icon-preview"></span><?=__('Review')?>
+                            </a>
+                        <?php endif; ?>
                     </th>
                 </tr>
                 </thead>
