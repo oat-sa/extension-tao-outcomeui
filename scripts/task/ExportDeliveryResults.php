@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -214,11 +215,11 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
 
                     case '--dir':
                         if (!is_dir($value)) {
-                            throw new \InvalidArgumentException('Invalid directory "'. $value .'" provided.');
+                            throw new \InvalidArgumentException('Invalid directory "' . $value . '" provided.');
                         }
 
                         if (!is_writable($value)) {
-                            throw new \InvalidArgumentException('Directory "'. $value .'" not writable.');
+                            throw new \InvalidArgumentException('Directory "' . $value . '" not writable.');
                         }
                         $this->destination = $value;
                         break;

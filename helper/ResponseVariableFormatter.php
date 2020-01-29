@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,14 +28,16 @@ use \taoResultServer_models_classes_ResponseVariable as ResponseVariable;
  * Class ResponseVariableFormatter
  * @package oat\taoOutcomeUi\helper
  */
-class ResponseVariableFormatter {
+class ResponseVariableFormatter
+{
 
     /**
      * Special trim for identifier in response variables
      * @param $identifierString
      * @return string
      */
-    static private function trimIdentifier($identifierString){
+    private static function trimIdentifier($identifierString)
+    {
         return trim($identifierString, " \t\n\r\0\x0B'\"");
     }
 
@@ -45,9 +48,10 @@ class ResponseVariableFormatter {
      * @return array|bool|float|int|string
      * @throws \common_Exception
      */
-    static private function formatStringValue($baseType, $stringValue){
+    private static function formatStringValue($baseType, $stringValue)
+    {
 
-        switch(strtolower($baseType)){
+        switch (strtolower($baseType)) {
             case 'string':
             case 'duration':
                 return $stringValue;
@@ -62,13 +66,13 @@ class ResponseVariableFormatter {
             case 'pair':
             case 'directedpair':
                 $pair = explode(' ', trim($stringValue));
-                if(count($pair) != 2){
+                if (count($pair) != 2) {
                     throw new \common_Exception('invalid pair string');
                 }
                 return [self::trimIdentifier($pair[0]), self::trimIdentifier($pair[1])];
             case 'point':
                 $pair = explode(' ', trim($stringValue));
-                if(count($pair) != 2){
+                if (count($pair) != 2) {
                     throw new \common_Exception('invalid point string');
                 }
                 return [intval($pair[0]), intval($pair[1])];
@@ -84,13 +88,14 @@ class ResponseVariableFormatter {
      * @return array
      * @throws \common_Exception
      */
-    static public function formatVariableToPci(ResponseVariable $var) {
+    public static function formatVariableToPci(ResponseVariable $var)
+    {
         $value = $var->getValue();
-        switch($var->getCardinality()){
+        switch ($var->getCardinality()) {
             case 'single':
-                if(strlen($value) === 0){
+                if (strlen($value) === 0) {
                     $formatted = ['base' => null];
-                }else{
+                } else {
                     try {
                         $formatted = ['base' => [$var->getBaseType() => self::formatStringValue($var->getBaseType(), $value)]];
                     } catch (\common_exception_NotImplemented $e) {
@@ -101,13 +106,13 @@ class ResponseVariableFormatter {
                 break;
             case 'ordered':
             case 'multiple':
-                if(strlen($value) === 0){
+                if (strlen($value) === 0) {
                     $formatted = ['list' => [$var->getBaseType() => []]];
-                }else{
+                } else {
                     preg_match_all('/([^\[\];<>]+)/', $value, $matches);
                     $list = [];
-                    foreach($matches[1] as $valueString){
-                        if(empty(trim($valueString))){
+                    foreach ($matches[1] as $valueString) {
+                        if (empty(trim($valueString))) {
                             continue;
                         }
 
@@ -134,21 +139,21 @@ class ResponseVariableFormatter {
      * @return array
      * @throws \common_Exception
      */
-    static public function formatStructuredVariablesToItemState($testResultVariables, $itemFilter = []){
+    public static function formatStructuredVariablesToItemState($testResultVariables, $itemFilter = [])
+    {
         $formatted = [];
-        foreach($testResultVariables as $itemResult){
-
-            if(!isset($itemResult['uri'])){
+        foreach ($testResultVariables as $itemResult) {
+            if (!isset($itemResult['uri'])) {
                 continue;
             }
 
             $itemUri = $itemResult['uri'];
-            if(!empty($itemFilter) && !in_array($itemUri, $itemFilter)){
+            if (!empty($itemFilter) && !in_array($itemUri, $itemFilter)) {
                 continue;
             }
 
             $itemResults = [];
-            foreach($itemResult['taoResultServer_models_classes_ResponseVariable'] as $var){
+            foreach ($itemResult['taoResultServer_models_classes_ResponseVariable'] as $var) {
                 $responseVariable = $var['var'];
                 /**
                  * @var $responseVariable \taoResultServer_models_classes_ResponseVariable

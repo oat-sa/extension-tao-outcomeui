@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -58,7 +59,7 @@ class ResultTable extends \tao_actions_CommonModule
     public function index()
     {
         $deliveryService = DeliveryAssemblyService::singleton();
-        if($this->getRequestParameter('classUri') !== $deliveryService->getRootClass()->getUri()) {
+        if ($this->getRequestParameter('classUri') !== $deliveryService->getRootClass()->getUri()) {
             $filter = $this->getRequestParameter('filter');
             $uri = $this->getRequestParameter('uri');
             if (!\common_Utils::isUri(tao_helpers_Uri::decode($uri))) {
@@ -69,7 +70,7 @@ class ResultTable extends \tao_actions_CommonModule
             $this->setView('resultTable.tpl');
         } else {
             $this->setData('type', 'info');
-            $this->setData('error',__('No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here.'));
+            $this->setData('error', __('No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here.'));
             $this->setView('index.tpl');
         }
     }
@@ -86,7 +87,7 @@ class ResultTable extends \tao_actions_CommonModule
         }
 
         if (!$this->hasRequestParameter(self::PARAMETER_COLUMNS)) {
-            throw new common_Exception('Parameter "'. self::PARAMETER_COLUMNS .'" missing');
+            throw new common_Exception('Parameter "' . self::PARAMETER_COLUMNS . '" missing');
         }
 
         $this->returnJson((new ResultsPayload($this->getExporterService()->getExporter()))->getPayload());
@@ -235,7 +236,7 @@ class ResultTable extends \tao_actions_CommonModule
         }
         if ($this->hasRequestParameter(self::PARAMETER_END_TO)) {
             $time = $this->getTime($this->getRequestParameter(self::PARAMETER_END_TO));
-            if($time) {
+            if ($time) {
                 $filters[self::PARAMETER_END_TO] = $time;
             }
         }
@@ -247,7 +248,8 @@ class ResultTable extends \tao_actions_CommonModule
         return $exporter;
     }
 
-    private function getTime($date = '') {
+    private function getTime($date = '')
+    {
         return $date ? strtotime($date) : 0;
     }
     
@@ -258,7 +260,7 @@ class ResultTable extends \tao_actions_CommonModule
     private function getDeliveryUri()
     {
         if (!$this->hasRequestParameter(self::PARAMETER_DELIVERY_URI)) {
-            throw new common_Exception('Parameter "'. self::PARAMETER_DELIVERY_URI .'" missing');
+            throw new common_Exception('Parameter "' . self::PARAMETER_DELIVERY_URI . '" missing');
         }
 
         return \tao_helpers_Uri::decode($this->getRequestParameter(self::PARAMETER_DELIVERY_URI));

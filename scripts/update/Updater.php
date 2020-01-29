@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -59,7 +60,7 @@ class Updater extends \common_ext_ExtensionUpdater
         // move ResultsManagerRole to model 1
         if ($this->isVersion('2.6')) {
             $rdf = ModelManager::getModel()->getRdfInterface();
-            $toChange = array();
+            $toChange = [];
             foreach ($rdf as $triple) {
                 if ($triple->subject == 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole') {
                     $toChange[] = $triple;
@@ -90,9 +91,8 @@ class Updater extends \common_ext_ExtensionUpdater
         $this->skip('4.4.1', '4.5.2');
 
         if ($this->isVersion('4.5.2') || $this->isVersion('4.6.0')) {
-
             $service = new ResultServiceWrapper(['class' => ResultsService::class]);
-            $this->getServiceManager()->register(ResultServiceWrapper::SERVICE_ID , $service);
+            $this->getServiceManager()->register(ResultServiceWrapper::SERVICE_ID, $service);
             $this->setVersion('4.6.1');
         }
 
@@ -139,7 +139,7 @@ class Updater extends \common_ext_ExtensionUpdater
 
         if ($this->isVersion('5.10.1')) {
             $service = new ResultsViewerService();
-            $this->getServiceManager()->register(ResultsViewerService::SERVICE_ID , $service);
+            $this->getServiceManager()->register(ResultsViewerService::SERVICE_ID, $service);
 
             $this->setVersion('5.11.0');
         }
@@ -182,6 +182,6 @@ class Updater extends \common_ext_ExtensionUpdater
             $this->setVersion('7.5.0');
         }
 
-        $this->skip('7.5.0', '8.2.1');
+        $this->skip('7.5.0', '8.2.2');
     }
 }

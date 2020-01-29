@@ -1,22 +1,23 @@
 <?php
-/**  
+
+/**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; under version 2
  * of the License (non-upgradable).
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- * 
+ *
  * Copyright (c) 2009-2012 (original work) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV);
- *               
- * 
+ *
+ *
  */
 
 namespace oat\taoOutcomeUi\model\table;
@@ -31,8 +32,7 @@ use \tao_models_classes_table_Column;
  * @author Joel Bout, <joel.bout@tudor.lu>
  * @package taoOutcomeUi
  */
-abstract class VariableColumn
-    extends tao_models_classes_table_Column
+abstract class VariableColumn extends tao_models_classes_table_Column
 {
     // --- ATTRIBUTES ---
     /**
@@ -58,7 +58,7 @@ abstract class VariableColumn
 
     /**
      * shared data providider to cache the variables
-     * 
+     *
      * @var VariableDataProvider
      */
     public $dataProvider = null;
@@ -67,7 +67,7 @@ abstract class VariableColumn
     // --- OPERATIONS ---
 
     /**
-     * 
+     *
      * @param array $array
      * @return \oat\taoOutcomeUi\model\table\VariableColumn
      */
@@ -79,25 +79,24 @@ abstract class VariableColumn
         $contextId = $array['contextId'];
         $contextLabel = $array['contextLabel'];
         $variableIdentifier =  $array['variableIdentifier'];
-		$returnValue = new static($contextId, $contextLabel, $variableIdentifier);
+        $returnValue = new static($contextId, $contextLabel, $variableIdentifier);
         
 
         return $returnValue;
     }
 
     /**
-     * 
+     *
      * @param string $contextIdentifier
      * @param string $contextLabel
      * @param string $identifier
      */
-    public function __construct( $contextIdentifier,$contextLabel, $identifier)
+    public function __construct($contextIdentifier, $contextLabel, $identifier)
     {
-        parent::__construct( $contextLabel. "-" .$identifier);
+        parent::__construct($contextLabel . "-" . $identifier);
         $this->identifier = $identifier;
         $this->contextIdentifier = $contextIdentifier;
         $this->contextLabel = $contextLabel;
-        
     }
 
     public function setDataProvider(VariableDataProvider $provider)
@@ -161,10 +160,9 @@ abstract class VariableColumn
     }
     
     /**
-     * Returns the variable type of the column 
-     * 
+     * Returns the variable type of the column
+     *
      * @return string
      */
-    public abstract function getVariableType(); 
-
+    abstract public function getVariableType();
 }

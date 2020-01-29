@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,6 +19,7 @@
  *
  * @author Oleksandr Zagovorychev <zagovorichev@gmail.com>
  */
+
 namespace oat\taoOutcomeUi\model\table;
 
 use \core_kernel_classes_Resource;
@@ -62,7 +64,6 @@ class DeliveryExecutionDataProvider implements tao_models_classes_table_DataProv
             $de = $service->getDeliveryExecution($identifier);
             /** @var DeliveryExecutionColumn $column */
             foreach ($columns as $column) {
-
                 switch ($column->getIdentifier()) {
                     case self::PROP_STARTED_AT:
                         //$column->setContextIdentifier($identifier);
@@ -106,5 +107,4 @@ class DeliveryExecutionDataProvider implements tao_models_classes_table_DataProv
     {
         return ServiceManager::getServiceManager();
     }
-
 }

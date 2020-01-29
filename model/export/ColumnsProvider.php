@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -86,7 +87,7 @@ class ColumnsProvider
         $this->delivery = $this->getResource($delivery);
 
         if (!$this->delivery->exists()) {
-            throw new \common_exception_NotFound('Results Exporter: delivery "'. $this->delivery->getUri() .'" does not exist.');
+            throw new \common_exception_NotFound('Results Exporter: delivery "' . $this->delivery->getUri() . '" does not exist.');
         }
 
         $this->resultsService = $resultsService;
@@ -117,7 +118,7 @@ class ColumnsProvider
 
         $testTakerProps = array_merge($this->testTakerProperties, $customProps);
 
-        foreach ($testTakerProps as $property){
+        foreach ($testTakerProps as $property) {
             $property = $this->getProperty($property);
             $col = new ContextTypePropertyColumn(ContextTypePropertyColumn::CONTEXT_TYPE_TEST_TAKER, $property);
 
@@ -147,7 +148,7 @@ class ColumnsProvider
 
         $deliveryProps = array_merge($this->deliveryProperties, $customProps);
 
-        foreach ($deliveryProps as $property){
+        foreach ($deliveryProps as $property) {
             $property = $this->getProperty($property);
             $loginCol = new ContextTypePropertyColumn(ContextTypePropertyColumn::CONTEXT_TYPE_DELIVERY, $property);
 
