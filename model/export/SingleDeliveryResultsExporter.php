@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -102,7 +103,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
         $this->delivery = $this->getResource($delivery);
 
         if (!$this->delivery->exists()) {
-            throw new \common_exception_NotFound('Results Exporter: delivery "'. $this->delivery->getUri() .'" does not exist.');
+            throw new \common_exception_NotFound('Results Exporter: delivery "' . $this->delivery->getUri() . '" does not exist.');
         }
 
         $this->resultsService = $resultsService;
@@ -139,7 +140,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
         if (!empty($this->columnsToExport)) {
             $columns = $this->columnsToExport;
         } else {
-            $variables = array_merge($this->columnsProvider->getGradeColumns(),$this->columnsProvider->getResponseColumns());
+            $variables = array_merge($this->columnsProvider->getGradeColumns(), $this->columnsProvider->getResponseColumns());
             usort($variables, function ($a, $b) {
                 return strcmp($a["label"], $b["label"]);
             });
@@ -173,7 +174,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
             ResultsService::VARIABLES_FILTER_LAST_SUBMITTED,
         ];
         if (!in_array($variableToExport, $allowedFilters)) {
-            throw new \InvalidArgumentException('Results Exporter: wrong submitted variable "'. $variableToExport .'"');
+            throw new \InvalidArgumentException('Results Exporter: wrong submitted variable "' . $variableToExport . '"');
         }
 
         $this->variableToExport = $variableToExport;
@@ -231,7 +232,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
         );
 
         // flattening data: only 'cell' is what we need
-        return array_map(function($row){
+        return array_map(function ($row) {
             return $row['cell'];
         }, $cells);
     }
@@ -268,7 +269,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
         );
 
         // flattening data: only 'cell' is what we need
-        return array_map(function($row){
+        return array_map(function ($row) {
             return $row['cell'];
         }, $cells);
     }
@@ -341,12 +342,12 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
     private function getFileName()
     {
         return 'results_export_'
-            .strtolower(\tao_helpers_Display::textCleaner($this->delivery->getLabel(), '*'))
-            .'_'
-            .\tao_helpers_Uri::getUniqueId($this->delivery->getUri())
-            .'_'
-            .date('YmdHis') . rand(10, 99) //more unique name
-            .'.csv';
+            . strtolower(\tao_helpers_Display::textCleaner($this->delivery->getLabel(), '*'))
+            . '_'
+            . \tao_helpers_Uri::getUniqueId($this->delivery->getUri())
+            . '_'
+            . date('YmdHis') . rand(10, 99) //more unique name
+            . '.csv';
     }
 
     /**

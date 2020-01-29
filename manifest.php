@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -63,7 +64,7 @@ return [
     'managementRole' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole',
     'acl'            => [
         ['grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', ['ext' => 'taoOutcomeUi']],
-        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, DeliveryMgmt::class.'@getOntologyData'],
+        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, DeliveryMgmt::class . '@getOntologyData'],
         [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@index'],
         [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@getResults'],
         [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@viewResult'],

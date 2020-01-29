@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,6 +19,7 @@
  *
  *
  */
+
 namespace oat\taoOutcomeUi\model\table;
 
 use oat\tao\helpers\UserHelper;
@@ -86,7 +88,7 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
             $searchService = $this->getServiceLocator()->get(Search::SERVICE_ID);
 
             if ($classUri) {
-                $criteria .= ' AND delivery:"'.$classUri.'"';
+                $criteria .= ' AND delivery:"' . $classUri . '"';
             }
 
             $resultsArray = $searchService->query($criteria, ResultService::DELIVERY_RESULT_CLASS_URI, $start, $limit, 'id', 'DESC');
@@ -114,20 +116,20 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
                     $label = $execution->getLabel() ? $execution->getLabel() : $delivery->getLabel();
 
                     $this->results['data'][] = [
-                        'id' => $execution->getIdentifier().'|'.$delivery->getUri(),
+                        'id' => $execution->getIdentifier() . '|' . $delivery->getUri(),
                         'delivery' => $label,
                         'testTakerIdentifier' => $userName,
                         'deliveryResultIdentifier' => $execution->getIdentifier(),
                         'start_time' => $startTime
                     ];
                 } catch (\common_exception_NotFound $e) {
-                    $gau = array(
+                    $gau = [
                         'order' => $order,
                         'orderdir' => strtoupper($sort),
                         'offset' => $start,
                         'limit' => $limit,
                         'recursive' => true
-                    );
+                    ];
                     if ($classUri && $execution->getIdentifier() != $classUri) {
                         break;
                     }
@@ -141,13 +143,13 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
             foreach ($deliveries as $delivery) {
                 $deliveriesArray[] = $delivery->getUri();
             }
-            $gau = array(
+            $gau = [
                 'order' => $order,
                 'orderdir' => strtoupper($sort),
                 'offset' => $start,
                 'limit' => $limit,
                 'recursive' => true
-            );
+            ];
             if ($deliveriesArray) {
                 $this->getResultsByDeliveries($deliveriesArray, $gau);
             }
@@ -205,7 +207,7 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
                 }
             }
             $this->results['records'] = $resultsImplementation->countResultByDelivery($deliveriesArray);
-        }else{
+        } else {
             \common_Logger::i('Attempt to read from non-manageable result storage');
         }
     }
@@ -218,8 +220,8 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
     {
         $payload = [
             'data' => $this->results['data'],
-            'page' => (integer) $this->request->getPage(),
-            'records' => (integer) count($this->results['data']),
+            'page' => (int) $this->request->getPage(),
+            'records' => (int) count($this->results['data']),
             'total' => ceil($this->results['records'] / $this->request->getRows()),
         ];
         return $payload;

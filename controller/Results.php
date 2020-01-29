@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -103,28 +104,27 @@ class Results extends \tao_actions_CommonModule
             return;
         }
 
-        $model = array(
-            array(
+        $model = [
+            [
                 'id' => 'ttakerid',
                 'label' => __('Test Taker ID'),
                 'sortable' => false
-            ),
-            array(
+            ],
+            [
                 'id' => 'ttaker',
                 'label' => __('Test Taker'),
                 'sortable' => false
-            ),
-            array(
+            ],
+            [
                 'id' => 'time',
                 'label' => __('Start Time'),
                 'sortable' => false
-            )
-        );
+            ]
+        ];
 
         $deliveryService = DeliveryAssemblyService::singleton();
         $delivery = $this->getResource($this->getRequestParameter('id'));
         if ($delivery->getUri() !== $deliveryService->getRootClass()->getUri()) {
-
             try {
                 // display delivery
                 $this->getResultStorage($delivery);
@@ -147,7 +147,6 @@ class Results extends \tao_actions_CommonModule
                 $this->setData('error', $e->getMessage());
                 $this->setView('index.tpl');
             }
-
         } else {
             $this->setData('type', 'info');
             $this->setData('error', __('No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here.'));
@@ -168,21 +167,21 @@ class Results extends \tao_actions_CommonModule
         $query = $this->getRequestParameter('filterquery');
         $start = $limit * $page - $limit;
 
-        $gau = array(
+        $gau = [
             'order' => $order,
             'orderdir' => strtoupper($sort),
             'offset' => $start,
             'limit' => $limit,
             'recursive' => true
-        );
+        ];
 
         try {
-            $data = array();
-            $readOnly = array();
+            $data = [];
+            $readOnly = [];
             $user = $this->getSession()->getUser();
-            $rights = array(
-                'view' => !AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'viewResult', array()),
-                'delete' => !AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'delete', array()));
+            $rights = [
+                'view' => !AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'viewResult', []),
+                'delete' => !AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'delete', [])];
             if ($query) {
                 $resultsData = new ResultsMonitoringDatatable(DatatableRequest::fromGlobals());
                 $resultsData->setServiceLocator($this->getServiceLocator());
@@ -192,12 +191,11 @@ class Results extends \tao_actions_CommonModule
             } else {
                 $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
                 $this->getResultStorage($delivery);
-                $results = $this->getResultsService()->getImplementation()->getResultByDelivery(array($delivery->getUri()), $gau);
-                $count = $this->getResultsService()->getImplementation()->countResultByDelivery(array($delivery->getUri()));
+                $results = $this->getResultsService()->getImplementation()->getResultByDelivery([$delivery->getUri()], $gau);
+                $count = $this->getResultsService()->getImplementation()->countResultByDelivery([$delivery->getUri()]);
             }
 
             foreach ($results as $res) {
-
                 $deliveryExecution = $this->getServiceProxy()->getDeliveryExecution($res['deliveryResultIdentifier']);
 
                 try {
@@ -210,27 +208,27 @@ class Results extends \tao_actions_CommonModule
                 $user = UserHelper::getUser($res['testTakerIdentifier']);
                 $userName = UserHelper::getUserName($user, true);
 
-                $data[] = array(
+                $data[] = [
                     'id' => $deliveryExecution->getIdentifier(),
                     'ttakerid' => $res['testTakerIdentifier'],
                     'ttaker' => _dh($userName),
                     'time' => $startTime,
-                );
+                ];
 
                 $readOnly[$deliveryExecution->getIdentifier()] = $rights;
             }
 
-            $this->returnJson(array(
+            $this->returnJson([
                 'data' => $data,
                 'page' => floor($start / $limit) + 1,
                 'total' => ceil($count / $limit),
                 'records' => count($data),
                 'readonly' => $readOnly
-            ));
+            ]);
         } catch (\common_exception_Error $e) {
-            $this->returnJson(array(
+            $this->returnJson([
                 'error' => $e->getMessage()
-            ));
+            ]);
         }
     }
 
@@ -253,9 +251,9 @@ class Results extends \tao_actions_CommonModule
 
             $deleted = $this->getResultsService()->deleteResult($deliveryExecutionUri);
 
-            $this->returnJson(array('deleted' => $deleted));
+            $this->returnJson(['deleted' => $deleted]);
         } catch (\common_exception_Error $e) {
-            $this->returnJson(array('error' => $e->getMessage()));
+            $this->returnJson(['error' => $e->getMessage()]);
         }
     }
 
@@ -319,20 +317,21 @@ class Results extends \tao_actions_CommonModule
                 $this->setData('userEmail', $userEmail);
             }
             $filterSubmission = ($this->hasRequestParameter("filterSubmission")) ? $this->getRequestParameter("filterSubmission") : ResultsService::VARIABLES_FILTER_LAST_SUBMITTED;
-            $filterTypes = ($this->hasRequestParameter("filterTypes")) ? $this->getRequestParameter("filterTypes") : array(\taoResultServer_models_classes_ResponseVariable::class, \taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class);
+            $filterTypes = ($this->hasRequestParameter("filterTypes")) ? $this->getRequestParameter("filterTypes") : [\taoResultServer_models_classes_ResponseVariable::class, \taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class];
 
             // check the result page cache; if we have hit than return the gzencoded string and let the client to encode the data
             $cacheKey = $this->getResultsService()->getCacheKey($resultId, md5($filterSubmission . implode(',', $filterTypes)));
-            if ($this->isCacheable($resultId)
+            if (
+                $this->isCacheable($resultId)
                 && $this->getResultsService()->getCache()
                 && $this->getResultsService()->getCache()->exists($cacheKey)
             ) {
-                $this->logDebug('Result page cache hit for "'. $cacheKey .'"');
+                $this->logDebug('Result page cache hit for "' . $cacheKey . '"');
 
                 $gzipOutput = $this->getResultsService()->getCache()->get($cacheKey);
 
                 header('Content-Encoding: gzip');
-                header('Content-Length: '. strlen($gzipOutput));
+                header('Content-Length: ' . strlen($gzipOutput));
 
                 echo $gzipOutput;
                 exit;
@@ -362,16 +361,17 @@ class Results extends \tao_actions_CommonModule
 
             // quick hack to gain performance: caching the entire result page if it is cacheable
             // "gzencode" is used to reduce the size of the string to be cached
-            ob_start(function($buffer) use($resultId, $cacheKey) {
-                if ($this->isCacheable($resultId)
-                    && $this->getResultsService()->setCacheValue($resultId, $cacheKey, gzencode($buffer, 9))) {
-                    \common_Logger::d('Result page cache set for "'. $cacheKey .'"');
+            ob_start(function ($buffer) use ($resultId, $cacheKey) {
+                if (
+                    $this->isCacheable($resultId)
+                    && $this->getResultsService()->setCacheValue($resultId, $cacheKey, gzencode($buffer, 9))
+                ) {
+                    \common_Logger::d('Result page cache set for "' . $cacheKey . '"');
                 }
 
                 return $buffer;
             });
-        }
-        catch (\common_exception_Error $e) {
+        } catch (\common_exception_Error $e) {
             $this->setData('type', 'error');
             $this->setData('error', $e->getMessage());
             $this->setView('index.tpl');
@@ -406,7 +406,7 @@ class Results extends \tao_actions_CommonModule
 
             echo $xml;
         } catch (\common_exception_UserReadableException $e) {
-            $this->returnJson(array('error' => $e->getUserMessage()));
+            $this->returnJson(['error' => $e->getUserMessage()]);
         }
     }
 
@@ -450,12 +450,12 @@ class Results extends \tao_actions_CommonModule
         /** @var ResultServerService $resultServerService */
         $resultServerService = $this->getServiceManager()->get(ResultServerService::SERVICE_ID);
         $resultStorage = $resultServerService->getResultStorage($delivery->getUri());
-        if ($resultStorage instanceof NoResultStorage){
-           throw NoResultStorageException::create();
+        if ($resultStorage instanceof NoResultStorage) {
+            throw NoResultStorageException::create();
         }
 
-        if (!$resultStorage instanceof \taoResultServer_models_classes_ReadableResultStorage){
-           throw new \common_exception_Error('The results storage it is not readable');
+        if (!$resultStorage instanceof \taoResultServer_models_classes_ReadableResultStorage) {
+            throw new \common_exception_Error('The results storage it is not readable');
         }
         $this->getResultsService()->setImplementation($resultStorage);
         return $resultStorage;
@@ -538,7 +538,7 @@ class Results extends \tao_actions_CommonModule
         }
 
         if (!$this->hasRequestParameter(self::PARAMETER_DELIVERY_CLASS_URI) && !$this->hasRequestParameter(self::PARAMETER_DELIVERY_URI)) {
-            throw new \common_Exception('Parameter "'. self::PARAMETER_DELIVERY_CLASS_URI .'" or "'. self::PARAMETER_DELIVERY_URI .'" missing');
+            throw new \common_Exception('Parameter "' . self::PARAMETER_DELIVERY_CLASS_URI . '" or "' . self::PARAMETER_DELIVERY_URI . '" missing');
         }
 
         $resourceUri = $this->hasRequestParameter(self::PARAMETER_DELIVERY_URI)
