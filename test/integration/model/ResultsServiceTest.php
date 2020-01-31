@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +18,7 @@
  * Copyright (c) 2015 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
+
 namespace oat\taoOutcomeUi\test\integration\model;
 
 use oat\generis\test\GenerisPhpUnitTestRunner;
@@ -88,7 +90,8 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      *
      * @author Lionel Lecaque, lionel@taotesting.com
      */
-    public function testSetImplementation() {
+    public function testSetImplementation()
+    {
         $impProphecy = $this->prophesize(RdsResultStorage::class);
 
         $imp = $impProphecy->reveal();
@@ -100,7 +103,8 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      *
      * @author Lionel Lecaque, lionel@taotesting.com
      */
-    public function testGetItemResultsFromDeliveryResult() {
+    public function testGetItemResultsFromDeliveryResult()
+    {
         $impProphecy = $this->prophesize(RdsResultStorage::class);
 
         $impProphecy->getRelatedItemCallIds('#fakeUri')->willReturn('#fakeDelivery');
@@ -113,7 +117,8 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      *
      * @author Lionel Lecaque, lionel@taotesting.com
      */
-    public function testGetDelivery() {
+    public function testGetDelivery()
+    {
         $impProphecy = $this->prophesize(RdsResultStorage::class);
         $impProphecy->getDelivery('#fakeUri')->willReturn('#fakeDelivery');
         $imp = $impProphecy->reveal();
@@ -128,23 +133,25 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      *
      * @author Lionel Lecaque, lionel@taotesting.com
      */
-    public function testGetVariablesFromObjectResult() {
+    public function testGetVariablesFromObjectResult()
+    {
         $impProphecy = $this->prophesize(RdsResultStorage::class);
 
         $variable = new \stdClass();
         $variable->variable = new taoResultServer_models_classes_ResponseVariable();
         $variable->value = '#bar';
-        $impProphecy->getVariables('#foo')->willReturn(array(array($variable)));
+        $impProphecy->getVariables('#foo')->willReturn([[$variable]]);
         $imp = $impProphecy->reveal();
 
         $this->service->setImplementation($imp);
-        $this->assertContains(array($variable),$this->service->getVariablesFromObjectResult('#foo'));
+        $this->assertContains([$variable], $this->service->getVariablesFromObjectResult('#foo'));
     }
     /**
      *
      * @author Lionel Lecaque, lionel@taotesting.com
      */
-    public function testGetVariableCandidateResponse() {
+    public function testGetVariableCandidateResponse()
+    {
         $impProphecy = $this->prophesize(RdsResultStorage::class);
 
         $impProphecy->getVariableProperty('#foo', 'candidateResponse')->willReturn(true);
@@ -157,7 +164,8 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      *
      * @author Lionel Lecaque, lionel@taotesting.com
      */
-    public function testGetVariableBaseType() {
+    public function testGetVariableBaseType()
+    {
         $impProphecy = $this->prophesize(RdsResultStorage::class);
 
         $impProphecy->getVariableProperty('#foo', 'baseType')->willReturn(true);
@@ -172,7 +180,8 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      *
      * @author Lionel Lecaque, lionel@taotesting.com
      */
-    public function testGetItemFromItemResult() {
+    public function testGetItemFromItemResult()
+    {
         // @TODO: Refactor ResultService class to be able to mock dependencies and fix test.
         $this->markTestSkipped();
 
@@ -180,11 +189,11 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
         $item = new \stdClass();
         $item->item = '#item';
-        $impProphecy->getVariables('#foo')->willReturn(array(
-            array(
+        $impProphecy->getVariables('#foo')->willReturn([
+            [
                 $item
-            )
-        ));
+            ]
+        ]);
         $imp = $impProphecy->reveal();
 
         $this->service->setImplementation($imp);
@@ -198,7 +207,8 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      *
      * @author Lionel Lecaque, lionel@taotesting.com
      */
-    public function testGetVariableDataFromDeliveryResult() {
+    public function testGetVariableDataFromDeliveryResult()
+    {
         $impProphecy = $this->prophesize(RdsResultStorage::class);
 
         $first = microtime();
@@ -217,36 +227,37 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $outcomeVariable->setIdentifier('mySecondID');
         $outcomeVariable->setEpoch($first);
         $var2->variable = $outcomeVariable;
-        $impProphecy->getRelatedTestCallIds("#fakeUri")->willReturn(array("#fakeTestUri"));
-        $impProphecy->getVariables('#fakeTestUri')->willReturn(array(
-            array(
+        $impProphecy->getRelatedTestCallIds("#fakeUri")->willReturn(["#fakeTestUri"]);
+        $impProphecy->getVariables('#fakeTestUri')->willReturn([
+            [
                 $var
-            ),
-            array(
+            ],
+            [
                 $var2
-            )
-        ));
+            ]
+        ]);
         $imp = $impProphecy->reveal();
 
         $this->service->setImplementation($imp);
 
         $varDataAll = $this->service->getVariableDataFromDeliveryResult('#fakeUri');
-        $this->assertEquals(array(
+        $this->assertEquals([
             $outcomeVariable,
             $responseVariable
-        ), $varDataAll);
-        $varDataEmpty = $this->service->getVariableDataFromDeliveryResult('#fakeUri', array(taoResultServer_models_classes_TraceVariable::class));
+        ], $varDataAll);
+        $varDataEmpty = $this->service->getVariableDataFromDeliveryResult('#fakeUri', [taoResultServer_models_classes_TraceVariable::class]);
         $this->assertEmpty($varDataEmpty);
-        $varData = $this->service->getVariableDataFromDeliveryResult('#fakeUri', array(taoResultServer_models_classes_ResponseVariable::class));
-        $this->assertEquals(array(
+        $varData = $this->service->getVariableDataFromDeliveryResult('#fakeUri', [taoResultServer_models_classes_ResponseVariable::class]);
+        $this->assertEquals([
             $responseVariable
-        ), $varData);
+        ], $varData);
     }
     /**
      *
      * @author Lionel Lecaque, lionel@taotesting.com
      */
-    public function testGetTestTaker() {
+    public function testGetTestTaker()
+    {
         $impProphecy = $this->prophesize(RdsResultStorage::class);
 
         $impProphecy->getTestTaker('#fakeUri')->willReturn('#testTaker');
@@ -328,9 +339,9 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $this->expectException(common_exception_Error::class);
 
         $resultProphecy = $this->prophesize(core_kernel_classes_Resource::class);
-        $resultProphecy->getPropertyValues(new core_kernel_classes_Property(ResultServerService::PROPERTY_HAS_MODEL))->willReturn(array(
+        $resultProphecy->getPropertyValues(new core_kernel_classes_Property(ResultServerService::PROPERTY_HAS_MODEL))->willReturn([
             '#fakeUri'
-        ));
+        ]);
         $resultServer = $resultProphecy->reveal();
 
         $deliveryProphecy = $this->prophesize(core_kernel_classes_Resource::class);
@@ -348,9 +359,9 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
     public function testGetReadableImplementation()
     {
         $resultProphecy = $this->prophesize(core_kernel_classes_Resource::class);
-        $resultProphecy->getPropertyValues(new core_kernel_classes_Property(ResultServerService::PROPERTY_HAS_MODEL))->willReturn(array(
+        $resultProphecy->getPropertyValues(new core_kernel_classes_Property(ResultServerService::PROPERTY_HAS_MODEL))->willReturn([
             'http://www.tao.lu/Ontologies/taoOutcomeRds.rdf#RdsResultStorageModel'
-        ));
+        ]);
         $resultServer = $resultProphecy->reveal();
 
         $deliveryProphecy = $this->prophesize(core_kernel_classes_Resource::class);
@@ -384,11 +395,11 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $this->service->setImplementation($implementationMock);
 
         $var = ($this->service->getVariables('#fakeUri'));
-        $this->assertContains(array($variable1), $var);
+        $this->assertContains([$variable1], $var);
 
         $var = $this->service->getVariables('#fakeUri', false);
         $this->assertArrayHasKey('#itemResultVariable', $var);
-        $this->assertEquals(array(array($variable1)), $var['#itemResultVariable']);
+        $this->assertEquals([[$variable1]], $var['#itemResultVariable']);
     }
 
     /**
@@ -396,16 +407,17 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      *
      * @author Lionel Lecaque, lionel@taotesting.com
      */
-    public function testGetItemVariableDataFromDeliveryResult() {
+    public function testGetItemVariableDataFromDeliveryResult()
+    {
         // @TODO: Refactor ResultService class to be able to mock dependencies and fix test.
         $this->markTestSkipped();
 
         $impProphecy = $this->prophesize(RdsResultStorage::class);
-        $impProphecy->getRelatedItemCallIds('#fakeUri')->willReturn(array(
+        $impProphecy->getRelatedItemCallIds('#fakeUri')->willReturn([
             '#itemsResults1' => '#itemResultVariable',
             '#itemsResults2' => '#itemResultVariable2',
             '#itemsResults3' => '#itemResultVariable3'
-        ));
+        ]);
 
         $item = new \stdClass();
         $item->item = '#item';
@@ -438,22 +450,21 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $var3->setCorrectResponse(0);
         $item3->variable = $var3;
 
-        $impProphecy->getVariables('#itemResultVariable')->willReturn(array(
-            array(
+        $impProphecy->getVariables('#itemResultVariable')->willReturn([
+            [
                 $item
-            )
-        ));
-        $impProphecy->getVariables('#itemResultVariable2')->willReturn(array(
-            array(
+            ]
+        ]);
+        $impProphecy->getVariables('#itemResultVariable2')->willReturn([
+            [
                 $item2
-            )
-        ));
-        $impProphecy->getVariables('#itemResultVariable3')->willReturn(array(
-            array(
+            ]
+        ]);
+        $impProphecy->getVariables('#itemResultVariable3')->willReturn([
+            [
                 $item3
-            )
-        )
-        );
+            ]
+        ]);
 
         $imp = $impProphecy->reveal();
         $this->service->setImplementation($imp);
@@ -531,9 +542,9 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $this->assertArrayHasKey('nbIncorrectResponses', $itemVar);
         $this->assertEquals(1, $itemVar['nbIncorrectResponses']);
         $this->assertArrayHasKey('nbUnscoredResponses', $itemVar);
-        $this->assertEquals(0,$itemVar['nbUnscoredResponses']);
+        $this->assertEquals(0, $itemVar['nbUnscoredResponses']);
 
-        $this->assertArrayHasKey('data',$itemVar);
+        $this->assertArrayHasKey('data', $itemVar);
     }
 
     public function testAllGetStructuredVariables()
@@ -543,7 +554,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
         $serviceMock = $this->getMockBuilder(ResultsService::class)
             ->disableOriginalConstructor()
-            ->setMethods(array('getItemFromItemResult'))
+            ->setMethods(['getItemFromItemResult'])
             ->getMock();
 
         $itemModel1Prophecy = $this->prophesize(core_kernel_classes_Resource::class);
@@ -629,17 +640,17 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $variable13->variable = $traceVariable1;
 
 
-        $variables1 = array(
-            'uri11' => array(
+        $variables1 = [
+            'uri11' => [
                 $variable1
-            ),
-            'uri12' => array(
+            ],
+            'uri12' => [
                 $variable12
-            ),
-            'uri13' => array(
+            ],
+            'uri13' => [
                 $variable13
-            )
-        );
+            ]
+        ];
 
         //Variables for Item 2
         $callId2 = 'callId2';
@@ -777,35 +788,35 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
 
 
-        $variables2 = array(
-            'uri21' => array(
+        $variables2 = [
+            'uri21' => [
                 $variable2
-            ),
-            'uri22' => array(
+            ],
+            'uri22' => [
                 $variable22
-            ),
-            'uri23' => array(
+            ],
+            'uri23' => [
                 $variable23
-            ),
-            'uri24' => array(
+            ],
+            'uri24' => [
                 $variable24
-            )
-        );
+            ]
+        ];
 
-        $variables3 = array(
-            'uri31' => array(
+        $variables3 = [
+            'uri31' => [
                 $variable3
-            ),
-            'uri32' => array(
+            ],
+            'uri32' => [
                 $variable32
-            ),
-            'uri33' => array(
+            ],
+            'uri33' => [
                 $variable33
-            )
-        );
+            ]
+        ];
 
 
-        $callIds = array($callId1, $callId2, $callId3);
+        $callIds = [$callId1, $callId2, $callId3];
 
         $relatedItem1 = $relatedItem1Prophecy->reveal();
         $relatedItem2 = $relatedItem2Prophecy->reveal();
@@ -814,16 +825,16 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $serviceMock->expects($this->exactly(8))
             ->method('getItemFromItemResult')
             ->withConsecutive(
-                [$callId1, array(array($variable1))],
-                [$callId2, array(array($variable2))],
-                [$callId3, array(array($variable3))],
-                [$callId2, array(array($variable24))],
-                [$callId1, array(array($variable13))],
-                [$callId2, array(array($variable23))],
-                [$callId3, array(array($variable33))],
-                [$callId2, array(array($variable24))]
+                [$callId1, [[$variable1]]],
+                [$callId2, [[$variable2]]],
+                [$callId3, [[$variable3]]],
+                [$callId2, [[$variable24]]],
+                [$callId1, [[$variable13]]],
+                [$callId2, [[$variable23]]],
+                [$callId3, [[$variable33]]],
+                [$callId2, [[$variable24]]]
             )
-            ->willReturnOnConsecutiveCalls($relatedItem1, $relatedItem2, $relatedItem3, $relatedItem2,$relatedItem1, $relatedItem2, $relatedItem3, $relatedItem2);
+            ->willReturnOnConsecutiveCalls($relatedItem1, $relatedItem2, $relatedItem3, $relatedItem2, $relatedItem1, $relatedItem2, $relatedItem3, $relatedItem2);
 
 
         $impProphecy = $this->prophesize(RdsResultStorage::class);
@@ -841,11 +852,11 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         ];
         $allVariables = $serviceMock->getStructuredVariables('DeliveryExecutionIdentifier', 'all', $wantedTypes);
 
-        $lastVariables = $serviceMock->getStructuredVariables('DeliveryExecutionIdentifier', ResultsService::VARIABLES_FILTER_LAST_SUBMITTED, array(taoResultServer_models_classes_TraceVariable::class));
+        $lastVariables = $serviceMock->getStructuredVariables('DeliveryExecutionIdentifier', ResultsService::VARIABLES_FILTER_LAST_SUBMITTED, [taoResultServer_models_classes_TraceVariable::class]);
 
         $this->assertInternalType('array', $allVariables);
 
-        $this->assertEquals(array($epoch1,$epoch2,$epoch3,$epoch24), array_keys($allVariables));
+        $this->assertEquals([$epoch1,$epoch2,$epoch3,$epoch24], array_keys($allVariables));
 
         $this->assertInternalType('array', $allVariables[$epoch1]);
         $this->assertArrayHasKey('itemModel', $allVariables[$epoch1]);
@@ -1003,7 +1014,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $this->assertEquals('unscored', $allVariables[$epoch24][taoResultServer_models_classes_TraceVariable::class]['TraceVariableIdentifier']['isCorrect']);
 
         $this->assertInternalType('array', $lastVariables);
-        $this->assertEquals(array($epoch13, $epoch33, $epoch24), array_keys($lastVariables));
+        $this->assertEquals([$epoch13, $epoch33, $epoch24], array_keys($lastVariables));
 
         $this->assertArrayHasKey(taoResultServer_models_classes_TraceVariable::class, $lastVariables[$epoch13]);
         $this->assertInternalType('array', $lastVariables[$epoch13][taoResultServer_models_classes_TraceVariable::class]);
@@ -1040,36 +1051,35 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
         $this->assertArrayHasKey('isCorrect', $lastVariables[$epoch24][taoResultServer_models_classes_TraceVariable::class]['TraceVariableIdentifier']);
         $this->assertEquals('unscored', $lastVariables[$epoch24][taoResultServer_models_classes_TraceVariable::class]['TraceVariableIdentifier']['isCorrect']);
-
     }
 
     public function testCalculateResponseStatistics()
     {
-        $itemVar1 = array(
-            taoResultServer_models_classes_ResponseVariable::class => array('variableIdentifier' => array('isCorrect' => 'correct'))
-        );
-        $itemVar2 = array(
-            taoResultServer_models_classes_ResponseVariable::class => array('variableIdentifier' => array('isCorrect' => 'incorrect'))
-        );
-        $itemVar3 = array(
-            taoResultServer_models_classes_ResponseVariable::class => array('variableIdentifier' => array('isCorrect' => 'incorrect'))
-        );
-        $itemVar4 = array(
-            taoResultServer_models_classes_ResponseVariable::class => array('variableIdentifier' => array('isCorrect' => 'unscored'))
-        );
-        $itemVar5 = array(
-            taoResultServer_models_classes_ResponseVariable::class => array('variableIdentifier' => array('isCorrect' => 'incorrect'))
-        );
-        $itemVar6 = array(
-            'notAValidVariableType' => array('variableIdentifier' => array('isCorrect' => 'correct'))
-        );
-        $itemVar7 = array(
-            taoResultServer_models_classes_ResponseVariable::class => array('variableIdentifier' => array('isCorrect' => 'undefinedValue'))
-        );
-        $itemVar8 = array(
-            taoResultServer_models_classes_ResponseVariable::class => array('variableIdentifier' => array('isCorrect' => 'correct'))
-        );
-        $variables = array(
+        $itemVar1 = [
+            taoResultServer_models_classes_ResponseVariable::class => ['variableIdentifier' => ['isCorrect' => 'correct']]
+        ];
+        $itemVar2 = [
+            taoResultServer_models_classes_ResponseVariable::class => ['variableIdentifier' => ['isCorrect' => 'incorrect']]
+        ];
+        $itemVar3 = [
+            taoResultServer_models_classes_ResponseVariable::class => ['variableIdentifier' => ['isCorrect' => 'incorrect']]
+        ];
+        $itemVar4 = [
+            taoResultServer_models_classes_ResponseVariable::class => ['variableIdentifier' => ['isCorrect' => 'unscored']]
+        ];
+        $itemVar5 = [
+            taoResultServer_models_classes_ResponseVariable::class => ['variableIdentifier' => ['isCorrect' => 'incorrect']]
+        ];
+        $itemVar6 = [
+            'notAValidVariableType' => ['variableIdentifier' => ['isCorrect' => 'correct']]
+        ];
+        $itemVar7 = [
+            taoResultServer_models_classes_ResponseVariable::class => ['variableIdentifier' => ['isCorrect' => 'undefinedValue']]
+        ];
+        $itemVar8 = [
+            taoResultServer_models_classes_ResponseVariable::class => ['variableIdentifier' => ['isCorrect' => 'correct']]
+        ];
+        $variables = [
             'epoch1' => $itemVar1,
             'epoch2' => $itemVar2,
             'epoch3' => $itemVar3,
@@ -1078,7 +1088,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
             'epoch6' => $itemVar6,
             'epoch7' => $itemVar7,
             'epoch8' => $itemVar8
-        );
+        ];
         $responseStats = $this->service->calculateResponseStatistics($variables);
 
 
@@ -1090,7 +1100,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $this->assertArrayHasKey('nbIncorrectResponses', $responseStats);
         $this->assertEquals(3, $responseStats['nbIncorrectResponses']);
         $this->assertArrayHasKey('nbUnscoredResponses', $responseStats);
-        $this->assertEquals(1,$responseStats['nbUnscoredResponses']);
+        $this->assertEquals(1, $responseStats['nbUnscoredResponses']);
     }
 
     public function testGetResultsFromDelivery()
@@ -1107,7 +1117,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $user->getIdentifier()->willReturn('#fakeTestUri');
         $user->getPropertyValues($prop)->willReturn([]);
 
-        $impProphecy->getRelatedTestCallIds("#fakeUri")->willReturn(array("#fakeTestUri"));
+        $impProphecy->getRelatedTestCallIds("#fakeUri")->willReturn(["#fakeTestUri"]);
         $impProphecy->getTestTaker('#fakeUri1')->willReturn('#testTaker');
 
         $impProphecy->getResultByDelivery(['#fakeUri'], [])->willReturn([[
@@ -1130,7 +1140,6 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         ];
 
         $varDataAll = $this->service->getResultsByDelivery($delivery, $columns, 'lastSubmitted');
-        $this->assertEquals('#fakeUri1' ,$varDataAll[0]['id']);
-
+        $this->assertEquals('#fakeUri1', $varDataAll[0]['id']);
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -16,6 +17,7 @@
  *
  * Copyright (c) 2018 (original work) Open Assessment Technologies SA;
  */
+
 namespace oat\taoOutcomeUi\model\search;
 
 use oat\tao\helpers\UserHelper;
@@ -75,7 +77,8 @@ class ResultIndexIterator implements \Iterator
      * @param mixed $classes array/instance of class(es) to iterate over
      * @param ServiceLocatorInterface $serviceLocator
      */
-    public function __construct($classes, ServiceLocatorInterface $serviceLocator) {
+    public function __construct($classes, ServiceLocatorInterface $serviceLocator)
+    {
         $this->setServiceLocator($serviceLocator);
         $this->resourceIterator = new \core_kernel_classes_ResourceIterator($classes);
         /** @var ResultServerService $resultService */
@@ -89,7 +92,8 @@ class ResultIndexIterator implements \Iterator
      * (non-PHPdoc)
      * @see Iterator::rewind()
      */
-    function rewind() {
+    function rewind()
+    {
         if (!$this->unmoved) {
             $this->resourceIterator->rewind();
             $this->ensureNotEmpty();
@@ -101,7 +105,8 @@ class ResultIndexIterator implements \Iterator
      * (non-PHPdoc)
      * @see Iterator::current()
      */
-    function current() {
+    function current()
+    {
         $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($this->instanceCache[$this->currentInstance]);
         return $this->createDocument($deliveryExecution);
     }
@@ -110,15 +115,17 @@ class ResultIndexIterator implements \Iterator
      * (non-PHPdoc)
      * @see Iterator::key()
      */
-    function key() {
-        return $this->resourceIterator->key().'#'.$this->currentInstance;
+    function key()
+    {
+        return $this->resourceIterator->key() . '#' . $this->currentInstance;
     }
 
     /**
      * (non-PHPdoc)
      * @see Iterator::next()
      */
-    function next() {
+    function next()
+    {
         $this->unmoved = false;
         if ($this->valid()) {
             $this->currentInstance++;
@@ -142,7 +149,8 @@ class ResultIndexIterator implements \Iterator
      * (non-PHPdoc)
      * @see Iterator::valid()
      */
-    function valid() {
+    function valid()
+    {
         return $this->resourceIterator->valid();
     }
 
@@ -152,7 +160,8 @@ class ResultIndexIterator implements \Iterator
      * Ensure the class iterator is pointin to a non empty class
      * Loads the first resource block to test this
      */
-    protected function ensureNotEmpty() {
+    protected function ensureNotEmpty()
+    {
         $this->currentInstance = 0;
         while ($this->resourceIterator->valid() && !$this->load($this->resourceIterator->current(), 0)) {
             $this->resourceIterator->next();
@@ -162,15 +171,16 @@ class ResultIndexIterator implements \Iterator
     /**
      * Ensure the current item is valid result
      */
-    protected function ensureValidResult() {
+    protected function ensureValidResult()
+    {
         $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($this->instanceCache[$this->currentInstance]);
-       try {
-           $deliveryExecution->getDelivery();
-       } catch (\common_exception_NotFound $e) {
-           $message = 'Skip result '. $deliveryExecution->getIdentifier(). ' with message '.$e->getMessage();
-           \common_Logger::e($message);
-           $this->next();
-       }
+        try {
+            $deliveryExecution->getDelivery();
+        } catch (\common_exception_NotFound $e) {
+            $message = 'Skip result ' . $deliveryExecution->getIdentifier() . ' with message ' . $e->getMessage();
+            \common_Logger::e($message);
+            $this->next();
+        }
     }
 
     /**
@@ -179,19 +189,20 @@ class ResultIndexIterator implements \Iterator
      * @return bool
      * @throws \common_exception_Error
      */
-    protected function load(\core_kernel_classes_Resource $delivery, $offset) {
+    protected function load(\core_kernel_classes_Resource $delivery, $offset)
+    {
 
-        $options = array(
+        $options = [
             'recursive' => true,
             'offset' => $offset,
             'limit' => self::CACHE_SIZE
-        );
+        ];
 
         $resultsImplementation = $this->resultService->getResultStorage(null);
 
-        $this->instanceCache = array();
+        $this->instanceCache = [];
         $results = $resultsImplementation->getResultByDelivery([$delivery->getUri()], $options);
-        foreach($results as $result){
+        foreach ($results as $result) {
             $id = isset($result['deliveryResultIdentifier']) ? $result['deliveryResultIdentifier'] : null;
             if ($id) {
                 $this->instanceCache[$offset] = $id;

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -43,7 +44,7 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
      * @access public
      * @var array
      */
-    public $cache = array();
+    public $cache = [];
 
     /**
      * Short description of attribute singleton
@@ -112,7 +113,6 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
                     $variableIdentifier = (string) $varData->getIdentifier();
                     foreach ($columns as $column) {
                         if ($variableIdentifier == $column->getIdentifier() and $contextIdentifier == $column->getContextIdentifier()) {
-
                             $epoch = $varData->getEpoch();
                             $readableTime = "";
                             if ($epoch != "") {
@@ -124,13 +124,13 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
                             // display the duration in seconds with microseconds
                             if ($column->getIdentifier() === 'duration') {
                                 $qtiDuration = new QtiDuration($value);
-                                $value = $qtiDuration->getSeconds(true) .'.'. $qtiDuration->getMicroseconds();
+                                $value = $qtiDuration->getSeconds(true) . '.' . $qtiDuration->getMicroseconds();
                             }
 
-                            $this->cache[get_class($varData)][$result][$column->getContextIdentifier() . $variableIdentifier][(string) $epoch] = array(
+                            $this->cache[get_class($varData)][$result][$column->getContextIdentifier() . $variableIdentifier][(string) $epoch] = [
                                 $value,
                                 $readableTime
-                            );
+                            ];
                         }
                     }
                 }
@@ -144,7 +144,7 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
      */
     public function getValue(core_kernel_classes_Resource $resource, tao_models_classes_table_Column $column)
     {
-        $returnValue = array();
+        $returnValue = [];
 
         if (! $column instanceof VariableColumn) {
             throw new \common_exception_InconsistentData('Unexpected colum type ' . get_class($column) . ' for ' . __CLASS__);
@@ -170,5 +170,4 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
     {
         return ServiceManager::getServiceManager()->get(\common_cache_Cache::SERVICE_ID);
     }
-
 }

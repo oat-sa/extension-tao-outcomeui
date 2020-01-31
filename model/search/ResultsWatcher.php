@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -112,7 +113,6 @@ class ResultsWatcher extends ConfigurableService
      */
     public function isResultSearchEnabled()
     {
-        return (boolean)$this->getOption(self::OPTION_RESULT_SEARCH_FIELD_VISIBILITY);
+        return (bool)$this->getOption(self::OPTION_RESULT_SEARCH_FIELD_VISIBILITY);
     }
-
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -79,7 +80,7 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
         $this->deliveryClass = $this->getClass($deliveryClass);
 
         if (!$this->deliveryClass->exists()) {
-            throw new \common_exception_NotFound('Results Exporter: delivery class "'. $this->deliveryClass->getUri() .'" does not exist.');
+            throw new \common_exception_NotFound('Results Exporter: delivery class "' . $this->deliveryClass->getUri() . '" does not exist.');
         }
 
         $this->resultsService = $resultsService;
@@ -126,7 +127,7 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
             ResultsService::VARIABLES_FILTER_LAST_SUBMITTED,
         ];
         if (!in_array($variableToExport, $allowedFilters)) {
-            throw new \InvalidArgumentException('Results Exporter: wrong submitted variable "'. $variableToExport .'"');
+            throw new \InvalidArgumentException('Results Exporter: wrong submitted variable "' . $variableToExport . '"');
         }
 
         $this->variableToExport = $variableToExport;
@@ -235,12 +236,12 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
     private function getFileName()
     {
         return 'results_export_'
-            .strtolower(\tao_helpers_Display::textCleaner($this->deliveryClass->getLabel(), '*'))
-            .'_'
-            .\tao_helpers_Uri::getUniqueId($this->deliveryClass->getUri())
-            .'_'
-            .date('YmdHis') . rand(10, 99) //more unique name
-            .'.zip';
+            . strtolower(\tao_helpers_Display::textCleaner($this->deliveryClass->getLabel(), '*'))
+            . '_'
+            . \tao_helpers_Uri::getUniqueId($this->deliveryClass->getUri())
+            . '_'
+            . date('YmdHis') . rand(10, 99) //more unique name
+            . '.zip';
     }
 
     /**

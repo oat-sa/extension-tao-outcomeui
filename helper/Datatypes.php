@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,38 +24,39 @@ namespace oat\taoOutcomeUi\helper;
 /**
  * A class focusing on providing utility methods for the various result datatypes
  * that might be sent/stored to/by a result server.
- * 
+ *
  * @author Jérôme Bogaerts <jerome@taotesting.com>
  *
  */
-class Datatypes {
+class Datatypes
+{
     
     /**
      * Decode a binary string representing a file into an array.
-     * 
+     *
      * The binary string that is decoded must respect the following scheme:
-     * 
+     *
      * * filename length, unsigned short
      * * filename, string
      * * mimetype length, unsigned short
      * * mimetype, string
      * * binary content of the file, string
-     * 
+     *
      * The returned array contains tree cells with the following keys:
-     * 
+     *
      * * name, string (might be empty)
      * * mime, string
      * * data, string
-     * 
+     *
      * @param string $binary A binary string representing the file to be decoded.
      * @return array The decoded file as an array.
      */
-    static public function decodeFile($binary) {
+    public static function decodeFile($binary)
+    {
         
-        $returnValue = array('name' => '', 'mime' => '', 'data' => '');
+        $returnValue = ['name' => '', 'mime' => '', 'data' => ''];
         
         if (empty($binary) === false) {
-            
             $filenameLen = current(unpack('S', substr($binary, 0, 2)));
             if ($filenameLen > 0) {
                 $returnValue['name'] = substr($binary, 2, $filenameLen);

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +18,7 @@
  * Copyright (c) 2018 (original work) Open Assessment Technologies SA;
  *
  */
+
 namespace oat\taoOutcomeUi\model\search;
 
 use oat\generis\model\OntologyAwareTrait;
@@ -30,10 +32,11 @@ use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
 class ResultCustomFieldsService extends ConfigurableService
 {
     use OntologyAwareTrait;
+
     const SERVICE_ID = 'taoOutcomeUi/ResultCustomFields';
 
     public function getCustomFields(DeliveryExecutionInterface $deliveryExecution)
     {
-       return [];
+        return [];
     }
 }

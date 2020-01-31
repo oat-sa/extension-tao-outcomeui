@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -61,7 +62,7 @@ class ContextTypePropertyColumn extends \tao_models_classes_table_PropertyColumn
     public function setContextType($contextType)
     {
         if (!in_array($contextType, [self::CONTEXT_TYPE_TEST_TAKER, self::CONTEXT_TYPE_DELIVERY])) {
-            throw new \common_exception_InvalidArgumentType('Not valid context type "'. $contextType .'"');
+            throw new \common_exception_InvalidArgumentType('Not valid context type "' . $contextType . '"');
         }
 
         $this->contextType = $contextType;

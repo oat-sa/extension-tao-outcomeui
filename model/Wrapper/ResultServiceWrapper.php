@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: christophe
@@ -7,7 +8,6 @@
  */
 
 namespace oat\taoOutcomeUi\model\Wrapper;
-
 
 use oat\oatbox\service\ConfigurableService;
 use oat\oatbox\service\ServiceManager;
@@ -26,8 +26,9 @@ class ResultServiceWrapper extends ConfigurableService
      */
     protected $resultService;
 
-    public function getService() {
-        if(is_null($this->resultService)) {
+    public function getService()
+    {
+        if (is_null($this->resultService)) {
             $serviceClass = $this->getOption('class');
             $this->resultService = $serviceClass::singleton();
         }
@@ -37,7 +38,7 @@ class ResultServiceWrapper extends ConfigurableService
     public static function deleteResultCache(DeliveryExecutionState $event)
     {
         // if the delivery execution has been re-activated, we have to delete the result cache already existing for this execution
-        if ($event->getPreviousState() == DeliveryExecutionInterface::STATE_FINISHIED ) {
+        if ($event->getPreviousState() == DeliveryExecutionInterface::STATE_FINISHIED) {
             /** @var ResultsService $resultService */
             $resultService = ServiceManager::getServiceManager()->get(self::SERVICE_ID)->getService();
             $resultService->deleteCacheFor($event->getDeliveryExecution()->getIdentifier());

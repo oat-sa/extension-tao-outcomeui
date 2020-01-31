@@ -1,4 +1,5 @@
 <?php
+
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -37,7 +38,7 @@ return [
     'label'          => 'Result visualisation',
     'description'    => 'TAO Results extension',
     'license'        => 'GPL-2.0',
-    'version'        => '8.2.1',
+    'version'        => '8.2.2',
     'author'         => 'Open Assessment Technologies, CRP Henri Tudor',
     // taoItems is only needed for the item model property retrieval
     'requires'       => [
@@ -63,7 +64,7 @@ return [
     'managementRole' => 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole',
     'acl'            => [
         ['grant', 'http://www.tao.lu/Ontologies/TAOResult.rdf#ResultsManagerRole', ['ext' => 'taoOutcomeUi']],
-        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, DeliveryMgmt::class.'@getOntologyData'],
+        [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, DeliveryMgmt::class . '@getOntologyData'],
         [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@index'],
         [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@getResults'],
         [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@viewResult'],
