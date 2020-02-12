@@ -342,9 +342,10 @@ class Results extends \tao_actions_CommonModule
             $variables = $this->getResultsService()->getImplementation()->getDeliveryVariables($resultId);
             $structuredItemVariables = $this->getResultsService()->structureItemVariables($variables, $filterSubmission);
             $itemVariables = $this->formatItemVariables($structuredItemVariables, $filterTypes);
-            $testVariables = $this->getResultsService()->extractTestVariables($variables, $filterTypes);
-
-            $testVariables = $this->filterTestVariables($testVariables, $filterSubmission);
+            $testVariables = $this->filterTestVariables(
+                $this->getResultsService()->extractTestVariables($variables, $filterTypes),
+                $filterSubmission
+            );
 
             // render item variables
             $this->setData('variables', $itemVariables);
