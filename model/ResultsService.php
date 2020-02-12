@@ -554,9 +554,9 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         usort($itemVariables, function ($a, $b) {
             $variableA = $a[0]->variable;
             $variableB = $b[0]->variable;
-            [$usec, $sec] = explode(" ", $variableA->getEpoch());
+            list($usec, $sec) = explode(" ", $variableA->getEpoch());
             $floata = ((float) $usec + (float) $sec);
-            [$usec, $sec] = explode(" ", $variableB->getEpoch());
+            list($usec, $sec) = explode(" ", $variableB->getEpoch());
             $floatb = ((float) $usec + (float) $sec);
 
             if ((floatval($floata) - floatval($floatb)) > 0) {
@@ -819,9 +819,9 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      */
     public static function sortTimeStamps($a, $b)
     {
-        [$usec, $sec] = explode(" ", $a);
+        list($usec, $sec) = explode(" ", $a);
         $floata = ((float) $usec + (float) $sec);
-        [$usec, $sec] = explode(" ", $b);
+        list($usec, $sec) = explode(" ", $b);
         $floatb = ((float) $usec + (float) $sec);
 
         //the callback is expecting an int returned, for the case where the difference is of less than a second
