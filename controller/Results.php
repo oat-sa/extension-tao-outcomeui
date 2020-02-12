@@ -43,12 +43,14 @@ use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 use oat\taoResultServer\models\classes\NoResultStorage;
 use oat\taoResultServer\models\classes\NoResultStorageException;
 use oat\taoResultServer\models\classes\QtiResultsService;
+use tao_helpers_Date;
 use \tao_helpers_Uri;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\tao\helpers\UserHelper;
 use oat\tao\model\datatable\implementation\DatatableRequest;
+use taoResultServer_models_classes_Variable;
 
 /**
  * Results Controller provide actions performed from url resolution
@@ -342,6 +344,8 @@ class Results extends \tao_actions_CommonModule
             $itemVariables = $this->formatItemVariables($structuredItemVariables, $filterTypes);
             $testVariables = $this->getResultsService()->extractTestVariables($variables, $filterTypes);
 
+            $testVariables = $this->filterTestVariables($testVariables, $filterSubmission);
+
             // render item variables
             $this->setData('variables', $itemVariables);
             $stats = $this->getResultsService()->calculateResponseStatistics($itemVariables);
@@ -549,5 +553,44 @@ class Results extends \tao_actions_CommonModule
         $exporter = $this->propagate(new ResultsExporter($resourceUri, ResultsService::singleton()));
 
         return $this->returnTaskJson($exporter->createExportTask());
+    }
+
+    /**
+     * Returns the filtered test variables based on the submission filter
+     * @param taoResultServer_models_classes_Variable[] $testVariables
+     */
+    private function filterTestVariables(array $testVariables, string $filterSubmission): array
+    {
+        switch ($filterSubmission) {
+            case ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED:
+            case ResultsService::VARIABLES_FILTER_LAST_SUBMITTED:
+                $uniqueVariableIdentifiers = [];
+
+                usort($testVariables, static function (
+                    taoResultServer_models_classes_Variable $a,
+                    taoResultServer_models_classes_Variable $b
+                ) use ($filterSubmission) {
+                    if ($filterSubmission === ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED) {
+                        return tao_helpers_Date::getTimeStamp($a->getEpoch()) - tao_helpers_Date::getTimeStamp($b->getEpoch());
+                    }
+
+                    return tao_helpers_Date::getTimeStamp($b->getEpoch()) - tao_helpers_Date::getTimeStamp($a->getEpoch());
+                });
+
+                return array_filter($testVariables, static function (
+                    taoResultServer_models_classes_Variable $variable
+                ) use (&$uniqueVariableIdentifiers) {
+                    if (in_array($variable->getIdentifier(), $uniqueVariableIdentifiers)) {
+                        return false;
+                    }
+                    $uniqueVariableIdentifiers[] = $variable->getIdentifier();
+
+                    return true;
+                });
+
+            case ResultsService::VARIABLES_FILTER_ALL:
+            default:
+                return $testVariables;
+        }
     }
 }
