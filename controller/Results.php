@@ -342,10 +342,7 @@ class Results extends \tao_actions_CommonModule
             $variables = $this->getResultsService()->getImplementation()->getDeliveryVariables($resultId);
             $structuredItemVariables = $this->getResultsService()->structureItemVariables($variables, $filterSubmission);
             $itemVariables = $this->formatItemVariables($structuredItemVariables, $filterTypes);
-            $testVariables = $this->filterTestVariables(
-                $this->getResultsService()->extractTestVariables($variables, $filterTypes),
-                $filterSubmission
-            );
+            $testVariables = $this->getResultsService()->extractTestVariables($variables, $filterTypes, $filterSubmission);
 
             // render item variables
             $this->setData('variables', $itemVariables);
@@ -554,44 +551,5 @@ class Results extends \tao_actions_CommonModule
         $exporter = $this->propagate(new ResultsExporter($resourceUri, ResultsService::singleton()));
 
         return $this->returnTaskJson($exporter->createExportTask());
-    }
-
-    /**
-     * Returns the filtered test variables based on the submission filter
-     * @param taoResultServer_models_classes_Variable[] $testVariables
-     */
-    private function filterTestVariables(array $testVariables, string $filterSubmission): array
-    {
-        switch ($filterSubmission) {
-            case ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED:
-            case ResultsService::VARIABLES_FILTER_LAST_SUBMITTED:
-                $uniqueVariableIdentifiers = [];
-
-                usort($testVariables, static function (
-                    taoResultServer_models_classes_Variable $a,
-                    taoResultServer_models_classes_Variable $b
-                ) use ($filterSubmission) {
-                    if ($filterSubmission === ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED) {
-                        return tao_helpers_Date::getTimeStamp($a->getEpoch()) - tao_helpers_Date::getTimeStamp($b->getEpoch());
-                    }
-
-                    return tao_helpers_Date::getTimeStamp($b->getEpoch()) - tao_helpers_Date::getTimeStamp($a->getEpoch());
-                });
-
-                return array_filter($testVariables, static function (
-                    taoResultServer_models_classes_Variable $variable
-                ) use (&$uniqueVariableIdentifiers) {
-                    if (in_array($variable->getIdentifier(), $uniqueVariableIdentifiers)) {
-                        return false;
-                    }
-                    $uniqueVariableIdentifiers[] = $variable->getIdentifier();
-
-                    return true;
-                });
-
-            case ResultsService::VARIABLES_FILTER_ALL:
-            default:
-                return $testVariables;
-        }
     }
 }

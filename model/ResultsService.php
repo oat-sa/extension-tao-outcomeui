@@ -59,6 +59,7 @@ use oat\taoResultServer\models\classes\ResultServerService;
 use tao_models_classes_service_StorageDirectory;
 use taoQtiTest_models_classes_QtiTestService;
 use oat\taoQtiTest\models\QtiTestCompilerIndex;
+use taoResultServer_models_classes_Variable;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use oat\tao\model\OntologyClassService;
@@ -554,9 +555,9 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         usort($itemVariables, function ($a, $b) {
             $variableA = $a[0]->variable;
             $variableB = $b[0]->variable;
-            list($usec, $sec) = explode(" ", $variableA->getEpoch());
+            [$usec, $sec] = explode(" ", $variableA->getEpoch());
             $floata = ((float) $usec + (float) $sec);
-            list($usec, $sec) = explode(" ", $variableB->getEpoch());
+            [$usec, $sec] = explode(" ", $variableB->getEpoch());
             $floatb = ((float) $usec + (float) $sec);
 
             if ((floatval($floata) - floatval($floatb)) > 0) {
@@ -819,9 +820,9 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      */
     public static function sortTimeStamps($a, $b)
     {
-        list($usec, $sec) = explode(" ", $a);
+        [$usec, $sec] = explode(" ", $a);
         $floata = ((float) $usec + (float) $sec);
-        list($usec, $sec) = explode(" ", $b);
+        [$usec, $sec] = explode(" ", $b);
         $floatb = ((float) $usec + (float) $sec);
 
         //the callback is expecting an int returned, for the case where the difference is of less than a second
@@ -848,29 +849,45 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         return $this->extractTestVariables($this->getVariablesFromObjectResult($testCallIds), $wantedTypes);
     }
 
-    public function extractTestVariables($variableObjects, $wantedTypes)
+    public function extractTestVariables(array $variableObjects, array $wantedTypes, string $filter = self::VARIABLES_FILTER_ALL)
     {
-        $variablesData = [];
-        foreach ($variableObjects as $variable) {
-            if (is_null($variable[0]->callIdItem) && in_array(get_class($variable[0]->variable), $wantedTypes)) {
-                $variablesData[] = $variable[0]->variable;
-            }
-        }
-        usort($variablesData, function ($a, $b) {
-            list($usec, $sec) = explode(" ", $a->getEpoch());
-            $floata = ((float) $usec + (float) $sec);
-            list($usec, $sec) = explode(" ", $b->getEpoch());
-            $floatb = ((float) $usec + (float) $sec);
+        $variableObjects = array_filter($variableObjects, static function (array $variableObject) use ($wantedTypes) {
+            $variable = current($variableObject);
 
-            if ((floatval($floata) - floatval($floatb)) > 0) {
-                return 1;
-            } elseif ((floatval($floata) - floatval($floatb)) < 0) {
-                return -1;
-            } else {
-                return 0;
-            }
+            return $variable->callIdItem === null && in_array(get_class($variable->variable), $wantedTypes, true);
         });
-        return $variablesData;
+
+        $variableObjects = array_map(static function (array $variableObject) {
+            return current($variableObject)->variable;
+        }, $variableObjects);
+
+        usort($variableObjects, static function (
+            taoResultServer_models_classes_Variable $a,
+            taoResultServer_models_classes_Variable $b
+        ) use ($filter) {
+            if ($filter === self::VARIABLES_FILTER_LAST_SUBMITTED) {
+                return tao_helpers_Date::getTimeStamp($b->getEpoch()) - tao_helpers_Date::getTimeStamp($a->getEpoch());
+            }
+
+            return tao_helpers_Date::getTimeStamp($a->getEpoch()) - tao_helpers_Date::getTimeStamp($b->getEpoch());
+        });
+
+        if (in_array($filter, [self::VARIABLES_FILTER_FIRST_SUBMITTED, self::VARIABLES_FILTER_LAST_SUBMITTED], true)) {
+            $uniqueVariableIdentifiers = [];
+
+            $variableObjects = array_filter($variableObjects, static function (
+                taoResultServer_models_classes_Variable $variable
+            ) use (&$uniqueVariableIdentifiers) {
+                if (in_array($variable->getIdentifier(), $uniqueVariableIdentifiers, true)) {
+                    return false;
+                }
+                $uniqueVariableIdentifiers[] = $variable->getIdentifier();
+
+                return true;
+            });
+        }
+
+        return $variableObjects;
     }
 
     /**
