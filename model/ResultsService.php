@@ -865,10 +865,10 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
             taoResultServer_models_classes_Variable $b
         ) use ($filter) {
             if ($filter === self::VARIABLES_FILTER_LAST_SUBMITTED) {
-                return tao_helpers_Date::getTimeStamp($b->getEpoch()) - tao_helpers_Date::getTimeStamp($a->getEpoch());
+                return $b->getCreationTime() - $a->getCreationTime();
             }
 
-            return tao_helpers_Date::getTimeStamp($a->getEpoch()) - tao_helpers_Date::getTimeStamp($b->getEpoch());
+            return $a->getCreationTime() - $b->getCreationTime();
         });
 
         if (in_array($filter, [self::VARIABLES_FILTER_FIRST_SUBMITTED, self::VARIABLES_FILTER_LAST_SUBMITTED], true)) {
