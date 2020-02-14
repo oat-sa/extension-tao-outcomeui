@@ -25,9 +25,20 @@ use oat\taoOutcomeRds\model\RdsResultStorage;
 use oat\taoOutcomeUi\model\ResultsService;
 use ReflectionClass;
 use ReflectionException;
+use stdClass;
+use taoResultServer_models_classes_OutcomeVariable;
+use taoResultServer_models_classes_ResponseVariable;
 
 class ResultsServiceTest extends TestCase
 {
+    /** @var ResultsService */
+    private $subject;
+
+    protected function setUp()
+    {
+        $this->subject = new ResultsService();
+    }
+
     /**
      * @dataProvider getVariablesFromObjectResultProvider
      *
@@ -37,27 +48,25 @@ class ResultsServiceTest extends TestCase
      */
     public function testGetVariablesFromObjectResult($variables, $expectedVariablesCount)
     {
-        $service = new ResultsService();
-
         $mock = $this->getMockBuilder(RdsResultStorage::class)->getMock();
         $mock->expects($this->once())
             ->method('getVariables')
             ->willReturn($variables);
 
-        $service->setImplementation($mock);
+        $this->subject->setImplementation($mock);
 
-        $return = $service->getVariablesFromObjectResult('itemResultFixture');
+        $return = $this->subject->getVariablesFromObjectResult('itemResultFixture');
 
         $this->assertCount($expectedVariablesCount, $return);
     }
 
     public function getVariablesFromObjectResultProvider()
     {
-        $variable = new \stdClass();
+        $variable = new stdClass();
         $variable->variable = new \taoResultServer_models_classes_ResponseVariable();
         $variable->value = '#bar';
 
-        $variable1 = new \stdClass();
+        $variable1 = new stdClass();
         $variable1->variable = new \taoResultServer_models_classes_OutcomeVariable();
         $variable1->value = '#bar';
 
@@ -77,6 +86,151 @@ class ResultsServiceTest extends TestCase
         ];
     }
 
+    /**
+     * @dataProvider testExtractTestVariablesProvider
+     */
+    public function testExtractTestVariables(array $expectedOutput, array $variableObjects, array $wantedTypes, string $filter = null)
+    {
+        if ($filter === null) {
+            $this->assertSame($expectedOutput, $this->subject->extractTestVariables($variableObjects, $wantedTypes));
+        } else {
+            $this->assertSame($expectedOutput, $this->subject->extractTestVariables($variableObjects, $wantedTypes, $filter));
+        }
+    }
+
+    public function testExtractTestVariablesProvider()
+    {
+        $responseVariable = $this->getResponseVariable();
+        $outcomeVariable = $this->getOutcomeVariable();
+
+        return [
+            [
+                [
+                    $responseVariable,
+                    $outcomeVariable,
+                ],
+                [
+                    [(object) [
+                        'callIdItem' => 'https://sds-tao.docker.localhost/ontologies/tao.rdf#i5e43f610586e6866601988b391f3a4.item-1.0',
+                        'variable' => $outcomeVariable,
+                    ]],
+                    [(object) [
+                        'callIdItem' => null,
+                        'variable' => $outcomeVariable,
+                    ]],
+                    [(object) [
+                        'callIdItem' => null,
+                        'variable' => $responseVariable,
+                    ]],
+                ],
+                [
+                    'taoResultServer_models_classes_OutcomeVariable',
+                    'taoResultServer_models_classes_ResponseVariable',
+                ],
+            ],
+            [
+                [
+                    0 => $responseVariable,
+                    1 => $responseVariable,
+                    2 => $outcomeVariable,
+                    3 => $outcomeVariable,
+                ],
+                [
+                    [(object) [
+                        'callIdItem' => 'https://sds-tao.docker.localhost/ontologies/tao.rdf#i5e43f610586e6866601988b391f3a4.item-1.0',
+                        'variable' => $outcomeVariable,
+                    ]],
+                    [(object) [
+                        'callIdItem' => null,
+                        'variable' => $outcomeVariable,
+                    ]],
+                    [(object) [
+                        'callIdItem' => null,
+                        'variable' => $outcomeVariable,
+                    ]],
+                    [(object) [
+                        'callIdItem' => null,
+                        'variable' => $responseVariable,
+                    ]],
+                    [(object) [
+                        'callIdItem' => null,
+                        'variable' => $responseVariable,
+                    ]],
+                ],
+                [
+                    'taoResultServer_models_classes_OutcomeVariable',
+                    'taoResultServer_models_classes_ResponseVariable',
+                ],
+                ResultsService::VARIABLES_FILTER_ALL,
+            ],
+            [
+                [
+                    0 => $outcomeVariable,
+                    2 => $responseVariable,
+                ],
+                [
+                    [(object) [
+                        'callIdItem' => 'https://sds-tao.docker.localhost/ontologies/tao.rdf#i5e43f610586e6866601988b391f3a4.item-1.0',
+                        'variable' => $outcomeVariable,
+                    ]],
+                    [(object) [
+                        'callIdItem' => null,
+                        'variable' => $outcomeVariable,
+                    ]],
+                    [(object) [
+                        'callIdItem' => null,
+                        'variable' => $outcomeVariable,
+                    ]],
+                    [(object) [
+                        'callIdItem' => null,
+                        'variable' => $responseVariable,
+                    ]],
+                    [(object) [
+                        'callIdItem' => null,
+                        'variable' => $responseVariable,
+                    ]],
+                ],
+                [
+                    'taoResultServer_models_classes_OutcomeVariable',
+                    'taoResultServer_models_classes_ResponseVariable',
+                ],
+                ResultsService::VARIABLES_FILTER_LAST_SUBMITTED,
+            ],
+            [
+                [
+                    0 => $responseVariable,
+                    2 => $outcomeVariable,
+                ],
+                [
+                    [(object) [
+                        'callIdItem' => 'https://sds-tao.docker.localhost/ontologies/tao.rdf#i5e43f610586e6866601988b391f3a4.item-1.0',
+                        'variable' => $outcomeVariable,
+                    ]],
+                    [(object) [
+                        'callIdItem' => null,
+                        'variable' => $outcomeVariable,
+                    ]],
+                    [(object) [
+                        'callIdItem' => null,
+                        'variable' => $outcomeVariable,
+                    ]],
+                    [(object) [
+                        'callIdItem' => null,
+                        'variable' => $responseVariable,
+                    ]],
+                    [(object) [
+                        'callIdItem' => null,
+                        'variable' => $responseVariable,
+                    ]],
+                ],
+                [
+                    'taoResultServer_models_classes_OutcomeVariable',
+                    'taoResultServer_models_classes_ResponseVariable',
+                ],
+                ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED,
+            ],
+        ];
+    }
 
     public function filterDataProvider()
     {
@@ -203,5 +357,41 @@ class ResultsServiceTest extends TestCase
         $method->setAccessible(true);
         $resultsService = new ResultsService();
         self::assertSame($expected, $method->invokeArgs($resultsService, [$row, $filters]));
+    }
+
+    private function getResponseVariable(
+        $candidateResponse = 'UFQ0LjA5MTc1M1M=',
+        $identifier = 'duration',
+        $cardinality = 'single',
+        $baseType = 'float',
+        $epoch = '0.79269200 1581512215'
+     ) {
+        $responseVariable = new taoResultServer_models_classes_ResponseVariable();
+
+        $responseVariable->candidateResponse = $candidateResponse;
+        $responseVariable->identifier = $identifier;
+        $responseVariable->cardinality = $cardinality;
+        $responseVariable->baseType = $baseType;
+        $responseVariable->epoch = $epoch;
+
+        return $responseVariable;
+    }
+
+    private function getOutcomeVariable(
+        $value = 'Y29tcGxldGVk',
+        $identifier = 'completionStatus',
+        $cardinality = 'single',
+        $baseType = 'identifier',
+        $epoch = '0.96025600 1581512219'
+    ) {
+        $outcomeVariable = new taoResultServer_models_classes_OutcomeVariable();
+
+        $outcomeVariable->value = $value;
+        $outcomeVariable->identifier = $identifier;
+        $outcomeVariable->cardinality = $cardinality;
+        $outcomeVariable->baseType = $baseType;
+        $outcomeVariable->epoch = $epoch;
+
+        return $outcomeVariable;
     }
 }
