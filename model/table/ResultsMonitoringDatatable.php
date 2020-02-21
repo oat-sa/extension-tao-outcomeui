@@ -59,30 +59,36 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
     }
 
     /**
-     * @return array
      * @throws \common_Exception
-     * @throws \common_exception_Error
+     * @throws \common_exception_NotFound
+     *
+     * @return array
      */
     public function getPayload()
     {
-        $deliveryService = DeliveryAssemblyService::singleton();
-        $deliveryClass = $deliveryService->getRootClass();
-
         $this->results = [
             'data' => [],
-            'records' => 0
+            'records' => 0,
         ];
+
         $page = $this->request->getPage();
         $limit = $this->request->getRows();
-        $order = $this->request->getSortBy();
-        $sort = $this->request->getSortOrder();
         $start = $limit * $page - $limit;
+
+        $options = [
+            'order' => $this->request->getSortBy(),
+            'orderdir' => strtoupper($this->request->getSortOrder()),
+            'offset' => $start,
+            'limit' => $limit,
+            'recursive' => true,
+        ];
 
         $params = \Context::getInstance()->getRequest()->getParameters();
         $criteria = isset($params['filterquery']) ? $params['filterquery'] : '';
         $classUri = isset($params['classUri']) ? $params['classUri'] : '';
 
         $deliveriesArray = [];
+
         if ($criteria) {
             /** @var Search $searchService */
             $searchService = $this->getServiceLocator()->get(Search::SERVICE_ID);
@@ -91,76 +97,68 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
                 $criteria .= ' AND delivery:"' . $classUri . '"';
             }
 
-            $resultsArray = $searchService->query($criteria, ResultService::DELIVERY_RESULT_CLASS_URI, $start, $limit, 'id', 'DESC');
+            $resultsArray = $searchService->query($criteria, ResultService::DELIVERY_RESULT_CLASS_URI, $start, $limit);
+
             /** @var IndexDocument $index */
             foreach ($resultsArray as $index) {
-
                 /** @var DeliveryExecution $execution */
                 $execution = ServiceProxy::singleton()->getDeliveryExecution($index);
+
                 try {
                     $delivery = $execution->getDelivery();
-                    if ($classUri && $delivery->getUri() != $classUri) {
+
+                    if ($classUri && $delivery->getUri() !== $classUri) {
                         break;
                     }
-                    $user = UserHelper::getUser($execution->getUserIdentifier());
-                    $userName = UserHelper::getUserName($user, true);
-                    if (empty($userName)) {
-                        $userName = $execution->getUserIdentifier();
-                    }
+
                     try {
                         $startTime = \tao_helpers_Date::displayeDate($execution->getStartTime());
                     } catch (\common_exception_NotFound $e) {
                         \common_Logger::w($e->getMessage());
                         $startTime = '';
                     }
-                    $label = $execution->getLabel() ? $execution->getLabel() : $delivery->getLabel();
+
+                    $user = UserHelper::getUser($execution->getUserIdentifier());
+                    $userName = UserHelper::getUserName($user, true);
 
                     $this->results['data'][] = [
                         'id' => $execution->getIdentifier() . '|' . $delivery->getUri(),
-                        'delivery' => $label,
-                        'testTakerIdentifier' => $userName,
+                        'delivery' => $execution->getLabel() ? $execution->getLabel() : $delivery->getLabel(),
+                        'userName' => !empty($userName) ? $userName : $execution->getUserIdentifier(),
+                        'testTakerIdentifier' => $execution->getUserIdentifier(),
                         'deliveryResultIdentifier' => $execution->getIdentifier(),
-                        'start_time' => $startTime
+                        'start_time' => $startTime,
                     ];
                 } catch (\common_exception_NotFound $e) {
-                    $gau = [
-                        'order' => $order,
-                        'orderdir' => strtoupper($sort),
-                        'offset' => $start,
-                        'limit' => $limit,
-                        'recursive' => true
-                    ];
-                    if ($classUri && $execution->getIdentifier() != $classUri) {
+                    if ($classUri && $execution->getIdentifier() !== $classUri) {
                         break;
                     }
-                    $this->getResultsByDeliveries([$execution->getIdentifier()], $gau);
+
+                    $this->getResultsByDeliveries([$execution->getIdentifier()], $options);
                 }
             }
+
             $this->results['records'] = $resultsArray->getTotalCount();
         } else {
-            $deliveries = $deliveryClass->getInstances(true);
             /** @var \core_kernel_classes_Resource $delivery */
-            foreach ($deliveries as $delivery) {
+            foreach (DeliveryAssemblyService::singleton()->getRootClass()->getInstances(true) as $delivery) {
                 $deliveriesArray[] = $delivery->getUri();
             }
-            $gau = [
-                'order' => $order,
-                'orderdir' => strtoupper($sort),
-                'offset' => $start,
-                'limit' => $limit,
-                'recursive' => true
-            ];
+
             if ($deliveriesArray) {
-                $this->getResultsByDeliveries($deliveriesArray, $gau);
+                $this->getResultsByDeliveries($deliveriesArray, $options);
             }
         }
+
         return $this->doPostprocessing();
     }
+
     /**
      * @param $deliveriesArray
-     * @param $options
-     * @return mixed
+     * @param array $options
+     *
      * @throws \common_Exception
+     * @throws \common_exception_Error
      */
     protected function getResultsByDeliveries($deliveriesArray, $options = [])
     {
@@ -191,21 +189,22 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
                             }
                         }
                     }
-                    $testTaker = $result['testTakerIdentifier'] ? $result['testTakerIdentifier'] : 'TestTaker';
-                    $user = UserHelper::getUser($testTaker);
+
+                    $testTakerId = $result['testTakerIdentifier'] ? $result['testTakerIdentifier'] : 'TestTaker';
+                    $user = UserHelper::getUser($testTakerId);
                     $userName = UserHelper::getUserName($user, true);
-                    if (empty($userName)) {
-                        $userName = $testTaker;
-                    }
+
                     $this->results['data'][] = [
                         'id' => $id . '|' . $result['deliveryIdentifier'],
                         'delivery' => $label,
-                        'testTakerIdentifier' => $userName,
+                        'userName' => !empty($userName) ? $userName : $testTakerId,
+                        'testTakerIdentifier' => $testTakerId,
                         'deliveryResultIdentifier' => $id,
-                        'start_time' => $startTime
+                        'start_time' => $startTime,
                     ];
                 }
             }
+
             $this->results['records'] = $resultsImplementation->countResultByDelivery($deliveriesArray);
         } else {
             \common_Logger::i('Attempt to read from non-manageable result storage');
@@ -213,18 +212,20 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
     }
 
     /**
-     * @param array $results
      * @return array
      */
     protected function doPostProcessing()
     {
-        $payload = [
+        $numberOfRecords = isset($this->results['records']['value'])
+            ? $this->results['records']['value']
+            : $this->results['records'];
+
+        return [
             'data' => $this->results['data'],
             'page' => (int) $this->request->getPage(),
             'records' => (int) count($this->results['data']),
-            'total' => ceil($this->results['records'] / $this->request->getRows()),
+            'total' => ceil($numberOfRecords / $this->request->getRows()),
         ];
-        return $payload;
     }
     /**
      * @return array

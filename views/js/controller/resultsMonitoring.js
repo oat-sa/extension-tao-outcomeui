@@ -194,7 +194,7 @@ define([
                         label: __('Delivery Execution'),
                         sortable: false,
                     }, {
-                        id: 'testTakerIdentifier',
+                        id: 'userName',
                         label: __('Test Taker'),
                         sortable: false
                     }, {
