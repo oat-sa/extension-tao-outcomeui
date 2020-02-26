@@ -62,6 +62,7 @@ use taoResultServer_models_classes_Variable;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use oat\tao\model\OntologyClassService;
+use oat\taoDelivery\model\RuntimeService;
 
 class ResultsService extends OntologyClassService implements ServiceLocatorAwareInterface
 {
@@ -1529,7 +1530,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      */
     private function getDirectoryIds($delivery)
     {
-        $runtime = $this->getServiceLocator()->get(AssignmentService::SERVICE_ID)->getRuntime($delivery);
+        $runtime = $this->getServiceLocator()->get(RuntimeService::SERVICE_ID)->getRuntime($delivery);
         $inputParameters = \tao_models_classes_service_ServiceCallHelper::getInputValues($runtime, []);
         $directoryIds = explode('|', $inputParameters['QtiTestCompilation']);
 
