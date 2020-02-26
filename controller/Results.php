@@ -156,24 +156,12 @@ class Results extends \tao_actions_CommonModule
 
 
     /**
-     * get all result delivery execution to display
+     * Get all result delivery execution to display
      */
     public function getResults()
     {
-        $page = $this->getRequestParameter('page');
         $limit = $this->getRequestParameter('rows');
-        $order = $this->getRequestParameter('sortby');
-        $sort = $this->getRequestParameter('sortorder');
-        $query = $this->getRequestParameter('filterquery');
-        $start = $limit * $page - $limit;
-
-        $gau = [
-            'order' => $order,
-            'orderdir' => strtoupper($sort),
-            'offset' => $start,
-            'limit' => $limit,
-            'recursive' => true
-        ];
+        $start = $limit * $this->getRequestParameter('page') - $limit;
 
         try {
             $data = [];
@@ -181,17 +169,27 @@ class Results extends \tao_actions_CommonModule
             $user = $this->getSession()->getUser();
             $rights = [
                 'view' => !AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'viewResult', []),
-                'delete' => !AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'delete', [])];
-            if ($query) {
+                'delete' => !AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'delete', []),
+            ];
+
+            if ($this->hasRequestParameter('filterquery')) {
                 $resultsData = new ResultsMonitoringDatatable(DatatableRequest::fromGlobals());
                 $resultsData->setServiceLocator($this->getServiceLocator());
+
                 $payload = $resultsData->getPayload();
                 $results = $payload['data'];
                 $count = $payload['records'];
             } else {
                 $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
                 $this->getResultStorage($delivery);
-                $results = $this->getResultsService()->getImplementation()->getResultByDelivery([$delivery->getUri()], $gau);
+
+                $results = $this->getResultsService()->getImplementation()->getResultByDelivery([$delivery->getUri()], [
+                    'order' => $this->getRequestParameter('sortby'),
+                    'orderdir' => strtoupper($this->getRequestParameter('sortorder')),
+                    'offset' => $start,
+                    'limit' => $limit,
+                    'recursive' => true,
+                ]);
                 $count = $this->getResultsService()->getImplementation()->countResultByDelivery([$delivery->getUri()]);
             }
 
@@ -206,12 +204,11 @@ class Results extends \tao_actions_CommonModule
                 }
 
                 $user = UserHelper::getUser($res['testTakerIdentifier']);
-                $userName = UserHelper::getUserName($user, true);
 
                 $data[] = [
                     'id' => $deliveryExecution->getIdentifier(),
                     'ttakerid' => $res['testTakerIdentifier'],
-                    'ttaker' => _dh($userName),
+                    'ttaker' => _dh(UserHelper::getUserName($user, true)),
                     'time' => $startTime,
                 ];
 
@@ -223,11 +220,11 @@ class Results extends \tao_actions_CommonModule
                 'page' => floor($start / $limit) + 1,
                 'total' => ceil($count / $limit),
                 'records' => count($data),
-                'readonly' => $readOnly
+                'readonly' => $readOnly,
             ]);
         } catch (\common_exception_Error $e) {
             $this->returnJson([
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ]);
         }
     }
@@ -340,7 +337,7 @@ class Results extends \tao_actions_CommonModule
             $variables = $this->getResultsService()->getImplementation()->getDeliveryVariables($resultId);
             $structuredItemVariables = $this->getResultsService()->structureItemVariables($variables, $filterSubmission);
             $itemVariables = $this->formatItemVariables($structuredItemVariables, $filterTypes);
-            $testVariables = $this->getResultsService()->extractTestVariables($variables, $filterTypes);
+            $testVariables = $this->getResultsService()->extractTestVariables($variables, $filterTypes, $filterSubmission);
 
             // render item variables
             $this->setData('variables', $itemVariables);
@@ -478,9 +475,10 @@ class Results extends \tao_actions_CommonModule
                 continue;
             }
             $itemUri = $item['uri'];
-            $item['state'] = isset($responses[$itemUri][$item['attempt']])
-                ? json_encode(array_diff_key($responses[$itemUri][$item['attempt']], $excludedVariables))
-                : null;
+            $state = isset($responses[$itemUri][$item['attempt']])
+                ? array_diff_key($responses[$itemUri][$item['attempt']], $excludedVariables)
+                : [];
+            $item['state'] = !empty($state) ? json_encode($state) : '{}';
         }
 
         return $displayedVariables;

@@ -43,7 +43,6 @@ use oat\taoOutcomeUi\model\table\ResponseColumn;
 use \common_Exception;
 use \common_Logger;
 use \common_exception_Error;
-use \core_kernel_classes_Class;
 use \core_kernel_classes_Resource;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
@@ -59,6 +58,7 @@ use oat\taoResultServer\models\classes\ResultServerService;
 use tao_models_classes_service_StorageDirectory;
 use taoQtiTest_models_classes_QtiTestService;
 use oat\taoQtiTest\models\QtiTestCompilerIndex;
+use taoResultServer_models_classes_Variable;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use oat\tao\model\OntologyClassService;
@@ -849,29 +849,45 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         return $this->extractTestVariables($this->getVariablesFromObjectResult($testCallIds), $wantedTypes);
     }
 
-    public function extractTestVariables($variableObjects, $wantedTypes)
+    public function extractTestVariables(array $variableObjects, array $wantedTypes, string $filter = self::VARIABLES_FILTER_ALL)
     {
-        $variablesData = [];
-        foreach ($variableObjects as $variable) {
-            if (is_null($variable[0]->callIdItem) && in_array(get_class($variable[0]->variable), $wantedTypes)) {
-                $variablesData[] = $variable[0]->variable;
-            }
-        }
-        usort($variablesData, function ($a, $b) {
-            list($usec, $sec) = explode(" ", $a->getEpoch());
-            $floata = ((float) $usec + (float) $sec);
-            list($usec, $sec) = explode(" ", $b->getEpoch());
-            $floatb = ((float) $usec + (float) $sec);
+        $variableObjects = array_filter($variableObjects, static function (array $variableObject) use ($wantedTypes) {
+            $variable = current($variableObject);
 
-            if ((floatval($floata) - floatval($floatb)) > 0) {
-                return 1;
-            } elseif ((floatval($floata) - floatval($floatb)) < 0) {
-                return -1;
-            } else {
-                return 0;
-            }
+            return $variable->callIdItem === null && in_array(get_class($variable->variable), $wantedTypes, true);
         });
-        return $variablesData;
+
+        $variableObjects = array_map(static function (array $variableObject) {
+            return current($variableObject)->variable;
+        }, $variableObjects);
+
+        usort($variableObjects, static function (
+            taoResultServer_models_classes_Variable $a,
+            taoResultServer_models_classes_Variable $b
+        ) use ($filter) {
+            if ($filter === self::VARIABLES_FILTER_LAST_SUBMITTED) {
+                return $b->getCreationTime() - $a->getCreationTime();
+            }
+
+            return $a->getCreationTime() - $b->getCreationTime();
+        });
+
+        if (in_array($filter, [self::VARIABLES_FILTER_FIRST_SUBMITTED, self::VARIABLES_FILTER_LAST_SUBMITTED], true)) {
+            $uniqueVariableIdentifiers = [];
+
+            $variableObjects = array_filter($variableObjects, static function (
+                taoResultServer_models_classes_Variable $variable
+            ) use (&$uniqueVariableIdentifiers) {
+                if (in_array($variable->getIdentifier(), $uniqueVariableIdentifiers, true)) {
+                    return false;
+                }
+                $uniqueVariableIdentifiers[] = $variable->getIdentifier();
+
+                return true;
+            });
+        }
+
+        return $variableObjects;
     }
 
     /**
