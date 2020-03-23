@@ -44,6 +44,7 @@ class ResultsServiceTest extends TestCase
      *
      * @param $variables
      * @param $expectedVariablesCount
+     *
      * @throws \common_exception_Error
      */
     public function testGetVariablesFromObjectResult($variables, $expectedVariablesCount)
@@ -75,14 +76,14 @@ class ResultsServiceTest extends TestCase
                 [[$variable]], 1,
             ],
             [
-                [[$variable, $variable1]], 2
+                [[$variable, $variable1]], 2,
             ],
             [
                 [
                     [$variable],
-                    [$variable, $variable1]
-                ], 3
-            ]
+                    [$variable, $variable1],
+                ], 3,
+            ],
         ];
     }
 
@@ -114,15 +115,15 @@ class ResultsServiceTest extends TestCase
                     $outcomeVariable,
                 ],
                 [
-                    [(object) [
+                    [(object)[
                         'callIdItem' => 'https://sds-tao.docker.localhost/ontologies/tao.rdf#i5e43f610586e6866601988b391f3a4.item-1.0',
                         'variable' => $outcomeVariable,
                     ]],
-                    [(object) [
+                    [(object)[
                         'callIdItem' => null,
                         'variable' => $outcomeVariable,
                     ]],
-                    [(object) [
+                    [(object)[
                         'callIdItem' => null,
                         'variable' => $responseVariable,
                     ]],
@@ -140,23 +141,23 @@ class ResultsServiceTest extends TestCase
                     3 => $outcomeVariable,
                 ],
                 [
-                    [(object) [
+                    [(object)[
                         'callIdItem' => 'https://sds-tao.docker.localhost/ontologies/tao.rdf#i5e43f610586e6866601988b391f3a4.item-1.0',
                         'variable' => $outcomeVariable,
                     ]],
-                    [(object) [
+                    [(object)[
                         'callIdItem' => null,
                         'variable' => $outcomeVariable,
                     ]],
-                    [(object) [
+                    [(object)[
                         'callIdItem' => null,
                         'variable' => $outcomeVariable,
                     ]],
-                    [(object) [
+                    [(object)[
                         'callIdItem' => null,
                         'variable' => $responseVariable,
                     ]],
-                    [(object) [
+                    [(object)[
                         'callIdItem' => null,
                         'variable' => $responseVariable,
                     ]],
@@ -173,23 +174,23 @@ class ResultsServiceTest extends TestCase
                     2 => $responseVariable,
                 ],
                 [
-                    [(object) [
+                    [(object)[
                         'callIdItem' => 'https://sds-tao.docker.localhost/ontologies/tao.rdf#i5e43f610586e6866601988b391f3a4.item-1.0',
                         'variable' => $outcomeVariable,
                     ]],
-                    [(object) [
+                    [(object)[
                         'callIdItem' => null,
                         'variable' => $outcomeVariable,
                     ]],
-                    [(object) [
+                    [(object)[
                         'callIdItem' => null,
                         'variable' => $outcomeVariable,
                     ]],
-                    [(object) [
+                    [(object)[
                         'callIdItem' => null,
                         'variable' => $responseVariable,
                     ]],
-                    [(object) [
+                    [(object)[
                         'callIdItem' => null,
                         'variable' => $responseVariable,
                     ]],
@@ -206,23 +207,23 @@ class ResultsServiceTest extends TestCase
                     2 => $outcomeVariable,
                 ],
                 [
-                    [(object) [
+                    [(object)[
                         'callIdItem' => 'https://sds-tao.docker.localhost/ontologies/tao.rdf#i5e43f610586e6866601988b391f3a4.item-1.0',
                         'variable' => $outcomeVariable,
                     ]],
-                    [(object) [
+                    [(object)[
                         'callIdItem' => null,
                         'variable' => $outcomeVariable,
                     ]],
-                    [(object) [
+                    [(object)[
                         'callIdItem' => null,
                         'variable' => $outcomeVariable,
                     ]],
-                    [(object) [
+                    [(object)[
                         'callIdItem' => null,
                         'variable' => $responseVariable,
                     ]],
-                    [(object) [
+                    [(object)[
                         'callIdItem' => null,
                         'variable' => $responseVariable,
                     ]],
@@ -349,9 +350,11 @@ class ResultsServiceTest extends TestCase
 
     /**
      * @dataProvider filterDataProvider
+     *
      * @param bool $expected
      * @param array $row
      * @param array $filters
+     *
      * @throws ReflectionException
      */
     public function testFilterData($expected, $row, $filters)
@@ -369,16 +372,13 @@ class ResultsServiceTest extends TestCase
         $cardinality = 'single',
         $baseType = 'float',
         $epoch = '0.79269200 1581512215'
-     ) {
-        $responseVariable = new taoResultServer_models_classes_ResponseVariable();
-
-        $responseVariable->candidateResponse = $candidateResponse;
-        $responseVariable->identifier = $identifier;
-        $responseVariable->cardinality = $cardinality;
-        $responseVariable->baseType = $baseType;
-        $responseVariable->epoch = $epoch;
-
-        return $responseVariable;
+    ): taoResultServer_models_classes_ResponseVariable {
+        return (new taoResultServer_models_classes_ResponseVariable())
+            ->setCandidateResponse($candidateResponse)
+            ->setIdentifier($identifier)
+            ->setCardinality($cardinality)
+            ->setBaseType($baseType)
+            ->setEpoch($epoch);
     }
 
     private function getOutcomeVariable(
@@ -387,15 +387,12 @@ class ResultsServiceTest extends TestCase
         $cardinality = 'single',
         $baseType = 'identifier',
         $epoch = '0.96025600 1581512219'
-    ) {
-        $outcomeVariable = new taoResultServer_models_classes_OutcomeVariable();
-
-        $outcomeVariable->value = $value;
-        $outcomeVariable->identifier = $identifier;
-        $outcomeVariable->cardinality = $cardinality;
-        $outcomeVariable->baseType = $baseType;
-        $outcomeVariable->epoch = $epoch;
-
-        return $outcomeVariable;
+    ): taoResultServer_models_classes_OutcomeVariable {
+        return (new taoResultServer_models_classes_OutcomeVariable())
+            ->setValue($value)
+            ->setIdentifier($identifier)
+            ->setCardinality($cardinality)
+            ->setBaseType($baseType)
+            ->setEpoch($epoch);
     }
 }
