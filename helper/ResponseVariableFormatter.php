@@ -113,6 +113,10 @@ class ResponseVariableFormatter
                     ) {
                      $matches = explode(';', $content[1]);
                         foreach ($matches as $valueString) {
+                            if (empty(trim($valueString))) {	
+                                continue;
+                            }
+                            
                             try {
                                 $list[] = self::formatStringValue($var->getBaseType(), trim($valueString, " '"));
                             } catch (\common_exception_NotImplemented $e) {
