@@ -106,23 +106,22 @@ class ResponseVariableFormatter
                 break;
             case 'ordered':
             case 'multiple':
-                if (strlen($value) === 0) {
-                    $formatted = ['list' => [$var->getBaseType() => []]];
-                } else {
-                    preg_match('/^\s*[\[|<](.*)[\]>]\s*$/', $value, $content);
-                    $matches = explode(';', $content[1]);
-
                     $list = [];
-                    foreach ($matches as $valueString) {
-                        try {
-                            $list[] = self::formatStringValue($var->getBaseType(), trim($valueString, " '"));
-                        } catch (\common_exception_NotImplemented $e) {
-                            // simply ignore unsupported data/type
+
+                    if(!empty($value) 
+                        && preg_match('/^\s*[\[|<](.*)[\]>]\s*$/', $value, $content)
+                    ) {
+                     $matches = explode(';', $content[1]);
+                        foreach ($matches as $valueString) {
+                            try {
+                                $list[] = self::formatStringValue($var->getBaseType(), trim($valueString, " '"));
+                            } catch (\common_exception_NotImplemented $e) {
+                                // simply ignore unsupported data/type
+                            }
                         }
-                    }
-                    
+                    }                    
+
                     $formatted = ['list' => [$var->getBaseType() => $list]];
-                }
                 break;
             default:
                 throw new \common_Exception('unknown response cardinality');
