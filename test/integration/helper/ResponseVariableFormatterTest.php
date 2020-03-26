@@ -169,4 +169,17 @@ class ResponseVariableFormatterTest extends TestCase
 
         $this->assertEquals($expected, ResponseVariableFormatter::formatVariableToPci($var));
     }
+
+    public function testMultipleForMathEntry()
+    {
+        $var = new ResponseVariable();
+        $var->setBaseType('identifier');
+        $var->setCardinality('multiple');
+        $var->setValue(" ['\sqrt{4}'; ''; '\cos'; '{1,2}'; '\sin'; ''; '\pi'; '[1]'; '<'] ");
+
+        $expected = ['list' => ['identifier' => ['\sqrt{4}', '', '\cos', '{1,2}', '\sin', '', '\pi', '[1]', '<']]];
+
+        $this->assertEquals($expected, ResponseVariableFormatter::formatVariableToPci($var));
+
+    }
 }
