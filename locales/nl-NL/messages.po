@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO 3.4.0-sprint112\n"
-"PO-Revision-Date: 2019-10-11T09:48:40\n"
+"Project-Id-Version: TAO 3.4.0-sprint124\n"
+"PO-Revision-Date: 2020-03-20T11:17:06\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: nl-NL\n"
@@ -15,7 +15,7 @@ msgstr ""
 
 #, tao-public
 msgid " "
-msgstr ""
+msgstr " "
 
 msgid "Add All grades"
 msgstr "Voeg alle niveaus toe"
@@ -24,7 +24,7 @@ msgid "Add All responses"
 msgstr "Voeg alle antwoorden toe"
 
 msgid "Add Delivery"
-msgstr ""
+msgstr "Publicatie toevoegen"
 
 msgid "Add Delivery Execution"
 msgstr ""
@@ -33,7 +33,7 @@ msgid "Add Test Taker"
 msgstr "Voeg kandidaat toe"
 
 msgid "Adding/Updating search index for %s"
-msgstr ""
+msgstr "Toevoegen/bijwerken van zoekindex voor %s"
 
 msgid "All collected variables"
 msgstr "Alle verzamelde variabelen"
@@ -45,10 +45,10 @@ msgid "Class"
 msgstr "Klasse"
 
 msgid "CSV results export for delivery \"%s"
-msgstr ""
+msgstr "CSV resultaten export voor publicatie \"%s"
 
 msgid "CSV results export for delivery class \"%s"
-msgstr ""
+msgstr "CSV resultaten export voor publicatie \"%s"
 
 msgid "Delete"
 msgstr "Verwijderen"
@@ -57,13 +57,13 @@ msgid "Delivery"
 msgstr "Pakket"
 
 msgid "Delivery Execution"
-msgstr ""
+msgstr "Publicatie executie"
 
 msgid "Download"
 msgstr "Downloaden"
 
 msgid "Download result"
-msgstr ""
+msgstr "Resultaat downloaden"
 
 msgid "Email:"
 msgstr "E-mail:"
@@ -76,7 +76,7 @@ msgstr "Fout"
 
 #, tao-public
 msgid "Export CSV"
-msgstr ""
+msgstr "Exporteer CSV"
 
 msgid "Export CSV File"
 msgstr "Naar een CSV-bestand exporteren"
@@ -135,7 +135,7 @@ msgid "Remove All responses"
 msgstr "Verwijder alle antwoorden"
 
 msgid "Remove Delivery"
-msgstr ""
+msgstr "Publicatie verwijderen"
 
 msgid "Remove Delivery Execution"
 msgstr ""
@@ -155,29 +155,29 @@ msgid "Results library"
 msgstr "Resultaat bank"
 
 msgid "Results monitoring"
-msgstr ""
+msgstr "Resultaten monitoring"
 
 #, tao-public
 msgid "Results Monitoring"
-msgstr ""
+msgstr "Resultaten Monitoring"
 
 msgid "Review"
-msgstr ""
+msgstr "Beoordeling"
 
 msgid "Search by delivery results"
-msgstr ""
+msgstr "Zoeken op publicatieresultaten"
 
 msgid "Search by results"
-msgstr ""
+msgstr "Zoeken op resultaten"
 
 msgid "Something went wrong..."
-msgstr ""
+msgstr "Er is iets misgegaan..."
 
 msgid "Start Delivery Execution"
 msgstr ""
 
 msgid "Start Time"
-msgstr ""
+msgstr "Starttijd"
 
 msgid "Test Taker"
 msgstr "Kandidaat"
@@ -202,7 +202,7 @@ msgstr "Er is een probleem opgetreden tijdens het genereren van uw rapport; Prob
 
 #, tao-public
 msgid "Tools"
-msgstr ""
+msgstr "Gereedschappen"
 
 msgid "Traces"
 msgstr ""
@@ -214,7 +214,7 @@ msgid "Variables"
 msgstr ""
 
 msgid "View"
-msgstr ""
+msgstr "Bekijk"
 
 #, tao-public
 msgid "View and format the collected results."

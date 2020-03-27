@@ -34,7 +34,7 @@ class ResultsServiceTest extends TestCase
     /** @var ResultsService */
     private $subject;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->subject = new ResultsService();
     }
@@ -98,6 +98,10 @@ class ResultsServiceTest extends TestCase
         }
     }
 
+    /**
+     * @return array
+     * @doesNotPerformAssertions
+     */
     public function testExtractTestVariablesProvider()
     {
         $responseVariable = $this->getResponseVariable();
