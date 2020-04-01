@@ -27,7 +27,7 @@ use oat\oatbox\user\User;
 use oat\tao\test\TaoPhpUnitTestRunner;
 use common_ext_ExtensionsManager;
 use oat\taoDeliveryRdf\model\DeliveryContainerService;
-use oat\taoOutcomeRds\model\RdsResultStorage;
+use oat\taoResultServer\models\classes\ResultManagement;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoResultServer\models\classes\ResultServerService;
 use taoResultServer_models_classes_OutcomeVariable;
@@ -92,7 +92,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      */
     public function testSetImplementation()
     {
-        $impProphecy = $this->prophesize(RdsResultStorage::class);
+        $impProphecy = $this->prophesize(ResultManagement::class);
 
         $imp = $impProphecy->reveal();
 
@@ -105,7 +105,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      */
     public function testGetItemResultsFromDeliveryResult()
     {
-        $impProphecy = $this->prophesize(RdsResultStorage::class);
+        $impProphecy = $this->prophesize(ResultManagement::class);
 
         $impProphecy->getRelatedItemCallIds('#fakeUri')->willReturn('#fakeDelivery');
         $imp = $impProphecy->reveal();
@@ -119,7 +119,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      */
     public function testGetDelivery()
     {
-        $impProphecy = $this->prophesize(RdsResultStorage::class);
+        $impProphecy = $this->prophesize(ResultManagement::class);
         $impProphecy->getDelivery('#fakeUri')->willReturn('#fakeDelivery');
         $imp = $impProphecy->reveal();
 
@@ -135,7 +135,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      */
     public function testGetVariablesFromObjectResult()
     {
-        $impProphecy = $this->prophesize(RdsResultStorage::class);
+        $impProphecy = $this->prophesize(ResultManagement::class);
 
         $variable = new \stdClass();
         $variable->variable = new taoResultServer_models_classes_ResponseVariable();
@@ -152,7 +152,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      */
     public function testGetVariableCandidateResponse()
     {
-        $impProphecy = $this->prophesize(RdsResultStorage::class);
+        $impProphecy = $this->prophesize(ResultManagement::class);
 
         $impProphecy->getVariableProperty('#foo', 'candidateResponse')->willReturn(true);
         $imp = $impProphecy->reveal();
@@ -166,7 +166,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      */
     public function testGetVariableBaseType()
     {
-        $impProphecy = $this->prophesize(RdsResultStorage::class);
+        $impProphecy = $this->prophesize(ResultManagement::class);
 
         $impProphecy->getVariableProperty('#foo', 'baseType')->willReturn(true);
         $imp = $impProphecy->reveal();
@@ -185,7 +185,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         // @TODO: Refactor ResultService class to be able to mock dependencies and fix test.
         $this->markTestSkipped();
 
-        $impProphecy = $this->prophesize(RdsResultStorage::class);
+        $impProphecy = $this->prophesize(ResultManagement::class);
 
         $item = new \stdClass();
         $item->item = '#item';
@@ -209,7 +209,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      */
     public function testGetVariableDataFromDeliveryResult()
     {
-        $impProphecy = $this->prophesize(RdsResultStorage::class);
+        $impProphecy = $this->prophesize(ResultManagement::class);
 
         $first = microtime();
 
@@ -258,7 +258,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      */
     public function testGetTestTaker()
     {
-        $impProphecy = $this->prophesize(RdsResultStorage::class);
+        $impProphecy = $this->prophesize(ResultManagement::class);
 
         $impProphecy->getTestTaker('#fakeUri')->willReturn('#testTaker');
         $imp = $impProphecy->reveal();
@@ -278,7 +278,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
      */
     public function testDeleteResult()
     {
-        $impProphecy = $this->prophesize(RdsResultStorage::class);
+        $impProphecy = $this->prophesize(ResultManagement::class);
         $impProphecy->deleteResult('#foo')->willReturn(true);
         $imp = $impProphecy->reveal();
 
@@ -360,7 +360,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
     {
         $resultProphecy = $this->prophesize(core_kernel_classes_Resource::class);
         $resultProphecy->getPropertyValues(new core_kernel_classes_Property(ResultServerService::PROPERTY_HAS_MODEL))->willReturn([
-            'http://www.tao.lu/Ontologies/taoOutcomeRds.rdf#RdsResultStorageModel'
+            'http://www.tao.lu/Ontologies/taoOutcomeRds.rdf#ResultManagementModel'
         ]);
         $resultServer = $resultProphecy->reveal();
 
@@ -368,7 +368,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $deliveryProphecy->getOnePropertyValue(new core_kernel_classes_Property(DeliveryContainerService::PROPERTY_RESULT_SERVER))->willReturn($resultServer);
         $delivery = $deliveryProphecy->reveal();
 
-        $this->assertInstanceOf(RdsResultStorage::class, $this->service->getReadableImplementation($delivery));
+        $this->assertInstanceOf(ResultManagement::class, $this->service->getReadableImplementation($delivery));
     }
 
     public function testGetVariables()
@@ -383,7 +383,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $variable2->value = 'bar';
         $variable2->callIdTest = '#testResultVariable';
 
-        $impProphecy = $this->prophesize(RdsResultStorage::class);
+        $impProphecy = $this->prophesize(ResultManagement::class);
         $impProphecy->getRelatedItemCallIds('#fakeUri')->willReturn(['#itemsResults1' => '#itemResultVariable']);
         $impProphecy->getRelatedTestCallIds('#fakeUri')->willReturn(['#testResults1' => '#testResultVariable']);
         $impProphecy->getVariables(['#itemResultVariable', '#testResultVariable'])->willReturn([
@@ -412,7 +412,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         // @TODO: Refactor ResultService class to be able to mock dependencies and fix test.
         $this->markTestSkipped();
 
-        $impProphecy = $this->prophesize(RdsResultStorage::class);
+        $impProphecy = $this->prophesize(ResultManagement::class);
         $impProphecy->getRelatedItemCallIds('#fakeUri')->willReturn([
             '#itemsResults1' => '#itemResultVariable',
             '#itemsResults2' => '#itemResultVariable2',
@@ -837,7 +837,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
             ->willReturnOnConsecutiveCalls($relatedItem1, $relatedItem2, $relatedItem3, $relatedItem2, $relatedItem1, $relatedItem2, $relatedItem3, $relatedItem2);
 
 
-        $impProphecy = $this->prophesize(RdsResultStorage::class);
+        $impProphecy = $this->prophesize(ResultManagement::class);
         $impProphecy->getRelatedItemCallIds('DeliveryExecutionIdentifier')->willReturn($callIds);
         $impProphecy->getVariables($callId1)->willReturn($variables1);
         $impProphecy->getVariables($callId2)->willReturn($variables2);
@@ -1106,7 +1106,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
     public function testGetResultsFromDelivery()
     {
         $prop = new \core_kernel_classes_Property('http://www.w3.org/2000/01/rdf-schema#label');
-        $impProphecy = $this->prophesize(RdsResultStorage::class);
+        $impProphecy = $this->prophesize(ResultManagement::class);
 
         $deliveryProphecy = $this->prophesize(core_kernel_classes_Resource::class);
         $deliveryProphecy->getUri()->willReturn('#fakeUri');
