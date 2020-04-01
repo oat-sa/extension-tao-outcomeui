@@ -21,13 +21,13 @@
 namespace oat\taoOutcomeUi\unit\model;
 
 use oat\generis\test\TestCase;
-use oat\taoOutcomeRds\model\RdsResultStorage;
 use oat\taoOutcomeUi\model\ResultsService;
 use ReflectionClass;
 use ReflectionException;
 use stdClass;
 use taoResultServer_models_classes_OutcomeVariable;
 use taoResultServer_models_classes_ResponseVariable;
+use oat\taoResultServer\models\classes\ResultManagement;
 
 class ResultsServiceTest extends TestCase
 {
@@ -48,7 +48,7 @@ class ResultsServiceTest extends TestCase
      */
     public function testGetVariablesFromObjectResult($variables, $expectedVariablesCount)
     {
-        $mock = $this->getMockBuilder(RdsResultStorage::class)->getMock();
+        $mock = $this->getMockBuilder(ResultManagement::class)->getMock();
         $mock->expects($this->once())
             ->method('getVariables')
             ->willReturn($variables);
