@@ -49,10 +49,10 @@ use oat\taoTests\models\event\TestChangedEvent;
  */
 class Updater extends \common_ext_ExtensionUpdater
 {
-
     /**
      *
      * @param string $initialVersion
+     *
      * @return string $versionUpdatedTo
      */
     public function update($initialVersion)
@@ -182,6 +182,6 @@ class Updater extends \common_ext_ExtensionUpdater
             $this->setVersion('7.5.0');
         }
 
-        $this->skip('7.5.0', '8.5.2');
+        $this->skip('7.5.0', '8.6.0');
     }
 }

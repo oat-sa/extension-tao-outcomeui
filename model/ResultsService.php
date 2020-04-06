@@ -18,13 +18,17 @@
  * Copyright (c) 2013-2017 Open Assessment Technologies S.A.
  *
  *
- * @access public
- * @author Joel Bout, <joel.bout@tudor.lu>
+ * @access  public
+ * @author  Joel Bout, <joel.bout@tudor.lu>
  * @package taoOutcomeUi
  */
 
 namespace oat\taoOutcomeUi\model;
 
+use common_Exception;
+use common_exception_Error;
+use common_Logger;
+use core_kernel_classes_Resource;
 use League\Flysystem\FileNotFoundException;
 use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyRdfs;
@@ -33,60 +37,52 @@ use oat\oatbox\user\User;
 use oat\tao\helpers\metadata\ResourceCompiledMetadataHelper;
 use oat\tao\model\metadata\compiler\ResourceJsonMetadataCompiler;
 use oat\tao\model\metadata\compiler\ResourceMetadataCompilerInterface;
-use oat\taoDelivery\model\AssignmentService;
+use oat\tao\model\OntologyClassService;
+use oat\taoDelivery\model\execution\DeliveryExecution;
 use oat\taoDelivery\model\execution\ServiceProxy;
+use oat\taoDelivery\model\RuntimeService;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoItems\model\ItemCompilerIndex;
+use oat\taoOutcomeUi\helper\Datatypes;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
-use \common_Exception;
-use \common_Logger;
-use \common_exception_Error;
-use \core_kernel_classes_Resource;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
+use oat\taoQtiTest\models\QtiTestCompilerIndex;
 use oat\taoResultServer\models\classes\NoResultStorage;
 use oat\taoResultServer\models\classes\NoResultStorageException;
 use oat\taoResultServer\models\classes\ResultManagement;
+use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\classes\ResultService;
 use tao_helpers_Date;
-use \tao_models_classes_ClassService;
-use oat\taoOutcomeUi\helper\Datatypes;
-use oat\taoDelivery\model\execution\DeliveryExecution;
-use oat\taoResultServer\models\classes\ResultServerService;
 use tao_models_classes_service_StorageDirectory;
 use taoQtiTest_models_classes_QtiTestService;
-use oat\taoQtiTest\models\QtiTestCompilerIndex;
+use taoResultServer_models_classes_ReadableResultStorage;
 use taoResultServer_models_classes_Variable;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
-use oat\tao\model\OntologyClassService;
-use oat\taoDelivery\model\RuntimeService;
 
 class ResultsService extends OntologyClassService implements ServiceLocatorAwareInterface
 {
     use ServiceLocatorAwareTrait;
 
-    const VARIABLES_FILTER_LAST_SUBMITTED = 'lastSubmitted';
-    const VARIABLES_FILTER_FIRST_SUBMITTED = 'firstSubmitted';
-    const VARIABLES_FILTER_ALL = 'all';
+    public const VARIABLES_FILTER_LAST_SUBMITTED = 'lastSubmitted';
+    public const VARIABLES_FILTER_FIRST_SUBMITTED = 'firstSubmitted';
+    public const VARIABLES_FILTER_ALL = 'all';
 
-    const PERSISTENCE_CACHE_KEY = 'resultCache';
+    public const PERSISTENCE_CACHE_KEY = 'resultCache';
 
-    const PERIODS = [self::FILTER_START_FROM, self::FILTER_START_TO, self::FILTER_END_FROM, self::FILTER_END_TO];
-    const DELIVERY_EXECUTION_STARTED_AT = 'delivery_execution_started_at';
-    const DELIVERY_EXECUTION_FINISHED_AT = 'delivery_execution_finished_at';
-    const FILTER_START_FROM = 'startfrom';
-    const FILTER_START_TO = 'startto';
-    const FILTER_END_FROM = 'endfrom';
-    const FILTER_END_TO = 'endto';
+    public const PERIODS = [self::FILTER_START_FROM, self::FILTER_START_TO, self::FILTER_END_FROM, self::FILTER_END_TO];
+    public const DELIVERY_EXECUTION_STARTED_AT = 'delivery_execution_started_at';
+    public const DELIVERY_EXECUTION_FINISHED_AT = 'delivery_execution_finished_at';
+    public const FILTER_START_FROM = 'startfrom';
+    public const FILTER_START_TO = 'startto';
+    public const FILTER_END_FROM = 'endfrom';
+    public const FILTER_END_TO = 'endto';
 
-    /**
-     *
-     * @var \taoResultServer_models_classes_ReadableResultStorage
-     */
-    private $implementation = null;
+    /** @var taoResultServer_models_classes_ReadableResultStorage */
+    private $implementation;
 
     /**
      * Internal cache for item info.
@@ -102,9 +98,10 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      */
     private $resultCache;
 
-    /** @var array  */
+    /** @var array */
     private $indexerCache = [];
-    /** @var array  */
+
+    /** @var array */
     private $executionCache = [];
 
     /** @var array */
@@ -224,6 +221,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         if ($this->implementation == null) {
             throw new \common_exception_Error('No result storage defined');
         }
+
         return $this->implementation;
     }
 
@@ -231,10 +229,12 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      * return all variable for that deliveryResults (uri identifiers)
      *
      * @access public
-     * @author Joel Bout, <joel.bout@tudor.lu>
-     * @param  string $resultIdentifier
+     *
+     * @param string $resultIdentifier
      * @param boolean $flat a flat array is returned or a structured delvieryResult-ItemResult-Variable
+     *
      * @return array
+     * @author Joel Bout, <joel.bout@tudor.lu>
      */
     public function getVariables($resultIdentifier, $flat = true)
     {
@@ -274,12 +274,13 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         }
 
 
-        return (array) $returnValue;
+        return (array)$returnValue;
     }
 
     /**
      * @param string|array $itemResult
-     * @param array        $wantedTypes
+     * @param array $wantedTypes
+     *
      * @return array
      * @throws common_exception_Error
      */
@@ -303,7 +304,9 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
 
     /**
      * Return the corresponding delivery
+     *
      * @param string $resultIdentifier
+     *
      * @return core_kernel_classes_Resource delviery
      * @author Patrick Plichart, <patrick@taotesting.com>
      */
@@ -314,18 +317,23 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
 
     /**
      * Ges the type of items contained by the delivery
+     *
      * @param string $resultIdentifier
+     *
      * @return string
      */
     public function getDeliveryItemType($resultIdentifier)
     {
         $resultsViewerService = $this->getServiceLocator()->get(ResultsViewerService::SERVICE_ID);
+
         return $resultsViewerService->getDeliveryItemType($resultIdentifier);
     }
 
     /**
      * Returns all label of itemResults related to the delvieryResults
+     *
      * @param string $resultIdentifier
+     *
      * @return array string uri
      * */
     public function getItemResultsFromDeliveryResult($resultIdentifier)
@@ -335,7 +343,9 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
 
     /**
      * Returns all label of itemResults related to the delvieryResults
+     *
      * @param string $resultIdentifier
+     *
      * @return array string uri
      * */
     public function getTestsFromDeliveryResult($resultIdentifier)
@@ -347,6 +357,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      *
      * @param string $itemCallId
      * @param array $itemVariables already retrieved variables
+     *
      * @return array|null
      * @throws \common_exception_NotFound
      * @throws common_exception_Error
@@ -373,12 +384,14 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
             $langItem = $itemIndexer->getItem($itemUri, $this->getResultLanguage());
             $item = array_merge(is_array($langItem) ? $langItem : [], ['uriResource' => $itemUri]);
         }
+
         return $item;
     }
 
     /**
      *
      * @param string $test
+     *
      * @return \core_kernel_classes_Resource
      */
     public function getVariableFromTest($test)
@@ -393,12 +406,14 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         if (!is_null($tmpTests[0]->test)) {
             $returnTest = new core_kernel_classes_Resource($tmpTests[0]->test);
         }
+
         return $returnTest;
     }
 
     /**
      *
      * @param string $variableUri
+     *
      * @return string
      *
      */
@@ -410,6 +425,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
     /**
      *
      * @param string $variableUri
+     *
      * @return string
      */
     public function getVariableBaseType($variableUri)
@@ -421,7 +437,9 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
     /**
      *
      * @param array $variablesData
-     * @return array ["nbResponses" => x,"nbCorrectResponses" => y,"nbIncorrectResponses" => z,"nbUnscoredResponses" => a,"data" => $variableData]
+     *
+     * @return array ["nbResponses" => x,"nbCorrectResponses" => y,"nbIncorrectResponses" => z,"nbUnscoredResponses" =>
+     *               a,"data" => $variableData]
      */
     public function calculateResponseStatistics($variablesData)
     {
@@ -458,12 +476,14 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
             "nbIncorrectResponses" => $numberOfInCorrectResponseVariables,
             "nbUnscoredResponses" => $numberOfUnscoredResponseVariables,
         ];
+
         return $stats;
     }
 
     /**
      * @param $itemCallId
      * @param $itemVariables
+     *
      * @return array item information ['uri' => xxx, 'label' => yyy]
      */
     private function getItemInfos($itemCallId, $itemVariables)
@@ -487,6 +507,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
             // check item info in internal cache
             if (isset($this->itemInfoCache[$itemIdentifier])) {
                 common_Logger::t("Item info found in internal cache for item " . $itemIdentifier . "");
+
                 return $this->itemInfoCache[$itemIdentifier];
             }
             $itemLabel = $relatedItem['label'];
@@ -510,28 +531,31 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      *  prepare a data set as an associative array, service intended to populate gui controller
      *
      * @param string $resultIdentifier
-     * @param string $filter 'lastSubmitted', 'firstSubmitted', 'all'
-     * @param array $wantedTypes ['taoResultServer_models_classes_ResponseVariable', 'taoResultServer_models_classes_OutcomeVariable', 'taoResultServer_models_classes_TraceVariable']
+     * @param string $filter     'lastSubmitted', 'firstSubmitted', 'all'
+     * @param array $wantedTypes ['taoResultServer_models_classes_ResponseVariable',
+     *                           'taoResultServer_models_classes_OutcomeVariable',
+     *                           'taoResultServer_models_classes_TraceVariable']
+     *
      * @return array
-        [
-            'epoch1' => [
-                'label' => Example_0_Introduction,
-                'uri' => http://tao.local/mytao.rdf#i1462952280695832,
-                'internalIdentifier' => item-1,
-                'taoResultServer_models_classes_Variable class name' => [
-                    'Variable identifier 1' => [
-                        'uri' => 1,
-                        'var' => taoResultServer_models_classes_Variable object,
-                        'isCorrect' => correct
-                    ],
-                    'Variable identifier 2' => [
-                        'uri' => 2,
-                        'var' => taoResultServer_models_classes_Variable object,
-                        'isCorrect' => unscored
-                    ]
-                ]
-            ]
-        ]
+     * [
+     * 'epoch1' => [
+     * 'label' => Example_0_Introduction,
+     * 'uri' => http://tao.local/mytao.rdf#i1462952280695832,
+     * 'internalIdentifier' => item-1,
+     * 'taoResultServer_models_classes_Variable class name' => [
+     * 'Variable identifier 1' => [
+     * 'uri' => 1,
+     * 'var' => taoResultServer_models_classes_Variable object,
+     * 'isCorrect' => correct
+     * ],
+     * 'Variable identifier 2' => [
+     * 'uri' => 2,
+     * 'var' => taoResultServer_models_classes_Variable object,
+     * 'isCorrect' => unscored
+     * ]
+     * ]
+     * ]
+     * ]
      *
      * @throws common_exception_Error
      */
@@ -555,10 +579,10 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         usort($itemVariables, function ($a, $b) {
             $variableA = $a[0]->variable;
             $variableB = $b[0]->variable;
-            list($usec, $sec) = explode(" ", $variableA->getEpoch());
-            $floata = ((float) $usec + (float) $sec);
-            list($usec, $sec) = explode(" ", $variableB->getEpoch());
-            $floatb = ((float) $usec + (float) $sec);
+            [$usec, $sec] = explode(" ", $variableA->getEpoch());
+            $floata = ((float)$usec + (float)$sec);
+            [$usec, $sec] = explode(" ", $variableB->getEpoch());
+            $floatb = ((float)$usec + (float)$sec);
 
             if ((floatval($floata) - floatval($floatb)) > 0) {
                 return 1;
@@ -624,6 +648,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
             }
         }
         ksort($sorted);
+
         return $sorted;
     }
 
@@ -643,6 +668,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
                 }
             }
         }
+
         return $byItem;
     }
 
@@ -666,13 +692,16 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
             }
             $attempts[$cand][] = $variable;
         }
+
         return $attempts;
     }
 
     /**
      * Filters the complex array structure for variable classes
+     *
      * @param array $structure as defined by getStructuredVariables()
-     * @param array $filter classes to keep
+     * @param array $filter    classes to keep
+     *
      * @return array as defined by getStructuredVariables()
      */
     public function filterStructuredVariables(array $structure, array $filter)
@@ -680,7 +709,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         $all = [
             \taoResultServer_models_classes_ResponseVariable::class,
             \taoResultServer_models_classes_OutcomeVariable::class,
-            \taoResultServer_models_classes_TraceVariable::class
+            \taoResultServer_models_classes_TraceVariable::class,
         ];
         $toRemove = array_diff($all, $filter);
         $filtered = $structure;
@@ -691,6 +720,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
                 }
             }
         }
+
         return $filtered;
     }
 
@@ -698,7 +728,9 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      *
      * @param $resultIdentifier
      * @param string $filter 'lastSubmitted', 'firstSubmitted'
-     * @return array ["nbResponses" => x,"nbCorrectResponses" => y,"nbIncorrectResponses" => z,"nbUnscoredResponses" => a,"data" => $variableData]
+     *
+     * @return array ["nbResponses" => x,"nbCorrectResponses" => y,"nbIncorrectResponses" => z,"nbUnscoredResponses" =>
+     *               a,"data" => $variableData]
      * @deprecated
      */
     public function getItemVariableDataStatsFromDeliveryResult($resultIdentifier, $filter = null)
@@ -740,10 +772,12 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
             "nbCorrectResponses" => $numberOfCorrectResponseVariables,
             "nbIncorrectResponses" => $numberOfInCorrectResponseVariables,
             "nbUnscoredResponses" => $numberOfUnscoredResponseVariables,
-            "data" => $variablesData
+            "data" => $variablesData,
         ];
+
         return $stats;
     }
+
     /**
      *  prepare a data set as an associative array, service intended to populate gui controller
      *
@@ -797,13 +831,15 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
                     uksort($variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier], "self::sortTimeStamps");
 
                     switch ($filter) {
-                        case self::VARIABLES_FILTER_LAST_SUBMITTED: {
-                                $variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier] = [array_pop($variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier])];
-                                break;
+                        case self::VARIABLES_FILTER_LAST_SUBMITTED:
+                        {
+                            $variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier] = [array_pop($variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier])];
+                            break;
                         }
-                        case self::VARIABLES_FILTER_FIRST_SUBMITTED: {
-                                $variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier] = [array_shift($variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier])];
-                                break;
+                        case self::VARIABLES_FILTER_FIRST_SUBMITTED:
+                        {
+                            $variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier] = [array_shift($variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier])];
+                            break;
                         }
                     }
                 }
@@ -812,18 +848,20 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
 
         return $variablesByItem;
     }
+
     /**
      *
      * @param string $a epoch
      * @param string $b epoch
+     *
      * @return number
      */
     public static function sortTimeStamps($a, $b)
     {
-        list($usec, $sec) = explode(" ", $a);
-        $floata = ((float) $usec + (float) $sec);
-        list($usec, $sec) = explode(" ", $b);
-        $floatb = ((float) $usec + (float) $sec);
+        [$usec, $sec] = explode(" ", $a);
+        $floata = ((float)$usec + (float)$sec);
+        [$usec, $sec] = explode(" ", $b);
+        $floatb = ((float)$usec + (float)$sec);
 
         //the callback is expecting an int returned, for the case where the difference is of less than a second
         //intval(round(floatval($b) - floatval($a),1, PHP_ROUND_HALF_EVEN));
@@ -841,11 +879,13 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      *
      * @param string $resultIdentifier
      * @param array $wantedTypes
+     *
      * @return array
      */
-    public function getVariableDataFromDeliveryResult($resultIdentifier, $wantedTypes = [\taoResultServer_models_classes_ResponseVariable::class,\taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class])
+    public function getVariableDataFromDeliveryResult($resultIdentifier, $wantedTypes = [\taoResultServer_models_classes_ResponseVariable::class, \taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class])
     {
         $testCallIds = $this->getTestsFromDeliveryResult($resultIdentifier);
+
         return $this->extractTestVariables($this->getVariablesFromObjectResult($testCallIds), $wantedTypes);
     }
 
@@ -894,6 +934,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      * returns the test taker related to the delivery
      *
      * @param string $resultIdentifier
+     *
      * @return User
      */
     public function getTestTaker($resultIdentifier)
@@ -902,6 +943,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         /** @var \tao_models_classes_UserService $userService */
         $userService = $this->getServiceLocator()->get(\tao_models_classes_UserService::SERVICE_ID);
         $user = $userService->getUserById($testTaker);
+
         return $user;
     }
 
@@ -909,6 +951,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      * Delete a delivery result
      *
      * @param string $resultIdentifier
+     *
      * @return boolean
      */
     public function deleteResult($resultIdentifier)
@@ -919,7 +962,9 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
 
     /**
      * Return the file data associate to a variable
+     *
      * @param $variableUri
+     *
      * @return array file data
      * @throws \core_kernel_persistence_Exception
      */
@@ -929,33 +974,38 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         $baseType = $this->getVariableBaseType($variableUri);
 
         switch ($baseType) {
-            case "file": {
-                    $value = $this->getVariableCandidateResponse($variableUri);
-                    common_Logger::i(var_export(strlen($value), true));
-                    $decodedFile = Datatypes::decodeFile($value);
-                    common_Logger::i("FileName:");
-                    common_Logger::i(var_export($decodedFile["name"], true));
-                    common_Logger::i("Mime Type:");
-                    common_Logger::i(var_export($decodedFile["mime"], true));
-                    $file = [
-                        "data" => $decodedFile["data"],
-                        "mimetype" => "Content-type: " . $decodedFile["mime"],
-                        "filename" => $decodedFile["name"]];
-                    break;
+            case "file":
+            {
+                $value = $this->getVariableCandidateResponse($variableUri);
+                common_Logger::i(var_export(strlen($value), true));
+                $decodedFile = Datatypes::decodeFile($value);
+                common_Logger::i("FileName:");
+                common_Logger::i(var_export($decodedFile["name"], true));
+                common_Logger::i("Mime Type:");
+                common_Logger::i(var_export($decodedFile["mime"], true));
+                $file = [
+                    "data" => $decodedFile["data"],
+                    "mimetype" => "Content-type: " . $decodedFile["mime"],
+                    "filename" => $decodedFile["name"]];
+                break;
             }
-            default: { //legacy files
-                    $file = [
-                        "data" => $this->getVariableCandidateResponse($variableUri),
-                        "mimetype" => "Content-type: text/xml",
-                        "filename" => "trace.xml"];
+            default:
+            { //legacy files
+                $file = [
+                    "data" => $this->getVariableCandidateResponse($variableUri),
+                    "mimetype" => "Content-type: text/xml",
+                    "filename" => "trace.xml"];
             }
         }
+
         return $file;
     }
 
     /**
      * To be reviewed as it implies a dependency towards taoSubjects
+     *
      * @param string $resultIdentifier
+     *
      * @return array test taker properties values
      */
     public function getTestTakerData($resultIdentifier)
@@ -971,7 +1021,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
                 GenerisRdf::PROPERTY_USER_LOGIN,
                 GenerisRdf::PROPERTY_USER_FIRSTNAME,
                 GenerisRdf::PROPERTY_USER_LASTNAME,
-                GenerisRdf::PROPERTY_USER_MAIL
+                GenerisRdf::PROPERTY_USER_MAIL,
             ];
             $propValues = [];
             foreach ($arrayOfProperties as $property) {
@@ -982,18 +1032,20 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
                 $propValues[$property] = $values;
             }
         }
+
         return $propValues;
     }
 
     /**
      *
      * @param \core_kernel_classes_Resource $delivery
-     * @return \taoResultServer_models_classes_ReadableResultStorage
+     *
+     * @return taoResultServer_models_classes_ReadableResultStorage
      * @throws common_exception_Error
      */
     public function getReadableImplementation(\core_kernel_classes_Resource $delivery)
     {
-        /** @var ResultServerService  $service */
+        /** @var ResultServerService $service */
         $service = $this->getServiceLocator()->get(ResultServerService::SERVICE_ID);
         $resultStorage = $service->getResultStorage($delivery);
 
@@ -1002,7 +1054,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
             throw NoResultStorageException::create();
         }
 
-        if (!$resultStorage instanceof \taoResultServer_models_classes_ReadableResultStorage) {
+        if (!$resultStorage instanceof taoResultServer_models_classes_ReadableResultStorage) {
             throw new \common_exception_Error('The results storage it is not readable');
         }
 
@@ -1013,6 +1065,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      * Get the array of column names indexed by their unique column id.
      *
      * @param \tao_models_classes_table_Column[] $columns
+     *
      * @return array
      */
     public function getColumnNames(array $columns)
@@ -1020,12 +1073,14 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         return array_reduce($columns, function ($carry, \tao_models_classes_table_Column $column) {
             /** @var ContextTypePropertyColumn|VariableColumn $column */
             $carry[$this->getColumnId($column)] = $column->getLabel();
+
             return $carry;
         });
     }
 
     /**
      * @param \tao_models_classes_table_Column|ContextTypePropertyColumn|VariableColumn $column
+     *
      * @return string
      */
     private function getColumnId(\tao_models_classes_table_Column $column)
@@ -1043,6 +1098,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      * @param core_kernel_classes_Resource $delivery
      * @param array $storageOptions
      * @param array $filters
+     *
      * @throws common_Exception
      * @throws common_exception_Error
      */
@@ -1050,11 +1106,13 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
     {
         //The list of delivery Results matching the current selection filters
         $this->setImplementation($this->getReadableImplementation($delivery));
+
         return $this->findResultsByDeliveryAndFilters($delivery, $filters, $storageOptions);
     }
 
     /**
      * @param string $result
+     *
      * @return bool
      */
     protected function shouldResultBeSkipped($result)
@@ -1069,6 +1127,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      * @param array $filters
      * @param int $offset
      * @param int $limit
+     *
      * @return array
      * @throws common_Exception
      * @throws common_exception_Error
@@ -1119,7 +1178,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
                         if (\common_Utils::isUri($value)) {
                             $value = (new core_kernel_classes_Resource($value))->getLabel();
                         } else {
-                            $value = (string) $value;
+                            $value = (string)$value;
                         }
 
                         if (in_array($column->getProperty()->getUri(), [DeliveryAssemblyService::PROPERTY_START, DeliveryAssemblyService::PROPERTY_END])) {
@@ -1150,7 +1209,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
                 $this->convertDates($cellData);
                 $rows[] = [
                     'id' => $result,
-                    'cell' => $cellData
+                    'cell' => $cellData,
                 ];
             }
         }
@@ -1160,6 +1219,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
 
     /**
      * @param $columns
+     *
      * @return array
      */
     private function collectColumnDataProviderMap($columns)
@@ -1177,7 +1237,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
             if (!$found) {
                 $dataProviderMap[] = [
                     'instance' => $dataProvider,
-                    'columns' => [$column]
+                    'columns' => [$column],
                 ];
             }
         }
@@ -1187,6 +1247,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
 
     /**
      * @param $data
+     *
      * @throws common_Exception
      */
     private function convertDates(&$data)
@@ -1199,8 +1260,10 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
 
     /**
      * Check that data is apply to these filter params
+     *
      * @param $row
      * @param array $filters
+     *
      * @return bool
      */
     private function filterData($row, array $filters)
@@ -1226,11 +1289,13 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
                 $matched = $endTime <= $filters[self::FILTER_END_TO];
             }
         }
+
         return $matched;
     }
 
     /**
      * @param array $deliveryUris
+     *
      * @return int
      * @throws common_exception_Error
      */
@@ -1241,6 +1306,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
 
     /**
      * @param array|string $resultsIds
+     *
      * @return mixed
      * @throws common_exception_Error
      */
@@ -1251,7 +1317,8 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
 
     /**
      * Retrieve the different variables columns pertainign to the current selection of results
-     * Implementation note : it nalyses all the data collected to identify the different response variables submitted by the items in the context of activities
+     * Implementation note : it nalyses all the data collected to identify the different response variables submitted
+     * by the items in the context of activities
      */
     public function getVariableColumns($delivery, $variableClassUri, array $filters = [], array $storageOptions = [])
     {
@@ -1277,7 +1344,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
                 $variable = $variable[0];
                 if ($this->isResultVariable($variable, $variableClassUri)) {
                     //variableIdentifier
-                    $variableIdentifier = $variable->variable->identifier;
+                    $variableIdentifier = $variable->variable->getIdentifier();
                     if (!is_null($variable->item)) {
                         $uri = $variable->item;
                         $contextIdentifierLabel = $itemIndex->getItemValue($uri, $resultLanguage, 'label');
@@ -1308,6 +1375,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         foreach ($columns as $column) {
             $arr[] = $column->toArray();
         }
+
         return $arr;
     }
 
@@ -1316,6 +1384,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      *
      * @param $variable
      * @param $variableClassUri
+     *
      * @return bool
      */
     private function isResultVariable($variable, $variableClassUri)
@@ -1324,7 +1393,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         $outcomeVariableClass = \taoResultServer_models_classes_OutcomeVariable::class;
         $class = isset($variable->class) ? $variable->class : get_class($variable->variable);
 
-        return (null != $variable->item ||  null != $variable->test)
+        return (null != $variable->item || null != $variable->test)
             && (
                 $class == $outcomeVariableClass
                 && $variableClassUri == $outcomeVariableClass
@@ -1343,8 +1412,9 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      * 3 allowed filters: firstSubmitted, lastSubmitted, all
      *
      * @param array $observationsList The list of variable values
-     * @param string $filterData The filter
-     * @param string $allDelimiter $delimiter to separate values in "all" filter context
+     * @param string $filterData      The filter
+     * @param string $allDelimiter    $delimiter to separate values in "all" filter context
+     *
      * @return array
      */
     public static function filterCellData($observationsList, $filterData, $allDelimiter = '|')
@@ -1382,6 +1452,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
 
     /**
      * @param $delivery
+     *
      * @return ItemCompilerIndex
      * @throws common_exception_Error
      */
@@ -1393,13 +1464,15 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
             $indexer = $this->getDecompiledIndexer($directory);
             $this->indexerCache[$deliveryUri] = $indexer;
         }
-        $indexer = $this->indexerCache[$deliveryUri] ;
+        $indexer = $this->indexerCache[$deliveryUri];
+
         return $indexer;
     }
 
     /**
      * @param $delivery
      * @param $testUri
+     *
      * @return ResourceCompiledMetadataHelper
      */
     private function getTestMetadata(core_kernel_classes_Resource $delivery, $testUri)
@@ -1430,6 +1503,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      *
      * @param tao_models_classes_service_StorageDirectory $directory
      * @param string $testUri
+     *
      * @return false|string
      * @throws \FileNotFoundException
      * @throws common_Exception
@@ -1452,6 +1526,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      * Get teast metadata from file.
      *
      * @param tao_models_classes_service_StorageDirectory $directory
+     *
      * @return false|string
      */
     private function loadTestMetadataFromFile(tao_models_classes_service_StorageDirectory $directory)
@@ -1465,6 +1540,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      *
      * @param tao_models_classes_service_StorageDirectory $directory
      * @param $testUri
+     *
      * @throws \FileNotFoundException
      * @throws common_Exception
      */
@@ -1481,6 +1557,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
 
     /**
      * @param string $directory
+     *
      * @return QtiTestCompilerIndex
      */
     private function getDecompiledIndexer(tao_models_classes_service_StorageDirectory $directory)
@@ -1494,11 +1571,13 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         } catch (\Exception $e) {
             \common_Logger::d('Ignoring file not found exception for Items Index');
         }
+
         return $itemIndex;
     }
 
     /**
      * Should be changed if real result language would matter
+     *
      * @return string
      */
     private function getResultLanguage()
@@ -1508,6 +1587,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
 
     /**
      * @param $executionUri
+     *
      * @return core_kernel_classes_Resource
      * @throws \common_exception_NotFound
      */
@@ -1520,11 +1600,13 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
             $this->executionCache[$executionUri] = $delivery;
         }
         $delivery = $this->executionCache[$executionUri];
+
         return $delivery;
     }
 
     /**
      * @param $delivery
+     *
      * @return array
      * @throws common_exception_Error
      */
@@ -1539,6 +1621,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
 
     /**
      * @param $delivery
+     *
      * @return tao_models_classes_service_StorageDirectory
      * @throws common_exception_Error
      */
@@ -1558,6 +1641,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
         if (!$this->serviceLocator) {
             $this->setServiceLocator(ServiceManager::getServiceManager());
         }
+
         return $this->serviceLocator;
     }
 
@@ -1565,6 +1649,7 @@ class ResultsService extends OntologyClassService implements ServiceLocatorAware
      * @param core_kernel_classes_Resource $delivery
      * @param array $filters
      * @param array $storageOptions
+     *
      * @return array
      * @throws common_exception_Error
      */
