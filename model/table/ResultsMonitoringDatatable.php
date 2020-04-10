@@ -28,7 +28,7 @@ use oat\tao\model\search\index\IndexDocument;
 use oat\tao\model\search\Search;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
-use oat\taoProctoring\model\execution\DeliveryExecution;
+use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
 use oat\taoResultServer\models\classes\ResultManagement;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\classes\ResultService;
@@ -101,7 +101,7 @@ class ResultsMonitoringDatatable implements DatatablePayload, ServiceLocatorAwar
 
             /** @var IndexDocument $index */
             foreach ($resultsArray as $index) {
-                /** @var DeliveryExecution $execution */
+                /** @var DeliveryExecutionInterface $execution */
                 $execution = ServiceProxy::singleton()->getDeliveryExecution($index);
 
                 try {
