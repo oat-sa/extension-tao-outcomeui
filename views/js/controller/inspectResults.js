@@ -8,6 +8,7 @@ define([
     'i18n',
     'module',
     'core/logger',
+    'core/dataProvider/request',
     'util/url',
     'layout/actions/binder',
     'layout/loading-bar',
@@ -16,10 +17,11 @@ define([
     'taoOutcomeUi/component/results/pluginsLoader',
     'taoOutcomeUi/component/results/list',
     'ui/taskQueueButton/treeButton'
-], function ($, _, __, module, loggerFactory, urlHelper, binder, loadingBar, feedback, taskQueue, resultsPluginsLoader, resultsListFactory, treeTaskButtonFactory) {
+], function ($, _, __, module, loggerFactory, request, urlHelper, binder, loadingBar, feedback, taskQueue, resultsPluginsLoader, resultsListFactory, treeTaskButtonFactory) {
     'use strict';
 
     var logger = loggerFactory('controller/inspectResults');
+    var reviewUrl = urlHelper.route('review', 'DeliveryReview', 'remoteProctoring');
 
     /**
      * Take care of errors
@@ -104,6 +106,24 @@ define([
                     taskCreationUrl : this.url,
                     taskCreationData : {uri : uniqueValue}
                 }).start();
+            });
+
+            binder.register('proctorio_url_redirect', actionContext => {
+                const data = _.pick(actionContext, ['uri', 'classUri', 'id']);
+
+                request(reviewUrl, {...data},'POST')
+                    .then(response => {
+                        const url = response.url;
+
+                        if (url) {
+                            window.open(url, '_blank');
+                        } else {
+                            feedback().info(__('Proctorio review link is not generated because there are no executions for this delivery yet.'));
+                        }
+                    })
+                    .catch(err => {
+                        reportError(err);
+                    });
             });
         }
     };
