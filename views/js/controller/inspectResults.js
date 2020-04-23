@@ -31,7 +31,7 @@ define([
 
         logger.error(err);
 
-        if (err instanceof Error) {s
+        if (err instanceof Error) {
             feedback().error(err.message);
         }
     }
