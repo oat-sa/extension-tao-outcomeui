@@ -110,7 +110,7 @@ define([
             binder.register('open_url', function(actionContext) {
                 const data = _.pick(actionContext, ['uri', 'classUri', 'id']);
 
-                request(this.url, data,'POST')
+                request(this.url, data, 'POST')
                     .then(response => {
                         const url = response.url;
 
@@ -120,9 +120,7 @@ define([
                             feedback().info(__('The URL does not exist.'));
                         }
                     })
-                    .catch(err => {
-                        reportError(err);
-                    });
+                    .catch(reportError);
             });
         }
     };
