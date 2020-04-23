@@ -31,7 +31,7 @@ define([
 
         logger.error(err);
 
-        if (err instanceof Error) {
+        if (err instanceof Error) {s
             feedback().error(err.message);
         }
     }
@@ -107,17 +107,17 @@ define([
                 }).start();
             });
 
-            binder.register('proctorio_url_redirect', function(actionContext) {
+            binder.register('open_url', function(actionContext) {
                 const data = _.pick(actionContext, ['uri', 'classUri', 'id']);
 
-                request(this.url, {...data},'POST')
+                request(this.url, data,'POST')
                     .then(response => {
                         const url = response.url;
 
                         if (url) {
                             window.open(url, '_blank');
                         } else {
-                            feedback().info(__('Proctorio review link is not generated because there are no executions for this delivery yet.'));
+                            feedback().info(__('The URL does not exist.'));
                         }
                     })
                     .catch(err => {
