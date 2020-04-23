@@ -21,7 +21,6 @@ define([
     'use strict';
 
     var logger = loggerFactory('controller/inspectResults');
-    var reviewUrl = urlHelper.route('review', 'DeliveryReview', 'remoteProctoring');
 
     /**
      * Take care of errors
@@ -108,10 +107,10 @@ define([
                 }).start();
             });
 
-            binder.register('proctorio_url_redirect', actionContext => {
+            binder.register('proctorio_url_redirect', function(actionContext) {
                 const data = _.pick(actionContext, ['uri', 'classUri', 'id']);
 
-                request(reviewUrl, {...data},'POST')
+                request(this.url, {...data},'POST')
                     .then(response => {
                         const url = response.url;
 
