@@ -8,6 +8,7 @@ define([
     'i18n',
     'module',
     'core/logger',
+    'core/dataProvider/request',
     'util/url',
     'layout/actions/binder',
     'layout/loading-bar',
@@ -16,7 +17,7 @@ define([
     'taoOutcomeUi/component/results/pluginsLoader',
     'taoOutcomeUi/component/results/list',
     'ui/taskQueueButton/treeButton'
-], function ($, _, __, module, loggerFactory, urlHelper, binder, loadingBar, feedback, taskQueue, resultsPluginsLoader, resultsListFactory, treeTaskButtonFactory) {
+], function ($, _, __, module, loggerFactory, request, urlHelper, binder, loadingBar, feedback, taskQueue, resultsPluginsLoader, resultsListFactory, treeTaskButtonFactory) {
     'use strict';
 
     var logger = loggerFactory('controller/inspectResults');
@@ -104,6 +105,22 @@ define([
                     taskCreationUrl : this.url,
                     taskCreationData : {uri : uniqueValue}
                 }).start();
+            });
+
+            binder.register('open_url', function(actionContext) {
+                const data = _.pick(actionContext, ['uri', 'classUri', 'id']);
+
+                request(this.url, data, 'POST')
+                    .then(response => {
+                        const url = response.url;
+
+                        if (url) {
+                            window.open(url, '_blank');
+                        } else {
+                            feedback().info(__('The URL does not exist.'));
+                        }
+                    })
+                    .catch(reportError);
             });
         }
     };
