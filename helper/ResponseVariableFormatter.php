@@ -92,6 +92,7 @@ class ResponseVariableFormatter
     {
         $value = $var->getValue();
         switch ($var->getCardinality()) {
+            case 'record':
             case 'single':
                 if (strlen($value) === 0) {
                     $formatted = ['base' => null];
