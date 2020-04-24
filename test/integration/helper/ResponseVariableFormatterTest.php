@@ -61,6 +61,18 @@ class ResponseVariableFormatterTest extends TestCase
         $this->assertEquals($expected, ResponseVariableFormatter::formatVariableToPci($var));
     }
 
+    public function testFormatRecordIdentifier()
+    {
+        $var = new ResponseVariable();
+        $var->setBaseType('identifier');
+        $var->setCardinality('record');
+        $var->setValue('ABC');
+
+        $expected = ['base' => ['identifier' => 'ABC']];
+
+        $this->assertEquals($expected, ResponseVariableFormatter::formatVariableToPci($var));
+    }
+
     public function testFormatSinglePair()
     {
         $var = new ResponseVariable();
