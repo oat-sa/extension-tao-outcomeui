@@ -60,13 +60,9 @@ use tao_models_classes_service_StorageDirectory;
 use taoQtiTest_models_classes_QtiTestService;
 use taoResultServer_models_classes_ReadableResultStorage;
 use taoResultServer_models_classes_Variable;
-use Zend\ServiceManager\ServiceLocatorAwareInterface;
-use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
-class ResultsService extends OntologyClassService implements ServiceLocatorAwareInterface
+class ResultsService extends OntologyClassService
 {
-    use ServiceLocatorAwareTrait;
-
     public const VARIABLES_FILTER_LAST_SUBMITTED = 'lastSubmitted';
     public const VARIABLES_FILTER_FIRST_SUBMITTED = 'firstSubmitted';
     public const VARIABLES_FILTER_ALL = 'all';
