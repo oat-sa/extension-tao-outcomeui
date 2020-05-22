@@ -173,12 +173,15 @@ class ResultIndexIterator implements \Iterator
      */
     protected function ensureValidResult()
     {
-        $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($this->instanceCache[$this->currentInstance]);
         try {
+            $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($this->instanceCache[$this->currentInstance]);
             $deliveryExecution->getDelivery();
         } catch (\common_exception_NotFound $e) {
             $message = 'Skip result ' . $deliveryExecution->getIdentifier() . ' with message ' . $e->getMessage();
             \common_Logger::e($message);
+            $this->next();
+        } catch (\Exception $e) {
+            \common_Logger::e($e->getMessage());
             $this->next();
         }
     }

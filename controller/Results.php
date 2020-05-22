@@ -28,7 +28,6 @@ use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyAwareTrait;
 use oat\generis\model\OntologyRdfs;
 use oat\oatbox\event\EventManager;
-use oat\tao\model\accessControl\AclProxy;
 use oat\tao\model\plugins\PluginModule;
 use oat\tao\model\taskQueue\TaskLogActionTrait;
 use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
@@ -72,7 +71,7 @@ class Results extends \tao_actions_CommonModule
      */
     protected function getResultsService()
     {
-        return $this->getServiceManager()->get(ResultServiceWrapper::SERVICE_ID)->getService();
+        return $this->getServiceLocator()->get(ResultServiceWrapper::SERVICE_ID)->getService();
     }
 
     /**
@@ -88,7 +87,7 @@ class Results extends \tao_actions_CommonModule
      */
     protected function getDeliveryAssemblyService()
     {
-        return DeliveryAssemblyService::singleton();
+        return $this->getServiceLocator()->get(DeliveryAssemblyService::class);
     }
 
     /**
@@ -166,10 +165,9 @@ class Results extends \tao_actions_CommonModule
         try {
             $data = [];
             $readOnly = [];
-            $user = $this->getSession()->getUser();
             $rights = [
-                'view' => !AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'viewResult', []),
-                'delete' => !AclProxy::hasAccess($user, 'oat\taoOutcomeUi\controller\Results', 'delete', []),
+                'view' => !$this->hasAccess('oat\taoOutcomeUi\controller\Results', 'viewResult', []),
+                'delete' => !$this->hasAccess('oat\taoOutcomeUi\controller\Results', 'delete', []),
             ];
 
             if ($this->hasRequestParameter('filterquery')) {
