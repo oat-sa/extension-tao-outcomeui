@@ -42,6 +42,7 @@ use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 use oat\taoResultServer\models\classes\NoResultStorage;
 use oat\taoResultServer\models\classes\NoResultStorageException;
 use oat\taoResultServer\models\classes\QtiResultsService;
+use oat\taoResultServer\models\Formatter\ItemResponseCollectionNormalizer;
 use \tao_helpers_Uri;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
@@ -333,6 +334,8 @@ class Results extends \tao_actions_CommonModule
             }
 
             $variables = $this->getResultsService()->getImplementation()->getDeliveryVariables($resultId);
+            $variables = $this->getNormalizer()->normalize($variables);
+
             $structuredItemVariables = $this->getResultsService()->structureItemVariables($variables, $filterSubmission);
             $itemVariables = $this->formatItemVariables($structuredItemVariables, $filterTypes);
             $testVariables = $this->getResultsService()->extractTestVariables($variables, $filterTypes, $filterSubmission);
@@ -545,5 +548,10 @@ class Results extends \tao_actions_CommonModule
         $exporter = $this->propagate(new ResultsExporter($resourceUri, ResultsService::singleton()));
 
         return $this->returnTaskJson($exporter->createExportTask());
+    }
+
+    private function getNormalizer(): ItemResponseCollectionNormalizer
+    {
+        return $this->getServiceLocator()->get(ItemResponseCollectionNormalizer::class);
     }
 }
