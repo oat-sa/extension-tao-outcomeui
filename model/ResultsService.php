@@ -55,6 +55,7 @@ use oat\taoResultServer\models\classes\NoResultStorageException;
 use oat\taoResultServer\models\classes\ResultManagement;
 use oat\taoResultServer\models\classes\ResultServerService;
 use oat\taoResultServer\models\classes\ResultService;
+use oat\taoResultServer\models\Formatter\ItemResponseVariableSplitter;
 use tao_helpers_Date;
 use tao_models_classes_service_StorageDirectory;
 use taoQtiTest_models_classes_QtiTestService;
@@ -670,26 +671,12 @@ class ResultsService extends OntologyClassService
 
     public function splitByAttempt($itemVariables)
     {
-        $attempts = [];
-        foreach ($itemVariables as $variable) {
-            if ($variable->variable->getIdentifier() == 'numAttempts') {
-                $attempts[(string)$variable->variable->getCreationTime()] = [];
-            }
-        }
-        foreach ($itemVariables as $variable) {
-            $cand = null;
-            $bestDist = null;
-            foreach (array_keys($attempts) as $time) {
-                $dist = abs($time - $variable->variable->getCreationTime());
-                if (is_null($bestDist) || $dist < $bestDist) {
-                    $bestDist = $dist;
-                    $cand = $time;
-                }
-            }
-            $attempts[$cand][] = $variable;
-        }
+        return $this->getItemResponseSplitter()->splitObjByAttempt($itemVariables);
+    }
 
-        return $attempts;
+    private function getItemResponseSplitter(): ItemResponseVariableSplitter
+    {
+        return $this->getServiceLocator()->get(ItemResponseVariableSplitter::class);
     }
 
     /**
