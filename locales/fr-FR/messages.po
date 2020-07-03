@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO 3.4.0-sprint124\n"
-"PO-Revision-Date: 2020-03-20T08:14:01\n"
+"Project-Id-Version: TAO 3.4.0-sprint132\n"
+"PO-Revision-Date: 2020-07-03T09:27:31\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: fr-FR\n"
@@ -122,6 +122,9 @@ msgstr "Gérer les résultats"
 msgid "No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here."
 msgstr "Aucun test n'a encore été passé. Dès qu'un participant passera un test, ses résultats seront affichés ici."
 
+msgid "Nothing to export for \"%s"
+msgstr ""
+
 msgid "Please confirm deletion"
 msgstr "Veuillez confirmer la suppression."
 
@@ -161,6 +164,12 @@ msgstr "Surveillance des résultats"
 msgid "Results Monitoring"
 msgstr "Surveillance des résultats"
 
+msgid "Results of \"%s\" successfully exported"
+msgstr ""
+
+msgid "Results of \"%s\" successfully exported into \"%s"
+msgstr ""
+
 msgid "Review"
 msgstr "Révision"
 
@@ -196,6 +205,9 @@ msgstr "La classe sélectionnée ne contient pas de résultat à analyser, veuil
 
 msgid "The number of observations is too low"
 msgstr "Le nombre d'observations est trop faible."
+
+msgid "The URL does not exist."
+msgstr ""
 
 msgid "There was a problem generating your report, please try again."
 msgstr "Il y a eu un souci lors de la génération de votre rapport, veuillez réessayer."

@@ -46,6 +46,7 @@ use oat\taoTests\models\event\TestChangedEvent;
 /**
  *
  * @author Joel Bout <joel@taotesting.com>
+ * @deprecated use migrations instead. See https://github.com/oat-sa/generis/wiki/Tao-Update-Process
  */
 class Updater extends \common_ext_ExtensionUpdater
 {
@@ -183,5 +184,10 @@ class Updater extends \common_ext_ExtensionUpdater
         }
 
         $this->skip('7.5.0', '9.1.1');
+        
+        //Updater files are deprecated. Please use migrations.
+        //See: https://github.com/oat-sa/generis/wiki/Tao-Update-Process
+
+        $this->setVersion($this->getExtension()->getManifest()->getVersion());
     }
 }
