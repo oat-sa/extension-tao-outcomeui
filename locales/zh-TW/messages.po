@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO 3.4.0-sprint112\n"
-"PO-Revision-Date: 2019-10-11T09:48:40\n"
+"Project-Id-Version: TAO 3.4.0-sprint132\n"
+"PO-Revision-Date: 2020-07-03T09:27:32\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: zh-TW\n"
@@ -122,6 +122,9 @@ msgstr "管理結果"
 msgid "No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here."
 msgstr "尚未有人考試。考生考完試後，這裏會顯示考試結果。"
 
+msgid "Nothing to export for \"%s"
+msgstr ""
+
 msgid "Please confirm deletion"
 msgstr "請確認刪除"
 
@@ -161,6 +164,12 @@ msgstr ""
 msgid "Results Monitoring"
 msgstr ""
 
+msgid "Results of \"%s\" successfully exported"
+msgstr ""
+
+msgid "Results of \"%s\" successfully exported into \"%s"
+msgstr ""
+
 msgid "Review"
 msgstr ""
 
@@ -196,6 +205,9 @@ msgstr "您選擇的班級沒有包含可以分析結果, 請選擇其他的班�
 
 msgid "The number of observations is too low"
 msgstr "觀察數量太少了"
+
+msgid "The URL does not exist."
+msgstr ""
 
 msgid "There was a problem generating your report, please try again."
 msgstr "在產生您的報告的時候發生了一個錯誤， 請再試一次。"
