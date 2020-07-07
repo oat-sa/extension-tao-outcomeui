@@ -127,10 +127,19 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
                                 $value = $qtiDuration->getSeconds(true) . '.' . $qtiDuration->getMicroseconds();
                             }
 
-                            $this->cache[get_class($varData)][$result][$column->getContextIdentifier() . $variableIdentifier][(string) $epoch] = [
+                            $data = [
                                 $value,
                                 $readableTime
                             ];
+
+                            $this->cache[get_class($varData)][$result][$column->getContextIdentifier() . $variableIdentifier][(string) $epoch] = $data;
+
+                            if ($column->getIdentifier() === 'RESPONSE') {
+                                $this->cache[get_class($varData)][$result][$column->getContextIdentifier() . $variableIdentifier.'_is_correct'][(string) $epoch] = [
+                                    (int)$varData->getCorrectResponse(),
+                                    $readableTime
+                                ];
+                            }
                         }
                     }
                 }

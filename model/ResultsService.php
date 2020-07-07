@@ -1353,6 +1353,9 @@ class ResultsService extends OntologyClassService
                 default:
                     $columns[] = new ResponseColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"]);
             }
+            if ($variableType["variableIdentifier"] === 'RESPONSE') {
+                $columns[] = new ResponseColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"].'_is_correct');
+            }
         }
         $arr = [];
         foreach ($columns as $column) {
