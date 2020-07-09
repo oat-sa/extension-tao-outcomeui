@@ -1338,6 +1338,11 @@ class ResultsService extends OntologyClassService
                     }
 
                     $variableTypes[$uri . $variableIdentifier] = ["contextLabel" => $contextIdentifierLabel, "contextId" => $uri, "variableIdentifier" => $variableIdentifier];
+
+                    if ($variable->variable instanceof \taoResultServer_models_classes_ResponseVariable
+                    && $variable->variable->getCorrectResponse() !== null) {
+                        $variableTypes[$uri . $variableIdentifier.'_is_correct'] = ["contextLabel" => $contextIdentifierLabel, "contextId" => $uri, "variableIdentifier" => $variableIdentifier.'_is_correct'];
+                    }
                 }
             }
         }
@@ -1352,9 +1357,6 @@ class ResultsService extends OntologyClassService
                     break;
                 default:
                     $columns[] = new ResponseColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"]);
-            }
-            if ($variableType["variableIdentifier"] === 'RESPONSE') {
-                $columns[] = new ResponseColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"].'_is_correct');
             }
         }
         $arr = [];
