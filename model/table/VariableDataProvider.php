@@ -134,7 +134,7 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
 
                             $this->cache[get_class($varData)][$result][$column->getContextIdentifier() . $variableIdentifier][(string) $epoch] = $data;
 
-                            if ($varData->getCorrectResponse() !== null) {
+                            if ($varData instanceof \taoResultServer_models_classes_ResponseVariable && $varData->getCorrectResponse() !== null) {
                                 $this->cache[get_class($varData)][$result][$column->getContextIdentifier() . $variableIdentifier.'_is_correct'][(string) $epoch] = [
                                     (int)$varData->getCorrectResponse(),
                                     $readableTime
