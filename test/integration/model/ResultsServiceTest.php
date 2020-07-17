@@ -215,6 +215,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
         $var = new \stdClass();
         $var->callIdTest = 'callId';
+        $var->callIdItem = null;
         $responseVariable = new taoResultServer_models_classes_ResponseVariable();
         $responseVariable->setIdentifier('myID');
         $second = microtime();
@@ -223,11 +224,12 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
         $var2 = new \stdClass();
         $var2->callIdTest = 'callId';
+        $var2->callIdItem = null;
         $outcomeVariable = new taoResultServer_models_classes_OutcomeVariable();
         $outcomeVariable->setIdentifier('mySecondID');
         $outcomeVariable->setEpoch($first);
         $var2->variable = $outcomeVariable;
-        $impProphecy->getRelatedTestCallIds("#fakeUri")->willReturn(["#fakeTestUri"]);
+        $impProphecy->getRelatedTestCallIds("#fakeUri")->willReturn("#fakeTestUri");
         $impProphecy->getVariables('#fakeTestUri')->willReturn([
             [
                 $var
@@ -242,8 +244,8 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
         $varDataAll = $this->service->getVariableDataFromDeliveryResult('#fakeUri');
         $this->assertEquals([
-            $outcomeVariable,
-            $responseVariable
+            $responseVariable,
+            $outcomeVariable
         ], $varDataAll);
         $varDataEmpty = $this->service->getVariableDataFromDeliveryResult('#fakeUri', [taoResultServer_models_classes_TraceVariable::class]);
         $this->assertEmpty($varDataEmpty);
@@ -359,9 +361,6 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
     public function testGetReadableImplementation()
     {
         $resultProphecy = $this->prophesize(core_kernel_classes_Resource::class);
-        $resultProphecy->getPropertyValues(new core_kernel_classes_Property(ResultServerService::PROPERTY_HAS_MODEL))->willReturn([
-            'http://www.tao.lu/Ontologies/taoOutcomeRds.rdf#ResultManagementModel'
-        ]);
         $resultServer = $resultProphecy->reveal();
 
         $deliveryProphecy = $this->prophesize(core_kernel_classes_Resource::class);
@@ -386,7 +385,7 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
         $impProphecy = $this->prophesize(ResultManagement::class);
         $impProphecy->getRelatedItemCallIds('#fakeUri')->willReturn(['#itemsResults1' => '#itemResultVariable']);
         $impProphecy->getRelatedTestCallIds('#fakeUri')->willReturn(['#testResults1' => '#testResultVariable']);
-        $impProphecy->getVariables(['#itemResultVariable', '#testResultVariable'])->willReturn([
+        $impProphecy->getDeliveryVariables('#fakeUri')->willReturn([
             [$variable1],
             [$variable2]
         ]);
@@ -1119,8 +1118,10 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
         $impProphecy->getRelatedTestCallIds("#fakeUri")->willReturn(["#fakeTestUri"]);
         $impProphecy->getTestTaker('#fakeUri1')->willReturn('#testTaker');
-
-        $impProphecy->getResultByDelivery(['#fakeUri'], [])->willReturn([[
+        $columns = [
+            new \oat\taoOutcomeUi\model\table\ContextTypePropertyColumn('test_taker', $prop)
+        ];
+        $impProphecy->getResultByDelivery(['#fakeUri'], $columns)->willReturn([[
             'deliveryResultIdentifier' => '#fakeUri1',
             'testTakerIdentifier' => '123',
             'deliveryIdentifier' => '#fakeUri2',
@@ -1135,11 +1136,9 @@ class ResultsServiceTest extends GenerisPhpUnitTestRunner
 
         $serviceManager = $this->getServiceLocatorMock([ResultServerService::SERVICE_ID => $resultServerServiceMock->reveal(), \tao_models_classes_UserService::SERVICE_ID => $userService->reveal()]);
         $this->service->setServiceLocator($serviceManager);
-        $columns = [
-                new \oat\taoOutcomeUi\model\table\ContextTypePropertyColumn('test_taker', $prop)
-        ];
 
-        $varDataAll = $this->service->getResultsByDelivery($delivery, $columns, 'lastSubmitted');
-        $this->assertEquals('#fakeUri1', $varDataAll[0]['id']);
+
+        $varDataAll = $this->service->getResultsByDelivery($delivery, $columns, ['lastSubmitted']);
+        $this->assertEquals('#fakeUri1', $varDataAll[0]);
     }
 }

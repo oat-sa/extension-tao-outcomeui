@@ -1338,6 +1338,11 @@ class ResultsService extends OntologyClassService
                     }
 
                     $variableTypes[$uri . $variableIdentifier] = ["contextLabel" => $contextIdentifierLabel, "contextId" => $uri, "variableIdentifier" => $variableIdentifier];
+
+                    if ($variable->variable instanceof \taoResultServer_models_classes_ResponseVariable
+                    && $variable->variable->getCorrectResponse() !== null) {
+                        $variableTypes[$uri . $variableIdentifier.'_is_correct'] = ["contextLabel" => $contextIdentifierLabel, "contextId" => $uri, "variableIdentifier" => $variableIdentifier.'_is_correct'];
+                    }
                 }
             }
         }
