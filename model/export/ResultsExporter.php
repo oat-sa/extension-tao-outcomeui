@@ -40,6 +40,10 @@ class ResultsExporter implements ServiceLocatorAwareInterface
     use ServiceLocatorAwareTrait;
 
     private $exportStrategy;
+    /**
+     * @var ResultsService
+     */
+    private $resultsService;
 
     /**
      * @param string|\core_kernel_classes_Resource $resource
@@ -58,6 +62,7 @@ class ResultsExporter implements ServiceLocatorAwareInterface
                 new ColumnsProvider($resource, $resultsService)
             );
         }
+        $this->resultsService = $resultsService;
     }
 
     /**
@@ -122,8 +127,8 @@ class ResultsExporter implements ServiceLocatorAwareInterface
         }
 
         $label = $this->exportStrategy->getResourceToExport()->isClass()
-            ? __('CSV results export for delivery class "%s"', $this->exportStrategy->getResourceToExport()->getLabel())
-            : __('CSV results export for delivery "%s"', $this->exportStrategy->getResourceToExport()->getLabel());
+            ? __('%s results export for delivery class "%s"', $this->resultsService->getFormat(), $this->exportStrategy->getResourceToExport()->getLabel())
+            : __('%s results export for delivery "%s"', $this->resultsService->getFormat(), $this->exportStrategy->getResourceToExport()->getLabel());
 
         return $queueDispatcher->createTask(
             new ExportDeliveryResults(),

@@ -24,6 +24,7 @@ namespace oat\taoOutcomeUi\model\export;
 use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\filesystem\FileSystemService;
 use oat\tao\model\export\implementation\CsvExporter;
+use oat\tao\model\export\implementation\SqlExporter;
 use oat\tao\model\taskQueue\Task\FilesystemAwareTrait;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
@@ -137,25 +138,25 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      */
     public function getColumnsToExport()
     {
-        if (!empty($this->columnsToExport)) {
-            $columns = $this->columnsToExport;
-        } else {
-            $variables = array_merge($this->columnsProvider->getGradeColumns(), $this->columnsProvider->getResponseColumns());
-            usort($variables, function ($a, $b) {
-                return strcmp($a["label"], $b["label"]);
-            });
-            $columns = array_merge(
-                $this->columnsProvider->getTestTakerColumns(),
-                $this->columnsProvider->getDeliveryColumns(),
-                $variables
-            );
-        }
-
-        // Needed by the filter to filter by start and end date
-        // filtering will be done as a post-processing
-        $columns = array_merge($columns, $this->columnsProvider->getDeliveryExecutionColumns());
-
         if (empty($this->builtColumns)) {
+            if (!empty($this->columnsToExport)) {
+                $columns = $this->columnsToExport;
+            } else {
+                $variables = array_merge($this->columnsProvider->getGradeColumns(), $this->columnsProvider->getResponseColumns());
+                usort($variables, function ($a, $b) {
+                    return strcmp($a["label"], $b["label"]);
+                });
+                $columns = array_merge(
+                    $this->columnsProvider->getTestTakerColumns(),
+                    $this->columnsProvider->getDeliveryColumns(),
+                    $variables
+                );
+            }
+
+            // Needed by the filter to filter by start and end date
+            // filtering will be done as a post-processing
+            $columns = array_merge($columns, $this->columnsProvider->getDeliveryExecutionColumns());
+
             // build column objects
             $this->builtColumns = $this->buildColumns($columns);
         }
@@ -312,7 +313,11 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
             $result = [array_fill_keys($columnNames, '')];
         }
 
-        $exporter = new CsvExporter($result);
+        if ($this->resultsService->getFormat() == ResultsService::SQL_FORMAT) {
+            $exporter = new SqlExporter($result, $this->getColumnsToExport());
+        } else {
+            $exporter = new CsvExporter($result);
+        }
 
         unset($columnNames, $data, $result);
 
@@ -341,13 +346,14 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      */
     private function getFileName()
     {
+        $format = $this->resultsService->getFormat() ?: 'csv';
         return 'results_export_'
             . strtolower(\tao_helpers_Display::textCleaner($this->delivery->getLabel(), '*'))
             . '_'
             . \tao_helpers_Uri::getUniqueId($this->delivery->getUri())
             . '_'
             . date('YmdHis') . rand(10, 99) //more unique name
-            . '.csv';
+            . '.' . strtolower($format);
     }
 
     /**
@@ -406,7 +412,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
                 $columns[] = $column;
             }
         }
-        
+
         return $columns;
     }
 

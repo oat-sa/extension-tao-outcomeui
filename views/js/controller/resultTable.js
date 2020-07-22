@@ -42,7 +42,7 @@ define([
         /**
          * Controller entry point
          */
-        start : function start(){
+        start : function start() {
 
             var conf = module.config();
             var $container = $(".result-table");
@@ -81,7 +81,7 @@ define([
                 .on('change', function (v) {
                     console.log('changed', v)
                 })
-                .on('render', function() {
+                .on('render', function () {
                     $('button', $dateStartRangeContainer).hide();
                 });
 
@@ -101,7 +101,7 @@ define([
                     }
                 }
             })
-                .on('render', function() {
+                .on('render', function () {
                     $('button', $dateEndRangeContainer).hide();
                 });
 
@@ -111,26 +111,25 @@ define([
              * @param {String} [action = 'add'] - 'add' or 'remove' the retrieved columns
              * @param {Function} done - once the datatable is loaded
              */
-            var buildGrid = function buildGrid(url, action, done){
+            var buildGrid = function buildGrid(url, action, done) {
                 loadingBar.start();
                 $.ajax({
-                    url : url,
-                    dataType : 'json',
-                    data : {filter : filter, uri : uri},
-                    type :'GET'
-                }).done(function(response){
-                    if(response && response.columns){
-                        if(action === 'remove'){
-                            columns = _.reject(columns, function(col){
-                                return _.find(response.columns, function(resCol){
+                    url: url,
+                    dataType: 'json',
+                    data: {filter: filter, uri: uri},
+                    type: 'GET'
+                }).done(function (response) {
+                    if (response && response.columns) {
+                        if (action === 'remove') {
+                            columns = _.reject(columns, function (col) {
+                                return _.find(response.columns, function (resCol) {
                                     return _.isEqual(col, resCol);
                                 });
                             });
                         } else {
-                            if(typeof response.first !== 'undefined' && response.first === true){
+                            if (typeof response.first !== 'undefined' && response.first === true) {
                                 columns = response.columns.concat(columns);
-                            }
-                            else{
+                            } else {
                                 columns = columns.concat(response.columns);
                             }
                         }
@@ -147,14 +146,14 @@ define([
              * Rebuild the datatable
              * @param {Function} done - once the datatable is loaded
              */
-            var _buildTable = function _buildTable(done){
+            var _buildTable = function _buildTable(done) {
                 var model = [];
 
                 //set up model from columns
-                _.forEach(columns, function(col){
+                _.forEach(columns, function (col) {
                     model.push({
-                        id : col.prop ? (col.prop + '_' + col.contextType) : (col.contextId + '_' + col.variableIdentifier),
-                        label : col.label,
+                        id: col.prop ? (col.prop + '_' + col.contextType) : (col.contextId + '_' + col.variableIdentifier),
+                        label: col.label,
                         sortable: false
                     });
                 });
@@ -164,22 +163,28 @@ define([
                     .empty()
                     .data('ui.datatable', null)
                     .off('load.datatable')
-                    .on('load.datatable', function(){
-                        if(_.isFunction(done)){
+                    .on('load.datatable', function () {
+                        if (_.isFunction(done)) {
                             done();
                             done = '';
                         }
                     })
                     .datatable({
-                        url : urlUtil.route('feedDataTable', 'ResultTable', 'taoOutcomeUi',
-                            {filter : filter, startfrom: deStartFrom, startto: deStartTo, endfrom: deEndFrom, endto: deEndTo}),
-                        querytype : 'POST',
+                        url: urlUtil.route('feedDataTable', 'ResultTable', 'taoOutcomeUi',
+                            {
+                                filter: filter,
+                                startfrom: deStartFrom,
+                                startto: deStartTo,
+                                endfrom: deEndFrom,
+                                endto: deEndTo
+                            }),
+                        querytype: 'POST',
                         params: {columns: JSON.stringify(columns), '_search': false, uri: uri},
-                        model :  model
+                        model: model
                     });
             };
 
-            var filterChanged = function filterChanged () {
+            var filterChanged = function filterChanged() {
                 filter = $filterField.select2('val');
                 deStartFrom = filterDeStartRange.getStart();
                 deStartTo = filterDeStartRange.getEnd();
@@ -190,7 +195,7 @@ define([
             };
 
             //group button to toggle them
-            $('[data-group]', $container).each(function(){
+            $('[data-group]', $container).each(function () {
                 var $elt = $(this);
                 var group = $elt.data('group');
                 var action = $elt.data('action');
@@ -199,41 +204,41 @@ define([
             });
 
             //regarding button data, we rebuild the table
-            $container.on('click', '[data-group]', function(e){
-                var $elt    = $(this);
-                var group   = $elt.data('group');
-                var action  = $elt.data('action');
-                var url     = $elt.data('url');
+            $container.on('click', '[data-group]', function (e) {
+                var $elt = $(this);
+                var group = $elt.data('group');
+                var action = $elt.data('action');
+                var url = $elt.data('url');
                 e.preventDefault();
-                buildGrid(url, action, function(){
-                    _.forEach(groups[group], function($btn){
+                buildGrid(url, action, function () {
+                    _.forEach(groups[group], function ($btn) {
                         $btn.toggleClass('hidden');
                     });
                 });
             });
 
             //default table
-            buildGrid(urlUtil.route('getTestTakerColumns', 'ResultTable', 'taoOutcomeUi', {filter : filter}));
+            buildGrid(urlUtil.route('getTestTakerColumns', 'ResultTable', 'taoOutcomeUi', {filter: filter}));
 
             //setup the filtering
             $filterField.select2({
-                minimumResultsForSearch : -1
+                minimumResultsForSearch: -1
             }).select2('val', filter);
 
             $('.result-filter-btn', $container)
-                .click(function() {
+                .click(function () {
                     filterChanged();
                 });
 
             //instantiate the task creation button
             standardTaskButtonFactory({
-                type : 'info',
-                icon : 'export',
-                title : __('Export CSV File'),
-                label : __('Export CSV File'),
-                taskQueue : taskQueue,
-                taskCreationUrl : urlUtil.route('export', 'ResultTable', 'taoOutcomeUi'),
-                taskCreationData : function getTaskRequestData(){
+                type: 'info',
+                icon: 'export',
+                title: __('Export CSV File'),
+                label: __('Export CSV File'),
+                taskQueue: taskQueue,
+                taskCreationUrl: urlUtil.route('export', 'ResultTable', 'taoOutcomeUi'),
+                taskCreationData: function getTaskRequestData() {
                     filterChanged();
                     return {
                         filter: filter,
@@ -245,9 +250,36 @@ define([
                         endto: deEndTo
                     };
                 }
-            }).on('error', function(err){
+            }).on('error', function (err) {
                 feedback().error(err);
             }).render($filterButtonsContainer);
+
+            if (conf.allowSqlResult) {
+                standardTaskButtonFactory({
+                    type: 'info',
+                    icon: 'export',
+                    title: __('Export SQL File'),
+                    label: __('Export SQL File'),
+                    taskQueue: taskQueue,
+                    taskCreationUrl: urlUtil.route('exportSQL', 'ResultTable', 'taoOutcomeUi'),
+                    taskCreationData: function getTaskRequestData() {
+                        filterChanged();
+                        return {
+                            filter: filter,
+                            columns: JSON.stringify(columns),
+                            uri: uri,
+                            startfrom: deStartFrom,
+                            startto: deStartTo,
+                            endfrom: deEndFrom,
+                            endto: deEndTo
+                        };
+                    }
+                }).on('error', function (err) {
+                    feedback().error(err);
+                }).on('finished', function (a, b, c) {
+                    let abc = 5;
+                }).render($filterButtonsContainer);
+            }
         }
     };
     return resulTableController;

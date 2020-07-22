@@ -67,6 +67,7 @@ class ResultTable extends \tao_actions_CommonModule
             }
             $this->setData('filter', $filter);
             $this->setData('uri', $uri);
+            $this->setData('allowSqlResult', true);
             $this->setView('resultTable.tpl');
         } else {
             $this->setData('type', 'info');
@@ -106,7 +107,23 @@ class ResultTable extends \tao_actions_CommonModule
             throw new \Exception('Only ajax call allowed.');
         }
 
-        return $this->returnTaskJson($this->getExporterService()->createExportTask());
+        return $this->returnTaskJson($this->getExporterService(ResultsService::CSV_FORMAT)->createExportTask());
+    }
+
+    /**
+     * Exports results by a single delivery.
+     *
+     * Only creating the export task.
+     *
+     * @throws \Exception
+     */
+    public function exportSQL()
+    {
+        if (!$this->isXmlHttpRequest()) {
+            throw new \Exception('Only ajax call allowed.');
+        }
+
+        return $this->returnTaskJson($this->getExporterService(ResultsService::SQL_FORMAT)->createExportTask());
     }
 
     /**
@@ -199,13 +216,19 @@ class ResultTable extends \tao_actions_CommonModule
     }
 
     /**
+     * @param string $format
      * @return ResultsExporter
+     * @throws \common_exception_MissingParameter
      * @throws common_Exception
      */
-    private function getExporterService()
+    private function getExporterService(string $format = null)
     {
+        /** @var ResultsService $resultService */
+        $resultService = ResultsService::singleton();
+        $resultService->setFormat($format);
+
         /** @var ResultsExporter $exporter */
-        $exporter = $this->propagate(new ResultsExporter($this->getDeliveryUri(), ResultsService::singleton()));
+        $exporter = $this->propagate(new ResultsExporter($this->getDeliveryUri(), $resultService));
 
         if ($this->hasRequestParameter(self::PARAMETER_COLUMNS)) {
             $exporter->setColumnsToExport($this->getRawParameter(self::PARAMETER_COLUMNS));

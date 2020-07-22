@@ -544,8 +544,45 @@ class Results extends \tao_actions_CommonModule
             ? \tao_helpers_Uri::decode($this->getRequestParameter(self::PARAMETER_DELIVERY_URI))
             : \tao_helpers_Uri::decode($this->getRequestParameter(self::PARAMETER_DELIVERY_CLASS_URI));
 
+        /** @var ResultsService $resultService */
+        $resultService = ResultsService::singleton();
+        $resultService->setFormat(ResultsService::SQL_FORMAT);
+
         /** @var ResultsExporter $exporter */
-        $exporter = $this->propagate(new ResultsExporter($resourceUri, ResultsService::singleton()));
+        $exporter = $this->propagate(new ResultsExporter($resourceUri, $resultService));
+
+        return $this->returnTaskJson($exporter->createExportTask());
+    }
+
+    /**
+     * Exports results by either a class or a single delivery.
+     *
+     * Only creating the export task.
+     *
+     * @throws Exception
+     * @throws \common_Exception
+     */
+    public function exportSQL()
+    {
+        if (!$this->isXmlHttpRequest()) {
+            throw new \Exception('Only ajax call allowed.');
+        }
+
+        if (!$this->hasRequestParameter(self::PARAMETER_DELIVERY_CLASS_URI) && !$this->hasRequestParameter(self::PARAMETER_DELIVERY_URI)) {
+            throw new \common_Exception('Parameter "' . self::PARAMETER_DELIVERY_CLASS_URI . '" or "' . self::PARAMETER_DELIVERY_URI . '" missing');
+        }
+
+        $resourceUri = $this->hasRequestParameter(self::PARAMETER_DELIVERY_URI)
+            ? \tao_helpers_Uri::decode($this->getRequestParameter(self::PARAMETER_DELIVERY_URI))
+            : \tao_helpers_Uri::decode($this->getRequestParameter(self::PARAMETER_DELIVERY_CLASS_URI));
+
+
+        /** @var ResultsService $resultService */
+        $resultService = ResultsService::singleton();
+        $resultService->setFormat(ResultsService::SQL_FORMAT);
+
+        /** @var ResultsExporter $exporter */
+        $exporter = $this->propagate(new ResultsExporter($resourceUri, $resultService));
 
         return $this->returnTaskJson($exporter->createExportTask());
     }
