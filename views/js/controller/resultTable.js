@@ -276,8 +276,6 @@ define([
                     }
                 }).on('error', function (err) {
                     feedback().error(err);
-                }).on('finished', function (a, b, c) {
-                    let abc = 5;
                 }).render($filterButtonsContainer);
             }
         }
