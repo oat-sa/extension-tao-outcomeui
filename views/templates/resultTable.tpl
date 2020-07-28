@@ -87,11 +87,19 @@ use oat\taoOutcomeUi\model\ResultsService;
                     </div>
                 </div>
             </div>
-            <div class="grid-row filter-buttons">
-                <button class="btn-info small result-filter-btn">
-                    <span class="icon-preview"></span>
-                    <?=__('Preview');?>
-                </button>
+            <div class="grid-row">
+                <div class="filter-buttons">
+                    <button class="btn-info small result-filter-btn">
+                        <span class="icon-preview"></span>
+                        <?=__('Preview');?>
+                    </button>
+                </div>
+                <? if (get_data("allowSqlResult")): ?>
+                <div class="sql-export-tooltip">
+                    <span class="icon-warning tooltipstered" data-tooltip="~ .tooltip-content:first" data-tooltip-theme="info" ></span>
+                    <div class="tooltip-content"><?=__('test tooltype')?></div>
+                </div>
+                <? endif; ?>
             </div>
         </div>
     </div>
@@ -104,7 +112,7 @@ requirejs.config({
         'taoOutcomeUi/controller/resultTable' : {
             'filter' : <?=json_encode(get_data('filter'))?>,
             'uri' : '<?=get_data("uri")?>',
-            'allowSqlResult': '<?=get_data("allowSqlResult")?>'
+            'allowSqlResult' : '<?=get_data("allowSqlResult")?>'
         }
     }
 });
