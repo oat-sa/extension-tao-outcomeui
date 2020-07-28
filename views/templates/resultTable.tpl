@@ -112,7 +112,7 @@ requirejs.config({
         'taoOutcomeUi/controller/resultTable' : {
             'filter' : <?=json_encode(get_data('filter'))?>,
             'uri' : '<?=get_data("uri")?>',
-            'allowSqlResult' : '<?=get_data("allowSqlResult")?>'
+            'allowSqlResult' : '<? if (get_data("allowSqlResult")) echo 'true'; else echo 'false' ?>'
         }
     }
 });

@@ -95,7 +95,7 @@ class ResultTable extends \tao_actions_CommonModule
     }
 
     /**
-     * Exports results by a single delivery.
+     * Exports results by a single delivery in csv format.
      *
      * Only creating the export task.
      *
@@ -111,7 +111,7 @@ class ResultTable extends \tao_actions_CommonModule
     }
 
     /**
-     * Exports results by a single delivery.
+     * Exports results by a single delivery in sql format.
      *
      * Only creating the export task.
      *

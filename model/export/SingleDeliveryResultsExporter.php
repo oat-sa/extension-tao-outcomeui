@@ -21,6 +21,7 @@
 
 namespace oat\taoOutcomeUi\model\export;
 
+use common_exception_InvalidArgumentType;
 use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\filesystem\FileSystemService;
 use oat\tao\model\export\implementation\CsvExporter;
@@ -312,32 +313,50 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
             $result = [array_fill_keys($columnNames, '')];
         }
 
-        if ($this->resultsService->getFormat() == ResultsService::SQL_FORMAT) {
-            $exporter = new SqlExporter($result, $this->getColumnsToExport());
-        } else {
-            $exporter = new CsvExporter($result);
+        switch ($this->resultsService->getFormat()) {
+            case ResultsService::SQL_FORMAT:
+                $exporter = new SqlExporter($result, $this->getColumnsToExport());
+                break;
+            case ResultsService::CSV_FORMAT:
+                $exporter = new CsvExporter($result);
+                break;
         }
 
         unset($columnNames, $data, $result);
 
         return is_null($destination)
-            ? $this->saveStringToStorage($exporter->export(true, false), $this->getFileName())
+            ? $this->saveStringToStorage($this->getExportData($exporter), $this->getFileName())
             : $this->saveToLocal($exporter, $destination);
     }
 
     /**
      * @param CsvExporter $exporter
-     * @param string      $destination
+     * @param string $destination
      * @return string
-     * @throws \common_exception_InvalidArgumentType
+     * @throws common_exception_InvalidArgumentType
      */
     private function saveToLocal($exporter, $destination)
     {
         $fullPath = realpath($destination) . DIRECTORY_SEPARATOR . $this->getFileName();
 
-        file_put_contents($fullPath, $exporter->export(true, false));
+        file_put_contents($fullPath, $this->getExportData($exporter));
 
         return $fullPath;
+    }
+
+    /**
+     * @param CsvExporter|SqlExporter $exporter
+     * @return string
+     * @throws common_exception_InvalidArgumentType
+     */
+    private function getExportData($exporter)
+    {
+        switch ($this->resultsService->getFormat()) {
+            case ResultsService::SQL_FORMAT:
+                return $exporter->export();
+            case ResultsService::CSV_FORMAT:
+                return $exporter->export(true, false);
+        }
     }
 
     /**

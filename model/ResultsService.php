@@ -110,7 +110,7 @@ class ResultsService extends OntologyClassService
     /**
      * @var string
      */
-    private $format;
+    private $format = self::CSV_FORMAT;
 
     /**
      * @return \common_persistence_KvDriver|null
@@ -1506,11 +1506,13 @@ class ResultsService extends OntologyClassService
         return $this->testMetadataCache[$testUri];
     }
 
-    public function getFormat() {
+    public function getFormat()
+    {
         return $this->format;
     }
 
-    public function setFormat($format) {
+    public function setFormat($format)
+    {
         $this->format = $format;
     }
 

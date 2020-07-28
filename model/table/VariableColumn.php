@@ -63,9 +63,12 @@ abstract class VariableColumn extends tao_models_classes_table_Column
      */
     public $dataProvider = null;
 
-   
+    /**
+     * @var string
+     */
+    private $baseType;
+
     // --- OPERATIONS ---
-    public $baseType;
 
     /**
      *
@@ -92,15 +95,20 @@ abstract class VariableColumn extends tao_models_classes_table_Column
      * @param string $contextIdentifier
      * @param string $contextLabel
      * @param string $identifier
-     * @param $baseType
+     * @param string|null $baseType
      */
-    public function __construct($contextIdentifier, $contextLabel, $identifier, $baseType)
+    public function __construct($contextIdentifier, $contextLabel, $identifier, $baseType = null)
     {
         parent::__construct($contextLabel . "-" . $identifier);
         $this->identifier = $identifier;
         $this->contextIdentifier = $contextIdentifier;
         $this->contextLabel = $contextLabel;
         $this->baseType = $baseType;
+    }
+
+    public function getBaseType()
+    {
+        return $this->baseType;
     }
 
     public function setDataProvider(VariableDataProvider $provider)
@@ -158,7 +166,7 @@ abstract class VariableColumn extends tao_models_classes_table_Column
         $returnValue['contextId'] = $this->contextIdentifier;
         $returnValue['contextLabel'] = $this->contextLabel;
         $returnValue['variableIdentifier'] = $this->identifier;
-        $returnValue['baseType'] = $this->baseType;
+        $returnValue['baseType'] = $this->getBaseType();
 
         return (array) $returnValue;
     }
