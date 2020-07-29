@@ -81,6 +81,9 @@ msgstr ""
 msgid "Export CSV File"
 msgstr "Flytja út CSV Skrá"
 
+msgid "Export SQL File"
+msgstr "Flytja út SQL Skrá"
+
 #, tao-public
 msgid "Export Table"
 msgstr "Flytja út Töflu"

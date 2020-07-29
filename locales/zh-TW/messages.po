@@ -81,6 +81,9 @@ msgstr ""
 msgid "Export CSV File"
 msgstr "匯出 CSV 檔案"
 
+msgid "Export SQL File"
+msgstr "匯出 SQL 檔案"
+
 #, tao-public
 msgid "Export Table"
 msgstr "匯出表格"
