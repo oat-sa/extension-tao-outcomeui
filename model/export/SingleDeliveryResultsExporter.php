@@ -25,7 +25,7 @@ use common_exception_InvalidArgumentType;
 use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\filesystem\FileSystemService;
 use oat\tao\model\export\implementation\CsvExporter;
-use oat\tao\model\export\implementation\sql\SqlExporter;
+use oat\tao\model\export\implementation\SqlExporter;
 use oat\tao\model\taskQueue\Task\FilesystemAwareTrait;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
