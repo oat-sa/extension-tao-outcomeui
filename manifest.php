@@ -39,7 +39,7 @@ return [
     'label'          => 'Result visualisation',
     'description'    => 'TAO Results extension',
     'license'        => 'GPL-2.0',
-    'version'        => '9.2.0',
+    'version'        => '10.0.0',
     'author'         => 'Open Assessment Technologies, CRP Henri Tudor',
     // taoItems is only needed for the item model property retrieval
     'requires'       => [
@@ -47,7 +47,7 @@ return [
         'taoResultServer' => '>=12.0.2',
         'taoItems'        => '>=6.0.0',
         'taoDeliveryRdf'  => '>=6.0.0',
-        'tao'             => '>=36.1.0'
+        'tao'             => '>=45.4.0'
     ],
     'install'        => [
         'php' => [
