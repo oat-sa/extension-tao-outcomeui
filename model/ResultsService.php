@@ -80,7 +80,7 @@ class ResultsService extends OntologyClassService
     public const FILTER_END_FROM = 'endfrom';
     public const FILTER_END_TO = 'endto';
 
-    public const OPTION_ALLOW_SQL_RESULT = 'allow_sql_result';
+    public const OPTION_ALLOW_SQL_RESULT = 'allow_sql_export';
 
     /** @var taoResultServer_models_classes_ReadableResultStorage */
     private $implementation;
