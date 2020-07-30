@@ -97,7 +97,7 @@ use oat\taoOutcomeUi\model\ResultsService;
                 <? if (get_data("allowSqlResult")): ?>
                 <div class="sql-export-tooltip">
                     <span class="icon-warning tooltipstered" data-tooltip="~ .tooltip-content:first" data-tooltip-theme="info" ></span>
-                    <div class="tooltip-content"><?='The script does not take into account the restrictions on the size of the column header and the size of the row for different databases.')?></div>
+                    <div class="tooltip-content"><?=__('The script does not take into account the restrictions on the size of the column header and the size of the row for different databases.')?></div>
                 </div>
                 <? endif; ?>
             </div>
