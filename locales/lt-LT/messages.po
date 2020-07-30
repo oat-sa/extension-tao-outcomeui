@@ -78,6 +78,9 @@ msgstr "Klaida"
 msgid "Export CSV"
 msgstr "Eksportuoti CSV"
 
+msgid "Export SQL"
+msgstr "Eksportuoti SQL"
+
 msgid "Export CSV File"
 msgstr "Eksportuoti CSV Failą"
 

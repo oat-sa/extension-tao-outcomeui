@@ -67,17 +67,24 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
      * @var array
      */
     private $filters = [];
+    /**
+     * @var DeliveryResultsExporterFactoryInterface
+     */
+    private $deliveryResultExporterFactory;
 
     /**
      * MultipleDeliveriesResultsExporter constructor.
      *
      * @param string|\core_kernel_classes_Class $deliveryClass
-     * @param ResultsService                    $resultsService
+     * @param ResultsService $resultsService
+     * @param DeliveryResultsExporterFactoryInterface $deliveryResultExporterFactory
      * @throws \common_exception_NotFound
      */
-    public function __construct($deliveryClass, ResultsService $resultsService)
+    public function __construct($deliveryClass, ResultsService $resultsService, DeliveryResultsExporterFactoryInterface $deliveryResultExporterFactory)
     {
         $this->deliveryClass = $this->getClass($deliveryClass);
+
+        $this->deliveryResultExporterFactory = $deliveryResultExporterFactory;
 
         if (!$this->deliveryClass->exists()) {
             throw new \common_exception_NotFound('Results Exporter: delivery class "' . $this->deliveryClass->getUri() . '" does not exist.');
@@ -168,8 +175,10 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
         return $this;
     }
 
+
     /**
      * @return array
+     * @throws \common_exception_NotFound
      */
     public function getData()
     {
@@ -177,11 +186,11 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
 
         /** @var \core_kernel_classes_Resource $delivery */
         foreach ($this->deliveryClass->getInstances(true) as $delivery) {
-            $data[$delivery->getUri()] = (new SingleDeliveryResultsExporter(
-                $delivery,
-                $this->resultsService,
-                (new ColumnsProvider($delivery, $this->resultsService))
-            ))
+            $data[$delivery->getUri()] =
+                $this->deliveryResultExporterFactory->getDeliveryResultsExporter(
+                    $delivery,
+                    $this->resultsService
+                )
                 ->setServiceLocator($this->getServiceLocator())
                 ->getData();
         }
@@ -254,13 +263,11 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
     {
         /** @var \core_kernel_classes_Resource $delivery */
         foreach ($deliveryClass->getInstances(false) as $delivery) {
-            (new SingleDeliveryResultsExporter(
+            $this->deliveryResultExporterFactory->getDeliveryResultsExporter(
                 $delivery,
-                $this->resultsService,
-                (new ColumnsProvider($delivery, $this->resultsService))
-            ))
-                ->setServiceLocator($this->getServiceLocator())
-                ->export($destination);
+                $this->resultsService
+            )->setServiceLocator($this->getServiceLocator())
+             ->export($destination);
         }
 
         if ($subClasses = $deliveryClass->getSubClasses(false)) {

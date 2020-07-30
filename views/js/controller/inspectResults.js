@@ -57,6 +57,7 @@ define([
                 classUri: classUri
             };
             var taskButton;
+            var taskButtonExportSQL;
 
             loadingBar.start();
 
@@ -106,6 +107,24 @@ define([
                     taskCreationData : {uri : uniqueValue}
                 }).start();
             });
+
+            if (config.allowSqlExport) {
+                taskButtonExportSQL = treeTaskButtonFactory({
+                    replace: true,
+                    icon: 'export',
+                    label: __('Export SQL'),
+                    taskQueue: taskQueue
+                }).render($('#results-sql-export'));
+
+                binder.register('export_sql', function remove(actionContext) {
+                    var data = _.pick(actionContext, ['uri', 'classUri', 'id']);
+                    var uniqueValue = data.uri || data.classUri || '';
+                    taskButtonExportSQL.setTaskConfig({
+                        taskCreationUrl: this.url,
+                        taskCreationData: {uri: uniqueValue}
+                    }).start();
+                });
+            }
 
             binder.register('open_url', function(actionContext) {
                 const data = _.pick(actionContext, ['uri', 'classUri', 'id']);

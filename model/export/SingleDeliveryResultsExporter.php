@@ -21,16 +21,15 @@
 
 namespace oat\taoOutcomeUi\model\export;
 
-use common_exception_InvalidArgumentType;
 use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\filesystem\FileSystemService;
 use oat\tao\model\export\implementation\CsvExporter;
-use oat\tao\model\export\implementation\SqlExporter;
 use oat\tao\model\taskQueue\Task\FilesystemAwareTrait;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeUi\model\table\VariableDataProvider;
+use tao_models_classes_table_Column;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
 /**
@@ -43,6 +42,8 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
     use OntologyAwareTrait;
     use ServiceLocatorAwareTrait;
     use FilesystemAwareTrait;
+
+    public const RESULT_FORMAT = 'CSV';
 
     /**
      * @var \core_kernel_classes_Resource
@@ -62,7 +63,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
     private $columnsToExport = [];
 
     /**
-     * @var \tao_models_classes_table_Column[]
+     * @var tao_models_classes_table_Column[]
      */
     private $builtColumns = [];
 
@@ -94,18 +95,12 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
     const CHUNK_SIZE = 100;
 
     /**
-     * @var string
-     */
-    private $format;
-
-    /**
      * @param string|\core_kernel_classes_Resource $delivery
-     * @param ResultsService $resultsService
-     * @param ColumnsProvider $columnsProvider
-     * @param $format
+     * @param ResultsService                       $resultsService
+     * @param ColumnsProvider                      $columnsProvider
      * @throws \common_exception_NotFound
      */
-    public function __construct($delivery, ResultsService $resultsService, ColumnsProvider $columnsProvider, $format = ResultsExporter::CSV_FORMAT)
+    public function __construct($delivery, ResultsService $resultsService, ColumnsProvider $columnsProvider)
     {
         $this->delivery = $this->getResource($delivery);
 
@@ -115,7 +110,14 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
 
         $this->resultsService = $resultsService;
         $this->columnsProvider = $columnsProvider;
-        $this->format = $format;
+    }
+
+    /**
+     * @return string
+     */
+    public function getResultFormat()
+    {
+        return static::RESULT_FORMAT;
     }
 
     /**
@@ -320,14 +322,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
             $result = [array_fill_keys($columnNames, '')];
         }
 
-        switch ($this->format) {
-            case ResultsExporter::SQL_FORMAT:
-                $exporter = new SqlExporter($result, $this->getColumnsToExport());
-                break;
-            case ResultsExporter::CSV_FORMAT:
-                $exporter = new CsvExporter($result);
-                break;
-        }
+        $exporter = $this->getExporter($result, $this->getColumnsToExport());
 
         unset($columnNames, $data, $result);
 
@@ -337,10 +332,29 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
     }
 
     /**
+     * @param array $result
+     * @return CsvExporter
+     */
+    protected function getExporter(array $result)
+    {
+        return new CsvExporter($result);
+    }
+
+    /**
      * @param CsvExporter $exporter
-     * @param string $destination
      * @return string
-     * @throws common_exception_InvalidArgumentType
+     * @throws \common_exception_InvalidArgumentType
+     */
+    protected function getExportData($exporter)
+    {
+        return $exporter->export(true, false);
+    }
+
+    /**
+     * @param CsvExporter $exporter
+     * @param string      $destination
+     * @return string
+     * @throws \common_exception_InvalidArgumentType
      */
     private function saveToLocal($exporter, $destination)
     {
@@ -352,33 +366,17 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
     }
 
     /**
-     * @param CsvExporter|SqlExporter $exporter
-     * @return string
-     * @throws common_exception_InvalidArgumentType
-     */
-    private function getExportData($exporter)
-    {
-        switch ($this->format) {
-            case ResultsExporter::SQL_FORMAT:
-                return $exporter->export();
-            case ResultsExporter::CSV_FORMAT:
-                return $exporter->export(true, false);
-        }
-    }
-
-    /**
      * @return string
      */
     private function getFileName()
     {
-        $format = $this->format ?: 'csv';
         return 'results_export_'
             . strtolower(\tao_helpers_Display::textCleaner($this->delivery->getLabel(), '*'))
             . '_'
             . \tao_helpers_Uri::getUniqueId($this->delivery->getUri())
             . '_'
             . date('YmdHis') . rand(10, 99) //more unique name
-            . '.' . strtolower($format);
+            . '.' . strtolower($this->getResultFormat());
     }
 
     /**
@@ -412,7 +410,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      * ]
      *
      * @param array $columnsData
-     * @return \tao_models_classes_table_Column[]
+     * @return tao_models_classes_table_Column[]
      */
     private function buildColumns($columnsData)
     {
@@ -420,11 +418,11 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
         $dataProvider = new VariableDataProvider();
 
         foreach ($columnsData as $column) {
-            if (!isset($column['type']) || !is_subclass_of($column['type'], \tao_models_classes_table_Column::class)) {
+            if (!isset($column['type']) || !is_subclass_of($column['type'], tao_models_classes_table_Column::class)) {
                 throw new \RuntimeException('Column type not specified or wrong type provided');
             }
 
-            $column = \tao_models_classes_table_Column::buildColumnFromArray($column);
+            $column = tao_models_classes_table_Column::buildColumnFromArray($column);
             if (!is_null($column)) {
                 if ($column instanceof VariableColumn) {
                     $column->setDataProvider($dataProvider);

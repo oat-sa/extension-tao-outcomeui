@@ -26,6 +26,9 @@ use \common_Exception;
 use oat\tao\model\taskQueue\TaskLogActionTrait;
 use oat\taoOutcomeUi\model\export\ColumnsProvider;
 use oat\generis\model\OntologyAwareTrait;
+use oat\taoOutcomeUi\model\export\DeliveryCsvResultsExporterFactory;
+use oat\taoOutcomeUi\model\export\DeliveryResultsExporterFactoryInterface;
+use oat\taoOutcomeUi\model\export\DeliverySqlResultsExporterFactory;
 use oat\taoOutcomeUi\model\export\ResultsExporter;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\table\ResultsPayload;
@@ -91,7 +94,7 @@ class ResultTable extends \tao_actions_CommonModule
             throw new common_Exception('Parameter "' . self::PARAMETER_COLUMNS . '" missing');
         }
 
-        $this->returnJson((new ResultsPayload($this->getExporterService()->getExporter()))->getPayload());
+        $this->returnJson((new ResultsPayload($this->getExporterService(new DeliveryCsvResultsExporterFactory())->getExporter()))->getPayload());
     }
 
     /**
@@ -107,7 +110,7 @@ class ResultTable extends \tao_actions_CommonModule
             throw new \Exception('Only ajax call allowed.');
         }
 
-        return $this->returnTaskJson($this->getExporterService(ResultsExporter::CSV_FORMAT)->createExportTask());
+        return $this->returnTaskJson($this->getExporterService(new DeliveryCsvResultsExporterFactory())->createExportTask());
     }
 
     /**
@@ -123,7 +126,7 @@ class ResultTable extends \tao_actions_CommonModule
             throw new \Exception('Only ajax call allowed.');
         }
 
-        return $this->returnTaskJson($this->getExporterService(ResultsExporter::SQL_FORMAT)->createExportTask());
+        return $this->returnTaskJson($this->getExporterService(new DeliverySqlResultsExporterFactory())->createExportTask());
     }
 
     /**
@@ -215,16 +218,18 @@ class ResultTable extends \tao_actions_CommonModule
         return new ColumnsProvider($this->getDeliveryUri(), ResultsService::singleton());
     }
 
+
     /**
-     * @param string $format
+     * @param DeliveryResultsExporterFactoryInterface $deliveryResultsExporterFactory
      * @return ResultsExporter
      * @throws \common_exception_MissingParameter
+     * @throws \common_exception_NotFound
      * @throws common_Exception
      */
-    private function getExporterService(string $format = null)
+    private function getExporterService(DeliveryResultsExporterFactoryInterface $deliveryResultsExporterFactory)
     {
         /** @var ResultsExporter $exporter */
-        $exporter = $this->propagate(new ResultsExporter($this->getDeliveryUri(), ResultsService::singleton(), $format));
+        $exporter = $this->propagate(new ResultsExporter($this->getDeliveryUri(), ResultsService::singleton(), $deliveryResultsExporterFactory));
 
         if ($this->hasRequestParameter(self::PARAMETER_COLUMNS)) {
             $exporter->setColumnsToExport($this->getRawParameter(self::PARAMETER_COLUMNS));

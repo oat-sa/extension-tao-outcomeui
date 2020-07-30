@@ -40,9 +40,6 @@ class ResultsExporter implements ServiceLocatorAwareInterface
     use OntologyAwareTrait;
     use ServiceLocatorAwareTrait;
 
-    public const SQL_FORMAT = 'SQL';
-    public const CSV_FORMAT = 'CSV';
-
     private $exportStrategy;
     /**
      * @var ResultsService
@@ -50,30 +47,26 @@ class ResultsExporter implements ServiceLocatorAwareInterface
     private $resultsService;
 
     /**
-     * @var string
-     */
-    private $format;
-
-    /**
      * ResultsExporter constructor.
      * @param $resource
      * @param ResultsService $resultsService
-     * @param string|null $format
+     * @param DeliveryResultsExporterFactoryInterface|null $deliveryResultsExporterFactory
      * @throws common_exception_NotFound
      */
-    public function __construct($resource, ResultsService $resultsService, $format = self::CSV_FORMAT)
+    public function __construct($resource, ResultsService $resultsService, DeliveryResultsExporterFactoryInterface $deliveryResultsExporterFactory = null)
     {
         $resource = $this->getResource($resource);
-        $this->format = $format;
+
+        if ($deliveryResultsExporterFactory === null) {
+            $deliveryResultsExporterFactory = new DeliveryCsvResultsExporterFactory();
+        }
 
         if ($resource->isClass()) {
-            $this->exportStrategy = new MultipleDeliveriesResultsExporter($this->getClass($resource->getUri()), $resultsService);
+            $this->exportStrategy = new MultipleDeliveriesResultsExporter($this->getClass($resource->getUri()), $resultsService, $deliveryResultsExporterFactory);
         } else {
-            $this->exportStrategy = new SingleDeliveryResultsExporter(
+            $this->exportStrategy = $deliveryResultsExporterFactory->getDeliveryResultsExporter(
                 $resource,
-                $resultsService,
-                new ColumnsProvider($resource, $resultsService),
-                $format
+                $resultsService
             );
         }
         $this->resultsService = $resultsService;
@@ -141,8 +134,8 @@ class ResultsExporter implements ServiceLocatorAwareInterface
         }
 
         $label = $this->exportStrategy->getResourceToExport()->isClass()
-            ? __('%s results export for delivery class "%s"', $this->format, $this->exportStrategy->getResourceToExport()->getLabel())
-            : __('%s results export for delivery "%s"', $this->format, $this->exportStrategy->getResourceToExport()->getLabel());
+            ? __('%s results export for delivery class "%s"', $this->exportStrategy->getResultFormat(), $this->exportStrategy->getResourceToExport()->getLabel())
+            : __('%s results export for delivery "%s"', $this->exportStrategy->getResultFormat(), $this->exportStrategy->getResourceToExport()->getLabel());
 
         return $queueDispatcher->createTask(
             new ExportDeliveryResults(),
@@ -151,7 +144,7 @@ class ResultsExporter implements ServiceLocatorAwareInterface
                 $columns,
                 $this->getExporter()->getVariableToExport(),
                 $this->getExporter()->getFiltersToExport(),
-                $this->format
+                $this->exportStrategy->getResultFormat()
             ],
             $label
         );

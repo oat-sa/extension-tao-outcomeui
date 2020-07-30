@@ -78,6 +78,9 @@ msgstr "Fout"
 msgid "Export CSV"
 msgstr "Exporteer CSV"
 
+msgid "Export CSV"
+msgstr "Exporteer SQL"
+
 msgid "Export CSV File"
 msgstr "Naar een CSV-bestand exporteren"
 
