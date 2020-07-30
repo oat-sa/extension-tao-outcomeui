@@ -44,10 +44,10 @@ msgstr ""
 msgid "Class"
 msgstr ""
 
-msgid "CSV results export for delivery \"%s"
+msgid "%s results export for delivery \"%s"
 msgstr ""
 
-msgid "CSV results export for delivery class \"%s"
+msgid "%s results export for delivery class \"%s"
 msgstr ""
 
 msgid "Delete"

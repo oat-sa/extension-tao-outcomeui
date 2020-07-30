@@ -47,7 +47,7 @@ msgstr "Classe"
 msgid "CSV results export for delivery \"%s"
 msgstr "Export CSV des résultats pour la passation de test \"%s"
 
-msgid "CSV results export for delivery class \"%s"
+msgid "%s results export for delivery class \"%s"
 msgstr "Export CSV des résultats pour la classe de passation de test \"%s"
 
 msgid "Delete"
