@@ -94,10 +94,10 @@ use oat\taoOutcomeUi\model\ResultsService;
                         <?=__('Preview');?>
                     </button>
                 </div>
-                <? if (get_data("allowSqlResult")): ?>
+                <? if (get_data("allowSqlExport")): ?>
                 <div class="sql-export-tooltip">
                     <span class="icon-warning tooltipstered" data-tooltip="~ .tooltip-content:first" data-tooltip-theme="info" ></span>
-                    <div class="tooltip-content"><?=__('The script does not take into account the restrictions on the size of the column header and the size of the row for different databases.')?></div>
+                    <div class="tooltip-content"><?=__('The script does not take into account the restrictions on the size of the column header and the size of the row.')?></div>
                 </div>
                 <? endif; ?>
             </div>
@@ -112,7 +112,7 @@ requirejs.config({
         'taoOutcomeUi/controller/resultTable' : {
             'filter' : <?=json_encode(get_data('filter'))?>,
             'uri' : '<?=get_data("uri")?>',
-            'allowSqlResult' : '<? if (get_data("allowSqlResult")) echo "true"; else echo "false" ?>'
+            'allowSqlExport' : '<? if (get_data("allowSqlExport")) echo "true"; else echo "false" ?>'
         }
     }
 });

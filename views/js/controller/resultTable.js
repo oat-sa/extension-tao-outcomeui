@@ -254,7 +254,7 @@ define([
                 feedback().error(err);
             }).render($filterButtonsContainer);
 
-            if (conf.allowSqlResult) {
+            if (conf.allowSqlExport) {
                 standardTaskButtonFactory({
                     type: 'info',
                     icon: 'export',
