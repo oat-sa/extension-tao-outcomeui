@@ -94,12 +94,18 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
     const CHUNK_SIZE = 100;
 
     /**
+     * @var string
+     */
+    private $format;
+
+    /**
      * @param string|\core_kernel_classes_Resource $delivery
-     * @param ResultsService                       $resultsService
-     * @param ColumnsProvider                      $columnsProvider
+     * @param ResultsService $resultsService
+     * @param ColumnsProvider $columnsProvider
+     * @param $format
      * @throws \common_exception_NotFound
      */
-    public function __construct($delivery, ResultsService $resultsService, ColumnsProvider $columnsProvider)
+    public function __construct($delivery, ResultsService $resultsService, ColumnsProvider $columnsProvider, $format = ResultsExporter::CSV_FORMAT)
     {
         $this->delivery = $this->getResource($delivery);
 
@@ -109,6 +115,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
 
         $this->resultsService = $resultsService;
         $this->columnsProvider = $columnsProvider;
+        $this->format = $format;
     }
 
     /**
@@ -313,11 +320,11 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
             $result = [array_fill_keys($columnNames, '')];
         }
 
-        switch ($this->resultsService->getFormat()) {
-            case ResultsService::SQL_FORMAT:
+        switch ($this->format) {
+            case ResultsExporter::SQL_FORMAT:
                 $exporter = new SqlExporter($result, $this->getColumnsToExport());
                 break;
-            case ResultsService::CSV_FORMAT:
+            case ResultsExporter::CSV_FORMAT:
                 $exporter = new CsvExporter($result);
                 break;
         }
@@ -351,10 +358,10 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      */
     private function getExportData($exporter)
     {
-        switch ($this->resultsService->getFormat()) {
-            case ResultsService::SQL_FORMAT:
+        switch ($this->format) {
+            case ResultsExporter::SQL_FORMAT:
                 return $exporter->export();
-            case ResultsService::CSV_FORMAT:
+            case ResultsExporter::CSV_FORMAT:
                 return $exporter->export(true, false);
         }
     }
@@ -364,7 +371,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      */
     private function getFileName()
     {
-        $format = $this->resultsService->getFormat() ?: 'csv';
+        $format = $this->format ?: 'csv';
         return 'results_export_'
             . strtolower(\tao_helpers_Display::textCleaner($this->delivery->getLabel(), '*'))
             . '_'

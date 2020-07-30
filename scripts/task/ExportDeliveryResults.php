@@ -71,6 +71,7 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
     private $submittedVersion;
     private $destination;
     private $filters = [];
+    private $format;
 
     /**
      * @param array $params
@@ -110,7 +111,7 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
     private function getExporterService()
     {
         if (is_null($this->exporterService)) {
-            $this->exporterService = new ResultsExporter($this->resourceToExport, ResultsService::singleton());
+            $this->exporterService = new ResultsExporter($this->resourceToExport, ResultsService::singleton(), $this->format);
             $this->exporterService->setServiceLocator($this->getServiceLocator());
         }
 
@@ -158,6 +159,10 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
 
             if (isset($params[3])) {
                 $this->filters = $params[3];
+            }
+
+            if (isset($params[4])) {
+                $this->format = $params[4];
             }
         } else {
             // if the task is called from CLI

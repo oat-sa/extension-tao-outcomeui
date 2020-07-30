@@ -64,6 +64,8 @@ use taoResultServer_models_classes_Variable;
 
 class ResultsService extends OntologyClassService
 {
+    public const SERVICE_ID = 'taoOutcomeUi/OutcomeUiResultService';
+
     public const VARIABLES_FILTER_LAST_SUBMITTED = 'lastSubmitted';
     public const VARIABLES_FILTER_FIRST_SUBMITTED = 'firstSubmitted';
     public const VARIABLES_FILTER_ALL = 'all';
@@ -78,8 +80,7 @@ class ResultsService extends OntologyClassService
     public const FILTER_END_FROM = 'endfrom';
     public const FILTER_END_TO = 'endto';
 
-    public const SQL_FORMAT = 'SQL';
-    public const CSV_FORMAT = 'CSV';
+    public const OPTION_ALLOW_SQL_RESULT = 'allow_sql_result';
 
     /** @var taoResultServer_models_classes_ReadableResultStorage */
     private $implementation;
@@ -106,12 +107,6 @@ class ResultsService extends OntologyClassService
 
     /** @var array */
     private $testMetadataCache = [];
-
-    /**
-     * @var string
-     */
-    private $format = self::CSV_FORMAT;
-
     /**
      * @return \common_persistence_KvDriver|null
      */
@@ -1505,17 +1500,6 @@ class ResultsService extends OntologyClassService
 
         return $this->testMetadataCache[$testUri];
     }
-
-    public function getFormat()
-    {
-        return $this->format;
-    }
-
-    public function setFormat($format)
-    {
-        $this->format = $format;
-    }
-
     /**
      * Load test metadata from file. For deliveries without compiled file try  to compile test metadata.
      *

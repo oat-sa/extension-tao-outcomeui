@@ -67,7 +67,7 @@ class ResultTable extends \tao_actions_CommonModule
             }
             $this->setData('filter', $filter);
             $this->setData('uri', $uri);
-            $this->setData('allowSqlResult', true);
+            $this->setData('allowSqlResult', $this->getResultService()->getOption(ResultsService::OPTION_ALLOW_SQL_RESULT));
             $this->setView('resultTable.tpl');
         } else {
             $this->setData('type', 'info');
@@ -107,7 +107,7 @@ class ResultTable extends \tao_actions_CommonModule
             throw new \Exception('Only ajax call allowed.');
         }
 
-        return $this->returnTaskJson($this->getExporterService(ResultsService::CSV_FORMAT)->createExportTask());
+        return $this->returnTaskJson($this->getExporterService(ResultsExporter::CSV_FORMAT)->createExportTask());
     }
 
     /**
@@ -123,7 +123,7 @@ class ResultTable extends \tao_actions_CommonModule
             throw new \Exception('Only ajax call allowed.');
         }
 
-        return $this->returnTaskJson($this->getExporterService(ResultsService::SQL_FORMAT)->createExportTask());
+        return $this->returnTaskJson($this->getExporterService(ResultsExporter::SQL_FORMAT)->createExportTask());
     }
 
     /**
@@ -223,12 +223,8 @@ class ResultTable extends \tao_actions_CommonModule
      */
     private function getExporterService(string $format = null)
     {
-        /** @var ResultsService $resultService */
-        $resultService = ResultsService::singleton();
-        $resultService->setFormat($format);
-
         /** @var ResultsExporter $exporter */
-        $exporter = $this->propagate(new ResultsExporter($this->getDeliveryUri(), $resultService));
+        $exporter = $this->propagate(new ResultsExporter($this->getDeliveryUri(), ResultsService::singleton(), $format));
 
         if ($this->hasRequestParameter(self::PARAMETER_COLUMNS)) {
             $exporter->setColumnsToExport($this->getRawParameter(self::PARAMETER_COLUMNS));
@@ -287,5 +283,13 @@ class ResultTable extends \tao_actions_CommonModule
         }
 
         return \tao_helpers_Uri::decode($this->getRequestParameter(self::PARAMETER_DELIVERY_URI));
+    }
+
+    /**
+     * @return ResultsService
+     */
+    private function getResultService()
+    {
+        return $this->getServiceLocator()->get(ResultsService::SERVICE_ID);
     }
 }

@@ -544,11 +544,8 @@ class Results extends \tao_actions_CommonModule
             ? \tao_helpers_Uri::decode($this->getRequestParameter(self::PARAMETER_DELIVERY_URI))
             : \tao_helpers_Uri::decode($this->getRequestParameter(self::PARAMETER_DELIVERY_CLASS_URI));
 
-        $resultService = ResultsService::singleton();
-        $resultService->setFormat(ResultsService::CSV_FORMAT);
-
         /** @var ResultsExporter $exporter */
-        $exporter = $this->propagate(new ResultsExporter($resourceUri, $resultService));
+        $exporter = $this->propagate(new ResultsExporter($resourceUri, ResultsService::singleton()));
 
         return $this->returnTaskJson($exporter->createExportTask());
     }

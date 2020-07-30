@@ -23,6 +23,7 @@
  */
 
 use oat\taoOutcomeUi\scripts\install\RegisterEvent;
+use oat\taoOutcomeUi\scripts\install\RegisterResultService;
 use oat\taoOutcomeUi\scripts\install\RegisterTestPluginService;
 use oat\taoOutcomeUi\scripts\install\SetUpQueueTasks;
 use oat\taoOutcomeUi\scripts\install\SetupSearchService;
@@ -51,6 +52,7 @@ return [
     'install'        => [
         'php' => [
             RegisterTestPluginService::class,
+            RegisterResultService::class,
             SetUpQueueTasks::class,
             SetupSearchService::class,
             RegisterEvent::class
