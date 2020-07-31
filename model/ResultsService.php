@@ -1407,6 +1407,10 @@ class ResultsService extends OntologyClassService
             );
     }
 
+    /**
+     * @param Variable $variable
+     * @return string|null
+     */
     private function defineTypeColumn(Variable $variable)
     {
         $stringColumns = [
