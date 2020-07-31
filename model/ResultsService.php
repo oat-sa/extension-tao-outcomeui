@@ -1342,21 +1342,11 @@ class ResultsService extends OntologyClassService
 
                     $baseType = $variable->variable->getBaseType();
 
-                    $variableTypes[$uri . $variableIdentifier] = [
-                        "contextLabel" => $contextIdentifierLabel,
-                        "contextId" => $uri,
-                        "variableIdentifier" => $variableIdentifier,
-                        "baseType" => $baseType
-                    ];
+                    $variableTypes[$uri . $variableIdentifier] = ["contextLabel" => $contextIdentifierLabel, "contextId" => $uri, "variableIdentifier" => $variableIdentifier, "baseType" => $baseType];
 
                     if ($variable->variable instanceof \taoResultServer_models_classes_ResponseVariable
                     && $variable->variable->getCorrectResponse() !== null) {
-                        $variableTypes[$uri . $variableIdentifier.'_is_correct'] = [
-                            "contextLabel" => $contextIdentifierLabel,
-                            "contextId" => $uri,
-                            "variableIdentifier" => $variableIdentifier.'_is_correct',
-                            "baseType" => $baseType
-                        ];
+                        $variableTypes[$uri . $variableIdentifier.'_is_correct'] = ["contextLabel" => $contextIdentifierLabel, "contextId" => $uri, "variableIdentifier" => $variableIdentifier.'_is_correct', "baseType" => $baseType];
                     }
                 }
             }
