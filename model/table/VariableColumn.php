@@ -66,7 +66,7 @@ abstract class VariableColumn extends tao_models_classes_table_Column
     /**
      * @var string
      */
-    private $baseType;
+    private $columnType;
 
     // --- OPERATIONS ---
 
@@ -79,13 +79,11 @@ abstract class VariableColumn extends tao_models_classes_table_Column
     {
         $returnValue = null;
 
-        
         $contextId = $array['contextId'];
         $contextLabel = $array['contextLabel'];
         $variableIdentifier =  $array['variableIdentifier'];
-        $baseType =  $array['baseType'];
-        $returnValue = new static($contextId, $contextLabel, $variableIdentifier, $baseType);
-
+        $columnType =  $array['columnType'];
+        $returnValue = new static($contextId, $contextLabel, $variableIdentifier, $columnType);
 
         return $returnValue;
     }
@@ -95,20 +93,20 @@ abstract class VariableColumn extends tao_models_classes_table_Column
      * @param string $contextIdentifier
      * @param string $contextLabel
      * @param string $identifier
-     * @param string|null $baseType
+     * @param string|null $columnType
      */
-    public function __construct($contextIdentifier, $contextLabel, $identifier, $baseType = null)
+    public function __construct($contextIdentifier, $contextLabel, $identifier, $columnType = null)
     {
         parent::__construct($contextLabel . "-" . $identifier);
         $this->identifier = $identifier;
         $this->contextIdentifier = $contextIdentifier;
         $this->contextLabel = $contextLabel;
-        $this->baseType = $baseType;
+        $this->columnType = $columnType;
     }
 
-    public function getBaseType()
+    public function getColumnType()
     {
-        return $this->baseType;
+        return $this->columnType;
     }
 
     public function setDataProvider(VariableDataProvider $provider)
@@ -166,7 +164,7 @@ abstract class VariableColumn extends tao_models_classes_table_Column
         $returnValue['contextId'] = $this->contextIdentifier;
         $returnValue['contextLabel'] = $this->contextLabel;
         $returnValue['variableIdentifier'] = $this->identifier;
-        $returnValue['baseType'] = $this->getBaseType();
+        $returnValue['columnType'] = $this->getColumnType();
 
         return (array) $returnValue;
     }

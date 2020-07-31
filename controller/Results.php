@@ -140,7 +140,7 @@ class Results extends \tao_actions_CommonModule
                     'dataModel' => $model,
                     'plugins' => $this->getResultsListPlugin(),
                     'searchable' => $this->getServiceLocator()->get(ResultsWatcher::SERVICE_ID)->isResultSearchEnabled(),
-                    'allowSqlExport' => $this->getResultService()->getOption(ResultsService::OPTION_ALLOW_SQL_RESULT)
+                    'allowSqlExport' => $this->getResultService()->getOption(ResultsService::OPTION_ALLOW_SQL_EXPORT)
                 ]);
 
                 if ($this->hasRequestParameter('export-callback-url')) {

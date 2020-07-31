@@ -60,7 +60,7 @@ use tao_helpers_Date;
 use tao_models_classes_service_StorageDirectory;
 use taoQtiTest_models_classes_QtiTestService;
 use taoResultServer_models_classes_ReadableResultStorage;
-use taoResultServer_models_classes_Variable;
+use taoResultServer_models_classes_Variable as Variable;
 
 class ResultsService extends OntologyClassService
 {
@@ -80,7 +80,7 @@ class ResultsService extends OntologyClassService
     public const FILTER_END_FROM = 'endfrom';
     public const FILTER_END_TO = 'endto';
 
-    public const OPTION_ALLOW_SQL_RESULT = 'allow_sql_export';
+    public const OPTION_ALLOW_SQL_EXPORT = 'allow_sql_export';
 
     /** @var taoResultServer_models_classes_ReadableResultStorage */
     private $implementation;
@@ -888,8 +888,8 @@ class ResultsService extends OntologyClassService
         }, $variableObjects);
 
         usort($variableObjects, static function (
-            taoResultServer_models_classes_Variable $a,
-            taoResultServer_models_classes_Variable $b
+            Variable $a,
+            Variable $b
         ) use ($filter) {
             if ($filter === self::VARIABLES_FILTER_LAST_SUBMITTED) {
                 return $b->getCreationTime() - $a->getCreationTime();
@@ -902,7 +902,7 @@ class ResultsService extends OntologyClassService
             $uniqueVariableIdentifiers = [];
 
             $variableObjects = array_filter($variableObjects, static function (
-                taoResultServer_models_classes_Variable $variable
+                Variable $variable
             ) use (&$uniqueVariableIdentifiers) {
                 if (in_array($variable->getIdentifier(), $uniqueVariableIdentifiers, true)) {
                     return false;
@@ -1340,14 +1340,25 @@ class ResultsService extends OntologyClassService
                         $contextIdentifierLabel = $testData->getLabel();
                     }
 
-                    $baseType = $variable->variable->getBaseType();
+                    $columnType = $this->defineTypeColumn($variable->variable);
 
-                    $variableTypes[$uri . $variableIdentifier] = ["contextLabel" => $contextIdentifierLabel, "contextId" => $uri, "variableIdentifier" => $variableIdentifier, "baseType" => $baseType];
+                    $variableTypes[$uri . $variableIdentifier] = [
+                        "contextLabel" => $contextIdentifierLabel,
+                        "contextId" => $uri,
+                        "variableIdentifier" => $variableIdentifier,
+                        "columnType" => $columnType
+                    ];
 
                     if ($variable->variable instanceof \taoResultServer_models_classes_ResponseVariable
-                    && $variable->variable->getCorrectResponse() !== null) {
-                        $variableTypes[$uri . $variableIdentifier.'_is_correct'] = ["contextLabel" => $contextIdentifierLabel, "contextId" => $uri, "variableIdentifier" => $variableIdentifier.'_is_correct', "baseType" => $baseType];
+                        && $variable->variable->getCorrectResponse() !== null) {
+                        $variableTypes[$uri . $variableIdentifier.'_is_correct'] = [
+                            "contextLabel" => $contextIdentifierLabel,
+                            "contextId" => $uri,
+                            "variableIdentifier" => $variableIdentifier.'_is_correct',
+                            "columnType" => $variable->variable->getBaseType()
+                        ];
                     }
+
                 }
             }
         }
@@ -1355,13 +1366,13 @@ class ResultsService extends OntologyClassService
         foreach ($variableTypes as $variableType) {
             switch ($variableClassUri) {
                 case \taoResultServer_models_classes_OutcomeVariable::class:
-                    $columns[] = new GradeColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"], $variableType["baseType"]);
+                    $columns[] = new GradeColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"], $variableType["columnType"]);
                     break;
                 case \taoResultServer_models_classes_ResponseVariable::class:
-                    $columns[] = new ResponseColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"], $variableType["baseType"]);
+                    $columns[] = new ResponseColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"], $variableType["columnType"]);
                     break;
                 default:
-                    $columns[] = new ResponseColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"]);
+                    $columns[] = new ResponseColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"], $variableType["columnType"]);
             }
         }
         $arr = [];
@@ -1394,6 +1405,23 @@ class ResultsService extends OntologyClassService
                 $class == $responseVariableClass
                 && $variableClassUri == $responseVariableClass
             );
+    }
+
+    private function defineTypeColumn(Variable $variable)
+    {
+        $stringColumns = [
+            'SCORE',
+            'MAXSCORE',
+            'numAttempts',
+            'duration'
+        ];
+
+        if (in_array($variable->getIdentifier(), $stringColumns) ||
+            ($variable instanceof \taoResultServer_models_classes_ResponseVariable && $variable->getCorrectResponse() !== null)) {
+            return Variable::TYPE_VARIABLE_IDENTIFIER;
+        }
+
+        return $variable->getBaseType();
     }
 
     /**

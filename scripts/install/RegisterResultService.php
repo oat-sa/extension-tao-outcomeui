@@ -41,7 +41,7 @@ class RegisterResultService extends InstallAction
     {
         $this->getServiceManager()->register(ResultsService::SERVICE_ID, new ResultsService(
             [
-                ResultsService::OPTION_ALLOW_SQL_RESULT => false
+                ResultsService::OPTION_ALLOW_SQL_EXPORT => false
             ]
         ));
     }

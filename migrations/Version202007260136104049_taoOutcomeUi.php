@@ -49,7 +49,7 @@ final class Version202007260136104049_taoOutcomeUi extends AbstractMigration
     {
         $this->getServiceManager()->register(ResultsService::SERVICE_ID, new ResultsService(
             [
-                ResultsService::OPTION_ALLOW_SQL_RESULT => false
+                ResultsService::OPTION_ALLOW_SQL_EXPORT => false
             ]
         ));
     }

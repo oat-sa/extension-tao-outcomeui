@@ -45,7 +45,7 @@ return [
     // taoItems is only needed for the item model property retrieval
     'requires'       => [
         'generis'         => '>=12.15.0',
-        'taoResultServer' => '>=12.0.2',
+        'taoResultServer' => '>=12.3.0',
         'taoItems'        => '>=6.0.0',
         'taoDeliveryRdf'  => '>=6.0.0',
         'tao'             => '>=45.3.0'

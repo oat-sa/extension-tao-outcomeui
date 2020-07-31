@@ -24,6 +24,7 @@ namespace oat\taoOutcomeUi\model\export;
 use oat\tao\model\export\implementation\sql\ExportedColumn;
 use oat\tao\model\export\implementation\SqlExporter;
 use oat\taoOutcomeUi\model\table\VariableColumn;
+use taoResultServer_models_classes_Variable as Variable;
 
 /**
  * SingleDeliveryResultsExporter
@@ -35,36 +36,19 @@ class SingleDeliverySqlResultsExporter extends SingleDeliveryResultsExporter imp
     public const RESULT_FORMAT = 'SQL';
 
     private $mappingVarTypes = [
-        'integer'    => ExportedColumn::TYPE_INTEGER,
-        'boolean'    => ExportedColumn::TYPE_BOOLEAN,
-        'identifier' => ExportedColumn::TYPE_VARCHAR,
-        'duration'   => ExportedColumn::TYPE_DECIMAL,
-        'float'      => ExportedColumn::TYPE_DECIMAL
+        Variable::TYPE_VARIABLE_INTEGER => ExportedColumn::TYPE_INTEGER,
+        Variable::TYPE_VARIABLE_BOOLEAN => ExportedColumn::TYPE_BOOLEAN,
+        Variable::TYPE_VARIABLE_IDENTIFIER => ExportedColumn::TYPE_VARCHAR,
+        Variable::TYPE_VARIABLE_DURATION => ExportedColumn::TYPE_DECIMAL,
+        Variable::TYPE_VARIABLE_FLOAT => ExportedColumn::TYPE_DECIMAL
     ];
 
     private $mappingFieldsTypes = [
-        'Test Taker ID'             => ExportedColumn::TYPE_VARCHAR,
-        'Test Taker'                => ExportedColumn::TYPE_VARCHAR,
-        'Login'                     => ExportedColumn::TYPE_VARCHAR,
-        'First Name'                => ExportedColumn::TYPE_VARCHAR,
-        'Last Name'                 => ExportedColumn::TYPE_VARCHAR,
-        'Mail'                      => ExportedColumn::TYPE_VARCHAR,
-        'Interface Language'        => ExportedColumn::TYPE_VARCHAR,
-        'Group'                     => ExportedColumn::TYPE_VARCHAR,
-        'Delivery'                  => ExportedColumn::TYPE_VARCHAR,
-        'Title'                     => ExportedColumn::TYPE_VARCHAR,
         'Start Date'                => ExportedColumn::TYPE_TIMESTAMP,
         'End Date'                  => ExportedColumn::TYPE_TIMESTAMP,
-        'Display Order'             => ExportedColumn::TYPE_VARCHAR,
-        'Access'                    => ExportedColumn::TYPE_VARCHAR,
-        'Runtime'                   => ExportedColumn::TYPE_VARCHAR,
-        'Delivery container serial' => ExportedColumn::TYPE_VARCHAR,
-        'Delivery origin'           => ExportedColumn::TYPE_VARCHAR,
-        'Compilation Directory'     => ExportedColumn::TYPE_VARCHAR,
         'Compilation Time'          => ExportedColumn::TYPE_INTEGER,
         'Start Delivery Execution'  => ExportedColumn::TYPE_TIMESTAMP,
-        'End Delivery Execution'    => ExportedColumn::TYPE_TIMESTAMP,
-        'Max. Executions (default: unlimited)' => ExportedColumn::TYPE_VARCHAR,
+        'End Delivery Execution'    => ExportedColumn::TYPE_TIMESTAMP
     ];
 
     /**
@@ -84,10 +68,9 @@ class SingleDeliverySqlResultsExporter extends SingleDeliveryResultsExporter imp
     {
         foreach ($this->getColumnsToExport() as $columnData) {
             if ($columnData instanceof VariableColumn) {
-                $type = $columnData->getBaseType() && isset($this->mappingVarTypes[$columnData->getBaseType()])
-                    ? $this->mappingVarTypes[$columnData->getBaseType()]
+                $type = $columnData->getColumnType() && isset($this->mappingVarTypes[$columnData->getColumnType()])
+                    ? $this->mappingVarTypes[$columnData->getColumnType()]
                     : ExportedColumn::TYPE_VARCHAR;
-
                 $this->mappingFieldsTypes[$columnData->getLabel()] = $type;
             }
         }
