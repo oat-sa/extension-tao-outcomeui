@@ -75,21 +75,21 @@ class SingleDeliverySqlResultExporterTest extends TestCase
 
         $variableColumnsToExport = [
             new GradeColumn(
-                'testGradeContextIdentifier',
+                '',
                 'Tets Variable Grade Column',
-                'testGradeIdentifier',
+                '',
                 Variable::TYPE_VARIABLE_IDENTIFIER),
             new ResponseColumn(
-                'testResponseContextIdentifier',
+                '',
                 'Tets Variable Response Column',
-                'testResponseIdentifier',
+                '',
                 'nonexistent type')
         ];
         $singleDeliveryExporter->setFixtureColumnsToExport($variableColumnsToExport);
 
         $exporter = $singleDeliveryExporter->getExporterMock($this->dataFixture);
 
-        $sqlExpected = file_get_contents('taoOutcomeUi/test/unit/model/export/sqlFixture.sql');
+        $sqlExpected = file_get_contents(__DIR__ . 'sqlFixture.sql');
 
         $sql = $singleDeliveryExporter->getExportDataMock($exporter);
 
