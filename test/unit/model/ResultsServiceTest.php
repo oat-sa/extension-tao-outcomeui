@@ -28,6 +28,7 @@ use stdClass;
 use taoResultServer_models_classes_OutcomeVariable;
 use taoResultServer_models_classes_ResponseVariable;
 use oat\taoResultServer\models\classes\ResultManagement;
+use taoResultServer_models_classes_Variable as Variable;
 
 class ResultsServiceTest extends TestCase
 {
@@ -394,5 +395,49 @@ class ResultsServiceTest extends TestCase
             ->setCardinality($cardinality)
             ->setBaseType($baseType)
             ->setEpoch($epoch);
+    }
+
+    /**
+     * @throws ReflectionException
+     */
+    public function testDefineTypeColumn()
+    {
+        $class = new ReflectionClass(ResultsService::class);
+        $method = $class->getMethod('defineTypeColumn');
+        $method->setAccessible(true);
+        $resultService = new ResultsService();
+
+        $variable = new \taoResultServer_models_classes_ResponseVariable();
+        $variable->setIdentifier('SCORE');
+        $variable->setBaseType(Variable::TYPE_VARIABLE_INTEGER);
+        $result = $method->invoke($resultService, $variable);
+        $this->assertEquals($result, Variable::TYPE_VARIABLE_IDENTIFIER);
+
+        $variable = new \taoResultServer_models_classes_ResponseVariable();
+        $variable->setIdentifier('ANY');
+        $variable->setBaseType(Variable::TYPE_VARIABLE_INTEGER);
+        $result = $method->invoke($resultService, $variable);
+        $this->assertEquals($result, Variable::TYPE_VARIABLE_INTEGER);
+
+        $variable = new \taoResultServer_models_classes_ResponseVariable();
+        $variable->setIdentifier('ANY');
+        $variable->setCorrectResponse(true);
+        $variable->setBaseType(Variable::TYPE_VARIABLE_INTEGER);
+        $result = $method->invoke($resultService, $variable);
+        $this->assertEquals($result, Variable::TYPE_VARIABLE_IDENTIFIER);
+
+        $variable = new \taoResultServer_models_classes_ResponseVariable();
+        $variable->setIdentifier('ANY');
+        $variable->setCorrectResponse(false);
+        $variable->setBaseType(Variable::TYPE_VARIABLE_INTEGER);
+        $result = $method->invoke($resultService, $variable);
+        $this->assertEquals($result, Variable::TYPE_VARIABLE_IDENTIFIER);
+
+        $variable = new \taoResultServer_models_classes_ResponseVariable();
+        $variable->setIdentifier('ANY');
+        $variable->setCorrectResponse(null);
+        $variable->setBaseType(Variable::TYPE_VARIABLE_INTEGER);
+        $result = $method->invoke($resultService, $variable);
+        $this->assertEquals($result, Variable::TYPE_VARIABLE_INTEGER);
     }
 }
