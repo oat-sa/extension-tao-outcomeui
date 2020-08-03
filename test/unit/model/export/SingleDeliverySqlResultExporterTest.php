@@ -25,6 +25,9 @@ use oat\generis\test\TestCase;
 use oat\taoOutcomeUi\model\export\ColumnsProvider;
 use oat\taoOutcomeUi\model\export\SingleDeliverySqlResultsExporter;
 use oat\taoOutcomeUi\model\ResultsService;
+use oat\taoOutcomeUi\model\table\GradeColumn;
+use oat\taoOutcomeUi\model\table\ResponseColumn;
+use taoResultServer_models_classes_Variable as Variable;
 
 class SingleDeliverySqlResultExporterTest extends TestCase
 {
@@ -38,16 +41,23 @@ class SingleDeliverySqlResultExporterTest extends TestCase
             'Test Taker ID' => 'http://nec-pr.docker.localhost/tao.rdf#i5f16bd028eb6e202ad4b5d43f67e24',
             'Compilation Time' => 1594828388,
             'Field Without Type' => 33333
+        ],
+        [
+            'Tets Variable Grade Column' => 'http://nec-pr.docker.localhost/tao.rdf#i5f16bd028eb6ee202ae213123121231',
+            'Compilation Time' => 159482838228,
+            'Field Without Type' => 3311333
+        ],
+        [
+            'Tets Variable Response Column' => 'http://nec-pr.docker.localhost/tao.rdf#i5f16bd028eb6ee202ae11111',
+            'Compilation Time' => 1594838228,
+            'Field Without Type' => 331111
         ]
     ];
-    protected function setUp(): void
-    {
-    }
 
     /**
      * @throws \common_exception_NotFound
      */
-    public function testGetExporterMock()
+    public function testGetExporterAndGetExportData()
     {
         $deliveryMock = $this->createMock(\core_kernel_classes_Resource::class);
         $deliveryMock->method('exists')->willReturn(true);
@@ -63,9 +73,23 @@ class SingleDeliverySqlResultExporterTest extends TestCase
 
         $singleDeliveryExporter = new SingleDeliverySqlResultExporterMock($modelMock, $deliveryMock, $resultServiceMock, $columnsProviderMock);
 
+        $variableColumnsToExport = [
+            new GradeColumn(
+                'testGradeContextIdentifier',
+                'Tets Variable Grade Column',
+                'testGradeIdentifier',
+                Variable::TYPE_VARIABLE_IDENTIFIER),
+            new ResponseColumn(
+                'testResponseContextIdentifier',
+                'Tets Variable Response Column',
+                'testResponseIdentifier',
+                'nonexistent type')
+        ];
+        $singleDeliveryExporter->setFixtureColumnsToExport($variableColumnsToExport);
+
         $exporter = $singleDeliveryExporter->getExporterMock($this->dataFixture);
 
-        $sqlExpected = file_get_contents(__DIR__, 'sqlFixture.sql');
+        $sqlExpected = file_get_contents('taoOutcomeUi/test/unit/model/export/sqlFixture.sql');
 
         $sql = $singleDeliveryExporter->getExportDataMock($exporter);
 
@@ -76,12 +100,13 @@ class SingleDeliverySqlResultExporterTest extends TestCase
 
 class SingleDeliverySqlResultExporterMock extends SingleDeliverySqlResultsExporter
 {
+    private $columns = [];
+
     public function __construct($ontology, $delivery, ResultsService $resultsService, ColumnsProvider $columnsProvider)
     {
         $this->setModel($ontology);
         parent::__construct($delivery, $resultsService, $columnsProvider);
     }
-
 
     public function getExporterMock($data)
     {
@@ -90,7 +115,12 @@ class SingleDeliverySqlResultExporterMock extends SingleDeliverySqlResultsExport
 
     public function getColumnsToExport()
     {
-        return [];
+        return $this->columns;
+    }
+
+    public function setFixtureColumnsToExport($columns)
+    {
+        $this->columns = $columns;
     }
 
     public function getExportDataMock($exporter)
