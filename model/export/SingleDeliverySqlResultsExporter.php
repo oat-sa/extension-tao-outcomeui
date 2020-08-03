@@ -61,10 +61,10 @@ class SingleDeliverySqlResultsExporter extends SingleDeliveryResultsExporter imp
     }
 
     /**
-     * @param array $result
+     * @param array $data
      * @return SqlExporter
      */
-    protected function getExporter($result)
+    protected function getExporter($data)
     {
         foreach ($this->getColumnsToExport() as $columnData) {
             if ($columnData instanceof VariableColumn) {
@@ -74,6 +74,6 @@ class SingleDeliverySqlResultsExporter extends SingleDeliveryResultsExporter imp
                 $this->mappingFieldsTypes[$columnData->getLabel()] = $type;
             }
         }
-        return new SqlExporter($result, $this->mappingFieldsTypes, 'result_table');
+        return new SqlExporter($data, $this->mappingFieldsTypes, 'result_table');
     }
 }
