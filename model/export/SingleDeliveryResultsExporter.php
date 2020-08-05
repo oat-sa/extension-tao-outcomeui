@@ -322,7 +322,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
             $result = [array_fill_keys($columnNames, '')];
         }
 
-        $exporter = $this->getExporter($result, $this->getColumnsToExport());
+        $exporter = $this->getExporter($result);
 
         unset($columnNames, $data, $result);
 
