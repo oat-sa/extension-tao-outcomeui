@@ -31,4 +31,9 @@ interface DeliveryResultsExporterFactoryInterface
      * @return SingleDeliveryResultsExporter
      */
     public function getDeliveryResultsExporter(\core_kernel_classes_Resource $resource, ResultsService $resultsService);
+
+    /**
+     * @return string
+     */
+    public function getFormat();
 }

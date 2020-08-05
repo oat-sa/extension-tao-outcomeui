@@ -225,6 +225,11 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
         return '';
     }
 
+    public function getResultFormat()
+    {
+        return $this->deliveryResultExporterFactory->getFormat();
+    }
+
     /**
      * @param string $tmpZipPath
      * @param string $destination

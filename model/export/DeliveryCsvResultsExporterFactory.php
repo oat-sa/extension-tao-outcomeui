@@ -31,10 +31,7 @@ use common_exception_NotFound;
 class DeliveryCsvResultsExporterFactory implements DeliveryResultsExporterFactoryInterface
 {
     /**
-     * @param $resource
-     * @param $resultsService
-     * @return SingleDeliveryResultsExporter
-     * @throws common_exception_NotFound
+     * @inheritdoc
      */
     public function getDeliveryResultsExporter($resource, $resultsService)
     {
@@ -43,5 +40,12 @@ class DeliveryCsvResultsExporterFactory implements DeliveryResultsExporterFactor
             $resultsService,
             new ColumnsProvider($resource, $resultsService)
         );
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getFormat(){
+        return SingleDeliveryResultsExporter::RESULT_FORMAT;
     }
 }
