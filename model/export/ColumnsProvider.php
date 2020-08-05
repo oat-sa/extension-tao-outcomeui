@@ -47,6 +47,7 @@ class ColumnsProvider
     private $resultsService;
 
     const LABEL_START_DELIVERY_EXECUTION = 'Start Delivery Execution';
+    const LABEL_ID_DELIVERY_EXECUTION = 'Id Delivery Execution';
 
     /**
      * Test Taker properties to be exported.
@@ -168,6 +169,12 @@ class ColumnsProvider
     public function getDeliveryExecutionColumns()
     {
         return [
+            [
+                'type' => DeliveryExecutionColumn::class,
+                'label' => self::LABEL_ID_DELIVERY_EXECUTION,
+                'contextId' => 'delivery_execution',
+                'variableIdentifier' => DeliveryExecutionDataProvider::PROP_DELIVERY_EXECUTION_ID
+            ],
             [
                 'type' => DeliveryExecutionColumn::class,
                 'label' => self::LABEL_START_DELIVERY_EXECUTION,
