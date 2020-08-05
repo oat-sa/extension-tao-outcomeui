@@ -108,7 +108,7 @@ define([
                 }).start();
             });
 
-            if (config.allowSqlExport) {
+            if ($('#results-sql-export').length) {
                 taskButtonExportSQL = treeTaskButtonFactory({
                     replace: true,
                     icon: 'export',

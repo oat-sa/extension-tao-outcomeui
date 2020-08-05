@@ -139,8 +139,7 @@ class Results extends \tao_actions_CommonModule
                 $this->setData('config', [
                     'dataModel' => $model,
                     'plugins' => $this->getResultsListPlugin(),
-                    'searchable' => $this->getServiceLocator()->get(ResultsWatcher::SERVICE_ID)->isResultSearchEnabled(),
-                    'allowSqlExport' => $this->getResultService()->getOption(ResultsService::OPTION_ALLOW_SQL_EXPORT)
+                    'searchable' => $this->getServiceLocator()->get(ResultsWatcher::SERVICE_ID)->isResultSearchEnabled()
                 ]);
 
                 if ($this->hasRequestParameter('export-callback-url')) {
