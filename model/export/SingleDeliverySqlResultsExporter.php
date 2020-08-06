@@ -31,7 +31,7 @@ use taoResultServer_models_classes_Variable as Variable;
  *
  * @author Andrey Niahrou
  */
-class SingleDeliverySqlResultsExporter extends SingleDeliveryResultsExporter implements ResultsExporterInterface
+class SingleDeliverySqlResultsExporter extends SingleDeliveryResultsExporter
 {
     public const RESULT_FORMAT = 'SQL';
 
