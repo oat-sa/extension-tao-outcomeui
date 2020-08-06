@@ -79,7 +79,7 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
     /**
      * @var DeliveryResultsExporterFactoryInterface
      */
-    private $singleDeliveryResultsExporterFactory;
+    private $deliveryResultsExporterFactory;
 
     /**
      * @param array $params
@@ -120,7 +120,7 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
     private function getExporterService()
     {
         if (is_null($this->exporterService)) {
-            $this->exporterService = new ResultsExporter($this->resourceToExport, ResultsService::singleton(), $this->singleDeliveryResultsExporterFactory);
+            $this->exporterService = new ResultsExporter($this->resourceToExport, ResultsService::singleton(), $this->deliveryResultsExporterFactory);
             $this->exporterService->setServiceLocator($this->getServiceLocator());
         }
 
@@ -171,9 +171,9 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
             }
 
             if (isset($params[4]) && $params[4] === SingleDeliverySqlResultsExporter::RESULT_FORMAT) {
-                $this->singleDeliveryResultsExporterFactory = new DeliverySqlResultsExporterFactory();
+                $this->deliveryResultsExporterFactory = new DeliverySqlResultsExporterFactory();
             } else {
-                $this->singleDeliveryResultsExporterFactory = new DeliveryCsvResultsExporterFactory();
+                $this->deliveryResultsExporterFactory = new DeliveryCsvResultsExporterFactory();
             }
         } else {
             // if the task is called from CLI

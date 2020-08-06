@@ -33,7 +33,7 @@ class DeliveryCsvResultsExporterFactory implements DeliveryResultsExporterFactor
     /**
      * @inheritdoc
      */
-    public function getDeliveryResultsExporter($resource, $resultsService)
+    public function getDeliveryResultsExporter(\core_kernel_classes_Resource $resource, $resultsService)
     {
         return new SingleDeliveryResultsExporter(
             $resource,
@@ -45,7 +45,8 @@ class DeliveryCsvResultsExporterFactory implements DeliveryResultsExporterFactor
     /**
      * @inheritdoc
      */
-    public function getFormat(){
+    public function getFormat()
+    {
         return SingleDeliveryResultsExporter::RESULT_FORMAT;
     }
 }

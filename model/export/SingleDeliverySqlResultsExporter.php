@@ -61,10 +61,9 @@ class SingleDeliverySqlResultsExporter extends SingleDeliveryResultsExporter imp
     }
 
     /**
-     * @param array $data
-     * @return SqlExporter
+     * @inheritdoc
      */
-    protected function getExporter($data)
+    protected function getExporter(array $data)
     {
         foreach ($this->getColumnsToExport() as $columnData) {
             if ($columnData instanceof VariableColumn) {

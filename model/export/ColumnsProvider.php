@@ -47,7 +47,7 @@ class ColumnsProvider
     private $resultsService;
 
     const LABEL_START_DELIVERY_EXECUTION = 'Start Delivery Execution';
-    const LABEL_ID_DELIVERY_EXECUTION = 'Id Delivery Execution';
+    const LABEL_ID_DELIVERY_EXECUTION = 'Delivery Execution Id';
 
     /**
      * Test Taker properties to be exported.

@@ -52,7 +52,6 @@ return [
     'install'        => [
         'php' => [
             RegisterTestPluginService::class,
-            RegisterResultService::class,
             SetUpQueueTasks::class,
             SetupSearchService::class,
             RegisterEvent::class
