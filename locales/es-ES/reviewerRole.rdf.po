@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO 3.4.0-sprint112\n"
-"PO-Revision-Date: 2019-10-11T09:48:40\n"
+"Project-Id-Version: TAO 3.4.0-sprint121\n"
+"PO-Revision-Date: 2020-07-31T13:14:33\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: es-ES\n"
@@ -13,10 +13,10 @@ msgstr ""
 # http://www.tao.lu/Ontologies/TAOResult.rdf#TaoReviewerRole
 msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
 msgid "Reviewer Role"
-msgstr ""
+msgstr "Rol de revisor"
 
 # http://www.tao.lu/Ontologies/TAOResult.rdf#TaoReviewerRole
 msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
 msgid "Allow a reviewer Role to fetch item content and delivery results"
-msgstr ""
+msgstr "Permitir al rol de revisor obtener el contenido de los elementos y los resultados de las entregas"
 

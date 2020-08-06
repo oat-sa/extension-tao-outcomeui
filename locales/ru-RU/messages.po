@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO 3.4.0-sprint112\n"
-"PO-Revision-Date: 2019-10-11T09:48:40\n"
+"Project-Id-Version: TAO 3.4.0-sprint121\n"
+"PO-Revision-Date: 2020-07-31T13:14:48\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: ru-RU\n"
@@ -15,13 +15,13 @@ msgstr ""
 
 #, tao-public
 msgid " "
-msgstr ""
+msgstr " "
 
 msgid "Add All grades"
-msgstr ""
+msgstr "Добавить Все оценки"
 
 msgid "Add All responses"
-msgstr ""
+msgstr "Добавить Все ответы"
 
 msgid "Add Delivery"
 msgstr ""
@@ -30,19 +30,19 @@ msgid "Add Delivery Execution"
 msgstr ""
 
 msgid "Add Test Taker"
-msgstr ""
+msgstr "Добавить участника теста"
 
 msgid "Adding/Updating search index for %s"
 msgstr ""
 
 msgid "All collected variables"
-msgstr ""
+msgstr "Добавить собираемые переменные"
 
 msgid "Anonymise"
-msgstr ""
+msgstr "Анонимизировать"
 
 msgid "Class"
-msgstr ""
+msgstr "Класс"
 
 msgid "CSV results export for delivery \"%s"
 msgstr ""
@@ -51,88 +51,88 @@ msgid "CSV results export for delivery class \"%s"
 msgstr ""
 
 msgid "Delete"
-msgstr ""
+msgstr "Удалить"
 
 msgid "Delivery"
-msgstr ""
+msgstr "Раздача"
 
 msgid "Delivery Execution"
 msgstr ""
 
 msgid "Download"
-msgstr ""
+msgstr "Загрузка"
 
 msgid "Download result"
 msgstr ""
 
 msgid "Email:"
-msgstr ""
+msgstr "Эл. почта:"
 
 msgid "End Delivery Execution"
 msgstr ""
 
 msgid "Error"
-msgstr ""
+msgstr "Ошибка"
 
 #, tao-public
 msgid "Export CSV"
 msgstr ""
 
 msgid "Export CSV File"
-msgstr ""
+msgstr "Экспорт в CSV-файл"
 
 #, tao-public
 msgid "Export Table"
-msgstr ""
+msgstr "Экспортировать таблицу"
 
 msgid "Filter"
-msgstr ""
+msgstr "Фильтр"
 
 msgid "Filters"
 msgstr ""
 
 msgid "First Name:"
-msgstr ""
+msgstr "Имя:"
 
 msgid "First submitted variables only"
-msgstr ""
+msgstr "Только первые представленные переменные"
 
 msgid "Grades"
-msgstr ""
+msgstr "Классы"
 
 msgid "Label"
-msgstr ""
+msgstr "Метка"
 
 msgid "Label:"
-msgstr ""
+msgstr "Метка:"
 
 msgid "Last Name:"
-msgstr ""
+msgstr "Фамилия:"
 
 msgid "Last submitted variables only"
-msgstr ""
+msgstr "Только последние отправленные переменные"
 
 msgid "Login:"
-msgstr ""
+msgstr "Логин:"
 
 #, tao-public
 msgid "Manage Results"
-msgstr ""
+msgstr "Управление результатами"
 
 msgid "No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here."
-msgstr ""
+msgstr "Никаких тестов еще не было пройдено. Как только тестиируемый пройдет тест, его результаты будут показаны здесь."
 
 msgid "Please confirm deletion"
-msgstr ""
+msgstr "Пожалуйста, подтвердите удаление"
 
 msgid "Preview"
 msgstr ""
 
 msgid "Remove All grades"
-msgstr ""
+msgstr "Удалить Все классы"
 
 msgid "Remove All responses"
-msgstr ""
+msgstr "Удалить Все ответы"
 
 msgid "Remove Delivery"
 msgstr ""
@@ -141,18 +141,18 @@ msgid "Remove Delivery Execution"
 msgstr ""
 
 msgid "Responses"
-msgstr ""
+msgstr "Ответы"
 
 msgid "Result has been deleted"
-msgstr ""
+msgstr "Результат был удален"
 
 #, tao-public
 msgid "Results"
-msgstr ""
+msgstr "Результаты"
 
 #, tao-public
 msgid "Results library"
-msgstr ""
+msgstr "Библиотека результатов"
 
 msgid "Results monitoring"
 msgstr ""
@@ -180,25 +180,25 @@ msgid "Start Time"
 msgstr ""
 
 msgid "Test Taker"
-msgstr ""
+msgstr "Тестируемый"
 
 msgid "Test taker"
-msgstr ""
+msgstr "Тестируемый"
 
 msgid "Test Taker ID"
 msgstr ""
 
 msgid "Test Variables"
-msgstr ""
+msgstr "Тестовые переменные"
 
 msgid "The class you have selected contains no results to be analysed, please select a different class"
-msgstr ""
+msgstr "Выбранный класс не содержит результатов для анализа, выберите другой класс"
 
 msgid "The number of observations is too low"
-msgstr ""
+msgstr "Количество наблюдений слишком низкое"
 
 msgid "There was a problem generating your report, please try again."
-msgstr ""
+msgstr "Возникла проблема при создании отчета, повторите попытку."
 
 #, tao-public
 msgid "Tools"
@@ -208,7 +208,7 @@ msgid "Traces"
 msgstr ""
 
 msgid "unknown"
-msgstr ""
+msgstr "неизвестный"
 
 msgid "Variables"
 msgstr ""
@@ -218,8 +218,8 @@ msgstr ""
 
 #, tao-public
 msgid "View and format the collected results."
-msgstr ""
+msgstr "Просмотр и форматирование собранных результатов."
 
 msgid "We are preparing your report, please wait..."
-msgstr ""
+msgstr "Мы готовим Ваш отчет, пожалуйста, подождите..."
 

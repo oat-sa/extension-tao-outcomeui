@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO 3.4.0-sprint112\n"
-"PO-Revision-Date: 2019-10-11T09:48:40\n"
+"Project-Id-Version: TAO 3.4.0-sprint121\n"
+"PO-Revision-Date: 2020-07-31T13:14:30\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: da-DK\n"
@@ -15,211 +15,211 @@ msgstr ""
 
 #, tao-public
 msgid " "
-msgstr ""
+msgstr " "
 
 msgid "Add All grades"
-msgstr ""
+msgstr "Tilføj alle klassetrin"
 
 msgid "Add All responses"
-msgstr ""
+msgstr "Tilføj alle svar"
 
 msgid "Add Delivery"
-msgstr ""
+msgstr "Tilføj leverance"
 
 msgid "Add Delivery Execution"
 msgstr ""
 
 msgid "Add Test Taker"
-msgstr ""
+msgstr "Tilføj testtager"
 
 msgid "Adding/Updating search index for %s"
-msgstr ""
+msgstr "Tilføjer/opdaterer søgeindeks for %s"
 
 msgid "All collected variables"
-msgstr ""
+msgstr "Alle indsamlede variable"
 
 msgid "Anonymise"
-msgstr ""
+msgstr "Anonymiser"
 
 msgid "Class"
-msgstr ""
+msgstr "Mappe"
 
 msgid "CSV results export for delivery \"%s"
-msgstr ""
+msgstr "CSV-resultater eksporteret for leverance \"%s"
 
 msgid "CSV results export for delivery class \"%s"
-msgstr ""
+msgstr "CSV-resultater eksporteret for leverancemappe \"%s"
 
 msgid "Delete"
-msgstr ""
+msgstr "Slet"
 
 msgid "Delivery"
-msgstr ""
+msgstr "Leverance"
 
 msgid "Delivery Execution"
-msgstr ""
+msgstr "Leveranceafvikling"
 
 msgid "Download"
-msgstr ""
+msgstr "Download"
 
 msgid "Download result"
-msgstr ""
+msgstr "Download besvarelse"
 
 msgid "Email:"
-msgstr ""
+msgstr "E-mail:"
 
 msgid "End Delivery Execution"
 msgstr ""
 
 msgid "Error"
-msgstr ""
+msgstr "Fejl"
 
 #, tao-public
 msgid "Export CSV"
-msgstr ""
+msgstr "Eksporter CSV"
 
 msgid "Export CSV File"
-msgstr ""
+msgstr "Eksporter CSV-fil"
 
 #, tao-public
 msgid "Export Table"
-msgstr ""
+msgstr "Eksporter tabel"
 
 msgid "Filter"
-msgstr ""
+msgstr "Filtrer"
 
 msgid "Filters"
 msgstr ""
 
 msgid "First Name:"
-msgstr ""
+msgstr "Fornavn:"
 
 msgid "First submitted variables only"
-msgstr ""
+msgstr "Kun de først indsendte variable"
 
 msgid "Grades"
-msgstr ""
+msgstr "Klassetrin"
 
 msgid "Label"
-msgstr ""
+msgstr "Betegnelse"
 
 msgid "Label:"
-msgstr ""
+msgstr "Betegnelse:"
 
 msgid "Last Name:"
-msgstr ""
+msgstr "Efternavn:"
 
 msgid "Last submitted variables only"
-msgstr ""
+msgstr "Kun de sidst indsendte variable"
 
 msgid "Login:"
-msgstr ""
+msgstr "Log ind:"
 
 #, tao-public
 msgid "Manage Results"
-msgstr ""
+msgstr "Administrer besvarelser"
 
 msgid "No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here."
-msgstr ""
+msgstr "Der er ikke taget nogen tests endnu. Så snart en testtager har taget en test, vil hans eller hendes besvarelser blive vist her."
 
 msgid "Please confirm deletion"
-msgstr ""
+msgstr "Bekræft venligst sletning"
 
 msgid "Preview"
 msgstr ""
 
 msgid "Remove All grades"
-msgstr ""
+msgstr "Fjern alle klassetrin"
 
 msgid "Remove All responses"
-msgstr ""
+msgstr "Fjern alle svar"
 
 msgid "Remove Delivery"
-msgstr ""
+msgstr "Fjern leverance"
 
 msgid "Remove Delivery Execution"
 msgstr ""
 
 msgid "Responses"
-msgstr ""
+msgstr "Svar"
 
 msgid "Result has been deleted"
-msgstr ""
+msgstr "Besvarelserne er blevet slettet"
 
 #, tao-public
 msgid "Results"
-msgstr ""
+msgstr "Besvarelser"
 
 #, tao-public
 msgid "Results library"
-msgstr ""
+msgstr "Resultatbibliotek"
 
 msgid "Results monitoring"
-msgstr ""
+msgstr "Besvarelsesovervågning"
 
 #, tao-public
 msgid "Results Monitoring"
-msgstr ""
+msgstr "Besvarelsesovervågning"
 
 msgid "Review"
-msgstr ""
+msgstr "Gennemse"
 
 msgid "Search by delivery results"
-msgstr ""
+msgstr "Søg efter leveranceresultater"
 
 msgid "Search by results"
-msgstr ""
+msgstr "Søg efter besvarelser"
 
 msgid "Something went wrong..."
-msgstr ""
+msgstr "Der gik noget galt..."
 
 msgid "Start Delivery Execution"
 msgstr ""
 
 msgid "Start Time"
-msgstr ""
+msgstr "Starttid"
 
 msgid "Test Taker"
-msgstr ""
+msgstr "Testtager"
 
 msgid "Test taker"
-msgstr ""
+msgstr "Testtager"
 
 msgid "Test Taker ID"
 msgstr ""
 
 msgid "Test Variables"
-msgstr ""
+msgstr "Testvariable"
 
 msgid "The class you have selected contains no results to be analysed, please select a different class"
-msgstr ""
+msgstr "Den mappe du har valgt, indeholder ikke nogen besvarelser der kan analyseres. Vælg venligst en anden mappe"
 
 msgid "The number of observations is too low"
-msgstr ""
+msgstr "Antallet af observationer er for lavt"
 
 msgid "There was a problem generating your report, please try again."
-msgstr ""
+msgstr "Der var et problem med at udarbejde din rapport. Prøv venligst igen."
 
 #, tao-public
 msgid "Tools"
-msgstr ""
+msgstr "Værktøjer"
 
 msgid "Traces"
-msgstr ""
+msgstr "Spor"
 
 msgid "unknown"
-msgstr ""
+msgstr "ukendt"
 
 msgid "Variables"
 msgstr ""
 
 msgid "View"
-msgstr ""
+msgstr "Vis"
 
 #, tao-public
 msgid "View and format the collected results."
-msgstr ""
+msgstr "Se og formater de indsamlede besvarelser."
 
 msgid "We are preparing your report, please wait..."
-msgstr ""
+msgstr "Vi forbereder din rapport. Vent venligst ..."
 

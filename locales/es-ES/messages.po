@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO 3.4.0-sprint112\n"
-"PO-Revision-Date: 2019-10-11T09:48:40\n"
+"Project-Id-Version: TAO 3.4.0-sprint121\n"
+"PO-Revision-Date: 2020-07-31T13:14:33\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: es-ES\n"
@@ -15,7 +15,7 @@ msgstr ""
 
 #, tao-public
 msgid " "
-msgstr ""
+msgstr " "
 
 msgid "Add All grades"
 msgstr "Añadir todos los grados"
@@ -24,7 +24,7 @@ msgid "Add All responses"
 msgstr "Añadir todos los responsables"
 
 msgid "Add Delivery"
-msgstr ""
+msgstr "Añadir entrega"
 
 msgid "Add Delivery Execution"
 msgstr ""
@@ -33,7 +33,7 @@ msgid "Add Test Taker"
 msgstr "Añadir Partiicpante"
 
 msgid "Adding/Updating search index for %s"
-msgstr ""
+msgstr "Agregando/actualizando indices de búsqueda para %s"
 
 msgid "All collected variables"
 msgstr "Añadir variables acumuladas"
@@ -45,10 +45,10 @@ msgid "Class"
 msgstr "Clase"
 
 msgid "CSV results export for delivery \"%s"
-msgstr ""
+msgstr "Exportación de resultados CSV para entrega \"%s"
 
 msgid "CSV results export for delivery class \"%s"
-msgstr ""
+msgstr "Exportación de resultados CSV para clase de entrega \"%s"
 
 msgid "Delete"
 msgstr "Eliminar"
@@ -57,13 +57,13 @@ msgid "Delivery"
 msgstr "Entrega"
 
 msgid "Delivery Execution"
-msgstr ""
+msgstr "Ejecución de entrega"
 
 msgid "Download"
 msgstr "Descargar"
 
 msgid "Download result"
-msgstr ""
+msgstr "Resultados de entrega"
 
 msgid "Email:"
 msgstr "Correo electrónico:"
@@ -76,7 +76,7 @@ msgstr "Error"
 
 #, tao-public
 msgid "Export CSV"
-msgstr ""
+msgstr "Exportar CSV"
 
 msgid "Export CSV File"
 msgstr "Exportar a un archivo CSV"
@@ -135,7 +135,7 @@ msgid "Remove All responses"
 msgstr "Eliminar todas las respuestas"
 
 msgid "Remove Delivery"
-msgstr ""
+msgstr "Eliminar entrega"
 
 msgid "Remove Delivery Execution"
 msgstr ""
@@ -155,29 +155,29 @@ msgid "Results library"
 msgstr "Biblioteca de resultados"
 
 msgid "Results monitoring"
-msgstr ""
+msgstr "Monitoreo de resultados"
 
 #, tao-public
 msgid "Results Monitoring"
-msgstr ""
+msgstr "Monitoreo de Resultados"
 
 msgid "Review"
-msgstr ""
+msgstr "Revisar"
 
 msgid "Search by delivery results"
-msgstr ""
+msgstr "Buscar por resultados de entrega"
 
 msgid "Search by results"
-msgstr ""
+msgstr "Buscar por resultados"
 
 msgid "Something went wrong..."
-msgstr ""
+msgstr "Algo salió mal..."
 
 msgid "Start Delivery Execution"
 msgstr ""
 
 msgid "Start Time"
-msgstr ""
+msgstr "Tiempo de inicio"
 
 msgid "Test Taker"
 msgstr "Participante"
@@ -202,10 +202,10 @@ msgstr "Hubo un problema al generar el informe, por favor intente de nuevo."
 
 #, tao-public
 msgid "Tools"
-msgstr ""
+msgstr "Herramientas"
 
 msgid "Traces"
-msgstr ""
+msgstr "Trazos"
 
 msgid "unknown"
 msgstr "desconocido"
@@ -214,7 +214,7 @@ msgid "Variables"
 msgstr ""
 
 msgid "View"
-msgstr ""
+msgstr "Ver"
 
 #, tao-public
 msgid "View and format the collected results."
