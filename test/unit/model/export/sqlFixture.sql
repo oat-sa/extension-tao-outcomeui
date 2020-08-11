@@ -13,7 +13,7 @@ INSERT INTO result_table (
 	   col_tets_variable_grade_column,
 	   col_tets_variable_response_column
 ) VALUES (
-	   'http://nec-pr.docker.localhost/tao.rdf#i5f16bd028eb6e202ad4b5d184\'f67e22',
+	   'http://nec-pr.docker.localhost/tao.rdf#i5f16bd028eb6e202ad4b5d184"f67e22',
 	   1594828375,
 	   '12345'
 	),
