@@ -26,7 +26,11 @@ use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\action\Action;
 use oat\tao\model\taskQueue\Task\WorkerContextAwareInterface;
 use oat\tao\model\taskQueue\Task\WorkerContextAwareTrait;
+use oat\taoOutcomeUi\model\export\DeliveryResultsExporterFactoryInterface;
 use oat\taoOutcomeUi\model\export\ResultsExporter;
+use oat\taoOutcomeUi\model\export\DeliveryCsvResultsExporterFactory;
+use oat\taoOutcomeUi\model\export\SingleDeliverySqlResultsExporter;
+use oat\taoOutcomeUi\model\export\DeliverySqlResultsExporterFactory;
 use oat\taoOutcomeUi\model\ResultsService;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
@@ -71,6 +75,11 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
     private $submittedVersion;
     private $destination;
     private $filters = [];
+    private $format;
+    /**
+     * @var DeliveryResultsExporterFactoryInterface
+     */
+    private $deliveryResultsExporterFactory;
 
     /**
      * @param array $params
@@ -106,11 +115,12 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
 
     /**
      * @return ResultsExporter
+     * @throws \common_exception_NotFound
      */
     private function getExporterService()
     {
         if (is_null($this->exporterService)) {
-            $this->exporterService = new ResultsExporter($this->resourceToExport, ResultsService::singleton());
+            $this->exporterService = new ResultsExporter($this->resourceToExport, ResultsService::singleton(), $this->deliveryResultsExporterFactory);
             $this->exporterService->setServiceLocator($this->getServiceLocator());
         }
 
@@ -158,6 +168,12 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
 
             if (isset($params[3])) {
                 $this->filters = $params[3];
+            }
+
+            if (isset($params[4]) && $params[4] === SingleDeliverySqlResultsExporter::RESULT_FORMAT) {
+                $this->deliveryResultsExporterFactory = new DeliverySqlResultsExporterFactory();
+            } else {
+                $this->deliveryResultsExporterFactory = new DeliveryCsvResultsExporterFactory();
             }
         } else {
             // if the task is called from CLI

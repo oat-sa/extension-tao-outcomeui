@@ -63,7 +63,11 @@ abstract class VariableColumn extends tao_models_classes_table_Column
      */
     public $dataProvider = null;
 
-   
+    /**
+     * @var string
+     */
+    private $columnType;
+
     // --- OPERATIONS ---
 
     /**
@@ -75,12 +79,11 @@ abstract class VariableColumn extends tao_models_classes_table_Column
     {
         $returnValue = null;
 
-        
         $contextId = $array['contextId'];
         $contextLabel = $array['contextLabel'];
         $variableIdentifier =  $array['variableIdentifier'];
-        $returnValue = new static($contextId, $contextLabel, $variableIdentifier);
-        
+        $columnType =  $array['columnType'];
+        $returnValue = new static($contextId, $contextLabel, $variableIdentifier, $columnType);
 
         return $returnValue;
     }
@@ -90,13 +93,20 @@ abstract class VariableColumn extends tao_models_classes_table_Column
      * @param string $contextIdentifier
      * @param string $contextLabel
      * @param string $identifier
+     * @param string|null $columnType
      */
-    public function __construct($contextIdentifier, $contextLabel, $identifier)
+    public function __construct($contextIdentifier, $contextLabel, $identifier, $columnType = null)
     {
         parent::__construct($contextLabel . "-" . $identifier);
         $this->identifier = $identifier;
         $this->contextIdentifier = $contextIdentifier;
         $this->contextLabel = $contextLabel;
+        $this->columnType = $columnType;
+    }
+
+    public function getColumnType()
+    {
+        return $this->columnType;
     }
 
     public function setDataProvider(VariableDataProvider $provider)
@@ -154,7 +164,7 @@ abstract class VariableColumn extends tao_models_classes_table_Column
         $returnValue['contextId'] = $this->contextIdentifier;
         $returnValue['contextLabel'] = $this->contextLabel;
         $returnValue['variableIdentifier'] = $this->identifier;
-        
+        $returnValue['columnType'] = $this->getColumnType();
 
         return (array) $returnValue;
     }

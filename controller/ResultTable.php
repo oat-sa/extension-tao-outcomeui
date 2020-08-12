@@ -26,6 +26,9 @@ use \common_Exception;
 use oat\tao\model\taskQueue\TaskLogActionTrait;
 use oat\taoOutcomeUi\model\export\ColumnsProvider;
 use oat\generis\model\OntologyAwareTrait;
+use oat\taoOutcomeUi\model\export\DeliveryCsvResultsExporterFactory;
+use oat\taoOutcomeUi\model\export\DeliveryResultsExporterFactoryInterface;
+use oat\taoOutcomeUi\model\export\DeliverySqlResultsExporterFactory;
 use oat\taoOutcomeUi\model\export\ResultsExporter;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\table\ResultsPayload;
@@ -67,6 +70,7 @@ class ResultTable extends \tao_actions_CommonModule
             }
             $this->setData('filter', $filter);
             $this->setData('uri', $uri);
+            $this->setData('allowSqlExport', $this->getResultService()->getOption(ResultsService::OPTION_ALLOW_SQL_EXPORT));
             $this->setView('resultTable.tpl');
         } else {
             $this->setData('type', 'info');
@@ -90,11 +94,11 @@ class ResultTable extends \tao_actions_CommonModule
             throw new common_Exception('Parameter "' . self::PARAMETER_COLUMNS . '" missing');
         }
 
-        $this->returnJson((new ResultsPayload($this->getExporterService()->getExporter()))->getPayload());
+        $this->returnJson((new ResultsPayload($this->getExporterService(new DeliveryCsvResultsExporterFactory())->getExporter()))->getPayload());
     }
 
     /**
-     * Exports results by a single delivery.
+     * Exports results by a single delivery in csv format.
      *
      * Only creating the export task.
      *
@@ -106,7 +110,23 @@ class ResultTable extends \tao_actions_CommonModule
             throw new \Exception('Only ajax call allowed.');
         }
 
-        return $this->returnTaskJson($this->getExporterService()->createExportTask());
+        return $this->returnTaskJson($this->getExporterService(new DeliveryCsvResultsExporterFactory())->createExportTask());
+    }
+
+    /**
+     * Exports results by a single delivery in sql format.
+     *
+     * Only creating the export task.
+     *
+     * @throws \Exception
+     */
+    public function exportSQL()
+    {
+        if (!$this->isXmlHttpRequest()) {
+            throw new \Exception('Only ajax call allowed.');
+        }
+
+        return $this->returnTaskJson($this->getExporterService(new DeliverySqlResultsExporterFactory())->createExportTask());
     }
 
     /**
@@ -198,14 +218,18 @@ class ResultTable extends \tao_actions_CommonModule
         return new ColumnsProvider($this->getDeliveryUri(), ResultsService::singleton());
     }
 
+
     /**
+     * @param DeliveryResultsExporterFactoryInterface $deliveryResultsExporterFactory
      * @return ResultsExporter
+     * @throws \common_exception_MissingParameter
+     * @throws \common_exception_NotFound
      * @throws common_Exception
      */
-    private function getExporterService()
+    private function getExporterService(DeliveryResultsExporterFactoryInterface $deliveryResultsExporterFactory)
     {
         /** @var ResultsExporter $exporter */
-        $exporter = $this->propagate(new ResultsExporter($this->getDeliveryUri(), ResultsService::singleton()));
+        $exporter = $this->propagate(new ResultsExporter($this->getDeliveryUri(), ResultsService::singleton(), $deliveryResultsExporterFactory));
 
         if ($this->hasRequestParameter(self::PARAMETER_COLUMNS)) {
             $exporter->setColumnsToExport($this->getRawParameter(self::PARAMETER_COLUMNS));
@@ -264,5 +288,13 @@ class ResultTable extends \tao_actions_CommonModule
         }
 
         return \tao_helpers_Uri::decode($this->getRequestParameter(self::PARAMETER_DELIVERY_URI));
+    }
+
+    /**
+     * @return ResultsService
+     */
+    private function getResultService()
+    {
+        return $this->getServiceLocator()->get(ResultsService::SERVICE_ID);
     }
 }

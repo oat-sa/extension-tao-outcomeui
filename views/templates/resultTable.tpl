@@ -87,11 +87,19 @@ use oat\taoOutcomeUi\model\ResultsService;
                     </div>
                 </div>
             </div>
-            <div class="grid-row filter-buttons">
-                <button class="btn-info small result-filter-btn">
-                    <span class="icon-preview"></span>
-                    <?=__('Preview');?>
-                </button>
+            <div class="grid-row">
+                <div class="filter-buttons">
+                    <button class="btn-info small result-filter-btn">
+                        <span class="icon-preview"></span>
+                        <?=__('Preview');?>
+                    </button>
+                </div>
+                <? if (get_data("allowSqlExport")): ?>
+                <div class="sql-export-tooltip">
+                    <span class="icon-warning tooltipstered" data-tooltip="~ .tooltip-content:first" data-tooltip-theme="info" ></span>
+                    <div class="tooltip-content"><?=__('The script does not take into account the restrictions on the size of the column header and the size of the row.')?></div>
+                </div>
+                <? endif; ?>
             </div>
         </div>
     </div>
@@ -103,7 +111,8 @@ requirejs.config({
     config : {
         'taoOutcomeUi/controller/resultTable' : {
             'filter' : <?=json_encode(get_data('filter'))?>,
-            'uri' : '<?=get_data("uri")?>'
+            'uri' : '<?=get_data("uri")?>',
+            'allowSqlExport' : '<? if (get_data("allowSqlExport")) echo "true"; else echo "false" ?>'
         }
     }
 });
