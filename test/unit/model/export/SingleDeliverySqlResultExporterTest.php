@@ -89,7 +89,7 @@ class SingleDeliverySqlResultExporterTest extends TestCase
 
         $exporter = $singleDeliveryExporter->getExporterMock($this->dataFixture);
 
-        $sqlExpected = file_get_contents(__DIR__ . '/sqlFixture.sql');
+        $sqlExpected = file_get_contents(__DIR__ . DIRECTORY_SEPARATOR . 'sqlFixture.sql');
 
         $sql = $singleDeliveryExporter->getExportDataMock($exporter);
 
