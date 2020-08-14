@@ -47,7 +47,7 @@ msgstr "Classe"
 msgid "CSV results export for delivery \"%s"
 msgstr "Export CSV des résultats pour la passation de test \"%s"
 
-msgid "CSV results export for delivery class \"%s"
+msgid "%s results export for delivery class \"%s"
 msgstr "Export CSV des résultats pour la classe de passation de test \"%s"
 
 msgid "Delete"
@@ -78,8 +78,14 @@ msgstr "Erreur"
 msgid "Export CSV"
 msgstr "Exporter en CSV"
 
+msgid "Export SQL"
+msgstr "Exporter en SQL"
+
 msgid "Export CSV File"
 msgstr "Exporter le fichier CSV"
+
+msgid "Export SQL File"
+msgstr "Exporter le fichier SQL"
 
 #, tao-public
 msgid "Export Table"

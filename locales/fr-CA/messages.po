@@ -47,7 +47,7 @@ msgstr ""
 msgid "CSV results export for delivery \"%s"
 msgstr ""
 
-msgid "CSV results export for delivery class \"%s"
+msgid "%s results export for delivery class \"%s"
 msgstr ""
 
 msgid "Delete"
@@ -79,6 +79,9 @@ msgid "Export CSV"
 msgstr ""
 
 msgid "Export CSV File"
+msgstr ""
+
+msgid "Export SQL File"
 msgstr ""
 
 #, tao-public

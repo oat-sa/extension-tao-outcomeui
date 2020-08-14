@@ -47,7 +47,7 @@ msgstr "Klasse"
 msgid "CSV results export for delivery \"%s"
 msgstr "CSV resultaten export voor publicatie \"%s"
 
-msgid "CSV results export for delivery class \"%s"
+msgid "%s results export for delivery class \"%s"
 msgstr "CSV resultaten export voor publicatie \"%s"
 
 msgid "Delete"
@@ -78,8 +78,14 @@ msgstr "Fout"
 msgid "Export CSV"
 msgstr "Exporteer CSV"
 
+msgid "Export CSV"
+msgstr "Exporteer SQL"
+
 msgid "Export CSV File"
 msgstr "Naar een CSV-bestand exporteren"
+
+msgid "Export SQL File"
+msgstr "Naar een SQL-bestand exporteren"
 
 #, tao-public
 msgid "Export Table"

@@ -47,7 +47,7 @@ msgstr "Flokkur"
 msgid "CSV results export for delivery \"%s"
 msgstr ""
 
-msgid "CSV results export for delivery class \"%s"
+msgid "%s results export for delivery class \"%s"
 msgstr ""
 
 msgid "Delete"
@@ -80,6 +80,9 @@ msgstr ""
 
 msgid "Export CSV File"
 msgstr "Flytja út CSV Skrá"
+
+msgid "Export SQL File"
+msgstr "Flytja út SQL Skrá"
 
 #, tao-public
 msgid "Export Table"

@@ -22,6 +22,8 @@
 
 namespace oat\taoOutcomeUi\controller;
 
+use common_Exception;
+use common_exception_NotFound;
 use \Exception;
 use \common_exception_BadRequest;
 use oat\generis\model\GenerisRdf;
@@ -34,6 +36,9 @@ use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
 use oat\taoOutcomeUi\model\event\ResultsListPluginEvent;
+use oat\taoOutcomeUi\model\export\DeliveryCsvResultsExporterFactory;
+use oat\taoOutcomeUi\model\export\DeliveryResultsExporterFactoryInterface;
+use oat\taoOutcomeUi\model\export\DeliverySqlResultsExporterFactory;
 use oat\taoOutcomeUi\model\export\ResultsExporter;
 use oat\taoOutcomeUi\model\plugins\ResultsPluginService;
 use oat\taoOutcomeUi\model\search\ResultsWatcher;
@@ -134,13 +139,12 @@ class Results extends \tao_actions_CommonModule
                 $this->setData('config', [
                     'dataModel' => $model,
                     'plugins' => $this->getResultsListPlugin(),
-                    'searchable' => $this->getServiceLocator()->get(ResultsWatcher::SERVICE_ID)->isResultSearchEnabled(),
+                    'searchable' => $this->getServiceLocator()->get(ResultsWatcher::SERVICE_ID)->isResultSearchEnabled()
                 ]);
 
                 if ($this->hasRequestParameter('export-callback-url')) {
                     $this->setData('export-callback-url', $this->getRequestParameter('export-callback-url'));
                 }
-
                 $this->setView('resultList.tpl');
             } catch (\common_exception_Error $e) {
                 $this->setData('type', 'error');
@@ -197,7 +201,7 @@ class Results extends \tao_actions_CommonModule
 
                 try {
                     $startTime = \tao_helpers_Date::displayeDate($deliveryExecution->getStartTime());
-                } catch (\common_exception_NotFound $e) {
+                } catch (common_exception_NotFound $e) {
                     $this->logWarning($e->getMessage());
                     $startTime = '';
                 }
@@ -258,7 +262,7 @@ class Results extends \tao_actions_CommonModule
      *
      * @param string $resultIdentifier
      * @return bool
-     * @throws \common_exception_NotFound
+     * @throws common_exception_NotFound
      */
     private function isCacheable($resultIdentifier)
     {
@@ -381,7 +385,7 @@ class Results extends \tao_actions_CommonModule
      *
      * @author Gyula Szucs, <gyula@taotesting.com>
      * @throws \common_exception_MissingParameter
-     * @throws \common_exception_NotFound
+     * @throws common_exception_NotFound
      * @throws \common_exception_ValidationFailed
      */
     public function downloadXML()
@@ -523,21 +527,47 @@ class Results extends \tao_actions_CommonModule
     }
 
     /**
-     * Exports results by either a class or a single delivery.
+     * Exports results by either a class or a single delivery in csv format.
      *
      * Only creating the export task.
      *
      * @throws Exception
-     * @throws \common_Exception
+     * @throws common_Exception
      */
     public function export()
+    {
+        $exporter = $this->getExporter(new DeliveryCsvResultsExporterFactory());
+        return $this->returnTaskJson($exporter->createExportTask());
+    }
+
+    /**
+     * Exports results by either a class or a single delivery in sql format.
+     *
+     * Only creating the export task.
+     *
+     * @throws Exception
+     * @throws common_Exception
+     */
+    public function exportSql()
+    {
+        $exporter = $this->getExporter(new DeliverySqlResultsExporterFactory());
+        return $this->returnTaskJson($exporter->createExportTask());
+    }
+
+    /**
+     * @param DeliveryResultsExporterFactoryInterface $deliveryResultsExporterFactory
+     * @return ResultsExporter
+     * @throws common_Exception
+     * @throws common_exception_NotFound
+     */
+    private function getExporter(DeliveryResultsExporterFactoryInterface $deliveryResultsExporterFactory)
     {
         if (!$this->isXmlHttpRequest()) {
             throw new \Exception('Only ajax call allowed.');
         }
 
         if (!$this->hasRequestParameter(self::PARAMETER_DELIVERY_CLASS_URI) && !$this->hasRequestParameter(self::PARAMETER_DELIVERY_URI)) {
-            throw new \common_Exception('Parameter "' . self::PARAMETER_DELIVERY_CLASS_URI . '" or "' . self::PARAMETER_DELIVERY_URI . '" missing');
+            throw new common_Exception('Parameter "' . self::PARAMETER_DELIVERY_CLASS_URI . '" or "' . self::PARAMETER_DELIVERY_URI . '" missing');
         }
 
         $resourceUri = $this->hasRequestParameter(self::PARAMETER_DELIVERY_URI)
@@ -545,13 +575,21 @@ class Results extends \tao_actions_CommonModule
             : \tao_helpers_Uri::decode($this->getRequestParameter(self::PARAMETER_DELIVERY_CLASS_URI));
 
         /** @var ResultsExporter $exporter */
-        $exporter = $this->propagate(new ResultsExporter($resourceUri, ResultsService::singleton()));
+        $exporter = $this->propagate(new ResultsExporter($resourceUri, ResultsService::singleton(), $deliveryResultsExporterFactory));
 
-        return $this->returnTaskJson($exporter->createExportTask());
+        return $exporter;
     }
 
     private function getNormalizer(): ItemResponseCollectionNormalizer
     {
         return $this->getServiceLocator()->get(ItemResponseCollectionNormalizer::class);
+    }
+
+    /**
+     * @return ResultsService
+     */
+    private function getResultService()
+    {
+        return $this->getServiceLocator()->get(ResultsService::SERVICE_ID);
     }
 }

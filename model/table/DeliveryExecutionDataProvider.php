@@ -39,6 +39,7 @@ class DeliveryExecutionDataProvider implements tao_models_classes_table_DataProv
 
     const PROP_STARTED_AT = 'started_at';
     const PROP_FINISHED_AT = 'finished_at';
+    const PROP_DELIVERY_EXECUTION_ID = 'delivery_execution_id';
     const PROP_USER_ID = 'user_id';
 
     /**
@@ -75,6 +76,9 @@ class DeliveryExecutionDataProvider implements tao_models_classes_table_DataProv
                         break;
                     case self::PROP_USER_ID:
                         $this->cache[$identifier][$column->getIdentifier()] = $de->getUserIdentifier() ?: '';
+                        break;
+                    case self::PROP_DELIVERY_EXECUTION_ID:
+                        $this->cache[$identifier][$column->getIdentifier()] = $de->getIdentifier() ?: '';
                         break;
                     default:
                         throw new \common_exception_Error('Undefined property ' . $column->getIdentifier());
