@@ -92,7 +92,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      */
     private $filters = [];
 
-    const CHUNK_SIZE = 1;
+    const CHUNK_SIZE = 100;
 
     /**
      * @param string|\core_kernel_classes_Resource $delivery
