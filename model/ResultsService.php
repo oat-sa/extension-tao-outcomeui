@@ -1359,7 +1359,7 @@ class ResultsService extends OntologyClassService
                             "contextLabel" => $contextIdentifierLabel,
                             "contextId" => $uri,
                             "variableIdentifier" => $variableIdentifier.'_is_correct',
-                            "columnType" => $variable->variable->getBaseType()
+                            "columnType" => Variable::TYPE_VARIABLE_IDENTIFIER
                         ];
                     }
 
