@@ -367,6 +367,12 @@ class ResultsServiceTest extends TestCase
         self::assertSame($expected, $method->invokeArgs($resultsService, [$row, $filters]));
     }
 
+    public function testGetCellsByResults()
+    {
+        $service = new ResultsService();
+        $this->assertEquals(null, $service->getCellsByResults([], [], []));
+    }
+
     private function getResponseVariable(
         $candidateResponse = 'UFQ0LjA5MTc1M1M=',
         $identifier = 'duration',
