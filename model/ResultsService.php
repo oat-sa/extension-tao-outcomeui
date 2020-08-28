@@ -1123,6 +1123,10 @@ class ResultsService extends OntologyClassService
         $rows = [];
         $dataProviderMap = $this->collectColumnDataProviderMap($columns);
 
+        if (!array_key_exists($offset, $results)) {
+            return null;
+        }
+
         /** @var DeliveryExecution $result */
         for ($i = $offset; $i < ($offset + $limit); $i++) {
             if (!array_key_exists($i, $results)) {
@@ -1355,7 +1359,7 @@ class ResultsService extends OntologyClassService
                             "contextLabel" => $contextIdentifierLabel,
                             "contextId" => $uri,
                             "variableIdentifier" => $variableIdentifier.'_is_correct',
-                            "columnType" => $variable->variable->getBaseType()
+                            "columnType" => Variable::TYPE_VARIABLE_IDENTIFIER
                         ];
                     }
 

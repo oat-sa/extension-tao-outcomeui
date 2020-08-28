@@ -241,6 +241,10 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
             PHP_INT_MAX
         );
 
+        if ($cells === null) {
+            $cells = [];
+        }
+
         // flattening data: only 'cell' is what we need
         return array_map(function ($row) {
             return $row['cell'];
@@ -278,6 +282,9 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
             $limit
         );
 
+        if ($cells === null) {
+            return null;
+        }
         // flattening data: only 'cell' is what we need
         return array_map(function ($row) {
             return $row['cell'];
@@ -305,7 +312,9 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
         do {
             $cells = $this->getCells($data, $offset, self::CHUNK_SIZE);
             $offset += self::CHUNK_SIZE;
-
+            if ($cells === null) {
+                break;
+            }
             foreach ($cells as $row) {
                 $rowResult = [];
                 foreach ($row as $rowKey => $rowVal) {
@@ -313,7 +322,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
                 }
                 $result[] = $rowResult;
             }
-        } while (count($cells));
+        } while ($cells !== null);
 
         $this->sortByStartDate($result);
 
