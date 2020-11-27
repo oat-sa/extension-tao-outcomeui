@@ -17,7 +17,22 @@ define([
     'taoOutcomeUi/component/results/pluginsLoader',
     'taoOutcomeUi/component/results/list',
     'ui/taskQueueButton/treeButton'
-], function ($, _, __, module, loggerFactory, request, urlHelper, binder, loadingBar, feedback, taskQueue, resultsPluginsLoader, resultsListFactory, treeTaskButtonFactory) {
+], function (
+    $,
+    _,
+    __,
+    module,
+    loggerFactory,
+    request,
+    urlHelper,
+    binder,
+    loadingBar,
+    feedback,
+    taskQueue,
+    resultsPluginsLoader,
+    resultsListFactory,
+    treeTaskButtonFactory
+) {
     'use strict';
 
     var logger = loggerFactory('controller/inspectResults');
@@ -40,7 +55,6 @@ define([
      * @exports taoOutcomeUi/controller/resultTable
      */
     return {
-
         /**
          * Controller entry point
          */
@@ -48,6 +62,20 @@ define([
             var config = module.config() || {};
             var $container = $('#inspect-result');
             var classUri = $container.data('uri');
+            const searchContainer = $('.action-bar .search-area');
+            if (searchContainer.data('show-result')) {
+                var action = {
+                    binding: 'load',
+                    url: urlHelper.route('viewResult', 'Results', 'taoOutcomeUi')
+                };
+                var context = {
+                    id: searchContainer.data('show-result'),
+                    classUri
+                };
+                searchContainer.removeData('show-result');
+                binder.exec(action, context);
+                return;
+            }
             var listConfig = {
                 dataUrl: urlHelper.route('getResults', 'Results', 'taoOutcomeUi', {
                     classUri: classUri
@@ -72,14 +100,15 @@ define([
             });
 
             if ($container.length) {
-                resultsPluginsLoader.load()
+                resultsPluginsLoader
+                    .load()
                     .then(function () {
                         resultsListFactory(listConfig, resultsPluginsLoader.getPlugins())
                             .on('error', reportError)
                             .on('success', function (message) {
                                 feedback().success(message);
                             })
-                            .before('loading', function() {
+                            .before('loading', function () {
                                 loadingBar.start();
                             })
                             .after('loaded', function () {
@@ -93,19 +122,21 @@ define([
             }
 
             taskButton = treeTaskButtonFactory({
-                replace : true,
-                icon : 'export',
-                label : __('Export CSV'),
-                taskQueue : taskQueue
+                replace: true,
+                icon: 'export',
+                label: __('Export CSV'),
+                taskQueue: taskQueue
             }).render($('#results-csv-export'));
 
-            binder.register('export_csv', function remove(actionContext){
+            binder.register('export_csv', function remove(actionContext) {
                 var data = _.pick(actionContext, ['uri', 'classUri', 'id']);
                 var uniqueValue = data.uri || data.classUri || '';
-                taskButton.setTaskConfig({
-                    taskCreationUrl : this.url,
-                    taskCreationData : {uri : uniqueValue}
-                }).start();
+                taskButton
+                    .setTaskConfig({
+                        taskCreationUrl: this.url,
+                        taskCreationData: { uri: uniqueValue }
+                    })
+                    .start();
             });
 
             if ($('#results-sql-export').length) {
@@ -119,14 +150,16 @@ define([
                 binder.register('export_sql', function remove(actionContext) {
                     var data = _.pick(actionContext, ['uri', 'classUri', 'id']);
                     var uniqueValue = data.uri || data.classUri || '';
-                    taskButtonExportSQL.setTaskConfig({
-                        taskCreationUrl: this.url,
-                        taskCreationData: {uri: uniqueValue}
-                    }).start();
+                    taskButtonExportSQL
+                        .setTaskConfig({
+                            taskCreationUrl: this.url,
+                            taskCreationData: { uri: uniqueValue }
+                        })
+                        .start();
                 });
             }
 
-            binder.register('open_url', function(actionContext) {
+            binder.register('open_url', function (actionContext) {
                 const data = _.pick(actionContext, ['uri', 'classUri', 'id']);
 
                 request(this.url, data, 'POST')
