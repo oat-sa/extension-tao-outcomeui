@@ -21,6 +21,7 @@
 
 namespace oat\taoOutcomeUi\model\search;
 
+use DateTimeImmutable;
 use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\service\ConfigurableService;
 use oat\tao\helpers\UserHelper;
@@ -104,7 +105,9 @@ class ResultsWatcher extends ConfigurableService
                 self::INDEX_TEST_TAKER_LAST_NAME => UserHelper::getUserLastName($user, true),
                 self::INDEX_TEST_TAKER_NAME => UserHelper::getUserName($user, true),
                 self::INDEX_DELIVERY_EXECUTION => $deliveryExecutionId,
-                self::INDEX_DELIVERY_EXECUTION_START_TIME => (string) $deliveryExecution->getStartTime()
+                self::INDEX_DELIVERY_EXECUTION_START_TIME =>  $this->transformDateTime(
+                    $deliveryExecution->getStartTime()
+                )
             ];
             $body = array_merge($body, $customBody);
             $queueDispatcher = $this->getServiceLocator()->get(QueueDispatcherInterface::SERVICE_ID);
@@ -125,5 +128,12 @@ class ResultsWatcher extends ConfigurableService
     public function isResultSearchEnabled()
     {
         return (bool)$this->getOption(self::OPTION_RESULT_SEARCH_FIELD_VISIBILITY);
+    }
+
+    private function transformDateTime(string $getStartTime): string
+    {
+        $timeArray = explode(" ", $getStartTime);
+        $date = DateTimeImmutable::createFromFormat('U', $timeArray[1]);
+        return $date->format('m/d/Y H:i:s');
     }
 }
