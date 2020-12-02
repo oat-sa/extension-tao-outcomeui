@@ -41,12 +41,16 @@ class ResultsWatcher extends ConfigurableService
 {
     use OntologyAwareTrait;
 
-    const SERVICE_ID = 'taoOutcomeUi/ResultsWatcher';
-    const INDEX_DELIVERY = 'delivery';
-    const INDEX_TEST_TAKER = 'test_taker';
-    const INDEX_TEST_TAKER_NAME = 'test_taker_name';
-    const INDEX_DELIVERY_EXECUTION = 'delivery_execution';
-    const OPTION_RESULT_SEARCH_FIELD_VISIBILITY = 'option_result_search_field_visibility';
+    public const SERVICE_ID = 'taoOutcomeUi/ResultsWatcher';
+    public const OPTION_RESULT_SEARCH_FIELD_VISIBILITY = 'option_result_search_field_visibility';
+
+    public const INDEX_DELIVERY = 'delivery';
+    public const INDEX_TEST_TAKER = 'test_taker';
+    public const INDEX_TEST_TAKER_NAME = 'test_taker_name';
+    public const INDEX_DELIVERY_EXECUTION = 'delivery_execution';
+    public const INDEX_DELIVERY_EXECUTION_START_TIME = 'delivery_execution_start_time';
+    public const INDEX_TEST_TAKER_LAST_NAME = 'test_taker_last_name';
+    public const INDEX_TEST_TAKER_FIRST_NAME = 'test_taker_first_name';
 
     /**
      * @param DeliveryExecutionCreated $event
@@ -86,22 +90,30 @@ class ResultsWatcher extends ConfigurableService
         $report = \common_report_Report::createSuccess();
         $searchService = $this->getServiceLocator()->get(Search::SERVICE_ID);
         if ($searchService->supportCustomIndex()) {
-            $id = $deliveryExecution->getIdentifier();
+            $deliveryExecutionId = $deliveryExecution->getIdentifier();
             $user = UserHelper::getUser($deliveryExecution->getUserIdentifier());
             $customFieldService = $this->getServiceLocator()->get(ResultCustomFieldsService::SERVICE_ID);
             $customBody = $customFieldService->getCustomFields($deliveryExecution);
-            $userName = UserHelper::getUserName($user, true);
+
             $body = [
                 'label' => $deliveryExecution->getLabel(),
                 self::INDEX_DELIVERY => $deliveryExecution->getDelivery()->getUri(),
                 'type' => ResultService::DELIVERY_RESULT_CLASS_URI,
                 self::INDEX_TEST_TAKER => $user->getIdentifier(),
-                self::INDEX_TEST_TAKER_NAME => $userName,
-                self::INDEX_DELIVERY_EXECUTION => $id,
+                self::INDEX_TEST_TAKER_FIRST_NAME => UserHelper::getUserFirstName($user, true),
+                self::INDEX_TEST_TAKER_LAST_NAME => UserHelper::getUserLastName($user, true),
+                self::INDEX_TEST_TAKER_NAME => UserHelper::getUserName($user, true),
+                self::INDEX_DELIVERY_EXECUTION => $deliveryExecutionId,
+                self::INDEX_DELIVERY_EXECUTION_START_TIME => (string) $deliveryExecution->getStartTime()
             ];
             $body = array_merge($body, $customBody);
             $queueDispatcher = $this->getServiceLocator()->get(QueueDispatcherInterface::SERVICE_ID);
-            $queueDispatcher->createTask(new AddSearchIndexFromArray(), [$id, $body], __('Adding/Updating search index for %s', $deliveryExecution->getLabel()));
+
+            $queueDispatcher->createTask(
+                new AddSearchIndexFromArray(),
+                [$deliveryExecutionId, $body],
+                __('Adding/Updating search index for %s', $deliveryExecution->getLabel())
+            );
         }
         return $report;
     }
