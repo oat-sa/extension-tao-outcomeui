@@ -35,7 +35,7 @@ define([
 ) {
     'use strict';
 
-    var logger = loggerFactory('controller/inspectResults');
+    const logger = loggerFactory('controller/inspectResults');
 
     /**
      * Take care of errors
@@ -59,16 +59,16 @@ define([
          * Controller entry point
          */
         start: function () {
-            var config = module.config() || {};
-            var $container = $('#inspect-result');
-            var classUri = $container.data('uri');
+            const config = module.config() || {};
+            const $container = $('#inspect-result');
+            const classUri = $container.data('uri');
             const searchContainer = $('.action-bar .search-area');
             if (searchContainer.data('show-result')) {
-                var action = {
+                const action = {
                     binding: 'load',
                     url: urlHelper.route('viewResult', 'Results', 'taoOutcomeUi')
                 };
-                var context = {
+                const context = {
                     id: searchContainer.data('show-result'),
                     classUri
                 };
@@ -76,7 +76,7 @@ define([
                 binder.exec(action, context);
                 return;
             }
-            var listConfig = {
+            const listConfig = {
                 dataUrl: urlHelper.route('getResults', 'Results', 'taoOutcomeUi', {
                     classUri: classUri
                 }),
@@ -84,8 +84,8 @@ define([
                 searchable: config.searchable,
                 classUri: classUri
             };
-            var taskButton;
-            var taskButtonExportSQL;
+            let taskButton;
+            let taskButtonExportSQL;
 
             loadingBar.start();
 
@@ -129,8 +129,8 @@ define([
             }).render($('#results-csv-export'));
 
             binder.register('export_csv', function remove(actionContext) {
-                var data = _.pick(actionContext, ['uri', 'classUri', 'id']);
-                var uniqueValue = data.uri || data.classUri || '';
+                const data = _.pick(actionContext, ['uri', 'classUri', 'id']);
+                const uniqueValue = data.uri || data.classUri || '';
                 taskButton
                     .setTaskConfig({
                         taskCreationUrl: this.url,
@@ -148,8 +148,8 @@ define([
                 }).render($('#results-sql-export'));
 
                 binder.register('export_sql', function remove(actionContext) {
-                    var data = _.pick(actionContext, ['uri', 'classUri', 'id']);
-                    var uniqueValue = data.uri || data.classUri || '';
+                    const data = _.pick(actionContext, ['uri', 'classUri', 'id']);
+                    const uniqueValue = data.uri || data.classUri || '';
                     taskButtonExportSQL
                         .setTaskConfig({
                             taskCreationUrl: this.url,
