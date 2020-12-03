@@ -20,7 +20,7 @@ class ExportDeliveryClassXmlResults extends ScriptAction
 {
     use OntologyAwareTrait;
 
-    private const ITERATIONS_TO_RELOAD = 100;
+    private const EXECUTION_ITERATIONS_TO_REINSTANTIATE_ZIP_OBJECT = 100;
 
     /**
      * @var Report
@@ -97,7 +97,7 @@ class ExportDeliveryClassXmlResults extends ScriptAction
 
                     // flush the archive by creating the object ZipArchive from scratch every 100 iterations to
                     // prevent ZipArchive from memory leaking (it builds up all the changes in memory that are not 'committed')
-                    if ($executionAcrossDeliveriesNumber % self::ITERATIONS_TO_RELOAD === 0) {
+                    if ($executionAcrossDeliveriesNumber % self::EXECUTION_ITERATIONS_TO_REINSTANTIATE_ZIP_OBJECT === 0) {
                         $zipArchive->close();
                         $zipArchive = $this->instantiateZip($path);
                     }
