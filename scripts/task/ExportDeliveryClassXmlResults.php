@@ -128,14 +128,10 @@ class ExportDeliveryClassXmlResults extends ScriptAction
      */
     private function instantiateZip($path, $create = false)
     {
-        $flags = null;
-        if ($create) {
-            $flags = \ZipArchive::CREATE;
-        }
-
         $zipArchive = new \ZipArchive();
 
-        $zipOpenResult = $zipArchive->open($path, $flags);
+        $zipOpenResult = $create ? $zipArchive->open($path, \ZipArchive::CREATE) : $zipArchive->open($path);
+
         if ($zipOpenResult !== true) {
             throw new \Exception(sprintf('Unable to create archive at path %s (error code %s)', $path, $zipOpenResult));
         }
