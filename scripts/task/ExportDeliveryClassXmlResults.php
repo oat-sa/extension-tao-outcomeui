@@ -95,9 +95,6 @@ class ExportDeliveryClassXmlResults extends ScriptAction
                 foreach ($executions as $execution) {
                     $executionNumber++;
                     $executionAcrossDeliveriesNumber++;
-                    if ($executionNumber == 10) {
-                        break;
-                    }
 
                     // flush the archive by creating the object ZipArchive from scratch every 100 iterations to
                     // prevent ZipArchive from memory leaking (it builds up all the changes in memory that are not 'committed')
