@@ -78,10 +78,7 @@ class ExportDeliveryClassXmlResults extends ScriptAction
             if (file_exists($path)) {
                 unlink($path);
             }
-            $zipArchive = new \ZipArchive();
-            if ($zipArchive->open($path, \ZipArchive::CREATE) !== true) {
-                throw new \Exception('Unable to create archive at ' . $path);
-            }
+            $zipArchive = $this->instantiateZip($path, true);
 
             $deliveryNumber = 0;
             $executionAcrossDeliveriesNumber = 0;
@@ -102,11 +99,7 @@ class ExportDeliveryClassXmlResults extends ScriptAction
                     // prevent ZipArchive from memory leaking (it builds up all the changes in memory that are not 'committed')
                     if ($executionAcrossDeliveriesNumber % self::ITERATIONS_TO_RELOAD === 0) {
                         $zipArchive->close();
-                        $zipArchive = new \ZipArchive();
-
-                        if ($zipArchive->open($path) !== true) {
-                            throw new \Exception('Unable to open archive at ' . $path);
-                        }
+                        $zipArchive = $this->instantiateZip($path);
                     }
                     $xml = $this->getQtiResultsService()->getQtiResultXml($delivery->getUri(), $execution);
                     $executionObj = $this->getServiceProxy()->getDeliveryExecution($execution);
@@ -128,6 +121,25 @@ class ExportDeliveryClassXmlResults extends ScriptAction
         }
         $this->report->add(Report::createSuccess(sprintf('Done! %d results for %d deliveries were exported. Please download the ZIP file at this path: %s', $resultCount, $deliveryNumber, $path)));
         return $this->report;
+    }
+
+    /**
+     * @throws \Exception
+     */
+    private function instantiateZip($path, $create = false)
+    {
+        $flags = null;
+        if ($create) {
+            $flags = \ZipArchive::CREATE;
+        }
+
+        $zipArchive = new \ZipArchive();
+
+        $zipOpenResult = $zipArchive->open($path, $flags);
+        if ($zipOpenResult !== true) {
+            throw new \Exception(sprintf('Unable to create archive at path %s (error code %s)', $path, $zipOpenResult));
+        }
+        return $zipArchive;
     }
 
     /**
