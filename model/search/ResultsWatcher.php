@@ -15,12 +15,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2018 (original work) Open Assessment Technologies SA;
- *
+ * Copyright (c) 2018-2020 (original work) Open Assessment Technologies SA;
  */
 
 namespace oat\taoOutcomeUi\model\search;
 
+use DateTime;
 use DateTimeImmutable;
 use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\service\ConfigurableService;
@@ -134,6 +134,16 @@ class ResultsWatcher extends ConfigurableService
     {
         $timeArray = explode(" ", $getStartTime);
         $date = DateTimeImmutable::createFromFormat('U', $timeArray[1]);
+
+        if ($date === false) {
+            $date = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $getStartTime);
+        }
+
+        if (!$date instanceof DateTime) {
+            $this->logCritical('We wer not able to transform delivery-execution start time!');
+            return 'wrong data';
+        }
+
         return $date->format('m/d/Y H:i:s');
     }
 }
