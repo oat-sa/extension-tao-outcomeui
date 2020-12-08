@@ -141,7 +141,7 @@ class ResultsWatcher extends ConfigurableService
 
         if (!$date instanceof DateTime) {
             $this->logCritical('We wer not able to transform delivery-execution start time!');
-            return 'wrong data';
+            return '';
         }
 
         return $date->format('m/d/Y H:i:s');
