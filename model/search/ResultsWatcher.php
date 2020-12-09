@@ -140,7 +140,9 @@ class ResultsWatcher extends ConfigurableService
         }
 
         if (!$date instanceof DateTime) {
-            $this->logCritical('We wer not able to transform delivery-execution start time!');
+            $this->logCritical(
+                sprintf('We were not able to transform string: "%s" delivery-execution start time!', $getStartTime)
+            );
             return '';
         }
 
