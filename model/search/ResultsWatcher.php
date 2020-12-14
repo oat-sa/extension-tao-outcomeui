@@ -48,6 +48,7 @@ class ResultsWatcher extends ConfigurableService
     public const INDEX_DELIVERY = 'delivery';
     public const INDEX_TEST_TAKER = 'test_taker';
     public const INDEX_TEST_TAKER_NAME = 'test_taker_name';
+    public const INDEX_TEST_TAKER_LABEL = 'test_taker_label';
     public const INDEX_DELIVERY_EXECUTION = 'delivery_execution';
     public const INDEX_DELIVERY_EXECUTION_START_TIME = 'delivery_execution_start_time';
     public const INDEX_TEST_TAKER_LAST_NAME = 'test_taker_last_name';
@@ -104,6 +105,7 @@ class ResultsWatcher extends ConfigurableService
                 self::INDEX_TEST_TAKER_FIRST_NAME => UserHelper::getUserFirstName($user, true),
                 self::INDEX_TEST_TAKER_LAST_NAME => UserHelper::getUserLastName($user, true),
                 self::INDEX_TEST_TAKER_NAME => UserHelper::getUserName($user, true),
+                self::INDEX_TEST_TAKER_LABEL => UserHelper::getUserLabel($user),
                 self::INDEX_DELIVERY_EXECUTION => $deliveryExecutionId,
                 self::INDEX_DELIVERY_EXECUTION_START_TIME =>  $this->transformDateTime(
                     $deliveryExecution->getStartTime()
@@ -139,7 +141,7 @@ class ResultsWatcher extends ConfigurableService
             $date = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $getStartTime);
         }
 
-        if (!$date instanceof DateTime) {
+        if (!$date instanceof DateTimeImmutable) {
             $this->logCritical(
                 sprintf('We were not able to transform string: "%s" delivery-execution start time!', $getStartTime)
             );
