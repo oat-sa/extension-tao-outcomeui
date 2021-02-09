@@ -47,6 +47,7 @@ use oat\taoOutcomeUi\helper\Datatypes;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
+use oat\taoOutcomeUi\model\table\TraceVariableColumn;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 use oat\taoQtiTest\models\QtiTestCompilerIndex;
@@ -1332,7 +1333,9 @@ class ResultsService extends OntologyClassService
             $selectedVariables = $this->getResultsVariables($resultsIdsItem);
             foreach ($selectedVariables as $variable) {
                 $variable = $variable[0];
-                if ($this->isResultVariable($variable, $variableClassUri)) {
+                if ($this->isResultVariable($variable, $variableClassUri)
+                    || $this->isTraceVariable($variable, $variableClassUri)
+                ) {
                     //variableIdentifier
                     $variableIdentifier = $variable->variable->getIdentifier();
                     if (!is_null($variable->item)) {
@@ -1375,6 +1378,9 @@ class ResultsService extends OntologyClassService
                 case \taoResultServer_models_classes_ResponseVariable::class:
                     $columns[] = new ResponseColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"], $variableType["columnType"]);
                     break;
+                case \taoResultServer_models_classes_TraceVariable::class:
+                    $columns[] = new TraceVariableColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"], $variableType["columnType"]);
+                    break;
                 default:
                     $columns[] = new ResponseColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"], $variableType["columnType"]);
             }
@@ -1409,6 +1415,23 @@ class ResultsService extends OntologyClassService
                 $class == $responseVariableClass
                 && $variableClassUri == $responseVariableClass
             );
+    }
+
+    /**
+     * Check if provided variable is a trace variable.
+     *
+     * @param $variable
+     * @param $variableClassUri
+     *
+     * @return bool
+     */
+    private function isTraceVariable($variable, $variableClassUri)
+    {
+        $traceVariableClass = \taoResultServer_models_classes_TraceVariable::class;
+        $class = $variable->class ?? get_class($variable->variable);
+
+        return $class === $traceVariableClass
+                && $variableClassUri === $traceVariableClass;
     }
 
     /**

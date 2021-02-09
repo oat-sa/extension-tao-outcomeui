@@ -211,6 +211,22 @@ class ResultTable extends \tao_actions_CommonModule
     }
 
     /**
+     * Returns trace variables columns.
+     *
+     * @throws \Exception
+     */
+    public function getTraceVariablesColumns()
+    {
+        if (!$this->isXmlHttpRequest()) {
+            throw new \Exception('Only ajax call allowed.');
+        }
+
+        return $this->returnJson([
+            'columns' => $this->getColumnsProvider()->getTraceVariablesColumns()
+        ]);
+    }
+
+    /**
      * @return ColumnsProvider
      */
     private function getColumnsProvider()
