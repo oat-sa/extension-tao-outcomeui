@@ -38,10 +38,10 @@ use oat\taoOutcomeUi\model\ResultsService;
             <button class="btn-error small hidden" data-group="deliveryexecution" data-action="remove" data-url="<?=_url('getDeliveryExecutionColumns')?>" >
                 <span class="icon-bin"></span><?=__('Remove Delivery Execution')?>
             </button>
-            <button class="btn-info small" data-group="variables" data-action="add" data-url="<?=_url('getTraceVariablesColumns')?>" >
+            <button class="btn-info small" data-group="variables" data-action="add" data-url="<?=_url('getTraceVariableColumns')?>" >
                 <span class="icon-add"></span><?=__('Add all trace variables')?>
             </button>
-            <button class="btn-error small hidden" data-group="variables" data-action="remove" data-url="<?=_url('getTraceVariablesColumns')?>"  >
+            <button class="btn-error small hidden" data-group="variables" data-action="remove" data-url="<?=_url('getTraceVariableColumns')?>"  >
                 <span class="icon-bin"></span><?=__('Remove all trace variables')?>
             </button>
         </div>

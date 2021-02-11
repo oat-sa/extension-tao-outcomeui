@@ -22,23 +22,40 @@
 
 namespace oat\taoOutcomeUi\model\table;
 
-use \core_kernel_classes_Class;
+use tao_models_classes_table_Column;
 
 /**
- * Short description of class oat\taoOutcomeUi\model\table\ResponseColumn
+ * Short description of class oat\taoOutcomeUi\model\table\TraceVariableColumn
  *
  * @access public
- * @author Joel Bout, <joel.bout@tudor.lu>
+ * @author Sergey Lunev, <sergey.lunev@taotesting.com>
  * @package taoOutcomeUi
  */
-class TraceVariableColumn extends VariableColumn
+class TraceVariableColumn extends tao_models_classes_table_Column
 {
-    /**
-     * (non-PHPdoc)
-     * @see \oat\taoOutcomeUi\model\table\VariableColumn::getVariableType()
-     */
-    public function getVariableType()
+
+    private static $dataProvider;
+
+    protected static function fromArray($array)
     {
-        return \taoResultServer_models_classes_TraceVariable::class;
+        return new self($array['label']);
+    }
+
+    public function getDataProvider()
+    {
+        if (!self::$dataProvider) {
+            self::$dataProvider = new TraceVariableDataProvider();
+        }
+        return self::$dataProvider;
+    }
+
+    public function getContextIdentifier()
+    {
+        return 'delivery_execution';
+    }
+
+    public function getIdentifier()
+    {
+        return 'trace_variable';
     }
 }

@@ -71,6 +71,9 @@ class ResultsService extends OntologyClassService
     public const VARIABLES_FILTER_FIRST_SUBMITTED = 'firstSubmitted';
     public const VARIABLES_FILTER_ALL = 'all';
 
+    // Only need to correct formatting trace variables
+    protected const VARIABLES_FILTER_TRACE = 'trace';
+
     public const PERSISTENCE_CACHE_KEY = 'resultCache';
 
     public const PERIODS = [self::FILTER_START_FROM, self::FILTER_START_TO, self::FILTER_END_FROM, self::FILTER_END_TO];
@@ -1150,7 +1153,9 @@ class ResultsService extends OntologyClassService
                 $cellKey = $this->getColumnId($column);
 
                 $cellData[$cellKey] = null;
-                if (count($column->getDataProvider()->cache) > 0) {
+                if ($column instanceof TraceVariableColumn && count($column->getDataProvider()->cache) > 0) {
+                    $cellData[$cellKey] = self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column), self::VARIABLES_FILTER_TRACE);
+                } elseif (count($column->getDataProvider()->cache) > 0) {
                     // grade or response column values
                     $cellData[$cellKey] = self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column), $filter);
                 } elseif ($column instanceof ContextTypePropertyColumn) {
@@ -1491,6 +1496,15 @@ class ResultsService extends OntologyClassService
 
             case self::VARIABLES_FILTER_FIRST_SUBMITTED:
                 $value = array_shift($observationsList);
+                break;
+
+            case self::VARIABLES_FILTER_TRACE:
+                $tmp = [];
+                foreach (array_values($observationsList) as $arrayValue) {
+                    $tmp[] = json_decode($arrayValue, true);
+                }
+
+                $value = json_encode($tmp);
                 break;
 
             case self::VARIABLES_FILTER_ALL:

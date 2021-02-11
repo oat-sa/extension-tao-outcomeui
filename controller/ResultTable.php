@@ -215,7 +215,7 @@ class ResultTable extends \tao_actions_CommonModule
      *
      * @throws \Exception
      */
-    public function getTraceVariablesColumns()
+    public function getTraceVariableColumns()
     {
         if (!$this->isXmlHttpRequest()) {
             throw new \Exception('Only ajax call allowed.');
