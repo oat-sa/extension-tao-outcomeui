@@ -33,6 +33,7 @@ use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\DeliveryExecutionColumn;
 use oat\taoOutcomeUi\model\table\DeliveryExecutionDataProvider;
 use oat\taoOutcomeUi\model\table\TraceVariableColumn;
+use oat\taoOutcomeUi\model\table\TraceVariableDataProvider;
 use oat\taoTestTaker\models\TestTakerService;
 
 /**
@@ -227,6 +228,9 @@ class ColumnsProvider
             [
                 'type' => TraceVariableColumn::class,
                 'label' => self::LABEL_TRACE_VARIABLES,
+                'contextId' => 'delivery_execution',
+                'prop' => 'delivery_execution',
+                'contextType' => TraceVariableDataProvider::PROP_TRACE_VARIABLE,
             ]
         ];
     }
