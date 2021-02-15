@@ -85,6 +85,7 @@ class ResultsService extends OntologyClassService
     public const FILTER_END_TO = 'endto';
 
     public const OPTION_ALLOW_SQL_EXPORT = 'allow_sql_export';
+    public const OPTION_ALLOW_TRACE_VARIABLES_EXPORT = 'allow_trace_variable_export';
 
     /** @var taoResultServer_models_classes_ReadableResultStorage */
     private $implementation;
