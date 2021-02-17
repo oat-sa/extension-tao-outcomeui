@@ -1467,7 +1467,7 @@ class ResultsService extends OntologyClassService
      * List of variables contains the response for an interaction.
      * Each attempts is an entry in $observationList
      *
-     * 3 allowed filters: firstSubmitted, lastSubmitted, all
+     * 3 allowed filters: firstSubmitted, lastSubmitted, all, trace
      *
      * @param array $observationsList The list of variable values
      * @param string $filterData      The filter

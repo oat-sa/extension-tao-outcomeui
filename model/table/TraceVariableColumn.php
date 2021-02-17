@@ -33,7 +33,6 @@ use tao_models_classes_table_Column;
  */
 class TraceVariableColumn extends tao_models_classes_table_Column
 {
-
     private static $dataProvider;
 
     protected static function fromArray($array)
