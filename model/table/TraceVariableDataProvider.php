@@ -11,8 +11,9 @@ use tao_models_classes_table_DataProvider;
 
 class TraceVariableDataProvider implements tao_models_classes_table_DataProvider
 {
-    const PROP_TRACE_VARIABLE = 'trace_variable';
+    public const PROP_TRACE_VARIABLE = 'trace_variable';
 
+    /** @var array */
     public $cache;
 
     public function prepare($resources, $columns)
@@ -25,12 +26,9 @@ class TraceVariableDataProvider implements tao_models_classes_table_DataProvider
 
             foreach ($itemResults as $itemResultUri => $vars) {
                 foreach ($vars as $var) {
-                    $var = $var[0];
                     // cache the variable data
-                    /**
-                     * @var \taoResultServer_models_classes_Variable $varData
-                     */
-                    $varData = $var->variable;
+                    /** @var \taoResultServer_models_classes_Variable $varData */
+                    $varData = $var[0]->variable;
 
                     if (!$varData instanceof \taoResultServer_models_classes_TraceVariable) {
                         continue;
@@ -45,13 +43,11 @@ class TraceVariableDataProvider implements tao_models_classes_table_DataProvider
                         $readableTime = "@" . tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE);
                     }
 
-                    $data = [
+                    $this->cache[$result][(string) $epoch] = [
                         $trace,
                         $identifier,
                         $readableTime
                     ];
-
-                    $this->cache[$result][(string) $epoch] = $data;
                 }
             }
         }
