@@ -1154,7 +1154,7 @@ class ResultsService extends OntologyClassService
                 $cellKey = $this->getColumnId($column);
 
                 $cellData[$cellKey] = null;
-                if ($column instanceof TraceVariableColumn && count($column->getDataProvider()->cache) > 0) {
+                if ($column instanceof TraceVariableColumn && count($column->getDataProvider()->getCache()) > 0) {
                     $cellData[$cellKey] = self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column), self::VARIABLES_FILTER_TRACE);
                 } elseif (count($column->getDataProvider()->cache) > 0) {
                     // grade or response column values
@@ -1500,14 +1500,11 @@ class ResultsService extends OntologyClassService
                 break;
 
             case self::VARIABLES_FILTER_TRACE:
-                $tmp = [];
-                foreach (array_values($observationsList) as $arrayValue) {
-                    $tmp[] = json_decode($arrayValue, true);
-                }
-
-                $value = json_encode($tmp);
+                $value = json_encode(array_map(function ($value) {
+                    return json_decode($value, true);
+                }, array_values($observationsList)));
                 break;
-
+                
             case self::VARIABLES_FILTER_ALL:
             default:
                 $value = implode($allDelimiter, $observationsList);

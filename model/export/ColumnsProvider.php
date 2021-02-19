@@ -228,8 +228,8 @@ class ColumnsProvider
             [
                 'type' => TraceVariableColumn::class,
                 'label' => self::LABEL_TRACE_VARIABLES,
-                'contextId' => 'delivery_execution',
-                'prop' => 'delivery_execution',
+                'contextId' => TraceVariableColumn::CONTEXT_IDENTIFIER,
+                'prop' => TraceVariableColumn::CONTEXT_IDENTIFIER,
                 'contextType' => TraceVariableDataProvider::PROP_TRACE_VARIABLE,
             ]
         ];
