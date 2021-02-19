@@ -65,4 +65,9 @@ class TraceVariableDataProvider implements tao_models_classes_table_DataProvider
 
         return $returnValue;
     }
+
+    public function getCache()
+    {
+        return $this->cache;
+    }
 }

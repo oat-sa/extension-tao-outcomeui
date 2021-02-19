@@ -33,6 +33,9 @@ use tao_models_classes_table_Column;
  */
 class TraceVariableColumn extends tao_models_classes_table_Column
 {
+    public const CONTEXT_IDENTIFIER = 'delivery_execution';
+    public const IDENTIFIER = 'trace_variable';
+
     private static $dataProvider;
 
     protected static function fromArray($array)
@@ -50,11 +53,11 @@ class TraceVariableColumn extends tao_models_classes_table_Column
 
     public function getContextIdentifier()
     {
-        return 'delivery_execution';
+        return self::CONTEXT_IDENTIFIER;
     }
 
     public function getIdentifier()
     {
-        return 'trace_variable';
+        return self::IDENTIFIER;
     }
 }
