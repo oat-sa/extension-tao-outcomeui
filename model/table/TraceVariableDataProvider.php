@@ -29,8 +29,7 @@ class TraceVariableDataProvider implements tao_models_classes_table_DataProvider
                     // cache the variable data
                     /** @var \taoResultServer_models_classes_Variable $varData */
                     $varData = $var[0]->variable;
-
-                    if (!$varData instanceof \taoResultServer_models_classes_TraceVariable) {
+                    if (!$varData instanceof \taoResultServer_models_classes_TraceVariable || $var[0]->callIdItem !== null) {
                         continue;
                     }
 
