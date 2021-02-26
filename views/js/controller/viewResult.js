@@ -102,7 +102,7 @@ define([
                 }
 
                 previewerFactory(type, uri, state, {
-                    view: 'reviewRendeder',
+                    view: 'reviewRenderer',
                     fullPage: true
                 });
             });
