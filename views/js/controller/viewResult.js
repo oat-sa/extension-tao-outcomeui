@@ -13,7 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2014-2019 (original work) Open Assessment Technologies SA ;
+ * Copyright (c) 2014-2021 (original work) Open Assessment Technologies SA ;
  */
 /**
  * @author Bertrand Chevrier <bertrand@taotesting.com>
@@ -102,7 +102,7 @@ define([
                 }
 
                 previewerFactory(type, uri, state, {
-                    readOnly: true,
+                    view: 'reviewRendeder',
                     fullPage: true
                 });
             });
