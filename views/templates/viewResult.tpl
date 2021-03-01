@@ -9,44 +9,51 @@ use oat\taoOutcomeUi\model\ResultsService;
 <div class="main-container flex-container-full">
 
     <div id="view-result">
-        <div id="resultsViewTools">
-            <div class="tile">
-                <select class="result-filter">
-                    <option  value="all" ><?=__('All collected variables')?></option>
-                    <option  value="<?= ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED ?>" ><?=__('First submitted variables only')?></option>
-                    <option  value="<?= ResultsService::VARIABLES_FILTER_LAST_SUBMITTED ?>" ><?=__('Last submitted variables only')?></option>
-                </select>
-                <label>
-                    <input type="checkbox" name="class-filter" value="<?=\taoResultServer_models_classes_ResponseVariable::class?>">
-                    <span class="icon-checkbox cross"></span>
-                    <?=__('Responses')?>
-                </label>
-                <label>
-                    <input type="checkbox" name="class-filter" value="<?=\taoResultServer_models_classes_OutcomeVariable::class?>">
-                    <span class="icon-checkbox cross"></span>
-                    <?=__('Grades')?>
-                </label>
-                <label>
-                    <input type="checkbox" name="class-filter" value="<?=\taoResultServer_models_classes_TraceVariable::class?>">
-                    <span class="icon-checkbox cross"></span>
-                    <?=__('Traces')?>
-                </label>
-            <button class="btn-info small result-filter-btn"><?=__('Filter');?></button>
-            </div>
-        </div>
-        <div id="resultsHeader">
-            <div class="tile testtaker">
-                <strong>
-                    <span class="icon-test-taker"></span>
-                    <?=__('Test Taker')?>
-                </strong>
-                <table class="mini">
-                    <tr><td class="field"><?=__('Login:')?></td><td class="fieldValue"><?= _dh(get_data('userLogin'))?></td></tr>
-                    <tr><td class="field"><?=__('Label:')?></td><td class="fieldValue"><?= _dh(get_data('userLabel'))?></td></tr>
-                    <tr><td class="field"><?=__('Last Name:')?></td><td class="fieldValue"><?= _dh(get_data('userLastName'))?></td></tr>
-                    <tr><td class="field"><?=__('First Name:')?></td><td class="fieldValue"><?= _dh(get_data('userFirstName'))?></td></tr>
-                    <tr><td class="field"><?=__('Email:')?></td><td class="fieldValue userMail"><?= _dh(get_data('userEmail'))?></td></tr>
-                </table>
+        <div class="resultsWrapper">
+            <div id="resultsHeader" class="tile">
+                    <strong>
+                        <span class="icon-test-taker"></span>
+                        <?=__('Test Taker')?>
+                    </strong>
+                    <table class="mini">
+                        <tr><td class="field"><?=__('Login:')?></td><td class="fieldValue"><?= _dh(get_data('userLogin'))?></td></tr>
+                        <tr><td class="field"><?=__('Label:')?></td><td class="fieldValue"><?= _dh(get_data('userLabel'))?></td></tr>
+                        <tr><td class="field"><?=__('Last Name:')?></td><td class="fieldValue"><?= _dh(get_data('userLastName'))?></td></tr>
+                        <tr><td class="field"><?=__('First Name:')?></td><td class="fieldValue"><?= _dh(get_data('userFirstName'))?></td></tr>
+                        <tr><td class="field"><?=__('Email:')?></td><td class="fieldValue userMail"><?= _dh(get_data('userEmail'))?></td></tr>
+                    </table>
+                </div>
+            <div class="resultsViewToolsWrapper">
+                <div class="resultsViewToolsButtons">
+                    <button class="download btn-info small print"><span class="icon-print"></span><?php echo __('Print') ?></button>
+                    <button class="download btn-info small download"><span class="icon-download"></span><?php echo __('Download') ?></button>
+                    <button class="download btn-info small delete"><span class="icon-delete"></span><?php echo __('Delete') ?></button>
+                </div>
+                <div id="resultsViewTools">
+                    <div class="tile">
+                        <select class="result-filter">
+                            <option  value="all" ><?=__('All collected variables')?></option>
+                            <option  value="<?= ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED ?>" ><?=__('First submitted variables only')?></option>
+                            <option  value="<?= ResultsService::VARIABLES_FILTER_LAST_SUBMITTED ?>" ><?=__('Last submitted variables only')?></option>
+                        </select>
+                        <label>
+                            <input type="checkbox" name="class-filter" value="<?=\taoResultServer_models_classes_ResponseVariable::class?>">
+                            <span class="icon-checkbox cross"></span>
+                            <?=__('Responses')?>
+                        </label>
+                        <label>
+                            <input type="checkbox" name="class-filter" value="<?=\taoResultServer_models_classes_OutcomeVariable::class?>">
+                            <span class="icon-checkbox cross"></span>
+                            <?=__('Grades')?>
+                        </label>
+                        <label>
+                            <input type="checkbox" name="class-filter" value="<?=\taoResultServer_models_classes_TraceVariable::class?>">
+                            <span class="icon-checkbox cross"></span>
+                            <?=__('Traces')?>
+                        </label>
+                        <button class="btn-info small result-filter-btn"><?=__('Filter');?></button>
+                    </div>
+                </div>
             </div>
         </div>
         <div id="resultsBox">
@@ -93,14 +100,14 @@ use oat\taoOutcomeUi\model\ResultsService;
                     </th>
                     <th>
                         <?php if ($item['uri'] != 'unknown'): ?>
-                            <a href="#" 
-                                data-delivery-id="<?=get_data('classUri')?>" 
-                                data-result-id="<?=get_data('id')?>" 
-                                data-type="<?=get_data('itemType')?>" 
-                                data-uri="<?=$item['uri']?>" 
-                                data-definition="<?=$item['internalIdentifier']?>" 
-                                data-state="<?=htmlspecialchars($item['state'])?>" 
-                                class="btn-info small preview" 
+                            <a href="#"
+                                data-delivery-id="<?=get_data('classUri')?>"
+                                data-result-id="<?=get_data('id')?>"
+                                data-type="<?=get_data('itemType')?>"
+                                data-uri="<?=$item['uri']?>"
+                                data-definition="<?=$item['internalIdentifier']?>"
+                                data-state="<?=htmlspecialchars($item['state'])?>"
+                                class="btn-info small preview"
                                 target="preview">
                                 <span class="icon-preview"></span><?=__('Review')?>
                             </a>
@@ -228,7 +235,6 @@ use oat\taoOutcomeUi\model\ResultsService;
 
                 </tbody>
             </table>
-            <br/>
             <?php } ?>
             <!-- End of Item Result Tables-->
             </div>
