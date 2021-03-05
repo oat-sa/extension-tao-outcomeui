@@ -47,6 +47,7 @@ use oat\taoOutcomeUi\helper\Datatypes;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
+use oat\taoOutcomeUi\model\table\TraceVariableColumn;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 use oat\taoQtiTest\models\QtiTestCompilerIndex;
@@ -70,6 +71,9 @@ class ResultsService extends OntologyClassService
     public const VARIABLES_FILTER_FIRST_SUBMITTED = 'firstSubmitted';
     public const VARIABLES_FILTER_ALL = 'all';
 
+    // Only need to correct formatting trace variables
+    protected const VARIABLES_FILTER_TRACE = 'trace';
+
     public const PERSISTENCE_CACHE_KEY = 'resultCache';
 
     public const PERIODS = [self::FILTER_START_FROM, self::FILTER_START_TO, self::FILTER_END_FROM, self::FILTER_END_TO];
@@ -81,6 +85,7 @@ class ResultsService extends OntologyClassService
     public const FILTER_END_TO = 'endto';
 
     public const OPTION_ALLOW_SQL_EXPORT = 'allow_sql_export';
+    public const OPTION_ALLOW_TRACE_VARIABLES_EXPORT = 'allow_trace_variable_export';
 
     /** @var taoResultServer_models_classes_ReadableResultStorage */
     private $implementation;
@@ -1149,7 +1154,9 @@ class ResultsService extends OntologyClassService
                 $cellKey = $this->getColumnId($column);
 
                 $cellData[$cellKey] = null;
-                if (count($column->getDataProvider()->cache) > 0) {
+                if ($column instanceof TraceVariableColumn && count($column->getDataProvider()->getCache()) > 0) {
+                    $cellData[$cellKey] = self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column), self::VARIABLES_FILTER_TRACE);
+                } elseif (count($column->getDataProvider()->cache) > 0) {
                     // grade or response column values
                     $cellData[$cellKey] = self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column), $filter);
                 } elseif ($column instanceof ContextTypePropertyColumn) {
@@ -1438,7 +1445,7 @@ class ResultsService extends OntologyClassService
      * List of variables contains the response for an interaction.
      * Each attempts is an entry in $observationList
      *
-     * 3 allowed filters: firstSubmitted, lastSubmitted, all
+     * 3 allowed filters: firstSubmitted, lastSubmitted, all, trace
      *
      * @param array $observationsList The list of variable values
      * @param string $filterData      The filter
@@ -1470,6 +1477,12 @@ class ResultsService extends OntologyClassService
                 $value = array_shift($observationsList);
                 break;
 
+            case self::VARIABLES_FILTER_TRACE:
+                $value = json_encode(array_map(function ($value) {
+                    return json_decode($value, true);
+                }, array_values($observationsList)));
+                break;
+                
             case self::VARIABLES_FILTER_ALL:
             default:
                 $value = implode($allDelimiter, $observationsList);

@@ -70,7 +70,17 @@ class ResultTable extends \tao_actions_CommonModule
             }
             $this->setData('filter', $filter);
             $this->setData('uri', $uri);
-            $this->setData('allowSqlExport', $this->getResultService()->getOption(ResultsService::OPTION_ALLOW_SQL_EXPORT));
+            $this->setData(
+                'allowSqlExport',
+                $this->getResultService()->getOption(ResultsService::OPTION_ALLOW_SQL_EXPORT)
+            );
+            $this->setData(
+                'allowTraceVariableExport',
+                $this->getResultService()->getOption(
+                    ResultsService::OPTION_ALLOW_TRACE_VARIABLES_EXPORT,
+                    false
+                )
+            );
             $this->setView('resultTable.tpl');
         } else {
             $this->setData('type', 'info');
@@ -207,6 +217,22 @@ class ResultTable extends \tao_actions_CommonModule
 
         return $this->returnJson([
             'columns' => $this->getColumnsProvider()->getResponseColumns()
+        ]);
+    }
+
+    /**
+     * Returns trace variables columns.
+     *
+     * @throws \Exception
+     */
+    public function getTraceVariableColumns()
+    {
+        if (!$this->isXmlHttpRequest()) {
+            throw new \Exception('Only ajax call allowed.');
+        }
+
+        return $this->returnJson([
+            'columns' => $this->getColumnsProvider()->getTraceVariablesColumns()
         ]);
     }
 

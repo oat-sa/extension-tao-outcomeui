@@ -32,6 +32,8 @@ use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\DeliveryExecutionColumn;
 use oat\taoOutcomeUi\model\table\DeliveryExecutionDataProvider;
+use oat\taoOutcomeUi\model\table\TraceVariableColumn;
+use oat\taoOutcomeUi\model\table\TraceVariableDataProvider;
 use oat\taoTestTaker\models\TestTakerService;
 
 /**
@@ -48,6 +50,8 @@ class ColumnsProvider
 
     const LABEL_START_DELIVERY_EXECUTION = 'Start Delivery Execution';
     const LABEL_ID_DELIVERY_EXECUTION = 'Delivery Execution Id';
+
+    const LABEL_TRACE_VARIABLES = 'Trace variables';
 
     /**
      * Test Taker properties to be exported.
@@ -210,6 +214,25 @@ class ColumnsProvider
     public function getResponseColumns()
     {
         return $this->resultsService->getVariableColumns($this->delivery, \taoResultServer_models_classes_ResponseVariable::class);
+    }
+
+    /**
+     * Returns all trace variables columns to be exported.
+     *
+     * @throws \RuntimeException
+     * @return array
+     */
+    public function getTraceVariablesColumns()
+    {
+        return [
+            [
+                'type' => TraceVariableColumn::class,
+                'label' => self::LABEL_TRACE_VARIABLES,
+                'contextId' => TraceVariableColumn::CONTEXT_IDENTIFIER,
+                'prop' => TraceVariableColumn::CONTEXT_IDENTIFIER,
+                'contextType' => TraceVariableDataProvider::PROP_TRACE_VARIABLE,
+            ]
+        ];
     }
 
     /**
