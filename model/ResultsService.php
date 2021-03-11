@@ -605,7 +605,7 @@ class ResultsService extends OntologyClassService
                 $variable = $itemVariable->variable;
                 $itemCallId = $itemVariable->callIdItem;
                 if ($variable->getIdentifier() == 'numAttempts') {
-                    $variablesByItem[$time] = $this->getItemInfos($itemCallId, [[$itemVariable]]);
+                    $variablesByItem[$time] = array_merge($variablesByItem[$time], $this->getItemInfos($itemCallId, [[$itemVariable]]));
                     $variablesByItem[$time]['attempt'] = $variable->getValue();
                 }
                 $variableDescription = [
