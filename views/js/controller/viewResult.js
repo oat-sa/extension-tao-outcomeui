@@ -56,7 +56,6 @@ define([
             method: 'POST',
             data: { variableUri, deliveryUri }
         })
-            .catch(e => logger.error(e))
             .then(response => {
                 // The response may contain more than the expected data,
                 // like the success status, which is not relevant here.
@@ -76,7 +75,8 @@ define([
         const { file } = response && response.base || {};
         if (file && file.uri && !file.data) {
             return requestFileContent(file.uri, deliveryUri)
-                .then(data => response.base.file = data);
+                .then(data => response.base.file = data)
+                .catch(e => logger.error(e));
         }
         return Promise.resolve();
     }
