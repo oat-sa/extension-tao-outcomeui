@@ -442,6 +442,94 @@ class Results extends \tao_actions_CommonModule
     }
 
     /**
+     * Get the data for the file in the response as a variable data
+     */
+    public function getVariableFile()
+    {
+        $delivery = $this->getResource(tao_helpers_Uri::decode($this->getRequestParameter('deliveryUri')));
+        $variableUri = $this->getResource(tao_helpers_Uri::decode($this->getRequestParameter('variableUri')));
+        try {
+            $this->getResultStorage($delivery);
+
+            $file = $this->getResultsService()->getVariableFile($variableUri);
+
+            // weirdly, the mime type declaration can be expressed as a HTTP header notation
+            $mime = trim(str_replace('content-type:', '', strtolower($file["mimetype"])));
+
+            $this->returnJson(
+                [
+                    'success' => true,
+                    'data' => base64_encode($file["data"]),
+                    'name' => $file["filename"],
+                    'mime' => $mime,
+                ]
+            );
+        } catch (\common_exception_Error $e) {
+            $this->returnJson(
+                $this->getErrorResponse($e),
+                $this->getStatusCode($e)
+            );
+        }
+    }
+
+    /**
+     * Gets an error response object
+     * @param Exception $e Exception from which extract the error context
+     * @return array
+     */
+    protected function getErrorResponse(Exception $e): array
+    {
+        $this->logError($e->getMessage());
+
+        $response = [
+            'success' => false,
+            'type' => 'error',
+        ];
+        if ($e instanceof Exception) {
+            $response['type'] = 'exception';
+            $response['code'] = $e->getCode();
+        }
+        if ($e instanceof \common_exception_UserReadableException) {
+            $response['message'] = $e->getUserMessage();
+        } else {
+            $response['message'] = __('Internal server error!');
+        }
+        if ($e instanceof \common_exception_Unauthorized) {
+            $response['code'] = 403;
+        }
+        return $response;
+    }
+
+    /**
+     * Gets an HTTP response code
+     * @param ?Exception [$e] Optional exception from which extract the error context
+     * @return int
+     */
+    protected function getStatusCode(?Exception $e = null): int
+    {
+        $code = 200;
+        if ($e) {
+            $code = 500;
+
+            switch (true) {
+                case $e instanceof \common_exception_NotImplemented:
+                case $e instanceof \common_exception_NoImplementation:
+                    $code = 501;
+                    break;
+
+                case $e instanceof \common_exception_Unauthorized:
+                    $code = 403;
+                    break;
+
+                case $e instanceof \tao_models_classes_FileNotFoundException:
+                    $code = 404;
+                    break;
+            }
+        }
+        return $code;
+    }
+
+    /**
      * Returns the currently configured result storage
      *
      * @param \core_kernel_classes_Resource $delivery
