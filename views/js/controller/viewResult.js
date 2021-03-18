@@ -24,6 +24,7 @@ define([
     'i18n',
     'util/url',
     'core/logger',
+    'core/request',
     'layout/section',
     'taoItems/previewer/factory',
     'jquery.fileDownload'
@@ -33,6 +34,7 @@ define([
     __,
     urlHelper,
     loggerFactory,
+    request,
     section,
     previewerFactory
 ) {
@@ -40,56 +42,7 @@ define([
 
     const logger = loggerFactory('taoOutcomeUi/viewResults');
     const downloadUrl = urlHelper.route('getFile', 'Results', 'taoOutcomeUi');
-
-    /**
-     * Removes a cookie added by the download request
-     * @param {String} path
-     */
-    function clearDownloadCookie(path) {
-        document.cookie = `fileDownload=; expires=${(new Date(1000)).toUTCString()}; path=${path}`;
-    };
-
-    /**
-     * Builds an error object based on the supplied AJAX context
-     * @param {String} message
-     * @param {Object} response
-     * @param {XMLHttpRequest} xhr
-     * @returns {Error}
-     */
-    function getAjaxError(message, response, xhr) {
-        const err = new Error(message);
-        err.response = response;
-        err.code = xhr.status;
-        err.sent = xhr.readyState > 0;
-        return err;
-    }
-
-    /**
-     * Requests an endpoint for a data file
-     * @param {Object} params
-     * @returns {Promise}
-     */
-    function requestData(params) {
-        return new Promise((resolve, reject) => {
-            $.ajax(params)
-                .done((response, status, xhr) => {
-                    if (xhr.status === 204 || status === 'nocontent') {
-                        return resolve();
-                    }
-                    if (xhr.status === 200) {
-                        const contentType = xhr.getResponseHeader('Content-Type') || '';
-                        return resolve({
-                            data: response,
-                            mime: contentType.toLocaleLowerCase().replace('content-type:', '').trim()
-                        });
-                    }
-                    reject(getAjaxError(__('The server has sent an empty response'), response, xhr));
-                })
-                .fail((xhr, textStatus, errorThrown) => {
-                    reject(getAjaxError(errorThrown || __('An error occurred!'), xhr.responseText, xhr));
-                });
-        });
-    }
+    const dataUrl = urlHelper.route('getVariableFile', 'Results', 'taoOutcomeUi');
 
     /**
      * Requests a file content given the URIs
@@ -98,17 +51,18 @@ define([
      * @returns {Promise}
      */
     function requestFileContent(variableUri, deliveryUri) {
-        return requestData({
-            url: downloadUrl,
+        return request({
+            url: dataUrl,
             method: 'POST',
-            data: { variableUri, deliveryUri },
-            dataType: 'text'
+            data: { variableUri, deliveryUri }
         })
             .catch(e => logger.error(e))
-            .then(data => {
-                clearDownloadCookie('/');
-                clearDownloadCookie('/taoOutcomeUi/Results');
-                return data;
+            .then(response => {
+                // The response may contain more than the expected data,
+                // like the success status, which is not relevant here.
+                // Hence this rewriting.
+                const { data, name, mime } = response;
+                return { data, name, mime };
             });
     }
 
@@ -122,9 +76,7 @@ define([
         const { file } = response && response.base || {};
         if (file && file.uri && !file.data) {
             return requestFileContent(file.uri, deliveryUri)
-                .then(data => {
-                    response.base.file = data;
-                });
+                .then(data => response.base.file = data);
         }
         return Promise.resolve();
     }
