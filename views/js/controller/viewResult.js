@@ -75,7 +75,13 @@ define([
         const { file } = response && response.base || {};
         if (file && file.uri && !file.data) {
             return requestFileContent(file.uri, deliveryUri)
-                .then(data => response.base.file = data)
+                .then(fileData => {
+                    if (fileData && fileData.data) {
+                        response.base.file = fileData;
+                    } else {
+                        response.base = null;
+                    }
+                })
                 .catch(e => logger.error(e));
         }
         return Promise.resolve();
@@ -177,7 +183,15 @@ define([
                 }
 
                 Promise.resolve($btn.data('state'))
+                    .then(state => {
+                        console.log(JSON.stringify(state));
+                        return state;
+                    })
                     .then(state => refineItemState(state, deliveryUri))
+                    .then(state => {
+                        console.log(JSON.stringify(state));
+                        return state;
+                    })
                     .then(state => {
                         $btn.removeProp('disabled').removeClass('disabled');
                         previewerFactory(type, uri, state, {
