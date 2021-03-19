@@ -183,15 +183,7 @@ define([
                 }
 
                 Promise.resolve($btn.data('state'))
-                    .then(state => {
-                        console.log(JSON.stringify(state));
-                        return state;
-                    })
                     .then(state => refineItemState(state, deliveryUri))
-                    .then(state => {
-                        console.log(JSON.stringify(state));
-                        return state;
-                    })
                     .then(state => {
                         $btn.removeProp('disabled').removeClass('disabled');
                         previewerFactory(type, uri, state, {
