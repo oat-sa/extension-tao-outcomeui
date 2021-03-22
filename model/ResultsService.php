@@ -601,11 +601,12 @@ class ResultsService extends OntologyClassService
         $attempts = $this->splitByItemAndAttempt($itemVariables, $filter);
         $variablesByItem = [];
         foreach ($attempts as $time => $variables) {
+            $variablesByItem[$time] = [];
             foreach ($variables as $itemVariable) {
                 $variable = $itemVariable->variable;
                 $itemCallId = $itemVariable->callIdItem;
                 if ($variable->getIdentifier() == 'numAttempts') {
-                    $variablesByItem[$time] = $this->getItemInfos($itemCallId, [[$itemVariable]]);
+                    $variablesByItem[$time] = array_merge($variablesByItem[$time], $this->getItemInfos($itemCallId, [[$itemVariable]]));
                     $variablesByItem[$time]['attempt'] = $variable->getValue();
                 }
                 $variableDescription = [
