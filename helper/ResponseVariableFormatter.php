@@ -109,22 +109,22 @@ class ResponseVariableFormatter
             case 'multiple':
                     $list = [];
 
-                    if(!empty($value) 
+                    if(!empty($value)
                         && preg_match('/^\s*[\[|<](.*)[\]>]\s*$/', $value, $content)
                     ) {
                      $matches = explode(';', $content[1]);
                         foreach ($matches as $valueString) {
-                            if (empty(trim($valueString))) {	
+                            if (empty(trim($valueString))) {
                                 continue;
                             }
-                            
+
                             try {
                                 $list[] = self::formatStringValue($var->getBaseType(), trim($valueString, " '"));
                             } catch (\common_exception_NotImplemented $e) {
                                 // simply ignore unsupported data/type
                             }
                         }
-                    }                    
+                    }
 
                     $formatted = ['list' => [$var->getBaseType() => $list]];
                 break;
@@ -157,13 +157,20 @@ class ResponseVariableFormatter
 
             $itemResults = [];
             foreach ($itemResult['taoResultServer_models_classes_ResponseVariable'] as $var) {
-                $responseVariable = $var['var'];
                 /**
                  * @var $responseVariable \taoResultServer_models_classes_ResponseVariable
                  */
-                $itemResults[$responseVariable->getIdentifier()] = [
-                    'response' => self::formatVariableToPci($responseVariable)
-                ];
+                $responseVariable = $var['var'];
+
+                if ($responseVariable->getBaseType() === 'file') {
+                    $itemResults[$responseVariable->getIdentifier()] = [
+                        'response' => ['base' => ['file' => ['uri' => $var['uri']]]]
+                    ];
+                } else {
+                    $itemResults[$responseVariable->getIdentifier()] = [
+                        'response' => self::formatVariableToPci($responseVariable)
+                    ];
+                }
             }
 
             $formatted[$itemUri][$itemResult['attempt']] = $itemResults;
