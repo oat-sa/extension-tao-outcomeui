@@ -143,3 +143,18 @@ tr td {
 .filter-buttons {
     display: inline;
 }
+
+@media print {
+    header > nav,
+    .navi-container,
+    .content-container .action-bar,
+    .resultsViewToolsWrapper, 
+    table.matrix a.btn-info.preview {
+        display: none !important;
+    }
+
+    .section-container .navi-container + .content-container {
+        max-width: 100%;
+    }
+}
+

@@ -2,6 +2,7 @@
 use oat\tao\helpers\Template;
 use oat\taoOutcomeUi\model\ResultsService;
 ?>
+<link rel="stylesheet" href="<?= Template::css('icon.css') ?>" />
 <link rel="stylesheet" type="text/css" href="<?= ROOT_URL ?>taoOutcomeUi/views/css/result.css" />
 
 <header class="section-header flex-container-full">
@@ -25,9 +26,9 @@ use oat\taoOutcomeUi\model\ResultsService;
                 </div>
             <div class="resultsViewToolsWrapper">
                 <div class="resultsViewToolsButtons">
-                    <button class="download btn-info small print"><span class="icon-print"></span><?php echo __('Print') ?></button>
-                    <button class="download btn-info small download"><span class="icon-download"></span><?php echo __('Download') ?></button>
-                    <button class="download btn-info small delete"><span class="icon-delete"></span><?php echo __('Delete') ?></button>
+                    <button class="btn-info small print"><span class="icon-print"></span><?php echo __('Print') ?></button>
+                    <button class="btn-info small download"><span class="icon-download"></span><?php echo __('Download') ?></button>
+                    <button class="btn-info small delete"><span class="icon-delete"></span><?php echo __('Delete') ?></button>
                 </div>
                 <div id="resultsViewTools">
                     <div class="tile">
