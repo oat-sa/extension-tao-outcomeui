@@ -1,12 +1,17 @@
 @import "inc/bootstrap";
 
 #content {
-    padding : 20px;
+    padding: 24px;
+}
+
+.resultsWrapper {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 8px;
 }
 
 #resultsHeader{
-    overflow:auto;
-    margin-bottom:10px;
+    flex: 1;
 }
 
 .tile {
@@ -14,20 +19,21 @@
     border: 1px solid #ddd;
     padding:6px;
 }
-.tile.testtaker{
-     float:left;
-     width:54%;
-}
 .tile.statistics{
-     float:right;
-     width:45%;
+    float:right;
+    width:45%;
 }
 
-#resultsViewTools{
-    display:block;
-    //text-align:right;
-    float:right;
-    margin-left:10px;
+.resultsViewToolsWrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-left: 10px;
+}
+
+.resultsViewToolsButtons button {
+    margin-left: 8px;
 }
 
 .userMail{
@@ -137,3 +143,18 @@ tr td {
 .filter-buttons {
     display: inline;
 }
+
+@media print {
+    header > nav,
+    .navi-container,
+    .content-container .action-bar,
+    .resultsViewToolsWrapper, 
+    table.matrix a.btn-info.preview {
+        display: none !important;
+    }
+
+    .section-container .navi-container + .content-container {
+        max-width: 100%;
+    }
+}
+

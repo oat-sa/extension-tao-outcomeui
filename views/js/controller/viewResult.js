@@ -27,6 +27,10 @@ define([
     'core/request',
     'layout/section',
     'taoItems/previewer/factory',
+    'ui/dialog/confirm',
+    'uri',
+    'ui/feedback',
+    'core/router',
     'jquery.fileDownload'
 ], function (
     module,
@@ -36,12 +40,15 @@ define([
     loggerFactory,
     request,
     section,
-    previewerFactory
+    previewerFactory,
+    dialogConfirm,
+    uriHelper,
+    feedback,
+    router
 ) {
     'use strict';
 
     const logger = loggerFactory('taoOutcomeUi/viewResults');
-    const downloadUrl = urlHelper.route('getFile', 'Results', 'taoOutcomeUi');
     const dataUrl = urlHelper.route('getVariableFile', 'Results', 'taoOutcomeUi');
 
     /**
@@ -150,14 +157,43 @@ define([
 
             //bind the download buttons
             $('.download', $container).on('click', function() {
-                const variableUri = $(this).val();
-                $.fileDownload(downloadUrl, {
+                $.fileDownload(urlHelper.route('downloadXML', 'Results', 'taoOutcomeUi'), {
                     preparingMessageHtml: __("We are preparing your report, please wait..."),
                     failMessageHtml: __("There was a problem generating your report, please try again."),
-                    httpMethod: "POST",
-                    //This gives the current selection of filters (facet based query) and the list of columns selected from the client (the list of columns is not kept on the server side class.taoTable.php
-                    data: { variableUri, deliveryUri }
+                    httpMethod: 'GET',
+                    data: {
+                        id: conf.id,
+                        delivery: conf.classUri
+                    }
                 });
+            });
+
+            //bind the download buttons
+            $('.delete', $container).on('click', function() {
+                dialogConfirm(__('Please confirm deletion'), function () {
+                    $.ajax({
+                        url: urlHelper.route('delete', 'Results', 'taoOutcomeUi'),
+                        type: "POST",
+                        data: {
+                            uri: uriHelper.encode(conf.id)
+                        },
+                        dataType: 'json'
+                    }).done(function (response) {
+                        if (response.deleted) {
+                            feedback().success(__('Result has been deleted'));
+                            // Hack to go back to the list of results
+                            router.dispatch('tao/Main/index');
+                        } else {
+                            feedback().error(__('Something went wrong...') + '<br>' + encode.html(response.error), {encodeHtml: false});
+                        }
+                    }).fail(function () {
+                        feedback().error(__('Something went wrong...'));
+                    });
+                });
+            });
+
+            $('.print', $container).on('click', function() {
+                window.print();
             });
 
             $('.preview', $container).on('click', function(e) {
@@ -191,7 +227,7 @@ define([
                             fullPage: true
                         });
                     })
-                    .catch(e => logger.error(e));
+                    .catch(err => logger.error(err));
             });
 
         }
