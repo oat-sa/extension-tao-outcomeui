@@ -27,7 +27,7 @@
                     <action id="results-index" name="Results" url="/taoOutcomeUi/Results/index" group="content" context="instance">
                         <icon id="icon-result-small"/>
                     </action>
-                    <action id="results-export" name="Export Table" url="/taoOutcomeUi/ResultTable/index" group="content"  context="instance">
+                    <action id="results-export" name="Export Table" url="/taoOutcomeUi/ResultTable/index" group="tree" context="resource">
                         <icon id="icon-table"/>
                     </action>
                 </actions>
