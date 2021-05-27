@@ -157,7 +157,7 @@ define([
 
 
             //bind the xml download button
-            $('.xmlDownload', $container).on('click', function() {
+            $('#xmlDownload', $container).on('click', function() {
                 $.fileDownload(urlHelper.route('downloadXML', 'Results', 'taoOutcomeUi'), {
                     preparingMessageHtml: __("We are preparing your report, please wait..."),
                     failMessageHtml: __("There was a problem generating your report, please try again."),
