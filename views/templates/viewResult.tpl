@@ -27,7 +27,7 @@ use oat\taoOutcomeUi\model\ResultsService;
             <div class="resultsViewToolsWrapper">
                 <div class="resultsViewToolsButtons">
                     <button class="btn-info small print"><span class="icon-print"></span><?php echo __('Print') ?></button>
-                    <button class="btn-info small download"><span class="icon-download"></span><?php echo __('Export Results') ?></button>
+                    <button id="xmlDownload" class="btn-info small download"><span class="icon-download"></span><?php echo __('Export Results') ?></button>
                     <button class="btn-info small delete"><span class="icon-delete"></span><?php echo __('Delete') ?></button>
                 </div>
                 <div id="resultsViewTools">
@@ -134,7 +134,7 @@ use oat\taoOutcomeUi\model\ResultsService;
                             <td class="dataResult" colspan="2">
                         <?php
                         if ($variable->getBaseType() === "file" && $variable->getCandidateResponse() !== '') {
-                            echo '<button class="download btn-info small" value="'.htmlspecialchars($observation["uri"]).'"><span class="icon-download"></span> '.__('Download file').'</button>';
+                            echo '<button id="fileDownload" class="download btn-info small" value="'.htmlspecialchars($observation["uri"]).'"><span class="icon-download"></span> '.__('Download file').'</button>';
                         }
                         else{
                             $rdfValue = $variable->getValue();

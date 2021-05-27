@@ -49,6 +49,7 @@ define([
     'use strict';
 
     const logger = loggerFactory('taoOutcomeUi/viewResults');
+    const downloadUrl = urlHelper.route('getFile', 'Results', 'taoOutcomeUi');
     const dataUrl = urlHelper.route('getVariableFile', 'Results', 'taoOutcomeUi');
 
     /**
@@ -155,8 +156,8 @@ define([
             });
 
 
-            //bind the download buttons
-            $('.download', $container).on('click', function() {
+            //bind the xml download button
+            $('.xmlDownload', $container).on('click', function() {
                 $.fileDownload(urlHelper.route('downloadXML', 'Results', 'taoOutcomeUi'), {
                     preparingMessageHtml: __("We are preparing your report, please wait..."),
                     failMessageHtml: __("There was a problem generating your report, please try again."),
@@ -164,6 +165,20 @@ define([
                     data: {
                         id: conf.id,
                         delivery: conf.classUri
+                    }
+                });
+            });
+
+            // bind the file download button
+            $('#fileDownload', $container).on('click', function() {
+                const variableUri = $(this).val();
+                $.fileDownload(downloadUrl, {
+                    preparingMessageHtml: __("We are preparing your file, please wait..."),
+                    failMessageHtml: __("There was a problem generating your file, please try again."),
+                    httpMethod: 'POST',
+                    data: {
+                        variableUri,
+                        deliveryUri
                     }
                 });
             });
