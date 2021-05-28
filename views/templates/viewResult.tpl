@@ -100,7 +100,7 @@ use oat\taoOutcomeUi\model\ResultsService;
                     <th colspan="5" class="bold">
                         <b><?= _dh($item['label']) ?></b>
                     </th>
-                    <th>
+                    <th class="search-modal">
                         <?php if ($item['uri'] != 'unknown'): ?>
                             <a href="#"
                                 data-delivery-id="<?=get_data('classUri')?>"
@@ -109,7 +109,7 @@ use oat\taoOutcomeUi\model\ResultsService;
                                 data-uri="<?=$item['uri']?>"
                                 data-definition="<?=$item['internalIdentifier']?>"
                                 data-state="<?=htmlspecialchars($item['state'])?>"
-                                class="btn-info small preview"
+                                class="btn-info small preview go-to-item"
                                 target="preview">
                                 <span class="icon-preview"></span><?=__('Review')?>
                             </a>
