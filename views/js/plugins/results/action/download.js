@@ -39,11 +39,10 @@ define([
             // this action will be available for each displayed line in the list
             resultsList.addAction({
                 id: 'download',
-                label: __('Download'),
-                icon: 'download',
+                label: __('Export Results'),
+                icon: 'export',
                 action: function downloadResults(id) {
                     $.fileDownload(urlHelper.route('downloadXML', 'Results', 'taoOutcomeUi'), {
-                        preparingMessageHtml: __("We are preparing your report, please wait..."),
                         failMessageHtml: __("There was a problem generating your report."),
                         httpMethod: 'GET',
                         data: {

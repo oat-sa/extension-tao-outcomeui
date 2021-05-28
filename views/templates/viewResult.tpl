@@ -27,7 +27,7 @@ use oat\taoOutcomeUi\model\ResultsService;
             <div class="resultsViewToolsWrapper">
                 <div class="resultsViewToolsButtons">
                     <button class="btn-info small print"><span class="icon-print"></span><?php echo __('Print') ?></button>
-                    <button id="xmlDownload" class="btn-info small download"><span class="icon-download"></span><?php echo __('Export Results') ?></button>
+                    <button id="xmlDownload" class="btn-info small download"><span class="icon-export"></span><?php echo __('Export Results') ?></button>
                     <button class="btn-info small delete"><span class="icon-delete"></span><?php echo __('Delete') ?></button>
                 </div>
                 <div id="resultsViewTools">
@@ -52,7 +52,7 @@ use oat\taoOutcomeUi\model\ResultsService;
                             <span class="icon-checkbox cross"></span>
                             <?=__('Traces')?>
                         </label>
-                        <button class="btn-info small result-filter-btn"><?=__('Filter');?></button>
+                        <button class="btn-info small result-filter-btn btn-secondary"><?=__('Filter');?></button>
                     </div>
                 </div>
             </div>
@@ -99,7 +99,7 @@ use oat\taoOutcomeUi\model\ResultsService;
                     <th colspan="5" class="bold">
                         <b><?= _dh($item['label']) ?></b>
                     </th>
-                    <th class="search-modal">
+                    <th>
                         <?php if ($item['uri'] != 'unknown'): ?>
                             <a href="#"
                                 data-delivery-id="<?=get_data('classUri')?>"
@@ -108,7 +108,7 @@ use oat\taoOutcomeUi\model\ResultsService;
                                 data-uri="<?=$item['uri']?>"
                                 data-definition="<?=$item['internalIdentifier']?>"
                                 data-state="<?=htmlspecialchars($item['state'])?>"
-                                class="btn-info small preview go-to-item"
+                                class="btn-info small preview btn-secondary"
                                 target="preview">
                                 <span class="icon-preview"></span><?=__('Review')?>
                             </a>
