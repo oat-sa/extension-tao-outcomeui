@@ -44,7 +44,7 @@ define([
                 action: function downloadResults(id) {
                     $.fileDownload(urlHelper.route('downloadXML', 'Results', 'taoOutcomeUi'), {
                         preparingMessageHtml: __("We are preparing your report, please wait..."),
-                        failMessageHtml: __("There was a problem generating your report, please try again."),
+                        failMessageHtml: __("There was a problem generating your report."),
                         httpMethod: 'GET',
                         data: {
                             id: id,

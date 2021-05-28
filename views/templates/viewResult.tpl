@@ -24,6 +24,7 @@ use oat\taoOutcomeUi\model\ResultsService;
                         <tr><td class="field"><?=__('Email:')?></td><td class="fieldValue userMail"><?= _dh(get_data('userEmail'))?></td></tr>
                     </table>
                 </div>
+                </div>
             <div class="resultsViewToolsWrapper">
                 <div class="resultsViewToolsButtons">
                     <button class="btn-info small print"><span class="icon-print"></span><?php echo __('Print') ?></button>

@@ -148,7 +148,7 @@ tr td {
     header > nav,
     .navi-container,
     .content-container .action-bar,
-    .resultsViewToolsWrapper, 
+    .resultsViewToolsWrapper,
     table.matrix a.btn-info.preview {
         display: none !important;
     }
@@ -158,3 +158,17 @@ tr td {
     }
 }
 
+#fileDownload {
+    cursor: pointer;
+    background: transparent;
+    text-decoration: none;
+    outline: 0;
+    color: #3e7da7;
+}
+
+.review {
+    background-color: transparent;
+    border: 1px solid black;
+    color: black;
+    text-shadow: none;
+}
