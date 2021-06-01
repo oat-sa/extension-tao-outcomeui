@@ -143,7 +143,7 @@ define([
     function downloadResult(rowId) {
         var res = parseRowId(rowId);
         $.fileDownload(url.route('downloadXML', 'Results', 'taoOutcomeUi'), {
-            failMessageHtml: __("There was a problem generating your report."),
+            failMessageHtml: __("Unexpected error occurred when generating your report. Please contact your system administrator."),
             httpMethod: 'GET',
             data: {
                 id: res[0],
