@@ -23,6 +23,7 @@ namespace oat\taoOutcomeUi\model\search;
 use DateTimeImmutable;
 use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\service\ConfigurableService;
+use oat\oatbox\user\UserService;
 use oat\tao\helpers\UserHelper;
 use oat\tao\model\AdvancedSearch\AdvancedSearchChecker;
 use oat\tao\model\search\Search;
@@ -93,7 +94,7 @@ class ResultsWatcher extends ConfigurableService
         $searchService = $this->getServiceLocator()->get(Search::SERVICE_ID);
         if ($searchService->supportCustomIndex() && $this->getAdvancedSearchChecker()->isEnabled()) {
             $deliveryExecutionId = $deliveryExecution->getIdentifier();
-            $user = UserHelper::getUser($deliveryExecution->getUserIdentifier());
+            $user = $this->getUserService()->getUser($deliveryExecution->getUserIdentifier());
             $customFieldService = $this->getServiceLocator()->get(ResultCustomFieldsService::SERVICE_ID);
             $customBody = $customFieldService->getCustomFields($deliveryExecution);
 
@@ -153,6 +154,11 @@ class ResultsWatcher extends ConfigurableService
 
     private function getAdvancedSearchChecker(): AdvancedSearchChecker
     {
-        return $this->getServiceManager()->get(AdvancedSearchChecker::class);
+        return $this->getServiceLocator()->get(AdvancedSearchChecker::class);
+    }
+
+    private function getUserService(): UserService
+    {
+        return $this->getServiceLocator()->get(UserService::SERVICE_ID);
     }
 }
