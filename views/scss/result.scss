@@ -148,7 +148,7 @@ tr td {
     header > nav,
     .navi-container,
     .content-container .action-bar,
-    .resultsViewToolsWrapper, 
+    .resultsViewToolsWrapper,
     table.matrix a.btn-info.preview {
         display: none !important;
     }
@@ -158,3 +158,18 @@ tr td {
     }
 }
 
+#fileDownload {
+    cursor: pointer;
+    background: transparent;
+    text-shadow: none;
+    color: #3e7da7;
+}
+
+.btn-info.btn-secondary {
+    &.preview, &.result-filter-btn {
+        background-color: transparent;
+        border: 1px solid black;
+        color: black;
+        text-shadow: none;
+    }
+}
