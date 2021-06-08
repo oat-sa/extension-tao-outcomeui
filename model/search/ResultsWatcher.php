@@ -20,19 +20,19 @@
 
 namespace oat\taoOutcomeUi\model\search;
 
-use DateTime;
 use DateTimeImmutable;
 use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\service\ConfigurableService;
 use oat\tao\helpers\UserHelper;
+use oat\tao\model\AdvancedSearch\AdvancedSearchChecker;
 use oat\tao\model\search\Search;
 use oat\tao\model\search\tasks\AddSearchIndexFromArray;
 use oat\tao\model\taskQueue\QueueDispatcherInterface;
 use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
+use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;
 use oat\taoResultServer\models\classes\ResultService;
 use oat\taoTests\models\event\TestChangedEvent;
-use oat\taoDelivery\model\execution\ServiceProxy;
 
 /**
  * Class ResultsWatcher
@@ -91,7 +91,7 @@ class ResultsWatcher extends ConfigurableService
         /** @var Search $searchService */
         $report = \common_report_Report::createSuccess();
         $searchService = $this->getServiceLocator()->get(Search::SERVICE_ID);
-        if ($searchService->supportCustomIndex()) {
+        if ($searchService->supportCustomIndex() && $this->getAdvancedSearchChecker()->isEnabled()) {
             $deliveryExecutionId = $deliveryExecution->getIdentifier();
             $user = UserHelper::getUser($deliveryExecution->getUserIdentifier());
             $customFieldService = $this->getServiceLocator()->get(ResultCustomFieldsService::SERVICE_ID);
@@ -149,5 +149,10 @@ class ResultsWatcher extends ConfigurableService
         }
 
         return $date->format('m/d/Y H:i:s');
+    }
+
+    private function getAdvancedSearchChecker(): AdvancedSearchChecker
+    {
+        return $this->getServiceManager()->get(AdvancedSearchChecker::class);
     }
 }
