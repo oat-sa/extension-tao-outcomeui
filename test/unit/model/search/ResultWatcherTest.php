@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -41,16 +40,19 @@ class ResultWatcherTest extends TestCase
      * @var ResultsWatcher
      */
     private $subject;
+
     /**
      * @var AdvancedSearchChecker|MockObject
      */
     private $advancedSearchChecker;
+
     /**
-     * @var MockObject|string
+     * @var QueueDispatcherInterface|MockObject
      */
     private $queueDispatcher;
+
     /**
-     * @var Search|MockObject
+     * @var SearchProxy|MockObject
      */
     private $searchService;
 
