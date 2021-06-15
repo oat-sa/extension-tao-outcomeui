@@ -15,28 +15,28 @@ msgstr ""
 
 #, tao-public
 msgid " "
-msgstr ""
+msgstr " "
 
 msgid "Add All grades"
-msgstr "すべてのグレードに追加"
+msgstr "評点を追加"
 
 msgid "Add All responses"
-msgstr "すべてのレスポンスに追加"
+msgstr "解答を追加"
 
 msgid "Add Delivery"
-msgstr ""
+msgstr "デリバリ情報追加"
 
 msgid "Add Delivery Execution"
-msgstr ""
+msgstr "デリバリ実施情報追加"
 
 msgid "Add Test Taker"
-msgstr "受験者を追加"
+msgstr "受検者情報を追加"
 
 msgid "Adding/Updating search index for %s"
-msgstr ""
+msgstr "%sの検索インデックスの追加/更新"
 
 msgid "All collected variables"
-msgstr "すべての変数"
+msgstr "すべての項目"
 
 msgid "Anonymise"
 msgstr "匿名化"
@@ -45,10 +45,10 @@ msgid "Class"
 msgstr "クラス"
 
 msgid "CSV results export for delivery \"%s"
-msgstr ""
+msgstr "デリバリ \"%sのCSV結果をエクスポート"
 
 msgid "%s results export for delivery class \"%s"
-msgstr ""
+msgstr "デリバリ \"%sの結果 %s をエクスポート"
 
 msgid "Delete"
 msgstr "削除"
@@ -57,51 +57,51 @@ msgid "Delivery"
 msgstr "デリバリ"
 
 msgid "Delivery Execution"
-msgstr ""
+msgstr "デリバリ実施"
 
 msgid "Download"
 msgstr "ダウンロード"
 
 msgid "Download result"
-msgstr ""
+msgstr "結果ダウンロード"
 
 msgid "Email:"
-msgstr "電子メール:"
+msgstr "メール:"
 
 msgid "End Delivery Execution"
-msgstr ""
+msgstr "デリバリ実施の終了日時"
 
 msgid "Error"
 msgstr "エラー"
 
 #, tao-public
 msgid "Export CSV"
-msgstr ""
+msgstr "CSVエクスポート"
 
 msgid "Export CSV File"
-msgstr "CSV ファイルにエクスポート"
+msgstr "CSVエクスポート"
 
 msgid "Export SQL File"
-msgstr "SQL ファイルにエクスポート"
+msgstr "SQLエクスポート"
 
 #, tao-public
 msgid "Export Table"
-msgstr "テーブルをエクスポート"
+msgstr "結果テーブル出力"
 
 msgid "Filter"
 msgstr "フィルタ"
 
 msgid "Filters"
-msgstr ""
+msgstr "フィルタ"
 
 msgid "First Name:"
-msgstr "名:"
+msgstr "名前1:"
 
 msgid "First submitted variables only"
-msgstr "最初の変数のみをサブミット"
+msgstr "初回送信データのみ"
 
 msgid "Grades"
-msgstr "グレード"
+msgstr "評点"
 
 msgid "Label"
 msgstr "ラベル"
@@ -110,10 +110,10 @@ msgid "Label:"
 msgstr "ラベル:"
 
 msgid "Last Name:"
-msgstr "姓:"
+msgstr "名前２:"
 
 msgid "Last submitted variables only"
-msgstr "最後の変数のみサブミット"
+msgstr "最終送信データのみ"
 
 msgid "Login:"
 msgstr "ログイン名:"
@@ -123,31 +123,31 @@ msgid "Manage Results"
 msgstr "結果の管理"
 
 msgid "No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here."
-msgstr "テストがまだ受験されていません。テストを受験次第結果が表示されます"
+msgstr "まだ受検されていません。受検後に結果が表示されます"
 
 msgid "Nothing to export for \"%s"
-msgstr ""
+msgstr "エクスポートするものはありません：\"%s"
 
 msgid "Please confirm deletion"
-msgstr "削除を確認してください"
+msgstr "削除してもよろしいですか？"
 
 msgid "Preview"
-msgstr ""
+msgstr "プレビュー"
 
 msgid "Remove All grades"
-msgstr "すべてのグレードを削除"
+msgstr "評点を除外"
 
 msgid "Remove All responses"
-msgstr "すべてのレスポンスを削除"
+msgstr "解答を除外"
 
 msgid "Remove Delivery"
-msgstr ""
+msgstr "デリバリ情報を除外"
 
 msgid "Remove Delivery Execution"
-msgstr ""
+msgstr "デリバリ実施情報を除外"
 
 msgid "Responses"
-msgstr "応答"
+msgstr "解答"
 
 msgid "Result has been deleted"
 msgstr "結果は削除されました"
@@ -158,83 +158,83 @@ msgstr "結果"
 
 #, tao-public
 msgid "Results library"
-msgstr "結果ライブラリー"
+msgstr "結果ライブラリ"
 
 msgid "Results monitoring"
-msgstr ""
+msgstr "結果モニタリング"
 
 #, tao-public
 msgid "Results Monitoring"
-msgstr ""
+msgstr "結果モニタリング"
 
 msgid "Results of \"%s\" successfully exported"
-msgstr ""
+msgstr "結果 \"%s\" のエクスポートが完了しました"
 
 msgid "Results of \"%s\" successfully exported into \"%s"
-msgstr ""
+msgstr "結果 \"%s\" が \"%sにエクスポートされました"
 
 msgid "Review"
-msgstr ""
+msgstr "レビュー"
 
 msgid "Search by delivery results"
-msgstr ""
+msgstr "デリバリ結果から検索"
 
 msgid "Search by results"
-msgstr ""
+msgstr "結果から検索"
 
 msgid "Something went wrong..."
-msgstr ""
+msgstr "処理が完了できません・・・"
 
 msgid "Start Delivery Execution"
-msgstr ""
+msgstr "デリバリ実施の開始日時"
 
 msgid "Start Time"
-msgstr ""
+msgstr "開始時間"
 
 msgid "Test Taker"
-msgstr "受験者"
+msgstr "受検者"
 
 msgid "Test taker"
-msgstr "受験者"
+msgstr "受検者"
 
 msgid "Test Taker ID"
-msgstr ""
+msgstr "受検者ID"
 
 msgid "Test Variables"
 msgstr "テスト変数"
 
 msgid "The class you have selected contains no results to be analysed, please select a different class"
-msgstr "選択したクラスには、分析すべき結果が含まれていません。別のクラスを選択してください。"
+msgstr "選択したクラスには、結果が含まれていません。別のクラスを選択してください。"
 
 msgid "The number of observations is too low"
-msgstr "観点の値が低すぎます"
+msgstr "オブザベーションの数が少なすぎます"
 
 msgid "The URL does not exist."
-msgstr ""
+msgstr "このURLは見つかりません"
 
 msgid "There was a problem generating your report, please try again."
 msgstr "レポート生成中に問題が発生しました。再度実行してください。"
 
 #, tao-public
 msgid "Tools"
-msgstr ""
+msgstr "ツール"
 
 msgid "Traces"
-msgstr ""
+msgstr "トレース"
 
 msgid "unknown"
 msgstr "不明"
 
 msgid "Variables"
-msgstr ""
+msgstr "データ項目"
 
 msgid "View"
-msgstr ""
+msgstr "表示"
 
 #, tao-public
 msgid "View and format the collected results."
-msgstr "収集された結果の表示とフォーマット。"
+msgstr "収集した結果の表示とフォーマット"
 
 msgid "We are preparing your report, please wait..."
-msgstr "レポート作成中、しばらくお待ちください..."
+msgstr "レポート作成中です、しばらくお待ちください..."
 
