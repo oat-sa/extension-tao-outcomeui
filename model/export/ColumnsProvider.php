@@ -35,6 +35,7 @@ use oat\taoOutcomeUi\model\table\DeliveryExecutionDataProvider;
 use oat\taoOutcomeUi\model\table\TraceVariableColumn;
 use oat\taoOutcomeUi\model\table\TraceVariableDataProvider;
 use oat\taoTestTaker\models\TestTakerService;
+use oat\taoOutcomeUi\model\table\TestCenterColumn;
 
 /**
  * ColumnsProvider
@@ -48,10 +49,13 @@ class ColumnsProvider
     private $delivery;
     private $resultsService;
 
-    const LABEL_START_DELIVERY_EXECUTION = 'Start Delivery Execution';
-    const LABEL_ID_DELIVERY_EXECUTION = 'Delivery Execution Id';
+    private const TEST_CENTER_PROPERTY_RDF = 'http://www.tao.lu/Ontologies/TAOTestCenter.rdf#member';
+    private const TEST_CENTER_ASSIGNMENT_PROPERTY_RDF = 'http://www.tao.lu/Ontologies/TAOTestCenter#UserAssignment';
 
-    const LABEL_TRACE_VARIABLES = 'Trace variables';
+    public const LABEL_START_DELIVERY_EXECUTION = 'Start Delivery Execution';
+    private const LABEL_ID_DELIVERY_EXECUTION = 'Delivery Execution Id';
+
+    private const LABEL_TRACE_VARIABLES = 'Trace variables';
 
     /**
      * Test Taker properties to be exported.
@@ -84,7 +88,7 @@ class ColumnsProvider
 
     /**
      * @param string|\core_kernel_classes_Resource $delivery
-     * @param ResultsService                       $resultsService
+     * @param ResultsService $resultsService
      * @throws \common_exception_NotFound
      */
     public function __construct($delivery, ResultsService $resultsService)
@@ -125,10 +129,17 @@ class ColumnsProvider
 
         foreach ($testTakerProps as $property) {
             $property = $this->getProperty($property);
-            $col = new ContextTypePropertyColumn(ContextTypePropertyColumn::CONTEXT_TYPE_TEST_TAKER, $property);
 
-            if ($property->getUri() === OntologyRdfs::RDFS_LABEL) {
-                $col->label = __('Test Taker');
+            if ($property->getUri() === self::TEST_CENTER_PROPERTY_RDF) {
+                continue;
+            } elseif ($property->getUri() === self::TEST_CENTER_ASSIGNMENT_PROPERTY_RDF) {
+                $col = new TestCenterColumn($property);
+            } else {
+                $col = new ContextTypePropertyColumn(ContextTypePropertyColumn::CONTEXT_TYPE_TEST_TAKER, $property);
+
+                if ($property->getUri() === OntologyRdfs::RDFS_LABEL) {
+                    $col->label = __('Test Taker');
+                }
             }
 
             $columns[] = $col->toArray();
@@ -140,8 +151,8 @@ class ColumnsProvider
     /**
      * Get delivery columns to be exported.
      *
-     * @throws \RuntimeException
      * @return array
+     * @throws \RuntimeException
      * @throws \core_kernel_persistence_Exception
      */
     public function getDeliveryColumns()
@@ -197,8 +208,8 @@ class ColumnsProvider
     /**
      * Returns all grade columns to be exported.
      *
-     * @throws \RuntimeException
      * @return array
+     * @throws \RuntimeException
      */
     public function getGradeColumns()
     {
@@ -208,8 +219,8 @@ class ColumnsProvider
     /**
      * Returns all response columns to be exported.
      *
-     * @throws \RuntimeException
      * @return array
+     * @throws \RuntimeException
      */
     public function getResponseColumns()
     {
@@ -219,8 +230,8 @@ class ColumnsProvider
     /**
      * Returns all trace variables columns to be exported.
      *
-     * @throws \RuntimeException
      * @return array
+     * @throws \RuntimeException
      */
     public function getTraceVariablesColumns()
     {
