@@ -62,6 +62,7 @@ use tao_models_classes_service_StorageDirectory;
 use taoQtiTest_models_classes_QtiTestService;
 use taoResultServer_models_classes_ReadableResultStorage;
 use taoResultServer_models_classes_Variable as Variable;
+use oat\taoOutcomeUi\model\table\TestCenterColumn;
 
 class ResultsService extends OntologyClassService
 {
@@ -86,6 +87,8 @@ class ResultsService extends OntologyClassService
 
     public const OPTION_ALLOW_SQL_EXPORT = 'allow_sql_export';
     public const OPTION_ALLOW_TRACE_VARIABLES_EXPORT = 'allow_trace_variable_export';
+
+    public const SEPARATOR = ' | ';
 
     /** @var taoResultServer_models_classes_ReadableResultStorage */
     private $implementation;
@@ -1079,6 +1082,8 @@ class ResultsService extends OntologyClassService
     {
         if ($column instanceof ContextTypePropertyColumn) {
             $id = $column->getProperty()->getUri() . '_' . $column->getContextType();
+        } elseif ($column instanceof TestCenterColumn) {
+            $id = $column->getProperty()->getUri();
         } else {
             $id = $column->getContextIdentifier() . '_' . $column->getIdentifier();
         }
@@ -1115,7 +1120,7 @@ class ResultsService extends OntologyClassService
     /**
      * @param array $results
      * @param                              $columns - columns to be exported
-     * @param                              $filter  'lastSubmitted' or 'firstSubmitted'
+     * @param                              $filter 'lastSubmitted' or 'firstSubmitted'
      * @param array $filters
      * @param int $offset
      * @param int $limit
@@ -1160,6 +1165,8 @@ class ResultsService extends OntologyClassService
                 } elseif (count($column->getDataProvider()->cache) > 0) {
                     // grade or response column values
                     $cellData[$cellKey] = self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column), $filter);
+
+                    continue;
                 } elseif ($column instanceof ContextTypePropertyColumn) {
                     // test taker or delivery property values
                     $resource = $column->isTestTakerType()
@@ -1200,8 +1207,19 @@ class ResultsService extends OntologyClassService
                         }
                     }
 
-                    $cellData[$cellKey] = [self::filterCellData(implode(' ', $values), $filter)];
+                } elseif ($column instanceof TestCenterColumn) {
+                    $property = $column->getProperty();
+                    $testTaker = $this->getTestTaker($result);
+                    $values = $testTaker->getPropertyValues($property);
+
+                    $values = array_map(function ($value) use ($column, $result) {
+                        $currentDelivery = $this->getDelivery($result);
+
+                        return $column->getTestCenterLabel($value, $currentDelivery);
+                    }, $values);
                 }
+
+                $cellData[$cellKey] = [self::filterCellData(implode(self::SEPARATOR, array_filter($values)), $filter)];
             }
             if ($this->filterData($cellData, $filters)) {
                 $this->convertDates($cellData);
@@ -1363,10 +1381,10 @@ class ResultsService extends OntologyClassService
 
                     if ($variable->variable instanceof \taoResultServer_models_classes_ResponseVariable
                         && $variable->variable->getCorrectResponse() !== null) {
-                        $variableTypes[$uri . $variableIdentifier.'_is_correct'] = [
+                        $variableTypes[$uri . $variableIdentifier . '_is_correct'] = [
                             "contextLabel" => $contextIdentifierLabel,
                             "contextId" => $uri,
-                            "variableIdentifier" => $variableIdentifier.'_is_correct',
+                            "variableIdentifier" => $variableIdentifier . '_is_correct',
                             "columnType" => Variable::TYPE_VARIABLE_IDENTIFIER
                         ];
                     }
@@ -1449,8 +1467,8 @@ class ResultsService extends OntologyClassService
      * 3 allowed filters: firstSubmitted, lastSubmitted, all, trace
      *
      * @param array $observationsList The list of variable values
-     * @param string $filterData      The filter
-     * @param string $allDelimiter    $delimiter to separate values in "all" filter context
+     * @param string $filterData The filter
+     * @param string $allDelimiter $delimiter to separate values in "all" filter context
      *
      * @return array
      */
@@ -1540,6 +1558,7 @@ class ResultsService extends OntologyClassService
 
         return $this->testMetadataCache[$testUri];
     }
+
     /**
      * Load test metadata from file. For deliveries without compiled file try  to compile test metadata.
      *
