@@ -239,7 +239,6 @@ define([
                 taskQueue: taskQueue,
                 taskCreationUrl: urlUtil.route('export', 'ResultTable', 'taoOutcomeUi'),
                 taskCreationData: function getTaskRequestData() {
-                    filterChanged();
                     return {
                         filter: filter,
                         columns: JSON.stringify(columns),
