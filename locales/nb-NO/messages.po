@@ -1,0 +1,257 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: TAO 2021.10\n"
+"PO-Revision-Date: 2021-10-22T13:50:47\n"
+"Last-Translator: TAO Translation Team <translation@tao.lu>\n"
+"MIME-Version: 1.0\n"
+"Language: nb-NO\n"
+"sourceLanguage: en-US\n"
+"targetLanguage: nb-NO\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Basepath: ../../\n"
+"X-Poedit-KeywordsList: __\n"
+"X-Poedit-SearchPath-0: .\n"
+
+msgid "%s results export for delivery \"%s"
+msgstr "%s resultater eksporteres for levering \"%s"
+
+msgid "%s results export for delivery class \"%s"
+msgstr "%s resultater eksporteres for leveringsmappe \"%s"
+
+msgid "Add All grades"
+msgstr "Legg til alle karakterer"
+
+msgid "Add All responses"
+msgstr "Legg til alle svar"
+
+msgid "Add all trace variables"
+msgstr "Legg til alle sporbare variabler"
+
+msgid "Add Delivery"
+msgstr "Legg til besvarelse"
+
+msgid "Add Delivery Execution"
+msgstr "Legg til bevarelseslevering"
+
+msgid "Add Test Taker"
+msgstr "Legg til elev"
+
+msgid "Adding/Updating search index for %s"
+msgstr "Legger til/oppdaterer søkeindeks for %s"
+
+msgid "All collected variables"
+msgstr "Alle innsamlede variabler"
+
+msgid "Anonymise"
+msgstr "Anonymiser"
+
+msgid "Class"
+msgstr "Mappe"
+
+msgid "Delete"
+msgstr "Slette"
+
+msgid "Delivery"
+msgstr "Besvarelse"
+
+msgid "Delivery Execution"
+msgstr "Levering"
+
+msgid "Download"
+msgstr "Nedlasting"
+
+msgid "Download file"
+msgstr "Last ned fil"
+
+msgid "Download result"
+msgstr "Nedlastingsresultat"
+
+msgid "Email:"
+msgstr "E-post:"
+
+msgid "End Delivery Execution"
+msgstr "Avslutt levering"
+
+msgid "Error"
+msgstr "Feil"
+
+#, tao-public
+msgid "Export CSV"
+msgstr "Eksporter CSV"
+
+msgid "Export CSV File"
+msgstr "Eksporter CSV-fil"
+
+msgid "Export Results"
+msgstr "Eksporter Resultater"
+
+msgid "Export SQL"
+msgstr "Eksporter SQL"
+
+msgid "Export SQL File"
+msgstr "Eksporter SQL-fil"
+
+#, tao-public
+msgid "Export Table"
+msgstr "Eksporter tabell"
+
+msgid "Filter"
+msgstr "Filter"
+
+msgid "Filters"
+msgstr "Filtre"
+
+msgid "First Name:"
+msgstr "Fornavn:"
+
+msgid "First submitted variables only"
+msgstr "Kun de første innsendte variablene"
+
+msgid "Grades"
+msgstr "Karakterer"
+
+msgid "Internal server error!"
+msgstr "Intern serverfeil!"
+
+msgid "Label"
+msgstr "Tittel"
+
+msgid "Label:"
+msgstr "Tittel:"
+
+msgid "Last Name:"
+msgstr "Etternavn:"
+
+msgid "Last submitted variables only"
+msgstr "Bare de sist innleverte variabler"
+
+msgid "Login:"
+msgstr "Login:"
+
+#, tao-public
+msgid "Manage Results"
+msgstr "Administrer resultater"
+
+msgid "No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here."
+msgstr "Ingen prøver er avlagt ennå. Så snart en elev gjennomfører en prøve, vil resultatene bli vist her."
+
+msgid "Nothing to export for \"%s"
+msgstr "Ingenting å eksportere for \"%s"
+
+msgid "Please confirm deletion"
+msgstr "Bekreft sletting"
+
+msgid "Preview"
+msgstr "Forhåndsvisning"
+
+msgid "Print"
+msgstr "Skriv ut"
+
+msgid "Remove All grades"
+msgstr "Fjern alle karakterer"
+
+msgid "Remove All responses"
+msgstr "Fjern alle svar"
+
+msgid "Remove all trace variables"
+msgstr "Fjern alle sporbare variabler"
+
+msgid "Remove Delivery"
+msgstr "Fjern besvarelse"
+
+msgid "Remove Delivery Execution"
+msgstr "Fjern levering"
+
+msgid "Responses"
+msgstr "Svar"
+
+msgid "Result has been deleted"
+msgstr "Resultatet er slettet"
+
+#, tao-public
+msgid "Results"
+msgstr "Resultater"
+
+#, tao-public
+msgid "Results library"
+msgstr "Resultatbibliotek"
+
+msgid "Results monitoring"
+msgstr "Resultatovervåking"
+
+#, tao-public
+msgid "Results Monitoring"
+msgstr "Resultatovervåking"
+
+msgid "Results of \"%s\" successfully exported"
+msgstr "Resultatene av \"%s\" ble eksportert"
+
+msgid "Results of \"%s\" successfully exported into \"%s"
+msgstr "Resultatene av \"%s\" ble eksportert til \"%s\""
+
+msgid "Review"
+msgstr "Se gjennom"
+
+msgid "Search by delivery results"
+msgstr "Søk etter leveringsresultater"
+
+msgid "Search by results"
+msgstr "Søk etter resultater"
+
+msgid "Something went wrong..."
+msgstr "Noe gikk galt..."
+
+msgid "Start Delivery Execution"
+msgstr "Start levering"
+
+msgid "Start Time"
+msgstr "Starttid"
+
+msgid "Test Taker"
+msgstr "Elev"
+
+msgid "Test taker"
+msgstr "Elev"
+
+msgid "Test Taker ID"
+msgstr "Elev ID"
+
+msgid "Test Variables"
+msgstr "Testvariabler"
+
+msgid "The class you have selected contains no results to be analysed, please select a different class"
+msgstr "Mappen du har valgt inneholder ingen resultater som skal analyseres. Velg en annen mappe"
+
+msgid "The number of observations is too low"
+msgstr "Antall observasjoner er for lavt"
+
+msgid "The script does not take into account the restrictions on the size of the column header and the size of the row."
+msgstr "Skriptet tar ikke hensyn til begrensningene for størrelsen på kolonneoverskriften og størrelsen på raden."
+
+msgid "The URL does not exist."
+msgstr "Nettadressen finnes ikke."
+
+#, tao-public
+msgid "Tools"
+msgstr "Verktøy"
+
+msgid "Traces"
+msgstr "Spor"
+
+msgid "Unexpected error occurred when generating your report. Please contact your system administrator."
+msgstr "Det oppstod en uventet feil da rapporten ble generert. Ta kontakt med systemadministrator."
+
+msgid "unknown"
+msgstr "ukjent"
+
+msgid "Variables"
+msgstr "Variabler"
+
+msgid "View"
+msgstr "Vis"
+
+#, tao-public
+msgid "View and format the collected results."
+msgstr "Se og formater de innsamlede resultatene."
+
