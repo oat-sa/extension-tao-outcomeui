@@ -553,11 +553,13 @@ class Results extends \tao_actions_CommonModule
 
     /**
      * Regroup item variables by attempt
+     *
      * @param array $variables
      * @param array $filterTypes
      * @return array
+     * @throws common_Exception
      */
-    protected function formatItemVariables($variables, $filterTypes)
+    protected function formatItemVariables(array $variables, array $filterTypes): array
     {
         $displayedVariables = $this->getResultsService()->filterStructuredVariables($variables, $filterTypes);
         $responses = ResponseVariableFormatter::formatStructuredVariablesToItemState($variables);
