@@ -142,8 +142,10 @@ class ResponseVariableFormatter
      * @return array
      * @throws \common_Exception
      */
-    public static function formatStructuredVariablesToItemState($testResultVariables, $itemFilter = [])
-    {
+    public static function formatStructuredVariablesToItemState(
+        array $testResultVariables,
+        array $itemFilter = []
+    ): array {
         $formatted = [];
         foreach ($testResultVariables as $itemKey => $itemResult) {
             if (!isset($itemResult['uri'])) {
@@ -174,6 +176,7 @@ class ResponseVariableFormatter
 
             $formatted[$itemKey][$itemResult['attempt']] = $itemResults;
         }
+
         return $formatted;
     }
 }
