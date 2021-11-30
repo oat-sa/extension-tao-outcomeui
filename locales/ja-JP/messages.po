@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO 3.4.0-sprint132\n"
-"PO-Revision-Date: 2020-07-17T11:41:01\n"
+"Project-Id-Version: TAO 2021.10\n"
+"PO-Revision-Date: 2021-11-17T13:30:34\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: ja-JP\n"
@@ -13,15 +13,20 @@ msgstr ""
 "X-Poedit-KeywordsList: __\n"
 "X-Poedit-SearchPath-0: .\n"
 
-#, tao-public
-msgid " "
-msgstr " "
+msgid "%s results export for delivery \"%s"
+msgstr ""
+
+msgid "%s results export for delivery class \"%s"
+msgstr "デリバリ \"%sの結果 %s をエクスポート"
 
 msgid "Add All grades"
 msgstr "評点を追加"
 
 msgid "Add All responses"
 msgstr "解答を追加"
+
+msgid "Add all trace variables"
+msgstr ""
 
 msgid "Add Delivery"
 msgstr "デリバリ情報追加"
@@ -44,12 +49,6 @@ msgstr "匿名化"
 msgid "Class"
 msgstr "クラス"
 
-msgid "CSV results export for delivery \"%s"
-msgstr "デリバリ \"%sのCSV結果をエクスポート"
-
-msgid "%s results export for delivery class \"%s"
-msgstr "デリバリ \"%sの結果 %s をエクスポート"
-
 msgid "Delete"
 msgstr "削除"
 
@@ -61,6 +60,9 @@ msgstr "デリバリ実施"
 
 msgid "Download"
 msgstr "ダウンロード"
+
+msgid "Download file"
+msgstr ""
 
 msgid "Download result"
 msgstr "結果ダウンロード"
@@ -80,6 +82,12 @@ msgstr "CSVエクスポート"
 
 msgid "Export CSV File"
 msgstr "CSVエクスポート"
+
+msgid "Export Results"
+msgstr ""
+
+msgid "Export SQL"
+msgstr ""
 
 msgid "Export SQL File"
 msgstr "SQLエクスポート"
@@ -102,6 +110,9 @@ msgstr "初回送信データのみ"
 
 msgid "Grades"
 msgstr "評点"
+
+msgid "Internal server error!"
+msgstr ""
 
 msgid "Label"
 msgstr "ラベル"
@@ -134,11 +145,17 @@ msgstr "削除してもよろしいですか？"
 msgid "Preview"
 msgstr "プレビュー"
 
+msgid "Print"
+msgstr ""
+
 msgid "Remove All grades"
 msgstr "評点を除外"
 
 msgid "Remove All responses"
 msgstr "解答を除外"
+
+msgid "Remove all trace variables"
+msgstr ""
 
 msgid "Remove Delivery"
 msgstr "デリバリ情報を除外"
@@ -209,11 +226,11 @@ msgstr "選択したクラスには、結果が含まれていません。別の
 msgid "The number of observations is too low"
 msgstr "オブザベーションの数が少なすぎます"
 
+msgid "The script does not take into account the restrictions on the size of the column header and the size of the row."
+msgstr ""
+
 msgid "The URL does not exist."
 msgstr "このURLは見つかりません"
-
-msgid "There was a problem generating your report, please try again."
-msgstr "レポート生成中に問題が発生しました。再度実行してください。"
 
 #, tao-public
 msgid "Tools"
@@ -221,6 +238,9 @@ msgstr "ツール"
 
 msgid "Traces"
 msgstr "トレース"
+
+msgid "Unexpected error occurred when generating your report. Please contact your system administrator."
+msgstr ""
 
 msgid "unknown"
 msgstr "不明"
@@ -234,7 +254,4 @@ msgstr "表示"
 #, tao-public
 msgid "View and format the collected results."
 msgstr "収集した結果の表示とフォーマット"
-
-msgid "We are preparing your report, please wait..."
-msgstr "レポート作成中です、しばらくお待ちください..."
 
