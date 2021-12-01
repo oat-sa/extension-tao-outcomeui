@@ -47,6 +47,7 @@ use oat\taoOutcomeUi\helper\Datatypes;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
+use oat\taoOutcomeUi\model\table\TestCenterColumn;
 use oat\taoOutcomeUi\model\table\TraceVariableColumn;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
@@ -62,7 +63,7 @@ use tao_models_classes_service_StorageDirectory;
 use taoQtiTest_models_classes_QtiTestService;
 use taoResultServer_models_classes_ReadableResultStorage;
 use taoResultServer_models_classes_Variable as Variable;
-use oat\taoOutcomeUi\model\table\TestCenterColumn;
+use taoTests_models_classes_TestsService as TestsService;
 
 class ResultsService extends OntologyClassService
 {
@@ -397,6 +398,34 @@ class ResultsService extends OntologyClassService
     }
 
     /**
+     * @todo temp bugfix for remote deliveries which waiting reworking https://oat-sa.atlassian.net/browse/TR-3111
+     * @throws \common_exception_NotFound
+     * @throws common_exception_Error
+     */
+    public function getItemLabelFromTestItems($itemCallId, array $itemVariables = []): ?string
+    {
+        if (empty($itemVariables)) {
+            $itemVariables = $this->getImplementation()->getVariables($itemCallId);
+        }
+
+        //get the first variable (item are the same in all)
+        $firstItemVariable = reset($itemVariables);
+
+        //get the first object
+        $itemUri = $firstItemVariable[0]->item;
+        $delivery = $this->getDeliveryByResultId($firstItemVariable[0]->deliveryResultIdentifier);
+
+        $deliveryAssemblyService = $this->getServiceLocator()->get(DeliveryAssemblyService::class);
+        $testService = $this->getServiceLocator()->get(TestsService::class);
+
+        $test = $deliveryAssemblyService->getOrigin($delivery);
+        /** @var core_kernel_classes_Resource[] $items */
+        $items = $testService->getTestItems($test);
+
+        return isset($items[$itemUri]) ? $items[$itemUri]->getLabel() : null;
+    }
+
+    /**
      *
      * @param string $test
      *
@@ -507,9 +536,8 @@ class ResultsService extends OntologyClassService
         }
 
         $itemIdentifier = $undefinedStr;
-        $itemLabel = $undefinedStr;
 
-        if ($relatedItem) {
+        if ($relatedItem && isset($relatedItem['uriResource'], $relatedItem['label'])) {
             $itemIdentifier = $relatedItem['uriResource'];
 
             // check item info in internal cache
@@ -519,6 +547,8 @@ class ResultsService extends OntologyClassService
                 return $this->itemInfoCache[$itemIdentifier];
             }
             $itemLabel = $relatedItem['label'];
+        } else {
+            $itemLabel = $this->getItemLabelFromTestItems($itemCallId, $itemVariables) ?? $undefinedStr;
         }
 
         $item['itemModel'] = '---';
