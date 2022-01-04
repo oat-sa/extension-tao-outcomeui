@@ -146,6 +146,7 @@ class ResponseVariableFormatter
         array $testResultVariables,
         array $itemFilter = []
     ): array {
+
         $formatted = [];
         foreach ($testResultVariables as $itemKey => $itemResult) {
             if (!isset($itemResult['uri'])) {
@@ -158,14 +159,12 @@ class ResponseVariableFormatter
 
             $itemResults = [];
             foreach ($itemResult['taoResultServer_models_classes_ResponseVariable'] as $var) {
-                /**
-                 * @var $responseVariable \taoResultServer_models_classes_ResponseVariable
-                 */
+                /** @var $responseVariable ResponseVariable */
                 $responseVariable = $var['var'];
 
                 if ($responseVariable->getBaseType() === 'file') {
                     $itemResults[$responseVariable->getIdentifier()] = [
-                        'response' => ['base' => ['file' => ['uri' => $var['uri']]]]
+                        'response' => ['base' => ['file' => self::formatVariableFile($responseVariable)]]
                     ];
                 } else {
                     $itemResults[$responseVariable->getIdentifier()] = [
@@ -178,5 +177,14 @@ class ResponseVariableFormatter
         }
 
         return $formatted;
+    }
+
+    private static function formatVariableFile(ResponseVariable $responseVariable): array
+    {
+        $file = Datatypes::decodeFile($responseVariable->getCandidateResponse());
+
+        $file['data'] = base64_encode($file['data']);
+
+        return $file;
     }
 }
