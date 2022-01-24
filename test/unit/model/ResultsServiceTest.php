@@ -260,6 +260,7 @@ class ResultsServiceTest extends TestCase
                     // 2019-06-24T15:01:09
                     ResultsService::FILTER_END_TO => '1561388469',
                 ],
+                'delivery_execution_id',
             ],
             // looking for data that is not in the range
             [
@@ -280,6 +281,7 @@ class ResultsServiceTest extends TestCase
                     // 2019-06-26T00:00:00+00:00
                     ResultsService::FILTER_END_TO => '1561507200',
                 ],
+                'delivery_execution_id',
             ],
             // data without finished date but with filters by finished date
             [
@@ -299,6 +301,7 @@ class ResultsServiceTest extends TestCase
                     // 2019-06-26T00:00:00+00:00
                     ResultsService::FILTER_END_TO => '1561507200',
                 ],
+                'delivery_execution_id',
             ],
             // all filters matched
             [
@@ -322,6 +325,7 @@ class ResultsServiceTest extends TestCase
                     // 2019-06-26T00:00:00+00:00
                     ResultsService::FILTER_END_TO => '1561507200',
                 ],
+                'delivery_execution_id',
             ],
             // start to is not matched
             [
@@ -345,6 +349,7 @@ class ResultsServiceTest extends TestCase
                     // 2019-06-26T00:00:00+00:00
                     ResultsService::FILTER_END_TO => '1561507200',
                 ],
+                'delivery_execution_id',
             ],
         ];
     }
@@ -358,13 +363,13 @@ class ResultsServiceTest extends TestCase
      *
      * @throws ReflectionException
      */
-    public function testFilterData($expected, $row, $filters)
+    public function testFilterData($expected, $row, $filters, $deliveryExecutionIdentifier)
     {
         $class = new ReflectionClass(ResultsService::class);
         $method = $class->getMethod('filterData');
         $method->setAccessible(true);
         $resultsService = new ResultsService();
-        self::assertSame($expected, $method->invokeArgs($resultsService, [$row, $filters]));
+        self::assertSame($expected, $method->invokeArgs($resultsService, [$row, $filters, $deliveryExecutionIdentifier]));
     }
 
     public function testGetCellsByResults()
