@@ -39,6 +39,7 @@ use oat\tao\model\metadata\compiler\ResourceJsonMetadataCompiler;
 use oat\tao\model\metadata\compiler\ResourceMetadataCompilerInterface;
 use oat\tao\model\OntologyClassService;
 use oat\taoDelivery\model\execution\DeliveryExecution;
+use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDelivery\model\RuntimeService;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
@@ -1251,7 +1252,7 @@ class ResultsService extends OntologyClassService
 
                 $cellData[$cellKey] = [self::filterCellData(implode(self::SEPARATOR, array_filter($values)), $filter)];
             }
-            if ($this->filterData($cellData, $filters)) {
+            if ($this->filterData($cellData, $filters, $result)) {
                 $this->convertDates($cellData);
                 $rows[] = [
                     'id' => $result,
@@ -1296,12 +1297,17 @@ class ResultsService extends OntologyClassService
      *
      * @throws common_Exception
      */
-    private function convertDates(&$data)
+    private function convertDates(&$data): void
     {
-        $sd = current($data[self::DELIVERY_EXECUTION_STARTED_AT]);
-        $data[self::DELIVERY_EXECUTION_STARTED_AT][0] = $sd ? tao_helpers_Date::displayeDate($sd) : '';
-        $ed = current($data[self::DELIVERY_EXECUTION_FINISHED_AT]);
-        $data[self::DELIVERY_EXECUTION_FINISHED_AT][0] = $ed ? tao_helpers_Date::displayeDate($ed) : '';
+        if (array_key_exists(self::DELIVERY_EXECUTION_STARTED_AT, $data)) {
+            $startDate = current($data[self::DELIVERY_EXECUTION_STARTED_AT]);
+            $data[self::DELIVERY_EXECUTION_STARTED_AT][0] = $startDate ? tao_helpers_Date::displayeDate($startDate) : '';
+        }
+
+        if (array_key_exists(self::DELIVERY_EXECUTION_FINISHED_AT, $data)) {
+            $endDate = current($data[self::DELIVERY_EXECUTION_FINISHED_AT]);
+            $data[self::DELIVERY_EXECUTION_FINISHED_AT][0] = $endDate ? tao_helpers_Date::displayeDate($endDate) : '';
+        }
     }
 
     /**
@@ -1312,14 +1318,24 @@ class ResultsService extends OntologyClassService
      *
      * @return bool
      */
-    private function filterData($row, array $filters)
+    private function filterData($row, array $filters, string $deliveryExecutionIdentifier)
     {
         $matched = true;
-        if (count($filters) && count(array_intersect(self::PERIODS, array_keys($filters)))) {
-            $startDate = current($row[self::DELIVERY_EXECUTION_STARTED_AT]);
-            $startTime = $startDate ? tao_helpers_Date::getTimeStamp($startDate) : 0;
+        if (!empty($filters) && !empty(array_intersect(self::PERIODS, array_keys($filters)))) {
+            if (
+                !array_key_exists(self::DELIVERY_EXECUTION_STARTED_AT, $row) ||
+                !array_key_exists(self::DELIVERY_EXECUTION_FINISHED_AT, $row)
+            ) {
+                $deliveryExecutionService = $this->getDeliveryExecutionService();
+                $deliveryExecution = $deliveryExecutionService->getDeliveryExecution($deliveryExecutionIdentifier);
+                $startDate = $deliveryExecution->getStartTime();
+                $endDate = $deliveryExecution->getFinishTime();
+            } else {
+                $startDate = current($row[self::DELIVERY_EXECUTION_STARTED_AT]);
+                $endDate = current($row[self::DELIVERY_EXECUTION_FINISHED_AT]);
+            }
 
-            $endDate = current($row[self::DELIVERY_EXECUTION_FINISHED_AT]);
+            $startTime = $startDate ? tao_helpers_Date::getTimeStamp($startDate) : 0;
             $endTime = $endDate ? tao_helpers_Date::getTimeStamp($endDate) : 0;
 
             if ($matched && array_key_exists(self::FILTER_START_FROM, $filters) && $filters[self::FILTER_START_FROM]) {
@@ -1337,6 +1353,11 @@ class ResultsService extends OntologyClassService
         }
 
         return $matched;
+    }
+
+    private function getDeliveryExecutionService(): DeliveryExecutionService
+    {
+        return $this->getServiceLocator()->get(DeliveryExecutionService::SERVICE_ID);
     }
 
     /**
@@ -1531,7 +1552,7 @@ class ResultsService extends OntologyClassService
                     return json_decode($value, true);
                 }, array_values($observationsList)));
                 break;
-                
+
             case self::VARIABLES_FILTER_ALL:
             default:
                 $value = implode($allDelimiter, $observationsList);
