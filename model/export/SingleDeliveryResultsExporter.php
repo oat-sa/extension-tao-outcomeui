@@ -352,7 +352,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      */
     protected function getExportData($exporter)
     {
-        return $exporter->export(true, false);
+        return $exporter->export(true, false, ',', '"', false);
     }
 
     /**
