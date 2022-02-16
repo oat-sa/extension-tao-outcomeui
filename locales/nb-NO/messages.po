@@ -50,10 +50,10 @@ msgid "Class"
 msgstr "Mappe"
 
 msgid "Delete"
-msgstr "Slette"
+msgstr "Slett"
 
 msgid "Delivery"
-msgstr "Besvarelse"
+msgstr "Publisert"
 
 msgid "Delivery Execution"
 msgstr "Levering"
@@ -115,10 +115,10 @@ msgid "Internal server error!"
 msgstr "Intern serverfeil!"
 
 msgid "Label"
-msgstr "Tittel"
+msgstr "Navn"
 
 msgid "Label:"
-msgstr "Tittel:"
+msgstr "Navn:"
 
 msgid "Last Name:"
 msgstr "Etternavn:"
@@ -143,7 +143,7 @@ msgid "Please confirm deletion"
 msgstr "Bekreft sletting"
 
 msgid "Preview"
-msgstr "Forhåndsvisning"
+msgstr "Forhåndsvis"
 
 msgid "Print"
 msgstr "Skriv ut"
@@ -178,11 +178,11 @@ msgid "Results library"
 msgstr "Resultatbibliotek"
 
 msgid "Results monitoring"
-msgstr "Resultatovervåking"
+msgstr "Monitorering"
 
 #, tao-public
 msgid "Results Monitoring"
-msgstr "Resultatovervåking"
+msgstr "Monitorering"
 
 msgid "Results of \"%s\" successfully exported"
 msgstr "Resultatene av \"%s\" ble eksportert"
