@@ -21,7 +21,7 @@
 
 namespace oat\taoOutcomeUi\helper;
 
-use \taoResultServer_models_classes_ResponseVariable as ResponseVariable;
+use taoResultServer_models_classes_ResponseVariable as ResponseVariable;
 
 /**
  * The ResponseVariableFormatter enables you to format the output of the ResultsService into an associative compatible with the client code
@@ -145,13 +145,12 @@ class ResponseVariableFormatter
     public static function formatStructuredVariablesToItemState($testResultVariables, $itemFilter = [])
     {
         $formatted = [];
-        foreach ($testResultVariables as $itemResult) {
+        foreach ($testResultVariables as $itemKey => $itemResult) {
             if (!isset($itemResult['uri'])) {
                 continue;
             }
 
-            $itemUri = $itemResult['uri'];
-            if (!empty($itemFilter) && !in_array($itemUri, $itemFilter)) {
+            if (!empty($itemFilter) && !in_array($itemResult['uri'], $itemFilter)) {
                 continue;
             }
 
@@ -173,7 +172,7 @@ class ResponseVariableFormatter
                 }
             }
 
-            $formatted[$itemUri][$itemResult['attempt']] = $itemResults;
+            $formatted[$itemKey][$itemResult['attempt']] = $itemResults;
         }
         return $formatted;
     }

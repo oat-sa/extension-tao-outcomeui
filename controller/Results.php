@@ -23,17 +23,20 @@
 namespace oat\taoOutcomeUi\controller;
 
 use common_Exception;
+use common_exception_BadRequest;
 use common_exception_NotFound;
-use \Exception;
-use \common_exception_BadRequest;
+use Exception;
 use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyAwareTrait;
 use oat\generis\model\OntologyRdfs;
 use oat\oatbox\event\EventManager;
+use oat\tao\helpers\UserHelper;
+use oat\tao\model\datatable\implementation\DatatableRequest;
 use oat\tao\model\plugins\PluginModule;
 use oat\tao\model\taskQueue\TaskLogActionTrait;
 use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\ServiceProxy;
+use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
 use oat\taoOutcomeUi\model\event\ResultsListPluginEvent;
 use oat\taoOutcomeUi\model\export\DeliveryCsvResultsExporterFactory;
@@ -41,19 +44,16 @@ use oat\taoOutcomeUi\model\export\DeliveryResultsExporterFactoryInterface;
 use oat\taoOutcomeUi\model\export\DeliverySqlResultsExporterFactory;
 use oat\taoOutcomeUi\model\export\ResultsExporter;
 use oat\taoOutcomeUi\model\plugins\ResultsPluginService;
+use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\search\ResultsWatcher;
 use oat\taoOutcomeUi\model\table\ResultsMonitoringDatatable;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 use oat\taoResultServer\models\classes\NoResultStorage;
 use oat\taoResultServer\models\classes\NoResultStorageException;
 use oat\taoResultServer\models\classes\QtiResultsService;
-use oat\taoResultServer\models\Formatter\ItemResponseCollectionNormalizer;
-use \tao_helpers_Uri;
-use oat\taoOutcomeUi\model\ResultsService;
-use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoResultServer\models\classes\ResultServerService;
-use oat\tao\helpers\UserHelper;
-use oat\tao\model\datatable\implementation\DatatableRequest;
+use oat\taoResultServer\models\Formatter\ItemResponseCollectionNormalizer;
+use tao_helpers_Uri;
 
 /**
  * Results Controller provide actions performed from url resolution
@@ -563,14 +563,11 @@ class Results extends \tao_actions_CommonModule
         $responses = ResponseVariableFormatter::formatStructuredVariablesToItemState($variables);
         $excludedVariables = array_flip(['numAttempts', 'duration']);
 
-        foreach ($displayedVariables as &$item) {
-            if (!isset($item['uri'])) {
-                continue;
-            }
-            $itemUri = $item['uri'];
-            $state = isset($responses[$itemUri][$item['attempt']])
-                ? array_diff_key($responses[$itemUri][$item['attempt']], $excludedVariables)
+        foreach ($displayedVariables as $itemKey => &$item) {
+            $state = isset($responses[$itemKey][$item['attempt']])
+                ? array_diff_key($responses[$itemKey][$item['attempt']], $excludedVariables)
                 : [];
+
             $item['state'] = !empty($state) ? json_encode($state) : '{}';
         }
 
