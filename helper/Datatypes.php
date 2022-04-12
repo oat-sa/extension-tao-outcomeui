@@ -21,6 +21,9 @@
 
 namespace oat\taoOutcomeUi\helper;
 
+use oat\oatbox\filesystem\utils\FlyWrapperTrait;
+use oat\taoDeliveryRdf\view\form\WizardForm;
+
 /**
  * A class focusing on providing utility methods for the various result datatypes
  * that might be sent/stored to/by a result server.
@@ -53,23 +56,27 @@ class Datatypes
      */
     public static function decodeFile($binary)
     {
-
         $returnValue = ['name' => '', 'mime' => '', 'data' => ''];
 
         if (empty($binary) === false) {
-            $filenameLen = current(unpack('S', substr($binary, 0, 2)));
+            $binaryStream = fopen('php://memory', 'r+');
+            fwrite($binaryStream, $binary);
+            rewind($binaryStream);
+
+            $binaryLength = strlen($binary);
+            $filenameLen = current(unpack('S', fread($binaryStream, 2)));
 
             //validate case when unpacked filename length more or equal entire provided string
             // what mean that provided string definitely in incorrect format
-            if ($filenameLen >= strlen($binary)) {
+            if ($filenameLen >= $binaryLength) {
                 return $returnValue;
             }
 
             if ($filenameLen > 0) {
-                $returnValue['name'] = substr($binary, 2, $filenameLen);
+                $returnValue['name'] = fread($binaryStream, $filenameLen);
             }
 
-            $packedMimeTypeLen = substr($binary, 2 + $filenameLen, 2);
+            $packedMimeTypeLen = fread($binaryStream, 2);
             if ($packedMimeTypeLen === false) {
                 return $returnValue;
             }
@@ -80,9 +87,8 @@ class Datatypes
             }
 
             $mimetypeLen = current($unpackedMimeTypeLen);
-            $returnValue['mime'] = substr($binary, 4 + $filenameLen, $mimetypeLen);
-
-            $returnValue['data'] = substr($binary, 4 + $filenameLen + $mimetypeLen);
+            $returnValue['mime'] = fread($binaryStream, $mimetypeLen);
+            $returnValue['data'] = stream_get_contents($binaryStream);
         }
 
         return $returnValue;
