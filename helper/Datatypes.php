@@ -76,7 +76,7 @@ class Datatypes
             $returnValue['name'] = fread($binaryStream, $filenameLen);
         }
 
-        $packedMimeTypeLen = fread($binaryStream, $filenameLen);
+        $packedMimeTypeLen = fread($binaryStream, 2);
         if ($packedMimeTypeLen === false) {
             return $returnValue;
         }
