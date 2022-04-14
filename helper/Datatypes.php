@@ -21,9 +21,6 @@
 
 namespace oat\taoOutcomeUi\helper;
 
-use oat\oatbox\filesystem\utils\FlyWrapperTrait;
-use oat\taoDeliveryRdf\view\form\WizardForm;
-
 /**
  * A class focusing on providing utility methods for the various result datatypes
  * that might be sent/stored to/by a result server.
@@ -58,38 +55,40 @@ class Datatypes
     {
         $returnValue = ['name' => '', 'mime' => '', 'data' => ''];
 
-        if (empty($binary) === false) {
-            $binaryStream = fopen('php://memory', 'r+');
-            fwrite($binaryStream, $binary);
-            rewind($binaryStream);
-
-            $binaryLength = strlen($binary);
-            $filenameLen = current(unpack('S', fread($binaryStream, 2)));
-
-            //validate case when unpacked filename length more or equal entire provided string
-            // what mean that provided string definitely in incorrect format
-            if ($filenameLen >= $binaryLength) {
-                return $returnValue;
-            }
-
-            if ($filenameLen > 0) {
-                $returnValue['name'] = fread($binaryStream, $filenameLen);
-            }
-
-            $packedMimeTypeLen = fread($binaryStream, $filenameLen);
-            if ($packedMimeTypeLen === false) {
-                return $returnValue;
-            }
-
-            $unpackedMimeTypeLen = unpack('S', $packedMimeTypeLen);
-            if ($unpackedMimeTypeLen === false) {
-                return $returnValue;
-            }
-
-            $mimetypeLen = current($unpackedMimeTypeLen);
-            $returnValue['mime'] = fread($binaryStream, $mimetypeLen);
-            $returnValue['data'] = stream_get_contents($binaryStream);
+        if (empty($binary)) {
+            return $returnValue;
         }
+
+        $binaryStream = fopen('php://memory', 'r+');
+        fwrite($binaryStream, $binary);
+        rewind($binaryStream);
+
+        $binaryLength = strlen($binary);
+        $filenameLen = current(unpack('S', fread($binaryStream, 2)));
+
+        //validate case when unpacked filename length more or equal entire provided string
+        // what mean that provided string definitely in incorrect format
+        if ($filenameLen >= $binaryLength) {
+            return $returnValue;
+        }
+
+        if ($filenameLen > 0) {
+            $returnValue['name'] = fread($binaryStream, $filenameLen);
+        }
+
+        $packedMimeTypeLen = fread($binaryStream, $filenameLen);
+        if ($packedMimeTypeLen === false) {
+            return $returnValue;
+        }
+
+        $unpackedMimeTypeLen = unpack('S', $packedMimeTypeLen);
+        if ($unpackedMimeTypeLen === false) {
+            return $returnValue;
+        }
+
+        $mimetypeLen = current($unpackedMimeTypeLen);
+        $returnValue['mime'] = fread($binaryStream, $mimetypeLen);
+        $returnValue['data'] = stream_get_contents($binaryStream);
 
         return $returnValue;
     }
