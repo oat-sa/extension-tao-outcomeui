@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2014 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ * Copyright (c) 2014-2022 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
 
@@ -30,7 +30,7 @@ namespace oat\taoOutcomeUi\helper;
  */
 class Datatypes
 {
-    
+
     /**
      * Decode a binary string representing a file into an array.
      *
@@ -53,21 +53,43 @@ class Datatypes
      */
     public static function decodeFile($binary)
     {
-        
         $returnValue = ['name' => '', 'mime' => '', 'data' => ''];
-        
-        if (empty($binary) === false) {
-            $filenameLen = current(unpack('S', substr($binary, 0, 2)));
-            if ($filenameLen > 0) {
-                $returnValue['name'] = substr($binary, 2, $filenameLen);
-            }
-            
-            $mimetypeLen = current(unpack('S', substr($binary, 2 + $filenameLen, 2)));
-            $returnValue['mime'] = substr($binary, 4 + $filenameLen, $mimetypeLen);
-            
-            $returnValue['data'] = substr($binary, 4 + $filenameLen + $mimetypeLen);
+
+        if (empty($binary)) {
+            return $returnValue;
         }
-        
+
+        $binaryStream = fopen('php://memory', 'r+');
+        fwrite($binaryStream, $binary);
+        rewind($binaryStream);
+
+        $binaryLength = strlen($binary);
+        $filenameLen = current(unpack('S', fread($binaryStream, 2)));
+
+        //validate case when unpacked filename length more or equal entire provided string
+        // what mean that provided string definitely in incorrect format
+        if ($filenameLen >= $binaryLength) {
+            return $returnValue;
+        }
+
+        if ($filenameLen > 0) {
+            $returnValue['name'] = fread($binaryStream, $filenameLen);
+        }
+
+        $packedMimeTypeLen = fread($binaryStream, 2);
+        if ($packedMimeTypeLen === false) {
+            return $returnValue;
+        }
+
+        $unpackedMimeTypeLen = unpack('S', $packedMimeTypeLen);
+        if ($unpackedMimeTypeLen === false) {
+            return $returnValue;
+        }
+
+        $mimetypeLen = current($unpackedMimeTypeLen);
+        $returnValue['mime'] = fread($binaryStream, $mimetypeLen);
+        $returnValue['data'] = stream_get_contents($binaryStream);
+
         return $returnValue;
     }
 }
