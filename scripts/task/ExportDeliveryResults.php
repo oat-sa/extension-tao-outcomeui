@@ -222,7 +222,11 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
                         break;
 
                     case '--submittedVersion':
-                        if (!in_array($value, [ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED, ResultsService::VARIABLES_FILTER_LAST_SUBMITTED])) {
+                       if (!in_array($value, [
+                                ResultsService::VARIABLES_FILTER_ALL,
+                                ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED,
+                                ResultsService::VARIABLES_FILTER_LAST_SUBMITTED
+                            ])) {
                             throw new \InvalidArgumentException('Invalid submitted version of variables "' . $value . '". Valid options: ' . implode(', ', [ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED, ResultsService::VARIABLES_FILTER_LAST_SUBMITTED]));
                         }
 
