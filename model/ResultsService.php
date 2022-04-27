@@ -1402,59 +1402,84 @@ class ResultsService extends OntologyClassService
 
         //retrieving The list of the variables identifiers per activities defintions as observed
         $variableTypes = [];
+        if (!empty($resultsIds)) {
+            $resultLanguage = $this->getResultLanguage();
 
-        $resultLanguage = $this->getResultLanguage();
+            foreach (array_chunk(
+                         $resultsIds,
+                         $resultServiceWrapper->getOption(ResultServiceWrapper::RESULT_COLUMNS_CHUNK_SIZE_OPTION)
+                     ) as $resultsIdsItem) {
+                $selectedVariables = $this->getResultsVariables($resultsIdsItem);
+                foreach ($selectedVariables as $variable) {
+                    $variable = $variable[0];
+                    if ($this->isResultVariable($variable, $variableClassUri)) {
+                        //variableIdentifier
+                        $variableIdentifier = $variable->variable->getIdentifier();
+                        if (!is_null($variable->item)) {
+                            $uri = $variable->item;
+                            $contextIdentifierLabel = $itemIndex->getItemValue($uri, $resultLanguage, 'label');
+                        } else {
+                            $uri = $variable->test;
+                            $testData = $this->getTestMetadata($delivery, $variable->test);
+                            $contextIdentifierLabel = $testData->getLabel();
+                        }
 
-        foreach (array_chunk($resultsIds, $resultServiceWrapper->getOption(ResultServiceWrapper::RESULT_COLUMNS_CHUNK_SIZE_OPTION)) as $resultsIdsItem) {
-            $selectedVariables = $this->getResultsVariables($resultsIdsItem);
-            foreach ($selectedVariables as $variable) {
-                $variable = $variable[0];
-                if ($this->isResultVariable($variable, $variableClassUri)) {
-                    //variableIdentifier
-                    $variableIdentifier = $variable->variable->getIdentifier();
-                    if (!is_null($variable->item)) {
-                        $uri = $variable->item;
-                        $contextIdentifierLabel = $itemIndex->getItemValue($uri, $resultLanguage, 'label');
-                    } else {
-                        $uri = $variable->test;
-                        $testData = $this->getTestMetadata($delivery, $variable->test);
-                        $contextIdentifierLabel = $testData->getLabel();
-                    }
+                        $columnType = $this->defineTypeColumn($variable->variable);
 
-                    $columnType = $this->defineTypeColumn($variable->variable);
-
-                    $variableTypes[$uri . $variableIdentifier] = [
-                        "contextLabel" => $contextIdentifierLabel,
-                        "contextId" => $uri,
-                        "variableIdentifier" => $variableIdentifier,
-                        "columnType" => $columnType
-                    ];
-
-                    if ($variable->variable instanceof \taoResultServer_models_classes_ResponseVariable
-                        && $variable->variable->getCorrectResponse() !== null) {
-                        $variableTypes[$uri . $variableIdentifier . '_is_correct'] = [
+                        $variableTypes[$uri.$variableIdentifier] = [
                             "contextLabel" => $contextIdentifierLabel,
                             "contextId" => $uri,
-                            "variableIdentifier" => $variableIdentifier . '_is_correct',
-                            "columnType" => Variable::TYPE_VARIABLE_IDENTIFIER
+                            "variableIdentifier" => $variableIdentifier,
+                            "columnType" => $columnType
                         ];
-                    }
 
+                        if ($variable->variable instanceof \taoResultServer_models_classes_ResponseVariable
+                            && $variable->variable->getCorrectResponse() !== null) {
+                            $variableTypes[$uri.$variableIdentifier.'_is_correct'] = [
+                                "contextLabel" => $contextIdentifierLabel,
+                                "contextId" => $uri,
+                                "variableIdentifier" => $variableIdentifier.'_is_correct',
+                                "columnType" => Variable::TYPE_VARIABLE_IDENTIFIER
+                            ];
+                        }
+
+                    }
                 }
             }
-        }
 
-        foreach ($variableTypes as $variableType) {
-            switch ($variableClassUri) {
-                case \taoResultServer_models_classes_OutcomeVariable::class:
-                    $columns[] = new GradeColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"], $variableType["columnType"]);
-                    break;
-                case \taoResultServer_models_classes_ResponseVariable::class:
-                    $columns[] = new ResponseColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"], $variableType["columnType"]);
-                    break;
-                default:
-                    $columns[] = new ResponseColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"], $variableType["columnType"]);
+            foreach ($variableTypes as $variableType) {
+                switch ($variableClassUri) {
+                    case \taoResultServer_models_classes_OutcomeVariable::class:
+                        $columns[] = new GradeColumn(
+                            $variableType["contextId"],
+                            $variableType["contextLabel"],
+                            $variableType["variableIdentifier"],
+                            $variableType["columnType"]
+                        );
+                        break;
+                    case \taoResultServer_models_classes_ResponseVariable::class:
+                        $columns[] = new ResponseColumn(
+                            $variableType["contextId"],
+                            $variableType["contextLabel"],
+                            $variableType["variableIdentifier"],
+                            $variableType["columnType"]
+                        );
+                        break;
+                    default:
+                        $columns[] = new ResponseColumn(
+                            $variableType["contextId"],
+                            $variableType["contextLabel"],
+                            $variableType["variableIdentifier"],
+                            $variableType["columnType"]
+                        );
+                }
             }
+        } else {
+            /**
+             * TODO  TAO-10728 need this logs to understand what delivery gives exception common_exception_NoContent
+             * For now i think we have problem with saved data, maybe something was deleted or not saved
+             */
+            \common_Logger::d(sprintf('Delivery: %s, Filters: %s', $delivery, implode(';', $filters)));
         }
         $arr = [];
         foreach ($columns as $column) {
