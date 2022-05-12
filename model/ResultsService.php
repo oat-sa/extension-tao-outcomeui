@@ -1418,6 +1418,9 @@ class ResultsService extends OntologyClassService
                         $uri = $variable->item;
                         if ($itemIndex) {
                             $contextIdentifierLabel = $itemIndex->getItemValue($uri, $resultLanguage, 'label');
+                        } else {
+                            $testData = $this->getTestMetadata($delivery, $variable->test);
+                            $contextIdentifierLabel = $testData->getLabel();
                         }
                     } else {
                         $uri = $variable->test;
