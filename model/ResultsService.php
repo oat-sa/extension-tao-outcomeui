@@ -1414,11 +1414,11 @@ class ResultsService extends OntologyClassService
                     if (!is_null($variable->item)) {
                         $uri = $variable->item;
                         if($this->isDeliveryRemote($delivery)) {
+                            $contextIdentifierLabel = $this->getItemLabelFromTestItems($variable->callIdItem, [[$variable]]);
+                        } else {
                             //retrieveing all individual response variables referring to the  selected delivery results
                             $itemIndex = $this->getItemIndexer($delivery);
                             $contextIdentifierLabel = $itemIndex->getItemValue($uri, $resultLanguage, 'label');
-                        } else {
-                            $contextIdentifierLabel = $this->getItemLabelFromTestItems($variable->callIdItem, [[$variable]]);
                         }
                     } else {
                         $uri = $variable->test;
