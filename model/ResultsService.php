@@ -38,6 +38,7 @@ use oat\tao\helpers\metadata\ResourceCompiledMetadataHelper;
 use oat\tao\model\metadata\compiler\ResourceJsonMetadataCompiler;
 use oat\tao\model\metadata\compiler\ResourceMetadataCompilerInterface;
 use oat\tao\model\OntologyClassService;
+use oat\taoDeliverConnect\model\delivery\factory\RemoteDeliveryFactory;
 use oat\taoDelivery\model\execution\DeliveryExecution;
 use oat\taoDelivery\model\execution\DeliveryExecutionService;
 use oat\taoDelivery\model\execution\ServiceProxy;
@@ -1395,10 +1396,8 @@ class ResultsService extends OntologyClassService
 
         $this->setImplementation($this->getReadableImplementation($delivery));
         //The list of delivery Results matching the current selection filters
-        $resultsIds = $this->findResultsByDeliveryAndFilters($delivery, $filters, $storageOptions);
 
-        //retrieveing all individual response variables referring to the  selected delivery results
-        $itemIndex = $this->getItemIndexer($delivery);
+        $resultsIds = $this->findResultsByDeliveryAndFilters($delivery, $filters, $storageOptions);
 
         //retrieving The list of the variables identifiers per activities defintions as observed
         $variableTypes = [];
@@ -1414,7 +1413,13 @@ class ResultsService extends OntologyClassService
                     $variableIdentifier = $variable->variable->getIdentifier();
                     if (!is_null($variable->item)) {
                         $uri = $variable->item;
-                        $contextIdentifierLabel = $itemIndex->getItemValue($uri, $resultLanguage, 'label');
+                        if($this->isDeliveryRemote($delivery)) {
+                            //retrieveing all individual response variables referring to the  selected delivery results
+                            $itemIndex = $this->getItemIndexer($delivery);
+                            $contextIdentifierLabel = $itemIndex->getItemValue($uri, $resultLanguage, 'label');
+                        } else {
+                            $contextIdentifierLabel = $this->getItemLabelFromTestItems($variable->callIdItem, [[$variable]]);
+                        }
                     } else {
                         $uri = $variable->test;
                         $testData = $this->getTestMetadata($delivery, $variable->test);
@@ -1462,6 +1467,11 @@ class ResultsService extends OntologyClassService
         }
 
         return $arr;
+    }
+
+    protected function isDeliveryRemote($delivery): bool
+    {
+        return !empty((string) $delivery->getOnePropertyValue($this->getProperty(RemoteDeliveryFactory::PROPERTY_PUBLICATION_ID)));
     }
 
     /**
