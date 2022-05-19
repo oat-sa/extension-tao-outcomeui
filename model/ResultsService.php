@@ -27,6 +27,7 @@ namespace oat\taoOutcomeUi\model;
 
 use common_Exception;
 use common_exception_Error;
+use common_exception_NoContent;
 use common_Logger;
 use core_kernel_classes_Resource;
 use League\Flysystem\FileNotFoundException;
@@ -1528,7 +1529,7 @@ class ResultsService extends OntologyClassService
             $itemIndexer = $this->getItemIndexer($delivery);
 
             return $itemIndexer->getItemValue($itemUri, $this->getResultLanguage(), 'label');
-        } catch (\common_Exception $e) {
+        } catch (common_exception_NoContent $e) {
         }
 
         // in case of a remote delivery, item label might be found from originating test
