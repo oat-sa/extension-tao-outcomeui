@@ -27,6 +27,7 @@ namespace oat\taoOutcomeUi\model;
 
 use common_Exception;
 use common_exception_Error;
+use common_exception_NoContent;
 use common_Logger;
 use core_kernel_classes_Resource;
 use League\Flysystem\FileNotFoundException;
@@ -374,8 +375,6 @@ class ResultsService extends OntologyClassService
      */
     public function getItemFromItemResult($itemCallId, $itemVariables = [])
     {
-        $item = null;
-
         if (empty($itemVariables)) {
             $itemVariables = $this->getImplementation()->getVariables($itemCallId);
         }
@@ -386,44 +385,16 @@ class ResultsService extends OntologyClassService
         //get the first object
         $itemUri = $tmpItems[0]->item;
 
+        if (!$itemUri) {
+            return null;
+        }
+
         $delivery = $this->getDeliveryByResultId($tmpItems[0]->deliveryResultIdentifier);
 
-        $itemIndexer = $this->getItemIndexer($delivery);
-
-        if (!is_null($itemUri)) {
-            $langItem = $itemIndexer->getItem($itemUri, $this->getResultLanguage());
-            $item = array_merge(is_array($langItem) ? $langItem : [], ['uriResource' => $itemUri]);
-        }
-
-        return $item;
-    }
-
-    /**
-     * @todo temp bugfix for remote deliveries which waiting reworking https://oat-sa.atlassian.net/browse/TR-3111
-     * @throws \common_exception_NotFound
-     * @throws common_exception_Error
-     */
-    public function getItemLabelFromTestItems($itemCallId, array $itemVariables = []): ?string
-    {
-        if (empty($itemVariables)) {
-            $itemVariables = $this->getImplementation()->getVariables($itemCallId);
-        }
-
-        //get the first variable (item are the same in all)
-        $firstItemVariable = reset($itemVariables);
-
-        //get the first object
-        $itemUri = $firstItemVariable[0]->item;
-        $delivery = $this->getDeliveryByResultId($firstItemVariable[0]->deliveryResultIdentifier);
-
-        $deliveryAssemblyService = $this->getServiceLocator()->get(DeliveryAssemblyService::class);
-        $testService = $this->getServiceLocator()->get(TestsService::class);
-
-        $test = $deliveryAssemblyService->getOrigin($delivery);
-        /** @var core_kernel_classes_Resource[] $items */
-        $items = $testService->getTestItems($test);
-
-        return isset($items[$itemUri]) ? $items[$itemUri]->getLabel() : null;
+        return [
+            'uriResource' => $itemUri,
+            'label' => $this->findItemLabel($delivery, $itemUri),
+        ];
     }
 
     /**
@@ -536,30 +507,24 @@ class ResultsService extends OntologyClassService
             $relatedItem = null;
         }
 
-        $itemIdentifier = $undefinedStr;
-
-        if ($relatedItem && isset($relatedItem['uriResource'], $relatedItem['label'])) {
+        if (isset($relatedItem['uriResource'])) {
             $itemIdentifier = $relatedItem['uriResource'];
-
             // check item info in internal cache
             if (isset($this->itemInfoCache[$itemIdentifier])) {
                 common_Logger::t("Item info found in internal cache for item " . $itemIdentifier . "");
 
                 return $this->itemInfoCache[$itemIdentifier];
             }
-            $itemLabel = $relatedItem['label'];
-        } else {
-            $itemLabel = $this->getItemLabelFromTestItems($itemCallId, $itemVariables) ?? $undefinedStr;
         }
 
         $item['itemModel'] = '---';
-        $item['label'] = $itemLabel;
-        $item['uri'] = $itemIdentifier;
+        $item['label'] = $relatedItem['label'] ?? $undefinedStr;
+        $item['uri'] = $relatedItem['uriResource'] ?? $undefinedStr;
 
         // storing item info in memory to not hit the db for the same item again and again
         // when method "getStructuredVariables" are called multiple times in the same request
         if ($relatedItem) {
-            $this->itemInfoCache[$itemIdentifier] = $item;
+            $this->itemInfoCache[$relatedItem['uriResource']] = $item;
         }
 
         return $item;
@@ -1397,13 +1362,8 @@ class ResultsService extends OntologyClassService
         //The list of delivery Results matching the current selection filters
         $resultsIds = $this->findResultsByDeliveryAndFilters($delivery, $filters, $storageOptions);
 
-        //retrieveing all individual response variables referring to the  selected delivery results
-        $itemIndex = $this->getItemIndexer($delivery);
-
         //retrieving The list of the variables identifiers per activities defintions as observed
         $variableTypes = [];
-
-        $resultLanguage = $this->getResultLanguage();
 
         foreach (array_chunk($resultsIds, $resultServiceWrapper->getOption(ResultServiceWrapper::RESULT_COLUMNS_CHUNK_SIZE_OPTION)) as $resultsIdsItem) {
             $selectedVariables = $this->getResultsVariables($resultsIdsItem);
@@ -1414,7 +1374,7 @@ class ResultsService extends OntologyClassService
                     $variableIdentifier = $variable->variable->getIdentifier();
                     if (!is_null($variable->item)) {
                         $uri = $variable->item;
-                        $contextIdentifierLabel = $itemIndex->getItemValue($uri, $resultLanguage, 'label');
+                        $contextIdentifierLabel = $this->findItemLabel($delivery, $uri) ?? $uri;
                     } else {
                         $uri = $variable->test;
                         $testData = $this->getTestMetadata($delivery, $variable->test);
@@ -1560,6 +1520,28 @@ class ResultsService extends OntologyClassService
         }
 
         return [$value];
+    }
+
+    private function findItemLabel(core_kernel_classes_Resource $delivery, $itemUri)
+    {
+        // item label can be found in ItemCompilerIndex for locally published deliveries
+        try {
+            $itemIndexer = $this->getItemIndexer($delivery);
+
+            return $itemIndexer->getItemValue($itemUri, $this->getResultLanguage(), 'label');
+        } catch (common_exception_NoContent $e) {
+        }
+
+        // in case of a remote delivery, item label might be found from originating test
+        // @TODO local test might have been deleted in the meantime, https://oat-sa.atlassian.net/browse/TR-3111
+        $deliveryAssemblyService = $this->getServiceLocator()->get(DeliveryAssemblyService::class);
+        $testService = $this->getServiceLocator()->get(TestsService::class);
+
+        $test = $deliveryAssemblyService->getOrigin($delivery);
+        /** @var core_kernel_classes_Resource[] $items */
+        $items = $testService->getTestItems($test);
+
+        return isset($items[$itemUri]) ? $items[$itemUri]->getLabel() : null;
     }
 
     /**
