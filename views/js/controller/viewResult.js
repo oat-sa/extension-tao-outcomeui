@@ -58,7 +58,8 @@ define([
      * @param {String} deliveryUri - The URI of a delivery
      * @returns {Promise}
      */
-    function requestFileContent(variableUri, deliveryUri) {
+    function requestFileContent(variableUri, deliveryUri)
+    {
         return request({
             url: dataUrl,
             method: 'POST',
@@ -79,7 +80,8 @@ define([
      * @param {String} deliveryUri
      * @returns {Promise}
      */
-    function refineFileResponse(response, deliveryUri) {
+    function refineFileResponse(response, deliveryUri)
+    {
         const { file } = response && response.base || {};
         if (file && file.uri && !file.data) {
             return requestFileContent(file.uri, deliveryUri)
@@ -101,7 +103,8 @@ define([
      * @param {String} deliveryUri
      * @returns {Promise}
      */
-    function refineItemState(state, deliveryUri) {
+    function refineItemState(state, deliveryUri)
+    {
         if (!state) {
             return Promise.resolve(state);
         }
@@ -134,19 +137,20 @@ define([
                 minimumResultsForSearch : -1
             }).select2('val', conf.filterSubmission || 'all');
 
-            for(let i in classFilter){
-                $(`[value="${classFilter[i]}"]`).prop('checked', 'checked');
-            }
+        for (let i in classFilter) {
+            $(`[value = "${classFilter[i]}"]`).prop('checked', 'checked');
+        }
 
-            $('.result-filter-btn', $container).click( () => {
+            $('.result-filter-btn', $container).click(() => {
                 classFilter = [''];
-                $classFilterField.each(function() {
-                    if($(this).prop('checked')){
+                $classFilterField.each(function () {
+                    if ($(this).prop('checked')) {
                         classFilter.push($(this).val());
                     }
                 });
                 section.loadContentBlock(
-                    urlHelper.route('viewResult', 'Results', 'taoOutcomeUi'), {
+                    urlHelper.route('viewResult', 'Results', 'taoOutcomeUi'),
+                    {
                         id: conf.id,
                         classUri:  conf.classUri,
                         filterSubmission: $resultFilterField.select2('val'),
@@ -157,7 +161,7 @@ define([
 
 
             //bind the xml download button
-            $('#xmlDownload', $container).on('click', function() {
+            $('#xmlDownload', $container).on('click', function () {
                 $.fileDownload(urlHelper.route('downloadXML', 'Results', 'taoOutcomeUi'), {
                     failMessageHtml: __("Unexpected error occurred when generating your report. Please contact your system administrator."),
                     httpMethod: 'GET',
@@ -169,7 +173,7 @@ define([
             });
 
             // bind the file download button
-            $('.download', $container).on('click', function() {
+            $('#fileDownload,[id^=fileDownload]', $container).on('click', function () {
                 const variableUri = $(this).val();
                 $.fileDownload(downloadUrl, {
                     httpMethod: 'POST',
@@ -181,7 +185,7 @@ define([
             });
 
             //bind the download buttons
-            $('.delete', $container).on('click', function() {
+            $('.delete', $container).on('click', function () {
                 dialogConfirm(__('Please confirm deletion'), function () {
                     $.ajax({
                         url: urlHelper.route('delete', 'Results', 'taoOutcomeUi'),
@@ -204,11 +208,11 @@ define([
                 });
             });
 
-            $('.print', $container).on('click', function() {
+            $('.print', $container).on('click', function () {
                 window.print();
             });
 
-            $('.preview', $container).on('click', function(e) {
+            $('.preview', $container).on('click', function (e) {
                 const $btn = $(this);
                 const deliveryId = $btn.data('deliveryId');
                 const resultId = $btn.data('resultId');
