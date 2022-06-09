@@ -58,8 +58,7 @@ define([
      * @param {String} deliveryUri - The URI of a delivery
      * @returns {Promise}
      */
-    function requestFileContent(variableUri, deliveryUri)
-    {
+    function requestFileContent(variableUri, deliveryUri) {
         return request({
             url: dataUrl,
             method: 'POST',
@@ -173,7 +172,7 @@ define([
             });
 
             // bind the file download button
-            $('#fileDownload,[id^=fileDownload]', $container).on('click', function () {
+            $('[id^=fileDownload]', $container).on('click', function () {
                 const variableUri = $(this).val();
                 $.fileDownload(downloadUrl, {
                     httpMethod: 'POST',
