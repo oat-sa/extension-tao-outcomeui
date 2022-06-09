@@ -79,8 +79,7 @@ define([
      * @param {String} deliveryUri
      * @returns {Promise}
      */
-    function refineFileResponse(response, deliveryUri)
-    {
+    function refineFileResponse(response, deliveryUri) {
         const { file } = response && response.base || {};
         if (file && file.uri && !file.data) {
             return requestFileContent(file.uri, deliveryUri)
@@ -102,8 +101,7 @@ define([
      * @param {String} deliveryUri
      * @returns {Promise}
      */
-    function refineItemState(state, deliveryUri)
-    {
+    function refineItemState(state, deliveryUri) {
         if (!state) {
             return Promise.resolve(state);
         }
