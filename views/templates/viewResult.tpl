@@ -100,7 +100,7 @@ use oat\taoOutcomeUi\model\ResultsService;
                         <b><?= _dh($item['label']) ?></b>
                     </th>
                     <th>
-                        <?php if ($item['uri'] != 'unknown'): ?>
+                        <?php if ($item['isLocal']): ?>
                             <a href="#"
                                 data-delivery-id="<?=get_data('classUri')?>"
                                 data-result-id="<?=get_data('id')?>"

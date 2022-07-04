@@ -520,6 +520,7 @@ class ResultsService extends OntologyClassService
         $item['itemModel'] = '---';
         $item['label'] = $relatedItem['label'] ?? $undefinedStr;
         $item['uri'] = $relatedItem['uriResource'] ?? $undefinedStr;
+        $item['isLocal'] = strpos($relatedItem['uriResource'] ?? '', LOCAL_NAMESPACE) !== false;
 
         // storing item info in memory to not hit the db for the same item again and again
         // when method "getStructuredVariables" are called multiple times in the same request
