@@ -5,6 +5,7 @@
 ![GitHub](https://img.shields.io/github/license/oat-sa/extension-tao-outcomeui.svg)
 ![GitHub release](https://img.shields.io/github/release/oat-sa/extension-tao-outcomeui.svg)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/y/oat-sa/extension-tao-outcomeui.svg)
+[![codecov](https://codecov.io/gh/oat-sa/extension-tao-outcomeui/branch/master/graph/badge.svg)](https://codecov.io/gh/oat-sa/extension-tao-outcomeui)
 
 > Extension implements resultServer interface to store results using ontology/statements table
 
