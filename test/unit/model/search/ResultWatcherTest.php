@@ -90,7 +90,7 @@ class ResultWatcherTest extends TestCase
         $deliveryMock = $this->createMock(core_kernel_classes_Resource::class);
 
         $deliveryExecutionMock->method('getDelivery')->willReturn($deliveryMock);
-        $deliveryExecutionMock->method('getStartTime')->willReturn('');
+        $deliveryExecutionMock->method('getStartTime')->willReturn(microtime());
 
         $event->method('getDeliveryExecution')->willReturn($deliveryExecutionMock);
 
