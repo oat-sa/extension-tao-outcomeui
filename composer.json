@@ -76,5 +76,9 @@
             "oat-sa/oatbox-extension-installer": true,
             "oat-sa/composer-npm-bridge": true
         }
+    },
+    "require-dev": {
+        "oat-sa/generis": "dev-php8-migration as v16.0.0",
+        "oat-sa/tao-core": "dev-php8-migration as v51.0.0"
     }
 }
