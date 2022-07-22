@@ -169,7 +169,7 @@ define([
             });
 
             // bind the file download button
-            $('#fileDownload', $container).on('click', function() {
+            $('.download', $container).on('click', function() {
                 const variableUri = $(this).val();
                 $.fileDownload(downloadUrl, {
                     httpMethod: 'POST',
