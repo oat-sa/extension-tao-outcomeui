@@ -321,8 +321,10 @@ class Results extends \tao_actions_CommonModule
 
             // check the result page cache; if we have hit than return the gzencoded string and let the client to encode the data
             $cacheKey = $this->getResultsService()->getCacheKey($resultId, md5($filterSubmission . implode(',', $filterTypes)));
+            $isResultCacheable = $this->isCacheable($resultId);
+
             if (
-                $this->isCacheable($resultId)
+                $isResultCacheable
                 && $this->getResultsService()->getCache()
                 && $this->getResultsService()->getCache()->exists($cacheKey)
             ) {
@@ -363,9 +365,9 @@ class Results extends \tao_actions_CommonModule
 
             // quick hack to gain performance: caching the entire result page if it is cacheable
             // "gzencode" is used to reduce the size of the string to be cached
-            ob_start(function ($buffer) use ($resultId, $cacheKey) {
+            ob_start(function ($buffer) use ($isResultCacheable, $resultId, $cacheKey) {
                 if (
-                    $this->isCacheable($resultId)
+                    $isResultCacheable
                     && $this->getResultsService()->setCacheValue($resultId, $cacheKey, gzencode($buffer, 9))
                 ) {
                     \common_Logger::d('Result page cache set for "' . $cacheKey . '"');
