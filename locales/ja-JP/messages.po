@@ -1,7 +1,7 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: TAO 2021.10\n"
-"PO-Revision-Date: 2021-11-17T13:30:34\n"
+"Project-Id-Version: TAO 2022.09\n"
+"PO-Revision-Date: 2022-08-12T16:45:57\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
 "MIME-Version: 1.0\n"
 "Language: ja-JP\n"
@@ -14,34 +14,34 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 
 msgid "%s results export for delivery \"%s"
-msgstr ""
-
-msgid "%s results export for delivery class \"%s"
 msgstr "デリバリ \"%sの結果 %s をエクスポート"
 
+msgid "%s results export for delivery class \"%s"
+msgstr "デリバリクラス \"%sの結果 %s をエクスポート"
+
 msgid "Add All grades"
-msgstr "評点を追加"
+msgstr "評点 追加"
 
 msgid "Add All responses"
-msgstr "解答を追加"
+msgstr "解答 追加"
 
 msgid "Add all trace variables"
-msgstr ""
+msgstr "トレース情報追加"
 
 msgid "Add Delivery"
-msgstr "デリバリ情報追加"
+msgstr "デリバリ情報 追加"
 
 msgid "Add Delivery Execution"
-msgstr "デリバリ実施情報追加"
+msgstr "デリバリ実施情報 追加"
 
 msgid "Add Test Taker"
-msgstr "受検者情報を追加"
+msgstr "受験者情報 追加"
 
 msgid "Adding/Updating search index for %s"
 msgstr "%sの検索インデックスの追加/更新"
 
 msgid "All collected variables"
-msgstr "すべての項目"
+msgstr "すべての情報"
 
 msgid "Anonymise"
 msgstr "匿名化"
@@ -62,7 +62,7 @@ msgid "Download"
 msgstr "ダウンロード"
 
 msgid "Download file"
-msgstr ""
+msgstr "ダウンロードファイル"
 
 msgid "Download result"
 msgstr "結果ダウンロード"
@@ -84,10 +84,10 @@ msgid "Export CSV File"
 msgstr "CSVエクスポート"
 
 msgid "Export Results"
-msgstr ""
+msgstr "結果出力"
 
 msgid "Export SQL"
-msgstr ""
+msgstr "SQL出力"
 
 msgid "Export SQL File"
 msgstr "SQLエクスポート"
@@ -112,7 +112,7 @@ msgid "Grades"
 msgstr "評点"
 
 msgid "Internal server error!"
-msgstr ""
+msgstr "内部サーバエラー"
 
 msgid "Label"
 msgstr "ラベル"
@@ -134,7 +134,7 @@ msgid "Manage Results"
 msgstr "結果の管理"
 
 msgid "No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here."
-msgstr "まだ受検されていません。受検後に結果が表示されます"
+msgstr "まだ受験されていません。受験後に結果が表示されます"
 
 msgid "Nothing to export for \"%s"
 msgstr "エクスポートするものはありません：\"%s"
@@ -146,22 +146,22 @@ msgid "Preview"
 msgstr "プレビュー"
 
 msgid "Print"
-msgstr ""
+msgstr "印刷"
 
 msgid "Remove All grades"
-msgstr "評点を除外"
+msgstr "評点 除外"
 
 msgid "Remove All responses"
-msgstr "解答を除外"
+msgstr "解答 除外"
 
 msgid "Remove all trace variables"
-msgstr ""
+msgstr "トレース情報 除外"
 
 msgid "Remove Delivery"
-msgstr "デリバリ情報を除外"
+msgstr "デリバリ情報 除外"
 
 msgid "Remove Delivery Execution"
-msgstr "デリバリ実施情報を除外"
+msgstr "デリバリ実施情報 除外"
 
 msgid "Responses"
 msgstr "解答"
@@ -209,13 +209,13 @@ msgid "Start Time"
 msgstr "開始時間"
 
 msgid "Test Taker"
-msgstr "受検者"
+msgstr "受験者"
 
 msgid "Test taker"
-msgstr "受検者"
+msgstr "受験者"
 
 msgid "Test Taker ID"
-msgstr "受検者ID"
+msgstr "受験者ID"
 
 msgid "Test Variables"
 msgstr "テスト変数"
@@ -240,7 +240,7 @@ msgid "Traces"
 msgstr "トレース"
 
 msgid "Unexpected error occurred when generating your report. Please contact your system administrator."
-msgstr ""
+msgstr "レポートの生成時に予期せぬエラーが発生しました。システム管理者に連絡してください。"
 
 msgid "unknown"
 msgstr "不明"
