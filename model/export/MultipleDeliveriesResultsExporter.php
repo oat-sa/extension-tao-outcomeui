@@ -272,6 +272,7 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
                 $delivery,
                 $this->resultsService
             )->setServiceLocator($this->getServiceLocator())
+             ->setVariableToExport($this->getVariableToExport())
              ->export($destination);
         }
 
