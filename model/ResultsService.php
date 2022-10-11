@@ -1155,8 +1155,9 @@ class ResultsService extends OntologyClassService
             /** @var ContextTypePropertyColumn|VariableColumn $column */
             foreach ($columns as $column) {
                 $cellKey = $this->getColumnId($column);
-
                 $cellData[$cellKey] = null;
+                $values = [];
+
                 if ($column instanceof TraceVariableColumn && count($column->getDataProvider()->getCache()) > 0) {
                     $cellData[$cellKey] = self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column), self::VARIABLES_FILTER_TRACE);
                 } elseif (count($column->getDataProvider()->cache) > 0) {
