@@ -76,7 +76,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      *
      * @var string
      */
-    private $variableToExport = ResultsService::VARIABLES_FILTER_LAST_SUBMITTED;
+    private $variableToExport = ResultsService::VARIABLES_FILTER_ALL;
 
     /**
      * @var array
@@ -158,6 +158,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
                 $columns = array_merge(
                     $this->columnsProvider->getTestTakerColumns(),
                     $this->columnsProvider->getDeliveryColumns(),
+                    $this->columnsProvider->getDeliveryExecutionColumns(),
                     $variables
                 );
             }

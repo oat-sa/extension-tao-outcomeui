@@ -47,7 +47,7 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
 
     private $columnsToExport = [];
 
-    private $variableToExport = ResultsService::VARIABLES_FILTER_LAST_SUBMITTED;
+    private $variableToExport = ResultsService::VARIABLES_FILTER_ALL;
 
     private $storageOptions = [];
 

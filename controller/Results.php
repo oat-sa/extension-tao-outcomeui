@@ -626,7 +626,7 @@ class Results extends \tao_actions_CommonModule
     public function export()
     {
         $exporter = $this->getExporter(new DeliveryCsvResultsExporterFactory());
-        return $this->returnTaskJson($exporter->createExportTask());
+        return $this->returnTaskJson($exporter->createExportTask(true));
     }
 
     /**

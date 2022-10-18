@@ -119,18 +119,21 @@ class ResultsExporter implements ServiceLocatorAwareInterface
     }
 
     /**
+     * @param bool $allColumns
      * @return CallbackTaskInterface
      */
-    public function createExportTask()
+    public function createExportTask(bool $allColumns = false): CallbackTaskInterface
     {
         /** @var QueueDispatcherInterface $queueDispatcher */
         $queueDispatcher = $this->getServiceLocator()->get(QueueDispatcherInterface::SERVICE_ID);
 
         $columns = [];
 
-        // we need to convert every column object into array first
-        foreach ($this->getExporter()->getColumnsToExport() as $column) {
-            $columns[] = $column->toArray();
+        if (!$allColumns) {
+            // we need to convert every column object into array first
+            foreach ($this->getExporter()->getColumnsToExport() as $column) {
+                $columns[] = $column->toArray();
+            }
         }
 
         $label = $this->exportStrategy->getResourceToExport()->isClass()
