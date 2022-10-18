@@ -21,6 +21,7 @@
 
 namespace oat\taoOutcomeUi\helper;
 
+use qtism\common\datatypes\QtiScalar;
 use taoResultServer_models_classes_ResponseVariable as ResponseVariable;
 
 /**
@@ -93,6 +94,20 @@ class ResponseVariableFormatter
         $value = $var->getValue();
         switch ($var->getCardinality()) {
             case 'record':
+                $decoded = json_decode($value, true);
+                foreach ($decoded as $key => $record) {
+                    foreach ($record as $datatype => $value) {
+                        /** @var QtiScalar $datatype */
+                        $formatted[] = [
+                            'name' => $key,
+                            'base' => [
+                                //TODO: define correct value type
+                                'string' => $value
+                            ]
+                        ];
+                    }
+                }
+                break;
             case 'single':
                 if (strlen($value) === 0) {
                     $formatted = ['base' => null];
@@ -165,6 +180,10 @@ class ResponseVariableFormatter
                 if ($responseVariable->getBaseType() === 'file') {
                     $itemResults[$responseVariable->getIdentifier()] = [
                         'response' => ['base' => ['file' => self::formatVariableFile($responseVariable)]]
+                    ];
+                } elseif ($responseVariable->getCardinality() === 'record') {
+                    $itemResults[$responseVariable->getIdentifier()] = [
+                        'record' => self::formatVariableToPci($responseVariable)
                     ];
                 } else {
                     $itemResults[$responseVariable->getIdentifier()] = [
