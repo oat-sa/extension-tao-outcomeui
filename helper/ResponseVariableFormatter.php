@@ -94,8 +94,6 @@ class ResponseVariableFormatter
         $value = $var->getValue();
         switch ($var->getCardinality()) {
             case 'record':
-                $formatted = $value;
-                break;
             case 'single':
                 if (strlen($value) === 0) {
                     $formatted = ['base' => null];
@@ -171,7 +169,8 @@ class ResponseVariableFormatter
                     ];
                 } elseif ($responseVariable->getCardinality() === 'record') {
                     $itemResults[$responseVariable->getIdentifier()] = [
-                        'record' => self::formatVariableToPci($responseVariable)
+                        'response' => json_decode($responseVariable->getValue(), true)
+                            ??  ['base' => '']
                     ];
                 } else {
                     $itemResults[$responseVariable->getIdentifier()] = [
