@@ -24,13 +24,13 @@ namespace oat\taoOutcomeUi\helper;
 use taoResultServer_models_classes_ResponseVariable as ResponseVariable;
 
 /**
- * The ResponseVariableFormatter enables you to format the output of the ResultsService into an associative compatible with the client code
+ * The ResponseVariableFormatter enables you to format the output of the ResultsService into an associative compatible
+ * with the client code
  * Class ResponseVariableFormatter
  * @package oat\taoOutcomeUi\helper
  */
 class ResponseVariableFormatter
 {
-
     /**
      * Special trim for identifier in response variables
      * @param $identifierString
@@ -98,7 +98,9 @@ class ResponseVariableFormatter
                     $formatted = ['base' => null];
                 } else {
                     try {
-                        $formatted = ['base' => [$var->getBaseType() => self::formatStringValue($var->getBaseType(), $value)]];
+                        $formatted = [
+                            'base' => [$var->getBaseType() => self::formatStringValue($var->getBaseType(), $value)]
+                        ];
                     } catch (\common_exception_NotImplemented $e) {
                         // simply ignore unsupported data/type
                         $formatted = ['base' => null];
@@ -107,27 +109,27 @@ class ResponseVariableFormatter
                 break;
             case 'ordered':
             case 'multiple':
-                    $list = [];
+            $list = [];
 
-                    if(!empty($value)
-                        && preg_match('/^\s*[\[|<](.*)[\]>]\s*$/', $value, $content)
-                    ) {
-                     $matches = explode(';', $content[1]);
-                        foreach ($matches as $valueString) {
-                            if (empty(trim($valueString))) {
-                                continue;
-                            }
-
-                            try {
-                                $list[] = self::formatStringValue($var->getBaseType(), trim($valueString, " '"));
-                            } catch (\common_exception_NotImplemented $e) {
-                                // simply ignore unsupported data/type
-                            }
-                        }
+            if (!empty($value)
+                && preg_match('/^\s*[\[|<](.*)[\]>]\s*$/', $value, $content)
+            ) {
+                $matches = explode(';', $content[1]);
+                foreach ($matches as $valueString) {
+                    if (empty(trim($valueString))) {
+                        continue;
                     }
 
-                    $formatted = ['list' => [$var->getBaseType() => $list]];
-                break;
+                    try {
+                        $list[] = self::formatStringValue($var->getBaseType(), trim($valueString, " '"));
+                    } catch (\common_exception_NotImplemented $e) {
+                        // simply ignore unsupported data/type
+                    }
+                }
+            }
+
+            $formatted = ['list' => [$var->getBaseType() => $list]];
+            break;
             default:
                 throw new \common_Exception('unknown response cardinality');
         }
