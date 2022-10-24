@@ -94,19 +94,7 @@ class ResponseVariableFormatter
         $value = $var->getValue();
         switch ($var->getCardinality()) {
             case 'record':
-                $decoded = json_decode($value, true);
-                foreach ($decoded as $key => $record) {
-                    foreach ($record as $datatype => $value) {
-                        /** @var QtiScalar $datatype */
-                        $formatted[] = [
-                            'name' => $key,
-                            'base' => [
-                                //TODO: define correct value type
-                                'string' => $value
-                            ]
-                        ];
-                    }
-                }
+                $formatted = $value;
                 break;
             case 'single':
                 if (strlen($value) === 0) {
