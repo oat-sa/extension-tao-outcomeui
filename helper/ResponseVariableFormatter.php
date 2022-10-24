@@ -21,7 +21,6 @@
 
 namespace oat\taoOutcomeUi\helper;
 
-use qtism\common\datatypes\QtiScalar;
 use taoResultServer_models_classes_ResponseVariable as ResponseVariable;
 
 /**
