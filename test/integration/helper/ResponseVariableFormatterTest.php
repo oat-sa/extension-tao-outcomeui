@@ -23,7 +23,7 @@ namespace oat\taoOutcomeUi\test\unit\helper;
 
 use oat\generis\test\TestCase;
 use oat\taoOutcomeUi\helper\ResponseVariableFormatter;
-use \taoResultServer_models_classes_ResponseVariable as ResponseVariable;
+use taoResultServer_models_classes_ResponseVariable as ResponseVariable;
 
 class ResponseVariableFormatterTest extends TestCase
 {
@@ -209,8 +209,6 @@ class ResponseVariableFormatterTest extends TestCase
                 ]
             ]
         ], $result);
-
-
     }
 
     public function testFormatSinglePair()
@@ -332,6 +330,5 @@ class ResponseVariableFormatterTest extends TestCase
         $expected = ['list' => ['identifier' => ['\sqrt{4}', '', '\cos', '{1,2}', '\sin', '', '\pi', '[1]', '<']]];
 
         $this->assertEquals($expected, ResponseVariableFormatter::formatVariableToPci($var));
-
     }
 }

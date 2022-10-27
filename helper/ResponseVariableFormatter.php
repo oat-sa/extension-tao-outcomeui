@@ -109,27 +109,27 @@ class ResponseVariableFormatter
                 break;
             case 'ordered':
             case 'multiple':
-            $list = [];
+                $list = [];
 
-            if (!empty($value)
-                && preg_match('/^\s*[\[|<](.*)[\]>]\s*$/', $value, $content)
-            ) {
-                $matches = explode(';', $content[1]);
-                foreach ($matches as $valueString) {
-                    if (empty(trim($valueString))) {
-                        continue;
-                    }
+                if (!empty($value)
+                    && preg_match('/^\s*[\[|<](.*)[\]>]\s*$/', $value, $content)
+                ) {
+                    $matches = explode(';', $content[1]);
+                    foreach ($matches as $valueString) {
+                        if (empty(trim($valueString))) {
+                            continue;
+                        }
 
-                    try {
-                        $list[] = self::formatStringValue($var->getBaseType(), trim($valueString, " '"));
-                    } catch (\common_exception_NotImplemented $e) {
-                        // simply ignore unsupported data/type
+                        try {
+                            $list[] = self::formatStringValue($var->getBaseType(), trim($valueString, " '"));
+                        } catch (\common_exception_NotImplemented $e) {
+                            // simply ignore unsupported data/type
+                        }
                     }
                 }
-            }
 
-            $formatted = ['list' => [$var->getBaseType() => $list]];
-            break;
+                $formatted = ['list' => [$var->getBaseType() => $list]];
+                break;
             default:
                 throw new \common_Exception('unknown response cardinality');
         }
@@ -171,7 +171,7 @@ class ResponseVariableFormatter
                 } elseif ($responseVariable->getCardinality() === 'record') {
                     $itemResults[$responseVariable->getIdentifier()] = [
                         'response' => json_decode($responseVariable->getValue(), true)
-                            ??  ['base' => '']
+                            ?? ['base' => '']
                     ];
                 } else {
                     $itemResults[$responseVariable->getIdentifier()] = [
