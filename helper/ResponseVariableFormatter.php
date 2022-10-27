@@ -111,9 +111,7 @@ class ResponseVariableFormatter
             case 'multiple':
                 $list = [];
 
-                if (!empty($value)
-                    && preg_match('/^\s*[\[|<](.*)[\]>]\s*$/', $value, $content)
-                ) {
+                if (!empty($value) && preg_match('/^\s*[\[|<](.*)[\]>]\s*$/', $value, $content)) {
                     $matches = explode(';', $content[1]);
                     foreach ($matches as $valueString) {
                         if (empty(trim($valueString))) {
