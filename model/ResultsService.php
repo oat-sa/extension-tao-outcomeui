@@ -1380,7 +1380,7 @@ class ResultsService extends OntologyClassService
                     } else {
                         $uri = $variable->test;
                         $testData = $this->getTestMetadata($delivery, $variable->test);
-                        $contextIdentifierLabel = $testData->getLabel();
+                        $contextIdentifierLabel = $testData->getLabel() ?? $delivery->getLabel();
                     }
 
                     $columnType = $this->defineTypeColumn($variable->variable);
