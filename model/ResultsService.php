@@ -93,6 +93,12 @@ class ResultsService extends OntologyClassService
 
     public const SEPARATOR = ' | ';
 
+    private const WANTED_TYPES = [
+        \taoResultServer_models_classes_ResponseVariable::class,
+        \taoResultServer_models_classes_OutcomeVariable::class,
+        \taoResultServer_models_classes_TraceVariable::class
+    ];
+
     /** @var taoResultServer_models_classes_ReadableResultStorage */
     private $implementation;
 
@@ -295,7 +301,7 @@ class ResultsService extends OntologyClassService
      * @return array
      * @throws common_exception_Error
      */
-    public function getVariablesFromObjectResult($itemResult, $wantedTypes = [\taoResultServer_models_classes_ResponseVariable::class, \taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class])
+    public function getVariablesFromObjectResult($itemResult, $wantedTypes = self::WANTED_TYPES)
     {
         $returnedVariables = [];
         $variables = $this->getImplementation()->getVariables($itemResult);
@@ -606,14 +612,20 @@ class ResultsService extends OntologyClassService
                 $variable = $itemVariable->variable;
                 $itemCallId = $itemVariable->callIdItem;
                 if ($variable->getIdentifier() == 'numAttempts') {
-                    $variablesByItem[$time] = array_merge($variablesByItem[$time], $this->getItemInfos($itemCallId, [[$itemVariable]]));
+                    $variablesByItem[$time] = array_merge(
+                        $variablesByItem[$time],
+                        $this->getItemInfos($itemCallId, [[$itemVariable]])
+                    );
                     $variablesByItem[$time]['attempt'] = $variable->getValue();
                 }
                 $variableDescription = [
                     'uri' => $itemVariable->uri,
                     'var' => $variable,
                 ];
-                if ($variable instanceof \taoResultServer_models_classes_ResponseVariable && !is_null($variable->getCorrectResponse())) {
+                if (
+                    $variable instanceof \taoResultServer_models_classes_ResponseVariable
+                    && !is_null($variable->getCorrectResponse())
+                ) {
                     $variableDescription['isCorrect'] = $variable->getCorrectResponse() >= 1 ? 'correct' : 'incorrect';
                 } else {
                     $variableDescription['isCorrect'] = 'unscored';
@@ -802,7 +814,10 @@ class ResultsService extends OntologyClassService
                 $variableDescription["uri"] = $variable[0]->uri;
                 $variableDescription["var"] = $variableTemp;
 
-                if (method_exists($variableTemp, 'getCorrectResponse') && !is_null($variableTemp->getCorrectResponse())) {
+                if (
+                    method_exists($variableTemp, 'getCorrectResponse')
+                    && !is_null($variableTemp->getCorrectResponse())
+                ) {
                     if ($variableTemp->getCorrectResponse() >= 1) {
                         $variableDescription["isCorrect"] = "correct";
                     } else {
@@ -812,7 +827,8 @@ class ResultsService extends OntologyClassService
                     $variableDescription["isCorrect"] = "unscored";
                 }
 
-                $variablesByItem[$itemIdentifier]['sortedVars'][$type][$variableIdentifier][$variableTemp->getEpoch()] = $variableDescription;
+                $variablesByItem[$itemIdentifier]['sortedVars'][$type][$variableIdentifier][$variableTemp->getEpoch()]
+                    = $variableDescription;
                 $variablesByItem[$itemIdentifier]['label'] = $itemLabel;
             }
         }
@@ -820,19 +836,26 @@ class ResultsService extends OntologyClassService
         foreach ($variablesByItem as $itemIdentifier => $itemVariables) {
             foreach ($itemVariables['sortedVars'] as $variableType => $variables) {
                 foreach ($variables as $variableIdentifier => $observation) {
-                    uksort($variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier], "self::sortTimeStamps");
+                    uksort(
+                        $variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier],
+                        "self::sortTimeStamps"
+                    );
 
                     switch ($filter) {
                         case self::VARIABLES_FILTER_LAST_SUBMITTED:
-                        {
-                            $variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier] = [array_pop($variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier])];
+                            $variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier] = [
+                                array_pop(
+                                    $variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier]
+                                )
+                            ];
                             break;
-                        }
                         case self::VARIABLES_FILTER_FIRST_SUBMITTED:
-                        {
-                            $variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier] = [array_shift($variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier])];
+                            $variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier] = [
+                                array_shift(
+                                    $variablesByItem[$itemIdentifier]['sortedVars'][$variableType][$variableIdentifier]
+                                )
+                            ];
                             break;
-                        }
                     }
                 }
             }
@@ -874,15 +897,18 @@ class ResultsService extends OntologyClassService
      *
      * @return array
      */
-    public function getVariableDataFromDeliveryResult($resultIdentifier, $wantedTypes = [\taoResultServer_models_classes_ResponseVariable::class, \taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class])
+    public function getVariableDataFromDeliveryResult($resultIdentifier, $wantedTypes = self::WANTED_TYPES)
     {
         $testCallIds = $this->getTestsFromDeliveryResult($resultIdentifier);
 
         return $this->extractTestVariables($this->getVariablesFromObjectResult($testCallIds), $wantedTypes);
     }
 
-    public function extractTestVariables(array $variableObjects, array $wantedTypes, string $filter = self::VARIABLES_FILTER_ALL)
-    {
+    public function extractTestVariables(
+        array $variableObjects,
+        array $wantedTypes,
+        string $filter = self::VARIABLES_FILTER_ALL
+    ) {
         $variableObjects = array_filter($variableObjects, static function (array $variableObject) use ($wantedTypes) {
             $variable = current($variableObject);
 
@@ -904,7 +930,13 @@ class ResultsService extends OntologyClassService
             return $a->getCreationTime() - $b->getCreationTime();
         });
 
-        if (in_array($filter, [self::VARIABLES_FILTER_FIRST_SUBMITTED, self::VARIABLES_FILTER_LAST_SUBMITTED], true)) {
+        if (
+            in_array(
+                $filter,
+                [self::VARIABLES_FILTER_FIRST_SUBMITTED, self::VARIABLES_FILTER_LAST_SUBMITTED],
+                true
+            )
+        ) {
             $uniqueVariableIdentifiers = [];
 
             $variableObjects = array_filter($variableObjects, static function (
@@ -967,7 +999,6 @@ class ResultsService extends OntologyClassService
 
         switch ($baseType) {
             case "file":
-            {
                 $value = $this->getVariableCandidateResponse($variableUri);
                 common_Logger::i(var_export(strlen($value), true));
                 $decodedFile = Datatypes::decodeFile($value);
@@ -980,14 +1011,11 @@ class ResultsService extends OntologyClassService
                     "mimetype" => "Content-type: " . $decodedFile["mime"],
                     "filename" => $decodedFile["name"]];
                 break;
-            }
             default:
-            { //legacy files
                 $file = [
                     "data" => $this->getVariableCandidateResponse($variableUri),
                     "mimetype" => "Content-type: text/xml",
                     "filename" => "trace.xml"];
-            }
         }
 
         return $file;
@@ -1096,8 +1124,11 @@ class ResultsService extends OntologyClassService
      * @throws common_Exception
      * @throws common_exception_Error
      */
-    public function getResultsByDelivery(\core_kernel_classes_Resource $delivery, array $storageOptions = [], array $filters = [])
-    {
+    public function getResultsByDelivery(
+        \core_kernel_classes_Resource $delivery,
+        array $storageOptions = [],
+        array $filters = []
+    ) {
         //The list of delivery Results matching the current selection filters
         $this->setImplementation($this->getReadableImplementation($delivery));
 
@@ -1126,8 +1157,14 @@ class ResultsService extends OntologyClassService
      * @throws common_Exception
      * @throws common_exception_Error
      */
-    public function getCellsByResults(array $results, $columns, $filter, array $filters = [], $offset = 0, $limit = null)
-    {
+    public function getCellsByResults(
+        array $results,
+        $columns,
+        $filter,
+        array $filters = [],
+        $offset = 0,
+        $limit = null
+    ) {
         $rows = [];
         $dataProviderMap = $this->collectColumnDataProviderMap($columns);
 
@@ -1159,10 +1196,16 @@ class ResultsService extends OntologyClassService
                 $values = [];
 
                 if ($column instanceof TraceVariableColumn && count($column->getDataProvider()->getCache()) > 0) {
-                    $cellData[$cellKey] = self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column), self::VARIABLES_FILTER_TRACE);
+                    $cellData[$cellKey] = self::filterCellData(
+                        $column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column),
+                        self::VARIABLES_FILTER_TRACE
+                    );
                 } elseif (count($column->getDataProvider()->cache) > 0) {
                     // grade or response column values
-                    $cellData[$cellKey] = self::filterCellData($column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column), $filter);
+                    $cellData[$cellKey] = self::filterCellData(
+                        $column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column),
+                        $filter
+                    );
 
                     continue;
                 } elseif ($column instanceof ContextTypePropertyColumn) {
@@ -1184,7 +1227,12 @@ class ResultsService extends OntologyClassService
                             $value = (string)$value;
                         }
 
-                        if (in_array($column->getProperty()->getUri(), [DeliveryAssemblyService::PROPERTY_START, DeliveryAssemblyService::PROPERTY_END])) {
+                        if (
+                            in_array(
+                                $column->getProperty()->getUri(),
+                                [DeliveryAssemblyService::PROPERTY_START, DeliveryAssemblyService::PROPERTY_END]
+                            )
+                        ) {
                             $value = tao_helpers_Date::displayeDate($value, tao_helpers_Date::FORMAT_VERBOSE);
                         }
 
@@ -1192,7 +1240,11 @@ class ResultsService extends OntologyClassService
                     }, $values);
 
                     // if it's a guest test taker (it has no property values at all), let's display the uri as label
-                    if ($column->isTestTakerType() && empty($values) && $column->getProperty()->getUri() == OntologyRdfs::RDFS_LABEL) {
+                    if (
+                        $column->isTestTakerType()
+                        && empty($values)
+                        && $column->getProperty()->getUri() == OntologyRdfs::RDFS_LABEL
+                    ) {
                         switch (true) {
                             case $resource instanceof core_kernel_classes_Resource:
                                 $values[] = $resource->getUri();
@@ -1204,7 +1256,6 @@ class ResultsService extends OntologyClassService
                                 throw new \Exception('Invalid type of resource property values.');
                         }
                     }
-
                 } elseif ($column instanceof TestCenterColumn) {
                     $property = $column->getProperty();
                     $testTaker = $this->getTestTaker($result);
@@ -1217,7 +1268,9 @@ class ResultsService extends OntologyClassService
                     }, $values);
                 }
 
-                $cellData[$cellKey] = [self::filterCellData(implode(self::SEPARATOR, array_filter($values)), $filter)];
+                $cellData[$cellKey] = [
+                    self::filterCellData(implode(self::SEPARATOR, array_filter($values)), $filter)
+                ];
             }
             if ($this->filterData($cellData, $filters, $result)) {
                 $this->convertDates($cellData);
@@ -1268,7 +1321,9 @@ class ResultsService extends OntologyClassService
     {
         if (array_key_exists(self::DELIVERY_EXECUTION_STARTED_AT, $data)) {
             $startDate = current($data[self::DELIVERY_EXECUTION_STARTED_AT]);
-            $data[self::DELIVERY_EXECUTION_STARTED_AT][0] = $startDate ? tao_helpers_Date::displayeDate($startDate) : '';
+            $data[self::DELIVERY_EXECUTION_STARTED_AT][0] = $startDate
+                ? tao_helpers_Date::displayeDate($startDate)
+                : '';
         }
 
         if (array_key_exists(self::DELIVERY_EXECUTION_FINISHED_AT, $data)) {
@@ -1305,13 +1360,22 @@ class ResultsService extends OntologyClassService
             $startTime = $startDate ? tao_helpers_Date::getTimeStamp($startDate) : 0;
             $endTime = $endDate ? tao_helpers_Date::getTimeStamp($endDate) : 0;
 
-            if ($matched && array_key_exists(self::FILTER_START_FROM, $filters) && $filters[self::FILTER_START_FROM]) {
+            if (
+                $matched
+                && array_key_exists(self::FILTER_START_FROM, $filters) && $filters[self::FILTER_START_FROM]
+            ) {
                 $matched = $startTime >= $filters[self::FILTER_START_FROM];
             }
-            if ($matched && array_key_exists(self::FILTER_START_TO, $filters) && $filters[self::FILTER_START_TO]) {
+            if (
+                $matched
+                && array_key_exists(self::FILTER_START_TO, $filters) && $filters[self::FILTER_START_TO]
+            ) {
                 $matched = $startTime <= $filters[self::FILTER_START_TO];
             }
-            if ($matched && array_key_exists(self::FILTER_END_FROM, $filters) && $filters[self::FILTER_END_FROM]) {
+            if (
+                $matched
+                && array_key_exists(self::FILTER_END_FROM, $filters) && $filters[self::FILTER_END_FROM]
+            ) {
                 $matched = $endTime >= $filters[self::FILTER_END_FROM];
             }
             if ($matched && array_key_exists(self::FILTER_END_TO, $filters) && $filters[self::FILTER_END_TO]) {
@@ -1367,7 +1431,12 @@ class ResultsService extends OntologyClassService
         //retrieving The list of the variables identifiers per activities defintions as observed
         $variableTypes = [];
 
-        foreach (array_chunk($resultsIds, $resultServiceWrapper->getOption(ResultServiceWrapper::RESULT_COLUMNS_CHUNK_SIZE_OPTION)) as $resultsIdsItem) {
+        foreach (
+            array_chunk(
+                $resultsIds,
+                $resultServiceWrapper->getOption(ResultServiceWrapper::RESULT_COLUMNS_CHUNK_SIZE_OPTION)
+            ) as $resultsIdsItem
+        ) {
             $selectedVariables = $this->getResultsVariables($resultsIdsItem);
             foreach ($selectedVariables as $variable) {
                 $variable = $variable[0];
@@ -1392,8 +1461,10 @@ class ResultsService extends OntologyClassService
                         "columnType" => $columnType
                     ];
 
-                    if ($variable->variable instanceof \taoResultServer_models_classes_ResponseVariable
-                        && $variable->variable->getCorrectResponse() !== null) {
+                    if (
+                        $variable->variable instanceof \taoResultServer_models_classes_ResponseVariable
+                        && $variable->variable->getCorrectResponse() !== null
+                    ) {
                         $variableTypes[$uri . $variableIdentifier . '_is_correct'] = [
                             "contextLabel" => $contextIdentifierLabel,
                             "contextId" => $uri,
@@ -1401,7 +1472,6 @@ class ResultsService extends OntologyClassService
                             "columnType" => Variable::TYPE_VARIABLE_IDENTIFIER
                         ];
                     }
-
                 }
             }
         }
@@ -1409,13 +1479,28 @@ class ResultsService extends OntologyClassService
         foreach ($variableTypes as $variableType) {
             switch ($variableClassUri) {
                 case \taoResultServer_models_classes_OutcomeVariable::class:
-                    $columns[] = new GradeColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"], $variableType["columnType"]);
+                    $columns[] = new GradeColumn(
+                        $variableType["contextId"],
+                        $variableType["contextLabel"],
+                        $variableType["variableIdentifier"],
+                        $variableType["columnType"]
+                    );
                     break;
                 case \taoResultServer_models_classes_ResponseVariable::class:
-                    $columns[] = new ResponseColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"], $variableType["columnType"]);
+                    $columns[] = new ResponseColumn(
+                        $variableType["contextId"],
+                        $variableType["contextLabel"],
+                        $variableType["variableIdentifier"],
+                        $variableType["columnType"]
+                    );
                     break;
                 default:
-                    $columns[] = new ResponseColumn($variableType["contextId"], $variableType["contextLabel"], $variableType["variableIdentifier"], $variableType["columnType"]);
+                    $columns[] = new ResponseColumn(
+                        $variableType["contextId"],
+                        $variableType["contextLabel"],
+                        $variableType["variableIdentifier"],
+                        $variableType["columnType"]
+                    );
             }
         }
         $arr = [];
@@ -1463,8 +1548,13 @@ class ResultsService extends OntologyClassService
             'duration'
         ];
 
-        if (in_array($variable->getIdentifier(), $stringColumns) ||
-            ($variable instanceof \taoResultServer_models_classes_ResponseVariable && $variable->getCorrectResponse() !== null)) {
+        if (
+            in_array($variable->getIdentifier(), $stringColumns)
+            || (
+                $variable instanceof \taoResultServer_models_classes_ResponseVariable
+                && $variable->getCorrectResponse() !== null
+            )
+        ) {
             return Variable::TYPE_VARIABLE_IDENTIFIER;
         }
 
@@ -1648,7 +1738,10 @@ class ResultsService extends OntologyClassService
         $resourceMetadataCompiler = $this->getServiceLocator()->get(ResourceJsonMetadataCompiler::SERVICE_ID);
         $metadata = $resourceMetadataCompiler->compile($resource);
 
-        $directory->write(taoQtiTest_models_classes_QtiTestService::TEST_COMPILED_METADATA_FILENAME, json_encode($metadata));
+        $directory->write(
+            taoQtiTest_models_classes_QtiTestService::TEST_COMPILED_METADATA_FILENAME,
+            json_encode($metadata)
+        );
     }
 
     /**
