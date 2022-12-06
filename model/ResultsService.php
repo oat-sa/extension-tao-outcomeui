@@ -46,6 +46,9 @@ use oat\taoDelivery\model\RuntimeService;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
 use oat\taoItems\model\ItemCompilerIndex;
 use oat\taoOutcomeUi\helper\Datatypes;
+use oat\taoOutcomeUi\model\table\ColumnDataProvider\ColumnId\VariableColumnIdProvider;
+use oat\taoOutcomeUi\model\table\ColumnDataProvider\ColumnIdProvider;
+use oat\taoOutcomeUi\model\table\ColumnDataProvider\ColumnLabelProvider;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\GradeColumn;
 use oat\taoOutcomeUi\model\table\ResponseColumn;
@@ -1092,28 +1095,11 @@ class ResultsService extends OntologyClassService
     {
         return array_reduce($columns, function ($carry, \tao_models_classes_table_Column $column) {
             /** @var ContextTypePropertyColumn|VariableColumn $column */
-            $carry[$this->getColumnId($column)] = $column->getLabel();
+            $columnId = $this->getColumnIdProvider()->provide($column);
+            $carry[$columnId] = $this->getColumnLabelProvider()->provide($column);
 
             return $carry;
         });
-    }
-
-    /**
-     * @param \tao_models_classes_table_Column|ContextTypePropertyColumn|VariableColumn $column
-     *
-     * @return string
-     */
-    private function getColumnId(\tao_models_classes_table_Column $column)
-    {
-        if ($column instanceof ContextTypePropertyColumn) {
-            $id = $column->getProperty()->getUri() . '_' . $column->getContextType();
-        } elseif ($column instanceof TestCenterColumn) {
-            $id = $column->getProperty()->getUri();
-        } else {
-            $id = $column->getContextIdentifier() . '_' . $column->getIdentifier();
-        }
-
-        return $id;
     }
 
     /**
@@ -1191,7 +1177,7 @@ class ResultsService extends OntologyClassService
 
             /** @var ContextTypePropertyColumn|VariableColumn $column */
             foreach ($columns as $column) {
-                $cellKey = $this->getColumnId($column);
+                $cellKey = $this->getColumnIdProvider()->provide($column);
                 $cellData[$cellKey] = null;
                 $values = [];
 
@@ -1439,12 +1425,23 @@ class ResultsService extends OntologyClassService
         ) {
             $selectedVariables = $this->getResultsVariables($resultsIdsItem);
             foreach ($selectedVariables as $variable) {
+                $refId = null;
                 $variable = $variable[0];
                 if ($this->isResultVariable($variable, $variableClassUri)) {
                     //variableIdentifier
                     $variableIdentifier = $variable->variable->getIdentifier();
                     if (!is_null($variable->item)) {
                         $uri = $variable->item;
+                        if (
+                            !$this->getItemResultStrategy()->isItemEntityBased()
+                            && $variable->callIdItem !== null
+                            && strpos($variable->callIdItem, $variable->deliveryResultIdentifier) !== false
+                        ) {
+                            [$refId, $occurrence] = explode(
+                                '.',
+                                substr($variable->callIdItem, strlen($variable->deliveryResultIdentifier . '.'))
+                            );
+                        }
                         $contextIdentifierLabel = $this->findItemLabel($delivery, $uri) ?? $uri;
                     } else {
                         $uri = $variable->test;
@@ -1453,10 +1450,16 @@ class ResultsService extends OntologyClassService
                     }
 
                     $columnType = $this->defineTypeColumn($variable->variable);
+                    $itemKey = $this->getColumnIdProvider()->createColumnDataHash(
+                        $uri,
+                        $refId ?? '',
+                        $variableIdentifier
+                    );
 
-                    $variableTypes[$uri . $variableIdentifier] = [
+                    $variableTypes[$itemKey] = [
                         "contextLabel" => $contextIdentifierLabel,
                         "contextId" => $uri,
+                        'refId' => $refId ?? null,
                         "variableIdentifier" => $variableIdentifier,
                         "columnType" => $columnType
                     ];
@@ -1465,13 +1468,21 @@ class ResultsService extends OntologyClassService
                         $variable->variable instanceof \taoResultServer_models_classes_ResponseVariable
                         && $variable->variable->getCorrectResponse() !== null
                     ) {
-                        $variableTypes[$uri . $variableIdentifier . '_is_correct'] = [
+                        $correctResponseVariableIdentifier = $variableIdentifier . '_is_correct';
+                        $itemKey = $this->getColumnIdProvider()->createColumnDataHash(
+                            $uri,
+                            $refId ?? '',
+                            $correctResponseVariableIdentifier
+                        );
+                        $variableTypes[$itemKey] = [
                             "contextLabel" => $contextIdentifierLabel,
                             "contextId" => $uri,
-                            "variableIdentifier" => $variableIdentifier . '_is_correct',
+                            'refId' => $refId ?? null,
+                            "variableIdentifier" => $correctResponseVariableIdentifier,
                             "columnType" => Variable::TYPE_VARIABLE_IDENTIFIER
                         ];
                     }
+
                 }
             }
         }
@@ -1483,23 +1494,18 @@ class ResultsService extends OntologyClassService
                         $variableType["contextId"],
                         $variableType["contextLabel"],
                         $variableType["variableIdentifier"],
-                        $variableType["columnType"]
+                        $variableType["columnType"],
+                        $variableType["refId"]
                     );
                     break;
                 case \taoResultServer_models_classes_ResponseVariable::class:
-                    $columns[] = new ResponseColumn(
-                        $variableType["contextId"],
-                        $variableType["contextLabel"],
-                        $variableType["variableIdentifier"],
-                        $variableType["columnType"]
-                    );
-                    break;
                 default:
                     $columns[] = new ResponseColumn(
                         $variableType["contextId"],
                         $variableType["contextLabel"],
                         $variableType["variableIdentifier"],
-                        $variableType["columnType"]
+                        $variableType["columnType"],
+                        $variableType["refId"]
                     );
             }
         }
@@ -1850,5 +1856,20 @@ class ResultsService extends OntologyClassService
         }
 
         return $results;
+    }
+
+    private function getColumnIdProvider(): ColumnIdProvider
+    {
+        return $this->getServiceLocator()->getContainer()->get(ColumnIdProvider::class);
+    }
+
+    private function getColumnLabelProvider(): ColumnLabelProvider
+    {
+        return $this->getServiceLocator()->getContainer()->get(ColumnLabelProvider::class);
+    }
+
+    private function getItemResultStrategy(): ItemResultStrategy
+    {
+        return $this->getServiceLocator()->getContainer()->get(ItemResultStrategy::class);
     }
 }

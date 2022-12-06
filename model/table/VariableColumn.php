@@ -22,7 +22,9 @@
 
 namespace oat\taoOutcomeUi\model\table;
 
+use oat\taoOutcomeUi\model\ItemResultStrategy;
 use \tao_models_classes_table_Column;
+use tao_models_classes_table_DataProvider;
 
 /**
  * Short description of class oat\taoOutcomeUi\model\table\VariableColumn
@@ -68,7 +70,12 @@ abstract class VariableColumn extends tao_models_classes_table_Column
      */
     private $columnType;
 
+    /** @var string|null */
+    private $refId;
+
     // --- OPERATIONS ---
+    /** @var ItemResultStrategy */
+    private $itemResultStrategy = null;
 
     /**
      *
@@ -77,15 +84,13 @@ abstract class VariableColumn extends tao_models_classes_table_Column
      */
     protected static function fromArray($array)
     {
-        $returnValue = null;
-
         $contextId = $array['contextId'];
         $contextLabel = $array['contextLabel'];
         $variableIdentifier =  $array['variableIdentifier'];
         $columnType =  $array['columnType'];
-        $returnValue = new static($contextId, $contextLabel, $variableIdentifier, $columnType);
+        $refId = $array['refId'] ?? null;
 
-        return $returnValue;
+        return new static($contextId, $contextLabel, $variableIdentifier, $columnType, $refId);
     }
 
     /**
@@ -94,14 +99,16 @@ abstract class VariableColumn extends tao_models_classes_table_Column
      * @param string $contextLabel
      * @param string $identifier
      * @param string|null $columnType
+     * @param string|null $refId
      */
-    public function __construct($contextIdentifier, $contextLabel, $identifier, $columnType = null)
+    public function __construct($contextIdentifier, $contextLabel, $identifier, $columnType = null, $refId = null)
     {
         parent::__construct($contextLabel . "-" . $identifier);
         $this->identifier = $identifier;
         $this->contextIdentifier = $contextIdentifier;
         $this->contextLabel = $contextLabel;
         $this->columnType = $columnType;
+        $this->refId = $refId;
     }
 
     public function getColumnType()
@@ -113,7 +120,7 @@ abstract class VariableColumn extends tao_models_classes_table_Column
     {
         $this->dataProvider = $provider;
     }
-    
+
     /**
      * Short description of method getDataProvider
      *
@@ -131,7 +138,7 @@ abstract class VariableColumn extends tao_models_classes_table_Column
      *
      * @access public
      * @author Joel Bout, <joel.bout@tudor.lu>
-     * @return core_kernel_classes_Resource
+     * @return string
      */
     public function getContextIdentifier()
     {
@@ -165,14 +172,28 @@ abstract class VariableColumn extends tao_models_classes_table_Column
         $returnValue['contextLabel'] = $this->contextLabel;
         $returnValue['variableIdentifier'] = $this->identifier;
         $returnValue['columnType'] = $this->getColumnType();
+        $returnValue['refId'] = $this->getRefId();
 
-        return (array) $returnValue;
+        return $returnValue;
     }
-    
+
     /**
      * Returns the variable type of the column
      *
      * @return string
      */
     abstract public function getVariableType();
+
+    /**
+     * @return string|null
+     */
+    public function getRefId(): ?string
+    {
+        return $this->refId;
+    }
+
+    public function getContextLabel(): string
+    {
+        return $this->contextLabel;
+    }
 }
