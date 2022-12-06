@@ -22,8 +22,8 @@
  *
  */
 
+use oat\taoOutcomeUi\model\ContainerServiceProvider\ContainerServiceProvider;
 use oat\taoOutcomeUi\scripts\install\RegisterEvent;
-use oat\taoOutcomeUi\scripts\install\RegisterResultService;
 use oat\taoOutcomeUi\scripts\install\RegisterTestPluginService;
 use oat\taoOutcomeUi\scripts\install\SetUpQueueTasks;
 use oat\taoOutcomeUi\scripts\install\SetupSearchService;
@@ -85,6 +85,9 @@ return [
         'BASE_URL'            => ROOT_URL . 'taoOutcomeUi/',
     ],
     'extra'          => [
-        'structures' => dirname(__FILE__) . DIRECTORY_SEPARATOR . 'controller' . DIRECTORY_SEPARATOR . 'structures.xml'
+        'structures' => dirname(__FILE__) . DIRECTORY_SEPARATOR . 'controller' . DIRECTORY_SEPARATOR . 'structures.xml',
+    ],
+    'containerServiceProviders' => [
+        ContainerServiceProvider::class
     ]
 ];
