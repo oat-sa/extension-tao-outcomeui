@@ -314,7 +314,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
             foreach ($cells as $row) {
                 $rowResult = [];
                 foreach ($row as $rowKey => $rowVal) {
-                    $rowResult[$columnNames[$rowKey]] = $rowVal[0];
+                    $rowResult[$rowKey] = $rowVal[0];
                 }
                 $result[] = $rowResult;
             }
@@ -322,10 +322,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
 
         $this->sortByStartDate($result);
 
-        //If there are no executions yet, the file is exported but contains only the header
-        if (empty($result)) {
-            $result = [array_fill_keys($columnNames, '')];
-        }
+        array_unshift($result, $columnNames);
 
         $exporter = $this->getExporter($result);
 
@@ -352,7 +349,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      */
     protected function getExportData($exporter)
     {
-        return $exporter->export(true, false, ',', '"', false);
+        return $exporter->export(false, false, ',', '"', false);
     }
 
     /**
