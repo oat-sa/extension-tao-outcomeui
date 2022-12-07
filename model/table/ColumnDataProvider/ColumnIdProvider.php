@@ -41,15 +41,15 @@ class ColumnIdProvider
 
     public function provide(tao_models_classes_table_Column $column): string
     {
-        switch (get_class($column)){
-            case ContextTypePropertyColumn::class:
+        switch (true){
+            case $column instanceof ContextTypePropertyColumn:
                 return $column->getProperty()->getUri() . '_' . $column->getContextType();
-            case TestCenterColumn::class:
+            case $column instanceof TestCenterColumn:
                 return $column->getProperty()->getUri();
-            case VariableColumn::class:
+            case $column instanceof VariableColumn:
                 return $this->provideVariableColumnId($column);
-            case TraceVariableColumn::class:
-            case DeliveryExecutionColumn::class:
+            case $column instanceof TraceVariableColumn:
+            case $column instanceof DeliveryExecutionColumn:
                 return $column->getContextIdentifier() . '_' . $column->getIdentifier();
             default:
                 return $this->createColumnDataHash($column->getLabel());
