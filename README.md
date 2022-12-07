@@ -83,7 +83,7 @@ As a system administrator you also install it through the TAO Extension Manager:
 Provided new class `oat\taoOutcomeUi\model\ItemResultStrategy` to control exporting of results. Configuration provided
 by environments variable
 ```bash
-export ITEM_RESULT_STRATEGY=item_instance_label_item_ref
+export ITEM_RESULT_STRATEGY=item_instance_label
 ```
 
 Support 4 type of configuration:
@@ -100,7 +100,7 @@ Support 4 type of configuration:
   exported for every single item instance used in test). Labels for columns provided by combination of assessmentItemRef
   value, item label and variable context
 
-if environment variable not provided default value will be considered as `item_instance_label_item_ref` 
+if environment variable not provided default value will be considered as `item_instance_label` 
 
 ### Registering default (phpfile) result page cache
 ```bash
