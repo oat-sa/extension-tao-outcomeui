@@ -152,9 +152,6 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
                 $columns = $this->columnsToExport;
             } else {
                 $variables = array_merge($this->columnsProvider->getGradeColumns(), $this->columnsProvider->getResponseColumns());
-                usort($variables, function ($a, $b) {
-                    return strcmp($a["label"], $b["label"]);
-                });
                 $columns = array_merge(
                     $this->columnsProvider->getTestTakerColumns(),
                     $this->columnsProvider->getDeliveryColumns(),
