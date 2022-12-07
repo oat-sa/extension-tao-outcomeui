@@ -151,8 +151,12 @@ define([
 
                 //set up model from columns
                 _.forEach(columns, function (col) {
+                    var colId = col.prop ? (col.prop + '_' + col.contextType) : (col.contextId + '_' + col.variableIdentifier);
+                    if(col.columnId){
+                        colId= col.columnId
+                    }
                     model.push({
-                        id: col.prop ? (col.prop + '_' + col.contextType) : (col.contextId + '_' + col.variableIdentifier),
+                        id: colId,
                         label: col.label,
                         sortable: false
                     });

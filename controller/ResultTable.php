@@ -31,6 +31,8 @@ use oat\taoOutcomeUi\model\export\DeliveryResultsExporterFactoryInterface;
 use oat\taoOutcomeUi\model\export\DeliverySqlResultsExporterFactory;
 use oat\taoOutcomeUi\model\export\ResultsExporter;
 use oat\taoOutcomeUi\model\ResultsService;
+use oat\taoOutcomeUi\model\table\ColumnDataProvider\ColumnIdProvider;
+use oat\taoOutcomeUi\model\table\ColumnDataProvider\ColumnLabelProvider;
 use oat\taoOutcomeUi\model\table\ResultsPayload;
 use tao_helpers_Uri;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
@@ -151,7 +153,9 @@ class ResultTable extends \tao_actions_CommonModule
         }
 
         return $this->returnJson([
-            'columns' => $this->getColumnsProvider()->getTestTakerColumns(),
+            'columns' => $this->adjustColumnByLabelAndId(
+                $this->getColumnsProvider()->getTestTakerColumns()
+            ),
             'first'   => true
         ]);
     }
@@ -168,7 +172,9 @@ class ResultTable extends \tao_actions_CommonModule
         }
 
         return $this->returnJson([
-            'columns' => $this->getColumnsProvider()->getDeliveryColumns()
+            'columns' => $this->adjustColumnByLabelAndId(
+                $this->getColumnsProvider()->getDeliveryColumns()
+            )
         ]);
     }
 
@@ -184,7 +190,9 @@ class ResultTable extends \tao_actions_CommonModule
         }
 
         return $this->returnJson([
-            'columns' => $this->getColumnsProvider()->getDeliveryExecutionColumns()
+            'columns' => $this->adjustColumnByLabelAndId(
+                $this->getColumnsProvider()->getDeliveryExecutionColumns()
+            )
         ]);
     }
 
@@ -200,7 +208,9 @@ class ResultTable extends \tao_actions_CommonModule
         }
 
         return $this->returnJson([
-            'columns' => $this->getColumnsProvider()->getGradeColumns()
+            'columns' => $this->adjustColumnByLabelAndId(
+                $this->getColumnsProvider()->getGradeColumns()
+            )
         ]);
     }
 
@@ -214,9 +224,10 @@ class ResultTable extends \tao_actions_CommonModule
         if (!$this->isXmlHttpRequest()) {
             throw new \Exception('Only ajax call allowed.');
         }
-
         return $this->returnJson([
-            'columns' => $this->getColumnsProvider()->getResponseColumns()
+            'columns' => $this->adjustColumnByLabelAndId(
+                $this->getColumnsProvider()->getResponseColumns()
+            )
         ]);
     }
 
@@ -302,7 +313,7 @@ class ResultTable extends \tao_actions_CommonModule
     {
         return $date ? strtotime($date) : 0;
     }
-    
+
     /**
      * @return string
      * @throws common_Exception
@@ -322,5 +333,28 @@ class ResultTable extends \tao_actions_CommonModule
     private function getResultService()
     {
         return $this->getServiceLocator()->get(ResultsService::SERVICE_ID);
+    }
+
+    private function adjustColumnByLabelAndId(array $columns): array
+    {
+        $columnIdProvider = $this->getColumnIdProvider();
+        $columnLabelProvider = $this->getColumnLabelProvider();
+
+        return array_map(static function (array $record) use ($columnIdProvider, $columnLabelProvider) {
+            $record['label'] = $columnLabelProvider->provideFromColumnArray($record);
+            $record['columnId'] = $columnIdProvider->provideFromColumnArray($record);
+
+            return $record;
+        }, $columns);
+    }
+
+    private function getColumnLabelProvider(): ColumnLabelProvider
+    {
+        return $this->getServiceLocator()->getContainer()->get(ColumnLabelProvider::class);
+    }
+
+    private function getColumnIdProvider(): ColumnIdProvider
+    {
+        return $this->getServiceLocator()->getContainer()->get(ColumnIdProvider::class);
     }
 }
