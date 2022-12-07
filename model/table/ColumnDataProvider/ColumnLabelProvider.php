@@ -62,6 +62,11 @@ class ColumnLabelProvider
         return $column->getLabel();
     }
 
+    public function provideFromColumnArray(array $columnArray): string
+    {
+        return $this->provide(tao_models_classes_table_Column::buildColumnFromArray($columnArray));
+    }
+
     public function createLabel(string ...$elements): string
     {
         return implode(self::LABEL_SEPARATOR, $elements);

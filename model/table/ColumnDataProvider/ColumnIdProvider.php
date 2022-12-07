@@ -56,6 +56,11 @@ class ColumnIdProvider
         }
     }
 
+    public function provideFromColumnArray(array $columnArray): string
+    {
+        return $this->provide(tao_models_classes_table_Column::buildColumnFromArray($columnArray));
+    }
+
     public function createColumnDataHash(string ...$elements): string
     {
         return md5(implode($elements));
