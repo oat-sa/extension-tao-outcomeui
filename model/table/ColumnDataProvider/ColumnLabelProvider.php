@@ -39,7 +39,7 @@ class ColumnLabelProvider
 
     public function provide(tao_models_classes_table_Column $column): string
     {
-        if($column instanceof VariableColumn) {
+        if ($column instanceof VariableColumn) {
             if (
                 $this->itemResultStrategy->isItemInstanceLabelItemRefBased()
                 && $column->getRefId() !== null

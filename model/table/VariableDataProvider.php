@@ -16,6 +16,7 @@
  *               2012-2022 Open Assessment Technologies SA;
  *
  */
+
 namespace oat\taoOutcomeUi\model\table;
 
 use common_Logger;
@@ -41,7 +42,6 @@ use tao_models_classes_table_DataProvider;
  */
 class VariableDataProvider implements tao_models_classes_table_DataProvider
 {
-
     /**
      * Short description of attribute cache
      *
@@ -129,7 +129,13 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
                             $epoch = $varData->getEpoch();
                             $readableTime = "";
                             if ($epoch != "") {
-                                $readableTime = "@" . tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE);
+                                $readableTime = sprintf(
+                                    "@%s",
+                                    tao_helpers_Date::displayeDate(
+                                        tao_helpers_Date::getTimeStamp($epoch),
+                                        tao_helpers_Date::FORMAT_VERBOSE
+                                    )
+                                );
                             }
 
                             $value = $varData->getValue();
@@ -145,10 +151,15 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
                                 $readableTime
                             ];
                             $columnIdProvider = $this->getColumnIdProvider();
-                            $this->cache[get_class($varData)][$result][$columnIdProvider->provide($column)][(string)$epoch] = $data;
+                            $columnId = $columnIdProvider->provide($column);
+                            $this->cache[get_class($varData)][$result][$columnId][(string)$epoch] = $data;
 
-                            if ($varData instanceof \taoResultServer_models_classes_ResponseVariable && $varData->getCorrectResponse() !== null) {
-                                $this->cache[get_class($varData)][$result][$columnIdProvider->provide($column) . '_is_correct'][(string)$epoch] = [
+                            if (
+                                $varData instanceof \taoResultServer_models_classes_ResponseVariable
+                                && $varData->getCorrectResponse() !== null
+                            ) {
+                                $correctColumnId = $columnId . '_is_correct';
+                                $this->cache[get_class($varData)][$result][$correctColumnId][(string)$epoch] = [
                                     (int)$varData->getCorrectResponse(),
                                     $readableTime
                                 ];
@@ -168,8 +179,14 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
     {
         $returnValue = [];
 
-        if (! $column instanceof VariableColumn) {
-            throw new \common_exception_InconsistentData('Unexpected colum type ' . get_class($column) . ' for ' . __CLASS__);
+        if (!$column instanceof VariableColumn) {
+            throw new \common_exception_InconsistentData(
+                sprintf(
+                    'Unexpected colum type %s for %s',
+                    get_class($column),
+                    __CLASS__
+                )
+            );
         }
 
         $vcUri = $column->getVariableType();
@@ -177,7 +194,13 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
         if (isset($this->cache[$vcUri][$resource->getUri()][$columnIdProvider->provide($column)])) {
             $returnValue = $this->cache[$vcUri][$resource->getUri()][$columnIdProvider->provide($column)];
         } else {
-            common_Logger::d('no data for resource: ' . $resource->getUri() . ' column: ' . $column->getIdentifier());
+            common_Logger::d(
+                sprintf(
+                    'no data for resource: %s column: %s',
+                    $resource->getUri(),
+                    $column->getIdentifier()
+                )
+            );
         }
 
         return $returnValue;

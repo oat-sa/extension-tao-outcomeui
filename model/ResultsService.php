@@ -1482,7 +1482,6 @@ class ResultsService extends OntologyClassService
                             "columnType" => Variable::TYPE_VARIABLE_IDENTIFIER
                         ];
                     }
-
                 }
             }
         }

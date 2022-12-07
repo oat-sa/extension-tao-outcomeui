@@ -24,7 +24,7 @@
 namespace oat\taoOutcomeUi\model\table;
 
 use oat\taoOutcomeUi\model\ItemResultStrategy;
-use \tao_models_classes_table_Column;
+use tao_models_classes_table_Column;
 use tao_models_classes_table_DataProvider;
 
 /**

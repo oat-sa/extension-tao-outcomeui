@@ -92,7 +92,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      */
     private $filters = [];
 
-    const CHUNK_SIZE = 100;
+    public const CHUNK_SIZE = 100;
 
     /**
      * @param string|\core_kernel_classes_Resource $delivery
@@ -105,7 +105,12 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
         $this->delivery = $this->getResource($delivery);
 
         if (!$this->delivery->exists()) {
-            throw new \common_exception_NotFound('Results Exporter: delivery "' . $this->delivery->getUri() . '" does not exist.');
+            throw new \common_exception_NotFound(
+                sprintf(
+                    'Results Exporter: delivery "%s" does not exist.',
+                    $this->delivery->getUri()
+                )
+            );
         }
 
         $this->resultsService = $resultsService;
@@ -151,7 +156,10 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
             if (!empty($this->columnsToExport)) {
                 $columns = $this->columnsToExport;
             } else {
-                $variables = array_merge($this->columnsProvider->getGradeColumns(), $this->columnsProvider->getResponseColumns());
+                $variables = array_merge(
+                    $this->columnsProvider->getGradeColumns(),
+                    $this->columnsProvider->getResponseColumns()
+                );
                 $columns = array_merge(
                     $this->columnsProvider->getTestTakerColumns(),
                     $this->columnsProvider->getDeliveryColumns(),
@@ -177,7 +185,12 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
             ResultsService::VARIABLES_FILTER_LAST_SUBMITTED,
         ];
         if (!in_array($variableToExport, $allowedFilters)) {
-            throw new \InvalidArgumentException('Results Exporter: wrong submitted variable "' . $variableToExport . '"');
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Results Exporter: wrong submitted variable "%s"',
+                    $variableToExport
+                )
+            );
         }
 
         $this->variableToExport = $variableToExport;

@@ -41,7 +41,7 @@ class ColumnIdProvider
 
     public function provide(tao_models_classes_table_Column $column): string
     {
-        switch (true){
+        switch (true) {
             case $column instanceof ContextTypePropertyColumn:
                 return $column->getProperty()->getUri() . '_' . $column->getContextType();
             case $column instanceof TestCenterColumn:
