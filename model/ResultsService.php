@@ -1481,7 +1481,9 @@ class ResultsService extends OntologyClassService
             }
         }
 
-        return array_map(fn(\tao_models_classes_table_Column $column) => $column->toArray(), $columns);
+        return array_values(
+            array_map(fn(\tao_models_classes_table_Column $column) => $column->toArray(), $columns)
+        );
     }
 
     /**
