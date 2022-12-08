@@ -1416,7 +1416,9 @@ class ResultsService extends OntologyClassService
 
         //retrieving The list of the variables identifiers per activities defintions as observed
         $variableTypes = [];
-
+        $columnsType = $variableClassUri === \taoResultServer_models_classes_OutcomeVariable::class
+            ? GradeColumn::class
+            : ResponseColumn::class;
         foreach (
             array_chunk(
                 $resultsIds,
@@ -1450,70 +1452,36 @@ class ResultsService extends OntologyClassService
                     }
 
                     $columnType = $this->defineTypeColumn($variable->variable);
-                    $itemKey = $this->getColumnIdProvider()->createColumnDataHash(
-                        $uri,
-                        $refId ?? '',
-                        $variableIdentifier
-                    );
 
-                    $variableTypes[$itemKey] = [
+                    $column = \tao_models_classes_table_Column::buildColumnFromArray([
+                        'type' => $columnsType,
                         "contextLabel" => $contextIdentifierLabel,
                         "contextId" => $uri,
                         'refId' => $refId ?? null,
                         "variableIdentifier" => $variableIdentifier,
                         "columnType" => $columnType
-                    ];
+                    ]);
+                    $columns[$this->getColumnIdProvider()->provide($column)] = $column;
 
                     if (
                         $variable->variable instanceof \taoResultServer_models_classes_ResponseVariable
                         && $variable->variable->getCorrectResponse() !== null
                     ) {
-                        $correctResponseVariableIdentifier = $variableIdentifier . '_is_correct';
-                        $itemKey = $this->getColumnIdProvider()->createColumnDataHash(
-                            $uri,
-                            $refId ?? '',
-                            $correctResponseVariableIdentifier
-                        );
-                        $variableTypes[$itemKey] = [
+                        $columnCorrect = \tao_models_classes_table_Column::buildColumnFromArray([
+                            'type' => $columnsType,
                             "contextLabel" => $contextIdentifierLabel,
                             "contextId" => $uri,
                             'refId' => $refId ?? null,
-                            "variableIdentifier" => $correctResponseVariableIdentifier,
+                            "variableIdentifier" => $variableIdentifier . '_is_correct',
                             "columnType" => Variable::TYPE_VARIABLE_IDENTIFIER
-                        ];
+                        ]);
+                        $columns[$this->getColumnIdProvider()->provide($columnCorrect)] = $columnCorrect;
                     }
                 }
             }
         }
 
-        foreach ($variableTypes as $variableType) {
-            switch ($variableClassUri) {
-                case \taoResultServer_models_classes_OutcomeVariable::class:
-                    $columns[] = new GradeColumn(
-                        $variableType["contextId"],
-                        $variableType["contextLabel"],
-                        $variableType["variableIdentifier"],
-                        $variableType["columnType"],
-                        $variableType["refId"]
-                    );
-                    break;
-                case \taoResultServer_models_classes_ResponseVariable::class:
-                default:
-                    $columns[] = new ResponseColumn(
-                        $variableType["contextId"],
-                        $variableType["contextLabel"],
-                        $variableType["variableIdentifier"],
-                        $variableType["columnType"],
-                        $variableType["refId"]
-                    );
-            }
-        }
-        $arr = [];
-        foreach ($columns as $column) {
-            $arr[] = $column->toArray();
-        }
-
-        return $arr;
+        return array_map(fn(\tao_models_classes_table_Column $column) => $column->toArray(), $columns);
     }
 
     /**
