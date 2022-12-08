@@ -88,19 +88,19 @@ export ITEM_RESULT_STRATEGY=item_instance_label
 
 Support 4 type of configuration:
 
-- item_entity - __legacy behavior__ all item variables collected for export as single item (even if item used in test
+- `item_entity` - __legacy behavior__ all item variables collected for export as single item (even if item used in test
   more than 1 time). Labels for columns provided by combination of item label and variable context
-- item_instance_label - all item variables collected for export considering `assessmentItemRef` (data will be exported
+- `item_instance_label` - all item variables collected for export considering `assessmentItemRef` (data will be exported
   for every single item instance used in test). Labels for columns provided by combination item label and variable
   context
-- item_instance_item_ref - all item variables collected for export considering `assessmentItemRef` (data will be
+- `item_instance_item_ref` - all item variables collected for export considering `assessmentItemRef` (data will be
   exported for every single item instance used in test). Labels for columns provided by combination of assessmentItemRef
   value and variable context
-- item_instance_label_item_ref - all item variables collected for export considering `assessmentItemRef` (data will be
+- `item_instance_label_item_ref` - all item variables collected for export considering `assessmentItemRef` (data will be
   exported for every single item instance used in test). Labels for columns provided by combination of assessmentItemRef
   value, item label and variable context
 
-if environment variable not provided default value will be considered as `item_instance_label` 
+if environment variable not provided default value will be considered as `item_instance_label_item_ref` 
 
 ### Registering default (phpfile) result page cache
 ```bash

@@ -41,7 +41,7 @@ class ContainerServiceProvider implements ContainerServiceProviderInterface
         $services = $configurator->services();
         $parameters = $configurator->parameters();
 
-        $parameters->set(self::DEFAULT_ITEM_RESULT_STRATEGY, 'item_instance_label');
+        $parameters->set(self::DEFAULT_ITEM_RESULT_STRATEGY, 'item_instance_label_item_ref');
         $parameters->set(
             ItemResultStrategy::ENV_ITEM_RESULT_STRATEGY,
             (string)env(ItemResultStrategy::ENV_ITEM_RESULT_STRATEGY)->default(self::DEFAULT_ITEM_RESULT_STRATEGY)
