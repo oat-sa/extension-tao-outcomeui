@@ -75,8 +75,6 @@ abstract class VariableColumn extends tao_models_classes_table_Column
     private $refId;
 
     // --- OPERATIONS ---
-    /** @var ItemResultStrategy */
-    private $itemResultStrategy = null;
 
     /**
      *

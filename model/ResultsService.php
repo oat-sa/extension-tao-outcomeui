@@ -1414,8 +1414,6 @@ class ResultsService extends OntologyClassService
         //The list of delivery Results matching the current selection filters
         $resultsIds = $this->findResultsByDeliveryAndFilters($delivery, $filters, $storageOptions);
 
-        //retrieving The list of the variables identifiers per activities defintions as observed
-        $variableTypes = [];
         $columnsType = $variableClassUri === \taoResultServer_models_classes_OutcomeVariable::class
             ? GradeColumn::class
             : ResponseColumn::class;
