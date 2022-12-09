@@ -110,12 +110,19 @@ class ResultsServiceTest extends TestCase
     /**
      * @dataProvider testExtractTestVariablesProvider
      */
-    public function testExtractTestVariables(array $expectedOutput, array $variableObjects, array $wantedTypes, string $filter = null)
-    {
+    public function testExtractTestVariables(
+        array $expectedOutput,
+        array $variableObjects,
+        array $wantedTypes,
+        string $filter = null
+    ) {
         if ($filter === null) {
             $this->assertSame($expectedOutput, $this->subject->extractTestVariables($variableObjects, $wantedTypes));
         } else {
-            $this->assertSame($expectedOutput, $this->subject->extractTestVariables($variableObjects, $wantedTypes, $filter));
+            $this->assertSame(
+                $expectedOutput,
+                $this->subject->extractTestVariables($variableObjects, $wantedTypes, $filter)
+            );
         }
     }
 
@@ -127,7 +134,7 @@ class ResultsServiceTest extends TestCase
     {
         $responseVariable = $this->getResponseVariable();
         $outcomeVariable = $this->getOutcomeVariable();
-
+        $callIdItem = 'https://sds-tao.docker.localhost/ontologies/tao.rdf#i5e43f610586e6866601988b391f3a4.item-1.0';
         return [
             [
                 [
@@ -136,7 +143,7 @@ class ResultsServiceTest extends TestCase
                 ],
                 [
                     [(object)[
-                        'callIdItem' => 'https://sds-tao.docker.localhost/ontologies/tao.rdf#i5e43f610586e6866601988b391f3a4.item-1.0',
+                        'callIdItem' => $callIdItem,
                         'variable' => $outcomeVariable,
                     ]],
                     [(object)[
@@ -162,7 +169,7 @@ class ResultsServiceTest extends TestCase
                 ],
                 [
                     [(object)[
-                        'callIdItem' => 'https://sds-tao.docker.localhost/ontologies/tao.rdf#i5e43f610586e6866601988b391f3a4.item-1.0',
+                        'callIdItem' => $callIdItem,
                         'variable' => $outcomeVariable,
                     ]],
                     [(object)[
@@ -195,7 +202,7 @@ class ResultsServiceTest extends TestCase
                 ],
                 [
                     [(object)[
-                        'callIdItem' => 'https://sds-tao.docker.localhost/ontologies/tao.rdf#i5e43f610586e6866601988b391f3a4.item-1.0',
+                        'callIdItem' => $callIdItem,
                         'variable' => $outcomeVariable,
                     ]],
                     [(object)[
@@ -228,7 +235,7 @@ class ResultsServiceTest extends TestCase
                 ],
                 [
                     [(object)[
-                        'callIdItem' => 'https://sds-tao.docker.localhost/ontologies/tao.rdf#i5e43f610586e6866601988b391f3a4.item-1.0',
+                        'callIdItem' => $callIdItem,
                         'variable' => $outcomeVariable,
                     ]],
                     [(object)[
@@ -388,7 +395,10 @@ class ResultsServiceTest extends TestCase
         $method = $class->getMethod('filterData');
         $method->setAccessible(true);
         $resultsService = new ResultsService();
-        self::assertSame($expected, $method->invokeArgs($resultsService, [$row, $filters, $deliveryExecutionIdentifier]));
+        self::assertSame(
+            $expected,
+            $method->invokeArgs($resultsService, [$row, $filters, $deliveryExecutionIdentifier])
+        );
     }
 
     public function testGetCellsByResults()
