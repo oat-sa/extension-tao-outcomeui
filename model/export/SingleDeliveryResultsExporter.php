@@ -15,7 +15,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2017 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ * Copyright (c) 2017-2022 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
 
@@ -92,7 +92,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      */
     private $filters = [];
 
-    const CHUNK_SIZE = 100;
+    public const CHUNK_SIZE = 100;
 
     /**
      * @param string|\core_kernel_classes_Resource $delivery
@@ -105,7 +105,12 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
         $this->delivery = $this->getResource($delivery);
 
         if (!$this->delivery->exists()) {
-            throw new \common_exception_NotFound('Results Exporter: delivery "' . $this->delivery->getUri() . '" does not exist.');
+            throw new \common_exception_NotFound(
+                sprintf(
+                    'Results Exporter: delivery "%s" does not exist.',
+                    $this->delivery->getUri()
+                )
+            );
         }
 
         $this->resultsService = $resultsService;
@@ -151,10 +156,10 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
             if (!empty($this->columnsToExport)) {
                 $columns = $this->columnsToExport;
             } else {
-                $variables = array_merge($this->columnsProvider->getGradeColumns(), $this->columnsProvider->getResponseColumns());
-                usort($variables, function ($a, $b) {
-                    return strcmp($a["label"], $b["label"]);
-                });
+                $variables = array_merge(
+                    $this->columnsProvider->getGradeColumns(),
+                    $this->columnsProvider->getResponseColumns()
+                );
                 $columns = array_merge(
                     $this->columnsProvider->getTestTakerColumns(),
                     $this->columnsProvider->getDeliveryColumns(),
@@ -180,7 +185,12 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
             ResultsService::VARIABLES_FILTER_LAST_SUBMITTED,
         ];
         if (!in_array($variableToExport, $allowedFilters)) {
-            throw new \InvalidArgumentException('Results Exporter: wrong submitted variable "' . $variableToExport . '"');
+            throw new \InvalidArgumentException(
+                sprintf(
+                    'Results Exporter: wrong submitted variable "%s"',
+                    $variableToExport
+                )
+            );
         }
 
         $this->variableToExport = $variableToExport;
@@ -314,7 +324,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
             foreach ($cells as $row) {
                 $rowResult = [];
                 foreach ($row as $rowKey => $rowVal) {
-                    $rowResult[$columnNames[$rowKey]] = $rowVal[0];
+                    $rowResult[$rowKey] = $rowVal[0];
                 }
                 $result[] = $rowResult;
             }
@@ -322,10 +332,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
 
         $this->sortByStartDate($result);
 
-        //If there are no executions yet, the file is exported but contains only the header
-        if (empty($result)) {
-            $result = [array_fill_keys($columnNames, '')];
-        }
+        array_unshift($result, $columnNames);
 
         $exporter = $this->getExporter($result);
 
@@ -352,7 +359,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      */
     protected function getExportData($exporter)
     {
-        return $exporter->export(true, false, ',', '"', false);
+        return $exporter->export(false, false, ',', '"', false);
     }
 
     /**

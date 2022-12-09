@@ -78,6 +78,30 @@ As a system administrator you also install it through the TAO Extension Manager:
 *Possible values:* 
 * a `ResultsViewerService` model.
 
+### Item results strategy
+
+Provided new class `oat\taoOutcomeUi\model\ItemResultStrategy` to control exporting of results. Configuration provided
+by environments variable
+```bash
+export ITEM_RESULT_STRATEGY=item_instance_label
+```
+
+Support 4 type of configuration:
+
+- `item_entity` - __legacy behavior__ all item variables collected for export as single item (even if item used in test
+  more than 1 time). Labels for columns provided by combination of item label and variable context
+- `item_instance_label` - all item variables collected for export considering `assessmentItemRef` (data will be exported
+  for every single item instance used in test). Labels for columns provided by combination item label and variable
+  context
+- `item_instance_item_ref` - all item variables collected for export considering `assessmentItemRef` (data will be
+  exported for every single item instance used in test). Labels for columns provided by combination of assessmentItemRef
+  value and variable context
+- `item_instance_label_item_ref` - all item variables collected for export considering `assessmentItemRef` (data will be
+  exported for every single item instance used in test). Labels for columns provided by combination of assessmentItemRef
+  value, item label and variable context
+
+if environment variable not provided default value will be considered as `item_instance_label_item_ref` 
+
 ### Registering default (phpfile) result page cache
 ```bash
  $ sudo -u www-data php index.php '\oat\taoOutcomeUi\scripts\tools\RegisterDefaultResultCache'

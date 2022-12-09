@@ -1,6 +1,6 @@
 <?php
 
-/*
+/**
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; under version 2
@@ -13,20 +13,25 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301, USA.
  * Copyright (c) 2009-2012 (original work) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV);
+ *               2012-2022 Open Assessment Technologies SA;
+ *
  */
+
 namespace oat\taoOutcomeUi\model\table;
 
-use \common_Logger;
-use \common_cache_FileCache;
-use \core_kernel_classes_Resource;
+use common_Logger;
+use core_kernel_classes_Resource;
 use oat\oatbox\service\ServiceManager;
-use oat\taoOutcomeUi\helper\Datatypes;
-use qtism\common\datatypes\QtiDuration;
-use \tao_helpers_Date;
-use \tao_models_classes_table_Column;
-use \tao_models_classes_table_DataProvider;
-use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoDelivery\model\execution\DeliveryExecution;
+use oat\taoOutcomeUi\helper\Datatypes;
+use oat\taoOutcomeUi\model\ItemResultStrategy;
+use oat\taoOutcomeUi\model\ResultsService;
+use oat\taoOutcomeUi\model\table\ColumnDataProvider\ColumnId\VariableColumnIdProvider;
+use oat\taoOutcomeUi\model\table\ColumnDataProvider\ColumnIdProvider;
+use qtism\common\datatypes\QtiDuration;
+use tao_helpers_Date;
+use tao_models_classes_table_Column;
+use tao_models_classes_table_DataProvider;
 
 /**
  * Short description of class
@@ -37,7 +42,6 @@ use oat\taoDelivery\model\execution\DeliveryExecution;
  */
 class VariableDataProvider implements tao_models_classes_table_DataProvider
 {
-
     /**
      * Short description of attribute cache
      *
@@ -110,13 +114,28 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
                         $decodedFile = Datatypes::decodeFile($varData->getValue());
                         $varData->setValue($decodedFile['name']);
                     }
+                    $callIdItem = $var->callIdItem;
                     $variableIdentifier = (string) $varData->getIdentifier();
+
                     foreach ($columns as $column) {
-                        if ($variableIdentifier == $column->getIdentifier() and $contextIdentifier == $column->getContextIdentifier()) {
+                        if (
+                            $variableIdentifier == $column->getIdentifier()
+                            && $contextIdentifier == $column->getContextIdentifier()
+                            && (
+                                $this->getItemResultStrategy()->isItemEntityBased()
+                                || strpos($callIdItem, $column->getRefId()) !== false
+                            )
+                        ) {
                             $epoch = $varData->getEpoch();
                             $readableTime = "";
                             if ($epoch != "") {
-                                $readableTime = "@" . tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE);
+                                $readableTime = sprintf(
+                                    "@%s",
+                                    tao_helpers_Date::displayeDate(
+                                        tao_helpers_Date::getTimeStamp($epoch),
+                                        tao_helpers_Date::FORMAT_VERBOSE
+                                    )
+                                );
                             }
 
                             $value = $varData->getValue();
@@ -131,11 +150,16 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
                                 $value,
                                 $readableTime
                             ];
+                            $columnIdProvider = $this->getColumnIdProvider();
+                            $columnId = $columnIdProvider->provide($column);
+                            $this->cache[get_class($varData)][$result][$columnId][(string)$epoch] = $data;
 
-                            $this->cache[get_class($varData)][$result][$column->getContextIdentifier() . $variableIdentifier][(string) $epoch] = $data;
-
-                            if ($varData instanceof \taoResultServer_models_classes_ResponseVariable && $varData->getCorrectResponse() !== null) {
-                                $this->cache[get_class($varData)][$result][$column->getContextIdentifier() . $variableIdentifier.'_is_correct'][(string) $epoch] = [
+                            if (
+                                $varData instanceof \taoResultServer_models_classes_ResponseVariable
+                                && $varData->getCorrectResponse() !== null
+                            ) {
+                                $correctColumnId = $columnId . '_is_correct';
+                                $this->cache[get_class($varData)][$result][$correctColumnId][(string)$epoch] = [
                                     (int)$varData->getCorrectResponse(),
                                     $readableTime
                                 ];
@@ -155,16 +179,28 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
     {
         $returnValue = [];
 
-        if (! $column instanceof VariableColumn) {
-            throw new \common_exception_InconsistentData('Unexpected colum type ' . get_class($column) . ' for ' . __CLASS__);
+        if (!$column instanceof VariableColumn) {
+            throw new \common_exception_InconsistentData(
+                sprintf(
+                    'Unexpected colum type %s for %s',
+                    get_class($column),
+                    __CLASS__
+                )
+            );
         }
 
         $vcUri = $column->getVariableType();
-
-        if (isset($this->cache[$vcUri][$resource->getUri()][$column->getContextIdentifier() . $column->getIdentifier()])) {
-            $returnValue = $this->cache[$vcUri][$resource->getUri()][$column->getContextIdentifier() . $column->getIdentifier()];
+        $columnIdProvider = $this->getColumnIdProvider();
+        if (isset($this->cache[$vcUri][$resource->getUri()][$columnIdProvider->provide($column)])) {
+            $returnValue = $this->cache[$vcUri][$resource->getUri()][$columnIdProvider->provide($column)];
         } else {
-            common_Logger::d('no data for resource: ' . $resource->getUri() . ' column: ' . $column->getIdentifier());
+            common_Logger::d(
+                sprintf(
+                    'no data for resource: %s column: %s',
+                    $resource->getUri(),
+                    $column->getIdentifier()
+                )
+            );
         }
 
         return $returnValue;
@@ -178,5 +214,15 @@ class VariableDataProvider implements tao_models_classes_table_DataProvider
     protected function getCache()
     {
         return ServiceManager::getServiceManager()->get(\common_cache_Cache::SERVICE_ID);
+    }
+
+    public function getColumnIdProvider(): ColumnIdProvider
+    {
+        return ServiceManager::getServiceManager()->getContainer()->get(ColumnIdProvider::class);
+    }
+
+    public function getItemResultStrategy(): ItemResultStrategy
+    {
+        return ServiceManager::getServiceManager()->getContainer()->get(ItemResultStrategy::class);
     }
 }
