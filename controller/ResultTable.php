@@ -16,13 +16,13 @@
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
  * Copyright (c) 2009-2012 (original work) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV);
- *               2012-2017 Open Assessment Technologies SA;
+ *               2012-2022 Open Assessment Technologies SA;
  *
  */
 
 namespace oat\taoOutcomeUi\controller;
 
-use \common_Exception;
+use common_Exception;
 use oat\tao\model\taskQueue\TaskLogActionTrait;
 use oat\taoOutcomeUi\model\export\ColumnsProvider;
 use oat\generis\model\OntologyAwareTrait;
@@ -31,6 +31,8 @@ use oat\taoOutcomeUi\model\export\DeliveryResultsExporterFactoryInterface;
 use oat\taoOutcomeUi\model\export\DeliverySqlResultsExporterFactory;
 use oat\taoOutcomeUi\model\export\ResultsExporter;
 use oat\taoOutcomeUi\model\ResultsService;
+use oat\taoOutcomeUi\model\table\ColumnDataProvider\ColumnIdProvider;
+use oat\taoOutcomeUi\model\table\ColumnDataProvider\ColumnLabelProvider;
 use oat\taoOutcomeUi\model\table\ResultsPayload;
 use tao_helpers_Uri;
 use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
@@ -42,17 +44,17 @@ use oat\taoDeliveryRdf\model\DeliveryAssemblyService;
  */
 class ResultTable extends \tao_actions_CommonModule
 {
-    const PARAMETER_COLUMNS = 'columns';
-    const PARAMETER_DELIVERY_URI = 'uri';
-    const PARAMETER_FILTER = 'filter';
-
-    const PARAMETER_START_FROM = 'startfrom';
-    const PARAMETER_START_TO = 'startto';
-    const PARAMETER_END_FROM = 'endfrom';
-    const PARAMETER_END_TO = 'endto';
-
     use OntologyAwareTrait;
     use TaskLogActionTrait;
+
+    public const PARAMETER_COLUMNS = 'columns';
+    public const PARAMETER_DELIVERY_URI = 'uri';
+    public const PARAMETER_FILTER = 'filter';
+
+    public const PARAMETER_START_FROM = 'startfrom';
+    public const PARAMETER_START_TO = 'startto';
+    public const PARAMETER_END_FROM = 'endfrom';
+    public const PARAMETER_END_TO = 'endto';
 
     /**
      * Return the Result Table entry page displaying the datatable and the filters to be applied.
@@ -84,7 +86,9 @@ class ResultTable extends \tao_actions_CommonModule
             $this->setView('resultTable.tpl');
         } else {
             $this->setData('type', 'info');
-            $this->setData('error', __('No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here.'));
+            $message = 'No tests have been taken yet.' .
+                ' As soon as a test-taker will take a test his results will be displayed here.';
+            $this->setData('error', __($message));
             $this->setView('index.tpl');
         }
     }
@@ -104,7 +108,12 @@ class ResultTable extends \tao_actions_CommonModule
             throw new common_Exception('Parameter "' . self::PARAMETER_COLUMNS . '" missing');
         }
 
-        $this->returnJson((new ResultsPayload($this->getExporterService(new DeliveryCsvResultsExporterFactory())->getExporter()))->getPayload());
+        $resultPayload = new ResultsPayload(
+            $this->getExporterService(new DeliveryCsvResultsExporterFactory())->getExporter()
+        );
+        $this->returnJson(
+            $resultPayload->getPayload()
+        );
     }
 
     /**
@@ -120,7 +129,9 @@ class ResultTable extends \tao_actions_CommonModule
             throw new \Exception('Only ajax call allowed.');
         }
 
-        return $this->returnTaskJson($this->getExporterService(new DeliveryCsvResultsExporterFactory())->createExportTask());
+        return $this->returnTaskJson(
+            $this->getExporterService(new DeliveryCsvResultsExporterFactory())->createExportTask()
+        );
     }
 
     /**
@@ -136,7 +147,9 @@ class ResultTable extends \tao_actions_CommonModule
             throw new \Exception('Only ajax call allowed.');
         }
 
-        return $this->returnTaskJson($this->getExporterService(new DeliverySqlResultsExporterFactory())->createExportTask());
+        return $this->returnTaskJson(
+            $this->getExporterService(new DeliverySqlResultsExporterFactory())->createExportTask()
+        );
     }
 
     /**
@@ -151,7 +164,9 @@ class ResultTable extends \tao_actions_CommonModule
         }
 
         return $this->returnJson([
-            'columns' => $this->getColumnsProvider()->getTestTakerColumns(),
+            'columns' => $this->adjustColumnByLabelAndId(
+                $this->getColumnsProvider()->getTestTakerColumns()
+            ),
             'first'   => true
         ]);
     }
@@ -168,7 +183,9 @@ class ResultTable extends \tao_actions_CommonModule
         }
 
         return $this->returnJson([
-            'columns' => $this->getColumnsProvider()->getDeliveryColumns()
+            'columns' => $this->adjustColumnByLabelAndId(
+                $this->getColumnsProvider()->getDeliveryColumns()
+            )
         ]);
     }
 
@@ -184,7 +201,9 @@ class ResultTable extends \tao_actions_CommonModule
         }
 
         return $this->returnJson([
-            'columns' => $this->getColumnsProvider()->getDeliveryExecutionColumns()
+            'columns' => $this->adjustColumnByLabelAndId(
+                $this->getColumnsProvider()->getDeliveryExecutionColumns()
+            )
         ]);
     }
 
@@ -200,7 +219,9 @@ class ResultTable extends \tao_actions_CommonModule
         }
 
         return $this->returnJson([
-            'columns' => $this->getColumnsProvider()->getGradeColumns()
+            'columns' => $this->adjustColumnByLabelAndId(
+                $this->getColumnsProvider()->getGradeColumns()
+            )
         ]);
     }
 
@@ -214,9 +235,10 @@ class ResultTable extends \tao_actions_CommonModule
         if (!$this->isXmlHttpRequest()) {
             throw new \Exception('Only ajax call allowed.');
         }
-
         return $this->returnJson([
-            'columns' => $this->getColumnsProvider()->getResponseColumns()
+            'columns' => $this->adjustColumnByLabelAndId(
+                $this->getColumnsProvider()->getResponseColumns()
+            )
         ]);
     }
 
@@ -255,7 +277,13 @@ class ResultTable extends \tao_actions_CommonModule
     private function getExporterService(DeliveryResultsExporterFactoryInterface $deliveryResultsExporterFactory)
     {
         /** @var ResultsExporter $exporter */
-        $exporter = $this->propagate(new ResultsExporter($this->getDeliveryUri(), ResultsService::singleton(), $deliveryResultsExporterFactory));
+        $exporter = $this->propagate(
+            new ResultsExporter(
+                $this->getDeliveryUri(),
+                ResultsService::singleton(),
+                $deliveryResultsExporterFactory
+            )
+        );
 
         if ($this->hasRequestParameter(self::PARAMETER_COLUMNS)) {
             $exporter->setColumnsToExport($this->getRawParameter(self::PARAMETER_COLUMNS));
@@ -302,7 +330,7 @@ class ResultTable extends \tao_actions_CommonModule
     {
         return $date ? strtotime($date) : 0;
     }
-    
+
     /**
      * @return string
      * @throws common_Exception
@@ -322,5 +350,28 @@ class ResultTable extends \tao_actions_CommonModule
     private function getResultService()
     {
         return $this->getServiceLocator()->get(ResultsService::SERVICE_ID);
+    }
+
+    private function adjustColumnByLabelAndId(array $columns): array
+    {
+        $columnIdProvider = $this->getColumnIdProvider();
+        $columnLabelProvider = $this->getColumnLabelProvider();
+
+        return array_map(static function (array $record) use ($columnIdProvider, $columnLabelProvider) {
+            $record['label'] = $columnLabelProvider->provideFromColumnArray($record);
+            $record['columnId'] = $columnIdProvider->provideFromColumnArray($record);
+
+            return $record;
+        }, $columns);
+    }
+
+    private function getColumnLabelProvider(): ColumnLabelProvider
+    {
+        return $this->getServiceLocator()->getContainer()->get(ColumnLabelProvider::class);
+    }
+
+    private function getColumnIdProvider(): ColumnIdProvider
+    {
+        return $this->getServiceLocator()->getContainer()->get(ColumnIdProvider::class);
     }
 }

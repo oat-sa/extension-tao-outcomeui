@@ -13,7 +13,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2014-2019 (original work) Open Assessment Technologies SA;
+ * Copyright (c) 2014-2022 (original work) Open Assessment Technologies SA;
  */
 
 /**
@@ -151,8 +151,12 @@ define([
 
                 //set up model from columns
                 _.forEach(columns, function (col) {
+                    var colId = col.prop ? (col.prop + '_' + col.contextType) : (col.contextId + '_' + col.variableIdentifier);
+                    if(col.columnId){
+                        colId= col.columnId
+                    }
                     model.push({
-                        id: col.prop ? (col.prop + '_' + col.contextType) : (col.contextId + '_' + col.variableIdentifier),
+                        id: colId,
                         label: col.label,
                         sortable: false
                     });

@@ -20,8 +20,17 @@
 
 namespace oat\taoOutcomeUi\unit\model;
 
+use core_kernel_classes_Resource;
+use oat\generis\test\ServiceManagerMockTrait;
 use oat\generis\test\TestCase;
+use oat\taoOutcomeUi\model\ItemResultStrategy;
 use oat\taoOutcomeUi\model\ResultsService;
+use oat\taoOutcomeUi\model\table\ColumnDataProvider\ColumnIdProvider;
+use oat\taoOutcomeUi\model\table\GradeColumn;
+use oat\taoOutcomeUi\model\table\ResponseColumn;
+use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
+use oat\taoQtiTest\models\QtiTestCompilerIndex;
+use oat\taoResultServer\models\classes\ResultServerService;
 use ReflectionClass;
 use ReflectionException;
 use stdClass;
@@ -32,11 +41,21 @@ use taoResultServer_models_classes_Variable as Variable;
 
 class ResultsServiceTest extends TestCase
 {
+    use ServiceManagerMockTrait;
+
+    private const EXPECTED_DELIVERY_URI = 'http://tao#delivery';
+    private const EXPECTED_ITEM_URI = 'http://tao#item';
+    private const EXPECTED_TEST_URI = 'http://tao#item';
+    private const EXPECTED_DE_URI = 'http://tao#delivery_execution';
+
     /** @var ResultsService */
     private $subject;
 
     protected function setUp(): void
     {
+        if (!defined('DEFAULT_LANG')) {
+            define('DEFAULT_LANG', 'en_ES');
+        }
         $this->subject = new ResultsService();
     }
 
@@ -91,12 +110,19 @@ class ResultsServiceTest extends TestCase
     /**
      * @dataProvider testExtractTestVariablesProvider
      */
-    public function testExtractTestVariables(array $expectedOutput, array $variableObjects, array $wantedTypes, string $filter = null)
-    {
+    public function testExtractTestVariables(
+        array $expectedOutput,
+        array $variableObjects,
+        array $wantedTypes,
+        string $filter = null
+    ) {
         if ($filter === null) {
             $this->assertSame($expectedOutput, $this->subject->extractTestVariables($variableObjects, $wantedTypes));
         } else {
-            $this->assertSame($expectedOutput, $this->subject->extractTestVariables($variableObjects, $wantedTypes, $filter));
+            $this->assertSame(
+                $expectedOutput,
+                $this->subject->extractTestVariables($variableObjects, $wantedTypes, $filter)
+            );
         }
     }
 
@@ -108,7 +134,7 @@ class ResultsServiceTest extends TestCase
     {
         $responseVariable = $this->getResponseVariable();
         $outcomeVariable = $this->getOutcomeVariable();
-
+        $callIdItem = 'https://sds-tao.docker.localhost/ontologies/tao.rdf#i5e43f610586e6866601988b391f3a4.item-1.0';
         return [
             [
                 [
@@ -117,7 +143,7 @@ class ResultsServiceTest extends TestCase
                 ],
                 [
                     [(object)[
-                        'callIdItem' => 'https://sds-tao.docker.localhost/ontologies/tao.rdf#i5e43f610586e6866601988b391f3a4.item-1.0',
+                        'callIdItem' => $callIdItem,
                         'variable' => $outcomeVariable,
                     ]],
                     [(object)[
@@ -143,7 +169,7 @@ class ResultsServiceTest extends TestCase
                 ],
                 [
                     [(object)[
-                        'callIdItem' => 'https://sds-tao.docker.localhost/ontologies/tao.rdf#i5e43f610586e6866601988b391f3a4.item-1.0',
+                        'callIdItem' => $callIdItem,
                         'variable' => $outcomeVariable,
                     ]],
                     [(object)[
@@ -176,7 +202,7 @@ class ResultsServiceTest extends TestCase
                 ],
                 [
                     [(object)[
-                        'callIdItem' => 'https://sds-tao.docker.localhost/ontologies/tao.rdf#i5e43f610586e6866601988b391f3a4.item-1.0',
+                        'callIdItem' => $callIdItem,
                         'variable' => $outcomeVariable,
                     ]],
                     [(object)[
@@ -209,7 +235,7 @@ class ResultsServiceTest extends TestCase
                 ],
                 [
                     [(object)[
-                        'callIdItem' => 'https://sds-tao.docker.localhost/ontologies/tao.rdf#i5e43f610586e6866601988b391f3a4.item-1.0',
+                        'callIdItem' => $callIdItem,
                         'variable' => $outcomeVariable,
                     ]],
                     [(object)[
@@ -369,13 +395,241 @@ class ResultsServiceTest extends TestCase
         $method = $class->getMethod('filterData');
         $method->setAccessible(true);
         $resultsService = new ResultsService();
-        self::assertSame($expected, $method->invokeArgs($resultsService, [$row, $filters, $deliveryExecutionIdentifier]));
+        self::assertSame(
+            $expected,
+            $method->invokeArgs($resultsService, [$row, $filters, $deliveryExecutionIdentifier])
+        );
     }
 
     public function testGetCellsByResults()
     {
         $service = new ResultsService();
         $this->assertEquals(null, $service->getCellsByResults([], [], []));
+    }
+
+    /**
+     * @dataProvider provideVariableColumnMap
+     */
+    public function testGetVariableColumnsWithoutVariablesInStorage(string $variableClass): void
+    {
+        $uri = 'http://tao#delivery';
+        $delivery = $this->createMock(core_kernel_classes_Resource::class);
+        $resultServiceWrapperMock = $this->createMock(ResultServiceWrapper::class);
+        $resultServerServiceMock = $this->createMock(ResultServerService::class);
+        $resultManagementMock = $this->createMock(ResultManagement::class);
+        $itemResultStrategyMock = $this->createMock(ItemResultStrategy::class);
+
+        $delivery->method('getUri')->willReturn($uri);
+        $resultManagementMock
+            ->method('getResultByDelivery')
+            ->with([$uri], [])
+            ->willReturn([['deliveryResultIdentifier' => 'http://tao#delivery_execution']]);
+        $resultManagementMock->method('getDeliveryVariables')->willReturn([]);
+        $resultServerServiceMock
+            ->expects(self::once())
+            ->method('getResultStorage')
+            ->willReturn($resultManagementMock);
+        $resultServiceWrapperMock
+            ->expects(self::once())
+            ->method('getOption')
+            ->with(ResultServiceWrapper::RESULT_COLUMNS_CHUNK_SIZE_OPTION)
+            ->willReturn(1);
+        $itemResultStrategyMock->expects(self::never())->method('isItemEntityBased');
+
+        $this->subject->setServiceManager($this->getServiceManagerMock([
+            ResultServiceWrapper::SERVICE_ID => $resultServiceWrapperMock,
+            ResultServerService::SERVICE_ID => $resultServerServiceMock,
+            ItemResultStrategy::class => $itemResultStrategyMock
+        ]));
+
+        $columns = $this->subject->getVariableColumns(
+            $delivery,
+            $variableClass
+        );
+        self::assertEmpty($columns);
+    }
+
+    /**
+     * @dataProvider  provideVariableColumnMap
+     */
+    public function testGetVariableColumnsForItemOutcomeVariablesWitNotItemEntityStrategy(
+        string $variableClass,
+        string $columnClass,
+        int $expectedCountForInstanceStrategy,
+        int $expectedCountForEntityStrategy,
+        array $variables
+    ): void {
+        $delivery = $this->createMock(core_kernel_classes_Resource::class);
+        $resultServiceWrapperMock = $this->createMock(ResultServiceWrapper::class);
+        $resultServerServiceMock = $this->createMock(ResultServerService::class);
+        $resultManagementMock = $this->createMock(ResultManagement::class);
+        $itemResultStrategyMock = $this->createMock(ItemResultStrategy::class);
+
+        $delivery->method('getUri')->willReturn(self::EXPECTED_DELIVERY_URI);
+        $resultManagementMock
+            ->method('getResultByDelivery')
+            ->with([self::EXPECTED_DELIVERY_URI], [])
+            ->willReturn([['deliveryResultIdentifier' => self::EXPECTED_DE_URI]]);
+        $resultManagementMock
+            ->method('getDeliveryVariables')
+            ->willReturn($variables);
+        $resultServerServiceMock
+            ->expects(self::once())
+            ->method('getResultStorage')
+            ->willReturn($resultManagementMock);
+        $resultServiceWrapperMock
+            ->expects(self::once())
+            ->method('getOption')
+            ->with(ResultServiceWrapper::RESULT_COLUMNS_CHUNK_SIZE_OPTION)
+            ->willReturn(1);
+        $itemResultStrategyMock
+            ->method('isItemEntityBased')
+            ->willReturn(false);
+
+        $this->subject->setServiceManager($this->getServiceManagerMock([
+            ResultServiceWrapper::SERVICE_ID => $resultServiceWrapperMock,
+            ResultServerService::SERVICE_ID => $resultServerServiceMock,
+            ItemResultStrategy::class => $itemResultStrategyMock,
+            ColumnIdProvider::class => new ColumnIdProvider($itemResultStrategyMock)
+        ]));
+        $reflectionClass = new ReflectionClass($this->subject);
+        $reflectionProperty = $reflectionClass->getProperty('indexerCache');
+        $indexerCacheMock = $this->createMock(QtiTestCompilerIndex::class);
+        $indexerCacheMock
+            ->method('getItemValue')
+            ->with(self::EXPECTED_ITEM_URI, DEFAULT_LANG, 'label')
+            ->willReturn('label');
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($this->subject, [self::EXPECTED_DELIVERY_URI => $indexerCacheMock]);
+
+        $columns = $this->subject->getVariableColumns(
+            $delivery,
+            $variableClass
+        );
+        self::assertCount($expectedCountForInstanceStrategy, $columns);
+        $expectedIndex = 0;
+        foreach ($columns as $index => $column) {
+            self::assertEquals($expectedIndex, $index);
+            self::assertEquals($columnClass, $column['type']);
+            $expectedIndex++;
+        }
+    }
+
+    /**
+     * @dataProvider  provideVariableColumnMap
+     */
+    public function testGetVariableColumnsForItemOutcomeVariablesWitItemEntityStrategy(
+        string $variableClass,
+        string $columnClass,
+        int $expectedCountForInstanceStrategy,
+        int $expectedCountForEntityStrategy,
+        array $variables
+    ): void {
+        $delivery = $this->createMock(core_kernel_classes_Resource::class);
+        $resultServiceWrapperMock = $this->createMock(ResultServiceWrapper::class);
+        $resultServerServiceMock = $this->createMock(ResultServerService::class);
+        $resultManagementMock = $this->createMock(ResultManagement::class);
+        $itemResultStrategyMock = $this->createMock(ItemResultStrategy::class);
+
+        $delivery->method('getUri')->willReturn(self::EXPECTED_DELIVERY_URI);
+        $resultManagementMock
+            ->method('getResultByDelivery')
+            ->with([self::EXPECTED_DELIVERY_URI], [])
+            ->willReturn([['deliveryResultIdentifier' => self::EXPECTED_DE_URI]]);
+        $resultManagementMock
+            ->method('getDeliveryVariables')
+            ->willReturn($variables);
+        $resultServerServiceMock
+            ->expects(self::once())
+            ->method('getResultStorage')
+            ->willReturn($resultManagementMock);
+        $resultServiceWrapperMock
+            ->expects(self::once())
+            ->method('getOption')
+            ->with(ResultServiceWrapper::RESULT_COLUMNS_CHUNK_SIZE_OPTION)
+            ->willReturn(1);
+        $itemResultStrategyMock
+            ->method('isItemEntityBased')
+            ->willReturn(true);
+
+        $this->subject->setServiceManager($this->getServiceManagerMock([
+            ResultServiceWrapper::SERVICE_ID => $resultServiceWrapperMock,
+            ResultServerService::SERVICE_ID => $resultServerServiceMock,
+            ItemResultStrategy::class => $itemResultStrategyMock,
+            ColumnIdProvider::class => new ColumnIdProvider($itemResultStrategyMock)
+        ]));
+        $reflectionClass = new ReflectionClass($this->subject);
+        $reflectionProperty = $reflectionClass->getProperty('indexerCache');
+        $indexerCacheMock = $this->createMock(QtiTestCompilerIndex::class);
+        $indexerCacheMock
+            ->method('getItemValue')
+            ->with(self::EXPECTED_ITEM_URI, DEFAULT_LANG, 'label')
+            ->willReturn('label');
+        $reflectionProperty->setAccessible(true);
+        $reflectionProperty->setValue($this->subject, [self::EXPECTED_DELIVERY_URI => $indexerCacheMock]);
+
+        $columns = $this->subject->getVariableColumns(
+            $delivery,
+            $variableClass
+        );
+        self::assertCount($expectedCountForEntityStrategy, $columns);
+        $expectedIndex = 0;
+        foreach ($columns as $index => $column) {
+            self::assertEquals($expectedIndex, $index);
+            self::assertEquals($columnClass, $column['type']);
+            $expectedIndex++;
+        }
+    }
+
+
+    public function provideVariableColumnMap(): array
+    {
+        return [
+            [
+                taoResultServer_models_classes_OutcomeVariable::class,
+                GradeColumn::class,
+                2,
+                1,
+                [
+                    [(object)[
+                        'callIdItem' => sprintf('%s.%s.0', self::EXPECTED_DE_URI, 'item-1'),
+                        'item' => self::EXPECTED_ITEM_URI,
+                        'test' => self::EXPECTED_TEST_URI,
+                        'deliveryResultIdentifier' => self::EXPECTED_DE_URI,
+                        'variable' => $this->getOutcomeVariable()
+                    ]],
+                    [(object)[
+                        'callIdItem' => sprintf('%s.%s.0', self::EXPECTED_DE_URI, 'item-2'),
+                        'item' => self::EXPECTED_ITEM_URI,
+                        'test' => self::EXPECTED_TEST_URI,
+                        'deliveryResultIdentifier' => self::EXPECTED_DE_URI,
+                        'variable' => $this->getOutcomeVariable()
+                    ]]
+                ]
+            ],
+            [
+                taoResultServer_models_classes_ResponseVariable::class,
+                ResponseColumn::class,
+                3,
+                2,
+                [
+                    [(object)[
+                        'callIdItem' => sprintf('%s.%s.0', self::EXPECTED_DE_URI, 'item-1'),
+                        'item' => self::EXPECTED_ITEM_URI,
+                        'test' => self::EXPECTED_TEST_URI,
+                        'deliveryResultIdentifier' => self::EXPECTED_DE_URI,
+                        'variable' => $this->getResponseVariable()
+                    ]],
+                    [(object)[
+                        'callIdItem' => sprintf('%s.%s.0', self::EXPECTED_DE_URI, 'item-2'),
+                        'item' => self::EXPECTED_ITEM_URI,
+                        'test' => self::EXPECTED_TEST_URI,
+                        'deliveryResultIdentifier' => self::EXPECTED_DE_URI,
+                        'variable' => ($this->getResponseVariable())->setCorrectResponse('correct')
+                    ]]
+                ]
+            ],
+        ];
     }
 
     private function getResponseVariable(
