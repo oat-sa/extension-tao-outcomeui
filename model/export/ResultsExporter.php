@@ -45,7 +45,7 @@ class ResultsExporter implements ServiceLocatorAwareInterface
      * @var ResultsService
      */
     private $resultsService;
-    private string $columns;
+    private $columns;
 
     /**
      * ResultsExporter constructor.
@@ -83,7 +83,7 @@ class ResultsExporter implements ServiceLocatorAwareInterface
         return $this->exportStrategy;
     }
 
-    public function setColumnsToExport(string $columnsToExport): self
+    public function setColumnsToExport($columnsToExport): self
     {
         $this->columns = $columnsToExport;
 
