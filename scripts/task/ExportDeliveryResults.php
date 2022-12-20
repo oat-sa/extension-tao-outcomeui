@@ -157,7 +157,7 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
 
         if ($this->isWorkerContext()) {
             // Columns to be exported, if defined
-            if (isset($params[1]) && is_array($params[1])) {
+            if (isset($params[1])) {
                 $this->columns = $params[1];
             }
 

@@ -45,6 +45,7 @@ class ResultsExporter implements ServiceLocatorAwareInterface
      * @var ResultsService
      */
     private $resultsService;
+    private string $columns;
 
     /**
      * ResultsExporter constructor.
@@ -82,13 +83,9 @@ class ResultsExporter implements ServiceLocatorAwareInterface
         return $this->exportStrategy;
     }
 
-    /**
-     * @param string|array $columnsToExport
-     * @return ResultsExporter
-     */
-    public function setColumnsToExport($columnsToExport)
+    public function setColumnsToExport(string $columnsToExport): self
     {
-        $this->getExporter()->setColumnsToExport($columnsToExport);
+        $this->columns = $columnsToExport;
 
         return $this;
     }
@@ -115,7 +112,9 @@ class ResultsExporter implements ServiceLocatorAwareInterface
      */
     public function export($destination = null)
     {
-        return $this->getExporter()->export($destination);
+        return $this->getExporter()
+            ->setColumnsToExport($this->columns)
+            ->export($destination);
     }
 
     /**
@@ -126,13 +125,6 @@ class ResultsExporter implements ServiceLocatorAwareInterface
         /** @var QueueDispatcherInterface $queueDispatcher */
         $queueDispatcher = $this->getServiceLocator()->get(QueueDispatcherInterface::SERVICE_ID);
 
-        $columns = [];
-
-        // we need to convert every column object into array first
-        foreach ($this->getExporter()->getColumnsToExport() as $column) {
-            $columns[] = $column->toArray();
-        }
-
         $label = $this->exportStrategy->getResourceToExport()->isClass()
             ? __('%s results export for delivery class "%s"', $this->exportStrategy->getResultFormat(), $this->exportStrategy->getResourceToExport()->getLabel())
             : __('%s results export for delivery "%s"', $this->exportStrategy->getResultFormat(), $this->exportStrategy->getResourceToExport()->getLabel());
@@ -141,7 +133,7 @@ class ResultsExporter implements ServiceLocatorAwareInterface
             new ExportDeliveryResults(),
             [
                 $this->getExporter()->getResourceToExport()->getUri(),
-                $columns,
+                $this->columns,
                 $this->getExporter()->getVariableToExport(),
                 $this->getExporter()->getFiltersToExport(),
                 $this->exportStrategy->getResultFormat()
