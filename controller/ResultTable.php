@@ -273,8 +273,10 @@ class ResultTable extends \tao_actions_CommonModule
      * @throws \common_exception_NotFound
      * @throws common_Exception
      */
-    private function getExporterService(DeliveryResultsExporterFactoryInterface $deliveryResultsExporterFactory
-    ): ResultsExporter {
+    private function getExporterService(
+        DeliveryResultsExporterFactoryInterface $deliveryResultsExporterFactory
+    ): ResultsExporter
+    {
         /** @var ResultsExporter $exporter */
         $exporter = $this->propagate(
             new ResultsExporter(
