@@ -167,7 +167,7 @@ class ResultTable extends \tao_actions_CommonModule
             'columns' => $this->adjustColumnByLabelAndId(
                 $this->getColumnsProvider()->getTestTakerColumns()
             ),
-            'first'   => true
+            'first' => true
         ]);
     }
 
@@ -259,23 +259,22 @@ class ResultTable extends \tao_actions_CommonModule
     }
 
     /**
-     * @return ColumnsProvider
+     * @throws \common_exception_NotFound
+     * @throws common_Exception
      */
-    private function getColumnsProvider()
+    private function getColumnsProvider(): ColumnsProvider
     {
         return new ColumnsProvider($this->getDeliveryUri(), ResultsService::singleton());
     }
 
 
     /**
-     * @param DeliveryResultsExporterFactoryInterface $deliveryResultsExporterFactory
-     * @return ResultsExporter
      * @throws \common_exception_MissingParameter
      * @throws \common_exception_NotFound
      * @throws common_Exception
      */
-    private function getExporterService(DeliveryResultsExporterFactoryInterface $deliveryResultsExporterFactory)
-    {
+    private function getExporterService(DeliveryResultsExporterFactoryInterface $deliveryResultsExporterFactory
+    ): ResultsExporter {
         /** @var ResultsExporter $exporter */
         $exporter = $this->propagate(
             new ResultsExporter(
@@ -286,7 +285,9 @@ class ResultTable extends \tao_actions_CommonModule
         );
 
         if ($this->hasRequestParameter(self::PARAMETER_COLUMNS)) {
-            $exporter->setColumnsToExport($this->getRawParameter(self::PARAMETER_COLUMNS));
+            $exporter->setColumnsToExport(
+                $this->decodeColumns($this->getRawParameter(self::PARAMETER_COLUMNS))
+            );
         }
 
         if ($this->hasRequestParameter(self::PARAMETER_FILTER)) {
@@ -326,16 +327,22 @@ class ResultTable extends \tao_actions_CommonModule
         return $exporter;
     }
 
+    private function decodeColumns(string $columnsJson): array
+    {
+        return ($columnsData = json_decode($columnsJson, true)) !== null && json_last_error() === JSON_ERROR_NONE
+            ? (array)$columnsData
+            : [];
+    }
+
     private function getTime($date = '')
     {
         return $date ? strtotime($date) : 0;
     }
 
     /**
-     * @return string
      * @throws common_Exception
      */
-    private function getDeliveryUri()
+    private function getDeliveryUri(): string
     {
         if (!$this->hasRequestParameter(self::PARAMETER_DELIVERY_URI)) {
             throw new common_Exception('Parameter "' . self::PARAMETER_DELIVERY_URI . '" missing');
@@ -344,10 +351,7 @@ class ResultTable extends \tao_actions_CommonModule
         return \tao_helpers_Uri::decode($this->getRequestParameter(self::PARAMETER_DELIVERY_URI));
     }
 
-    /**
-     * @return ResultsService
-     */
-    private function getResultService()
+    private function getResultService(): ResultsService
     {
         return $this->getServiceLocator()->get(ResultsService::SERVICE_ID);
     }

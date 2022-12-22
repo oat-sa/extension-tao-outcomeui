@@ -15,9 +15,11 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2017 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
+ * Copyright (c) 2017-2022 (original work) Open Assessment Technologies SA (under the project TAO-PRODUCT);
  *
  */
+
+declare(strict_types=1);
 
 namespace oat\taoOutcomeUi\model\export;
 
@@ -40,30 +42,30 @@ class ResultsExporter implements ServiceLocatorAwareInterface
     use OntologyAwareTrait;
     use ServiceLocatorAwareTrait;
 
-    private $exportStrategy;
-    /**
-     * @var ResultsService
-     */
-    private $resultsService;
-    private $columns;
+    private ResultsExporterInterface $exportStrategy;
+    private ResultsService $resultsService;
+    private array $columns = [];
 
     /**
-     * ResultsExporter constructor.
-     * @param $resource
-     * @param ResultsService $resultsService
-     * @param DeliveryResultsExporterFactoryInterface|null $deliveryResultsExporterFactory
      * @throws common_exception_NotFound
      */
-    public function __construct($resource, ResultsService $resultsService, DeliveryResultsExporterFactoryInterface $deliveryResultsExporterFactory = null)
-    {
-        $resource = $this->getResource($resource);
+    public function __construct(
+        string $resourceUri,
+        ResultsService $resultsService,
+        DeliveryResultsExporterFactoryInterface $deliveryResultsExporterFactory = null
+    ) {
+        $resource = $this->getResource($resourceUri);
 
         if ($deliveryResultsExporterFactory === null) {
             $deliveryResultsExporterFactory = new DeliveryCsvResultsExporterFactory();
         }
 
         if ($resource->isClass()) {
-            $this->exportStrategy = new MultipleDeliveriesResultsExporter($this->getClass($resource->getUri()), $resultsService, $deliveryResultsExporterFactory);
+            $this->exportStrategy = new MultipleDeliveriesResultsExporter(
+                $this->getClass($resource->getUri()),
+                $resultsService,
+                $deliveryResultsExporterFactory
+            );
         } else {
             $this->exportStrategy = $deliveryResultsExporterFactory->getDeliveryResultsExporter(
                 $resource,
@@ -73,44 +75,33 @@ class ResultsExporter implements ServiceLocatorAwareInterface
         $this->resultsService = $resultsService;
     }
 
-    /**
-     * @return ResultsExporterInterface
-     */
-    public function getExporter()
+    public function getExporter(): ResultsExporterInterface
     {
         $this->exportStrategy->setServiceLocator($this->getServiceLocator());
 
         return $this->exportStrategy;
     }
 
-    public function setColumnsToExport($columnsToExport): self
+    public function setColumnsToExport(array $columnsToExport): self
     {
         $this->columns = $columnsToExport;
 
         return $this;
     }
 
-    /**
-     * @param string $variableToExport
-     * @return ResultsExporter
-     */
-    public function setVariableToExport($variableToExport)
+    public function setVariableToExport(string $variableToExport): self
     {
         $this->getExporter()->setVariableToExport($variableToExport);
         return $this;
     }
 
-    public function setFiltersToExport($filters)
+    public function setFiltersToExport(array $filters): self
     {
         $this->getExporter()->setFiltersToExport($filters);
         return $this;
     }
 
-    /**
-     * @param null|string $destination
-     * @return string
-     */
-    public function export($destination = null)
+    public function export(string $destination = null): string
     {
         return $this->getExporter()
             ->setColumnsToExport($this->columns)
@@ -126,8 +117,16 @@ class ResultsExporter implements ServiceLocatorAwareInterface
         $queueDispatcher = $this->getServiceLocator()->get(QueueDispatcherInterface::SERVICE_ID);
 
         $label = $this->exportStrategy->getResourceToExport()->isClass()
-            ? __('%s results export for delivery class "%s"', $this->exportStrategy->getResultFormat(), $this->exportStrategy->getResourceToExport()->getLabel())
-            : __('%s results export for delivery "%s"', $this->exportStrategy->getResultFormat(), $this->exportStrategy->getResourceToExport()->getLabel());
+            ? __(
+                '%s results export for delivery class "%s"',
+                $this->exportStrategy->getResultFormat(),
+                $this->exportStrategy->getResourceToExport()->getLabel()
+            )
+            : __(
+                '%s results export for delivery "%s"',
+                $this->exportStrategy->getResultFormat(),
+                $this->exportStrategy->getResourceToExport()->getLabel()
+            );
 
         return $queueDispatcher->createTask(
             new ExportDeliveryResults(),

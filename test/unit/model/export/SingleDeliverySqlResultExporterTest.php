@@ -113,7 +113,7 @@ class SingleDeliverySqlResultExporterMock extends SingleDeliverySqlResultsExport
         return $this->getExporter($data);
     }
 
-    public function getColumnsToExport()
+    public function getColumnsToExport(): array
     {
         return $this->columns;
     }
