@@ -1186,6 +1186,8 @@ class ResultsService extends OntologyClassService
                         $column->getDataProvider()->getValue(new core_kernel_classes_Resource($result), $column),
                         self::VARIABLES_FILTER_TRACE
                     );
+
+                    continue;
                 } elseif (count($column->getDataProvider()->cache) > 0) {
                     // grade or response column values
                     $cellData[$cellKey] = self::filterCellData(
