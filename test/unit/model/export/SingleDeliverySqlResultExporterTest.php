@@ -102,7 +102,6 @@ class SingleDeliverySqlResultExporterTest extends TestCase
 
         $this->assertEquals($sqlExpected, $sql);
     }
-
 }
 
 class SingleDeliverySqlResultExporterMock extends SingleDeliverySqlResultsExporter

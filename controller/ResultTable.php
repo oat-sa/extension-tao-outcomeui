@@ -267,16 +267,14 @@ class ResultTable extends \tao_actions_CommonModule
         return new ColumnsProvider($this->getDeliveryUri(), ResultsService::singleton());
     }
 
-
-    /**
+     /**
      * @throws \common_exception_MissingParameter
      * @throws \common_exception_NotFound
      * @throws common_Exception
      */
     private function getExporterService(
         DeliveryResultsExporterFactoryInterface $deliveryResultsExporterFactory
-    ): ResultsExporter
-    {
+    ): ResultsExporter {
         /** @var ResultsExporter $exporter */
         $exporter = $this->propagate(
             new ResultsExporter(
