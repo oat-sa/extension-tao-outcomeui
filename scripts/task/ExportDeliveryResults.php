@@ -41,6 +41,7 @@ use oat\taoOutcomeUi\model\ResultsService;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 
+// phpcs:disable Generic.Files.LineLength
 /**
  * ExportDeliveryResults action, can be called either during a http request or from cli.
  *
@@ -57,6 +58,7 @@ use Zend\ServiceManager\ServiceLocatorAwareInterface;
  * ```
  * @author Gyula Szucs <gyula@taotesting.com>
  */
+// phpcs:enable
 class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, WorkerContextAwareInterface
 {
     use ServiceLocatorAwareTrait;
@@ -66,11 +68,11 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
     /**
      * Possible CLI values for columns
      */
-    const COLUMNS_CLI_VALUE_ALL = 'all';
-    const COLUMNS_CLI_VALUE_TEST_TAKER = 'tt';
-    const COLUMNS_CLI_VALUE_DELIVERY = 'delivery';
-    const COLUMNS_CLI_VALUE_GRADES = 'grades';
-    const COLUMNS_CLI_VALUE_RESPONSES = 'responses';
+    private const COLUMNS_CLI_VALUE_ALL = 'all';
+    private const COLUMNS_CLI_VALUE_TEST_TAKER = 'tt';
+    private const COLUMNS_CLI_VALUE_DELIVERY = 'delivery';
+    private const COLUMNS_CLI_VALUE_GRADES = 'grades';
+    private const COLUMNS_CLI_VALUE_RESPONSES = 'responses';
 
     private core_kernel_classes_Resource $resourceToExport;
     private ?ResultsExporter $exporterService = null;
@@ -247,14 +249,11 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
                         break;
 
                     case '--submittedVersion':
-                        if (!in_array(
-                            $value,
-                            [
-                                ResultsService::VARIABLES_FILTER_ALL,
-                                ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED,
-                                ResultsService::VARIABLES_FILTER_LAST_SUBMITTED
-                            ]
-                        )) {
+                        if (!in_array($value, [
+                            ResultsService::VARIABLES_FILTER_ALL,
+                            ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED,
+                            ResultsService::VARIABLES_FILTER_LAST_SUBMITTED
+                        ])) {
                             throw new InvalidArgumentException(
                                 sprintf(
                                     'Invalid submitted version of variables %s. Valid options: %s',
