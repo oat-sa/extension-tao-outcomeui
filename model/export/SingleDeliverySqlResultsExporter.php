@@ -63,9 +63,6 @@ class SingleDeliverySqlResultsExporter extends SingleDeliveryResultsExporter
         return $exporter->export();
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function getExporter(array $data): AbstractFileExporter
     {
         foreach ($this->getColumnsToExport() as $columnData) {
