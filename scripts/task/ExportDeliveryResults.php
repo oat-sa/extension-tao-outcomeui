@@ -84,7 +84,6 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
 
     /**
      * @param array $params
-     * @return Report
      */
     public function __invoke($params): Report
     {
@@ -119,10 +118,9 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
     }
 
     /**
-     * @return ResultsExporter
      * @throws common_exception_NotFound
      */
-    private function getExporterService()
+    private function getExporterService(): ResultsExporter
     {
         if (is_null($this->exporterService)) {
             $this->exporterService = new ResultsExporter(
@@ -185,112 +183,117 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
             } else {
                 $this->deliveryResultsExporterFactory = new DeliveryCsvResultsExporterFactory();
             }
-        } else {
-            // if the task is called from CLI
 
-            // remove first param, it is always the resource uri, no need to re-check
-            unset($params[0]);
+            return;
+        }
+        // if the task is called from CLI
 
-            // check params. running the command from CLI we have different params structure
-            foreach ($params as $param) {
-                list($option, $value) = explode('=', $param);
+        // remove first param, it is always the resource uri, no need to re-check
+        unset($params[0]);
 
-                switch ($option) {
-                    case '--columns':
-                        $columns = explode(',', $value);
+        // check params. running the command from CLI we have different params structure
+        foreach ($params as $param) {
+            list($option, $value) = explode('=', $param);
 
-                        $invalidValues = array_diff($columns, $this->getPossibleColumnValues());
+            switch ($option) {
+                case '--columns':
+                    $columns = explode(',', $value);
+                    $this->validateAndPopulateColumns($columns);
 
-                        if (count($invalidValues)) {
-                            throw new InvalidArgumentException(
-                                'Invalid columns value(s) "' . implode(
-                                    ', ',
-                                    $invalidValues
-                                ) . '". Valid options: ' . implode(', ', $this->getPossibleColumnValues())
-                            );
-                        }
+                    break;
 
-                        if (in_array(self::COLUMNS_CLI_VALUE_ALL, $columns)) {
-                            // skip cause SingleDeliveryResultsExporter use all columns by default
-                            break;
-                        }
-
-                        foreach ($columns as $column) {
-                            switch ($column) {
-                                case self::COLUMNS_CLI_VALUE_TEST_TAKER:
-                                    $this->columns = array_merge(
-                                        $this->columns,
-                                        $this->getExporterService()->getTestTakerColumns()
-                                    );
-                                    break;
-
-                                case self::COLUMNS_CLI_VALUE_DELIVERY:
-                                    $this->columns = array_merge(
-                                        $this->columns,
-                                        $this->getExporterService()->getDeliveryColumns()
-                                    );
-                                    break;
-
-                                case self::COLUMNS_CLI_VALUE_GRADES:
-                                    $this->columns = array_merge(
-                                        $this->columns,
-                                        $this->getExporterService()->getGradeColumns()
-                                    );
-                                    break;
-
-                                case self::COLUMNS_CLI_VALUE_RESPONSES:
-                                    $this->columns = array_merge(
-                                        $this->columns,
-                                        $this->getExporterService()->getResponseColumns()
-                                    );
-                                    break;
-                            }
-                        }
-                        break;
-
-                    case '--submittedVersion':
-                        if (
-                            !in_array(
+                case '--submittedVersion':
+                    if (!in_array($value, [
+                        ResultsService::VARIABLES_FILTER_ALL,
+                        ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED,
+                        ResultsService::VARIABLES_FILTER_LAST_SUBMITTED
+                    ])) {
+                        throw new InvalidArgumentException(
+                            sprintf(
+                                'Invalid submitted version of variables %s. Valid options: %s',
                                 $value,
-                                [
-                                    ResultsService::VARIABLES_FILTER_ALL,
+                                implode(', ', [
                                     ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED,
                                     ResultsService::VARIABLES_FILTER_LAST_SUBMITTED
-                                ]
+                                ])
                             )
-                        ) {
-                            throw new InvalidArgumentException(
-                                sprintf(
-                                    'Invalid submitted version of variables %s. Valid options: %s',
-                                    $value,
-                                    implode(', ', [
-                                        ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED,
-                                        ResultsService::VARIABLES_FILTER_LAST_SUBMITTED
-                                    ])
-                                )
-                            );
-                        }
+                        );
+                    }
 
-                        $this->submittedVersion = $value;
-                        break;
+                    $this->submittedVersion = $value;
+                    break;
 
-                    case '--dir':
-                        if (!is_dir($value)) {
-                            throw new InvalidArgumentException('Invalid directory "' . $value . '" provided.');
-                        }
+                case '--dir':
+                    if (!is_dir($value)) {
+                        throw new InvalidArgumentException('Invalid directory "' . $value . '" provided.');
+                    }
 
-                        if (!is_writable($value)) {
-                            throw new InvalidArgumentException('Directory "' . $value . '" not writable.');
-                        }
-                        $this->destination = $value;
-                        break;
-                    case '--start-from':
-                        $this->filters['startfrom'] = $value;
-                        break;
-                    case '--start-to':
-                        $this->filters['startto'] = $value;
-                        break;
-                }
+                    if (!is_writable($value)) {
+                        throw new InvalidArgumentException('Directory "' . $value . '" not writable.');
+                    }
+                    $this->destination = $value;
+                    break;
+                case '--start-from':
+                    $this->filters['startfrom'] = $value;
+                    break;
+                case '--start-to':
+                    $this->filters['startto'] = $value;
+                    break;
+            }
+        }
+    }
+
+    /**
+     * @throws InvalidArgumentException
+     * @throws common_exception_NotFound
+     */
+    private function validateAndPopulateColumns(array $columns): void
+    {
+        $invalidValues = array_diff($columns, $this->getPossibleColumnValues());
+
+        if (count($invalidValues)) {
+            throw new InvalidArgumentException(
+                'Invalid columns value(s) "' . implode(
+                    ', ',
+                    $invalidValues
+                ) . '". Valid options: ' . implode(', ', $this->getPossibleColumnValues())
+            );
+        }
+
+        if (in_array(self::COLUMNS_CLI_VALUE_ALL, $columns)) {
+            // skip cause SingleDeliveryResultsExporter use all columns by default
+            return;
+        }
+
+        foreach ($columns as $column) {
+            switch ($column) {
+                case self::COLUMNS_CLI_VALUE_TEST_TAKER:
+                    $this->columns = array_merge(
+                        $this->columns,
+                        $this->getExporterService()->getTestTakerColumns()
+                    );
+                    break;
+
+                case self::COLUMNS_CLI_VALUE_DELIVERY:
+                    $this->columns = array_merge(
+                        $this->columns,
+                        $this->getExporterService()->getDeliveryColumns()
+                    );
+                    break;
+
+                case self::COLUMNS_CLI_VALUE_GRADES:
+                    $this->columns = array_merge(
+                        $this->columns,
+                        $this->getExporterService()->getGradeColumns()
+                    );
+                    break;
+
+                case self::COLUMNS_CLI_VALUE_RESPONSES:
+                    $this->columns = array_merge(
+                        $this->columns,
+                        $this->getExporterService()->getResponseColumns()
+                    );
+                    break;
             }
         }
     }
