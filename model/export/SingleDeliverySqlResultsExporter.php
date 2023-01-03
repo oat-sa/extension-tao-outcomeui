@@ -19,11 +19,8 @@
  *
  */
 
-declare(strict_types=1);
-
 namespace oat\taoOutcomeUi\model\export;
 
-use oat\tao\model\export\implementation\AbstractFileExporter;
 use oat\tao\model\export\implementation\sql\ExportedColumn;
 use oat\tao\model\export\implementation\SqlExporter;
 use oat\taoOutcomeUi\model\table\VariableColumn;
@@ -38,7 +35,7 @@ class SingleDeliverySqlResultsExporter extends SingleDeliveryResultsExporter
 {
     public const RESULT_FORMAT = 'SQL';
 
-    private array $mappingVarTypes = [
+    private $mappingVarTypes = [
         Variable::TYPE_VARIABLE_INTEGER => ExportedColumn::TYPE_INTEGER,
         Variable::TYPE_VARIABLE_BOOLEAN => ExportedColumn::TYPE_BOOLEAN,
         Variable::TYPE_VARIABLE_IDENTIFIER => ExportedColumn::TYPE_VARCHAR,
@@ -46,20 +43,27 @@ class SingleDeliverySqlResultsExporter extends SingleDeliveryResultsExporter
         Variable::TYPE_VARIABLE_FLOAT => ExportedColumn::TYPE_DECIMAL
     ];
 
-    private array $mappingFieldsTypes = [
-        'Start Date' => ExportedColumn::TYPE_TIMESTAMP,
-        'End Date' => ExportedColumn::TYPE_TIMESTAMP,
-        'Compilation Time' => ExportedColumn::TYPE_INTEGER,
-        'Start Delivery Execution' => ExportedColumn::TYPE_TIMESTAMP,
-        'End Delivery Execution' => ExportedColumn::TYPE_TIMESTAMP
+    private $mappingFieldsTypes = [
+        'Start Date'                => ExportedColumn::TYPE_TIMESTAMP,
+        'End Date'                  => ExportedColumn::TYPE_TIMESTAMP,
+        'Compilation Time'          => ExportedColumn::TYPE_INTEGER,
+        'Start Delivery Execution'  => ExportedColumn::TYPE_TIMESTAMP,
+        'End Delivery Execution'    => ExportedColumn::TYPE_TIMESTAMP
     ];
 
-    protected function getExportData(AbstractFileExporter $exporter): string
+    /**
+     * @param SqlExporter $exporter
+     * @return string
+     */
+    protected function getExportData($exporter)
     {
         return $exporter->export();
     }
 
-    protected function getExporter(array $data): AbstractFileExporter
+    /**
+     * @inheritdoc
+     */
+    protected function getExporter(array $data)
     {
         foreach ($this->getColumnsToExport() as $columnData) {
             if ($columnData instanceof VariableColumn) {

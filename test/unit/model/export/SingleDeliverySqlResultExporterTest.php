@@ -71,26 +71,19 @@ class SingleDeliverySqlResultExporterTest extends TestCase
             ->method('getResource')
             ->willReturn($deliveryMock);
 
-        $singleDeliveryExporter = new SingleDeliverySqlResultExporterMock(
-            $modelMock,
-            $deliveryMock,
-            $resultServiceMock,
-            $columnsProviderMock
-        );
+        $singleDeliveryExporter = new SingleDeliverySqlResultExporterMock($modelMock, $deliveryMock, $resultServiceMock, $columnsProviderMock);
 
         $variableColumnsToExport = [
             new GradeColumn(
                 '',
                 'Tets Variable Grade Column',
                 '',
-                Variable::TYPE_VARIABLE_IDENTIFIER
-            ),
+                Variable::TYPE_VARIABLE_IDENTIFIER),
             new ResponseColumn(
                 '',
                 'Tets Variable Response Column',
                 '',
-                'nonexistent type'
-            )
+                'nonexistent type')
         ];
         $singleDeliveryExporter->setFixtureColumnsToExport($variableColumnsToExport);
 
@@ -102,6 +95,7 @@ class SingleDeliverySqlResultExporterTest extends TestCase
 
         $this->assertEquals($sqlExpected, $sql);
     }
+
 }
 
 class SingleDeliverySqlResultExporterMock extends SingleDeliverySqlResultsExporter
@@ -119,7 +113,7 @@ class SingleDeliverySqlResultExporterMock extends SingleDeliverySqlResultsExport
         return $this->getExporter($data);
     }
 
-    public function getColumnsToExport(): array
+    public function getColumnsToExport()
     {
         return $this->columns;
     }
