@@ -19,17 +19,23 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace oat\taoOutcomeUi\model\export;
 
+use common_exception_InvalidArgumentType;
+use common_exception_NotFound;
+use core_kernel_classes_Resource;
 use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\filesystem\FileSystemService;
+use oat\tao\model\export\implementation\AbstractFileExporter;
 use oat\tao\model\export\implementation\CsvExporter;
 use oat\tao\model\taskQueue\Task\FilesystemAwareTrait;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeUi\model\table\VariableDataProvider;
-use tao_models_classes_table_Column;
+use tao_models_classes_table_Column as TableColumn;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 
 /**
@@ -44,28 +50,14 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
     use FilesystemAwareTrait;
 
     public const RESULT_FORMAT = 'CSV';
+    private core_kernel_classes_Resource $delivery;
+    private ResultsService $resultsService;
+    private array $columnsToExport = [];
 
     /**
-     * @var \core_kernel_classes_Resource
+     * @var TableColumn[]
      */
-    private $delivery;
-
-    /**
-     * @var ResultsService
-     */
-    private $resultsService;
-
-    /**
-     * Metadata columns to be exported.
-     *
-     * @var array
-     */
-    private $columnsToExport = [];
-
-    /**
-     * @var tao_models_classes_table_Column[]
-     */
-    private $builtColumns = [];
+    private array $builtColumns = [];
 
     /**
      * Which submitted variables are we exporting?
@@ -76,36 +68,24 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      *
      * @var string
      */
-    private $variableToExport = ResultsService::VARIABLES_FILTER_LAST_SUBMITTED;
-
-    /**
-     * @var array
-     */
-    private $storageOptions = [];
-    /**
-     * @var ColumnsProvider
-     */
-    private $columnsProvider;
-
-    /**
-     * @var array
-     */
-    private $filters = [];
-
+    private string $variableToExport = ResultsService::VARIABLES_FILTER_LAST_SUBMITTED;
+    private array $storageOptions = [];
+    private ColumnsProvider $columnsProvider;
+    private array $filters = [];
     public const CHUNK_SIZE = 100;
 
     /**
-     * @param string|\core_kernel_classes_Resource $delivery
-     * @param ResultsService                       $resultsService
-     * @param ColumnsProvider                      $columnsProvider
-     * @throws \common_exception_NotFound
+     * @throws common_exception_NotFound
      */
-    public function __construct($delivery, ResultsService $resultsService, ColumnsProvider $columnsProvider)
-    {
+    public function __construct(
+        core_kernel_classes_Resource $delivery,
+        ResultsService $resultsService,
+        ColumnsProvider $columnsProvider
+    ) {
         $this->delivery = $this->getResource($delivery);
 
         if (!$this->delivery->exists()) {
-            throw new \common_exception_NotFound(
+            throw new common_exception_NotFound(
                 sprintf(
                     'Results Exporter: delivery "%s" does not exist.',
                     $this->delivery->getUri()
@@ -117,10 +97,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
         $this->columnsProvider = $columnsProvider;
     }
 
-    /**
-     * @return string
-     */
-    public function getResultFormat()
+    public function getResultFormat(): string
     {
         return static::RESULT_FORMAT;
     }
@@ -128,7 +105,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
     /**
      * @inheritdoc
      */
-    public function getResourceToExport()
+    public function getResourceToExport(): core_kernel_classes_Resource
     {
         return $this->delivery;
     }
@@ -138,11 +115,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      */
     public function setColumnsToExport($columnsToExport)
     {
-        if (is_string($columnsToExport)) {
-            $columnsToExport = $this->decodeColumns($columnsToExport);
-        }
-
-        $this->columnsToExport = (array) $columnsToExport;
+        $this->columnsToExport = $columnsToExport;
 
         return $this;
     }
@@ -150,7 +123,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
     /**
      * @inheritdoc
      */
-    public function getColumnsToExport()
+    public function getColumnsToExport(): array
     {
         if (empty($this->builtColumns)) {
             if (!empty($this->columnsToExport)) {
@@ -227,10 +200,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getData()
+    public function getData(): array
     {
         $results = $this->resultsService->getResultsByDelivery(
             $this->getResourceToExport(),
@@ -277,7 +247,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      * @throws \common_Exception
      * @throws \common_exception_Error
      */
-    private function getCells($results, $offset = 0, $limit = null)
+    private function getCells(array $results, int $offset = 0, $limit = null): ?array
     {
         $cells = $this->resultsService->getCellsByResults(
             $results,
@@ -300,7 +270,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
     /**
      * @inheritdoc
      */
-    public function export($destination = null)
+    public function export($destination = null): string
     {
         $columnNames = $this->resultsService->getColumnNames($this->getColumnsToExport());
 
@@ -343,11 +313,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
             : $this->saveToLocal($exporter, $destination);
     }
 
-    /**
-     * @param array $result
-     * @return CsvExporter
-     */
-    protected function getExporter(array $result)
+    protected function getExporter(array $result): AbstractFileExporter
     {
         return new CsvExporter($result);
     }
@@ -355,20 +321,17 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
     /**
      * @param CsvExporter $exporter
      * @return string
-     * @throws \common_exception_InvalidArgumentType
+     * @throws common_exception_InvalidArgumentType
      */
-    protected function getExportData($exporter)
+    protected function getExportData(AbstractFileExporter $exporter): string
     {
         return $exporter->export(false, false, ',', '"', false);
     }
 
     /**
-     * @param CsvExporter $exporter
-     * @param string      $destination
-     * @return string
-     * @throws \common_exception_InvalidArgumentType
+     * @throws common_exception_InvalidArgumentType
      */
-    private function saveToLocal($exporter, $destination)
+    private function saveToLocal(AbstractFileExporter $exporter, string $destination): string
     {
         $fullPath = realpath($destination) . DIRECTORY_SEPARATOR . $this->getFileName();
 
@@ -377,10 +340,7 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
         return $fullPath;
     }
 
-    /**
-     * @return string
-     */
-    private function getFileName()
+    private function getFileName(): string
     {
         return 'results_export_'
             . strtolower(\tao_helpers_Display::textCleaner($this->delivery->getLabel(), '*'))
@@ -389,19 +349,6 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
             . '_'
             . date('YmdHis') . rand(10, 99) //more unique name
             . '.' . strtolower($this->getResultFormat());
-    }
-
-    /**
-     * Decode the JSON encoded columns.
-     *
-     * @param string $columnsJson
-     * @return array
-     */
-    private function decodeColumns($columnsJson)
-    {
-        return ($columnsData = json_decode($columnsJson, true)) !== null && json_last_error() === JSON_ERROR_NONE
-            ? $columnsData
-            : [];
     }
 
     /**
@@ -421,20 +368,19 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
      *  variableIdentifier = "SCORE"
      * ]
      *
-     * @param array $columnsData
-     * @return tao_models_classes_table_Column[]
+     * @return TableColumn[]
      */
-    private function buildColumns($columnsData)
+    private function buildColumns(array $columnsData): array
     {
         $columns = [];
         $dataProvider = new VariableDataProvider();
 
         foreach ($columnsData as $column) {
-            if (!isset($column['type']) || !is_subclass_of($column['type'], tao_models_classes_table_Column::class)) {
+            if (!isset($column['type']) || !is_subclass_of($column['type'], TableColumn::class)) {
                 throw new \RuntimeException('Column type not specified or wrong type provided');
             }
 
-            $column = tao_models_classes_table_Column::buildColumnFromArray($column);
+            $column = TableColumn::buildColumnFromArray($column);
             if (!is_null($column)) {
                 if ($column instanceof VariableColumn) {
                     $column->setDataProvider($dataProvider);

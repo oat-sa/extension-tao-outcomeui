@@ -19,9 +19,15 @@
  *
  */
 
+declare(strict_types=1);
+
 namespace oat\taoOutcomeUi\scripts\task;
 
-use common_report_Report as Report;
+use common_exception_NotFound;
+use Exception;
+use InvalidArgumentException;
+use oat\oatbox\reporting\Report as Report;
+use core_kernel_classes_Resource;
 use oat\generis\model\OntologyAwareTrait;
 use oat\oatbox\action\Action;
 use oat\tao\model\taskQueue\Task\WorkerContextAwareInterface;
@@ -35,6 +41,7 @@ use oat\taoOutcomeUi\model\ResultsService;
 use Zend\ServiceManager\ServiceLocatorAwareTrait;
 use Zend\ServiceManager\ServiceLocatorAwareInterface;
 
+// phpcs:disable Generic.Files.LineLength
 /**
  * ExportDeliveryResults action, can be called either during a http request or from cli.
  *
@@ -51,6 +58,7 @@ use Zend\ServiceManager\ServiceLocatorAwareInterface;
  * ```
  * @author Gyula Szucs <gyula@taotesting.com>
  */
+// phpcs:enable
 class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, WorkerContextAwareInterface
 {
     use ServiceLocatorAwareTrait;
@@ -60,32 +68,24 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
     /**
      * Possible CLI values for columns
      */
-    const COLUMNS_CLI_VALUE_ALL = 'all';
-    const COLUMNS_CLI_VALUE_TEST_TAKER = 'tt';
-    const COLUMNS_CLI_VALUE_DELIVERY = 'delivery';
-    const COLUMNS_CLI_VALUE_GRADES = 'grades';
-    const COLUMNS_CLI_VALUE_RESPONSES = 'responses';
+    private const COLUMNS_CLI_VALUE_ALL = 'all';
+    private const COLUMNS_CLI_VALUE_TEST_TAKER = 'tt';
+    private const COLUMNS_CLI_VALUE_DELIVERY = 'delivery';
+    private const COLUMNS_CLI_VALUE_GRADES = 'grades';
+    private const COLUMNS_CLI_VALUE_RESPONSES = 'responses';
 
-    /**
-     * @var \core_kernel_classes_Resource
-     */
-    private $resourceToExport;
-    private $exporterService;
-    private $columns = [];
-    private $submittedVersion;
-    private $destination;
-    private $filters = [];
-    private $format;
-    /**
-     * @var DeliveryResultsExporterFactoryInterface
-     */
-    private $deliveryResultsExporterFactory;
+    private core_kernel_classes_Resource $resourceToExport;
+    private ?ResultsExporter $exporterService = null;
+    private array $columns = [];
+    private ?string $submittedVersion = null;
+    private ?string $destination = null;
+    private array $filters = [];
+    private ?DeliveryResultsExporterFactoryInterface $deliveryResultsExporterFactory = null;
 
     /**
      * @param array $params
-     * @return Report
      */
-    public function __invoke($params)
+    public function __invoke($params): Report
     {
         $this->loadExtensions();
 
@@ -104,23 +104,30 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
             $msg = $fileName
                 ? $this->isWorkerContext()
                     ? __('Results of "%s" successfully exported', $this->resourceToExport->getLabel())
-                    : __('Results of "%s" successfully exported into "%s"', $this->resourceToExport->getLabel(), $fileName)
+                    : __(
+                        'Results of "%s" successfully exported into "%s"',
+                        $this->resourceToExport->getLabel(),
+                        $fileName
+                    )
                 : __('Nothing to export for "%s"', $this->resourceToExport->getLabel());
 
             return Report::createSuccess($msg, $fileName);
-        } catch (\Exception $e) {
-            return Report::createFailure($e->getMessage());
+        } catch (Exception $e) {
+            return Report::createError($e->getMessage());
         }
     }
 
     /**
-     * @return ResultsExporter
-     * @throws \common_exception_NotFound
+     * @throws common_exception_NotFound
      */
-    private function getExporterService()
+    private function getExporterService(): ResultsExporter
     {
         if (is_null($this->exporterService)) {
-            $this->exporterService = new ResultsExporter($this->resourceToExport, ResultsService::singleton(), $this->deliveryResultsExporterFactory);
+            $this->exporterService = new ResultsExporter(
+                $this->resourceToExport->getUri(),
+                ResultsService::singleton(),
+                $this->deliveryResultsExporterFactory
+            );
             $this->exporterService->setServiceLocator($this->getServiceLocator());
         }
 
@@ -130,7 +137,7 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
     /**
      * Load the required TAO extensions (for constants)
      */
-    private function loadExtensions()
+    private function loadExtensions(): void
     {
         $this->getServiceLocator()->get(\common_ext_ExtensionsManager::SERVICE_ID)->getExtensionById('taoOutcomeUi');
         $this->getServiceLocator()->get(\common_ext_ExtensionsManager::SERVICE_ID)->getExtensionById('taoDeliveryRdf');
@@ -144,13 +151,14 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
      * - $params[1]: columns (optional, array|string)
      * - $params[2]: submittedVersion (optional, string)
      *
-     * @param array $params
      */
-    private function parseParams($params)
+    private function parseParams(array $params): void
     {
         // Delivery or Class Uri
         if (!isset($params[0])) {
-            throw new \InvalidArgumentException('Delivery or class uri missing. Please provide it as the first argument.');
+            throw new InvalidArgumentException(
+                'Delivery or class uri missing. Please provide it as the first argument.'
+            );
         }
 
         $this->resourceToExport = $this->getResource($params[0]);
@@ -175,89 +183,124 @@ class ExportDeliveryResults implements Action, ServiceLocatorAwareInterface, Wor
             } else {
                 $this->deliveryResultsExporterFactory = new DeliveryCsvResultsExporterFactory();
             }
-        } else {
-            // if the task is called from CLI
 
-            // remove first param, it is always the resource uri, no need to re-check
-            unset($params[0]);
+            return;
+        }
+        // if the task is called from CLI
 
-            // check params. running the command from CLI we have different params structure
-            foreach ($params as $param) {
-                list($option, $value) = explode('=', $param);
+        // remove first param, it is always the resource uri, no need to re-check
+        unset($params[0]);
 
-                switch ($option) {
-                    case '--columns':
-                        $columns = explode(',', $value);
+        // check params. running the command from CLI we have different params structure
+        foreach ($params as $param) {
+            list($option, $value) = explode('=', $param);
 
-                        $invalidValues = array_diff($columns, $this->getPossibleColumnValues());
+            switch ($option) {
+                case '--columns':
+                    $columns = explode(',', $value);
+                    $this->validateAndPopulateColumns($columns);
 
-                        if (count($invalidValues)) {
-                            throw new \InvalidArgumentException('Invalid columns value(s) "' . implode(', ', $invalidValues) . '". Valid options: ' . implode(', ', $this->getPossibleColumnValues()));
-                        }
+                    break;
 
-                        if (in_array(self::COLUMNS_CLI_VALUE_ALL, $columns)) {
-                            // do nothing because SingleDeliveryResultsExporter will use all columns by default if no columns specified
-                            break;
-                        }
+                case '--submittedVersion':
+                    if (
+                        !in_array($value, [
+                            ResultsService::VARIABLES_FILTER_ALL,
+                            ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED,
+                            ResultsService::VARIABLES_FILTER_LAST_SUBMITTED
+                        ])
+                    ) {
+                        throw new InvalidArgumentException(
+                            sprintf(
+                                'Invalid submitted version of variables %s. Valid options: %s',
+                                $value,
+                                implode(', ', [
+                                    ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED,
+                                    ResultsService::VARIABLES_FILTER_LAST_SUBMITTED
+                                ])
+                            )
+                        );
+                    }
 
-                        foreach ($columns as $column) {
-                            switch ($column) {
-                                case self::COLUMNS_CLI_VALUE_TEST_TAKER:
-                                    $this->columns = array_merge($this->columns, $this->getExporterService()->getTestTakerColumns());
-                                    break;
+                    $this->submittedVersion = $value;
+                    break;
 
-                                case self::COLUMNS_CLI_VALUE_DELIVERY:
-                                    $this->columns = array_merge($this->columns, $this->getExporterService()->getDeliveryColumns());
-                                    break;
+                case '--dir':
+                    if (!is_dir($value)) {
+                        throw new InvalidArgumentException('Invalid directory "' . $value . '" provided.');
+                    }
 
-                                case self::COLUMNS_CLI_VALUE_GRADES:
-                                    $this->columns = array_merge($this->columns, $this->getExporterService()->getGradeColumns());
-                                    break;
-
-                                case self::COLUMNS_CLI_VALUE_RESPONSES:
-                                    $this->columns = array_merge($this->columns, $this->getExporterService()->getResponseColumns());
-                                    break;
-                            }
-                        }
-                        break;
-
-                    case '--submittedVersion':
-                       if (!in_array($value, [
-                                ResultsService::VARIABLES_FILTER_ALL,
-                                ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED,
-                                ResultsService::VARIABLES_FILTER_LAST_SUBMITTED
-                            ])) {
-                            throw new \InvalidArgumentException('Invalid submitted version of variables "' . $value . '". Valid options: ' . implode(', ', [ResultsService::VARIABLES_FILTER_FIRST_SUBMITTED, ResultsService::VARIABLES_FILTER_LAST_SUBMITTED]));
-                        }
-
-                        $this->submittedVersion = $value;
-                        break;
-
-                    case '--dir':
-                        if (!is_dir($value)) {
-                            throw new \InvalidArgumentException('Invalid directory "' . $value . '" provided.');
-                        }
-
-                        if (!is_writable($value)) {
-                            throw new \InvalidArgumentException('Directory "' . $value . '" not writable.');
-                        }
-                        $this->destination = $value;
-                        break;
-                    case '--start-from':
-                        $this->filters['startfrom'] = $value;
-                        break;
-                    case '--start-to':
-                        $this->filters['startto'] = $value;
-                        break;
-                }
+                    if (!is_writable($value)) {
+                        throw new InvalidArgumentException('Directory "' . $value . '" not writable.');
+                    }
+                    $this->destination = $value;
+                    break;
+                case '--start-from':
+                    $this->filters['startfrom'] = $value;
+                    break;
+                case '--start-to':
+                    $this->filters['startto'] = $value;
+                    break;
             }
         }
     }
 
     /**
-     * @return array
+     * @throws InvalidArgumentException
+     * @throws common_exception_NotFound
      */
-    private function getPossibleColumnValues()
+    private function validateAndPopulateColumns(array $columns): void
+    {
+        $invalidValues = array_diff($columns, $this->getPossibleColumnValues());
+
+        if (count($invalidValues)) {
+            throw new InvalidArgumentException(
+                'Invalid columns value(s) "' . implode(
+                    ', ',
+                    $invalidValues
+                ) . '". Valid options: ' . implode(', ', $this->getPossibleColumnValues())
+            );
+        }
+
+        if (in_array(self::COLUMNS_CLI_VALUE_ALL, $columns)) {
+            // skip cause SingleDeliveryResultsExporter use all columns by default
+            return;
+        }
+
+        foreach ($columns as $column) {
+            switch ($column) {
+                case self::COLUMNS_CLI_VALUE_TEST_TAKER:
+                    $this->columns = array_merge(
+                        $this->columns,
+                        $this->getExporterService()->getTestTakerColumns()
+                    );
+                    break;
+
+                case self::COLUMNS_CLI_VALUE_DELIVERY:
+                    $this->columns = array_merge(
+                        $this->columns,
+                        $this->getExporterService()->getDeliveryColumns()
+                    );
+                    break;
+
+                case self::COLUMNS_CLI_VALUE_GRADES:
+                    $this->columns = array_merge(
+                        $this->columns,
+                        $this->getExporterService()->getGradeColumns()
+                    );
+                    break;
+
+                case self::COLUMNS_CLI_VALUE_RESPONSES:
+                    $this->columns = array_merge(
+                        $this->columns,
+                        $this->getExporterService()->getResponseColumns()
+                    );
+                    break;
+            }
+        }
+    }
+
+    private function getPossibleColumnValues(): array
     {
         return [
             self::COLUMNS_CLI_VALUE_ALL,
