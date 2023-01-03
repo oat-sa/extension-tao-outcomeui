@@ -54,10 +54,6 @@ class SingleDeliverySqlResultsExporter extends SingleDeliveryResultsExporter
         'End Delivery Execution' => ExportedColumn::TYPE_TIMESTAMP
     ];
 
-    /**
-     * @param SqlExporter $exporter
-     * @return string
-     */
     protected function getExportData(AbstractFileExporter $exporter): string
     {
         return $exporter->export();
