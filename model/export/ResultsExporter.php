@@ -78,6 +78,7 @@ class ResultsExporter implements ServiceLocatorAwareInterface
     public function getExporter(): ResultsExporterInterface
     {
         $this->exportStrategy->setServiceLocator($this->getServiceLocator());
+        $this->exportStrategy->setColumnsToExport($this->columns);
 
         return $this->exportStrategy;
     }
