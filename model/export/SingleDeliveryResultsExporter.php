@@ -158,7 +158,8 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
                 $columns = array_merge(
                     $this->columnsProvider->getTestTakerColumns(),
                     $this->columnsProvider->getDeliveryColumns(),
-                    $variables
+                    $variables,
+                    $this->columnsProvider->getDeliveryExecutionColumns()
                 );
             }
 
