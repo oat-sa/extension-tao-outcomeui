@@ -21,7 +21,7 @@
 namespace oat\taoOutcomeUi\unit\model\search;
 
 use core_kernel_classes_Resource;
-use oat\generis\test\TestCase;
+use oat\generis\test\ServiceManagerMockTrait;
 use oat\oatbox\log\LoggerService;
 use oat\oatbox\user\User;
 use oat\oatbox\user\UserService;
@@ -33,9 +33,12 @@ use oat\taoDelivery\models\classes\execution\event\DeliveryExecutionCreated;
 use oat\taoOutcomeUi\model\search\ResultCustomFieldsService;
 use oat\taoOutcomeUi\model\search\ResultsWatcher;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
 class ResultWatcherTest extends TestCase
 {
+    use ServiceManagerMockTrait;
+
     /**
      * @var ResultsWatcher
      */
@@ -70,7 +73,7 @@ class ResultWatcherTest extends TestCase
         $customFieldMock->method('getCustomFields')->willReturn([]);
 
         $this->subject->setServiceLocator(
-            $this->getServiceLocatorMock(
+            $this->getServiceManagerMock(
                 [
                     AdvancedSearchChecker::class => $this->advancedSearchChecker,
                     SearchProxy::SERVICE_ID => $this->searchService,
