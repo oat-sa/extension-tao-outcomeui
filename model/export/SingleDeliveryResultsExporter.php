@@ -251,8 +251,8 @@ class SingleDeliveryResultsExporter implements ResultsExporterInterface
     private function sortByStartDate(&$data)
     {
         usort($data, function ($a, $b) {
-            $bDate = $b[ColumnsProvider::LABEL_START_DELIVERY_EXECUTION];
-            $aDate = $a[ColumnsProvider::LABEL_START_DELIVERY_EXECUTION];
+            $bDate = $b[ColumnsProvider::LABEL_START_DELIVERY_EXECUTION] ?? null;
+            $aDate = $a[ColumnsProvider::LABEL_START_DELIVERY_EXECUTION] ?? null;
             $startB = $bDate ? strtotime($bDate) : 0;
             $startA = $aDate ? strtotime($aDate) : 0;
             return $startB - $startA;
