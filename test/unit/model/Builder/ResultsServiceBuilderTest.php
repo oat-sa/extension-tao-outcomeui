@@ -20,16 +20,19 @@
 
 namespace oat\taoOutcomeUi\unit\model\Builder;
 
-use oat\generis\test\TestCase;
+use oat\generis\test\ServiceManagerMockTrait;
 use oat\taoOutcomeUi\model\Builder\ResultsServiceBuilder;
 use oat\taoOutcomeUi\model\ResultsService;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
 use oat\taoResultServer\models\classes\ResultManagement;
 use oat\taoResultServer\models\classes\ResultServerService;
 use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-class ResultsServiceTest extends TestCase
+class ResultsServiceBuilderTest extends TestCase
 {
+    use ServiceManagerMockTrait;
+
     /** @var ResultsService */
     private $subject;
 
@@ -46,7 +49,7 @@ class ResultsServiceTest extends TestCase
 
         $this->subject = new ResultsServiceBuilder();
         $this->subject->setServiceLocator(
-            $this->getServiceLocatorMock(
+            $this->getServiceManagerMock(
                 [
                     ResultServiceWrapper::SERVICE_ID => $this->resultServiceWrapper,
                     ResultServerService::SERVICE_ID => $this->resultServerService,
