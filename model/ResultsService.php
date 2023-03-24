@@ -633,7 +633,7 @@ class ResultsService extends OntologyClassService
                 } else {
                     $variableDescription['isCorrect'] = 'unscored';
                 }
-                $variableDescription['isExternallyGraded'] = (bool)$itemVariable->isExternallyGraded ?? false;
+                $variableDescription['isExternallyGraded'] = (bool)($itemVariable->isExternallyGraded ?? false);
                 // some dangerous assumptions about the call Id structure
                 $callIdParts = explode('.', $itemCallId);
                 $variablesByItem[$time]['internalIdentifier'] = $callIdParts[count($callIdParts) - 2];
