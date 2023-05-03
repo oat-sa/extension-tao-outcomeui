@@ -25,8 +25,8 @@ namespace oat\taoOutcomeUi\helper;
 use oat\taoResultServer\models\classes\ResultService;
 use oat\generis\model\OntologyRdf;
 use oat\generis\model\OntologyRdfs;
-use \tao_helpers_grid_Cell_ResourceLabelAdapter;
-use \tao_helpers_grid_GridContainer;
+use tao_helpers_grid_Cell_ResourceLabelAdapter;
+use tao_helpers_grid_GridContainer;
 
 /**
  * Short description of class oat\taoOutcomeUi\helper\DeliveryResultGrid
@@ -66,15 +66,15 @@ class DeliveryResultGrid extends tao_helpers_grid_GridContainer
 
         $excludedProperties = (is_array($this->options) && isset($this->options['excludedProperties'])) ? $this->options['excludedProperties'] : [];
         $columnNames = (is_array($this->options) && isset($this->options['columnNames'])) ? $this->options['columnNames'] : [];
-        
-        
+
+
         $processProperties = [
             OntologyRdfs::RDFS_LABEL                    => __('Label'),
             ResultService::DELIVERY_CLASS_URI   => __('Delivery'),
             ResultService::SUBJECT_CLASS_URI    => __('Test taker'),
             OntologyRdf::RDF_TYPE                   => __('Class')
         ];
-        
+
         foreach ($processProperties as $processPropertyUri => $label) {
             if (!isset($excludedProperties[$processPropertyUri])) {
                 $column = $this->grid->addColumn($processPropertyUri, $label);

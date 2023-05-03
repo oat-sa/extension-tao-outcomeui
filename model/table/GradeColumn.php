@@ -22,7 +22,7 @@
 
 namespace oat\taoOutcomeUi\model\table;
 
-use \core_kernel_classes_Class;
+use core_kernel_classes_Class;
 
 /**
  * Represents a grade column

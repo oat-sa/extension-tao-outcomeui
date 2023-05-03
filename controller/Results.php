@@ -69,8 +69,8 @@ class Results extends \tao_actions_CommonModule
     use TaskLogActionTrait;
     use OntologyAwareTrait;
 
-    const PARAMETER_DELIVERY_URI = 'uri';
-    const PARAMETER_DELIVERY_CLASS_URI = 'classUri';
+    public const PARAMETER_DELIVERY_URI = 'uri';
+    public const PARAMETER_DELIVERY_CLASS_URI = 'classUri';
 
     /**
      * @return ResultsService

@@ -30,7 +30,6 @@ namespace oat\taoOutcomeUi\helper;
  */
 class Datatypes
 {
-
     /**
      * Decode a binary string representing a file into an array.
      *

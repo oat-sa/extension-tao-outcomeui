@@ -22,7 +22,7 @@
 
 namespace oat\taoOutcomeUi\model\table;
 
-use \core_kernel_classes_Class;
+use core_kernel_classes_Class;
 
 /**
  * Short description of class oat\taoOutcomeUi\model\table\ResponseColumn

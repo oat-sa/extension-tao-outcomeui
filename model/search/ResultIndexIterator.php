@@ -36,7 +36,7 @@ class ResultIndexIterator implements \Iterator
 {
     use ServiceLocatorAwareTrait;
 
-    const CACHE_SIZE = 100;
+    public const CACHE_SIZE = 100;
 
     private $resourceIterator;
 
@@ -92,7 +92,7 @@ class ResultIndexIterator implements \Iterator
      * (non-PHPdoc)
      * @see Iterator::rewind()
      */
-    function rewind()
+    public function rewind()
     {
         if (!$this->unmoved) {
             $this->resourceIterator->rewind();
@@ -105,7 +105,7 @@ class ResultIndexIterator implements \Iterator
      * (non-PHPdoc)
      * @see Iterator::current()
      */
-    function current()
+    public function current()
     {
         $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($this->instanceCache[$this->currentInstance]);
         return $this->createDocument($deliveryExecution);
@@ -115,7 +115,7 @@ class ResultIndexIterator implements \Iterator
      * (non-PHPdoc)
      * @see Iterator::key()
      */
-    function key()
+    public function key()
     {
         return $this->resourceIterator->key() . '#' . $this->currentInstance;
     }
@@ -124,7 +124,7 @@ class ResultIndexIterator implements \Iterator
      * (non-PHPdoc)
      * @see Iterator::next()
      */
-    function next()
+    public function next()
     {
         $this->unmoved = false;
         if ($this->valid()) {
@@ -149,7 +149,7 @@ class ResultIndexIterator implements \Iterator
      * (non-PHPdoc)
      * @see Iterator::valid()
      */
-    function valid()
+    public function valid()
     {
         return $this->resourceIterator->valid();
     }

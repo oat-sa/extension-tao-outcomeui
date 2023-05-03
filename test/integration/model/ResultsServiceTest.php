@@ -48,7 +48,6 @@ use common_exception_Error;
  */
 class ResultsServiceTest extends GenerisPhpUnitTestRunner
 {
-
     /**
      *
      * @var ResultsService

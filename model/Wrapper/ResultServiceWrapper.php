@@ -17,10 +17,9 @@ use oat\taoOutcomeUi\model\ResultsService;
 
 class ResultServiceWrapper extends ConfigurableService
 {
+    public const SERVICE_ID  = 'taoOutcomeUi/resultService';
 
-    const SERVICE_ID  = 'taoOutcomeUi/resultService';
-
-    const RESULT_COLUMNS_CHUNK_SIZE_OPTION = 'resultColumnsChunkSize';
+    public const RESULT_COLUMNS_CHUNK_SIZE_OPTION = 'resultColumnsChunkSize';
     /**
      * @var ResultsService
      */
