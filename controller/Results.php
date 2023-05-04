@@ -158,10 +158,9 @@ class Results extends \tao_actions_CommonModule
             $this->setData('type', 'info');
             $this->setData(
                 'error',
-                __(
-                    'No tests have been taken yet. As soon as a test-taker will take a test his results will be '
-                        . 'displayed here.'
-                )
+                // phpcs:disable Generic.Files.LineLength
+                __('No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here.')
+                // phpcs:enable Generic.Files.LineLength
             );
             $this->setView('index.tpl');
         }
