@@ -107,7 +107,10 @@ class ResultIndexIterator implements \Iterator
      */
     public function current()
     {
-        $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($this->instanceCache[$this->currentInstance]);
+        $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution(
+            $this->instanceCache[$this->currentInstance]
+        );
+
         return $this->createDocument($deliveryExecution);
     }
 
@@ -131,7 +134,8 @@ class ResultIndexIterator implements \Iterator
             $this->currentInstance++;
             if (!isset($this->instanceCache[$this->currentInstance])) {
                 // try to load next block (unless we know it's empty)
-                $remainingInstances = !$this->endOfResource && $this->load($this->resourceIterator->current(), $this->currentInstance);
+                $remainingInstances = !$this->endOfResource
+                    && $this->load($this->resourceIterator->current(), $this->currentInstance);
 
                 // endOfClass or failed loading
                 if (!$remainingInstances) {
@@ -174,7 +178,9 @@ class ResultIndexIterator implements \Iterator
     protected function ensureValidResult()
     {
         try {
-            $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution($this->instanceCache[$this->currentInstance]);
+            $deliveryExecution = ServiceProxy::singleton()->getDeliveryExecution(
+                $this->instanceCache[$this->currentInstance]
+            );
             $deliveryExecution->getDelivery();
         } catch (\common_exception_NotFound $e) {
             $message = 'Skip result ' . $deliveryExecution->getIdentifier() . ' with message ' . $e->getMessage();

@@ -15,9 +15,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2002-2008 (original work) Public Research Centre Henri Tudor & University of Luxembourg (under the project TAO & TAO2);
- *               2008-2010 (update and modification) Deutsche Institut für Internationale Pädagogische Forschung (under the project TAO-TRANSFER);
- *               2009-2012 (update and modification) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV); *
+ * Copyright (c) 2002-2008 (original work) Public Research Centre Henri Tudor & University of Luxembourg
+ *                         (under the project TAO & TAO2);
+ *               2008-2010 (update and modification) Deutsche Institut für Internationale Pädagogische Forschung
+ *                         (under the project TAO-TRANSFER);
+ *               2009-2012 (update and modification) Public Research Centre Henri Tudor
+ *                         (under the project TAO-SUSTAIN & TAO-DEV); *
  */
 
 namespace oat\taoOutcomeUi\controller;
@@ -153,7 +156,13 @@ class Results extends \tao_actions_CommonModule
             }
         } else {
             $this->setData('type', 'info');
-            $this->setData('error', __('No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here.'));
+            $this->setData(
+                'error',
+                __(
+                    'No tests have been taken yet. As soon as a test-taker will take a test his results will be '
+                        . 'displayed here.'
+                )
+            );
             $this->setView('index.tpl');
         }
     }
@@ -183,7 +192,9 @@ class Results extends \tao_actions_CommonModule
                 $results = $payload['data'];
                 $count = $payload['records'];
             } else {
-                $delivery = new \core_kernel_classes_Resource(tao_helpers_Uri::decode($this->getRequestParameter('classUri')));
+                $delivery = new \core_kernel_classes_Resource(
+                    tao_helpers_Uri::decode($this->getRequestParameter('classUri'))
+                );
                 $this->getResultStorage($delivery);
 
                 $results = $this->getResultsService()->getImplementation()->getResultByDelivery([$delivery->getUri()], [
@@ -266,7 +277,9 @@ class Results extends \tao_actions_CommonModule
      */
     private function isCacheable($resultIdentifier)
     {
-        return $this->getServiceProxy()->getDeliveryExecution($resultIdentifier)->getState()->getUri() == DeliveryExecutionInterface::STATE_FINISHIED;
+        $uri = $this->getServiceProxy()->getDeliveryExecution($resultIdentifier)->getState()->getUri();
+
+        return $uri == DeliveryExecutionInterface::STATE_FINISHIED;
     }
 
     /**
@@ -299,7 +312,9 @@ class Results extends \tao_actions_CommonModule
                 $login = (count($testTaker[GenerisRdf::PROPERTY_USER_LOGIN]) > 0) ? current(
                     $testTaker[GenerisRdf::PROPERTY_USER_LOGIN]
                 )->literal : "";
-                $label = (count($testTaker[OntologyRdfs::RDFS_LABEL]) > 0) ? current($testTaker[OntologyRdfs::RDFS_LABEL])->literal : "";
+                $label = (count($testTaker[OntologyRdfs::RDFS_LABEL]) > 0)
+                    ? current($testTaker[OntologyRdfs::RDFS_LABEL])->literal
+                    : "";
                 $firstName = (count($testTaker[GenerisRdf::PROPERTY_USER_FIRSTNAME]) > 0) ? current(
                     $testTaker[GenerisRdf::PROPERTY_USER_FIRSTNAME]
                 )->literal : "";
@@ -316,11 +331,23 @@ class Results extends \tao_actions_CommonModule
                 $this->setData('userLastName', $userLastName);
                 $this->setData('userEmail', $userEmail);
             }
-            $filterSubmission = ($this->hasRequestParameter("filterSubmission")) ? $this->getRequestParameter("filterSubmission") : ResultsService::VARIABLES_FILTER_LAST_SUBMITTED;
-            $filterTypes = ($this->hasRequestParameter("filterTypes")) ? $this->getRequestParameter("filterTypes") : [\taoResultServer_models_classes_ResponseVariable::class, \taoResultServer_models_classes_OutcomeVariable::class, \taoResultServer_models_classes_TraceVariable::class];
+            $filterSubmission = ($this->hasRequestParameter("filterSubmission"))
+                ? $this->getRequestParameter("filterSubmission")
+                : ResultsService::VARIABLES_FILTER_LAST_SUBMITTED;
+            $filterTypes = ($this->hasRequestParameter("filterTypes"))
+                ? $this->getRequestParameter("filterTypes")
+                : [
+                    \taoResultServer_models_classes_ResponseVariable::class,
+                    \taoResultServer_models_classes_OutcomeVariable::class,
+                    \taoResultServer_models_classes_TraceVariable::class,
+                ];
 
-            // check the result page cache; if we have hit than return the gzencoded string and let the client to encode the data
-            $cacheKey = $this->getResultsService()->getCacheKey($resultId, md5($filterSubmission . implode(',', $filterTypes)));
+            // check the result page cache; if we have hit than return the gzencoded string and let the client to encode
+            // the data
+            $cacheKey = $this->getResultsService()->getCacheKey(
+                $resultId,
+                md5($filterSubmission . implode(',', $filterTypes))
+            );
             $isResultCacheable = $this->isCacheable($resultId);
 
             if (
@@ -342,9 +369,16 @@ class Results extends \tao_actions_CommonModule
             $variables = $this->getResultsService()->getImplementation()->getDeliveryVariables($resultId);
             $variables = $this->getNormalizer()->normalize($variables);
 
-            $structuredItemVariables = $this->getResultsService()->structureItemVariables($variables, $filterSubmission);
+            $structuredItemVariables = $this->getResultsService()->structureItemVariables(
+                $variables,
+                $filterSubmission
+            );
             $itemVariables = $this->formatItemVariables($structuredItemVariables, $filterTypes);
-            $testVariables = $this->getResultsService()->extractTestVariables($variables, $filterTypes, $filterSubmission);
+            $testVariables = $this->getResultsService()->extractTestVariables(
+                $variables,
+                $filterTypes,
+                $filterSubmission
+            );
 
             // render item variables
             $this->setData('variables', $itemVariables);
@@ -394,16 +428,26 @@ class Results extends \tao_actions_CommonModule
     {
         try {
             if (!$this->hasRequestParameter('id') || empty($this->getRequestParameter('id'))) {
-                throw new \common_exception_MissingParameter('Result id is missing from the request.', $this->getRequestURI());
+                throw new \common_exception_MissingParameter(
+                    'Result id is missing from the request.',
+                    $this->getRequestURI()
+                );
             }
             if (!$this->hasRequestParameter('delivery') || empty($this->getRequestParameter('delivery'))) {
-                throw new \common_exception_MissingParameter('Delivery id is missing from the request.', $this->getRequestURI());
+                throw new \common_exception_MissingParameter(
+                    'Delivery id is missing from the request.',
+                    $this->getRequestURI()
+                );
             }
 
             $qtiResultService = $this->getServiceManager()->get(QtiResultsService::SERVICE_ID);
-            $xml = $qtiResultService->getQtiResultXml($this->getRequestParameter('delivery'), $this->getRawParameter('id'));
+            $xml = $qtiResultService->getQtiResultXml(
+                $this->getRequestParameter('delivery'),
+                $this->getRawParameter('id')
+            );
 
-            header('Set-Cookie: fileDownload=true'); //used by jquery file download to find out the download has been triggered ...
+            //used by jquery file download to find out the download has been triggered ...
+            header('Set-Cookie: fileDownload=true');
             setcookie("fileDownload", "true", 0, "/");
             header('Content-Disposition: attachment; filename="delivery_execution_' . date('YmdHis') . '.xml"');
             header('Content-Type: application/xml');
@@ -655,8 +699,14 @@ class Results extends \tao_actions_CommonModule
             throw new \Exception('Only ajax call allowed.');
         }
 
-        if (!$this->hasRequestParameter(self::PARAMETER_DELIVERY_CLASS_URI) && !$this->hasRequestParameter(self::PARAMETER_DELIVERY_URI)) {
-            throw new common_Exception('Parameter "' . self::PARAMETER_DELIVERY_CLASS_URI . '" or "' . self::PARAMETER_DELIVERY_URI . '" missing');
+        if (
+            !$this->hasRequestParameter(self::PARAMETER_DELIVERY_CLASS_URI)
+            && !$this->hasRequestParameter(self::PARAMETER_DELIVERY_URI)
+        ) {
+            throw new common_Exception(
+                'Parameter "' . self::PARAMETER_DELIVERY_CLASS_URI . '" or "' . self::PARAMETER_DELIVERY_URI
+                    . '" missing'
+            );
         }
 
         $resourceUri = $this->hasRequestParameter(self::PARAMETER_DELIVERY_URI)
@@ -664,7 +714,13 @@ class Results extends \tao_actions_CommonModule
             : \tao_helpers_Uri::decode($this->getRequestParameter(self::PARAMETER_DELIVERY_CLASS_URI));
 
         /** @var ResultsExporter $exporter */
-        $exporter = $this->propagate(new ResultsExporter($resourceUri, ResultsService::singleton(), $deliveryResultsExporterFactory));
+        $exporter = $this->propagate(
+            new ResultsExporter(
+                $resourceUri,
+                ResultsService::singleton(),
+                $deliveryResultsExporterFactory
+            )
+        );
 
         return $exporter;
     }

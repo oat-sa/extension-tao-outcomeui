@@ -137,7 +137,8 @@ class ResponseVariableFormatter
     /**
      * Format the output of oat\taoOutcomeUi\model\ResultsService::getStructuredVariables() into a client usable array
      *
-     * @param array $testResultVariables - the array output from oat\taoOutcomeUi\model\ResultsService::getStructuredVariables();
+     * @param array $testResultVariables - the array output from
+     *                                   oat\taoOutcomeUi\model\ResultsService::getStructuredVariables();
      * @param array $itemFilter = [] - the array of item uri to be included in the formatted output, all item if empty.
      * @return array
      * @throws \common_Exception

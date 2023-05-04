@@ -36,7 +36,8 @@ class ResultServiceWrapper extends ConfigurableService
 
     public static function deleteResultCache(DeliveryExecutionState $event)
     {
-        // if the delivery execution has been re-activated, we have to delete the result cache already existing for this execution
+        // if the delivery execution has been re-activated, we have to delete the result cache already existing for this
+        // execution
         if ($event->getPreviousState() == DeliveryExecutionInterface::STATE_FINISHIED) {
             /** @var ResultsService $resultService */
             $resultService = ServiceManager::getServiceManager()->get(self::SERVICE_ID)->getService();

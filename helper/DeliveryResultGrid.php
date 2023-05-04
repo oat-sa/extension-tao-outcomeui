@@ -15,9 +15,10 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2008-2010 (original work) Deutsche Institut für Internationale Pädagogische Forschung (under the project TAO-TRANSFER);
- *               2009-2012 (update and modification) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV);
- *
+ * Copyright (c) 2008-2010 (original work) Deutsche Institut für Internationale Pädagogische Forschung
+ *                         (under the project TAO-TRANSFER);
+ *               2009-2012 (update and modification) Public Research Centre Henri Tudor
+ *                         (under the project TAO-SUSTAIN & TAO-DEV);
  */
 
 namespace oat\taoOutcomeUi\helper;
@@ -64,8 +65,12 @@ class DeliveryResultGrid extends tao_helpers_grid_GridContainer
     {
         $returnValue = (bool) false;
 
-        $excludedProperties = (is_array($this->options) && isset($this->options['excludedProperties'])) ? $this->options['excludedProperties'] : [];
-        $columnNames = (is_array($this->options) && isset($this->options['columnNames'])) ? $this->options['columnNames'] : [];
+        $excludedProperties = (is_array($this->options) && isset($this->options['excludedProperties']))
+            ? $this->options['excludedProperties']
+            : [];
+        $columnNames = (is_array($this->options) && isset($this->options['columnNames']))
+            ? $this->options['columnNames']
+            : [];
 
 
         $processProperties = [
@@ -88,4 +93,4 @@ class DeliveryResultGrid extends tao_helpers_grid_GridContainer
 
         return (bool) $returnValue;
     }
-} /* end of class oat\taoOutcomeUi\helper\DeliveryResultGrid*/
+}

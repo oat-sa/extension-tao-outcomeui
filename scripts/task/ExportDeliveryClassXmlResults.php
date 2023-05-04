@@ -84,11 +84,26 @@ class ExportDeliveryClassXmlResults extends ScriptAction
             $executionAcrossDeliveriesNumber = 0;
             foreach ($deliveryClass->getInstances(true) as $delivery) {
                 $deliveryNumber++;
-                $this->report->add(Report::createInfo(sprintf('Starting to process delivery "%s"', $delivery->getLabel())));
+                $this->report->add(
+                    Report::createInfo(
+                        sprintf(
+                            'Starting to process delivery "%s"',
+                            $delivery->getLabel()
+                        )
+                    )
+                );
 
                 $executions = $this->getResultsService()->getResultsByDelivery($delivery);
 
-                $this->report->add(Report::createInfo(sprintf('%d results were found for delivery "%s"', count($executions), $delivery->getLabel())));
+                $this->report->add(
+                    Report::createInfo(
+                        sprintf(
+                            '%d results were found for delivery "%s"',
+                            count($executions),
+                            $delivery->getLabel()
+                        )
+                    )
+                );
 
                 $executionNumber = 0;
                 foreach ($executions as $execution) {
@@ -96,8 +111,11 @@ class ExportDeliveryClassXmlResults extends ScriptAction
                     $executionAcrossDeliveriesNumber++;
 
                     // flush the archive by creating the object ZipArchive from scratch every 100 iterations to
-                    // prevent ZipArchive from memory leaking (it builds up all the changes in memory that are not 'committed')
-                    if ($executionAcrossDeliveriesNumber % self::EXECUTION_ITERATIONS_TO_REINSTANTIATE_ZIP_OBJECT === 0) {
+                    // prevent ZipArchive from memory leaking (it builds up all the changes in memory that are not
+                    // 'committed')
+                    if (
+                        $executionAcrossDeliveriesNumber % self::EXECUTION_ITERATIONS_TO_REINSTANTIATE_ZIP_OBJECT === 0
+                    ) {
                         $zipArchive->close();
                         $zipArchive = $this->instantiateZip($path);
                     }
@@ -114,12 +132,30 @@ class ExportDeliveryClassXmlResults extends ScriptAction
             }
         } catch (\Throwable $e) {
             if (isset($execution)) {
-                $this->report->add(Report::createFailure(sprintf('Exception thrown while processing execution "%s": %s', $execution, $e->getMessage())));
+                $this->report->add(
+                    Report::createFailure(
+                        sprintf(
+                            'Exception thrown while processing execution "%s": %s',
+                            $execution,
+                            $e->getMessage()
+                        )
+                    )
+                );
             } else {
                 $this->report->add(Report::createFailure($e->getMessage()));
             }
         }
-        $this->report->add(Report::createSuccess(sprintf('Done! %d results for %d deliveries were exported. Please download the ZIP file at this path: %s', $resultCount, $deliveryNumber, $path)));
+        $this->report->add(
+            Report::createSuccess(
+                sprintf(
+                    'Done! %d results for %d deliveries were exported. Please download the ZIP file at this path: %s',
+                    $resultCount,
+                    $deliveryNumber,
+                    $path
+                )
+            )
+        );
+
         return $this->report;
     }
 
