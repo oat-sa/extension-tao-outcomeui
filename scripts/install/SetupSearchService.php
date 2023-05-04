@@ -42,10 +42,23 @@ class SetupSearchService extends InstallAction
     public function __invoke($params)
     {
         $this->getServiceManager()->register(ResultCustomFieldsService::SERVICE_ID, new ResultCustomFieldsService());
-        $this->getServiceManager()->register(ResultsWatcher::SERVICE_ID, new ResultsWatcher([ResultsWatcher::OPTION_RESULT_SEARCH_FIELD_VISIBILITY => false]));
+        $this
+            ->getServiceManager()
+            ->register(
+                ResultsWatcher::SERVICE_ID,
+                new ResultsWatcher([
+                    ResultsWatcher::OPTION_RESULT_SEARCH_FIELD_VISIBILITY => false,
+                ])
+            );
         /** @var EventManager $eventManager */
         $eventManager = $this->getServiceLocator()->get(EventManager::SERVICE_ID);
-        $eventManager->attach(DeliveryExecutionCreated::class, [ResultsWatcher::SERVICE_ID, 'catchCreatedDeliveryExecutionEvent']);
+        $eventManager->attach(
+            DeliveryExecutionCreated::class,
+            [
+                ResultsWatcher::SERVICE_ID,
+                'catchCreatedDeliveryExecutionEvent',
+            ]
+        );
         $eventManager->attach(TestChangedEvent::EVENT_NAME, [ResultsWatcher::SERVICE_ID, 'catchTestChangedEvent']);
         $this->getServiceManager()->register(EventManager::SERVICE_ID, $eventManager);
     }

@@ -33,7 +33,7 @@ class ResultCustomFieldsService extends ConfigurableService
 {
     use OntologyAwareTrait;
 
-    const SERVICE_ID = 'taoOutcomeUi/ResultCustomFields';
+    public const SERVICE_ID = 'taoOutcomeUi/ResultCustomFields';
 
     public function getCustomFields(DeliveryExecutionInterface $deliveryExecution)
     {

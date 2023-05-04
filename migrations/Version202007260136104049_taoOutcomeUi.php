@@ -34,7 +34,6 @@ use oat\taoOutcomeUi\model\ResultsService;
  */
 final class Version202007260136104049_taoOutcomeUi extends AbstractMigration
 {
-
     public function getDescription(): string
     {
         return 'Add option allow_sql_result to ResultsService';

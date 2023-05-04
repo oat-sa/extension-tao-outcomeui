@@ -96,7 +96,9 @@ class ColumnsProvider
         $this->delivery = $this->getResource($delivery);
 
         if (!$this->delivery->exists()) {
-            throw new \common_exception_NotFound('Results Exporter: delivery "' . $this->delivery->getUri() . '" does not exist.');
+            throw new \common_exception_NotFound(
+                'Results Exporter: delivery "' . $this->delivery->getUri() . '" does not exist.'
+            );
         }
 
         $this->resultsService = $resultsService;
@@ -160,7 +162,9 @@ class ColumnsProvider
         $columns = [];
 
         // add custom properties, it contains the group property as well
-        $customProps = $this->getClass($this->delivery->getOnePropertyValue($this->getProperty(OntologyRdf::RDF_TYPE)))->getProperties();
+        $customProps = $this
+            ->getClass($this->delivery->getOnePropertyValue($this->getProperty(OntologyRdf::RDF_TYPE)))
+            ->getProperties();
 
         $deliveryProps = array_merge($this->deliveryProperties, $customProps);
 
@@ -213,7 +217,10 @@ class ColumnsProvider
      */
     public function getGradeColumns()
     {
-        return $this->resultsService->getVariableColumns($this->delivery, \taoResultServer_models_classes_OutcomeVariable::class);
+        return $this->resultsService->getVariableColumns(
+            $this->delivery,
+            \taoResultServer_models_classes_OutcomeVariable::class
+        );
     }
 
     /**
@@ -224,7 +231,10 @@ class ColumnsProvider
      */
     public function getResponseColumns()
     {
-        return $this->resultsService->getVariableColumns($this->delivery, \taoResultServer_models_classes_ResponseVariable::class);
+        return $this->resultsService->getVariableColumns(
+            $this->delivery,
+            \taoResultServer_models_classes_ResponseVariable::class
+        );
     }
 
     /**

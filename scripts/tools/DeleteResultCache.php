@@ -73,12 +73,16 @@ class DeleteResultCache extends ScriptAction
             $resultsService = $this->getServiceManager()->get(ResultServiceWrapper::SERVICE_ID)->getService();
 
             if (is_null($resultsService->getCache())) {
-                throw new \RuntimeException('No result cache has been configured in persistence, so there is nothing to delete.');
+                throw new \RuntimeException(
+                    'No result cache has been configured in persistence, so there is nothing to delete.'
+                );
             }
 
             $deliveryExecutionIdentifier = $deliveryExecution->getIdentifier();
             if ($resultsService->deleteCacheFor($deliveryExecutionIdentifier)) {
-                $report = Report::createSuccess("Cache has been successfully deleted for entry '${deliveryExecutionIdentifier}'.");
+                $report = Report::createSuccess(
+                    "Cache has been successfully deleted for entry '${deliveryExecutionIdentifier}'."
+                );
             } else {
                 throw new \RuntimeException("No cache has been deleted for entry '${deliveryExecutionIdentifier}'.");
             }

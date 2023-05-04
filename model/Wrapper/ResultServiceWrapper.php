@@ -17,10 +17,9 @@ use oat\taoOutcomeUi\model\ResultsService;
 
 class ResultServiceWrapper extends ConfigurableService
 {
+    public const SERVICE_ID  = 'taoOutcomeUi/resultService';
 
-    const SERVICE_ID  = 'taoOutcomeUi/resultService';
-
-    const RESULT_COLUMNS_CHUNK_SIZE_OPTION = 'resultColumnsChunkSize';
+    public const RESULT_COLUMNS_CHUNK_SIZE_OPTION = 'resultColumnsChunkSize';
     /**
      * @var ResultsService
      */
@@ -37,7 +36,8 @@ class ResultServiceWrapper extends ConfigurableService
 
     public static function deleteResultCache(DeliveryExecutionState $event)
     {
-        // if the delivery execution has been re-activated, we have to delete the result cache already existing for this execution
+        // if the delivery execution has been re-activated, we have to delete the result cache already existing for this
+        // execution
         if ($event->getPreviousState() == DeliveryExecutionInterface::STATE_FINISHIED) {
             /** @var ResultsService $resultService */
             $resultService = ServiceManager::getServiceManager()->get(self::SERVICE_ID)->getService();

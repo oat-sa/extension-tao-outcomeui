@@ -118,7 +118,9 @@ class ResponseVariableFormatterTest extends TestCase
                             'epoch' => '0.12410600 1666713760',
                             'type' => 'responseVariable',
                             'correctResponse' => false,
-                            'candidateResponse' => 'eyJyZWNvcmQiOlt7Im5hbWUiOiJsaW5lVHlwZXMiLCJsaXN0Ijp7InN0cmluZyI6WyJjbG9zZWQtb3BlbiIsIm9wZW4tYXJyb3ciXX19LHsibmFtZSI6InZhbHVlcyIsImJhc2UiOnsic3RyaW5nIjoiW1swLDFdLFswLG51bGxdXSJ9fV19',
+                            'candidateResponse' => 'eyJyZWNvcmQiOlt7Im5hbWUiOiJsaW5lVHlwZXMiLCJsaXN0Ijp7InN0cmluZyI6WyJ'
+                                . 'jbG9zZWQtb3BlbiIsIm9wZW4tYXJyb3ciXX19LHsibmFtZSI6InZhbHVlcyIsImJhc2UiOnsic3RyaW5nIjo'
+                                . 'iW1swLDFdLFswLG51bGxdXSJ9fV19',
                         ])
                     ],
                 ],
@@ -276,7 +278,10 @@ class ResponseVariableFormatterTest extends TestCase
         $var = new ResponseVariable();
         $var->setBaseType('string');
         $var->setCardinality('single');
-        $value = " Pablo Ruiz y Picasso, also known as Pablo Picasso (Spanish: [ˈpaβlo piˈkaso]; 25 October 1881 – 8 April 1973), was a Spanish painter, sculptor, printmaker, ceramicist, stage designer, poet and playwright who spent most of his adult life in France. As one of the greatest and most influential artists of the 20th<br /> ";
+        $value = " Pablo Ruiz y Picasso, also known as Pablo Picasso (Spanish: [ˈpaβlo piˈkaso]; 25 October 1881 – 8 "
+            . "April 1973), was a Spanish painter, sculptor, printmaker, ceramicist, stage designer, poet and "
+            . "playwright who spent most of his adult life in France. As one of the greatest and most influential "
+            . "artists of the 20th<br /> ";
         $var->setValue($value);
 
         $expected = ['base' => ['string' => $value]];
@@ -315,7 +320,28 @@ class ResponseVariableFormatterTest extends TestCase
         $var->setCardinality('multiple');
         $var->setValue('[choice_1 choice_3; choice_2 choice_4; choice_1 choice_5; choice_2 choice_6]');
 
-        $expected = ['list' => ['pair' => [['choice_1', 'choice_3'], ['choice_2', 'choice_4'], ['choice_1', 'choice_5'], ['choice_2', 'choice_6']]]];
+        $expected = [
+            'list' => [
+                'pair' => [
+                    [
+                        'choice_1',
+                        'choice_3',
+                    ],
+                    [
+                        'choice_2',
+                        'choice_4',
+                    ],
+                    [
+                        'choice_1',
+                        'choice_5',
+                    ],
+                    [
+                        'choice_2',
+                        'choice_6',
+                    ],
+                ],
+            ],
+        ];
 
         $this->assertEquals($expected, ResponseVariableFormatter::formatVariableToPci($var));
     }
