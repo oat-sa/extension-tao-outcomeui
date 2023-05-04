@@ -1,0 +1,29 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tao-3x\n"
+"PO-Revision-Date: 2023-04-21 15:46\n"
+"Last-Translator: TAO Translation Team <translation@tao.lu>\n"
+"MIME-Version: 1.0\n"
+"Language: pt\n"
+"sourceLanguage: en-US\n"
+"targetLanguage: en-US\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tao-3x\n"
+"X-Crowdin-Project-ID: 582145\n"
+"X-Crowdin-Language: pt-BR\n"
+"X-Crowdin-File: /taoOutcomeUi/locales/en-US/reviewerRole.rdf.po\n"
+"X-Crowdin-File-ID: 1599\n"
+"Language-Team: Portuguese, Brazilian\n"
+
+# http://www.tao.lu/Ontologies/TAOResult.rdf#TaoReviewerRole
+msgctxt "http://www.w3.org/2000/01/rdf-schema#label"
+msgid "Reviewer Role"
+msgstr "Papel do Revisor"
+
+# http://www.tao.lu/Ontologies/TAOResult.rdf#TaoReviewerRole
+msgctxt "http://www.w3.org/2000/01/rdf-schema#comment"
+msgid "Allow a reviewer Role to fetch item content and delivery results"
+msgstr "Permitir um papel de revisor para buscar o conteúdo do item e enviar resultados"
+
