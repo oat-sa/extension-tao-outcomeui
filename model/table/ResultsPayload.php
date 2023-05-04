@@ -33,8 +33,6 @@ use oat\taoOutcomeUi\model\ResultsService;
  */
 class ResultsPayload implements DataTablePayloadInterface
 {
-
-
     private $request;
 
     /**

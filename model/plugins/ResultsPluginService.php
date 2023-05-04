@@ -29,7 +29,7 @@ use oat\tao\model\plugins\AbstractPluginService;
  */
 class ResultsPluginService extends AbstractPluginService
 {
-    const SERVICE_ID = 'taoOutcomeUi/ResultsListPlugins';
+    public const SERVICE_ID = 'taoOutcomeUi/ResultsListPlugins';
 
     /**
      * TestPluginService constructor.

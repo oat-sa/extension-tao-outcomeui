@@ -102,11 +102,22 @@ class Updater extends \common_ext_ExtensionUpdater
         $this->skip('4.14.0', '5.2.2');
 
         if ($this->isVersion('5.2.2')) {
-            $this->getServiceManager()->register(ResultCustomFieldsService::SERVICE_ID, new ResultCustomFieldsService());
+            $this
+                ->getServiceManager()
+                ->register(
+                    ResultCustomFieldsService::SERVICE_ID,
+                    new ResultCustomFieldsService()
+                );
             $this->getServiceManager()->register(ResultsWatcher::SERVICE_ID, new ResultsWatcher());
             /** @var EventManager $eventManager */
             $eventManager = $this->getServiceManager()->get(EventManager::SERVICE_ID);
-            $eventManager->attach(DeliveryExecutionCreated::class, [ResultsWatcher::SERVICE_ID, 'catchCreatedDeliveryExecutionEvent']);
+            $eventManager->attach(
+                DeliveryExecutionCreated::class,
+                [
+                    ResultsWatcher::SERVICE_ID,
+                    'catchCreatedDeliveryExecutionEvent',
+                ]
+            );
             $this->getServiceManager()->register(EventManager::SERVICE_ID, $eventManager);
 
             $this->setVersion('5.3.1');
@@ -149,14 +160,62 @@ class Updater extends \common_ext_ExtensionUpdater
 
         if ($this->isVersion('5.11.3')) {
             OntologyUpdater::syncModels();
-            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, DeliveryMgmt::class . '@getOntologyData'));
-            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@index'));
-            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@getResults'));
-            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@viewResult'));
-            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@downloadXML'));
-            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@getFile'));
-            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@getResultsListPlugin'));
-            AclProxy::applyRule(new AccessRule(AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@export'));
+            AclProxy::applyRule(
+                new AccessRule(
+                    AccessRule::GRANT,
+                    Reviewer::REVIEWER_ROLE,
+                    DeliveryMgmt::class . '@getOntologyData'
+                )
+            );
+            AclProxy::applyRule(
+                new AccessRule(
+                    AccessRule::GRANT,
+                    Reviewer::REVIEWER_ROLE,
+                    Results::class . '@index'
+                )
+            );
+            AclProxy::applyRule(
+                new AccessRule(
+                    AccessRule::GRANT,
+                    Reviewer::REVIEWER_ROLE,
+                    Results::class . '@getResults'
+                )
+            );
+            AclProxy::applyRule(
+                new AccessRule(
+                    AccessRule::GRANT,
+                    Reviewer::REVIEWER_ROLE,
+                    Results::class . '@viewResult'
+                )
+            );
+            AclProxy::applyRule(
+                new AccessRule(
+                    AccessRule::GRANT,
+                    Reviewer::REVIEWER_ROLE,
+                    Results::class . '@downloadXML'
+                )
+            );
+            AclProxy::applyRule(
+                new AccessRule(
+                    AccessRule::GRANT,
+                    Reviewer::REVIEWER_ROLE,
+                    Results::class . '@getFile'
+                )
+            );
+            AclProxy::applyRule(
+                new AccessRule(
+                    AccessRule::GRANT,
+                    Reviewer::REVIEWER_ROLE,
+                    Results::class . '@getResultsListPlugin'
+                )
+            );
+            AclProxy::applyRule(
+                new AccessRule(
+                    AccessRule::GRANT,
+                    Reviewer::REVIEWER_ROLE,
+                    Results::class . '@export'
+                )
+            );
             $this->setVersion('5.12.0');
         }
 
@@ -184,7 +243,7 @@ class Updater extends \common_ext_ExtensionUpdater
         }
 
         $this->skip('7.5.0', '9.1.1');
-        
+
         //Updater files are deprecated. Please use migrations.
         //See: https://github.com/oat-sa/generis/wiki/Tao-Update-Process
 

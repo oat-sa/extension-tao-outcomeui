@@ -22,11 +22,11 @@
 
 namespace oat\taoOutcomeUi\model\table;
 
-use \core_kernel_classes_Resource;
+use core_kernel_classes_Resource;
 use oat\oatbox\service\ServiceManager;
 use oat\taoDelivery\model\execution\ServiceProxy;
-use \tao_models_classes_table_Column;
-use \tao_models_classes_table_DataProvider;
+use tao_models_classes_table_Column;
+use tao_models_classes_table_DataProvider;
 
 /**
  * Short description of class
@@ -36,11 +36,10 @@ use \tao_models_classes_table_DataProvider;
  */
 class DeliveryExecutionDataProvider implements tao_models_classes_table_DataProvider
 {
-
-    const PROP_STARTED_AT = 'started_at';
-    const PROP_FINISHED_AT = 'finished_at';
-    const PROP_DELIVERY_EXECUTION_ID = 'delivery_execution_id';
-    const PROP_USER_ID = 'user_id';
+    public const PROP_STARTED_AT = 'started_at';
+    public const PROP_FINISHED_AT = 'finished_at';
+    public const PROP_DELIVERY_EXECUTION_ID = 'delivery_execution_id';
+    public const PROP_USER_ID = 'user_id';
 
     /**
      * @var array

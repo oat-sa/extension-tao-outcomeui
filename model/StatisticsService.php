@@ -15,16 +15,18 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
  *
- * Copyright (c) 2002-2008 (original work) Public Research Centre Henri Tudor & University of Luxembourg (under the project TAO & TAO2);
- *               2008-2010 (update and modification) Deutsche Institut für Internationale Pädagogische Forschung (under the project TAO-TRANSFER);
- *               2009-2012 (update and modification) Public Research Centre Henri Tudor (under the project TAO-SUSTAIN & TAO-DEV);
- *
+ * Copyright (c) 2002-2008 (original work) Public Research Centre Henri Tudor & University of Luxembourg
+ *                         (under the project TAO & TAO2);
+ *               2008-2010 (update and modification) Deutsche Institut für Internationale Pädagogische Forschung
+ *                         (under the project TAO-TRANSFER);
+ *               2009-2012 (update and modification) Public Research Centre Henri Tudor
+ *                         (under the project TAO-SUSTAIN & TAO-DEV);
  */
 
 namespace oat\taoOutcomeUi\model;
 
-use \Exception;
-use \common_Exception;
+use Exception;
+use common_Exception;
 use oat\taoDelivery\model\execution\ServiceProxy;
 
 /**
@@ -52,17 +54,20 @@ class StatisticsService extends ResultsService
             "nbExecutions" => 0, // Number of collected executions of the delivery
             "nbMaxExpectedExecutions" => 0, // Number of Test asturias albenizTasturias albenizakers
             "nbMaxExecutions" => 0, // Number of Executions tokens granted
-            "statisticsPerVariable" => [], // an array containing variables as keys, collected and computed data ["statisticsPerTest"]=>array()
+            // an array containing variables as keys, collected and computed data ["statisticsPerTest"]=>array()
+            "statisticsPerVariable" => [],
             "statistics" => []
         ];
-        
+
         $deliveryResults = $this->getImplementation()->getAllTestTakerIds();
         if (count($deliveryResults) == 0) {
-            throw new common_Exception(__('The class you have selected contains no results to be analysed, please select a different class'));
+            throw new common_Exception(
+                __('The class you have selected contains no results to be analysed, please select a different class')
+            );
         }
         $deliveryDataSet["nbExecutions"] = count($deliveryResults);
         $statisticsGroupedPerVariable = [];
-        
+
         $statisticsGrouped = [
             "sum" => 0,
             "#" => 0
@@ -77,7 +82,7 @@ class StatisticsService extends ResultsService
                 $testTakerIdentifier = $testTaker->getUri();
                 $testTakerLabel = $testTaker->getLabel();
             }
-            
+
             $statisticsGrouped["distinctTestTaker"][$testTakerIdentifier] = $testTakerLabel;
             $scoreVariables = $this->getVariables($de);
             try {
@@ -86,12 +91,12 @@ class StatisticsService extends ResultsService
             } catch (Exception $e) {
                 $deliveryDataSet["deliveries"]["undefined"] = "Unknown Delivery";
             }
-            
+
             foreach ($scoreVariables as $variable) {
                 $variableData = (array)(array_shift($variable));
                 $activityIdentifier = "";
                 $activityNaturalId = "";
-                
+
                 if (isset($variableData["item"])) {
                     $item = new \core_kernel_classes_Resource($variableData["item"]);
                     $activityIdentifier = $item->getUri();
@@ -104,12 +109,14 @@ class StatisticsService extends ResultsService
                         "#" => 0
                     ];
                 }
-                
-                // we should parametrize if we consider multiple executions of the same test taker or not, here all executions are considered
+
+                // we should parametrize if we consider multiple executions of the same test taker or not, here all
+                // executions are considered
                 $statisticsGroupedPerVariable[$variableIdentifier]["data"][] = $variableData["variable"]->getValue();
                 $statisticsGroupedPerVariable[$variableIdentifier]["sum"] += $variableData["variable"]->getValue();
                 $statisticsGroupedPerVariable[$variableIdentifier]["#"] += 1;
-                $statisticsGroupedPerVariable[$variableIdentifier]["naturalid"] = $activityNaturalId . " (" . $variableData["variable"]->getIdentifier() . ")";
+                $statisticsGroupedPerVariable[$variableIdentifier]["naturalid"] = $activityNaturalId . " ("
+                    . $variableData["variable"]->getIdentifier() . ")";
                 $statisticsGrouped["data"][] = $variableData["variable"]->getValue();
                 $statisticsGrouped["sum"] += $variableData["variable"]->getValue();
                 $statisticsGrouped["#"] += 1;
@@ -125,16 +132,21 @@ class StatisticsService extends ResultsService
         foreach ($statisticsGroupedPerVariable as $variableIdentifier => $data) {
             ksort($statisticsGroupedPerVariable[$variableIdentifier]["data"]);
             // compute the total populationa verage score for this variable
+            // phpcs:disable Generic.Files.LineLength
             $statisticsGroupedPerVariable[$variableIdentifier]["avg"] = $statisticsGroupedPerVariable[$variableIdentifier]["sum"] / $statisticsGroupedPerVariable[$variableIdentifier]["#"];
-            $statisticsGroupedPerVariable[$variableIdentifier] = $this->computeQuantiles($statisticsGroupedPerVariable[$variableIdentifier], 10);
+            // phpcs:enable Generic.Files.LineLength
+            $statisticsGroupedPerVariable[$variableIdentifier] = $this->computeQuantiles(
+                $statisticsGroupedPerVariable[$variableIdentifier],
+                10
+            );
         }
-        
+
         ksort($statisticsGrouped["data"]);
         natsort($statisticsGrouped["distinctTestTaker"]);
-        
+
         $deliveryDataSet["statistics"] = $statisticsGrouped;
         $deliveryDataSet["statisticsPerVariable"] = $statisticsGroupedPerVariable;
-        
+
         return $deliveryDataSet;
     }
     /**
@@ -146,31 +158,27 @@ class StatisticsService extends ResultsService
      */
     protected function computeQuantiles($statisticsGrouped, $split = 10)
     {
-        //if ($statisticsGrouped["#"]< $split) {throw new common_Exception(__('The number of observations is too low').' #'.$statisticsGrouped["#"].'/'.$split);}
-        //in case the number of observations is below the quantile size we lower it.
-        //$split = min(array($split,$statisticsGrouped["#"]));
-        
         $slotSize = $statisticsGrouped["#"] / $split; //number of observations per slot
         sort($statisticsGrouped["data"]);
-            //sum all values for the slotsize
-            $slot = 0 ;
-            $i = 1;
+        //sum all values for the slotsize
+        $slot = 0 ;
+        $i = 1;
         foreach ($statisticsGrouped["data"] as $key => $value) {
             if (($i) > $slotSize && (!($slot + 1 == $split))) {
                 $slot++;
                 $i = 1;
             }
             if (!(isset($statisticsGrouped["splitData"][$slot]))) {
-                        $statisticsGrouped["splitData"][$slot] = ["sum" => 0, "avg" => 0, "#" => 0];
+                $statisticsGrouped["splitData"][$slot] = ["sum" => 0, "avg" => 0, "#" => 0];
             }
-                $statisticsGrouped["splitData"][$slot]["sum"] += $value;
-                            $statisticsGrouped["splitData"][$slot]["#"] ++;
-                            $i++;
+            $statisticsGrouped["splitData"][$slot]["sum"] += $value;
+            $statisticsGrouped["splitData"][$slot]["#"] ++;
+            $i++;
         }
-                        //compute the average for each slot
+        //compute the average for each slot
         foreach ($statisticsGrouped["splitData"] as $slot => $struct) {
-                $statisticsGrouped["splitData"][$slot]["avg"] =
-                $statisticsGrouped["splitData"][$slot]["sum"] /  $statisticsGrouped["splitData"][$slot]["#"];
+            $statisticsGrouped["splitData"][$slot]["avg"] =
+            $statisticsGrouped["splitData"][$slot]["sum"] /  $statisticsGrouped["splitData"][$slot]["#"];
         }
         return $statisticsGrouped;
     }

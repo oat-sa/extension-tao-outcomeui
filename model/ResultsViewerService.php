@@ -25,14 +25,13 @@
 
 namespace oat\taoOutcomeUi\model;
 
-
 use oat\oatbox\service\ConfigurableService;
 
 class ResultsViewerService extends ConfigurableService
 {
-    const SERVICE_ID = 'taoOutcomeUi/resultsViewer';
-    
-    const OPTION_DEFAULT_ITEM_TYPE = 'defaultItemType';
+    public const SERVICE_ID = 'taoOutcomeUi/resultsViewer';
+
+    public const OPTION_DEFAULT_ITEM_TYPE = 'defaultItemType';
 
     /**
      * Sets the default item type the viewer should manage

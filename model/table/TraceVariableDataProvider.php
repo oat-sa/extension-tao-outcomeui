@@ -29,7 +29,11 @@ class TraceVariableDataProvider implements tao_models_classes_table_DataProvider
                     // cache the variable data
                     /** @var \taoResultServer_models_classes_Variable $varData */
                     $varData = $var[0]->variable;
-                    if (!$varData instanceof \taoResultServer_models_classes_TraceVariable || $var[0]->callIdItem !== null) {
+
+                    if (
+                        !$varData instanceof \taoResultServer_models_classes_TraceVariable
+                        || $var[0]->callIdItem !== null
+                    ) {
                         continue;
                     }
 
@@ -39,7 +43,11 @@ class TraceVariableDataProvider implements tao_models_classes_table_DataProvider
 
                     $readableTime = "";
                     if ($epoch != "") {
-                        $readableTime = "@" . tao_helpers_Date::displayeDate(tao_helpers_Date::getTimeStamp($epoch), tao_helpers_Date::FORMAT_VERBOSE);
+                        $displayDate = tao_helpers_Date::displayeDate(
+                            tao_helpers_Date::getTimeStamp($epoch),
+                            tao_helpers_Date::FORMAT_VERBOSE
+                        );
+                        $readableTime = "@" . $displayDate;
                     }
 
                     $this->cache[$result][(string) $epoch] = [

@@ -80,14 +80,19 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
      * @param DeliveryResultsExporterFactoryInterface $deliveryResultExporterFactory
      * @throws \common_exception_NotFound
      */
-    public function __construct($deliveryClass, ResultsService $resultsService, DeliveryResultsExporterFactoryInterface $deliveryResultExporterFactory)
-    {
+    public function __construct(
+        $deliveryClass,
+        ResultsService $resultsService,
+        DeliveryResultsExporterFactoryInterface $deliveryResultExporterFactory
+    ) {
         $this->deliveryClass = $this->getClass($deliveryClass);
 
         $this->deliveryResultExporterFactory = $deliveryResultExporterFactory;
 
         if (!$this->deliveryClass->exists()) {
-            throw new \common_exception_NotFound('Results Exporter: delivery class "' . $this->deliveryClass->getUri() . '" does not exist.');
+            throw new \common_exception_NotFound(
+                'Results Exporter: delivery class "' . $this->deliveryClass->getUri() . '" does not exist.'
+            );
         }
 
         $this->resultsService = $resultsService;
@@ -134,7 +139,9 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
             ResultsService::VARIABLES_FILTER_LAST_SUBMITTED,
         ];
         if (!in_array($variableToExport, $allowedFilters)) {
-            throw new \InvalidArgumentException('Results Exporter: wrong submitted variable "' . $variableToExport . '"');
+            throw new \InvalidArgumentException(
+                'Results Exporter: wrong submitted variable "' . $variableToExport . '"'
+            );
         }
 
         $this->variableToExport = $variableToExport;
@@ -279,7 +286,8 @@ class MultipleDeliveriesResultsExporter implements ResultsExporterInterface
         if ($subClasses = $deliveryClass->getSubClasses(false)) {
             /** @var \core_kernel_classes_Class $subClass */
             foreach ($subClasses as $subClass) {
-                $newDestination = $destination . DIRECTORY_SEPARATOR . \tao_helpers_Display::textCleaner($subClass->getLabel(), '*');
+                $newDestination = $destination . DIRECTORY_SEPARATOR
+                    . \tao_helpers_Display::textCleaner($subClass->getLabel(), '*');
                 mkdir($newDestination);
                 $this->exportIntoFolder($subClass, $newDestination);
             }

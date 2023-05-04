@@ -28,8 +28,8 @@ namespace oat\taoOutcomeUi\model\table;
  */
 class ContextTypePropertyColumn extends \tao_models_classes_table_PropertyColumn
 {
-    const CONTEXT_TYPE_TEST_TAKER = 'test_taker';
-    const CONTEXT_TYPE_DELIVERY = 'delivery';
+    public const CONTEXT_TYPE_TEST_TAKER = 'test_taker';
+    public const CONTEXT_TYPE_DELIVERY = 'delivery';
 
     public $contextType;
 
