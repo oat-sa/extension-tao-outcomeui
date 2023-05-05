@@ -1,0 +1,247 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: tao-3x\n"
+"PO-Revision-Date: 2023-04-21 15:46\n"
+"Last-Translator: TAO Translation Team <translation@tao.lu>\n"
+"MIME-Version: 1.0\n"
+"Language: pt\n"
+"sourceLanguage: en-US\n"
+"targetLanguage: en-US\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-Basepath: ../../\n"
+"X-Poedit-KeywordsList: __\n"
+"X-Poedit-SearchPath-0: .\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Crowdin-Project: tao-3x\n"
+"X-Crowdin-Project-ID: 582145\n"
+"X-Crowdin-Language: pt-BR\n"
+"X-Crowdin-File: /taoOutcomeUi/locales/en-US/messages.po\n"
+"X-Crowdin-File-ID: 1595\n"
+"Language-Team: Portuguese, Brazilian\n"
+
+#, tao-public
+msgid " "
+msgstr ""
+
+msgid "Add All grades"
+msgstr "Adicionar Todas as Notas"
+
+msgid "Add All responses"
+msgstr "Adicionar todas as respostas"
+
+msgid "Add Delivery"
+msgstr "Adicionar entrega"
+
+msgid "Add Delivery Execution"
+msgstr "Adicionar execução de entrega"
+
+msgid "Add Test Taker"
+msgstr "Adicionar Taker de Teste"
+
+msgid "Adding/Updating search index for %s"
+msgstr "Adicionando/Atualizando índice de pesquisa para %s"
+
+msgid "All collected variables"
+msgstr "Todas as variáveis coletadas"
+
+msgid "Anonymise"
+msgstr "Anonymise"
+
+msgid "Class"
+msgstr "Classe:"
+
+msgid "CSV results export for delivery \"%s"
+msgstr "Exportação CSV de resultados para entrega\"%s"
+
+msgid "%s results export for delivery class \"%s"
+msgstr "%s resultados da exportação para a classe de entrega \"%s"
+
+msgid "Delete"
+msgstr "excluir"
+
+msgid "Delivery"
+msgstr "Entrega"
+
+msgid "Delivery Execution"
+msgstr "Execução de Entrega"
+
+msgid "Download"
+msgstr "BAIXAR"
+
+msgid "Download result"
+msgstr "Baixar resultado"
+
+msgid "Email:"
+msgstr "Email:"
+
+msgid "End Delivery Execution"
+msgstr "Finalizar execução de entrega"
+
+msgid "Error"
+msgstr "ERRO"
+
+#, tao-public
+msgid "Export CSV"
+msgstr "Exportar como CSV"
+
+msgid "Export CSV File"
+msgstr "Exportar Arquivo CSV"
+
+msgid "Export SQL File"
+msgstr "Exportar Arquivo SQL"
+
+#, tao-public
+msgid "Export Table"
+msgstr "Exportar tabela"
+
+msgid "Filter"
+msgstr "filtro"
+
+msgid "Filters"
+msgstr "Filtros"
+
+msgid "First Name:"
+msgstr "Primeiro nome:"
+
+msgid "First submitted variables only"
+msgstr "Apenas as primeiras variáveis enviadas"
+
+msgid "Grades"
+msgstr "Notas"
+
+msgid "Label"
+msgstr "Descrição"
+
+msgid "Label:"
+msgstr "Etiqueta:"
+
+msgid "Last Name:"
+msgstr "Último Nome:"
+
+msgid "Last submitted variables only"
+msgstr "Últimas variáveis enviadas apenas"
+
+msgid "Login:"
+msgstr "Login:"
+
+#, tao-public
+msgid "Manage Results"
+msgstr "Gerenciar Resultados"
+
+msgid "No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here."
+msgstr "Nenhum teste foi feito ainda. Assim que um testador fizer um teste seus resultados serão exibidos aqui."
+
+msgid "Nothing to export for \"%s"
+msgstr "Nada para exportar para \"%s"
+
+msgid "Please confirm deletion"
+msgstr "Confirme a exclusão"
+
+msgid "Preview"
+msgstr "Pré-visualizar"
+
+msgid "Remove All grades"
+msgstr "Remover todas as notas"
+
+msgid "Remove All responses"
+msgstr "Remover todas as respostas"
+
+msgid "Remove Delivery"
+msgstr "Remover entrega"
+
+msgid "Remove Delivery Execution"
+msgstr "Remover execução de entrega"
+
+msgid "Responses"
+msgstr "respostas"
+
+msgid "Result has been deleted"
+msgstr "O resultado foi excluído"
+
+#, tao-public
+msgid "Results"
+msgstr "Resultados"
+
+#, tao-public
+msgid "Results library"
+msgstr "Biblioteca de resultados"
+
+msgid "Results monitoring"
+msgstr "Monitoramento de resultados"
+
+#, tao-public
+msgid "Results Monitoring"
+msgstr "Monitoramento de Resultados"
+
+msgid "Results of \"%s\" successfully exported"
+msgstr "Resultados de \"%s\" exportados com sucesso"
+
+msgid "Results of \"%s\" successfully exported into \"%s"
+msgstr "Resultados de \"%s\" exportados com sucesso para \"%s"
+
+msgid "Review"
+msgstr "Avaliar"
+
+msgid "Search by delivery results"
+msgstr "Pesquisar por resultados de entrega"
+
+msgid "Search by results"
+msgstr "Pesquisar por resultados"
+
+msgid "Something went wrong..."
+msgstr "Algo deu errado..."
+
+msgid "Start Delivery Execution"
+msgstr "Iniciar execução de entrega"
+
+msgid "Start Time"
+msgstr "Horário de Início"
+
+msgid "Test Taker"
+msgstr "format@@0 Test Taker"
+
+msgid "Test taker"
+msgstr "Testar taker"
+
+msgid "Test Taker ID"
+msgstr "Testar ID do Taker"
+
+msgid "Test Variables"
+msgstr "Variáveis de teste"
+
+msgid "The class you have selected contains no results to be analysed, please select a different class"
+msgstr "A classe que você selecionou não contém resultados para serem analisados. Por favor, selecione uma classe diferente"
+
+msgid "The number of observations is too low"
+msgstr "O número de observações é muito baixo"
+
+msgid "The URL does not exist."
+msgstr "A URL não existe."
+
+msgid "There was a problem generating your report, please try again."
+msgstr "Houve um problema ao gerar o relatório, por favor, tente novamente."
+
+#, tao-public
+msgid "Tools"
+msgstr "Ferramentas"
+
+msgid "Traces"
+msgstr "Trilhas"
+
+msgid "unknown"
+msgstr "desconhecido"
+
+msgid "Variables"
+msgstr "Variáveis"
+
+msgid "View"
+msgstr "Visualizar"
+
+#, tao-public
+msgid "View and format the collected results."
+msgstr "Visualizar e formatar os resultados coletados."
+
+msgid "We are preparing your report, please wait..."
+msgstr "Estamos preparando o seu relatório, por favor aguarde..."
+
