@@ -1,9 +1,1 @@
-{
-	"version": 3,
-	"file": "resultTable.css",
-	"sources": [
-		"../scss/resultTable.scss"
-	],
-	"names": [],
-	"mappings": "AAAA,AAAA,aAAa,AAAC,CACZ,SAAS,CAAE,KAAK,CASjB,AAVD,AAGE,aAHW,CAGX,kBAAkB,AAAC,CACjB,OAAO,CAAE,gBAAgB,CACzB,UAAU,CAAE,OAAO,CACnB,MAAM,CAAE,cAAc,CACtB,SAAS,CAAE,KAAK,CAChB,aAAa,CAAE,IAAI,CACpB"
-}
+{"version":3,"sourceRoot":"","sources":["../scss/resultTable.scss"],"names":[],"mappings":"AAAA,cACE,gBAEA,iCACE,yBACA,mBACA,sBACA,gBACA","file":"resultTable.css"}
