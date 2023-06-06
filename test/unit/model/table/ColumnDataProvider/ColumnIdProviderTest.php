@@ -394,6 +394,21 @@ class ColumnIdProviderTest extends TestCase
         );
     }
 
+    public function testProvideFromColumnArrayForResponseColumn(): void
+    {
+        self::assertEquals(
+            'context_identifier_identifier',
+            $this->subject->provideFromColumnArray([
+                'contextId' => self::EXPECTED_CONTEXT_IDENTIFIER,
+                'contextLabel' => self::EXPECTED_LABEL,
+                'variableIdentifier' => self::EXPECTED_IDENTIFIER,
+                'columnType' => self::EXPECTED_COLUMN_TYPE,
+                'refId' => self::EXPECTED_REF_ID,
+                'type' => ResponseColumn::class
+            ])
+        );
+    }
+
     /**
      * @dataProvider provideColumnDataHash
      */
@@ -424,7 +439,6 @@ class ColumnIdProviderTest extends TestCase
     {
         return [
             [GradeColumn::class],
-            [ResponseColumn::class]
         ];
     }
 

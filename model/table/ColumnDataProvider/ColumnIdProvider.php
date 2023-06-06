@@ -25,6 +25,7 @@ namespace oat\taoOutcomeUi\model\table\ColumnDataProvider;
 use oat\taoOutcomeUi\model\ItemResultStrategy;
 use oat\taoOutcomeUi\model\table\ContextTypePropertyColumn;
 use oat\taoOutcomeUi\model\table\DeliveryExecutionColumn;
+use oat\taoOutcomeUi\model\table\ResponseColumn;
 use oat\taoOutcomeUi\model\table\TestCenterColumn;
 use oat\taoOutcomeUi\model\table\TraceVariableColumn;
 use oat\taoOutcomeUi\model\table\VariableColumn;
@@ -42,6 +43,8 @@ class ColumnIdProvider
     public function provide(tao_models_classes_table_Column $column): string
     {
         switch (true) {
+            case $column instanceof ResponseColumn:
+                return $column->getContextIdentifier() . '_' . $column->getIdentifier();
             case $column instanceof ContextTypePropertyColumn:
                 return $column->getProperty()->getUri() . '_' . $column->getContextType();
             case $column instanceof TestCenterColumn:
