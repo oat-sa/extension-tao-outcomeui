@@ -506,6 +506,7 @@ class ResultsServiceTest extends TestCase
             $delivery,
             $variableClass
         );
+
         self::assertCount($expectedCountForInstanceStrategy, $columns);
         $expectedIndex = 0;
         foreach ($columns as $index => $column) {
@@ -611,14 +612,14 @@ class ResultsServiceTest extends TestCase
                 taoResultServer_models_classes_ResponseVariable::class,
                 ResponseColumn::class,
                 3,
-                2,
+                3,
                 [
                     [(object)[
                         'callIdItem' => sprintf('%s.%s.0', self::EXPECTED_DE_URI, 'item-1'),
                         'item' => self::EXPECTED_ITEM_URI,
                         'test' => self::EXPECTED_TEST_URI,
                         'deliveryResultIdentifier' => self::EXPECTED_DE_URI,
-                        'variable' => $this->getResponseVariable()
+                        'variable' => $this->getResponseVariable('response value', 'response')
                     ]],
                     [(object)[
                         'callIdItem' => sprintf('%s.%s.0', self::EXPECTED_DE_URI, 'item-2'),
