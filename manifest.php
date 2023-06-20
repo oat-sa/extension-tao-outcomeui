@@ -25,7 +25,9 @@
  *
  */
 
+use oat\taoLti\models\classes\user\TaoLtiRoles;
 use oat\taoOutcomeUi\model\ContainerServiceProvider\ContainerServiceProvider;
+use oat\taoOutcomeUi\model\user\LimitedResultsManagerRole;
 use oat\taoOutcomeUi\scripts\install\RegisterEvent;
 use oat\taoOutcomeUi\scripts\install\RegisterTestPluginService;
 use oat\taoOutcomeUi\scripts\install\SetUpQueueTasks;
@@ -48,10 +50,11 @@ return [
             RegisterTestPluginService::class,
             SetUpQueueTasks::class,
             SetupSearchService::class,
-            RegisterEvent::class
+            RegisterEvent::class,
         ],
         'rdf' => [
             __DIR__ . '/install/ontology/reviewerRole.rdf',
+            __DIR__ . '/install/ontology/limitedResultMangerRole.rdf',
         ]
     ],
     'uninstall'      => [],
@@ -67,6 +70,21 @@ return [
         [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@getFile'],
         [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@getResultsListPlugin'],
         [AccessRule::GRANT, Reviewer::REVIEWER_ROLE, Results::class . '@export'],
+        [
+            AccessRule::GRANT,
+            LimitedResultsManagerRole::LIMITED_RESULTS_MANAGER_ROLE,
+            ['ext' => 'taoOutcomeUi', 'mod' => 'Results']
+        ],
+        [
+            AccessRule::GRANT,
+            LimitedResultsManagerRole::LIMITED_RESULTS_MANAGER_ROLE,
+            ['ext' => 'taoOutcomeUi', 'mod' => 'ResultTable']
+        ],
+        [
+            AccessRule::GRANT,
+            LimitedResultsManagerRole::LIMITED_RESULTS_MANAGER_ROLE,
+            ['ext' => 'taoDeliveryRdf', 'mod' => 'DeliveryMgmt']
+        ]
     ],
     'routes'         => [
         '/taoOutcomeUi' => 'oat\\taoOutcomeUi\\controller'
