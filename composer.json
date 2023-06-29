@@ -63,8 +63,7 @@
 		"oat-sa/extension-tao-delivery-rdf" : ">=14.0.0",
 		"oat-sa/extension-tao-delivery" : ">=15.0.0",
 		"oat-sa/extension-tao-test" : ">=15.0.0",
-		"oat-sa/extension-tao-testqti" : ">=41.0.0",
-		"oat-sa/extension-tao-testtaker" : ">=8.0.0"
+		"oat-sa/extension-tao-testqti" : ">=41.0.0"
 	},
     "autoload" : {
         "psr-4" : {
