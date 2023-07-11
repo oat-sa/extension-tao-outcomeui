@@ -31,7 +31,7 @@ class ResultsViewerService extends ConfigurableService
 {
     public const SERVICE_ID = 'taoOutcomeUi/resultsViewer';
 
-    public const OPTION_DEFAULT_ITEM_TYPE = 'defaultItemType';
+    public const OPTION_DEFAULT_ITEM_TYPE = 'qtiItem';
 
     /**
      * Sets the default item type the viewer should manage
