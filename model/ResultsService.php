@@ -344,6 +344,7 @@ class ResultsService extends OntologyClassService
      */
     public function getDeliveryItemType($resultIdentifier)
     {
+        /** @var ResultsViewerService $resultsViewerService */
         $resultsViewerService = $this->getServiceLocator()->get(ResultsViewerService::SERVICE_ID);
 
         return $resultsViewerService->getDeliveryItemType($resultIdentifier);
