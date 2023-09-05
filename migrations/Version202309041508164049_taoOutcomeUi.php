@@ -6,6 +6,7 @@ namespace oat\taoOutcomeUi\migrations;
 
 use Doctrine\DBAL\Schema\Schema;
 use oat\tao\scripts\tools\migrations\AbstractMigration;
+use oat\taoOutcomeUi\model\ResultsViewerService;
 use oat\taoQtiTest\models\DeliveryItemTypeService;
 
 final class Version202309041508164049_taoOutcomeUi extends AbstractMigration
@@ -17,24 +18,21 @@ final class Version202309041508164049_taoOutcomeUi extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        $previousConfigFilePath = realpath(__DIR__ . '/../../config/taoOutcomeUi/resultsViewer.conf.php');
-        if (!file_exists($previousConfigFilePath)) {
+        if (!$this->getServiceManager()->getContainer()->has(ResultsViewerService::SERVICE_ID)) {
             return;
         }
 
-        $configData = file_get_contents($previousConfigFilePath);
-        if(!$configData) {
-            return;
-        }
+        /** @var ResultsViewerService $service */
+        $service = $this->getServiceManager()->getContainer()->get(ResultsViewerService::SERVICE_ID);
+        $defaultItemType = $service->getDefaultItemType();
 
-        preg_match("~'defaultItemType' => '(.*?)'~", $configData, $matches);
-        if (!isset($matches[1])) {
+        if (!$defaultItemType) {
             return;
         }
 
         /** @var DeliveryItemTypeService $service */
         $service = $this->getServiceManager()->getContainer()->get(DeliveryItemTypeService::SERVICE_ID);
-        $service->setDefaultItemType($matches[1]);
+        $service->setDefaultItemType($defaultItemType);
         $this->getServiceManager()->register(DeliveryItemTypeService::SERVICE_ID, $service);
     }
 
@@ -43,3 +41,4 @@ final class Version202309041508164049_taoOutcomeUi extends AbstractMigration
         $this->throwIrreversibleMigrationException();
     }
 }
+
