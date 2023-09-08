@@ -56,6 +56,7 @@ use oat\taoOutcomeUi\model\table\TestCenterColumn;
 use oat\taoOutcomeUi\model\table\TraceVariableColumn;
 use oat\taoOutcomeUi\model\table\VariableColumn;
 use oat\taoOutcomeUi\model\Wrapper\ResultServiceWrapper;
+use oat\taoQtiTest\models\DeliveryItemTypeService;
 use oat\taoQtiTest\models\QtiTestCompilerIndex;
 use oat\taoResultServer\models\classes\NoResultStorage;
 use oat\taoResultServer\models\classes\NoResultStorageException;
@@ -344,9 +345,10 @@ class ResultsService extends OntologyClassService
      */
     public function getDeliveryItemType($resultIdentifier)
     {
-        $resultsViewerService = $this->getServiceLocator()->get(ResultsViewerService::SERVICE_ID);
+        /** @var DeliveryItemTypeService $deliveryItemTypeService */
+        $deliveryItemTypeService = $this->getServiceLocator()->get(DeliveryItemTypeService::SERVICE_ID);
 
-        return $resultsViewerService->getDeliveryItemType($resultIdentifier);
+        return $deliveryItemTypeService->getDeliveryItemType($resultIdentifier);
     }
 
     /**

@@ -21,6 +21,7 @@
 
 /**
  * @author Jean-Sébastien Conan <jean-sebastien@taotesting.com>
+ * @deprecated Use oat\taoQtiTest\models\DeliveryItemTypeService instead
  */
 
 namespace oat\taoOutcomeUi\model;
