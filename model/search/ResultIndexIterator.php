@@ -21,8 +21,8 @@
 namespace oat\taoOutcomeUi\model\search;
 
 use oat\tao\helpers\UserHelper;
+use oat\tao\model\search\index\DocumentBuilder\IndexDocumentBuilderInterface;
 use oat\tao\model\search\index\IndexDocument;
-use oat\tao\model\search\index\IndexService;
 use oat\taoDelivery\model\execution\DeliveryExecutionInterface;
 use oat\taoDelivery\model\execution\ServiceProxy;
 use oat\taoDelivery\model\execution\DeliveryExecution;
@@ -254,8 +254,12 @@ class ResultIndexIterator implements \Iterator
             'id' => $execution->getIdentifier(),
             'body' => $body
         ];
-        /** @var IndexService $indexService */
-        $indexService = $this->getServiceLocator()->get(IndexService::SERVICE_ID);
-        return $indexService->createDocumentFromArray($document);
+
+        return $this->getIndexDocumentBuilder()->createDocumentFromArray($document);
+    }
+
+    private function getIndexDocumentBuilder(): IndexDocumentBuilderInterface
+    {
+        return $this->getServiceLocator()->getContainer()->get(IndexDocumentBuilderInterface::class);
     }
 }
