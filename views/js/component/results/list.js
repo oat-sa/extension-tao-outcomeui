@@ -57,8 +57,8 @@ define([
         function pluginRun(method) {
             var execStack = [];
 
-            _.forEach(plugins, function (plugin) {
-                if (_.isFunction(plugin[method])) {
+            plugins.forEach(function (plugin) {
+                if (typeof plugin[method] === 'function') {
                     execStack.push(plugin[method]());
                 }
             });
@@ -69,10 +69,10 @@ define([
         if (!_.isPlainObject(config)) {
             throw new TypeError('The configuration is required');
         }
-        if (!_.isString(config.classUri) || !config.classUri) {
+        if (typeof config.classUri !== 'string' || !config.classUri) {
             throw new TypeError('The class URI is required');
         }
-        if (!_.isString(config.dataUrl) || !config.dataUrl) {
+        if (typeof config.dataUrl !== 'string' || !config.dataUrl) {
             throw new TypeError('The service URL is required');
         }
         if (!_.isPlainObject(config.model) && !_.isArray(config.model)) {
@@ -117,7 +117,7 @@ define([
                     };
                 }
 
-                if (_.isFunction(action)) {
+                if (typeof action === 'function') {
                     descriptor.action = action;
                 }
                 if (!descriptor.label) {
@@ -162,7 +162,7 @@ define([
                     'list': $('.list', this.$component)
                 });
 
-                _.forEach(pluginFactories, function (pluginFactory) {
+                pluginFactories.forEach(function (pluginFactory) {
                     var plugin = pluginFactory(self, areaBroker);
                     plugins[plugin.getName()] = plugin;
                 });

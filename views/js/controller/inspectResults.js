@@ -4,7 +4,6 @@
  */
 define([
     'jquery',
-    'lodash',
     'i18n',
     'module',
     'core/logger',
@@ -19,7 +18,6 @@ define([
     'ui/taskQueueButton/treeButton'
 ], function (
     $,
-    _,
     __,
     module,
     loggerFactory,
@@ -89,7 +87,7 @@ define([
 
             loadingBar.start();
 
-            _.forEach(config.plugins, function (plugin) {
+            config.plugins.forEach((plugin) => {
                 if (plugin && plugin.module) {
                     if (plugin.exclude) {
                         resultsPluginsLoader.remove(plugin.module);
@@ -129,7 +127,7 @@ define([
             }).render($('#results-csv-export'));
 
             binder.register('export_csv', function remove(actionContext) {
-                const data = _.pick(actionContext, ['uri', 'classUri', 'id']);
+                const data = (({ uri, classUri, id }) => ({ uri, classUri, id }))(actionContext);
                 const uniqueValue = data.uri || data.classUri || '';
                 taskButton
                     .setTaskConfig({
@@ -148,7 +146,7 @@ define([
                 }).render($('#results-sql-export'));
 
                 binder.register('export_sql', function remove(actionContext) {
-                    const data = _.pick(actionContext, ['uri', 'classUri', 'id']);
+                    const data = (({ uri, classUri, id }) => ({ uri, classUri, id }))(actionContext);
                     const uniqueValue = data.uri || data.classUri || '';
                     taskButtonExportSQL
                         .setTaskConfig({
@@ -160,7 +158,7 @@ define([
             }
 
             binder.register('open_url', function (actionContext) {
-                const data = _.pick(actionContext, ['uri', 'classUri', 'id']);
+                const data = (({ uri, classUri, id }) => ({ uri, classUri, id }))(actionContext);
 
                 request(this.url, data, 'POST')
                     .then(response => {

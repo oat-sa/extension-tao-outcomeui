@@ -121,11 +121,7 @@ define([
                 }).done(function (response) {
                     if (response && response.columns) {
                         if (action === 'remove') {
-                            columns = _.reject(columns, function (col) {
-                                return _.find(response.columns, function (resCol) {
-                                    return _.isEqual(col, resCol);
-                                });
-                            });
+                            columns = columns.filter(col => !response.columns.some(resCol => _.isEqual(col, resCol)));
                         } else {
                             if (typeof response.first !== 'undefined' && response.first === true) {
                                 columns = response.columns.concat(columns);
@@ -134,7 +130,7 @@ define([
                             }
                         }
                     }
-                    if (_.isFunction(done)) {
+                    if (typeof done === 'function') {
                         done();
                     }
                 }).always(function () {
@@ -150,10 +146,10 @@ define([
                 var model = [];
 
                 //set up model from columns
-                _.forEach(columns, function (col) {
+                columns.forEach(function (col) {
                     var colId = col.prop ? (col.prop + '_' + col.contextType) : (col.contextId + '_' + col.variableIdentifier);
-                    if(col.columnId){
-                        colId= col.columnId
+                    if (col.columnId) {
+                        colId = col.columnId;
                     }
                     model.push({
                         id: colId,
@@ -168,7 +164,7 @@ define([
                     .data('ui.datatable', null)
                     .off('load.datatable')
                     .on('load.datatable', function () {
-                        if (_.isFunction(done)) {
+                        if (typeof done === 'function') {
                             done();
                             done = '';
                         }
@@ -215,8 +211,8 @@ define([
                 var url = $elt.data('url');
                 e.preventDefault();
                 buildGrid(url, action, function () {
-                    _.forEach(groups[group], function ($btn) {
-                        $btn.toggleClass('hidden');
+                    groups[group].forEach(function ($btn) {
+                        $btn.classList.toggle('hidden');
                     });
                 });
             });
