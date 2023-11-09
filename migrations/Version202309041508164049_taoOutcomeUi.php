@@ -18,12 +18,12 @@ final class Version202309041508164049_taoOutcomeUi extends AbstractMigration
 
     public function up(Schema $schema): void
     {
-        if (!$this->getServiceManager()->getContainer()->has(ResultsViewerService::SERVICE_ID)) {
+        if (!$this->getServiceManager()->has(ResultsViewerService::SERVICE_ID)) {
             return;
         }
 
         /** @var ResultsViewerService $service */
-        $service = $this->getServiceManager()->getContainer()->get(ResultsViewerService::SERVICE_ID);
+        $service = $this->getServiceManager()->get(ResultsViewerService::SERVICE_ID);
         $defaultItemType = $service->getDefaultItemType();
 
         if (!$defaultItemType) {
@@ -31,7 +31,7 @@ final class Version202309041508164049_taoOutcomeUi extends AbstractMigration
         }
 
         /** @var DeliveryItemTypeService $service */
-        $service = $this->getServiceManager()->getContainer()->get(DeliveryItemTypeService::SERVICE_ID);
+        $service = $this->getServiceManager()->get(DeliveryItemTypeService::SERVICE_ID);
         $service->setDefaultItemType($defaultItemType);
         $this->getServiceManager()->register(DeliveryItemTypeService::SERVICE_ID, $service);
     }
