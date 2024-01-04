@@ -146,7 +146,7 @@ define([
                 var model = [];
 
                 //set up model from columns
-                columns.forEach(function (col) {
+                _.forEach(columns, function (col) {
                     var colId = col.prop ? (col.prop + '_' + col.contextType) : (col.contextId + '_' + col.variableIdentifier);
                     if (col.columnId) {
                         colId = col.columnId;

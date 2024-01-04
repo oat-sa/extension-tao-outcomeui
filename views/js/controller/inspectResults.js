@@ -4,6 +4,7 @@
  */
 define([
     'jquery',
+    'lodash',
     'i18n',
     'module',
     'core/logger',
@@ -18,6 +19,7 @@ define([
     'ui/taskQueueButton/treeButton'
 ], function (
     $,
+    _,
     __,
     module,
     loggerFactory,
@@ -87,7 +89,7 @@ define([
 
             loadingBar.start();
 
-            config.plugins.forEach((plugin) => {
+            _.forEach(config.plugins, function (plugin) {
                 if (plugin && plugin.module) {
                     if (plugin.exclude) {
                         resultsPluginsLoader.remove(plugin.module);
