@@ -211,8 +211,8 @@ define([
                 var url = $elt.data('url');
                 e.preventDefault();
                 buildGrid(url, action, function () {
-                    groups[group].forEach(function ($btn) {
-                        $btn.classList.toggle('hidden');
+                    _.forEach(groups[group], function ($btn) {
+                        $btn.toggleClass('hidden');
                     });
                 });
             });

@@ -57,7 +57,7 @@ define([
         function pluginRun(method) {
             var execStack = [];
 
-            plugins.forEach(function (plugin) {
+            _.forEach(plugins, function (plugin) {
                 if (typeof plugin[method] === 'function') {
                     execStack.push(plugin[method]());
                 }
@@ -162,7 +162,7 @@ define([
                     'list': $('.list', this.$component)
                 });
 
-                pluginFactories.forEach(function (pluginFactory) {
+                _.forEach(pluginFactories, function (pluginFactory) {
                     var plugin = pluginFactory(self, areaBroker);
                     plugins[plugin.getName()] = plugin;
                 });
