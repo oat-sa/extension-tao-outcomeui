@@ -19,9 +19,8 @@
  * @author Jean-Sébastien Conan <jean-sebastien@taotesting.com>
  */
 define([
-    'lodash',
     'ui/areaBroker'
-], function (_, areaBroker) {
+], function (areaBroker) {
     'use strict';
 
     var requireAreas = [
@@ -38,5 +37,5 @@ define([
      * @returns {broker} the broker
      * @throws {TypeError} without a valid container
      */
-    return _.partial(areaBroker, requireAreas);
+    return areaBroker.bind(null, requireAreas);
 });
