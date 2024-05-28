@@ -189,7 +189,9 @@ define([
                                 filter: self.config.searchable,
                                 labels: {
                                     filter: __('Search by delivery results')
-                                }
+                                },
+                                sortby: 'timestamp',
+                                sortorder: 'desc'
                             });
                     })
                     .catch(function (err) {
