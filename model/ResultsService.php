@@ -30,7 +30,6 @@ use common_exception_Error;
 use common_exception_NoContent;
 use common_Logger;
 use core_kernel_classes_Resource;
-use League\Flysystem\FileNotFoundException;
 use oat\generis\model\GenerisRdf;
 use oat\generis\model\OntologyRdfs;
 use oat\oatbox\service\ServiceManager;
@@ -1668,14 +1667,12 @@ class ResultsService extends OntologyClassService
      * @param string $testUri
      *
      * @return false|string
-     * @throws \FileNotFoundException
      * @throws common_Exception
      */
     private function loadTestMetadata(tao_models_classes_service_StorageDirectory $directory, $testUri)
     {
-        try {
-            $testMetadata = $this->loadTestMetadataFromFile($directory);
-        } catch (FileNotFoundException $e) {
+        $testMetadata = $this->loadTestMetadataFromFile($directory);
+        if ($testMetadata === false) {
             \common_Logger::d('Compiled test metadata file not found. Try to compile a new file.');
 
             $this->compileTestMetadata($directory, $testUri);
@@ -1704,7 +1701,6 @@ class ResultsService extends OntologyClassService
      * @param tao_models_classes_service_StorageDirectory $directory
      * @param $testUri
      *
-     * @throws \FileNotFoundException
      * @throws common_Exception
      */
     private function compileTestMetadata(tao_models_classes_service_StorageDirectory $directory, $testUri)
