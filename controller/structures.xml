@@ -21,10 +21,10 @@
                     <action id="results-csv-export" name="Export CSV" url="/taoOutcomeUi/Results/export" group="tree" context="resource" binding="export_csv" weight="8">
                         <icon id="icon-export"/>
                     </action>
-                    <action id="results-class-index" name="Results" url="/taoOutcomeUi/Results/index" group="content" context="class" weight="10">
+                    <action id="results-class-index" name="Results" url="/taoOutcomeUi/Results/index" group="content" context="class" weight="1">
                         <icon id="icon-result-small"/>
                     </action>
-                    <action id="results-index" name="Results" url="/taoOutcomeUi/Results/index" group="content" context="instance" weight="10">
+                    <action id="results-index" name="Results" url="/taoOutcomeUi/Results/index" group="content" context="instance" weight="1">
                         <icon id="icon-result-small"/>
                     </action>
                     <action id="results-export" name="Export Table" url="/taoOutcomeUi/ResultTable/index" group="tree" context="resource" weight="7">
