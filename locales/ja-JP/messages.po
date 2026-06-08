@@ -1,5 +1,5 @@
 msgid ""
-msgstr ""
+msgstr " {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 "Project-Id-Version: TAO 2022.09\n"
 "PO-Revision-Date: 2022-08-12T16:45:57\n"
 "Last-Translator: TAO Translation Team <translation@tao.lu>\n"
@@ -14,244 +14,244 @@ msgstr ""
 "X-Poedit-SearchPath-0: .\n"
 
 msgid "%s results export for delivery \"%s"
-msgstr "デリバリ \"%sの結果 %s をエクスポート"
+msgstr "デリバリ \ {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "%s results export for delivery class \"%s"
-msgstr "デリバリクラス \"%sの結果 %s をエクスポート"
+msgstr "デリバリクラス \ {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Add All grades"
-msgstr "評点 追加"
+msgstr "評点 追加 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Add All responses"
-msgstr "解答 追加"
+msgstr "解答 追加 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Add all trace variables"
-msgstr "トレース情報追加"
+msgstr "トレース情報追加 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Add Delivery"
-msgstr "デリバリ情報 追加"
+msgstr "デリバリ情報 追加 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Add Delivery Execution"
-msgstr "デリバリ実施情報 追加"
+msgstr "デリバリ実施情報 追加 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Add Test Taker"
-msgstr "受験者情報 追加"
+msgstr "受験者情報 追加 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Adding/Updating search index for %s"
-msgstr "%sの検索インデックスの追加/更新"
+msgstr "%sの検索インデックスの追加/更新 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "All collected variables"
-msgstr "すべての情報"
+msgstr "すべての情報 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Anonymise"
-msgstr "匿名化"
+msgstr "匿名化 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Class"
-msgstr "クラス"
+msgstr "クラス {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Delete"
-msgstr "削除"
+msgstr "削除 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Delivery"
-msgstr "デリバリ"
+msgstr "デリバリ {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Delivery Execution"
-msgstr "デリバリ実施"
+msgstr "デリバリ実施 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Download"
-msgstr "ダウンロード"
+msgstr "ダウンロード {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Download file"
-msgstr "ダウンロードファイル"
+msgstr "ダウンロードファイル {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Download result"
-msgstr "結果ダウンロード"
+msgstr "結果ダウンロード {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Email:"
-msgstr "Eメール:"
+msgstr "Eメール: {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "End Delivery Execution"
-msgstr "デリバリ実施の終了日時"
+msgstr "デリバリ実施の終了日時 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Error"
-msgstr "エラー"
+msgstr "エラー {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 #, tao-public
 msgid "Export CSV"
-msgstr "CSVエクスポート"
+msgstr "CSVエクスポート {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Export CSV File"
-msgstr "CSVエクスポート"
+msgstr "CSVエクスポート {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Export Results"
-msgstr "結果出力"
+msgstr "結果出力 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Export SQL"
-msgstr "SQL出力"
+msgstr "SQL出力 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Export SQL File"
-msgstr "SQLエクスポート"
+msgstr "SQLエクスポート {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 #, tao-public
 msgid "Export Table"
-msgstr "結果テーブル出力"
+msgstr "結果テーブル出力 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Filter"
-msgstr "フィルタ"
+msgstr "フィルタ {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Filters"
-msgstr "フィルタ"
+msgstr "フィルタ {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "First Name:"
-msgstr "名前1:"
+msgstr "名前1: {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "First submitted variables only"
-msgstr "初回送信データのみ"
+msgstr "初回送信データのみ {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Grades"
-msgstr "評点"
+msgstr "評点 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Internal server error!"
-msgstr "内部サーバエラー"
+msgstr "内部サーバエラー {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Label"
-msgstr "ラベル"
+msgstr "ラベル {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Label:"
-msgstr "ラベル:"
+msgstr "ラベル: {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Last Name:"
-msgstr "名前２:"
+msgstr "名前２: {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Last submitted variables only"
-msgstr "最終送信データのみ"
+msgstr "最終送信データのみ {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Login:"
-msgstr "ログイン名:"
+msgstr "ログイン名: {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 #, tao-public
 msgid "Manage Results"
-msgstr "結果の管理"
+msgstr "結果の管理 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "No tests have been taken yet. As soon as a test-taker will take a test his results will be displayed here."
-msgstr "まだ受験されていません。受験後に結果が表示されます"
+msgstr "まだ受験されていません。受験後に結果が表示されます {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Nothing to export for \"%s"
-msgstr "エクスポートするものはありません：\"%s"
+msgstr "エクスポートするものはありません：\ {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Please confirm deletion"
-msgstr "削除してもよろしいですか？"
+msgstr "削除してもよろしいですか？ {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Preview"
-msgstr "プレビュー"
+msgstr "プレビュー {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Print"
-msgstr "印刷"
+msgstr "印刷 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Remove All grades"
-msgstr "評点 除外"
+msgstr "評点 除外 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Remove All responses"
-msgstr "解答 除外"
+msgstr "解答 除外 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Remove all trace variables"
-msgstr "トレース情報 除外"
+msgstr "トレース情報 除外 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Remove Delivery"
-msgstr "デリバリ情報 除外"
+msgstr "デリバリ情報 除外 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Remove Delivery Execution"
-msgstr "デリバリ実施情報 除外"
+msgstr "デリバリ実施情報 除外 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Responses"
-msgstr "解答"
+msgstr "解答 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Result has been deleted"
-msgstr "結果は削除されました"
+msgstr "結果は削除されました {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 #, tao-public
 msgid "Results"
-msgstr "結果"
+msgstr "結果 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 #, tao-public
 msgid "Results library"
-msgstr "結果ライブラリ"
+msgstr "結果ライブラリ {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Results monitoring"
-msgstr "結果モニタリング"
+msgstr "結果モニタリング {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 #, tao-public
 msgid "Results Monitoring"
-msgstr "結果モニタリング"
+msgstr "結果モニタリング {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Results of \"%s\" successfully exported"
-msgstr "結果 \"%s\" のエクスポートが完了しました"
+msgstr "結果 \ {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Results of \"%s\" successfully exported into \"%s"
-msgstr "結果 \"%s\" が \"%sにエクスポートされました"
+msgstr "結果 \ {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Review"
-msgstr "レビュー"
+msgstr "レビュー {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Search by delivery results"
-msgstr "デリバリ結果から検索"
+msgstr "デリバリ結果から検索 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Search by results"
-msgstr "結果から検索"
+msgstr "結果から検索 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Something went wrong..."
-msgstr "処理が完了できません・・・"
+msgstr "処理が完了できません・・・ {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Start Delivery Execution"
-msgstr "デリバリ実施の開始日時"
+msgstr "デリバリ実施の開始日時 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Start Time"
-msgstr "開始時間"
+msgstr "開始時間 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Test Taker"
-msgstr "受験者"
+msgstr "受験者 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Test taker"
-msgstr "受験者"
+msgstr "受験者 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Test Taker ID"
-msgstr "受験者ID"
+msgstr "受験者ID {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Test Variables"
-msgstr "テスト変数"
+msgstr "テスト変数 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "The class you have selected contains no results to be analysed, please select a different class"
-msgstr "選択したクラスには、結果が含まれていません。別のクラスを選択してください。"
+msgstr "選択したクラスには、結果が含まれていません。別のクラスを選択してください。 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "The number of observations is too low"
-msgstr "オブザベーションの数が少なすぎます"
+msgstr "オブザベーションの数が少なすぎます {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "The script does not take into account the restrictions on the size of the column header and the size of the row."
-msgstr "スクリプトでは、列ヘッダーのサイズと行のサイズの制限が考慮されていません。"
+msgstr "スクリプトでは、列ヘッダーのサイズと行のサイズの制限が考慮されていません。 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "The URL does not exist."
-msgstr "このURLは見つかりません"
+msgstr "このURLは見つかりません {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 #, tao-public
 msgid "Tools"
-msgstr "ツール"
+msgstr "ツール {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Traces"
-msgstr "トレース"
+msgstr "トレース {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Unexpected error occurred when generating your report. Please contact your system administrator."
-msgstr "レポートの生成時に予期せぬエラーが発生しました。システム管理者に連絡してください。"
+msgstr "レポートの生成時に予期せぬエラーが発生しました。システム管理者に連絡してください。 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "unknown"
-msgstr "不明"
+msgstr "不明 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "Variables"
-msgstr "データ項目"
+msgstr "データ項目 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 msgid "View"
-msgstr "表示"
+msgstr "表示 {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
 #, tao-public
 msgid "View and format the collected results."
-msgstr "収集した結果の表示とフォーマット"
+msgstr "収集した結果の表示とフォーマット {ruby}{rb}6{/rb}{rt}7{/rt}{/ruby}"
 
